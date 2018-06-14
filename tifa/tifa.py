@@ -94,13 +94,13 @@ class Tifa(ast.NodeVisitor):
         
         # Attempt parsing - might fail!
         try:
-            ast_tree = ast.parse(filename, code)
+            ast_tree = ast.parse(code, filename)
             return self.process_ast(ast_tree)
         except Exception as error:
             self.report = Tifa._error_report(error)
             return self.report;
     
-    def process_ast(self, ast):
+    def process_ast(self, ast_tree):
         '''
         Given an AST, actually performs the type and flow analyses to return a 
         report.
@@ -112,7 +112,7 @@ class Tifa(ast.NodeVisitor):
         # Initialize a new, empty report
         self.report = Tifa._initialize_report()
         # Traverse every node
-        self.visit(ast);
+        self.visit(ast_tree);
         
         # Check afterwards
         self.report['variables'] = self.name_map
