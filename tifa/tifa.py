@@ -121,7 +121,8 @@ class Tifa(ast.NodeVisitor):
         }
     
     def report_issue(self, issue, data):
-        data['position'] = self.locate()
+        if 'position' not in data:
+            data['position'] = self.locate()
         self.report.issues[issue].append(data)
         
     def locate(self):
@@ -171,7 +172,7 @@ class Tifa(ast.NodeVisitor):
         
         # Collect top level variables
         self._collect_top_level_varaibles()
-        print(self.report['variables'])
+        #print(self.report['variables'])
         
         return self.report
     
@@ -216,8 +217,17 @@ class Tifa(ast.NodeVisitor):
         return Identifier(False)
         
     def _finish_scope(self):
-        #TODO
-        pass
+        path_id = self.path_chain[0];
+        for name in self.name_map[path_id]:
+            if Tifa.sameScope(name, self.scope_chain):
+                state = self.name_map[path_id][name]
+                if state.over == 'yes':
+                    position = state.over_position
+                    self.report_issue('Overwritten variables', 
+                                     {'name': state.name, 'position': position})
+                if state.read == 'no':
+                    self.report_issue('Unread variables', 
+                                     {'name': state.name, 'type': state.type})
         
     def visit(self, node):
         '''
@@ -319,3 +329,12 @@ class Tifa(ast.NodeVisitor):
     def are_types_equal(left, right):
         #TODO
         pass
+    
+    @staticmethod
+    def sameScope(full_name, scope_chain):
+        # Get this entity's full scope chain
+        name_scopes = full_name.split("/")[:-1]
+        # against the reverse scope chain
+        checking_scopes = scope_chain[::-1]
+        return name_scopes == checking_scopes
+    

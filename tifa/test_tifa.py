@@ -199,19 +199,23 @@ unit_tests = [
 ]
 
 class TestCode(unittest.TestCase):
-    def test_codes(self):
+    pass
+
+def make_tester(code, nones, somes):
+    def test_code(self):
         tifa = Tifa()
-        for (code, nones, somes) in unit_tests:
-            tifa.process_code(code)
-            if not tifa.report['success']:
-                self.fail("Error message in\n"+code+"\n"+str(tifa.report['error']))
-                continue
-            for none in nones:
-                if tifa.report['issues'][none]:
-                    self.fail("Incorrectly detected "+none+"\n"+code+"\n"+tifa.report)
-            for some in somes:
-                if tifa.report['issues'][some]:
-                    self.fail("Failed to detect "+some+"\n"+code+"\n"+tifa.report)
+        tifa.process_code(code)
+        if not tifa.report['success']:
+            self.fail("Error message in\n"+code+"\n"+str(tifa.report['error']))
+        for none in nones:
+            if tifa.report['issues'][none]:
+                self.fail("Incorrectly detected "+none+"\n"+code+"\n")
+        for some in somes:
+            if not tifa.report['issues'][some]:
+                self.fail("Failed to detect "+some+"\n"+code+"\n")
+    return test_code
+for i, (code, nones, somes) in enumerate(unit_tests):
+    setattr(TestCode, 'test_code_{:02}'.format(i), make_tester(code, nones, somes))
 
 if __name__ == '__main__':
     unittest.main()
