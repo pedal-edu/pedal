@@ -19,7 +19,6 @@ Additionally, it reads the following as issues:
 
 import ast
 
-
 class Type:
     pass
 
@@ -75,6 +74,8 @@ class Tifa(ast.NodeVisitor):
         }
     
     def report_issue(self, issue, data):
+        node = self.node_chain[-1]
+        data['position'] = {'column': node.col_offset, 'line': node.lineno}
         self.report.issues[issue].append(data)
                 
     def process_code(self, code, filename="__main__"):
@@ -118,14 +119,17 @@ class Tifa(ast.NodeVisitor):
         self._finish_scope()
         
         # Collect top level variables
+        self._collect_top_level_varaibles()
+        
+        return self.report
+    
+    def _collect_top_level_varaibles(self):
         self.report['top_level_variables'] = {}
         main_path_vars = self.name_map[self.path_chain[0]]
         for full_name in main_path_vars:
             split_name = full_name.split("/")
             if split_name.length == 2 and split_name[0] == self.scope_chain[0]:
                 self.report.top_level_variables[split_name[1]] = main_path_vars[fullName]
-        
-        return self.report
     
     def _reset(self):
         '''
@@ -139,7 +143,7 @@ class Tifa(ast.NodeVisitor):
         # Human readable names
         self.path_names = ['*Module'];
         self.scope_names = ['*Module'];
-        self.ast_names = [];
+        self.node_chain = [];
         
         # Complete record of all Names
         self.scope_chain = [self.scope_id]
@@ -152,29 +156,29 @@ class Tifa(ast.NodeVisitor):
     def visit(self, node):
         '''
         '''
+        # Start processing the node
+        self.node_chain.append(node)
+        self.ast_id += 1
+        
         # Actions after return?
         if len(self.scope_chain) > 1:
             return_state = self.find_variable_scope("*return")
             if return_state.exists and return_state.in_scope:
                 if return_state.state.set == "yes":
-                    self.report_issue("Action after return", {"position": Tifa.locate(node)})
+                    self.report_issue("Action after return")
         
         # No? All good, let's enter the node
-        self.ast_names.append(node.__class__.__name__)
-        self.ast_id += 1
         result = super().visit(node)
+        
+        # Pop the node out of the chain
         self.ast_id -= 1
-        self.ast_names.pop()
+        self.node_chain.pop()
         
         # If a node failed to return something, return the UNKNOWN TYPE
         if result == None:
             return UnknownType()
         else:
             return result
-        
-    @staticmethod
-    def locate(node):
-        return {"column": node.col_offset, "line": node.lineno}
     
     def find_variable_scope(self, name):
         pass
