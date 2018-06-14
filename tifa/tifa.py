@@ -42,7 +42,36 @@ class LiteralValue:
 class LiteralNum(LiteralValue):
     def __init__(self, value):
         self.value = value
+        
+class Identifier:
+    def __init__(self, exists, in_scope=False, scoped_name="UNKNOWN", state=""):
+        self.exists = exists
+        self.in_scope = in_scope
+        self.scoped_name = scoped_name
+        self.state = state
+    
+class State:
+    def __init__(self, name, trace, type, method, position, 
+                 read='maybe', set='maybe', over='maybe', over_position=None):
+        self.name = name
+        self.trace = trace
+        self.type = type
+        self.method = method
+        self.position = position
+        self.over_position = over_position
+        self.read = read
+        self.set = set
+        self.over = over
+    
+    def copy(self, method, position):
+        return State(self.name, [self], self.type, method, position,
+                     state.read, state.set, state.over, state.over_position)
 
+    def __str__(self):
+        return self.method+"("+"|".join((self.read, self.set, self.over))+")"
+    def __repr__(self):
+        return str(self)
+                     
 class Tifa(ast.NodeVisitor):
     @staticmethod
     def _error_report(error):
@@ -142,6 +171,7 @@ class Tifa(ast.NodeVisitor):
         
         # Collect top level variables
         self._collect_top_level_varaibles()
+        print(self.report['variables'])
         
         return self.report
     
@@ -150,7 +180,7 @@ class Tifa(ast.NodeVisitor):
         main_path_vars = self.name_map[self.path_chain[0]]
         for full_name in main_path_vars:
             split_name = full_name.split("/")
-            if split_name.length == 2 and split_name[0] == self.scope_chain[0]:
+            if len(split_name) == 2 and split_name[0] == self.scope_chain[0]:
                 self.report.top_level_variables[split_name[1]] = main_path_vars[fullName]
     
     def _reset(self):
@@ -176,8 +206,14 @@ class Tifa(ast.NodeVisitor):
         self.path_parents = {}
         
     def find_variable_scope(self, name):
-        #TODO
-        pass
+        for j, scope in enumerate(self.scope_chain):
+            for path_id in self.path_chain:
+                path = self.name_map[path_id]
+                full_name = "/".join(map(str, self.scope_chain[:j]))+"/"+name
+                if full_name in path:
+                    return Identifier(True, j==0, full_name, path[full_name])
+                        
+        return Identifier(False)
         
     def _finish_scope(self):
         #TODO
@@ -248,16 +284,15 @@ class Tifa(ast.NodeVisitor):
         variable = self.find_variable_scope(name)
         if not variable.exists:
             # Create a new instance of the variable on the current path
-            new_state = {'name': name, 'trace': [], 'type': type,
-                         'method': 'store', 'position': self.locate(),
-                         'read': 'no', 'set': 'yes', 'over': 'no'}
+            new_state = State(name, [], type, 'store', self.locate(), 
+                              read='no', set='yes', over='no')
             self.name_map[current_path][full_name] = new_state
         else:
             new_state = self.trace_state(variable.state, "store")
             if not variable.in_scope:
                 self.report_issue("Write out of scope", {'name': name})
             # Type change?
-            if not Tifa.areTypesEqual(type, variable.state.type):
+            if not Tifa.are_types_equal(type, variable.state.type):
                 self.report_issue("Type changes", 
                                  {'name': name, 'old': variable.state.type, 
                                   'new': type})
@@ -277,15 +312,10 @@ class Tifa(ast.NodeVisitor):
         #TODO
         pass
     
-    def trace_state(state, method):
-        return {
-            'type': state.type, 'method': method, 'trace': [state],
-            'set': state.set, 'read': state.read, 'over': state.over,
-            'over_position': state.over_position,
-            'name': state.name, 'position': self.locate()
-        }
+    def trace_state(self, state, method):
+        return state.copy(method, self.locate())
     
     @staticmethod
-    def areTypesEqual(left, right):
+    def are_types_equal(left, right):
         #TODO
         pass
