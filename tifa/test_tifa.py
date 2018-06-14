@@ -204,14 +204,14 @@ class TestCode(unittest.TestCase):
         for (code, nones, somes) in unit_tests:
             tifa.process_code(code)
             if not tifa.report['success']:
-                self.fail("AI Tests: Error message in\n"+code+"\n"+str(tifa.report['error']))
+                self.fail("Error message in\n"+code+"\n"+str(tifa.report['error']))
                 continue
             for none in nones:
                 if tifa.report['issues'][none]:
-                    self.fail("AI Tests: Incorrectly detected "+none+"\n"+code+"\n"+tifa.report)
+                    self.fail("Incorrectly detected "+none+"\n"+code+"\n"+tifa.report)
             for some in somes:
                 if tifa.report['issues'][some]:
-                    self.fail("AI Tests: Failed to detect "+some+"\n"+code+"\n"+tifa.report)
+                    self.fail("Failed to detect "+some+"\n"+code+"\n"+tifa.report)
 
 if __name__ == '__main__':
     unittest.main()

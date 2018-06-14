@@ -23,7 +23,25 @@ class Type:
     pass
 
 class UnknownType(Type):
+    '''
+    A special type used to indicate an unknowable type.
+    '''
     pass
+
+class RecursedType(Type):
+    '''
+    A special type used as a placeholder for the result of a
+    recursive call that we have already process. This type will
+    be dominated by any actual types, but will not cause an issue.
+    '''
+    pass
+
+class LiteralValue:
+    pass
+    
+class LiteralNum(LiteralValue):
+    def __init__(self, value):
+        self.value = value
 
 class Tifa(ast.NodeVisitor):
     @staticmethod
@@ -74,9 +92,12 @@ class Tifa(ast.NodeVisitor):
         }
     
     def report_issue(self, issue, data):
-        node = self.node_chain[-1]
-        data['position'] = {'column': node.col_offset, 'line': node.lineno}
+        data['position'] = self.locate()
         self.report.issues[issue].append(data)
+        
+    def locate(self):
+        node = self.node_chain[-1]
+        return {'column': node.col_offset, 'line': node.lineno}
                 
     def process_code(self, code, filename="__main__"):
         '''
@@ -98,6 +119,7 @@ class Tifa(ast.NodeVisitor):
             return self.process_ast(ast_tree)
         except Exception as error:
             self.report = Tifa._error_report(error)
+            raise error
             return self.report;
     
     def process_ast(self, ast_tree):
@@ -153,8 +175,17 @@ class Tifa(ast.NodeVisitor):
         self.definition_chain = []
         self.path_parents = {}
         
+    def find_variable_scope(self, name):
+        #TODO
+        pass
+        
+    def _finish_scope(self):
+        #TODO
+        pass
+        
     def visit(self, node):
         '''
+        Process this node by calling its appropriate visit_*
         '''
         # Start processing the node
         self.node_chain.append(node)
@@ -179,9 +210,82 @@ class Tifa(ast.NodeVisitor):
             return UnknownType()
         else:
             return result
-    
-    def find_variable_scope(self, name):
-        pass
+            
+    def _visit_nodes(self, nodes):
+        for node in nodes:
+            if isinstance(node, ast.AST):
+                self.visit(node)
+                
+    def walk_targets(self, targets, type, walker):
+        for target in targets:
+            walker(target, type)
+            
+    def visit_Assign(self, node):
+        # Handle value
+        value_type = self.visit(node.value);
+        # Handle targets
+        self._visit_nodes(node.targets);
         
-    def _finish_scope(self):
+        # TODO: Properly handle assignments with subscripts
+        def action(target, type):
+            if isinstance(target, ast.Name):
+                self.store_variable(target.id, type)
+            elif isinstance(target, (ast.Tuple, ast.List)):
+                for i, elt in enumerate(target.elts):
+                    eltType = Tifa.index_sequence_type(type, LiteralNum(i))
+                    action(elt, eltType)
+            elif isinstance(target, ast.Subscript):
+                pass
+                # TODO: Handle minor type changes (e.g., appending to an inner list)
+        self.walk_targets(node.targets, value_type, action)
+        
+    def _scope_chain_str(self):
+        return "/".join(map(str, self.scope_chain))
+        
+    def store_variable(self, name, type):
+        full_name = self._scope_chain_str() + "/" + name
+        current_path = self.path_chain[0]
+        variable = self.find_variable_scope(name)
+        if not variable.exists:
+            # Create a new instance of the variable on the current path
+            new_state = {'name': name, 'trace': [], 'type': type,
+                         'method': 'store', 'position': self.locate(),
+                         'read': 'no', 'set': 'yes', 'over': 'no'}
+            self.name_map[current_path][full_name] = new_state
+        else:
+            new_state = self.trace_state(variable.state, "store")
+            if not variable.in_scope:
+                self.report_issue("Write out of scope", {'name': name})
+            # Type change?
+            if not Tifa.areTypesEqual(type, variable.state.type):
+                self.report_issue("Type changes", 
+                                 {'name': name, 'old': variable.state.type, 
+                                  'new': type})
+            new_state.type = type
+            # Overwritten?
+            if variable.state.set == 'yes' and variable.state.read == 'no':
+                new_state.over_position = position
+                new_state.over = 'yes'
+            else:
+                new_state.set = 'yes'
+                new_state.read = 'no'
+            self.name_map[current_path][full_name] = new_state
+        return new_state;
+    
+    @staticmethod
+    def index_sequence_type(type, i=0):
+        #TODO
+        pass
+    
+    def trace_state(state, method):
+        return {
+            'type': state.type, 'method': method, 'trace': [state],
+            'set': state.set, 'read': state.read, 'over': state.over,
+            'over_position': state.over_position,
+            'name': state.name, 'position': self.locate()
+        }
+    
+    @staticmethod
+    def areTypesEqual(left, right):
+        #TODO
         pass
