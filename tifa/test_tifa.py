@@ -2,28 +2,6 @@ from tifa import Tifa
 import unittest
 
 unit_tests = [
-    # Mutable Types
-    ['def t():\n    x = []\n    x.append(1)\n    return x\nfor x in t():\n    x + 1', ['Incompatible types'], []],
-    # Importing
-    ['import matplotlib.pyplot as plt\nplt.hist([1,2,3])\nplt.show()', ['Undefined variables'], []],
-    ['from random import randint\na=randint(1,2)\n1+a', ['Undefined variables', 'Incompatible types'], []],
-    ["import state_demographics\n\n\nincome_list = state_demographics.get(\"Per Capita Income\",\"(None)\",'')\nfilter_income = []\nfor income in income_list:\n    if income > 28000:\n        income_list.append(filter_income)\nprint(filter_income)\n", [], []],
-    ["import state_demographics\n\n\nincome_list = state_demographics.get(\"Per Capita Income\",\"(None)\",'')\nnew_income_list = 0\nfor income in income_list:\n    if income > 28000:\n        new_income_list = new_income_list + 1\nprint(new_income_list)\n", [], []],
-    ['l = []\nfor x in l:\n    if x > 0:\n        x', [], []],
-    ['x = []\nx.append(x)\nx', [], []],
-    ['def x(y):\n    y\nx()', [], []],
-    ['def x():\n    return\nx()', [], []],
-    ['def y():\n    x()\ndef x():\n    y()\nx()', [], ['Recursive Call']],
-    ['def x():\n    x()\nx()', [], ['Recursive Call']],
-    ['b= 0\nif True:\n    if True:\n        b=0\nb', ['Possibly undefined variables'], []],
-    # Overwritten in one branches
-    ['a = 0\nif True:\n\ta = 1\na', ['Possibly undefined variables'], []],
-    ["t = 0\nfor x in []:\n    if x:\n        t = t + 1\nprint(t)", ['Possibly undefined variables'], []],
-    ["x = ''\ndef y():\n    return x\ny()", ['Unread variables'], []],
-    
-    # Calling functions from within functions
-    ['def z():\n     return b\ndef y():\n    b = 0\n    z()\n    return b\ndef x():\n    y()\nx()',
-        ['Unread variables'], ['Read out of scope']],
     # Source Code, Shouldn't catch this, Should catch this
     ['print(True)', ['Undefined variables'], []],
     ['a = 0', [], ['Unread variables']],
@@ -196,6 +174,30 @@ unit_tests = [
     
     # Classes
     ['class A:\n    y = 0\n    def __init__(self, x):\n        self.x = 0\n        self.test()\n    def test(self):\n        self.x = 5\nA()', [], []],
+    
+    # Mutable Types
+    ['def t():\n    x = []\n    x.append(1)\n    return x\nfor x in t():\n    x + 1', ['Incompatible types'], []],
+    # Importing
+    ['import matplotlib.pyplot as plt\nplt.hist([1,2,3])\nplt.show()', ['Undefined variables'], []],
+    ['from random import randint\na=randint(1,2)\n1+a', ['Undefined variables', 'Incompatible types'], []],
+    
+    ["import state_demographics\n\n\nincome_list = state_demographics.get(\"Per Capita Income\",\"(None)\",'')\nfilter_income = []\nfor income in income_list:\n    if income > 28000:\n        income_list.append(filter_income)\nprint(filter_income)\n", [], []],
+    ["import state_demographics\n\n\nincome_list = state_demographics.get(\"Per Capita Income\",\"(None)\",'')\nnew_income_list = 0\nfor income in income_list:\n    if income > 28000:\n        new_income_list = new_income_list + 1\nprint(new_income_list)\n", [], []],
+    ['l = []\nfor x in l:\n    if x > 0:\n        x', [], []],
+    ['x = []\nx.append(x)\nx', [], []],
+    ['def x(y):\n    y\nx()', [], []],
+    ['def x():\n    return\nx()', [], []],
+    ['def y():\n    x()\ndef x():\n    y()\nx()', [], ['Recursive Call']],
+    ['def x():\n    x()\nx()', [], ['Recursive Call']],
+    ['b= 0\nif True:\n    if True:\n        b=0\nb', ['Possibly undefined variables'], []],
+    # Overwritten in one branches
+    ['a = 0\nif True:\n\ta = 1\na', ['Possibly undefined variables'], []],
+    ["t = 0\nfor x in []:\n    if x:\n        t = t + 1\nprint(t)", ['Possibly undefined variables'], []],
+    ["x = ''\ndef y():\n    return x\ny()", ['Unread variables'], []],
+    
+    # Calling functions from within functions
+    ['def z():\n     return b\ndef y():\n    b = 0\n    z()\n    return b\ndef x():\n    y()\nx()',
+    ['Unread variables'], ['Read out of scope']],
 ]
 
 class TestCode(unittest.TestCase):
