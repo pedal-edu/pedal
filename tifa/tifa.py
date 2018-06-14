@@ -77,7 +77,7 @@ class Tifa(ast.NodeVisitor):
     def report_issue(self, issue, data):
         self.report.issues[issue].append(data)
                 
-    def process_code(self, code, filename):
+    def process_code(self, code, filename="__main__"):
         '''
         Processes the AST of the given source code to generate a report.
         
@@ -89,12 +89,12 @@ class Tifa(ast.NodeVisitor):
         '''
         # Code
         self.source = code.split("\n") if code else []
-        filename = filename if filename else "__main__"
+        filename = filename
         
         # Attempt parsing - might fail!
         try:
-            ast = ast.parse(filename, code)
-            return self.process_ast(ast);
+            ast_tree = ast.parse(filename, code)
+            return self.process_ast(ast_tree)
         except Exception as error:
             self.report = Tifa._error_report(error)
             return self.report;
@@ -114,11 +114,11 @@ class Tifa(ast.NodeVisitor):
         self.visit(ast);
         
         # Check afterwards
-        self.report.variables = self.name_map;
-        self._finish_scope();
+        self.report['variables'] = self.name_map
+        self._finish_scope()
         
         # Collect top level variables
-        self.report.top_level_variables = {};
+        self.report['top_level_variables'] = {}
         main_path_vars = self.name_map[self.path_chain[0]]
         for full_name in main_path_vars:
             split_name = full_name.split("/")
@@ -149,7 +149,7 @@ class Tifa(ast.NodeVisitor):
         self.definition_chain = []
         self.path_parents = {}
         
-    def visit(node):
+    def visit(self, node):
         '''
         '''
         # Actions after return?
@@ -160,9 +160,9 @@ class Tifa(ast.NodeVisitor):
                     self.report_issue("Action after return", {"position": Tifa.locate(node)})
         
         # No? All good, let's enter the node
-        self.ast_names.push(node._astname)
+        self.ast_names.append(node.__class__.__name__)
         self.ast_id += 1
-        result = super(NodeVisitor, self).visit(node)
+        result = super().visit(node)
         self.ast_id -= 1
         self.ast_names.pop()
         
@@ -177,4 +177,7 @@ class Tifa(ast.NodeVisitor):
         return {"column": node.col_offset, "line": node.lineno}
     
     def find_variable_scope(self, name):
+        pass
+        
+    def _finish_scope(self):
         pass
