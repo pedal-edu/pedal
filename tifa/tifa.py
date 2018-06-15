@@ -15,6 +15,31 @@ TIFA uses a number of simplifications of the Python language.
 Additionally, it reads the following as issues:
   * Cannot read a variable without having first written to it.
   * Cannot rewrite a variable unless it has been read.
+  
+Important concepts:
+    Issue: A problematic situation in the submitted code that will be reported
+           but may not stop the execution.
+    Error: A situation in execution that terminates the program.
+    Name: A name of a variable
+    Scope: The context of a function, with its own namespaces. Represented
+           internally using numeric IDs (Scope IDs).
+    Scope Chain: A stack of scopes, with the innermost scope on top.
+    Fully Qualified Name: A string representation of a variable and its scope
+                          chain, written using "/". For example:
+                          0/1/4/my_variable_name
+    Path: A single path of execution through the control flow; every program
+          has at least one sequential path, but IFs, FORs, WHILEs, etc. can
+          cause multiple paths. Paths are represented using numeric IDs (Path
+          IDs).
+    State: Information about a Name that indicates things like the variable's
+           current type and whether that name has been read, set, or
+           overwritten.
+    Identifier: A wrapper around variables, used to hold their potential
+                non-existence (which is an Issue but not an Error).
+    Type: A symbolic representation of the variable's type.
+    Literal: Sometimes, we need a specialized representation of a literal value
+             to be passed around. This is particularly important for accessing
+             elements in an tuples.
 '''
 
 import ast
@@ -22,6 +47,9 @@ import ast
 class Type:
     '''
     Parent class for all other types, used to provide a common interface.
+    
+    TODO: Handle more complicated object-oriented types and custom types
+    (classes).
     '''
     def clone(self):
         return self.__class__()
@@ -158,6 +186,9 @@ VALID_BINOP_TYPES = {
 def are_types_equal(left, right):
     '''
     Determine if two types are equal.
+    
+    This could be more Polymorphic - move the code for each type into
+    its respective class instead.
     '''
     if left is None or right is None:
         return False
@@ -240,6 +271,7 @@ class Identifier:
         self.in_scope = in_scope
         self.scoped_name = scoped_name
         self.state = state
+
     
 class State:
     '''
@@ -298,6 +330,9 @@ class State:
         return str(self)
                      
 class Tifa(ast.NodeVisitor):
+    '''
+    '''
+
     @staticmethod
     def _error_report(error):
         '''
@@ -355,7 +390,7 @@ class Tifa(ast.NodeVisitor):
         '''
         if 'position' not in data:
             data['position'] = self.locate()
-        self.report.issues[issue].append(data)
+        self.report['issues'][issue].append(data)
         
     def locate(self):
         '''
@@ -457,6 +492,8 @@ class Tifa(ast.NodeVisitor):
         Walk through this scope and all enclosing scopes, finding the relevant
         identifier given by `name`.
         
+        Args:
+            name (str): The name of the variable
         Returns:
             Identifier: An Identifier for the variable, which could potentially
                         not exist.
@@ -471,6 +508,24 @@ class Tifa(ast.NodeVisitor):
                                       full_name, path[full_name])
                         
         return Identifier(False)
+    
+    def find_variable_out_of_scope(self, name):
+        '''
+        Walk through every scope and determine if this variable can be found
+        elsewhere (which would be an issue).
+        
+        Args:
+            name (str): The name of the variable
+        Returns:
+            Identifier: An Identifier for the variable, which could potentially
+                        not exist.
+        '''
+        for path in self.name_map.values():
+            for full_name in path:
+                unscoped_name = full_name.rsplit("/", maxsplit=1)[-1]
+                if name == unscoped_name:
+                    return Identifier(True, False, unscoped_name, path[full_name])
+        return Identifier(False)
         
     def _finish_scope(self):
         '''
@@ -479,7 +534,7 @@ class Tifa(ast.NodeVisitor):
         '''
         path_id = self.path_chain[0];
         for name in self.name_map[path_id]:
-            if Tifa.sameScope(name, self.scope_chain):
+            if Tifa.in_scope(name, self.scope_chain):
                 state = self.name_map[path_id][name]
                 if state.over == 'yes':
                     position = state.over_position
@@ -570,7 +625,7 @@ class Tifa(ast.NodeVisitor):
                 self.store_variable(target.id, type)
             elif isinstance(target, (ast.Tuple, ast.List)):
                 for i, elt in enumerate(target.elts):
-                    eltType = Tifa.index_sequence_type(type, LiteralNum(i))
+                    eltType = type.index(LiteralNum(i))
                     action(elt, eltType)
             elif isinstance(target, ast.Subscript):
                 pass
@@ -598,11 +653,11 @@ class Tifa(ast.NodeVisitor):
                     self.store_variable(name, result_type)
                     return result_type
         
-        self.reportIssue("Incompatible types", 
+        self.report_issue("Incompatible types", 
                          {"left": left, "right": right, 
                           "operation": node.op.name});
         
-    def _scope_chain_str(self):
+    def _scope_chain_str(self, name=None):
         '''
         Convert the current scope chain to a string representation (divided 
         by "/").
@@ -610,7 +665,10 @@ class Tifa(ast.NodeVisitor):
         Returns:
             str: String representation of the scope chain.
         '''
-        return "/".join(map(str, self.scope_chain))
+        if name:
+            return "/".join(map(str, self.scope_chain)) + "/" + name
+        else:
+            return "/".join(map(str, self.scope_chain))
         
     def identify_caller(self, node):
         if isinstance(node, ast.Name):
@@ -632,7 +690,7 @@ class Tifa(ast.NodeVisitor):
         Returns:
             State: The new state of the variable.
         '''
-        full_name = self._scope_chain_str() + "/" + name
+        full_name = self._scope_chain_str(name)
         current_path = self.path_chain[0]
         variable = self.find_variable_scope(name)
         if not variable.exists:
@@ -661,18 +719,67 @@ class Tifa(ast.NodeVisitor):
         return new_state
     
     def load_variable(self, name):
-        pass
-        #TODO
-    
-    @staticmethod
-    def index_sequence_type(type, i=0):
-        return type.index(i)
+        '''
+        Retrieve the variable with the given name.
+        
+        Args:
+            name (str): The unqualified name of the variable. If the variable is
+                        not found in the current scope or an enclosing sope, all
+                        other scopes will be searched to see if it was read out
+                        of scope.
+        Returns:
+            State: The current state of the variable.
+        '''
+        full_name = self._scope_chain_str(name)
+        current_path = self.path_chain[0]
+        variable = self.find_variable_scope(name)
+        if not variable.exists:
+            out_of_scope_var = self.find_variable_out_of_scope(name)
+            # Create a new instance of the variable on the current path
+            if out_of_scope_var.exists:
+                self.report_issue("Read out of scope", {'name': name})
+            else:
+                self.report_issue("Undefined variables", {'name': name})
+            new_state = State(name, [], UnknownType(), 'load', self.locate(),
+                              read='yes', set='no', over='no')
+            self.name_map[current_path][full_name] = new_state
+        else:
+            new_state = self.trace_state(variable.state, "load")
+            if variable.state.set == 'no':
+                self.report_issue("Undefined variables", {'name': name})
+            if variable.state.set == 'maybe':
+                self.report_issue("Possibly undefined variables", {'name': name})
+            new_state.read = 'yes';
+            if not variable.in_scope:
+                self.name_map[current_path][variable.scoped_name] = new_state
+            else:
+                self.name_map[current_path][full_name] = newState
+        return new_state
     
     def trace_state(self, state, method):
+        '''
+        Makes a copy of the given state with the given method type.
+        
+        Args:
+            state (State): The state to copy (as in, we trace a copy of it!)
+            method (str): The operation being applied to the state.
+        Returns:
+            State: The new State
+        '''
         return state.copy(method, self.locate())
     
     @staticmethod
-    def sameScope(full_name, scope_chain):
+    def in_scope(full_name, scope_chain):
+        '''
+        Determine if the fully qualified variable name is in the given scope
+        chain.
+        
+        Args:
+            full_name (str): A fully qualified variable name
+            scope_chain (list): A representation of a scope chain.
+        Returns:
+            bool: Whether the variable lives in this scope
+        '''
         # Get this entity's full scope chain
         name_scopes = full_name.split("/")[:-1]
         # against the reverse scope chain
