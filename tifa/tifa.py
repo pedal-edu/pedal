@@ -23,13 +23,15 @@ class Type:
     '''
     Parent class for all other types, used to provide a common interface.
     '''
-    pass
+    def clone(self):
+        return self.__class__()
+    def index(self):
+        return self.clone()
 
 class UnknownType(Type):
     '''
     A special type used to indicate an unknowable type.
     '''
-    pass
 
 class RecursedType(Type):
     '''
@@ -37,6 +39,71 @@ class RecursedType(Type):
     recursive call that we have already process. This type will
     be dominated by any actual types, but will not cause an issue.
     '''
+
+class TupleType(Type):
+    '''
+    '''
+    def __init__(self, subtypes=None):
+        if subtypes is None:
+            subtypes = []
+        self.subtypes = subtypes
+    def index(self, i):
+        if isinstance(i, LiteralNum):
+            return self.subtypes[i.value].clone()
+        else:
+            return self.subtypes[i].clone()
+    def clone(self):
+        return TupleType([t.clone() for t in self.subtypes])
+
+class ListType(Type):
+    def __init__(self, subtype=None, empty=True):
+        if subtype is None:
+            subtype = UnknownType()
+        self.subtype = subtype
+        self.empty = empty
+    def index(self, i):
+        return self.subtype.clone()
+    def clone(self):
+        return ListType(self.subtype.clone(), self.empty)
+
+class StrType(Type):
+    def index(self, i):
+        return StrType()
+class FileType(Type):
+    def index(self, i):
+        return StrType()
+    
+class DictType(Type):
+    def __init__(self, empty=False, literals=None, keys=None, values=None):
+        self.empty = empty
+        self.literals = literals
+        self.values = values
+        self.keys = keys
+    def index(self, i):
+        if self.literals is not None:
+            for literal, value in zip(self.literals, self.values):
+                if Tifa.are_literals_equal(literal, i):
+                    return value.clone()
+            return UnknownType()
+        else:
+            return self.keys.clone()
+
+class NumType(Type):
+    pass
+    
+class NoneType(Type):
+    pass
+    
+class BoolType(Type):
+    pass
+
+class ModuleType(Type):
+    pass
+
+class SetType(ListType):
+    pass
+
+class GeneratorType(ListType):
     pass
 
 class LiteralValue:
@@ -464,8 +531,7 @@ class Tifa(ast.NodeVisitor):
     
     @staticmethod
     def index_sequence_type(type, i=0):
-        #TODO
-        pass
+        return type.index(i)
     
     def trace_state(self, state, method):
         return state.copy(method, self.locate())
