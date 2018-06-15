@@ -106,6 +106,55 @@ class SetType(ListType):
 class GeneratorType(ListType):
     pass
     
+def merge_types(left, right):
+    # TODO: Check that lists/sets have the same subtypes
+    if isinstance(left, (ListType, SetType, GeneratorType)):
+        if left.empty:
+            return right.subtype
+        else:
+            return left.subtype.clone()
+    elif isinstance(left, TupleType):
+        return left.subtypes + right.subtypes
+    
+NumType_any = lambda *x: NumType
+StrType_any = lambda *x: StrType
+BoolType_any = lambda *x: BoolType
+VALID_BINOP_TYPES = {
+    ast.Add: {NumType: {NumType: NumType_any}, 
+              StrType :{StrType: StrType_any}, 
+              ListType: {ListType: merge_types},
+              TupleType: {TupleType: merge_types}},
+    ast.Sub: {NumType: {NumType: NumType_any}, 
+              SetType: {SetType: merge_types}},
+    ast.Div: {NumType: {NumType: NumType_any}},
+    ast.FloorDiv: {NumType: {NumType: NumType_any}},
+    ast.Mult: {NumType: {NumType: NumType_any, 
+                     StrType: StrType_any, 
+                     ListType: lambda l,r: r, 
+                     TupleType: lambda l,r: r},
+             StrType: {NumType: StrType_any},
+             ListType: {NumType: lambda l,r: l},
+             TupleType: {NumType: lambda l,r: l}},
+    ast.Pow: {NumType: {NumType: NumType_any}},
+    # TODO: Should we allow old-fashioned string interpolation?
+    # Currently, I vote no because it makes the code harder and is bad form.
+    ast.Mod: {NumType: {NumType: NumType_any}},
+    ast.LShift: {NumType: {NumType: NumType_any}},
+    ast.RShift: {NumType: {NumType: NumType_any}},
+    ast.BitOr: {NumType: {NumType: NumType_any}, 
+                BoolType: {NumType: NumType_any,
+                         BoolType: BoolType_any}, 
+                SetType: {SetType: merge_types}},
+    ast.BitXor: {NumType: {NumType: NumType_any}, 
+                BoolType: {NumType: NumType_any,
+                         BoolType: BoolType_any}, 
+                SetType: {SetType: merge_types}},
+    ast.BitAnd: {NumType: {NumType: NumType_any}, 
+                BoolType: {NumType: NumType_any,
+                         BoolType: BoolType_any}, 
+                SetType: {SetType: merge_types}}
+}
+    
 def are_types_equal(left, right):
     '''
     Determine if two types are equal.
@@ -528,6 +577,31 @@ class Tifa(ast.NodeVisitor):
                 # TODO: Handle minor type changes (e.g., appending to an inner list)
         self.walk_targets(node.targets, value_type, action)
         
+    def visit_AugAssign(self, node):
+        # Handle value
+        right = self.visit(node.value)
+        # Handle target
+        left = self.visit(node.target)
+        name = self.identify_caller(node.target)
+        
+        # Handle operation
+        self.load_variable(name);
+        if isinstance(left, UnknownType) or isinstance(right, UnknownType):
+            return UnknownType()
+        elif type(node.op) in VALID_BINOP_TYPES:
+            op_lookup = VALID_BINOP_TYPES[type(node.op)]
+            if type(left) in op_lookup:
+                op_lookup = op_lookup[type(left)]
+                if type(right) in op_lookup:
+                    op_lookup = op_lookup[type(right)]
+                    result_type = op_lookup(left, right)
+                    self.store_variable(name, result_type)
+                    return result_type
+        
+        self.reportIssue("Incompatible types", 
+                         {"left": left, "right": right, 
+                          "operation": node.op.name});
+        
     def _scope_chain_str(self):
         '''
         Convert the current scope chain to a string representation (divided 
@@ -537,6 +611,15 @@ class Tifa(ast.NodeVisitor):
             str: String representation of the scope chain.
         '''
         return "/".join(map(str, self.scope_chain))
+        
+    def identify_caller(self, node):
+        if isinstance(node, ast.Name):
+            return node.id
+        elif isinstance(node, ast.Call):
+            return self.identify_caller(node.func)
+        elif isinstance(node, (ast.Attribute, ast.Subscript)):
+            return self.identify_caller(nodevalue)
+        return None
         
     def store_variable(self, name, type):
         '''
@@ -576,6 +659,10 @@ class Tifa(ast.NodeVisitor):
                 new_state.read = 'no'
             self.name_map[current_path][full_name] = new_state
         return new_state
+    
+    def load_variable(self, name):
+        pass
+        #TODO
     
     @staticmethod
     def index_sequence_type(type, i=0):
