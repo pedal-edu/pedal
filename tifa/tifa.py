@@ -44,6 +44,14 @@ Important concepts:
 
 import ast
 
+def _dict_extends(d1, d2):
+    d3 = {}
+    for key, value in d1.items():
+        d3[key] = value
+    for key, value in d2.items():
+        d3[key] = value
+    return d3
+
 class Type:
     '''
     Parent class for all other types, used to provide a common interface.
@@ -51,10 +59,21 @@ class Type:
     TODO: Handle more complicated object-oriented types and custom types
     (classes).
     '''
+    fields = {}
     def clone(self):
         return self.__class__()
     def index(self, i):
         return self.clone()
+    def load_attr(self, attr, tifa, callee=None, callee_position=None):
+        if attr in self.fields:
+            return self.fields[attr]
+        # TODO: Handle more kinds of common mistakes
+        if attr == "append":
+            tifa.report_issue('Append to non-list', 
+                              {'name': tifa.identifyCaller(callee), 
+                               'position': callee_position, 'type': self})
+        return UnknownType()
+    
 
 class UnknownType(Type):
     '''
@@ -67,6 +86,32 @@ class RecursedType(Type):
     recursive call that we have already process. This type will
     be dominated by any actual types, but will not cause an issue.
     '''
+
+class FunctionType(Type):
+    def __init__(self, definition=None, name="*Anonymous", returns=None):
+        if returns is not None and definition is None:
+            if returns == 'identity':
+                def definition(ti, ty, na, args, ca):
+                    if args:
+                        return args[0].clone()
+                    return UnknownType()
+            elif returns == 'void':
+                def definition(ti, ty, na, args, ca):
+                    return NoneType()
+            else:
+                def definition(ti, ty, na, args, ca):
+                    return returnType.clone()
+        self.definition = definition
+        self.name = name
+        
+class NumType(Type):
+    pass
+    
+class NoneType(Type):
+    pass
+    
+class BoolType(Type):
+    pass
 
 class TupleType(Type):
     '''
@@ -93,13 +138,70 @@ class ListType(Type):
         return self.subtype.clone()
     def clone(self):
         return ListType(self.subtype.clone(), self.empty)
+    def load_attr(self, attr, tifa, callee=None, callee_position=None):
+        if attr == 'append':
+            def _append(tifa, function_type, callee, args, position):
+                if args:
+                    if callee:
+                        tifa.append_variable(callee, ListType(args[0].clone()), 
+                                             position)
+                    self.empty = False
+                    self.subtype = args[0]
+            return FunctionType(_append, 'append')
+        return super().load_attr(attr, tifa, callee, callee_position)
 
 class StrType(Type):
     def index(self, i):
         return StrType()
+    fields = _dict_extends(Type.fields, {})
+
+StrType.fields.update({
+    # Methods that return strings
+    "capitalize": FunctionType('capitalize', returns=StrType()),
+    "center": FunctionType('center', returns=StrType()),
+    "expandtabs": FunctionType('expandtabs', returns=StrType()),
+    "join": FunctionType('join', returns=StrType()),
+    "ljust": FunctionType('ljust', returns=StrType()),
+    "lower": FunctionType('lower', returns=StrType()),
+    "lstrip": FunctionType('lstrip', returns=StrType()),
+    "replace": FunctionType('replace', returns=StrType()),
+    "rjust": FunctionType('rjust', returns=StrType()),
+    "rstrip": FunctionType('rstrip', returns=StrType()),
+    "strip": FunctionType('strip', returns=StrType()),
+    "swapcase": FunctionType('swapcase', returns=StrType()),
+    "title": FunctionType('title', returns=StrType()),
+    "translate": FunctionType('translate', returns=StrType()),
+    "upper": FunctionType('upper', returns=StrType()),
+    "zfill": FunctionType('zfill', returns=StrType()),
+    # Methods that return numbers
+    "count": FunctionType('count', returns=NumType()),
+    "find": FunctionType('find', returns=NumType()),
+    "rfind": FunctionType('rfind', returns=NumType()),
+    "index": FunctionType('index', returns=NumType()),
+    "rindex": FunctionType('rindex', returns=NumType()),
+    # Methods that return booleans
+    "startswith": FunctionType('startswith', returns=BoolType()),
+    "endswith": FunctionType('endswith', returns=BoolType()),
+    "isalnum": FunctionType('isalnum', returns=BoolType()),
+    "isalpha": FunctionType('isalpha', returns=BoolType()),
+    "isdigit": FunctionType('isdigit', returns=BoolType()),
+    "islower": FunctionType('islower', returns=BoolType()),
+    "isspace": FunctionType('isspace', returns=BoolType()),
+    "istitle": FunctionType('istitle', returns=BoolType()),
+    "isupper": FunctionType('isupper', returns=BoolType()),
+    # Methods that return List of Strings
+    "rsplit": FunctionType('rsplit', returns=ListType(StrType())),
+    "split": FunctionType('split', returns=ListType(StrType())),
+    "splitlines": FunctionType('splitlines', returns=ListType(StrType()))
+})
 class FileType(Type):
     def index(self, i):
         return StrType()
+    fields = _dict_extends(Type.fields, {
+        'close': FunctionType('close', returns='void'),
+        'read': FunctionType('read', returns=StrType()),
+        'readlines': FunctionType('readlines', returns=ListType(StrType(), False))
+    })
     
 class DictType(Type):
     def __init__(self, empty=False, literals=None, keys=None, values=None):
@@ -115,15 +217,30 @@ class DictType(Type):
             return UnknownType()
         else:
             return self.keys.clone()
-
-class NumType(Type):
-    pass
-    
-class NoneType(Type):
-    pass
-    
-class BoolType(Type):
-    pass
+    def load_attr(self, attr, tifa, callee=None, callee_position=None):
+        if attr == 'items':
+            def _items(tifa, function_type, callee, args, position):
+                if type.literals is None:
+                    return ListType(TupleType([self.keys, self.values]))
+                else:
+                    return ListType(TupleType([self.literals[0].type(),
+                                               self.values[0]]))
+            return FunctionType(_items, 'items')
+        elif attr == 'keys':
+            def _keys(tifa, function_type, callee, args, position):
+                if type.literals is None:
+                    return ListType(self.keys)
+                else:
+                    return ListType(self.literals[0].type())
+            return FunctionType(_keys, 'keys')
+        elif attr == 'values':
+            def _items(tifa, function_type, callee, args, position):
+                if type.literals is None:
+                    return ListType(self.values)
+                else:
+                    return ListType(self.values[0])
+            return FunctionType(_values, 'values')
+        return super().load_attr(attr, tifa, callee, callee_position)
 
 class ModuleType(Type):
     def __init__(self, name="*UnknownModule", submodules=None, fields=None):
@@ -140,23 +257,10 @@ class SetType(ListType):
 
 class GeneratorType(ListType):
     pass
-    
+
+# Custom parking class in blockpy    
 class TimeType(Type): pass
 class DayType(Type): pass
-    
-class FunctionType(Type):
-    def __init__(self, definition=None, name="*Anonymous", returns=None):
-        if returns is not None and definition is None:
-            if returns == 'identity':
-                def definition(ti, ty, na, args, ca):
-                    if args:
-                        return args[0].clone()
-                    return UnknownType()
-            else:
-                def definition(ti, ty, na, args, ca):
-                    return returnType.clone()
-        self.definition = definition
-        self.name = name
     
 MODULES = {
     'matplotlib': ModuleType('matplotlib',
@@ -360,6 +464,9 @@ class LiteralNum(LiteralValue):
     '''
     def __init__(self, value):
         self.value = value
+    
+    def type(self):
+        return NumType()
         
 class Identifier:
     '''
@@ -773,10 +880,24 @@ class Tifa(ast.NodeVisitor):
     
     def visit_Import(self, node):
         # Handle names
-        for module in node.names:
-            asname = module.asname or module.name
-            module_type = self.load_module(module.name)
+        for alias in node.names:
+            asname = alias.asname or alias.name
+            module_type = self.load_module(alias.name)
             self.store_variable(asname, module_type)
+            
+    def visit_ImportFrom(self, node):
+        # Handle names
+        for alias in node.names:
+            if node.module is None:
+                asname = alias.asname or alias.name
+                module_type = self.load_module(alias.name)
+            else:
+                module_name = node.module;
+                asname = alias.asname or alias.name
+                module_type = self.load_module(module_name)
+            name_type = module_type.load_attr(alias.name, self, 
+                                              callee_position=self.locate())
+            self.store_variable(asname, name_type)
         
     def _scope_chain_str(self, name=None):
         '''
