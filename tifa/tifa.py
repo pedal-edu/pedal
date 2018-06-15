@@ -25,7 +25,7 @@ class Type:
     '''
     def clone(self):
         return self.__class__()
-    def index(self):
+    def index(self, i):
         return self.clone()
 
 class UnknownType(Type):
@@ -105,6 +105,54 @@ class SetType(ListType):
 
 class GeneratorType(ListType):
     pass
+    
+def are_types_equal(left, right):
+    '''
+    Determine if two types are equal.
+    '''
+    if left is None or right is None:
+        return False
+    elif isinstance(left, UnknownType) or isinstance(right, UnknownType):
+        return False
+    elif type(left) != type(right):
+        return False
+    elif isinstance(left, (GeneratorType, ListType)):
+        if left.empty or right.empty:
+            return True
+        else:
+            return are_types_equal(left.subtype, right.subtype)
+    elif isinstance(left, TupleType):
+        if left.empty or right.empty:
+            return True
+        elif len(left.subtypes) != len(right.subtypes):
+            return False
+        else:
+            for l, r in zip(left.subtypes, right.subtypes):
+                if not are_types_equal(l, r):
+                    return False
+            return True
+    elif isinstance(left, DictType):
+        if left.empty or right.empty:
+            return True
+        elif left.literals is not None and right.literals is not None:
+            if len(left.literals) != len(right.literals):
+                return False
+            else:
+                for l, r in zip(left.literals, right.literals):
+                    if not are_types_equal(l, r):
+                        return False
+                for l, r in zip(left.values, right.values):
+                    if not are_types_equal(l, r):
+                        return False
+                return True
+        elif left.literals is not None or right.literals is not None:
+            return False
+        else:
+            keys_equal = are_types_equal(left.keys, right.keys)
+            values_equal = are_types_equal(left.values, right.values)
+            return keys_equal and values_equal
+    else:
+        return True
 
 class LiteralValue:
     '''
@@ -514,7 +562,7 @@ class Tifa(ast.NodeVisitor):
             if not variable.in_scope:
                 self.report_issue("Write out of scope", {'name': name})
             # Type change?
-            if not Tifa.are_types_equal(type, variable.state.type):
+            if not are_types_equal(type, variable.state.type):
                 self.report_issue("Type changes", 
                                  {'name': name, 'old': variable.state.type, 
                                   'new': type})
@@ -535,11 +583,6 @@ class Tifa(ast.NodeVisitor):
     
     def trace_state(self, state, method):
         return state.copy(method, self.locate())
-    
-    @staticmethod
-    def are_types_equal(left, right):
-        #TODO
-        pass
     
     @staticmethod
     def sameScope(full_name, scope_chain):
