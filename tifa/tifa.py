@@ -126,13 +126,126 @@ class BoolType(Type):
     pass
 
 class ModuleType(Type):
-    pass
+    def __init__(self, name="*UnknownModule", submodules=None, fields=None):
+        self.name = name
+        if submodules is None:
+            submodules = {}
+        self.submodules = submodules
+        if fields is None:
+            fields = {}
+        self.fields = fields
 
 class SetType(ListType):
     pass
 
 class GeneratorType(ListType):
     pass
+    
+class TimeType(Type): pass
+class DayType(Type): pass
+    
+class FunctionType(Type):
+    def __init__(self, definition=None, name="*Anonymous", returns=None):
+        if returns is not None and definition is None:
+            if returns == 'identity':
+                def definition(ti, ty, na, args, ca):
+                    if args:
+                        return args[0].clone()
+                    return UnknownType()
+            else:
+                def definition(ti, ty, na, args, ca):
+                    return returnType.clone()
+        self.definition = definition
+        self.name = name
+    
+MODULES = {
+    'matplotlib': ModuleType('matplotlib',
+        submodules={
+            'pyplot': ModuleType('pyplot', fields={
+                'plot': FunctionType(name='plot', returns=NoneType()),
+                'hist': FunctionType(name='hist', returns=NoneType()),
+                'scatter': FunctionType(name='scatter', returns=NoneType()),
+                'show': FunctionType(name='show', returns=NoneType()),
+                'xlabel': FunctionType(name='xlabel', returns=NoneType()),
+                'ylabel': FunctionType(name='ylabel', returns=NoneType()),
+                'title': FunctionType(name='title', returns=NoneType()),
+            })
+        }),
+    'pprint': ModuleType('pprint',
+        fields={
+            'pprint': FunctionType(name='pprint', returns=NoneType())
+        }),
+    'random': ModuleType('random',
+        fields={
+            'randint': FunctionType(name='randint', returns=NumType())
+        }),
+    'turtle': ModuleType('turtle',
+        fields={
+            'forward': FunctionType(name='forward', returns=NoneType()),
+            'backward': FunctionType(name='backward', returns=NoneType()),
+            'color': FunctionType(name='color', returns=NoneType()),
+            'right': FunctionType(name='right', returns=NoneType()),
+            'left': FunctionType(name='left', returns=NoneType()),
+        }),
+    'parking': ModuleType('parking',
+        fields={
+            'Time': FunctionType(name='Time', returns=TimeType()),
+            'now': FunctionType(name='now', returns=TimeType()),
+            'Day': FunctionType(name='Day', returns=DayType()),
+            'today': FunctionType(name='today', returns=DayType()),
+        }),
+    'math': ModuleType('math',
+        fields={
+            'ceil': FunctionType(name='ceil', returns=NumType()),
+            'copysign': FunctionType(name='copysign', returns=NumType()),
+            'fabs': FunctionType(name='fabs', returns=NumType()),
+            'factorial': FunctionType(name='factorial', returns=NumType()),
+            'floor': FunctionType(name='floor', returns=NumType()),
+            'fmod': FunctionType(name='fmod', returns=NumType()),
+            'frexp': FunctionType(name='frexp', returns=NumType()),
+            'fsum': FunctionType(name='fsum', returns=NumType()),
+            'gcd': FunctionType(name='gcd', returns=NumType()),
+            'isclose': FunctionType(name='isclose', returns=BoolType()),
+            'isfinite': FunctionType(name='isfinite', returns=BoolType()),
+            'isinf': FunctionType(name='isinf', returns=BoolType()),
+            'isnan': FunctionType(name='isnan', returns=BoolType()),
+            'ldexp': FunctionType(name='ldexp', returns=NumType()),
+            'modf': FunctionType(name='modf', returns=NumType()),
+            'trunc': FunctionType(name='trunc', returns=NumType()),
+            'log': FunctionType(name='log', returns=NumType()),
+            'log1p': FunctionType(name='log1p', returns=NumType()),
+            'log2': FunctionType(name='log2', returns=NumType()),
+            'log10': FunctionType(name='log10', returns=NumType()),
+            'pow': FunctionType(name='pow', returns=NumType()),
+            'sqrt': FunctionType(name='sqrt', returns=NumType()),
+            'acos': FunctionType(name='acos', returns=NumType()),
+            'sin': FunctionType(name='sin', returns=NumType()),
+            'cos': FunctionType(name='cos', returns=NumType()),
+            'tan': FunctionType(name='tan', returns=NumType()),
+            'asin': FunctionType(name='asin', returns=NumType()),
+            'acos': FunctionType(name='acos', returns=NumType()),
+            'atan': FunctionType(name='atan', returns=NumType()),
+            'atan2': FunctionType(name='atan2', returns=NumType()),
+            'hypot': FunctionType(name='hypot', returns=NumType()),
+            'degrees': FunctionType(name='degrees', returns=NumType()),
+            'radians': FunctionType(name='radians', returns=NumType()),
+            'sinh': FunctionType(name='sinh', returns=NumType()),
+            'cosh': FunctionType(name='cosh', returns=NumType()),
+            'tanh': FunctionType(name='tanh', returns=NumType()),
+            'asinh': FunctionType(name='asinh', returns=NumType()),
+            'acosh': FunctionType(name='acosh', returns=NumType()),
+            'atanh': FunctionType(name='atanh', returns=NumType()),
+            'erf': FunctionType(name='erf', returns=NumType()),
+            'erfc': FunctionType(name='erfc', returns=NumType()),
+            'gamma': FunctionType(name='gamma', returns=NumType()),
+            'lgamma': FunctionType(name='lgamma', returns=NumType()),
+            'pi': NumType(),
+            'e': NumType(),
+            'tau': NumType(),
+            'inf': NumType(),
+            'nan': NumType(),
+        }),
+}
     
 def merge_types(left, right):
     # TODO: Check that lists/sets have the same subtypes
@@ -637,10 +750,11 @@ class Tifa(ast.NodeVisitor):
         right = self.visit(node.value)
         # Handle target
         left = self.visit(node.target)
+        # Target is always a Name, Subscript, or Attribute
         name = self.identify_caller(node.target)
         
         # Handle operation
-        self.load_variable(name);
+        self.load_variable(name)
         if isinstance(left, UnknownType) or isinstance(right, UnknownType):
             return UnknownType()
         elif type(node.op) in VALID_BINOP_TYPES:
@@ -655,7 +769,14 @@ class Tifa(ast.NodeVisitor):
         
         self.report_issue("Incompatible types", 
                          {"left": left, "right": right, 
-                          "operation": node.op.name});
+                          "operation": node.op.name})
+    
+    def visit_Import(self, node):
+        # Handle names
+        for module in node.names:
+            asname = module.asname or module.name
+            module_type = self.load_module(module.name)
+            self.store_variable(asname, module_type)
         
     def _scope_chain_str(self, name=None):
         '''
@@ -671,6 +792,20 @@ class Tifa(ast.NodeVisitor):
             return "/".join(map(str, self.scope_chain))
         
     def identify_caller(self, node):
+        '''
+        Figures out the variable that was used to kick off this call,
+        which is almost always the relevant Name to track as being updated.
+        If the origin wasn't a Name, nothing will need to be updated so None
+        is returned instead.
+        
+        TODO: Is this sufficient?
+        
+        Args:
+            node (AST): An AST node
+        Returns:
+            str or None: The name of the variable or None if no origin could
+                         be found.
+        '''
         if isinstance(node, ast.Name):
             return node.id
         elif isinstance(node, ast.Call):
@@ -755,6 +890,30 @@ class Tifa(ast.NodeVisitor):
             else:
                 self.name_map[current_path][full_name] = newState
         return new_state
+        
+    def load_module(self, chain):
+        '''
+        Finds the module in the set of available modules.
+        
+        Args:
+            chain (str): A chain of module imports (e.g., "matplotlib.pyplot")
+        Returns:
+            ModuleType: The specific module with its members, or an empty
+                        module type.
+        '''
+        module_names = chain.split('.')
+        if module_names[0] in MODULES:
+            base_module = MODULES[module_names[0]]
+            for module in module_names:
+                if (isinstance(base_module, ModuleType) and 
+                    module in base_module.submodules):
+                    base_module = base_module.submodules[module]
+                else:
+                    self.report_issue("Submodule not found", {"name": chain})
+            return base_module
+        else:
+            self.report_issue("Module not found", {"name": chain})
+            return ModuleType()
     
     def trace_state(self, state, method):
         '''
