@@ -88,12 +88,24 @@ class RecursedType(Type):
     '''
 
 class FunctionType(Type):
+    '''
+    
+    Special values for `returns`:
+        identity: Returns the first argument's type
+        element: Returns the first argument's first element's type
+        void: Returns the NoneType
+    '''
     def __init__(self, definition=None, name="*Anonymous", returns=None):
         if returns is not None and definition is None:
             if returns == 'identity':
                 def definition(ti, ty, na, args, ca):
                     if args:
                         return args[0].clone()
+                    return UnknownType()
+            elif returns == 'element':
+                def definition(ti, ty, na, args, ca):
+                    if args:
+                        return args[0].index(0)
                     return UnknownType()
             elif returns == 'void':
                 def definition(ti, ty, na, args, ca):
@@ -350,6 +362,80 @@ MODULES = {
             'nan': NumType(),
         }),
 }
+
+def _builtin_sequence_constructor(constructor):
+    '''
+    Helper function for creating constructors for the Set and List types.
+    These constructors use the subtype of the arguments.
+    
+    Args:
+        constructor (Type): A function for creating new sequence types.
+    '''
+    def sequence_call(tifa, function_type, callee, args, position):
+    # TODO: Should inherit the emptiness too
+        return_type = constructor(empty=True)
+        if args:
+            return_type.subtype = args[0].index(LiteralNum(0))
+        return return_type
+    return sequence_call
+    
+def _builtin_zip(tifa, function_type, callee, args, position):
+    '''
+    Definition of the built-in zip function, which consumes a series of
+    sequences and returns a list of tuples, with each tuple composed of the
+    elements of the sequence paired (or rather, tupled) together.
+    '''
+    if args:
+        tupled_types = TupleType(subtypes=[])
+        for arg in args:
+            tupled_types.append(arg.index(0))
+        return ListType(tupled_types)
+    return ListType(empty=True)
+
+BUILTINS = {
+    # Void Functions
+    "print": FunctionType(name="print", returns=NoneType()),
+    # Math Functions
+    "int": FunctionType(name="int", returns=NumType()),
+    "abs": FunctionType(name="abs", returns=NumType()),
+    "float": FunctionType(name="float", returns=NumType()),
+    "len": FunctionType(name="len", returns=NumType()),
+    "ord": FunctionType(name="ord", returns=NumType()),
+    "pow": FunctionType(name="pow", returns=NumType()),
+    "round": FunctionType(name="round", returns=NumType()),
+    "sum": FunctionType(name="sum", returns=NumType()),
+    # Boolean Functions
+    "bool": FunctionType(name="bool", returns=BoolType()),
+    "all": FunctionType(name="all", returns=BoolType()),
+    "any": FunctionType(name="any", returns=BoolType()),
+    "isinstance": FunctionType(name="isinstance", returns=BoolType()),
+    # String Functions
+    "input": FunctionType(name="input", returns=StrType()),
+    "str": FunctionType(name="str", returns=StrType()),
+    "chr": FunctionType(name="chr", returns=StrType()),
+    "repr": FunctionType(name="repr", returns=StrType()),
+    # File Functions
+    "open": FunctionType(name="open", returns=FileType()),
+    # List Functions
+    "map": FunctionType(name="map", returns=ListType()),
+    "list": FunctionType(name="list", 
+                         definition=_builtin_sequence_constructor(ListType)),
+    # Set Functions
+    "list": FunctionType(name="list", 
+                         definition=_builtin_sequence_constructor(SetType)),
+    # Dict Functions
+    "dict": FunctionType(name="dict", returns=DictType()),
+    # Pass through
+    "sorted": FunctionType(name="sorted", returns='identity'),
+    "reversed": FunctionType(name="reversed", returns='identity'),
+    "filter": FunctionType(name="filter", returns='identity'),
+    # Special Functions
+    "range": FunctionType(name="range", returns=ListType(NumType())),
+    "dir": FunctionType(name="dir", returns=ListType(StrType())),
+    "max": FunctionType(name="max", returns='element'),
+    "min": FunctionType(name="min", returns='element'),
+    "zip": FunctionType(name="zip", returns=_builtin_zip)
+}
     
 def merge_types(left, right):
     # TODO: Check that lists/sets have the same subtypes
@@ -603,11 +689,13 @@ class Tifa(ast.NodeVisitor):
                 }
         }
     
-    def report_issue(self, issue, data):
+    def report_issue(self, issue, data=None):
         '''
         Report the given issue with associated metadata, including the position
         if not explicitly included.
         '''
+        if data is None:
+            data = {}
         if 'position' not in data:
             data['position'] = self.locate()
         self.report['issues'][issue].append(data)
@@ -919,6 +1007,30 @@ class Tifa(ast.NodeVisitor):
             name_type = module_type.load_attr(alias.name, self, 
                                               callee_position=self.locate())
             self.store_variable(asname, name_type)
+            
+    def visit_Name(self, node):
+        name = node.id
+        if name == "___":
+            self.report_issue("Unconnected blocks")
+        if isinstance(node.ctx, ast.Load):
+            if name == "True" or name == "False":
+                return BoolType()
+            elif name == "None":
+                return NoneType()
+            else:
+                variable = self.find_variable_scope(name)
+                builtin = BUILTINS.get(name)
+                if not variable.exists and builtin:
+                    return builtin
+                else:
+                    state = self.load_variable(name)
+                    return state.type
+        else:
+            variable = self.find_variable_scope(name)
+            if variable.exists:
+                return variable.state.type
+            else:
+                return UnknownType()
         
     def _scope_chain_str(self, name=None):
         '''
