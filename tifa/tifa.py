@@ -714,8 +714,12 @@ class Tifa(ast.NodeVisitor):
             Position dict: A dictionary with the fields 'column' and 'line',
                            indicating the current position in the source code.
         '''
-        node = self.node_chain[-1]
+        if self.node_chain:
+            node = self.node_chain[-1]
+        else:
+            node = self.final_node
         return {'column': node.col_offset, 'line': node.lineno}
+        
                 
     def process_code(self, code, filename="__main__"):
         '''
@@ -799,6 +803,7 @@ class Tifa(ast.NodeVisitor):
         self.name_map[self.path_id] = {}
         self.definition_chain = []
         self.path_parents = {}
+        self.final_node = None
         
     def find_variable_scope(self, name):
         '''
@@ -845,7 +850,7 @@ class Tifa(ast.NodeVisitor):
         Walk through all the variables present in this scope and ensure that
         they have been read and not overwritten.
         '''
-        path_id = self.path_chain[0];
+        path_id = self.path_chain[0]
         for name in self.name_map[path_id]:
             if Tifa.in_scope(name, self.scope_chain):
                 state = self.name_map[path_id][name]
@@ -878,6 +883,7 @@ class Tifa(ast.NodeVisitor):
                     self.report_issue("Action after return")
         
         # No? All good, let's enter the node
+        self.final_node = node
         result = super().visit(node)
         
         # Pop the node out of the chain
@@ -991,6 +997,18 @@ class Tifa(ast.NodeVisitor):
                          {"left": left, "right": right, 
                           "operation": node.op.name});
         return UnknownType()
+    
+    def visit_BoolOp(self, node):
+        # Handle left and right
+        values = []
+        for value in node.values:
+            values.append(self.visit(value))   
+        
+        # TODO: Truthiness is not supported! Probably need a Union type
+        # TODO: Literals used as truthy value
+        
+        # Handle operation
+        return BoolType()
     
     def visit_Import(self, node):
         # Handle names
@@ -1218,6 +1236,6 @@ class Tifa(ast.NodeVisitor):
         # Get this entity's full scope chain
         name_scopes = full_name.split("/")[:-1]
         # against the reverse scope chain
-        checking_scopes = scope_chain[::-1]
+        checking_scopes = [str(s) for s in scope_chain[::-1]]
         return name_scopes == checking_scopes
     

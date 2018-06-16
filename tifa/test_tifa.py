@@ -1,4 +1,5 @@
 from tifa import Tifa
+import sys
 import unittest
 
 unit_tests = [
@@ -220,4 +221,4 @@ for i, (code, nones, somes) in enumerate(unit_tests[::-1]):
     setattr(TestCode, 'test_code_{:02}'.format(i), make_tester(code, nones, somes))
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(buffer=False)
