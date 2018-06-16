@@ -878,6 +878,27 @@ class Tifa(ast.NodeVisitor):
                          {"left": left, "right": right, 
                           "operation": node.op.name})
     
+    def visit_BinOp(self, node):
+        # Handle left and right
+        left = self.visit(node.left)
+        right = self.visit(node.right)
+        
+        # Handle operation
+        if isinstance(left, UnknownType) or isinstance(right, UnknownType):
+            return UnknownType()
+        elif type(node.op) in VALID_BINOP_TYPES:
+            op_lookup = VALID_BINOP_TYPES[type(node.op)]
+            if type(left) in op_lookup:
+                op_lookup = op_lookup[type(left)]
+                if type(right) in op_lookup:
+                    op_lookup = op_lookup[type(right)]
+                    return op_lookup(left, right)
+                    
+        self.report_issue("Incompatible types", 
+                         {"left": left, "right": right, 
+                          "operation": node.op.name});
+        return UnknownType()
+    
     def visit_Import(self, node):
         # Handle names
         for alias in node.names:
