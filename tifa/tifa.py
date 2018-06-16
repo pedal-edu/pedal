@@ -485,6 +485,11 @@ VALID_BINOP_TYPES = {
                          BoolType: BoolType_any}, 
                 SetType: {SetType: merge_types}}
 }
+VALID_UNARYOP_TYPES = {
+    ast.UAdd: {NumType: NumType},
+    ast.USub: {NumType: NumType},
+    ast.Invert: {NumType: NumType}
+}
     
 def are_types_equal(left, right):
     '''
@@ -1031,6 +1036,23 @@ class Tifa(ast.NodeVisitor):
                 return variable.state.type
             else:
                 return UnknownType()
+    
+    def visit_UnaryOp(self, node):
+        # Handle operand
+        operand = self.visit(node.operand)
+        
+        if isinstance(node.op, ast.Not):
+            return BoolType()
+        elif isinstance(operand, UnknownType):
+            return UnknownType()
+        elif type(node.op) in VALID_UNARYOP_TYPES:
+            op_lookup = VALID_UNARYOP_TYPES[type(node.op)]
+            if type(node.op) in op_lookup:
+                op_lookup = op_lookup[type(node.op)]
+                if type(operand) in op_lookup:
+                    op_lookup = op_lookup[type(operand)]
+                    return op_lookup(operand)
+        return UnknownType()
         
     def _scope_chain_str(self, name=None):
         '''
