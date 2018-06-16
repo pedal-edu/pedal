@@ -33,7 +33,7 @@ unit_tests = [
     ['def pluralize(a_word):\n    return a_word+"s"\nnoun = pluralize("Dog")\nprint(noun + " can pet other " + noun)', ['Incompatible types'], []],
     
     # Update without read
-    ['a = 0\na+= 1\n', ['Undefined variables'], ['Unread variables']],
+    ['a = 0\na+= 1', ['Undefined variables'], ['Unread variables']],
     # Update and read
     ['a = 0\na+= 1\nprint(a)', ['Undefined variables', 'Unread variables'], []],
     # Iterate through non-existing list

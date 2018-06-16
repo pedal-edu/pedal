@@ -627,13 +627,19 @@ class State:
         Make a copy of this State, copying this state into the new State's trace
         '''
         return State(self.name, [self], self.type, method, position,
-                     state.read, state.set, state.over, state.over_position)
+                     self.read, self.set, self.over, self.over_position)
 
     def __str__(self):
         '''
         Create a string representation of this State.
         '''
-        return self.method+"("+"|".join((self.read, self.set, self.over))+")"
+        return "{method}(r:{read},s:{set},o:{over},{type})".format(
+            method=self.method,
+            read=self.read[0],
+            set=self.set[0],
+            over=self.over[0],
+            type=self.type.__class__.__name__
+        )
     def __repr__(self):
         '''
         Create a string representation of this State.
@@ -816,7 +822,7 @@ class Tifa(ast.NodeVisitor):
             Identifier: An Identifier for the variable, which could potentially
                         not exist.
         '''
-        for scope_index, scope in enumerate(self.scope_chain):
+        for scope_index, scope in enumerate(self.scope_chain, 1):
             for path_id in self.path_chain:
                 path = self.name_map[path_id]
                 full_name = "/".join(map(str, self.scope_chain[:scope_index]))+"/"+name
@@ -975,7 +981,7 @@ class Tifa(ast.NodeVisitor):
         
         self.report_issue("Incompatible types", 
                          {"left": left, "right": right, 
-                          "operation": node.op.name})
+                          "operation": node.op})
     
     def visit_BinOp(self, node):
         # Handle left and right
@@ -995,8 +1001,12 @@ class Tifa(ast.NodeVisitor):
                     
         self.report_issue("Incompatible types", 
                          {"left": left, "right": right, 
-                          "operation": node.op.name});
+                          "operation": node.op});
         return UnknownType()
+        
+    def visit_Bool(self, node):
+        return BoolType()
+    
     
     def visit_BoolOp(self, node):
         # Handle left and right
@@ -1054,6 +1064,12 @@ class Tifa(ast.NodeVisitor):
                 return variable.state.type
             else:
                 return UnknownType()
+    
+    def visit_Num(self, node):
+        return NumType()
+                
+    def visit_Str(self, node):
+        return StrType()
     
     def visit_UnaryOp(self, node):
         # Handle operand
@@ -1139,7 +1155,7 @@ class Tifa(ast.NodeVisitor):
             new_state.type = type
             # Overwritten?
             if variable.state.set == 'yes' and variable.state.read == 'no':
-                new_state.over_position = position
+                new_state.over_position = self.locate()
                 new_state.over = 'yes'
             else:
                 new_state.set = 'yes'
