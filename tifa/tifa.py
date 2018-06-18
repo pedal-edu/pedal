@@ -1060,7 +1060,7 @@ class Tifa(ast.NodeVisitor):
             if isinstance(op, (ast.Eq, ast.NotEq, ast.Is, ast.IsNot)):
                 continue
             elif isinstance(op, (ast.Lt, ast.LtE, ast.GtE, ast.Gt)):
-                if type(left) != type(right):
+                if are_types_equal(left, right):
                     if isinstance(left, ORDERABLE_TYPES):
                         continue
             elif isinstance(op, (ast.In, ast.NotIn)):
@@ -1070,6 +1070,22 @@ class Tifa(ast.NodeVisitor):
                               {"left": left, "right": right,
                                "operation": op})
         return BoolType()
+        
+    def visit_IfExp(self, node):
+        # Visit the conditional
+        self.visit(node.test)
+        
+        # Visit the body
+        body = self.visit(node.body)
+        
+        # Visit the orelse
+        orelse = self.visit(node.orelse)
+
+        if are_types_equal(body, orelse):
+            return body
+            
+        # TODO: Union type?
+        return UnknownType()
     
     def visit_Import(self, node):
         # Handle names
