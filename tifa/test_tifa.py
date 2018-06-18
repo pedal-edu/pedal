@@ -207,10 +207,10 @@ unit_tests = [
     ['a=0\nwhile True:\n    a=0\na', ['Possibly undefined variables'], []],
     
     # Generators
-    ['[1]+[a for a in [1,2,3]]', ['Unread variables'], []],
-    ['{4}+{a for a in [1,2,3]}', ['Unread variables'], []],
-    ['3 in {a:a for a in [1,2,3]}', ['Unread variables'], []],
-    ['4 in (a for a in [1,2,3])', ['Unread variables'], []],
+    ['[1]+[a for a in [1,2,3]]', ['Unread variables', "Incompatible types"], []],
+    ['{4}+{a for a in [1,2,3]}', ['Unread variables', "Incompatible types"], []],
+    ['3 in {a:a for a in [1,2,3]}', ['Unread variables', "Incompatible types"], []],
+    ['4 in (a for a in [1,2,3])', ['Unread variables', "Incompatible types"], []],
 ]
 
 class TestCode(unittest.TestCase):
