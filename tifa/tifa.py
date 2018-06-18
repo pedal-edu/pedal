@@ -1119,25 +1119,26 @@ class Tifa(ast.NodeVisitor):
         self.path_names.pop()
         self.path_chain.pop(0)
         
-        print(self.name_map)
-        print(if_path_id, else_path_id, this_path_id)
-        
         
         # Combine two paths into one
         for if_name in self.name_map[if_path_id]:
+            # Check for any names that are on the IF path
             if_state = self.name_map[if_path_id][if_name]
             else_identifier = self.find_path_parent(else_path_id, if_name)
             if else_identifier.exists:
+                # Was on both IF and ELSE path
                 else_state = else_identifier.state
             else:
                 # Use from parent path
-                else_state = self.name_map[this_path_id][if_name]
+                # Was only on IF path
+                else_state = self.name_map[this_path_id].get(if_name)
             combined = self.combine_states(if_state, else_state)
             self.name_map[this_path_id][if_name] = combined
+        # Check for names that are on the ELSE path but not the IF path
         for else_name in self.name_map[else_path_id]:
-            if if_name not in self.name_map[else_path_id]:
+            if else_name not in self.name_map[if_path_id]:
                 else_state = self.name_map[else_path_id][else_name]
-                outer_state = self.name_map[this_path_id][else_name]
+                outer_state = self.name_map[this_path_id].get(else_name)
                 combined = self.combine_states(else_state, outer_state)
                 self.name_map[this_path_id][else_name] = combined
         
@@ -1367,7 +1368,6 @@ class Tifa(ast.NodeVisitor):
                       read=left.read, set=left.set, over=left.over,
                       over_position=left.over_position)
         if right is None:
-            # Not sure this is possible
             state.read = 'no' if left.read == 'no' else 'maybe'
             state.set = 'no' if left.set == 'no' else 'maybe'
             state.over = 'no' if left.over == 'no' else 'maybe'

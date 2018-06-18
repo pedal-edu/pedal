@@ -204,7 +204,7 @@ unit_tests = [
 class TestCode(unittest.TestCase):
     pass
 
-SILENCE_EXCEPT = 78
+SILENCE_EXCEPT = None#78
 
 def make_tester(code, nones, somes):
     def test_code(self):
