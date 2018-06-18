@@ -645,6 +645,10 @@ class State:
         Create a string representation of this State.
         '''
         return str(self)
+        
+ORDERABLE_TYPES = (NumType, BoolType, StrType, ListType, DayType, TimeType, 
+                   SetType, TupleType)
+INDEXABLE_TYPES = (StrType, ListType, SetType, TupleType, DictType)
                      
 class Tifa(ast.NodeVisitor):
     '''
@@ -1018,6 +1022,27 @@ class Tifa(ast.NodeVisitor):
         # TODO: Literals used as truthy value
         
         # Handle operation
+        return BoolType()
+    
+    def visit_Compare(self, node):
+        # Handle left and right
+        left = self.visit(node.left)
+        comparators = [self.visit(compare) for compare in node.comparators]
+        
+        # Handle ops
+        for op, right in zip(node.ops, comparators):
+            if isinstance(op, (ast.Eq, ast.NotEq, ast.Is, ast.IsNot)):
+                continue
+            elif isinstance(op, (ast.Lt, ast.LtE, ast.GtE, ast.Gt)):
+                if type(left) != type(right):
+                    if isinstance(left, ORDERABLE_TYPES):
+                        continue
+            elif isinstance(op, (ast.In, ast.NotIn)):
+                if isinstance(right, INDEXABLE_TYPES):
+                    continue
+            self.report_issue("Incompatible types",
+                              {"left": left, "right": right,
+                               "operation": op})
         return BoolType()
     
     def visit_Import(self, node):
