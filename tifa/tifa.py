@@ -74,6 +74,8 @@ class Type:
                               {'name': tifa.identifyCaller(callee), 
                                'position': callee_position, 'type': self})
         return UnknownType()
+    def is_empty(self):
+        return True
     
 
 class UnknownType(Type):
@@ -162,6 +164,8 @@ class ListType(Type):
                     self.subtype = args[0]
             return FunctionType(_append, 'append')
         return super().load_attr(attr, tifa, callee, callee_position)
+    def is_empty(self):
+        return self.empty
 
 class StrType(Type):
     def index(self, i):
@@ -222,6 +226,8 @@ class DictType(Type):
         self.literals = literals
         self.values = values
         self.keys = keys
+    def is_empty(self):
+        return self.empty
     def index(self, i):
         if self.literals is not None:
             for literal, value in zip(self.literals, self.values):
@@ -944,6 +950,26 @@ class Tifa(ast.NodeVisitor):
         '''
         for target in targets:
             walker(target, type)
+    
+    def _walk_target(self, target, type):
+        '''
+        Recursively apply the type to the target
+        
+        Args:
+            target (Ast): The current AST node to process
+            type (Type): The type to apply to this node
+        '''
+        if isinstance(target, ast.Name):
+            self.store_iter_variable(target.id, type)
+            return target.id
+        elif isinstance(target, (ast.Tuple, ast.List)):
+            result = None
+            for i, elt in enumerate(target.elts):
+                elt_type = type.index(LiteralNum(i))
+                potential_name = self._walk_target(elt, elt_type)
+                if potential_name is not None and result is None:
+                    result = potential_name
+            return result
             
     def visit_Assign(self, node):
         '''
@@ -1082,6 +1108,46 @@ class Tifa(ast.NodeVisitor):
                               {"left": left, "right": right,
                                "operation": op})
         return BoolType()
+      
+    def _visit_collection_loop(self, node):
+        # Handle the iteration list
+        iter = node.iter
+        iter_list_name = None
+        if isinstance(iter, ast.Name):
+            iter_list_name = iter.id
+            if iter_list_name == "___":
+                self.report_issue("Unconnected blocks")
+            state = self.iterate_variable(iter_list_name)
+            iter_type = state.type
+        else:
+            iter_type = self.visit(iter)
+        
+        if iter_type.is_empty():
+            self.report_issue("Non-list iterations", {"name": iter_list_name})
+            
+        if not isinstance(iter_type, INDEXABLE_TYPES):
+            self.report_issue("Non-list iterations", {"name": iter_list_name})
+            
+        iter_subtype = iter_type.index(LiteralNum(0))
+        
+        # Handle the iteration variable
+        iter_variable_name = self._walk_target(node.target, iter_subtype)
+        
+        if iter_variable_name and iter_list_name:
+            if iter_variable_name == iter_list_name:
+                self.report_issue("Iteration variable is iteration list", 
+                                  {"name": iter_variable_name})
+
+    def visit_comprehension(self, node):
+        self._visit_collection_loop(node)
+        # Handle the bodies
+        self.visit_statements(node.ifelse)
+    
+    def visit_For(self, node):
+        self._visit_collection_loop(node)
+        # Handle the bodies
+        self.visit_statements(node.body)
+        self.visit_statements(node.orelse)
     
     def visit_DictComp(self, node):
         # TODO: Handle comprehension scope
@@ -1197,6 +1263,12 @@ class Tifa(ast.NodeVisitor):
         for generator in node.generators:
             self.visit(generator)
         return SetType(self.visit(node.elt))
+    
+    def visit_statements(self, nodes):
+        # TODO: Check for pass in the middle of a series of statement
+        if any(isinstance(node, ast.Pass) for node in nodes):
+            pass
+        return [self.visit(statement) for statement in nodes]
                 
     def visit_Str(self, node):
         return StrType()
@@ -1280,6 +1352,18 @@ class Tifa(ast.NodeVisitor):
         elif isinstance(node, (ast.Attribute, ast.Subscript)):
             return self.identify_caller(node.value)
         return None
+        
+    def iterate_variable(self, name):
+        '''
+        Update the variable by iterating through it - this doesn't do anything
+        fancy yet.
+        '''
+        return self.load_variable(name)
+    
+    def store_iter_variable(self, name, type):
+        state = self.store_variable(name, type)
+        state.read = 'yes'
+        return state
         
     def store_variable(self, name, type):
         '''
