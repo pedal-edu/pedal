@@ -199,6 +199,12 @@ unit_tests = [
     # Calling functions from within functions
     ['def z():\n     return b\ndef y():\n    b = 0\n    z()\n    return b\ndef x():\n    y()\nx()',
     ['Unread variables'], ['Read out of scope']],
+    
+    # While loop with possibly unused body
+    ['a = 10\nwhile a:\n    a -= 1', ['Unread variables'], []],
+    ['a = 10\nwhile True:\n    a -= 1', [], ['Unread variables']],
+    ['while True:\n    a=0\na', [], ['Possibly undefined variables']],
+    ['a=0\nwhile True:\n    a=0\na', ['Possibly undefined variables'], []],
 ]
 
 class TestCode(unittest.TestCase):
