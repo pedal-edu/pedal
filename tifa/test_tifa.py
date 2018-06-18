@@ -205,6 +205,12 @@ unit_tests = [
     ['a = 10\nwhile True:\n    a -= 1', [], ['Unread variables']],
     ['while True:\n    a=0\na', [], ['Possibly undefined variables']],
     ['a=0\nwhile True:\n    a=0\na', ['Possibly undefined variables'], []],
+    
+    # Generators
+    ['[1]+[a for a in [1,2,3]]', ['Unread variables'], []],
+    ['{4}+{a for a in [1,2,3]}', ['Unread variables'], []],
+    ['3 in {a:a for a in [1,2,3]}', ['Unread variables'], []],
+    ['4 in (a for a in [1,2,3])', ['Unread variables'], []],
 ]
 
 class TestCode(unittest.TestCase):

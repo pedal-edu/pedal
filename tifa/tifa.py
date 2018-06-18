@@ -1082,6 +1082,20 @@ class Tifa(ast.NodeVisitor):
                               {"left": left, "right": right,
                                "operation": op})
         return BoolType()
+    
+    def visit_DictComp(self, node):
+        # TODO: Handle comprehension scope
+        for generator in node.generators:
+            self.visit(generator)
+        keys = self.visit(node.key)
+        values = self.visit(node.value)
+        return DictType(keys=keys, values=values)
+    
+    def visit_GeneratorExp(self, node):
+        # TODO: Handle comprehension scope
+        for generator in node.generators:
+            self.visit(generator)
+        return GeneratorType(self.visit(node.elt))
         
     def visit_If(self, node):
         # Visit the conditional
@@ -1107,38 +1121,6 @@ class Tifa(ast.NodeVisitor):
         # Combine two paths into one
         # Check for any names that are on the IF path
         self.merge_paths(this_path_id, if_path.id, else_path.id)
-    
-    def merge_paths(self, parent_path_id, left_path_id, right_path_id):
-        '''
-        Combines any variables on the left and right path into the parent
-        name space.
-        
-        Args:
-            parent_path_id (int): The parent path of the left and right branches
-            left_path_id (int): One of the two paths
-            right_path_id (int): The other of the two paths.
-        '''
-        # Combine two paths into one
-        # Check for any names that are on the IF path
-        for left_name in self.name_map[left_path_id]:
-            left_state = self.name_map[left_path_id][left_name]
-            right_identifier = self.find_path_parent(right_path_id, left_name)
-            if right_identifier.exists:
-                # Was on both IF and ELSE path
-                right_state = right_identifier.state
-            else:
-                # Was only on IF path, potentially on the parent path
-                right_state = self.name_map[parent_path_id].get(left_name)
-            combined = self.combine_states(left_state, right_state)
-            self.name_map[parent_path_id][left_name] = combined
-        # Check for names that are on the ELSE path but not the IF path
-        for right_name in self.name_map[right_path_id]:
-            if right_name not in self.name_map[left_path_id]:
-                right_state = self.name_map[right_path_id][right_name]
-                # Potentially on the parent path
-                parent_state = self.name_map[parent_path_id].get(right_name)
-                combined = self.combine_states(right_state, parent_state)
-                self.name_map[parent_path_id][right_name] = combined
         
     def visit_IfExp(self, node):
         # Visit the conditional
@@ -1177,6 +1159,12 @@ class Tifa(ast.NodeVisitor):
                                               callee_position=self.locate())
             self.store_variable(asname, name_type)
             
+    def visit_ListComp(self, node):
+        # TODO: Handle comprehension scope
+        for generator in node.generators:
+            self.visit(generator)
+        return ListType(self.visit(node.elt))
+            
     def visit_Name(self, node):
         name = node.id
         if name == "___":
@@ -1203,6 +1191,12 @@ class Tifa(ast.NodeVisitor):
     
     def visit_Num(self, node):
         return NumType()
+        
+    def visit_SetComp(self, node):
+        # TODO: Handle comprehension scope
+        for generator in node.generators:
+            self.visit(generator)
+        return SetType(self.visit(node.elt))
                 
     def visit_Str(self, node):
         return StrType()
@@ -1230,15 +1224,18 @@ class Tifa(ast.NodeVisitor):
         
         # Visit the bodies
         this_path_id = self.path_id
+        # One path is that we never enter the body
         empty_path = Tifa.NewPath(self, this_path_id, "e")
         with empty_path:
             pass
+        # Another path is that we loop through the body and check the test again
         body_path = Tifa.NewPath(self, this_path_id, "w")
         with body_path:
             for statement in node.body:
                 self.visit(statement)
             # Revisit conditional
             self.visit(node.test);
+        # If there's else bodies (WEIRD) then we should check them afterwards
         if node.orelse:
             self.report_issue("Else on loop body")
             for statement in node.orelse:
@@ -1405,6 +1402,38 @@ class Tifa(ast.NodeVisitor):
                 state.over_position = right.over_position
             state.trace.append(right)
         return state
+    
+    def merge_paths(self, parent_path_id, left_path_id, right_path_id):
+        '''
+        Combines any variables on the left and right path into the parent
+        name space.
+        
+        Args:
+            parent_path_id (int): The parent path of the left and right branches
+            left_path_id (int): One of the two paths
+            right_path_id (int): The other of the two paths.
+        '''
+        # Combine two paths into one
+        # Check for any names that are on the IF path
+        for left_name in self.name_map[left_path_id]:
+            left_state = self.name_map[left_path_id][left_name]
+            right_identifier = self.find_path_parent(right_path_id, left_name)
+            if right_identifier.exists:
+                # Was on both IF and ELSE path
+                right_state = right_identifier.state
+            else:
+                # Was only on IF path, potentially on the parent path
+                right_state = self.name_map[parent_path_id].get(left_name)
+            combined = self.combine_states(left_state, right_state)
+            self.name_map[parent_path_id][left_name] = combined
+        # Check for names that are on the ELSE path but not the IF path
+        for right_name in self.name_map[right_path_id]:
+            if right_name not in self.name_map[left_path_id]:
+                right_state = self.name_map[right_path_id][right_name]
+                # Potentially on the parent path
+                parent_state = self.name_map[parent_path_id].get(right_name)
+                combined = self.combine_states(right_state, parent_state)
+                self.name_map[parent_path_id][right_name] = combined
     
     def trace_state(self, state, method):
         '''
