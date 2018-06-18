@@ -204,10 +204,16 @@ unit_tests = [
 class TestCode(unittest.TestCase):
     pass
 
+SILENCE_EXCEPT = 78
+
 def make_tester(code, nones, somes):
     def test_code(self):
         tifa = Tifa()
-        tifa.process_code(code)
+        try:
+            tifa.process_code(code)
+        except Exception as e:
+            raise type(e)(str(e) +
+                      ' in code:\n%s' % code)
         if not tifa.report['success']:
             self.fail("Error message in\n"+code+"\n"+str(tifa.report['error']))
         for none in nones:
@@ -218,7 +224,8 @@ def make_tester(code, nones, somes):
                 self.fail("Failed to detect "+some+"\n"+code+"\n")
     return test_code
 for i, (code, nones, somes) in enumerate(unit_tests[::-1]):
-    setattr(TestCode, 'test_code_{:02}'.format(i), make_tester(code, nones, somes))
+    if SILENCE_EXCEPT is None or SILENCE_EXCEPT == i:
+        setattr(TestCode, 'test_code_{:02}'.format(i), make_tester(code, nones, somes))
 
 if __name__ == '__main__':
     unittest.main(buffer=False)

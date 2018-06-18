@@ -40,6 +40,7 @@ Important concepts:
     Literal: Sometimes, we need a specialized representation of a literal value
              to be passed around. This is particularly important for accessing
              elements in an tuples.
+    Name Map: (Path x Fully Qualified Names) => States
 '''
 
 import ast
@@ -854,6 +855,16 @@ class Tifa(ast.NodeVisitor):
                 if name == unscoped_name:
                     return Identifier(True, False, unscoped_name, path[full_name])
         return Identifier(False)
+    
+    def find_path_parent(self, path_id, name):
+        if name in self.name_map[path_id]:
+            return Identifier(True, state=self.name_map[path_id][name])
+        else:
+            path_parent = self.path_parents.get(path_id)
+            if path_parent is None:
+                return Identifier(False)
+            else:
+                return self.find_path_parent(path_parent, name)
         
     def _finish_scope(self):
         '''
@@ -1070,6 +1081,65 @@ class Tifa(ast.NodeVisitor):
                               {"left": left, "right": right,
                                "operation": op})
         return BoolType()
+        
+    def visit_If(self, node):
+        # Visit the conditional
+        self.visit(node.test);
+        
+        if len(node.orelse) == 1 and isinstance(node.orelse[0], ast.Pass):
+            self.report_issue("Malformed Conditional")
+        elif len(node.body) == 1 and isinstance(node.body[0], ast.Pass):
+            if node.orelse:
+                self.report_issue("Malformed Conditional")
+        
+        # Visit the bodies
+        this_path_id = self.path_id
+        # Enter this_path_id
+        self.path_id += 1
+        if_path_id = self.path_id
+        # Left side: if_path_id
+        self.path_names.append(str(if_path_id)+'i')
+        self.path_chain.insert(0, if_path_id)
+        self.name_map[if_path_id] = {}
+        self.path_parents[if_path_id] = this_path_id
+        for statement in node.body:
+            self.visit(statement)
+        self.path_names.pop()
+        self.path_chain.pop(0)
+        
+        self.path_id += 1;
+        else_path_id = self.path_id;
+        # Right side: else_path_id
+        self.path_names.append(str(else_path_id)+'e')
+        self.path_chain.insert(0, else_path_id)
+        self.name_map[else_path_id] = {}
+        self.path_parents[else_path_id] = this_path_id
+        for statement in node.orelse:
+            self.visit(statement)
+        self.path_names.pop()
+        self.path_chain.pop(0)
+        
+        print(self.name_map)
+        print(if_path_id, else_path_id, this_path_id)
+        
+        
+        # Combine two paths into one
+        for if_name in self.name_map[if_path_id]:
+            if_state = self.name_map[if_path_id][if_name]
+            else_identifier = self.find_path_parent(else_path_id, if_name)
+            if else_identifier.exists:
+                else_state = else_identifier.state
+            else:
+                # Use from parent path
+                else_state = self.name_map[this_path_id][if_name]
+            combined = self.combine_states(if_state, else_state)
+            self.name_map[this_path_id][if_name] = combined
+        for else_name in self.name_map[else_path_id]:
+            if if_name not in self.name_map[else_path_id]:
+                else_state = self.name_map[else_path_id][else_name]
+                outer_state = self.name_map[this_path_id][else_name]
+                combined = self.combine_states(else_state, outer_state)
+                self.name_map[this_path_id][else_name] = combined
         
     def visit_IfExp(self, node):
         # Visit the conditional
@@ -1291,6 +1361,28 @@ class Tifa(ast.NodeVisitor):
         else:
             self.report_issue("Module not found", {"name": chain})
             return ModuleType()
+            
+    def combine_states(self, left, right):
+        state = State(left.name, [left], left.type, 'branch', self.locate(),
+                      read=left.read, set=left.set, over=left.over,
+                      over_position=left.over_position)
+        if right is None:
+            # Not sure this is possible
+            state.read = 'no' if left.read == 'no' else 'maybe'
+            state.set = 'no' if left.set == 'no' else 'maybe'
+            state.over = 'no' if left.over == 'no' else 'maybe'
+        else:
+            if not are_types_equal(left.type, right.type):
+                self.report_issue("Type changes", {'name': left.name, 
+                                                   'old': left.type, 
+                                                   'new': right.type})
+            state.read = Tifa.match_rso(left.read, right.read)
+            state.set = Tifa.match_rso(left.set, right.set)
+            state.over = Tifa.match_rso(left.over, right.over)
+            if left.over == 'no':
+                state.over_position = right.over_position
+            state.trace.append(right)
+        return state
     
     def trace_state(self, state, method):
         '''
@@ -1322,3 +1414,9 @@ class Tifa(ast.NodeVisitor):
         checking_scopes = [str(s) for s in scope_chain[::-1]]
         return name_scopes == checking_scopes
     
+    @staticmethod
+    def match_rso(left, right):
+        if left == right:
+            return left
+        else:
+            return "maybe"
