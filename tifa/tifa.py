@@ -1081,6 +1081,34 @@ class Tifa(ast.NodeVisitor):
                               {"left": left, "right": right,
                                "operation": op})
         return BoolType()
+    
+    class NewPath:
+        '''
+        Context manager for entering and leaving execution paths (e.g., if
+        statements).)
+        
+        Args:
+            tifa (Tifa): The tifa instance, so we can modify some of its
+                         properties that track variables and paths.
+            origin_path (int): The path ID parent to this one.
+            name (str): The symbolic name of this path, typically 'i' for an IF
+                        body and 'e' for ELSE body.
+        '''
+        def __init__(self, tifa, origin_path, name):
+            self.tifa = tifa
+            self.name = name
+            self.origin_path = origin_path
+            self.id = None
+        def __enter__(self):
+            self.tifa.path_id += 1
+            self.id = self.tifa.path_id
+            self.tifa.path_names.append(str(self.id)+self.name)
+            self.tifa.path_chain.insert(0, self.id)
+            self.tifa.name_map[self.id] = {}
+            self.tifa.path_parents[self.id] = self.origin_path
+        def __exit__(self, type, value, traceback):
+            self.tifa.path_names.pop()
+            self.tifa.path_chain.pop(0)
         
     def visit_If(self, node):
         # Visit the conditional
@@ -1094,50 +1122,33 @@ class Tifa(ast.NodeVisitor):
         
         # Visit the bodies
         this_path_id = self.path_id
-        # Enter this_path_id
-        self.path_id += 1
-        if_path_id = self.path_id
-        # Left side: if_path_id
-        self.path_names.append(str(if_path_id)+'i')
-        self.path_chain.insert(0, if_path_id)
-        self.name_map[if_path_id] = {}
-        self.path_parents[if_path_id] = this_path_id
-        for statement in node.body:
-            self.visit(statement)
-        self.path_names.pop()
-        self.path_chain.pop(0)
-        
-        self.path_id += 1;
-        else_path_id = self.path_id;
-        # Right side: else_path_id
-        self.path_names.append(str(else_path_id)+'e')
-        self.path_chain.insert(0, else_path_id)
-        self.name_map[else_path_id] = {}
-        self.path_parents[else_path_id] = this_path_id
-        for statement in node.orelse:
-            self.visit(statement)
-        self.path_names.pop()
-        self.path_chain.pop(0)
-        
+        if_path = Tifa.NewPath(self, this_path_id, "i")
+        with if_path:
+            for statement in node.body:
+                self.visit(statement)
+        else_path = Tifa.NewPath(self, this_path_id, "e")
+        with else_path:
+            for statement in node.orelse:
+                self.visit(statement)
         
         # Combine two paths into one
-        for if_name in self.name_map[if_path_id]:
-            # Check for any names that are on the IF path
-            if_state = self.name_map[if_path_id][if_name]
-            else_identifier = self.find_path_parent(else_path_id, if_name)
+        # Check for any names that are on the IF path
+        for if_name in self.name_map[if_path.id]:
+            if_state = self.name_map[if_path.id][if_name]
+            else_identifier = self.find_path_parent(else_path.id, if_name)
             if else_identifier.exists:
                 # Was on both IF and ELSE path
                 else_state = else_identifier.state
             else:
-                # Use from parent path
-                # Was only on IF path
+                # Was only on IF path, potentially on the parent path
                 else_state = self.name_map[this_path_id].get(if_name)
             combined = self.combine_states(if_state, else_state)
             self.name_map[this_path_id][if_name] = combined
         # Check for names that are on the ELSE path but not the IF path
-        for else_name in self.name_map[else_path_id]:
-            if else_name not in self.name_map[if_path_id]:
-                else_state = self.name_map[else_path_id][else_name]
+        for else_name in self.name_map[else_path.id]:
+            if else_name not in self.name_map[if_path.id]:
+                else_state = self.name_map[else_path.id][else_name]
+                # Potentially on the parent path
                 outer_state = self.name_map[this_path_id].get(else_name)
                 combined = self.combine_states(else_state, outer_state)
                 self.name_map[this_path_id][else_name] = combined
