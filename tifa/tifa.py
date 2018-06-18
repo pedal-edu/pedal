@@ -112,7 +112,7 @@ class FunctionType(Type):
                     return NoneType()
             else:
                 def definition(ti, ty, na, args, ca):
-                    return returnType.clone()
+                    return returns.clone()
         self.definition = definition
         self.name = name
         
@@ -1024,6 +1024,32 @@ class Tifa(ast.NodeVisitor):
         # Handle operation
         return BoolType()
     
+    def visit_Call(self, node):
+        # Handle func part (Name or Attribute)
+        function_type = self.visit(node.func)
+        callee = self.identify_caller(node)
+        
+        # Handle args
+        arguments = [self.visit(arg) for arg in node.args]
+        
+        # TODO: Handle keywords
+        # TODO: Handle starargs
+        # TODO: Handle kwargs
+        if isinstance(function_type, FunctionType):
+            # Test if we have called this definition before
+            if function_type.definition not in self.definition_chain:
+                self.definition_chain.append(function_type.definition)
+                # Function invocation
+                result = function_type.definition(self, function_type, callee, 
+                                                  arguments, self.locate())
+                self.definition_chain.pop()
+                return result
+            else:
+                self.report_issue("Recursive Call", {"name": callee})
+        else:
+            self.report_issue("Not a function", {"name": callee})
+        return UnknownType()
+    
     def visit_Compare(self, node):
         # Handle left and right
         left = self.visit(node.left)
@@ -1146,7 +1172,7 @@ class Tifa(ast.NodeVisitor):
         elif isinstance(node, ast.Call):
             return self.identify_caller(node.func)
         elif isinstance(node, (ast.Attribute, ast.Subscript)):
-            return self.identify_caller(nodevalue)
+            return self.identify_caller(node.value)
         return None
         
     def store_variable(self, name, type):
