@@ -445,7 +445,7 @@ BUILTINS = {
     "list": FunctionType(name="list", 
                          definition=_builtin_sequence_constructor(ListType)),
     # Set Functions
-    "list": FunctionType(name="list", 
+    "set": FunctionType(name="set", 
                          definition=_builtin_sequence_constructor(SetType)),
     # Dict Functions
     "dict": FunctionType(name="dict", returns=DictType()),
@@ -1458,6 +1458,17 @@ class Tifa(ast.NodeVisitor):
             return value_type.index(Tifa.get_literal(node.slice.value))
         elif isinstance(node.slice, ast.Slice):
             return value_type
+    
+    def visit_Tuple(self, node):
+        type = TupleType()
+        if not node.elts:
+            type.empty = True
+            type.subtypes = []
+        else:
+            type.empty = False
+            # TODO: confirm homogenous subtype
+            type.subtypes = [self.visit(elt) for elt in node.elts]
+        return type
     
     def visit_UnaryOp(self, node):
         # Handle operand
