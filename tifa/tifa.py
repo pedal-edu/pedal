@@ -567,17 +567,25 @@ class LiteralValue:
     A special literal representation of a value, used to represent access on
     certain container types.
     '''
-    pass
+    def __init__(self, value):
+        self.value = value
     
 class LiteralNum(LiteralValue):
     '''
     Used to capture indexes of containers.
-    '''
-    def __init__(self, value):
-        self.value = value
-    
+    '''    
     def type(self):
         return NumType()
+
+class LiteralBool(LiteralValue):
+    def type(self):
+        return BoolType()
+class LiteralStr(LiteralValue):
+    def type(self):
+        return StrType()
+class LiteralTuple(LiteralValue):
+    def type(self):
+        return TupleType(self.value)
         
 class Identifier:
     '''
@@ -1170,7 +1178,6 @@ class Tifa(ast.NodeVisitor):
                                "position": self.locate(iter)})
             
         iter_subtype = iter_type.index(LiteralNum(0))
-        print(iter_subtype)
         
         # Handle the iteration variable
         iter_variable_name = self._walk_target(node.target, iter_subtype)
@@ -1383,6 +1390,15 @@ class Tifa(ast.NodeVisitor):
                 
     def visit_Str(self, node):
         return StrType()
+        
+    def visit_Subscript(self, node):
+        # Handle value
+        value_type = self.visit(node.value)
+        # Handle slice
+        if isinstance(node.slice, ast.Index):
+            return value_type.index(Tifa.get_literal(node.slice.value))
+        elif isinstance(node.slice, ast.Slice):
+            return value_type
     
     def visit_UnaryOp(self, node):
         # Handle operand
@@ -1674,6 +1690,30 @@ class Tifa(ast.NodeVisitor):
             return left
         else:
             return "maybe"
+    
+    @staticmethod
+    def get_literal(node):
+        if isinstance(node, ast.Num):
+            return LiteralNum(node.n)
+        elif isinstance(node, ast.Str):
+            return LiteralStr(node.s)
+        elif isinstance(node, ast.Tuple):
+            values = []
+            for elt in node.elts:
+                subvalue = Tifa.get_literal(elt)
+                if subvalue is not None:
+                    values.append(subvalue)
+                else:
+                    return None
+            return LiteralTuple(values)
+        elif isinstance(node, ast.Name):
+            if node.id == "None":
+                return LiteralNone()
+            elif node.id == "False":
+                return LiteralBool(False)
+            elif node.id == "True":
+                return LiteralBool(True)
+        return None
     
     class NewPath:
         '''
