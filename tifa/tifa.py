@@ -239,12 +239,16 @@ class DictType(Type):
         self.literals = literals
         self.values = values
         self.keys = keys
+    def clone(self):
+        return DictType(self.empty, self.literals, self.keys, self.values)
     def is_empty(self):
         return self.empty
     def index(self, i):
-        if self.literals is not None:
+        if self.empty:
+            return UnknownType()
+        elif self.literals is not None:
             for literal, value in zip(self.literals, self.values):
-                if Tifa.are_literals_equal(literal, i):
+                if are_literals_equal(literal, i):
                     return value.clone()
             return UnknownType()
         else:
@@ -252,7 +256,7 @@ class DictType(Type):
     def load_attr(self, attr, tifa, callee=None, callee_position=None):
         if attr == 'items':
             def _items(tifa, function_type, callee, args, position):
-                if type.literals is None:
+                if self.literals is None:
                     return ListType(TupleType([self.keys, self.values]))
                 else:
                     return ListType(TupleType([self.literals[0].type(),
@@ -260,14 +264,14 @@ class DictType(Type):
             return FunctionType(_items, 'items')
         elif attr == 'keys':
             def _keys(tifa, function_type, callee, args, position):
-                if type.literals is None:
+                if self.literals is None:
                     return ListType(self.keys)
                 else:
                     return ListType(self.literals[0].type())
             return FunctionType(_keys, 'keys')
         elif attr == 'values':
             def _items(tifa, function_type, callee, args, position):
-                if type.literals is None:
+                if self.literals is None:
                     return ListType(self.values)
                 else:
                     return ListType(self.values[0])
@@ -561,6 +565,22 @@ def are_types_equal(left, right):
             return keys_equal and values_equal
     else:
         return True
+        
+def are_literals_equal(first, second):
+    if first is None or second is None:
+        return False
+    elif type(first) != type(second):
+        return False
+    else:
+        if isinstance(first, LiteralTuple):
+            if len(first.value) != len(second.value):
+                return False
+            for l, s in zip(first.value, second.value):
+                if not are_literals_equal(l, s):
+                    return False
+            return True
+        else:
+            return first.value == second.value
 
 class LiteralValue:
     '''
@@ -1193,6 +1213,35 @@ class Tifa(ast.NodeVisitor):
         # Handle the bodies
         self.visit_statements(node.ifs)
     
+    def visit_Dict(self, node):
+        '''
+        Three types of dictionaries
+        - empty
+        - uniform type
+        - record
+        '''
+        type = DictType()
+        if not node.keys:
+            type.empty = True
+        else:
+            type.empty = True
+            all_literals = True
+            keys, values, literals = [], [], []
+            for key, value in zip(node.keys, node.values):
+                key, value = self.visit(key), self.visit(value)
+                literal = Tifa.get_literal(key)
+                if literal is not None:
+                    literals.append(literal)
+                    values.append(value)
+                else:
+                    all_literals = False;
+            if all_literals:
+                type.literals = literals
+                type.values = values
+            else:
+                type.keys = key;
+                type.values = value;
+        return type
     
     def visit_DictComp(self, node):
         # TODO: Handle comprehension scope
@@ -1726,6 +1775,7 @@ class Tifa(ast.NodeVisitor):
             elif node.id == "True":
                 return LiteralBool(True)
         return None
+
     
     class NewPath:
         '''
