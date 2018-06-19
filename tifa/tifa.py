@@ -78,7 +78,7 @@ class Type:
         # TODO: Handle more kinds of common mistakes
         if attr == "append":
             tifa.report_issue('Append to non-list', 
-                              {'name': tifa.identifyCaller(callee), 
+                              {'name': tifa.identify_caller(callee), 
                                'position': callee_position, 'type': self})
         return UnknownType()
     def is_empty(self):
@@ -1045,6 +1045,14 @@ class Tifa(ast.NodeVisitor):
         self.report_issue("Incompatible types", 
                          {"left": left, "right": right, 
                           "operation": node.op})
+                          
+    def visit_Attribute(self, node):
+        # Handle value
+        value_type = self.visit(node.value)
+        # Handle ctx
+        # TODO: Handling contexts
+        # Handle attr
+        return value_type.load_attr(node.attr, self, node.value, self.locate())
     
     def visit_BinOp(self, node):
         # Handle left and right
@@ -1162,6 +1170,7 @@ class Tifa(ast.NodeVisitor):
                                "position": self.locate(iter)})
             
         iter_subtype = iter_type.index(LiteralNum(0))
+        print(iter_subtype)
         
         # Handle the iteration variable
         iter_variable_name = self._walk_target(node.target, iter_subtype)
@@ -1317,6 +1326,7 @@ class Tifa(ast.NodeVisitor):
                 return_value = self.visit(node.body)
             return return_value
         return FunctionType(definition=definition)
+    
             
     def visit_ListComp(self, node):
         # TODO: Handle comprehension scope
