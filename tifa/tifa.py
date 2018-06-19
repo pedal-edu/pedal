@@ -119,6 +119,10 @@ class FunctionType(Type):
         self.definition = definition
         self.name = name
         
+class ClassType(Type):
+    def __init__(self, name):
+        self.name = name
+        
 class NumType(Type):
     pass
     
@@ -1088,6 +1092,13 @@ class Tifa(ast.NodeVisitor):
         else:
             self.report_issue("Not a function", {"name": callee})
         return UnknownType()
+        
+    def visit_ClassDef(self, node):
+        class_name = node.name
+        self.store_variable(class_name, ClassType)
+        # TODO: Define a new scope definition that executes the body
+        # TODO: find __init__, execute that
+        self.generic_visit(node)
     
     def visit_Compare(self, node):
         # Handle left and right
