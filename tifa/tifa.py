@@ -61,8 +61,14 @@ class Type:
     (classes).
     '''
     fields = {}
+    immutable = False
     def clone(self):
         return self.__class__()
+    def clone_mutably(self):
+        if self.immutable:
+            return self.clone()
+        else:
+            return self
     def index(self, i):
         return self.clone()
     def load_attr(self, attr, tifa, callee=None, callee_position=None):
@@ -124,13 +130,13 @@ class ClassType(Type):
         self.name = name
         
 class NumType(Type):
-    pass
+    immutable = True
     
 class NoneType(Type):
-    pass
+    immutable = True
     
 class BoolType(Type):
-    pass
+    immutable = True
 
 class TupleType(Type):
     '''
@@ -146,6 +152,7 @@ class TupleType(Type):
             return self.subtypes[i].clone()
     def clone(self):
         return TupleType([t.clone() for t in self.subtypes])
+    immutable = True
 
 class ListType(Type):
     def __init__(self, subtype=None, empty=True):
@@ -175,6 +182,7 @@ class StrType(Type):
     def index(self, i):
         return StrType()
     fields = _dict_extends(Type.fields, {})
+    immutable = True
 
 StrType.fields.update({
     # Methods that return strings
@@ -664,6 +672,9 @@ INDEXABLE_TYPES = (StrType, ListType, SetType, TupleType, DictType)
 class Tifa(ast.NodeVisitor):
     '''
     '''
+    
+    def __init__(self, PYTHON_3=True):
+        self.PYTHON_3 = PYTHON_3
 
     @staticmethod
     def _error_report(error):
@@ -1161,11 +1172,6 @@ class Tifa(ast.NodeVisitor):
         # Handle the bodies
         self.visit_statements(node.ifs)
     
-    def visit_For(self, node):
-        self._visit_collection_loop(node)
-        # Handle the bodies
-        self.visit_statements(node.body)
-        self.visit_statements(node.orelse)
     
     def visit_DictComp(self, node):
         # TODO: Handle comprehension scope
@@ -1174,6 +1180,45 @@ class Tifa(ast.NodeVisitor):
         keys = self.visit(node.key)
         values = self.visit(node.value)
         return DictType(keys=keys, values=values)
+    
+    def visit_For(self, node):
+        self._visit_collection_loop(node)
+        # Handle the bodies
+        self.visit_statements(node.body)
+        self.visit_statements(node.orelse)
+        
+    def visit_FunctionDef(self, node):
+        # Name
+        function_name = node.name
+        position = self.locate()
+        definitions_scope = self.scope_chain[:]
+        def definition(tifa, call_type, call_name, parameters, call_position):
+            function_scope = Tifa.NewScope(self, definitions_scope)
+            with function_scope:
+                # Process arguments
+                args = node.args.args
+                if len(args) != len(parameters):
+                    self.report_issue('Incorrect Arity', {"position": position})
+                # TODO: Handle special types of parameters
+                for arg, parameter in zip(args, parameters):
+                    name = arg.arg if self.PYTHON_3 else arg.id
+                    if parameter is not None:
+                        parameter = parameter.clone_mutably()
+                        self.store_variable(name, parameter, position)
+                if len(args) < len(parameters):
+                    for undefined_parameter in parameters[len(args):]:
+                        self.store_variable(name, UnknownType(), position)
+                self.visit_statements(node.body)
+                return_state = self.find_variable_scope("*return")
+                return_value = NoneType()
+                # If the pseudo variable exists, we load it and get its type
+                if return_state.exists and return_state.in_scope:
+                    return_state = self.load_variable("*return", call_position)
+                    return_value = return_state.type;
+            return return_value
+        function = FunctionType(definition=definition, name=function_name)
+        self.store_variable(function_name, function)
+        return function
     
     def visit_GeneratorExp(self, node):
         # TODO: Handle comprehension scope
@@ -1606,3 +1651,34 @@ class Tifa(ast.NodeVisitor):
         def __exit__(self, type, value, traceback):
             self.tifa.path_names.pop()
             self.tifa.path_chain.pop(0)
+        
+    class NewScope:
+        '''
+        Context manager for entering and leaving scopes (e.g., inside of
+        function calls).
+        
+        Args:
+            tifa (Tifa): The tifa instance, so we can modify some of its
+                         properties that track variables and paths.
+            definitions_scope_chain (list of int): The scope chain of the 
+                                                   definition
+        '''
+        def __init__(self, tifa, definitions_scope_chain):
+            self.tifa = tifa
+            self.definitions_scope_chain = definitions_scope_chain
+        def __enter__(self):
+            # Manage scope
+            self.old_scope = self.tifa.scope_chain[:]
+            # Move to the definition's scope chain
+            self.tifa.scope_chain = self.definitions_scope_chain[:]
+            # And then enter its body's new scope
+            self.tifa.scope_id += 1
+            self.tifa.scope_chain.insert(0, self.tifa.scope_id)
+        def __exit__(self, type, value, traceback):
+            # Finish up the scope
+            self.tifa._finish_scope()
+            # Leave the body
+            self.tifa.scope_chain.pop(0)
+            # Restore the scope
+            self.tifa.scope_chain = self.old_scope
+        
