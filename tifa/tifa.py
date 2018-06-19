@@ -1350,6 +1350,14 @@ class Tifa(ast.NodeVisitor):
     def visit_Num(self, node):
         return NumType()
         
+    def visit_Return(self, node):
+        if len(self.scope_chain) == 1:
+            self.report_issue("Return outside function")
+        if node.value is not None:
+            self.return_variable(self.visit(node.value))
+        else:
+            self.return_variable(NoneType())
+        
     def visit_SetComp(self, node):
         # TODO: Handle comprehension scope
         for generator in node.generators:
@@ -1456,6 +1464,9 @@ class Tifa(ast.NodeVisitor):
         state = self.store_variable(name, type, position)
         state.read = 'yes'
         return state
+    
+    def return_variable(self, type):
+        return self.store_variable("*return", type)
         
     def store_variable(self, name, type, position=None):
         '''
