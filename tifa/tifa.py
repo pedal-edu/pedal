@@ -1152,7 +1152,7 @@ class Tifa(ast.NodeVisitor):
             iter_type = self.visit(iter)
         
         if iter_type.is_empty():
-            self.report_issue("Non-list iterations", 
+            self.report_issue("Empty iterations", 
                               {"name": iter_list_name, 
                                "position": self.locate(iter)})
             
