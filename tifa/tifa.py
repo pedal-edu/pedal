@@ -1514,6 +1514,19 @@ class Tifa(ast.NodeVisitor):
         # Check for any names that are on the IF path
         self.merge_paths(this_path_id, body_path.id, empty_path.id)
         
+    def visit_With(self, node):
+        if self.PYTHON_3:
+            for item in node.items:
+                type_value = self.visit(item.context_expr)
+                self.visit(item.optional_vars)
+                self._walk_target(item.optional_vars, type_value)
+        else:
+            type_value = self.visit(node.context_expr)
+            self.visit_statements(node.optional_vars)
+            self._walk_target(node.optional_vars, type_value)
+        # Handle the bodies
+        self.visit_statements(node.body)
+        
     def _scope_chain_str(self, name=None):
         '''
         Convert the current scope chain to a string representation (divided 
