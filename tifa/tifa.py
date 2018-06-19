@@ -671,10 +671,14 @@ INDEXABLE_TYPES = (StrType, ListType, SetType, TupleType, DictType)
                      
 class Tifa(ast.NodeVisitor):
     '''
+    
+    Args:
+        python_3 (bool): Whether to parse the code in regular PYTHON_3 mode or
+                         the modified AST that Skulpt uses.
     '''
     
-    def __init__(self, PYTHON_3=True):
-        self.PYTHON_3 = PYTHON_3
+    def __init__(self, python_3=True):
+        self.PYTHON_3 = python_3
 
     @staticmethod
     def _error_report(error):
@@ -1287,6 +1291,31 @@ class Tifa(ast.NodeVisitor):
             name_type = module_type.load_attr(alias.name, self, 
                                               callee_position=self.locate())
             self.store_variable(asname, name_type)
+    
+    def visit_Lambda(self, node):
+        # Name
+        position = self.locate()
+        definitions_scope = self.scope_chain[:]
+        
+        def definition(tifa, call_type, call_name, parameters, call_position):
+            function_scope = Tifa.NewScope(self, definitions_scope)
+            with function_scope:
+                # Process arguments
+                args = node.args.args
+                if len(args) != len(parameters):
+                    self.report_issue('Incorrect Arity', {"position": position})
+                # TODO: Handle special types of parameters
+                for arg, parameter in zip(args, parameters):
+                    name = arg.arg if self.PYTHON_3 else arg.id
+                    if parameter is not None:
+                        parameter = parameter.clone_mutably()
+                        self.store_variable(name, parameter, position)
+                if len(args) < len(parameters):
+                    for undefined_parameter in parameters[len(args):]:
+                        self.store_variable(name, UnknownType(), position)
+                return_value = self.visit(node.body)
+            return return_value
+        return FunctionType(definition=definition)
             
     def visit_ListComp(self, node):
         # TODO: Handle comprehension scope
