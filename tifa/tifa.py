@@ -44,6 +44,7 @@ Important concepts:
 '''
 
 import ast
+from pprint import pprint
 
 def _dict_extends(d1, d2):
     d3 = {}
@@ -466,9 +467,9 @@ def merge_types(left, right):
     elif isinstance(left, TupleType):
         return left.subtypes + right.subtypes
     
-NumType_any = lambda *x: NumType
-StrType_any = lambda *x: StrType
-BoolType_any = lambda *x: BoolType
+NumType_any = lambda *x: NumType()
+StrType_any = lambda *x: StrType()
+BoolType_any = lambda *x: BoolType()
 VALID_BINOP_TYPES = {
     ast.Add: {NumType: {NumType: NumType_any}, 
               StrType :{StrType: StrType_any}, 
@@ -854,12 +855,12 @@ class Tifa(ast.NodeVisitor):
             Identifier: An Identifier for the variable, which could potentially
                         not exist.
         '''
-        for scope_index, scope in enumerate(self.scope_chain, 1):
+        for scope_level, scope in enumerate(self.scope_chain):
             for path_id in self.path_chain:
                 path = self.name_map[path_id]
-                full_name = "/".join(map(str, self.scope_chain[:scope_index]))+"/"+name
+                full_name = "/".join(map(str, self.scope_chain[scope_level:]))+"/"+name
                 if full_name in path:
-                    is_root_scope = (scope_index==0)
+                    is_root_scope = (scope_level==0)
                     return Identifier(True, is_root_scope, 
                                       full_name, path[full_name])
                         
@@ -1218,7 +1219,7 @@ class Tifa(ast.NodeVisitor):
                 # If the pseudo variable exists, we load it and get its type
                 if return_state.exists and return_state.in_scope:
                     return_state = self.load_variable("*return", call_position)
-                    return_value = return_state.type;
+                    return_value = return_state.type
             return return_value
         function = FunctionType(definition=definition, name=function_name)
         self.store_variable(function_name, function)
@@ -1466,7 +1467,8 @@ class Tifa(ast.NodeVisitor):
         return state
     
     def return_variable(self, type):
-        return self.store_variable("*return", type)
+        state = self.store_variable("*return", type)
+        return state
         
     def store_variable(self, name, type, position=None):
         '''
@@ -1509,7 +1511,7 @@ class Tifa(ast.NodeVisitor):
             self.name_map[current_path][full_name] = new_state
         return new_state
     
-    def load_variable(self, name):
+    def load_variable(self, name, position=None):
         '''
         Retrieve the variable with the given name.
         
@@ -1524,6 +1526,8 @@ class Tifa(ast.NodeVisitor):
         full_name = self._scope_chain_str(name)
         current_path = self.path_chain[0]
         variable = self.find_variable_scope(name)
+        if position is None:
+            position = self.locate()
         if not variable.exists:
             out_of_scope_var = self.find_variable_out_of_scope(name)
             # Create a new instance of the variable on the current path
@@ -1531,7 +1535,7 @@ class Tifa(ast.NodeVisitor):
                 self.report_issue("Read out of scope", {'name': name})
             else:
                 self.report_issue("Undefined variables", {'name': name})
-            new_state = State(name, [], UnknownType(), 'load', self.locate(),
+            new_state = State(name, [], UnknownType(), 'load', position,
                               read='yes', set='no', over='no')
             self.name_map[current_path][full_name] = new_state
         else:
@@ -1544,7 +1548,7 @@ class Tifa(ast.NodeVisitor):
             if not variable.in_scope:
                 self.name_map[current_path][variable.scoped_name] = new_state
             else:
-                self.name_map[current_path][full_name] = newState
+                self.name_map[current_path][full_name] = new_state
         return new_state
         
     def load_module(self, chain):
