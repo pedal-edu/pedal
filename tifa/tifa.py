@@ -1334,6 +1334,16 @@ class Tifa(ast.NodeVisitor):
             return return_value
         return FunctionType(definition=definition)
     
+    def visit_List(self, node):
+        type = ListType()
+        if node.elts:
+            type.empty = False
+            # TODO: confirm homogenous subtype
+            for elt in node.elts:
+                type.subtype = self.visit(elt)
+        else:
+            type.empty = True
+        return type
             
     def visit_ListComp(self, node):
         # TODO: Handle comprehension scope
@@ -1493,8 +1503,10 @@ class Tifa(ast.NodeVisitor):
         return state
     
     def return_variable(self, type):
-        state = self.store_variable("*return", type)
-        return state
+        return self.store_variable("*return", type)
+        
+    def append_variable(self, name, type, position=None):
+        return self.store_variable(name, type, position)
         
     def store_variable(self, name, type, position=None):
         '''
