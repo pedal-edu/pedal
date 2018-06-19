@@ -723,7 +723,7 @@ class Tifa(ast.NodeVisitor):
             data['position'] = self.locate()
         self.report['issues'][issue].append(data)
         
-    def locate(self):
+    def locate(self, node=None):
         '''
         Return a dictionary representing the current location within the
         AST.
@@ -732,10 +732,11 @@ class Tifa(ast.NodeVisitor):
             Position dict: A dictionary with the fields 'column' and 'line',
                            indicating the current position in the source code.
         '''
-        if self.node_chain:
-            node = self.node_chain[-1]
-        else:
-            node = self.final_node
+        if node is None:
+            if self.node_chain:
+                node = self.node_chain[-1]
+            else:
+                node = self.final_node
         return {'column': node.col_offset, 'line': node.lineno}
         
                 
@@ -960,7 +961,7 @@ class Tifa(ast.NodeVisitor):
             type (Type): The type to apply to this node
         '''
         if isinstance(target, ast.Name):
-            self.store_iter_variable(target.id, type)
+            self.store_iter_variable(target.id, type, self.locate(target))
             return target.id
         elif isinstance(target, (ast.Tuple, ast.List)):
             result = None
@@ -1116,17 +1117,22 @@ class Tifa(ast.NodeVisitor):
         if isinstance(iter, ast.Name):
             iter_list_name = iter.id
             if iter_list_name == "___":
-                self.report_issue("Unconnected blocks")
+                self.report_issue("Unconnected blocks", 
+                                  {"position": self.locate(iter)})
             state = self.iterate_variable(iter_list_name)
             iter_type = state.type
         else:
             iter_type = self.visit(iter)
         
         if iter_type.is_empty():
-            self.report_issue("Non-list iterations", {"name": iter_list_name})
+            self.report_issue("Non-list iterations", 
+                              {"name": iter_list_name, 
+                               "position": self.locate(iter)})
             
         if not isinstance(iter_type, INDEXABLE_TYPES):
-            self.report_issue("Non-list iterations", {"name": iter_list_name})
+            self.report_issue("Non-list iterations", 
+                              {"name": iter_list_name, 
+                               "position": self.locate(iter)})
             
         iter_subtype = iter_type.index(LiteralNum(0))
         
@@ -1136,12 +1142,13 @@ class Tifa(ast.NodeVisitor):
         if iter_variable_name and iter_list_name:
             if iter_variable_name == iter_list_name:
                 self.report_issue("Iteration variable is iteration list", 
-                                  {"name": iter_variable_name})
+                                  {"name": iter_variable_name,
+                                   "position": self.locate(node.target)})
 
     def visit_comprehension(self, node):
         self._visit_collection_loop(node)
         # Handle the bodies
-        self.visit_statements(node.ifelse)
+        self.visit_statements(node.ifs)
     
     def visit_For(self, node):
         self._visit_collection_loop(node)
@@ -1360,12 +1367,12 @@ class Tifa(ast.NodeVisitor):
         '''
         return self.load_variable(name)
     
-    def store_iter_variable(self, name, type):
-        state = self.store_variable(name, type)
+    def store_iter_variable(self, name, type, position=None):
+        state = self.store_variable(name, type, position)
         state.read = 'yes'
         return state
         
-    def store_variable(self, name, type):
+    def store_variable(self, name, type, position=None):
         '''
         Update the variable with the given name to now have the new type.
         
@@ -1376,12 +1383,14 @@ class Tifa(ast.NodeVisitor):
         Returns:
             State: The new state of the variable.
         '''
+        if position is None:
+            position = self.locate()
         full_name = self._scope_chain_str(name)
         current_path = self.path_chain[0]
         variable = self.find_variable_scope(name)
         if not variable.exists:
             # Create a new instance of the variable on the current path
-            new_state = State(name, [], type, 'store', self.locate(), 
+            new_state = State(name, [], type, 'store', position, 
                               read='no', set='yes', over='no')
             self.name_map[current_path][full_name] = new_state
         else:
@@ -1396,7 +1405,7 @@ class Tifa(ast.NodeVisitor):
             new_state.type = type
             # Overwritten?
             if variable.state.set == 'yes' and variable.state.read == 'no':
-                new_state.over_position = self.locate()
+                new_state.over_position = position
                 new_state.over = 'yes'
             else:
                 new_state.set = 'yes'
