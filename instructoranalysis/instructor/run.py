@@ -79,7 +79,6 @@ def _regular_execution(code, filename, mocked_input=None):
         sys.stdout = old_stdout
         sys.stdin = old_stdin
     output = capture_stdout.getvalue()
-    print(output)
     return (student_locals, output)
 
 def run(code, filename="__main__.py", threaded=False):
@@ -98,8 +97,10 @@ if __name__ == "__main__":
 import matplotlib.pyplot as plt
 print(plt.secret)
 """
-    for name, value in run(code)[0].items():
+    (student_locals, output) = run(code)
+    for name, value in student_locals.items():
         if name == "__builtins__":
-            print(name, ':', len(value))
+            print(name, ":", "Many things:", len(value))
         else:
             print(name, ":", value)
+    
