@@ -9,6 +9,9 @@ Tifa is a Type Inferencer and Flow Analyzer. Its goal is not to be a general pur
 
 A tool for detecting the absence or presence of instructor-authored patterns in student source code, using a tree inclusion algorithm. Also able to handle certain kinds of constraints.
 
+#CAIT
+Capturer for AST Inclusion Trees. Its goal is to take a a desired AST and a target AST. CAIT captures trees in the target ast that include the desired AST.
+
 # Feedback Dispatch (Name?)
 
 Given the results of execution and analysis, this tool determines what kind of feedback to deliver to the student.
