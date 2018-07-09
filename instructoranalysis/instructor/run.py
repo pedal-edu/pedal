@@ -1,3 +1,71 @@
+'''
+
+Common desires:
+
+Run a file with student's code
+run(filename)
+    run('canvas_analyzer.py') -> execute main function
+    load('canvas_analyzer'.py) -> Do not execute main function
+    
+    *args: positional arguments
+    **kwargs: named arguments
+    
+    _parameters or _arguments ?: {str : ANY}
+    _modules: {str : ANY}
+    _inputs: [str] or generator
+    _example: str
+
+Run the given string as code
+run(code)
+
+Run a specific function from the students' code
+run(function_name)
+    student = run('canvas_analyzer.py')
+    student.run('main')
+    student_print_user = report.run('print_user')
+
+Run the code/function again, but under different circumstances
+    run('canvas_analyzer.py')
+
+Run with the given stdin, parameters, or global variables
+    run(code, _inputs=['first', 'second', 'third'])
+    run(code, _inputs=special_input_function)
+    run(code, parameters={'first_argument': 5})
+    run(code, first_argument=5)
+    
+    run(code, _globals={})
+    Default stdin is a special generator that just keeps returning values
+
+Disable certain modules, built-in functions
+    student = run('canvas_analyzer.py', _modules=)
+
+Provide alternative implementation for certain modules
+    MatPlotLib should be able to be swapped out
+    time.sleep becomes pass
+
+Handle the output, variables, exceptions, or global state
+    output vs. raw_output: get formatted lines or 
+    
+    student.raw_output: string
+    student.output: list of string/objects
+    student.variables: dict
+    student.functions: dict (only callables)
+
+Give an explanation of the run:
+    Have a default explanation based on the values given, but allow a symbolic
+    explanation too.
+    
+Ensure student has the right version of a file based on hashes, and ensure
+    that student has not modified the files
+Minimum python version
+
+Handle golden files?
+
+String normalization for improved comparisons
+
+'''
+
+
 import ast
 import re
 import types
@@ -10,6 +78,20 @@ try:
     import io
 except:
     io = None
+    
+class RunReport:
+    def __init__(self, variables=None, raw_output=None):
+        if variables is None:
+            variables = {}
+        if raw_output is None:
+            raw_output = ""
+        self.variables = variables
+        self.raw_output = raw_output
+        lines = raw_output.rstrip().split("\n")
+        self.output = [line.rstrip() for line in lines]
+    
+    def run(self, function):
+        
 
 
 _REJECT_TRACEBACK_FILE_PATTERN = re.compile(r'[./]')
@@ -41,7 +123,7 @@ def _override_builtins(namespace):
         
     return safe_globals
 
-def _threaded_execution(code):
+def _threaded_execution(code, filename, inputs=None):
     pass
 
 from unittest.mock import patch, mock_open, MagicMock
@@ -54,7 +136,7 @@ MOCKED_MODULES = {
 fake_module.pyplot.secret = "Hello world"
 
 @patch.dict(sys.modules, MOCKED_MODULES)
-def _regular_execution(code, filename, mocked_input=None):
+def _regular_execution(code, filename, inputs=None):
     student_locals = _override_builtins({
         'compile':  mocked._disabled_compile,
         'eval':     mocked._disabled_eval,
@@ -66,7 +148,7 @@ def _regular_execution(code, filename, mocked_input=None):
     old_stdout = sys.stdout
     old_stdin = sys.stdin
     capture_stdout = io.StringIO()
-    injectin = io.StringIO(mocked_input)
+    injectin = io.StringIO(inputs)
     sys.stdout = capture_stdout
     sys.stdin = injectin
     try:
@@ -79,15 +161,15 @@ def _regular_execution(code, filename, mocked_input=None):
         sys.stdout = old_stdout
         sys.stdin = old_stdin
     output = capture_stdout.getvalue()
-    return (student_locals, output)
+    return RunReport(student_locals, output)
 
-def run(code, filename="__main__.py", threaded=False):
+def run(code, filename="__main__.py", inputs=None, threaded=False):
     if threaded and threading is not None:
-        return _threaded_execution(code)
+        return _threaded_execution(code, filename, inputs)
     else:
-        return _regular_execution(code, filename)
+        return _regular_execution(code, filename, inputs)
 
-def run_file(filename, threaded=False):
+def run_file(filename, inputs, threaded=False):
     with open(filename, 'r') as code_file:
         code = code_file.read() + '\n'
     return run(code, filename, threaded)
