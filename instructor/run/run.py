@@ -90,8 +90,8 @@ import re
 import types
 import sys
     
-import mocked
-from timeout import timeout
+from instructor.run import mocked
+from instructor.run.timeout import timeout
 
 try:
     import io
@@ -118,7 +118,7 @@ def _dict_extends(d1, d2):
         d3[key] = value
     return d3
     
-def run_code(self, code, _as_filename='__main__', _modules=None, _inputs=None, 
+def run_code(code, _as_filename='__main__', _modules=None, _inputs=None, 
              _example=None, _threaded=False):
     '''
     Load the given code, but do so as the __main__ file - thereby running
@@ -126,7 +126,7 @@ def run_code(self, code, _as_filename='__main__', _modules=None, _inputs=None,
     '''
     return _regular_execution(code, _as_filename)
     
-def load(self, filename, _as_filename=None, _modules=None, _inputs=None, 
+def load(filename, _as_filename=None, _modules=None, _inputs=None, 
          _example=None, _threaded=False):
     '''
     Load the given filename.
@@ -139,17 +139,6 @@ def load(self, filename, _as_filename=None, _modules=None, _inputs=None,
         code = code_file.read() + '\n'
     return load_code(code, _as_filename=_as_filename, _modules=_modules, 
                      _inputs=_inputs, _example=_example, _threaded=_threaded)
-    
-def run(self, filename, _modules=None, _inputs=None, 
-        _example=None, _threaded=False):
-    '''
-    Load the given filename, but do so as the __main__ file - thereby running
-    any code guarded by __name__==__main__.
-    
-    See `load_code`.
-    '''
-    return load(filename, _modules=_modules, _inputs=_inputs, _example=_example, 
-                _threaded=_threaded, _as_filename="__main__")
     
 class RunReport:
     '''
@@ -173,15 +162,15 @@ class RunReport:
         lines = raw_output.rstrip().split("\n")
         self.output = [line.rstrip() for line in lines]
     
-    def run(self, function, *args, **kwargs, _arguments=None, _as_filename=None,
-            _modules=None, _inputs=None, _example=None, _threaded=False):
+    def run(self, function, *args, _arguments=None, _as_filename=None,
+            _modules=None, _inputs=None, _example=None, _threaded=False, **kwargs):
         if _arguments is None:
             _arguments = {}
         kwargs = _dict_extends(_arguments, kwargs)
         if function not in self.functions:
             pass #TODO: Not a valid function
-        call = '
-        return _regular_execution(function, )
+        call = ''
+        return _regular_execution(function, call)
 
 _REJECT_TRACEBACK_FILE_PATTERN = re.compile(r'[./]')
 
