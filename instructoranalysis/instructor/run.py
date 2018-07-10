@@ -62,6 +62,26 @@ Handle golden files?
 
 String normalization for improved comparisons
 
+Student's code (bank.py):
+    class Bank:
+        def __init__(self, balance):
+            self.balance = balance
+        def save(self, amount):
+            self.balance += amount
+            return self.balance > 0
+        def take(self, amount):
+            self.balance -= amount
+            return self.balance > 0
+Instructor's test:
+    student = load_file('bank.py')
+    self.assertIn('Bank', student.variables)
+    student.run('Bank', 50, _target='bank')
+    student.run('bank.save', 32)
+    # True is stored in student.variables._
+    student.variables.bank.balance = 100
+    student.run('bank.take', 100)
+    # True is stored in student.variables._
+
 '''
 
 
