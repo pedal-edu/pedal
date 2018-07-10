@@ -61,30 +61,9 @@ Minimum python version
 Handle golden files?
 
 String normalization for improved comparisons
-
-Student's code (bank.py):
-    class Bank:
-        def __init__(self, balance):
-            self.balance = balance
-        def save(self, amount):
-            self.balance += amount
-            return self.balance > 0
-        def take(self, amount):
-            self.balance -= amount
-            return self.balance > 0
-Instructor's test:
-    student = load_file('bank.py')
-    self.assertIn('Bank', student.variables)
-    student.run('Bank', 50, _target='bank')
-    student.run('bank.save', 32)
-    # True is stored in student.variables._
-    student.variables.bank.balance = 100
-    student.run('bank.take', 100)
-    # True is stored in student.variables._
-
 '''
 
-
+from pprint import pprint
 import ast
 import re
 import types
@@ -124,20 +103,19 @@ def run_code(code, _as_filename='__main__', _modules=None, _inputs=None,
     Load the given code, but do so as the __main__ file - thereby running
     any code guarded by __name__==__main__.
     '''
-    return _regular_execution(code, _as_filename)
+    return _regular_execution(code, _as_filename, {}, _modules=_modules, 
+                              _inputs=_inputs, _example=_example, _threaded=_threaded)
     
 def load(filename, _as_filename=None, _modules=None, _inputs=None, 
          _example=None, _threaded=False):
     '''
     Load the given filename.
-    
-    See `load_code`.
     '''
     if _as_filename is None:
         _as_filename = filename
     with open(filename, 'r') as code_file:
         code = code_file.read() + '\n'
-    return load_code(code, _as_filename=_as_filename, _modules=_modules, 
+    return load_code(code, _as_filename, {}, _modules=_modules, 
                      _inputs=_inputs, _example=_example, _threaded=_threaded)
     
 class RunReport:
@@ -147,13 +125,22 @@ class RunReport:
     student.variables: dict
     student.functions: dict (only callables)
     '''
-    def __init__(self, variables=None, raw_output=None):
+    def __init__(self, variables=None, raw_output=None, filename="__main__"):
         # variables
         if variables is None:
             variables = {}
         self.variables = variables
         # functions
         self.functions = {k:v for k,v in variables.items() if callable(v)}
+        # Update outputs
+        self.set_output(raw_output)
+        # filename
+        self.filename = filename
+        # Temporary variables
+        self.temporaries = set()
+        self.backups = {}
+    
+    def set_output(self, raw_output):
         # raw_output
         if raw_output is None:
             raw_output = ""
@@ -161,48 +148,83 @@ class RunReport:
         # output
         lines = raw_output.rstrip().split("\n")
         self.output = [line.rstrip() for line in lines]
+        
+    def purge_temporaries(self):
+        ''' delete any variables that have been made as temporaries '''
+        for key in self.temporaries:
+            if key in self.backups:
+                self.variables[key] = self.backups[key]
+            else:
+                del self.variables[key]
     
-    def run(self, function, *args, _arguments=None, _as_filename=None,
-            _modules=None, _inputs=None, _example=None, _threaded=False, **kwargs):
-        if _arguments is None:
-            _arguments = {}
+    def make_temporary(self, category, name, value):
+        key = '_temporary_{}_{}'.format(category, name)
+        if key in self.variables:
+            self.backups[key] = self.variables[key]
+        self.temporaries.add(key)
+        self.variables[key] = value
+        return key
+    
+    def run(self, function, *args, **kwargs):
+        '''
+        _arguments=None, _as_filename=None, 
+            _target = '_', _modules=None, _inputs=None, _example=None, 
+            _threaded=False, 
+        '''
+        _arguments = kwargs.pop('_arguments', {})
+        _as_filename = kwargs.pop('_as_filename', self.filename)
+        target = kwargs.pop('_target', '_')
+        _modules = kwargs.pop('_modules', {})
+        _inputs = kwargs.pop('_inputs', None)
+        _example = kwargs.pop('_example', None)
+        _threaded = kwargs.pop('_threaded', False)
+        # With all the special args done, the remainder are regular kwargs
         kwargs = _dict_extends(_arguments, kwargs)
+        # Make sure it's a valid function in the namespace (TODO: but what?)
         if function not in self.functions:
-            pass #TODO: Not a valid function
-        call = ''
-        return _regular_execution(function, call)
+            pass
+        # Create the actual arguments and call
+        args = [self.make_temporary('arg', index, value)
+                for index, value in enumerate(args)]
+        kwargs = ["{}={}".format(key, self.make_temporary('kwarg', key, value))
+                  for key, value in kwargs.items()]
+        arguments = ", ".join(args+kwargs)
+        call = "{} = {}({})".format(target, function, arguments)
+        # Execute
+        result = _regular_execution(call, self.filename, self.variables)
+        self.set_output(result.raw_output)
+        self._ = self.variables[target]
+        # Clean up
+        self.purge_temporaries()
+        return result
 
 _REJECT_TRACEBACK_FILE_PATTERN = re.compile(r'[./]')
 
-def _override_builtins(namespace):
-    '''
-    Construct a new namespace based on the `namespace` and the original
-    `__builtins__`, suitable for `exec`.
-    '''
-    # Obtain the dictionary of built-in methods, which might not exist in
-    # some python versions (e.g., Skulpt)
-    try:
-        __builtins__
-    except NameError:
-        default_builtins = {}
-    else:
-        if type(__builtins__) is types.ModuleType:
-            default_builtins = __builtins__.__dict__
-        else:
-            default_builtins = __builtins__
-
-    # Create a shallow copy of the dictionary of built-in methods. Then,
-    # we'll take specific ones that are unsafe and replace them.
-    safe_globals = {}
-    safe_globals["__builtins__"] = default_builtins.copy()
-    for name, function in namespace.items():
-        mocked._original_builtins[name] = default_builtins[name]
-        safe_globals["__builtins__"][name] = function
-        
-    return safe_globals
-
 def _threaded_execution(code, filename, inputs=None):
     pass
+    
+def _make_inputs(*input_list, repeat=None):
+    '''
+    Helper function for creating mock user input.
+    
+    Params:
+        input_list (list of str): The list of inputs to be returned
+    Returns:
+        function (str=>str): The mock input function that is returned, which
+                             will return the next element of input_list each
+                             time it is called.
+    '''
+    generator = iter(input_list)
+    def mock_input(prompt=''):
+        print(prompt)
+        try:
+            return next(generator)
+        except StopIteration as SI:
+            if repeat is None:
+                raise SI
+            else:
+                return repeat
+    return mock_input
 
 from unittest.mock import patch, mock_open, MagicMock
 fake_module = types.ModuleType('matplotlib')
@@ -214,7 +236,7 @@ MOCKED_MODULES = {
 fake_module.pyplot.secret = "Hello world"
 
 @patch.dict(sys.modules, MOCKED_MODULES)
-def _regular_execution(code, filename, inputs=None):
+def _regular_execution(code, filename, namespace, _inputs=None, **kwargs):
     '''
     Given the args and kwargs, construct a relevant function call.
     Make the parameters' values available as locals? Or globals perhaps?
@@ -222,31 +244,35 @@ def _regular_execution(code, filename, inputs=None):
     Args:
         code (str): The code to be executed
     '''
-    student_locals = _override_builtins({
+    if _inputs is None:
+        _inputs = []
+    mocked._override_builtins(namespace, {
         'compile':  mocked._disabled_compile,
         'eval':     mocked._disabled_eval,
         'exec':     mocked._disabled_exec,
         'globals':  mocked._disabled_globals,
         'open':     mocked._restricted_open,
+        'input':    _make_inputs(*_inputs),
+        'raw_input':    _make_inputs(*_inputs),
     })
     # Redirect stdout/stdin as needed
     old_stdout = sys.stdout
     old_stdin = sys.stdin
     capture_stdout = io.StringIO()
-    injectin = io.StringIO(inputs)
+    #injectin = io.StringIO(inputs)
     sys.stdout = capture_stdout
-    sys.stdin = injectin
+    #sys.stdin = injectin
     try:
         # Calling compile instead of just passing the string source to exec
         # ensures that we get meaningul filenames in the traceback when tests
         # fail or have errors.
         compiled_code = compile(code, filename, 'exec')
-        exec(compiled_code, student_locals, student_locals)
+        exec(compiled_code, namespace)
     finally:
         sys.stdout = old_stdout
-        sys.stdin = old_stdin
+        #sys.stdin = old_stdin
     output = capture_stdout.getvalue()
-    return RunReport(student_locals, output)
+    return RunReport(namespace, output)
 
 if __name__ == "__main__":
     code = """
