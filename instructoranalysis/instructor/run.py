@@ -14,6 +14,8 @@ run(filename)
     _modules: {str : ANY}
     _inputs: [str] or generator
     _example: str
+    _filename: str
+    _threaded: bool
 
 Run the given string as code
 run(code)
@@ -46,10 +48,7 @@ Provide alternative implementation for certain modules
 Handle the output, variables, exceptions, or global state
     output vs. raw_output: get formatted lines or 
     
-    student.raw_output: string
-    student.output: list of string/objects
-    student.variables: dict
-    student.functions: dict (only callables)
+    
 
 Give an explanation of the run:
     Have a default explanation based on the values given, but allow a symbolic
@@ -79,20 +78,90 @@ try:
 except:
     io = None
     
+def _dict_extends(d1, d2):
+    '''
+    Helper function to create a new dictionary with the contents of the two
+    given dictionaries. Does not modify either dictionary, and the values are
+    copied shallowly. If there are repeates, the second dictionary wins ties.
+    
+    The function is written to ensure Skulpt compatibility.
+    
+    Args:
+        d1 (dict): The first dictionary
+        d2 (dict): The second dictionary
+    
+    '''
+    d3 = {}
+    for key, value in d1.items():
+        d3[key] = value
+    for key, value in d2.items():
+        d3[key] = value
+    return d3
+    
+def run_code(self, code, _as_filename='__main__', _modules=None, _inputs=None, 
+             _example=None, _threaded=False):
+    '''
+    Load the given code, but do so as the __main__ file - thereby running
+    any code guarded by __name__==__main__.
+    '''
+    return _regular_execution(code, _as_filename)
+    
+def load(self, filename, _as_filename=None, _modules=None, _inputs=None, 
+         _example=None, _threaded=False):
+    '''
+    Load the given filename.
+    
+    See `load_code`.
+    '''
+    if _as_filename is None:
+        _as_filename = filename
+    with open(filename, 'r') as code_file:
+        code = code_file.read() + '\n'
+    return load_code(code, _as_filename=_as_filename, _modules=_modules, 
+                     _inputs=_inputs, _example=_example, _threaded=_threaded)
+    
+def run(self, filename, _modules=None, _inputs=None, 
+        _example=None, _threaded=False):
+    '''
+    Load the given filename, but do so as the __main__ file - thereby running
+    any code guarded by __name__==__main__.
+    
+    See `load_code`.
+    '''
+    return load(filename, _modules=_modules, _inputs=_inputs, _example=_example, 
+                _threaded=_threaded, _as_filename="__main__")
+    
 class RunReport:
+    '''
+    student.raw_output: string
+    student.output: list of string/objects
+    student.variables: dict
+    student.functions: dict (only callables)
+    '''
     def __init__(self, variables=None, raw_output=None):
+        # variables
         if variables is None:
             variables = {}
+        self.variables = variables
+        # functions
+        self.functions = {k:v for k,v in variables.items() if callable(v)}
+        # raw_output
         if raw_output is None:
             raw_output = ""
-        self.variables = variables
         self.raw_output = raw_output
+        # output
         lines = raw_output.rstrip().split("\n")
         self.output = [line.rstrip() for line in lines]
     
-    def run(self, function):
-        
-
+    def run(self, function, *args, **kwargs, _arguments=None, _as_filename=None,
+            _modules=None, _inputs=None, _example=None, _threaded=False):
+        if _arguments is None:
+            _arguments = {}
+        kwargs = _dict_extends(_arguments, kwargs)
+        if function not in self.functions:
+            pass #TODO: Not a valid function
+        call = '
+        return _regular_execution(function, )
 
 _REJECT_TRACEBACK_FILE_PATTERN = re.compile(r'[./]')
 
@@ -137,6 +206,13 @@ fake_module.pyplot.secret = "Hello world"
 
 @patch.dict(sys.modules, MOCKED_MODULES)
 def _regular_execution(code, filename, inputs=None):
+    '''
+    Given the args and kwargs, construct a relevant function call.
+    Make the parameters' values available as locals? Or globals perhaps?
+    
+    Args:
+        code (str): The code to be executed
+    '''
     student_locals = _override_builtins({
         'compile':  mocked._disabled_compile,
         'eval':     mocked._disabled_eval,
@@ -162,17 +238,6 @@ def _regular_execution(code, filename, inputs=None):
         sys.stdin = old_stdin
     output = capture_stdout.getvalue()
     return RunReport(student_locals, output)
-
-def run(code, filename="__main__.py", inputs=None, threaded=False):
-    if threaded and threading is not None:
-        return _threaded_execution(code, filename, inputs)
-    else:
-        return _regular_execution(code, filename, inputs)
-
-def run_file(filename, inputs, threaded=False):
-    with open(filename, 'r') as code_file:
-        code = code_file.read() + '\n'
-    return run(code, filename, threaded)
 
 if __name__ == "__main__":
     code = """
