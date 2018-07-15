@@ -1,6 +1,9 @@
-from tifa import Tifa
-import sys
 import unittest
+import os
+import sys
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+import pedal.tifa
 
 unit_tests = [
     # Source Code, Shouldn't catch this, Should catch this
@@ -220,7 +223,7 @@ SILENCE_EXCEPT = None
 
 def make_tester(code, nones, somes):
     def test_code(self):
-        tifa = Tifa()
+        tifa = pedal.tifa.Tifa()
         try:
             tifa.process_code(code)
         except Exception as e:
