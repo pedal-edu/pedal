@@ -241,6 +241,13 @@ MOCKED_MODULES = {
         }
 fake_module.pyplot.secret = "Hello world"
 
+'''
+Hooks for pre/post execution. If set to be callable functions, they will
+be executed before and after execution (regardless of its success)
+'''
+pre_execution = None
+post_execution = None
+
 @patch.dict(sys.modules, MOCKED_MODULES)
 def _regular_execution(code, filename, namespace, _inputs=None, **kwargs):
     '''
@@ -269,6 +276,8 @@ def _regular_execution(code, filename, namespace, _inputs=None, **kwargs):
     sys.stdout = capture_stdout
     #sys.stdin = injectin
     exception = None
+    if callable(pre_execution):
+        pre_execution()
     try:
         # Calling compile instead of just passing the string source to exec
         # ensures that we get meaningul filenames in the traceback when tests
@@ -288,6 +297,8 @@ def _regular_execution(code, filename, namespace, _inputs=None, **kwargs):
     finally:
         sys.stdout = old_stdout
         #sys.stdin = old_stdin
+    if callable(post_execution):
+        post_execution()
     output = capture_stdout.getvalue()
     return RunReport(namespace, output, exception=exception)
 
