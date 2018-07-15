@@ -46,6 +46,11 @@ class TestCode(unittest.TestCase):
         student.variables['bank'].balance += 100
         student.run('bank.take', 100)
         self.assertTrue(student._)
+    
+    def test_improved_exceptions(self):
+        student_code = 'syntax error'
+        student = run_code(student_code, _as_filename='student.py')
+        self.assertTrue(student.exceptions)
 
 if __name__ == '__main__':
     unittest.main(buffer=False)

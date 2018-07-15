@@ -268,6 +268,15 @@ def _regular_execution(code, filename, namespace, _inputs=None, **kwargs):
         # fail or have errors.
         compiled_code = compile(code, filename, 'exec')
         exec(compiled_code, namespace)
+    except StopIteration:
+        input_failed = True
+        result= None
+    except Exception as e:
+        if example is None:
+            code = _demonstrate_call(a_function, parameters)
+        else:
+            code = example
+        _raise_improved_error(e, code)
     finally:
         sys.stdout = old_stdout
         #sys.stdin = old_stdin
