@@ -1,9 +1,9 @@
-from type_definitions import (UnknownType, RecursedType, FunctionType,
+from pedal.tifa.type_definitions import (UnknownType, RecursedType, FunctionType,
                               ClassType, NumType, NoneType, BoolType,
                               TupleType, ListType, StrType,
                               FileType, DictType, ModuleType, 
                               SetType, GeneratorType, DayType, TimeType)
-from literal_definitions import LiteralNum
+from pedal.tifa.literal_definitions import LiteralNum
 
 MODULES = {
     'matplotlib': ModuleType('matplotlib',

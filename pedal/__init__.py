@@ -1,4 +1,8 @@
 '''
+A package for analyzing student code.
+'''
+
+'''
 How do we best support instructors?
 
 For BlockPy, we need to port the Feedback module over to pure python, I think.
@@ -7,7 +11,7 @@ For BlockPy, we need to port the Feedback module over to pure python, I think.
     Compliment
     
     It is not BlockPy's responsibility to build the feedback, just to render it.
-    error(type, name, message, line)    
+        error(type, name, message, line)    
         error("Algorithm", "Action after return", "No actions can be performed after returning.", 45)
         error("Syntax", "Bad Input", "Unclosed parentheses", 133)
         error("Runtime", "TypeError", "You cannot add a string and an integer", 23)

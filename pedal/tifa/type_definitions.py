@@ -1,4 +1,4 @@
-from literal_definitions import LiteralNum
+from pedal.tifa.literal_definitions import LiteralNum
 
 def _dict_extends(d1, d2):
     '''

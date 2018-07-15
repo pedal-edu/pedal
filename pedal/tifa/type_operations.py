@@ -1,6 +1,6 @@
 import ast
 
-from type_definitions import (UnknownType, RecursedType, FunctionType,
+from pedal.tifa.type_definitions import (UnknownType, RecursedType, FunctionType,
                               ClassType, NumType, NoneType, BoolType,
                               TupleType, ListType, StrType,
                               FileType, DictType, ModuleType, 
