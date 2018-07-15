@@ -1,4 +1,5 @@
-# python-analysis
+# Pedal
+
 A collection of tools to analyze student's Python source code
 
 # TIFA
@@ -8,19 +9,14 @@ Tifa is a Type Inferencer and Flow Analyzer. Its goal is not to be a general pur
 # CAIT
 Capturer for AST Inclusion Trees. Its goal is to take a a desired AST and a target AST. CAIT captures trees in the target ast that include the desired AST.
 
-# Feedback Dispatch (Name?)
+# Feedback
 
 Given the results of execution and analysis, this tool determines what kind of feedback to deliver to the student.
 
-# PEML?
+# Mistakes
 
-Potentially support processing PEML files, generating appropriate Python code (compatible with both Web-CAT and BlockPy?).
+# Sandbox
 
-# Misconceptions
+# Environments
 
-# Runner
-
-# Coverage
-
-# Example
-
+# Report
