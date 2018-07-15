@@ -4,7 +4,7 @@ import os
 import sys
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from pedal.sandbox.run import run_code
+from pedal.sandbox import run_code
 
 class TestCode(unittest.TestCase):
     def setUp(self):
@@ -52,7 +52,7 @@ class TestCode(unittest.TestCase):
     def test_improved_exceptions(self):
         student_code = 'syntax error'
         student = run_code(student_code, _as_filename='student.py')
-        self.assertTrue(student.exceptions)
+        self.assertIsNotNone(student.exception)
 
 if __name__ == '__main__':
     unittest.main(buffer=False)
