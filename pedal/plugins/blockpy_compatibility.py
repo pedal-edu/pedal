@@ -1,47 +1,5 @@
 class GracefulExit(Exception):
     pass
-
-def set_success():
-    pass
-    
-def compliment(message):
-    pass
-    
-def give_partial(value, message):
-    pass
-    
-def hide_correctness():
-    pass
-    
-def explain(message, priority, line):
-    pass
-
-def gently(message, line):
-    pass
-
-def suppress(type, subtype):
-    pass
-    
-def log(message):
-    pass
-    
-def debug(message):
-    pass
-    
-def log_ast():
-    pass
-    
-def log_variables():
-    pass
-    
-def log_behavior():
-    pass
-    
-def log_issues():
-    pass
-    
-def log_trace():
-    pass
     
 class StudentData:
     def __init__(self):

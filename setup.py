@@ -3,7 +3,7 @@ import setuptools
 
 setuptools.setup(
     name='Pedal',
-    version='0.1dev',
+    version='0.1.1dev',
     author='acbart,lukesg08',
     author_email='acbart9@gmail.com',
     description='Tools for analyzing student code.',
