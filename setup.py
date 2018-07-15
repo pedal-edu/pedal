@@ -1,9 +1,18 @@
-from distutils.core import setup
+import setuptools
 
-setup(
-    name='Instructor',
+
+setuptools.setup(
+    name='Pedal',
     version='0.1dev',
-    packages=['instructor',],
+    author='acbart,lukesg08',
+    author_email='acbart9@gmail.com',
+    description='Tools for analyzing student code.',
+    packages=['pedal',],
     license='Creative Commons Attribution-Noncommercial-Share Alike license',
-    long_description=open('README.md').read(),
+    long_description=open('README.rst').read(),
+    url='https://github.com/acbart/pedal',
+    classifiers=(
+        "Programming Language :: Python :: 3",
+        
+    )
 )
