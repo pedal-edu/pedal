@@ -1,7 +1,7 @@
 import ast
 import re
-from ast_map import *
-from easy_node import *
+from pedal.cait.ast_map import *
+from pedal.cait.easy_node import *
 
 
 def is_primitive(item):
@@ -15,7 +15,6 @@ class StretchyTreeMatcher:
 			ast_node = ast.parse(code, filename)
 		else:
 			ast_node = code
-		
 		if ast_node is None:
 			self.rootNode = None
 		else:

@@ -2,8 +2,11 @@ from __future__ import print_function
 import unittest
 import ast
 import sys
-from stretchy_tree_matching import *
-from easy_node import *
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from pedal.cait.stretchy_tree_matching import *
+from pedal.cait.easy_node import *
 
 
 '''
