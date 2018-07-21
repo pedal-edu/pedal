@@ -30,11 +30,13 @@ class AstMap:
 		:param std_node: student node representing variable
 		:return: number of conflicts generated
 		"""
+		if type(std_node) != EasyNode:
+			raise TypeError
 		if type(ins_node) == str:
 			key = ins_node
 		else:
 			key = ins_node.astNode.id
-		value = AstSymbol(std_node.astNode.id, std_node.astNode)
+		value = AstSymbol(std_node.astNode.id, std_node)  # TODO: CONVERSION CHECK
 		if self.symbol_table.has(key):
 			new_list = self.symbol_table.get(key)
 			new_list.append(value)
@@ -57,7 +59,9 @@ class AstMap:
 		:param std_node: student ast subtree corresponding to the symbol
 		:return: nothing
 		"""
-		self.exp_table.set(ins_node.astNode.id, std_node.astNode)
+		if type(std_node) != EasyNode:
+			raise TypeError
+		self.exp_table.set(ins_node.astNode.id, std_node)
 
 	def add_node_pairing(self, ins_node, std_node):
 		"""
@@ -66,7 +70,10 @@ class AstMap:
 		:param std_node: student ast node
 		:return: nothing
 		"""
-		self.mappings.set(ins_node.astNode, std_node.astNode)
+		if type(std_node) != EasyNode:
+			raise TypeError
+		# self.mappings.set(ins_node.astNode, std_node.astNode) # TODO: CONVERSION CHECK C1
+		self.mappings.set(ins_node, std_node)  # TODO: CONVERSION CHECK C2
 
 	def has_conflicts(self, ):
 		"""
@@ -106,7 +113,8 @@ class AstMap:
 		other_sym = other.symbol_table
 		for key, value in zip(other_sym.keys, other_sym.values):
 			for sub_value in value:
-				self.add_var_to_sym_table(key, EasyNode(sub_value.astNode))
+				# self.add_var_to_sym_table(key, sub_value.astNode.easy_node)  # TODO: CONVERSION CHECK A1
+				self.add_var_to_sym_table(key, sub_value.astNode)  # TODO: CONVERSION CHECK
 
 	def get_std_name(self, ins_id):
 		"""Return student node associated with ins_id

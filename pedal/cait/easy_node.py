@@ -8,7 +8,7 @@ class EasyNode:
 	A wrapper class for AST nodes. Linearizes access to the children of the ast node and saves the field this AST node
 	originated from
 	"""
-	def __init__(self, ast_node, my_field='', tid=0, tree_root=None):
+	def __init__(self, ast_node, my_field='', tid=0, lin_tree=None):
 		"""
 		:param ast_node: The AST node to be wrapped
 		:param my_field: the field of the parent node that produced this child.
@@ -17,7 +17,15 @@ class EasyNode:
 		self.astNode = ast_node
 		self.field = my_field
 		self.tree_id = tid
-		self.root = tree_root
+		if lin_tree is None:
+			self.linear_tree = [self]
+		else:
+			lin_tree.append(self)
+			self.linear_tree = lin_tree
+
+		# reference to the easy node wrapping the ast_node
+		setattr(ast_node, 'easy_node', self)
+
 		tid_count = tid
 
 		my_field_generator = ast.iter_fields(self.astNode)
@@ -36,7 +44,7 @@ class EasyNode:
 			# (e.g. a load function) instead of a child node
 			for sub_value in value:
 				if isinstance(sub_value, ast.AST):
-					new_child = EasyNode(sub_value, my_field=field, tid=tid_count + 1, tree_root=tree_root)
+					new_child = EasyNode(sub_value, my_field=field, tid=tid_count + 1, lin_tree=self.linear_tree)
 					self.children.append(new_child)
 					tid_count += len(new_child.children) + 1
 
@@ -65,30 +73,21 @@ class EasyNode:
 		TODO: This could get expensive quickly if it's used too many times
 		:return: The next subtree in the overall AST
 		"""
-		if len(self.children) > 0:
-			target_index = self.children[len(self.children)-1].tree_id + 1
-		else:
-			target_index = self.tree_id + 1
 
+		# adding function to track tree ids
 		def visit_counter(self, node):
-			if self.target != self.counter:
-				self.counter += 1
-				self.generic_visit(node)
-			return node
+			self.counter += 1
+			self.generic_visit(node)
 		node_counter = ast.NodeVisitor()
 		setattr(node_counter, 'counter', self.tree_id)
-		setattr(node_counter, 'target', target_index)
 		node_counter.visit = MethodType(visit_counter, node_counter)
-		next_tree = node_counter.visit(self.astNode)
-		if len(self.children) > 0:
-			last_child = self.children[-1].tree_id
-		else:
-			last_child = self.tree_id
-		if node_counter.counter <= last_child:
+
+		# getting ids
+		node_counter.visit(self.astNode)
+		if node_counter.counter >= len(self.linear_tree):
 			return None
-		else:
-			# recreate EasyNode tree. Should be the same by value...
-			return EasyNode(next_tree, my_field='', tid=node_counter.counter, tree_root=self.root)
+		return self.linear_tree[node_counter.counter]
+
 
 	def get_child(self, node):
 		"""
@@ -116,7 +115,7 @@ class EasyNode:
 		if item == 'ast_name':
 			return EasyNode.get_ast_name(self.astNode)
 		else:
-			if item in self.astNode:
+			if hasattr(self.astNode, item):
 				# noinspection PyBroadException
 				try:
 					field = self.astNode.__getattr__(item)

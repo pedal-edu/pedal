@@ -121,6 +121,11 @@ class StretchyTreeMatcher:
 
 	def deep_find_match_binflex(self, ins_node, std_node, check_meta=False):
 		base_mappings = self.shallow_match(ins_node, std_node, check_meta)
+		# experimental
+		op_mappings = self.shallow_match(ins_node.children[1], std_node.children[1], True)
+		base_mappings = [base_mappings[0].new_merged_map(op_mappings[0])]
+		# experimental
+		# TODO: add mapping for op
 		if base_mappings:
 			ins_left = ins_node.children[0]  # instructor left ast node
 			ins_right = ins_node.children[2]  # instructor right ast node
@@ -311,13 +316,15 @@ class StretchyTreeMatcher:
 		meta_matched = (check_meta and ins_node.field == std_node.field) or not check_meta
 		is_match = len(ins_field_list) == len(std_field_list) and type(ins).__name__ == type(std).__name__ and meta_matched
 		for insTup, stdTup in zip(ins_field_list, std_field_list):
-			# ins_field = insTup[0]
+			ins_field = insTup[0]
 			ins_value = insTup[1]
-			# std_field = stdTup[0]
+			std_field = stdTup[0]
 			std_value = stdTup[1]
 
 			if ins_value is None:
 				continue
+
+			is_match = ins_field == std_field
 
 			if type(ins_value) != list:
 				ins_value = [ins_value]
