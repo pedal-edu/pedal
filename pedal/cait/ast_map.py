@@ -36,7 +36,7 @@ class AstMap:
 			key = ins_node
 		else:
 			key = ins_node.astNode.id
-		value = AstSymbol(std_node.astNode.id, std_node)  # TODO: CONVERSION CHECK
+		value = AstSymbol(std_node.astNode.id, std_node)
 		if self.symbol_table.has(key):
 			new_list = self.symbol_table.get(key)
 			new_list.append(value)
@@ -72,8 +72,7 @@ class AstMap:
 		"""
 		if type(std_node) != EasyNode:
 			raise TypeError
-		# self.mappings.set(ins_node.astNode, std_node.astNode) # TODO: CONVERSION CHECK C1
-		self.mappings.set(ins_node, std_node)  # TODO: CONVERSION CHECK C2
+		self.mappings.set(ins_node, std_node)
 
 	def has_conflicts(self, ):
 		"""
@@ -113,8 +112,7 @@ class AstMap:
 		other_sym = other.symbol_table
 		for key, value in zip(other_sym.keys, other_sym.values):
 			for sub_value in value:
-				# self.add_var_to_sym_table(key, sub_value.astNode.easy_node)  # TODO: CONVERSION CHECK A1
-				self.add_var_to_sym_table(key, sub_value.astNode)  # TODO: CONVERSION CHECK
+				self.add_var_to_sym_table(key, sub_value.astNode)
 
 	def get_std_name(self, ins_id):
 		"""Return student node associated with ins_id

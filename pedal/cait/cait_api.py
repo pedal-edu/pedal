@@ -15,7 +15,7 @@ def def_use_error(node):
 	return False
 
 
-def find_match(ins_code):
+def find_match(ins_code, std_code=None):
 	"""Apply Tree Inclusion and return first match
 
 	:param ins_code: Instructor defined pattern
@@ -24,7 +24,7 @@ def find_match(ins_code):
 	return False
 
 
-def find_matches(ins_code):
+def find_matches(ins_code, std_code=None):
 	"""Apply Tree Inclusion and return all matches
 
 	:param ins_code: Instructor pattern

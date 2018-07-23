@@ -6,9 +6,11 @@ from types import MethodType
 class EasyNode:
 	"""
 	A wrapper class for AST nodes. Linearizes access to the children of the ast node and saves the field this AST node
-	originated from
+	originated from.
+
+	TODO: May want to just add fields and methods to the existing AST nodes and use a production pattern instead.
 	"""
-	def __init__(self, ast_node, my_field='', tid=0, lin_tree=None):
+	def __init__(self, ast_node, my_field='', tid=0, lin_tree=None, ancestor=None):
 		"""
 		:param ast_node: The AST node to be wrapped
 		:param my_field: the field of the parent node that produced this child.
@@ -17,6 +19,7 @@ class EasyNode:
 		self.astNode = ast_node
 		self.field = my_field
 		self.tree_id = tid
+		self.parent = ancestor
 		if lin_tree is None:
 			self.linear_tree = [self]
 		else:
@@ -44,9 +47,10 @@ class EasyNode:
 			# (e.g. a load function) instead of a child node
 			for sub_value in value:
 				if isinstance(sub_value, ast.AST):
-					new_child = EasyNode(sub_value, my_field=field, tid=tid_count + 1, lin_tree=self.linear_tree)
+					new_child = EasyNode(sub_value, my_field=field, tid=tid_count + 1, lin_tree=self.linear_tree,
+										ancestor=self)
 					self.children.append(new_child)
-					tid_count += len(new_child.children) + 1
+					tid_count = len(self.linear_tree) - 1
 
 	def __str__(self):
 		return ''.join([self.field, "\n", ast_str.dump(self.astNode)])
@@ -69,11 +73,12 @@ class EasyNode:
 		raise NotImplementedError
 
 	def get_next_tree(self):
+		"""Gets the next tree in the AST
+		This method gets the next AST node that is of equal or higher level than self. Returns None if the end of the
+		tree is reached
+		TODO: Create a get sibling method.
+		:return: The next tree in the AST
 		"""
-		TODO: This could get expensive quickly if it's used too many times
-		:return: The next subtree in the overall AST
-		"""
-
 		# adding function to track tree ids
 		def visit_counter(self, node):
 			self.counter += 1
@@ -84,10 +89,12 @@ class EasyNode:
 
 		# getting ids
 		node_counter.visit(self.astNode)
-		if node_counter.counter >= len(self.linear_tree):
+		out_of_tree = node_counter.counter >= len(self.linear_tree)  # check if out of bounds
+		# len(self.children) > 0 and self.children[-1] == node_counter
+		# in_subtree = 0  # check if validly outside of subtree  # TODO: CHECK THIS
+		if out_of_tree:
 			return None
 		return self.linear_tree[node_counter.counter]
-
 
 	def get_child(self, node):
 		"""
@@ -127,3 +134,27 @@ class EasyNode:
 					return self.get_child(field)
 				else:
 					return field
+
+	def find_all(self, node_type):
+		"""Finds all nodes defined by string node_type
+
+		:param node_type: the string representing the "type" of node to look for
+		:return: a list of Ast Nodes (easy_nodes) of self that are of the specified type (including self if self
+					meets that criteria)
+		"""
+		items = []
+		visitor = ast.NodeVisitor()
+		# setattr(visitor, "current_id", self.tree_id - 1)
+		setattr(visitor, "items", items)
+		func_name = 'visit_' + node_type
+
+		def main_visit(self, node):
+			self.items.append(node.easy_node)
+			return self.generic_visit(node)
+
+		func_ref = main_visit
+		setattr(visitor, func_name, MethodType(func_ref, visitor))
+		visitor.visit(self.astNode)
+		return visitor.items
+
+
