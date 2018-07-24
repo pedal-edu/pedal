@@ -1,6 +1,6 @@
 '''
 Python Type Inferencer and Flow Analyzer (TIFA)
- 
+
 TIFA uses a number of simplifications of the Python language.
   * Variables cannot change type
   * Variables cannot be deleted
@@ -11,11 +11,11 @@ TIFA uses a number of simplifications of the Python language.
   * You cannot write a variable out of scope
   * You cannot read a mutable variable out of scope
   * No multiple inheritance
-  
+
 Additionally, it reads the following as issues:
   * Cannot read a variable without having first written to it.
   * Cannot rewrite a variable unless it has been read.
-  
+
 Important concepts:
     Issue: A problematic situation in the submitted code that will be reported
            but may not stop the execution. However, when an Issue occurs,
@@ -49,7 +49,7 @@ from pedal.tifa.tifa import Tifa
 NAME = 'Tifa'
 DESCRIPTION = '''Python Type Inferencer and Flow Analyzer (TIFA)
 
-Tifa traverses an AST to detect certain kinds of common issues made by students.
+Tifa traverses an AST to detect common issues made by students.
 '''
 REQUIRES = ['Source']
 OPTIONALS = []
