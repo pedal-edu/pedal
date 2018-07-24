@@ -232,10 +232,10 @@ class Tifa(ast.NodeVisitor):
                 state = self.name_map[path_id][name]
                 if state.over == 'yes':
                     position = state.over_position
-                    self.report_issue('Overwritten variables', 
+                    self.report_issue('Overwritten Variable', 
                                      {'name': state.name, 'position': position})
                 if state.read == 'no':
-                    self.report_issue('Unread variables', 
+                    self.report_issue('Unused Variable', 
                                      {'name': state.name, 'type': state.type})
         
     def visit(self, node):
@@ -487,12 +487,12 @@ class Tifa(ast.NodeVisitor):
             iter_type = self.visit(iter)
         
         if iter_type.is_empty():
-            self.report_issue("Empty iterations", 
+            self.report_issue("Iterating over empty list", 
                               {"name": iter_list_name, 
                                "position": self.locate(iter)})
             
         if not isinstance(iter_type, INDEXABLE_TYPES):
-            self.report_issue("Non-list iterations", 
+            self.report_issue("Iterating over non-list", 
                               {"name": iter_list_name, 
                                "position": self.locate(iter)})
             
@@ -503,7 +503,7 @@ class Tifa(ast.NodeVisitor):
         
         if iter_variable_name and iter_list_name:
             if iter_variable_name == iter_list_name:
-                self.report_issue("Iteration variable is iteration list", 
+                self.report_issue("Iteration Problem", 
                                   {"name": iter_variable_name,
                                    "position": self.locate(node.target)})
 
@@ -944,16 +944,16 @@ class Tifa(ast.NodeVisitor):
             if out_of_scope_var.exists:
                 self.report_issue("Read out of scope", {'name': name})
             else:
-                self.report_issue("Undefined variables", {'name': name})
+                self.report_issue("Initialization Problem", {'name': name})
             new_state = State(name, [], UnknownType(), 'load', position,
                               read='yes', set='no', over='no')
             self.name_map[current_path][full_name] = new_state
         else:
             new_state = self.trace_state(variable.state, "load")
             if variable.state.set == 'no':
-                self.report_issue("Undefined variables", {'name': name})
+                self.report_issue("Initialization Problem", {'name': name})
             if variable.state.set == 'maybe':
-                self.report_issue("Possibly undefined variables", {'name': name})
+                self.report_issue("Possible Initialization Problem", {'name': name})
             new_state.read = 'yes';
             if not variable.in_scope:
                 self.name_map[current_path][variable.scoped_name] = new_state
