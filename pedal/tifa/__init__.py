@@ -45,11 +45,24 @@ Important concepts:
 '''
 
 from pedal.tifa.tifa import Tifa
+from pedal.report import MAIN_REPORT
 
 NAME = 'Tifa'
+SHORT_DESCRIPTION = "Finds common issues caused by students."
 DESCRIPTION = '''Python Type Inferencer and Flow Analyzer (TIFA)
 
 Tifa traverses an AST to detect common issues made by students.
 '''
 REQUIRES = ['Source']
 OPTIONALS = []
+
+def tifa_analysis(python_3=True):
+    '''
+    Perform the TIFA analysis and attach the results to the MAIN_REPORT.
+    '''
+    t = Tifa(python_3=python_3)
+    tifa.process_code(MAIN_REPORT['source']['code'])
+
+__all__ = ['NAME', 'DESCRIPTION', 'SHORT_DESCRIPTION',
+           'REQUIRES', 'OPTIONALS',
+           'tifa_analysis', 'Tifa']

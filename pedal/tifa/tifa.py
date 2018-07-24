@@ -1,23 +1,25 @@
 import ast
 from pprint import pprint
 
-from pedal.tifa.type_definitions import (UnknownType, RecursedType, FunctionType,
-                                         ClassType, NumType, NoneType, BoolType,
-                                         TupleType, ListType, StrType,
-                                         FileType, DictType, ModuleType, 
-                                         SetType, GeneratorType, DayType, TimeType)
-from pedal.tifa.literal_definitions import (LiteralNum, LiteralBool, LiteralNone,
-                                 LiteralStr, LiteralTuple)
-from pedal.tifa.builtin_definitions import (MODULES, BUILTINS)
-    
-from pedal.tifa.type_operations import (merge_types, are_types_equal,
-                             VALID_UNARYOP_TYPES, VALID_BINOP_TYPES,
-                             ORDERABLE_TYPES, INDEXABLE_TYPES)
-        
-from pedal.tifa.identifier import Identifier
+from pedal.report import Report, Feedback, MAIN_REPORT
 
-    
+from pedal.tifa.type_definitions import (UnknownType, RecursedType,
+                                         FunctionType, ClassType, NumType,
+                                         NoneType, BoolType, TupleType,
+                                         ListType, StrType, FileType,
+                                         DictType, ModuleType, SetType,
+                                         GeneratorType, DayType, TimeType)
+from pedal.tifa.literal_definitions import (LiteralNum, LiteralBool,
+                                            LiteralNone, LiteralStr,
+                                            LiteralTuple)
+from pedal.tifa.builtin_definitions import (MODULES, BUILTINS)
+from pedal.tifa.type_operations import (merge_types, are_types_equal,
+                                        VALID_UNARYOP_TYPES, VALID_BINOP_TYPES,
+                                        ORDERABLE_TYPES, INDEXABLE_TYPES)
+from pedal.tifa.identifier import Identifier    
 from pedal.tifa.state import State
+
+__all__ = ['Tifa']
                      
 class Tifa(ast.NodeVisitor):
     '''
@@ -27,7 +29,9 @@ class Tifa(ast.NodeVisitor):
                          the modified AST that Skulpt uses.
     '''
     
-    def __init__(self, python_3=True):
+    def __init__(self, python_3=True, report=None):
+        if report is None:
+            self.report = MAIN_REPORT
         self.PYTHON_3 = python_3
 
     @staticmethod

@@ -2,6 +2,8 @@
 Simple data classes for storing feedback to present to learners.
 '''
 
+__all__ = ['Feedback']
+
 class Feedback:
     '''
     A class for storing raw feedback.
@@ -64,11 +66,26 @@ class Feedback:
         self.hints = hints
         self.constraints = constraints
         self.metacognitives = metacognitives
+    
+    def __str__(self):
+        return "<Feedback ({})>".format(self.label)
+    
+    
+    def __repr__(self):
+        metadata = ""
+        if self.tool is not None:
+            metadata += ", tool="+self.tool
+        if self.category is not None:
+            metadata += ", category="+self.category
+        if self.priority is not None:
+            metadata += ", priority="+self.priority
+        data = ""
+        return "Feedback({}{}{})".format(self.label, metadata, data)
 
 '''
 A Component is one of:
     message (str)
-    Object with a `message` field and any other suitable fields
+    Dict with a `message` field and any other suitable fields
         Example fields could include:
             html_message: An HTML message instead of a plaintext message.
             line: The line number to highlight
