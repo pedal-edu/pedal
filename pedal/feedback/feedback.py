@@ -1,13 +1,13 @@
 import pedal.report as report
 
-def select(feedback_report=None):
+def select(report=None):
     '''
     Args:
-        reports (list of Report): A list of report objects to be traversed.
+        report (Report): The report object to resolve down
     
     Returns
         str: A string of HTML feedback to be delivered
     '''
-    if feedback_report is None:
-        feedback_report = report._MAIN_REPORT
-    return feedback_report.complaints[0]
+    if report is None:
+        report = report._MAIN_REPORT
+    return report.feedback[0]
