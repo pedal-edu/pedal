@@ -45,3 +45,11 @@ Important concepts:
 '''
 
 from pedal.tifa.tifa import Tifa
+
+NAME = 'Tifa'
+DESCRIPTION = '''Python Type Inferencer and Flow Analyzer (TIFA)
+
+Tifa traverses an AST to detect certain kinds of common issues made by students.
+'''
+REQUIRES = ['Source']
+OPTIONALS = []

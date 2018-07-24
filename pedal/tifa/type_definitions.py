@@ -51,6 +51,11 @@ class Type:
         return UnknownType()
     def is_empty(self):
         return True
+    def is_equal(self, other):
+        # TODO: Make this more sophisticated!
+        return type(self) == type(other)
+    def is_instance(self, other):
+        return isinstance(self, other)
     
 
 class UnknownType(Type):
