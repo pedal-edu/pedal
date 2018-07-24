@@ -2,8 +2,11 @@ from __future__ import print_function
 import unittest
 import ast
 import sys
-from stretchy_tree_matching import *
-from easy_node import *
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from pedal.cait.stretchy_tree_matching import *
+from pedal.cait.easy_node import *
 
 
 '''
@@ -28,7 +31,7 @@ def parse_code(student_code):
 
 class CaitTests(unittest.TestCase):
 	def test_var_match(self):
-		print("TESTING VAR MATCH")
+		# print("TESTING VAR MATCH")
 		# tests whether variables are stored correctly
 		test_tree = StretchyTreeMatcher("_accu_ = 0")
 
@@ -46,8 +49,10 @@ class CaitTests(unittest.TestCase):
 
 		if mapping:
 			mapping = mapping[0]
-			self.assertTrue(mapping.mappings.keys[0] == ins_name_node.astNode, "ins node match not correct in _var_ case")
-			self.assertTrue(mapping.mappings.values[0] == std_name_node.astNode, "std node match not correct in _var_ case")
+			self.assertTrue(mapping.mappings.keys[0].astNode ==
+							ins_name_node.astNode, "ins node match not correct in _var_ case")
+			self.assertTrue(mapping.mappings.values[0].astNode ==
+							std_name_node.astNode, "std node match not correct in _var_ case")
 			debug_print = False  # TODO: debug flag
 			if debug_print:
 				print(test_tree)
@@ -57,7 +62,7 @@ class CaitTests(unittest.TestCase):
 
 	def test_expresssion_match(self):
 		# tests whether expressions are stored correctly
-		print("TESTING EXPRESSION MATCH")
+		# print("TESTING EXPRESSION MATCH")
 		test_tree = StretchyTreeMatcher("__exp__ = 0")
 
 		# extracting instrutor name node
@@ -76,7 +81,7 @@ class CaitTests(unittest.TestCase):
 			mapping = mapping[0]
 			if mapping:
 				self.assertTrue(mapping.exp_table.keys[0] == "__exp__", "symbol match not found")
-				self.assertTrue(mapping.exp_table.values[0] == std_for_loop.astNode, "did not match to correct ast node")
+				self.assertTrue(mapping.exp_table.values[0].astNode == std_for_loop.astNode, "did not match to correct ast node")
 			debug_print = False  # TODO: debug flag
 			if debug_print:
 				print(test_tree)
@@ -86,7 +91,7 @@ class CaitTests(unittest.TestCase):
 
 	def test_wild_card_match(self):
 		# tests whether Wild matches are stored correctly
-		print("TESTING WILD CARD MATCH")
+		# print("TESTING WILD CARD MATCH")
 		test_tree = StretchyTreeMatcher("___ = 0")
 
 		# extracting instrutor name node
@@ -103,8 +108,8 @@ class CaitTests(unittest.TestCase):
 		self.assertTrue(mapping, "match not found")
 		if mapping:
 			mapping = mapping[0]
-			self.assertTrue(mapping.mappings.keys[0] == ins_name_node.astNode and mapping.mappings.values[0] ==
-							std_for_loop.astNode, "wild card didn't match")
+			self.assertTrue(mapping.mappings.keys[0].astNode == ins_name_node.astNode and
+							mapping.mappings.values[0].astNode == std_for_loop.astNode, "wild card didn't match")
 			debug_print = False  # TODO: debug flag
 			if debug_print:
 				print(test_tree)
@@ -113,7 +118,7 @@ class CaitTests(unittest.TestCase):
 				print(mapping)
 
 	def test_match_all(self):
-		print("TESTING MATCH ALL")
+		# print("TESTING MATCH ALL")
 		test_tree = StretchyTreeMatcher("___ = 0")
 		ins_ast = test_tree.rootNode
 		ins_num_node = ins_ast.children[0].children[1]
@@ -129,8 +134,8 @@ class CaitTests(unittest.TestCase):
 		if mapping:
 			mapping = mapping[0]
 			if mapping:
-				self.assertTrue(mapping.mappings.keys[0] == ins_num_node.astNode, "ins node not matched correctly")
-				self.assertTrue(mapping.mappings.values[0] == std_num_node.astNode, "student node not matched correctly")
+				self.assertTrue(mapping.mappings.keys[0].astNode == ins_num_node.astNode, "ins node not matched correctly")
+				self.assertTrue(mapping.mappings.values[0].astNode == std_num_node.astNode, "student node not matched correctly")
 			debug_print = False  # TODO: debug print
 			if debug_print:
 				print(test_tree)
@@ -138,7 +143,7 @@ class CaitTests(unittest.TestCase):
 				print(mapping)
 
 	def test_generic_match(self):
-		print("TESTING SAME ORDER")
+		# print("TESTING SAME ORDER")
 		std_code = "_sum = 0\n_list = [1,2,3,4]\nfor item in _list:\n    _sum = _sum + item\nprint(_sum)"
 		ins_code = "_accu_ = 0\n_iList_ = __listInit__\nfor _item_ in _iList_:\n    _accu_ = _accu_ + _item_\nprint(_accu_)"
 		# var std_code = "_sum = 12 + 13"
@@ -151,7 +156,10 @@ class CaitTests(unittest.TestCase):
 		self.assertTrue(mappings_array, "matches not found")
 		if mappings_array:
 			mappings = mappings_array[0]
-			self.assertTrue(mappings.mappings.size() == 21, "incorrect number of mappings found")
+			self.assertTrue(
+				mappings.mappings.size() == len(ins_ast.linear_tree) - 1,  # -1 is because expression subsumes load
+				"incorrect number of mappings found {} instead of {}".format(mappings.mappings.size(),
+																			len(ins_ast.linear_tree) - 1))
 			self.assertTrue(mappings.symbol_table.size() == 3 and
 				len(mappings.symbol_table.values[0]) == 4 and
 				len(mappings.symbol_table.values[1]) == 2 and
@@ -163,7 +171,7 @@ class CaitTests(unittest.TestCase):
 				print(std_ast.astNode)
 
 	def test_many_to_one(self):
-		print("TESTING MANY TO ONE")
+		# print("TESTING MANY TO ONE")
 		std_code = "_sum = 0\nlist = [1,2,3,4]\nfor item in list:\n    _sum = _sum + item\nprint(_sum)"
 		ins_code = "_accu_ = 0\n_iList_ = __listInit__\nfor _item_ in _iList_:\n    _accu_ = _accu2_ + _item_\nprint(_accu_)"
 		ins_tree = StretchyTreeMatcher(ins_code)
@@ -189,7 +197,7 @@ class CaitTests(unittest.TestCase):
 				print(mappings)
 
 	def test_commutativity(self):
-		print("TESTING COMMUTATIVITY ADDITION")
+		# print("TESTING COMMUTATIVITY ADDITION")
 		fail_count = 0
 		success_count = 0
 		std_code = "_sum = 0\nlist = [1,2,3,4]\nfor item in list:\n    _sum = item + _sum\nprint(_sum)"
@@ -210,7 +218,7 @@ class CaitTests(unittest.TestCase):
 				print(mappings)
 
 	def test_one_to_many(self):
-		print("TESTING ONE TO MANY")
+		# print("TESTING ONE TO MANY")
 		std_code = "_sum = 0\nlist = [1,2,3,4]\nfor item in list:\n    _sum = _sum + _sum\nprint(_sum)"
 		ins_code = "_accu_ = 0\n_iList_ = __listInit__\nfor _item_ in _iList_:\n    _accu_ = _accu_ + _item_\nprint(_accu_)"
 		ins_tree = StretchyTreeMatcher(ins_code)
@@ -225,7 +233,7 @@ class CaitTests(unittest.TestCase):
 			print(mappings)
 
 	def test_multimatch_false(self):
-		print("TESTING MULTI-MATCH")
+		# print("TESTING MULTI-MATCH")
 		# var std_code = "_sum = 0\ncount = 0\nlist = [1,2,3,4]\nfor item in list:\n    _sum = _sum + item\n    count" \
 		# " = count + 1\nprint(_sum)"
 		std_code = "_sum = 0\ncount = 0\n_list = [1,2,3,4]\nfor item in _list:\n    _sum = _sum + count\n    count = _sum " \
@@ -259,7 +267,7 @@ class CaitTests(unittest.TestCase):
 			print(mappings)
 
 	def test_pass(self):
-		print("TESTING PASS MATCH")
+		# print("TESTING PASS MATCH")
 		std_code = 'import matplotlib.pyplot as plt\nquakes = [1,2,3,4]\nquakes_in_miles = []\nfor quakes in quakes:'\
 					'\n    quakes_in_miles.append(quake * 0.62)\nplt.hist(quakes_in_miles)\nplt.xlabel("Depth in Miles")'\
 					'\nplt.ylabel("Number of Earthquakes")\nplt.title("Distribution of Depth in Miles of Earthquakes")\nplt.show()'
@@ -276,7 +284,7 @@ class CaitTests(unittest.TestCase):
 			print(mappings)
 
 	def test_meta_stretch(self):
-		print("TESTING META STRETCH")
+		# print("TESTING META STRETCH")
 		fail_count = 0
 		success_count = 0
 		std_code = ''.join([

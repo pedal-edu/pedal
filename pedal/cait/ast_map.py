@@ -1,5 +1,5 @@
-from ct_map import *
-from easy_node import *
+from pedal.cait.ct_map import *
+from pedal.cait.easy_node import *
 
 
 class AstSymbol:
@@ -21,18 +21,22 @@ class AstMap:
 		self.exp_table = CtMap()
 		self.conflict_keys = []
 
-	'''
-	Adds ins_node.id to the symbol table if it doesn't already exist,
-	mapping it to a set of ins_node.
-	Updates a second dictionary that maps ins_node to an std_node, and overwrites
-	the current std_node since there should only be one mapping.
-	'''
 	def add_var_to_sym_table(self, ins_node, std_node):
+		"""
+		Adds ins_node.id to the symbol table if it doesn't already exist, mapping it to a set of ins_node. Updates a
+		second dictionary that maps ins_node to an std_node, and overwrites the current std_node since there should only
+		be one mapping.
+		:param ins_node: instructor node or str representing variable
+		:param std_node: student node representing variable
+		:return: number of conflicts generated
+		"""
+		if type(std_node) != EasyNode:
+			raise TypeError
 		if type(ins_node) == str:
 			key = ins_node
 		else:
 			key = ins_node.astNode.id
-		value = AstSymbol(std_node.astNode.id, std_node.astNode)
+		value = AstSymbol(std_node.astNode.id, std_node)
 		if self.symbol_table.has(key):
 			new_list = self.symbol_table.get(key)
 			new_list.append(value)
@@ -48,33 +52,53 @@ class AstMap:
 		return len(self.conflict_keys)
 
 	def add_exp_to_sym_table(self, ins_node, std_node):
-		self.exp_table.set(ins_node.astNode.id, std_node.astNode)
+		"""Adds mapping of expression symbol to student node
+		This function does NOT check for conflicts at the moment and probably should at some point.
+		TODO: Check for conflicts
+		:param ins_node: Instructor node representing an expression
+		:param std_node: student ast subtree corresponding to the symbol
+		:return: nothing
+		"""
+		if type(std_node) != EasyNode:
+			raise TypeError
+		self.exp_table.set(ins_node.astNode.id, std_node)
 
 	def add_node_pairing(self, ins_node, std_node):
-		self.mappings.set(ins_node.astNode, std_node.astNode)
+		"""
+		Adds a mapping of instructor ast node to a specific student ast node
+		:param ins_node: instructor pattern ast node
+		:param std_node: student ast node
+		:return: nothing
+		"""
+		if type(std_node) != EasyNode:
+			raise TypeError
+		self.mappings.set(ins_node, std_node)
 
 	def has_conflicts(self, ):
+		"""
+		:return: returns number of conflicts
+		"""
 		return len(self.conflict_keys) > 0
 
-	'''
-	Returns a newly merged map consisting of this and other
-	without modifying self.
-	@param :AstMap other - the other AstMap to be merged with
-	@return this modified by adding the contents of other
-	'''
 	def new_merged_map(self, other):
+		"""
+		Returns a newly merged map consisting of this and other
+		without modifying self.
+		:param other: (type AstMap) the other AstMap to be merged with
+		:return: self modified by adding the contents of other
+		"""
 		new_map = AstMap()
 		new_map.merge_map_with(self)
 		new_map.merge_map_with(other)
 		return new_map
 
-	'''
-	Returns a newly merged map consisting of this and other
-	by modifying this
-	@param :AstMap other - the other AstMap to be merged with
-	@return this modified by adding the contents of other
-	'''
 	def merge_map_with(self, other):
+		"""
+		Returns a newly merged map consisting of this and other
+		by modifying this
+		:param other: (type AstMap) the other AstMap to be merged with
+		:return: self modified by adding the contents of other
+		"""
 		# TODO: check if other is also an AstMap.
 		# merge all mappings
 		other_map = other.mappings
@@ -88,4 +112,31 @@ class AstMap:
 		other_sym = other.symbol_table
 		for key, value in zip(other_sym.keys, other_sym.values):
 			for sub_value in value:
-				self.add_var_to_sym_table(key, EasyNode(sub_value.astNode))
+				self.add_var_to_sym_table(key, sub_value.astNode)
+
+	def get_std_name(self, ins_id):
+		"""Return student node associated with ins_id
+
+		:param ins_id: the instructor variable defined in the pattern
+		:return: the associated student name node
+		"""
+		if type(ins_id) is str:
+			# noinspection PyBroadException
+			try:
+				return self.symbol_table.get(ins_id)
+			except Exception:
+				return None
+
+	def get_exp_name(self, ins_id):
+		"""Return student subtree associated with ins_id
+
+		:param ins_id: the instructor variable defined in the pattern
+		:return: the associated student subtree node
+		"""
+		if type(ins_id) is str:
+			# noinspection PyBroadException
+			try:
+				return self.exp_table.get(ins_id)
+			except Exception:
+				return None
+

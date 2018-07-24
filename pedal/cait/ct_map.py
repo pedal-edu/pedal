@@ -58,6 +58,8 @@ class CtMap:
 
 	def get(self, key):
 		self.update_cache(key)
+		if self.cacheIndex == -1:
+			raise IndexError
 		return self.values[self.cacheIndex]
 
 	def has(self, key):
