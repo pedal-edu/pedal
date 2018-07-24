@@ -16,15 +16,9 @@ __all__ = ['NAME', 'DESCRIPTION', 'SHORT_DESCRIPTION',
            'REQUIRES', 'OPTIONALS',
            'set_source']
 
-def _prepare_report(report):
-    if 'source' in report:
-        return False
-    report['source'] = {}
-
 def set_source(code, filename='__main__.py', report=None):
     if report is None:
         report = MAIN_REPORT
-    _prepare_report(report)
     report['source']['code'] = code
     report['source']['filename'] = filename
     _check_issues(code, report)
