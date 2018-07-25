@@ -333,10 +333,10 @@ class TestVariables(unittest.TestCase):
         self.assertNotIn('c', unused_variables)
         # Uninitalized variables
         self.assertEqual(len(issues['Initialization Problem']), 1)
-        uninit_variables = [i['name'] for i in issues['Initialization Problem']]
-        self.assertNotIn('a', uninit_variables)
-        self.assertNotIn('b', uninit_variables)
-        self.assertIn('c', uninit_variables)
+        unset_variables = [i['name'] for i in issues['Initialization Problem']]
+        self.assertNotIn('a', unset_variables)
+        self.assertNotIn('b', unset_variables)
+        self.assertIn('c', unset_variables)
 
 if __name__ == '__main__':
     unittest.main(buffer=False)
