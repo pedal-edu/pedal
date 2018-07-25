@@ -1,21 +1,30 @@
+import ast
+
 OPERATION_DESCRIPTION = {
-    "Pow": "an exponent",
-    "Add": "an addition",
-    "Mult": "a multiplication",
-    "Sub": "a subtraction",
-    "Div": "a division",
-    "Mod": "a modulo"
-}
-TYPE_DESCRIPTION = {
-    "Num": "a number",
-    "Str": "a string",
-    "Tuple": "a tuple",
-    "List": "a list",
-    "Bool": "a boolean",
-    "File": "a file",
-    "None": "a None",
-    "Set": "a set",
-    "Function": "a function"
+    ast.Pow: "an exponent",
+    ast.Add: "an addition",
+    ast.Mult: "a multiplication",
+    ast.Sub: "a subtraction",
+    ast.Div: "a division",
+    ast.FloorDiv: "a division",
+    ast.Mod: "a modulo",
+    ast.LShift: "a left shift",
+    ast.RShift: "a right shift",
+    ast.BitOr: "a bit or",
+    ast.BitAnd: "a bit and",
+    ast.BitXor: "a bit xor",
+    ast.And: "an and",
+    ast.Or: "an or",
+    ast.Eq: "an ==",
+    ast.NotEq: "a !=",
+    ast.Lt: "a <",
+    ast.LtE: "a <=",
+    ast.Gt: "a >",
+    ast.GtE: "a >=",
+    ast.Is: "an is",
+    ast.IsNot: "an is not",
+    ast.In: "an in",
+    ast.NotIn: "an not in",
 }
 
 def _format_message(issue, data):
@@ -100,10 +109,8 @@ def _format_message(issue, data):
     elif issue == 'Incompatible types':
         op = OPERATION_DESCRIPTION.get(data['operation'], 
                                        str(data['operation']))
-        left = TYPE_DESCRIPTION.get(data['left'], 
-                                    str(data['left']))
-        right = TYPE_DESCRIPTION.get(data['right'], 
-                                     str(data['right']))
+        left = data['left'].singular_name
+        right = data['right'].singular_name
         line = data['position']['line']
         return ("You used {op} operation with {left} and {right} on line "
                 "{line}. But you can't do that with that operator. Make "
