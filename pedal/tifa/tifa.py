@@ -130,12 +130,12 @@ class Tifa(ast.NodeVisitor):
         self._finish_scope()
         
         # Collect top level variables
-        self._collect_top_level_varaibles()
+        self._collect_top_level_variables()
         #print(self.report['variables'])
         
         return self.report['tifa']
     
-    def _collect_top_level_varaibles(self):
+    def _collect_top_level_variables(self):
         '''
         Walk through the variables and add any at the top level to the
         top_level_variables field of the report.

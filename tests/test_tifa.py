@@ -293,7 +293,7 @@ for name, (code, nones, somes) in unit_tests.items():
     if SILENCE_EXCEPT is None or SILENCE_EXCEPT == name:
         setattr(TestCode, 'test_code_{}'.format(name), make_tester(code, nones, somes))
         
-class TestTypes(unittest.TestCase):
+class TestVariables(unittest.TestCase):
     def test_type_comparisons(self):
         tifa = pedal.tifa.Tifa()
         tifa.process_code('my_int=0\nmy_str="A"\nmy_list=[1,2,3]')
@@ -320,6 +320,23 @@ class TestTypes(unittest.TestCase):
         self.assertTrue(my_list.subtype.is_equal('num'))
         self.assertTrue(my_list.subtype.is_equal(float))
         self.assertTrue(my_list.subtype.is_equal('NumType'))
+        
+    def test_variable_def_use(self):
+        tifa = pedal.tifa.Tifa()
+        tifa.process_code('a=0\nb=0\nb\nc')
+        issues = tifa.report['tifa']['issues']
+        # Unused variables
+        self.assertEqual(len(issues['Unused Variable']), 1)
+        unused_variables = [i['name'] for i in issues['Unused Variable']]
+        self.assertIn('a', unused_variables)
+        self.assertNotIn('b', unused_variables)
+        self.assertNotIn('c', unused_variables)
+        # Uninitalized variables
+        self.assertEqual(len(issues['Initialization Problem']), 1)
+        uninit_variables = [i['name'] for i in issues['Initialization Problem']]
+        self.assertNotIn('a', uninit_variables)
+        self.assertNotIn('b', uninit_variables)
+        self.assertIn('c', uninit_variables)
 
 if __name__ == '__main__':
     unittest.main(buffer=False)
