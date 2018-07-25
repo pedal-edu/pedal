@@ -54,9 +54,12 @@ class Type:
         return True
     def is_equal(self, other):
         # TODO: Make this more sophisticated!
-        return type(self) == type(other)
+        if type(self) not in TYPE_LOOKUPS:
+            return False
+        return other in TYPE_LOOKUPS[type(self)]
     def is_instance(self, other):
-        return isinstance(self, other)
+        # TODO: Implement this correctly
+        return self.is_equal(other)
     
 
 class UnknownType(Type):
@@ -287,3 +290,22 @@ class TimeType(Type):
 
 class DayType(Type):
     singular_name = 'a day of the week'
+
+try:
+    from numbers import Number
+except:
+    Number = int
+
+TYPE_LOOKUPS = {
+    FunctionType: ('function', FunctionType, 'FunctionType'),
+    ClassType: ('class', ClassType, 'ClassType'),
+    NumType: ('num', int, float, complex, NumType, Number, 'NumType'),
+    BoolType: ('bool', bool, BoolType, 'BoolType'),
+    NoneType: ('None', None, NoneType, 'NoneType'),
+    TupleType: ('tuple', tuple, TupleType, 'TupleType'),
+    ListType: ('list', list, ListType, 'ListType'),
+    StrType: ('str', str, StrType, 'StrType'),
+    FileType: ('file', FileType, 'FileType'),
+    DictType: ('dict', dict, DictType, 'DictType'),
+    SetType: ('set', set, SetType, 'SetType'),
+}

@@ -292,6 +292,34 @@ def make_tester(code, nones, somes):
 for name, (code, nones, somes) in unit_tests.items():
     if SILENCE_EXCEPT is None or SILENCE_EXCEPT == name:
         setattr(TestCode, 'test_code_{}'.format(name), make_tester(code, nones, somes))
+        
+class TestTypes(unittest.TestCase):
+    def test_type_comparisons(self):
+        tifa = pedal.tifa.Tifa()
+        tifa.process_code('my_int=0\nmy_str="A"\nmy_list=[1,2,3]')
+        variables = tifa.report['tifa']['top_level_variables']
+        self.assertEqual(len(variables), 3)
+        # Integer variable
+        my_int = variables['my_int'].type
+        self.assertTrue(my_int.is_equal('num'))
+        self.assertTrue(my_int.is_equal('NumType'))
+        self.assertTrue(my_int.is_equal(int))
+        self.assertTrue(my_int.is_equal(float))
+        # String variable
+        my_str = variables['my_str'].type
+        self.assertTrue(my_str.is_equal('str'))
+        self.assertTrue(my_str.is_equal('StrType'))
+        self.assertTrue(my_str.is_equal(str))
+        # List variable
+        my_list = variables['my_list'].type
+        self.assertTrue(my_list.is_equal('list'))
+        self.assertTrue(my_list.is_equal('ListType'))
+        self.assertTrue(my_list.is_equal(list))
+        # List subtype
+        self.assertTrue(my_list.subtype.is_equal(int))
+        self.assertTrue(my_list.subtype.is_equal('num'))
+        self.assertTrue(my_list.subtype.is_equal(float))
+        self.assertTrue(my_list.subtype.is_equal('NumType'))
 
 if __name__ == '__main__':
     unittest.main(buffer=False)
