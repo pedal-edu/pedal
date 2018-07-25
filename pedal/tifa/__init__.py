@@ -47,7 +47,7 @@ Important concepts:
 from pedal.tifa.tifa import Tifa
 from pedal.report import MAIN_REPORT
 
-NAME = 'Tifa'
+NAME = 'TIFA'
 SHORT_DESCRIPTION = "Finds common issues caused by students."
 DESCRIPTION = '''Python Type Inferencer and Flow Analyzer (TIFA)
 
