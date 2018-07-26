@@ -1,6 +1,4 @@
-from pedal.sandbox.run import run_code, load
-
-from pedal.report import MAIN_REPORT
+from pedal.sandbox.sandbox import Sandbox
 
 # Compatibility API
 '''

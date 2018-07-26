@@ -56,12 +56,14 @@ Tifa traverses an AST to detect common issues made by students.
 REQUIRES = ['Source']
 OPTIONALS = []
 
-def tifa_analysis(python_3=True):
+def tifa_analysis(python_3=True, report=None):
     '''
     Perform the TIFA analysis and attach the results to the MAIN_REPORT.
     '''
-    t = Tifa(python_3=python_3)
-    t.process_code(MAIN_REPORT['source']['code'])
+    if report is None:
+        report = MAIN_REPORT
+    t = Tifa(python_3=python_3, report=report)
+    t.process_code(report['source']['code'])
 
 __all__ = ['NAME', 'DESCRIPTION', 'SHORT_DESCRIPTION',
            'REQUIRES', 'OPTIONALS',
