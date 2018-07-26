@@ -227,6 +227,7 @@ def _make_inputs(*input_list, repeat=None):
             return next(generator)
         except StopIteration as SI:
             if repeat is None:
+                # TODO: Make this a custom exception
                 raise SI
             else:
                 return repeat

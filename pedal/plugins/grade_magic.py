@@ -16,16 +16,18 @@ def blockpy_grade(assignment_id, student_code):
                            'clear_report()\n'+
                            'from pedal.source import set_source\n'+
                            'set_source('+json.dumps(student_code)+')\n'+
-                           'def run_student():\n'+
-                           '    #limit_execution_time()\n'+
-                           '    try:\n'+
-                           indent(student_code, ' '*8)+'\n'+
+                           #'def run_student():\n'+
+                           #'    #limit_execution_time()\n'+
+                           #'    try:\n'+
+                           #indent(student_code, ' '*8)+'\n'+
                            #'        execf('+studentCode+')\n'+
-                           '    except Exception as error:\n'+
-                           '        #unlimit_execution_time()\n'+
-                           '        return error\n'+
-                           '    #unlimit_execution_time()\n'+
-                           '    return None\n'+
+                           #'    except Exception as error:\n'+
+                           #'        #unlimit_execution_time()\n'+
+                           #'        return error\n'+
+                           #'    #unlimit_execution_time()\n'+
+                           #'    return None\n'+
+                           'from pedal.sandbox.compatibility import *\n'+
+                           'run_student()\n'+
                            'from pedal.tifa import tifa_analysis\n'+
                            'tifa_analysis()\n'+
                            result['give_feedback']+'\n'+
@@ -86,3 +88,6 @@ class GradeMagic(Magics):
         
 def load_ipython_extension(ipython):
     ipython.register_magics(GradeMagic)
+
+def load_jupyter_server_extension(nbapp):
+    nbapp.register_magics(GradeMagic)
