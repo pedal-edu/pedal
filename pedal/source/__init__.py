@@ -37,4 +37,5 @@ def _check_issues(code, report):
                       mistakes={'message': "Failed to parse source code.",
                                 'error': e})
         report['source']['success'] = False
-        del report['source']['ast']
+        if 'ast' in report['source']:
+            del report['source']['ast']

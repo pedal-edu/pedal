@@ -35,7 +35,8 @@ class Tifa(ast.NodeVisitor):
     
     def __init__(self, python_3=True, report=None):
         if report is None:
-            self.report = MAIN_REPORT
+            report = MAIN_REPORT
+        self.report = report
         self._initialize_report()
         self.PYTHON_3 = python_3
     
