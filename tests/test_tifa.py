@@ -305,6 +305,7 @@ class TestVariables(unittest.TestCase):
         self.assertTrue(my_int.is_equal('NumType'))
         self.assertTrue(my_int.is_equal(int))
         self.assertTrue(my_int.is_equal(float))
+        self.assertFalse(my_int.is_equal(str))
         # String variable
         my_str = variables['my_str'].type
         self.assertTrue(my_str.is_equal('str'))
