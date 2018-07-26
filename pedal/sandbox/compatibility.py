@@ -32,3 +32,7 @@ def get_output(report=None):
         report = MAIN_REPORT
     sandbox = _check_sandbox(report)
     return sandbox.output
+
+def get_sandbox(report=None):
+    sandbox = _check_sandbox(report)
+    return sandbox

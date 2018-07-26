@@ -9,6 +9,7 @@ reset_output()
 queue_input(*inputs)
 get_program()
 run_student()
+
 parse_program()
 had_execution_time_error()
 limit_execution_time()

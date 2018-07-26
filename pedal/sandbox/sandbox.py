@@ -14,7 +14,7 @@ Methods
     Sandbox.run
     Sandbox.call
 Fields
-    variables
+    data
     output
     raw_output
     exception
@@ -155,17 +155,17 @@ class Sandbox:
     student.variables: dict
     student.functions: dict (only callables)
     '''
-    def __init__(self, variables=None, raw_output=None, exception=None, 
+    def __init__(self, data=None, raw_output=None, exception=None, 
                  filename="__main__", modules=None):
-        # variables
-        if variables is None:
-            variables = {}
-        self.variables = variables
+        # data
+        if data is None:
+            data = {}
+        self.data = data
         # Update outputs
         self.set_output(raw_output)
         # filename
         self.filename = filename
-        # Temporary variables
+        # Temporary data
         self.temporaries = set()
         self.backups = {}
         # Exception
@@ -175,7 +175,7 @@ class Sandbox:
     
     @property
     def functions(self):
-        return {k:v for k,v in self.variables.items() if callable(v)}
+        return {k:v for k,v in self.data.items() if callable(v)}
     
     def set_output(self, raw_output):
         if raw_output is None:
@@ -198,19 +198,19 @@ class Sandbox:
             self.inputs = inputs
         
     def purge_temporaries(self):
-        ''' delete any variables that have been made as temporaries '''
+        ''' delete any data that have been made as temporaries '''
         for key in self.temporaries:
             if key in self.backups:
-                self.variables[key] = self.backups[key]
+                self.data[key] = self.backups[key]
             else:
-                del self.variables[key]
+                del self.data[key]
     
     def make_temporary(self, category, name, value):
         key = '_temporary_{}_{}'.format(category, name)
-        if key in self.variables:
-            self.backups[key] = self.variables[key]
+        if key in self.data:
+            self.backups[key] = self.data[key]
         self.temporaries.add(key)
-        self.variables[key] = value
+        self.data[key] = value
         return key
     
     def run_file(filename, _as_filename=None, _modules=None, _inputs=None, 
@@ -245,7 +245,7 @@ class Sandbox:
         arguments = ", ".join(args+kwargs)
         call = "{} = {}({})".format(target, function, arguments)
         self.run(call, _as_filename, _modules, _inputs, _example, _threaded)
-        self._ = self.variables[target]
+        self._ = self.data[target]
         return self._
     
     @patch.dict(sys.modules, MOCKED_MODULES)
@@ -263,7 +263,7 @@ class Sandbox:
         else:
             _inputs = _make_inputs(*_inputs)
         # Execute
-        mocked._override_builtins(self.variables, {
+        mocked._override_builtins(self.data, {
             'compile':  mocked._disabled_compile,
             'eval':     mocked._disabled_eval,
             'exec':     mocked._disabled_exec,
@@ -289,7 +289,7 @@ class Sandbox:
             # ensures that we get meaningul filenames in the traceback when
             # tests fail or have errors.
             compiled_code = compile(code, _as_filename, 'exec')
-            exec(compiled_code, self.variables)
+            exec(compiled_code, self.data)
         except StopIteration:
             input_failed = True
             result= None
@@ -309,6 +309,19 @@ class Sandbox:
         
         # Clean up
         self.purge_temporaries()
+    
+    def get_names_by_type(self, type, exclude_builtins=True):
+        result = []
+        for name, value in self.data.items():
+            if isinstance(value, type):
+                if exclude_builtins and name.startswith('__'):
+                    continue
+                result.append(name)
+        return result
+    
+    def get_values_by_type(self, type, exclude_builtins=True):
+        names = self.get_names_by_type(type, exclude_builtins)
+        return [self.data[name] for name in names]
 
 def _threaded_execution(code, filename, inputs=None):
     pass

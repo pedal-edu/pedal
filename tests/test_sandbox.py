@@ -15,8 +15,8 @@ class TestCode(unittest.TestCase):
     def test_normal_run(self):
         student = Sandbox()
         student.run('a=0\nprint(a)')
-        self.assertIn('a', student.variables)
-        self.assertEqual(student.variables['a'], 0)
+        self.assertIn('a', student.data)
+        self.assertEqual(student.data['a'], 0)
         self.assertEqual(len(student.output), 1)
         self.assertIn('0', student.output[0])
     
@@ -24,8 +24,8 @@ class TestCode(unittest.TestCase):
         student = Sandbox()
         student.run('b = input("Give me something:")\nprint(b)',
                     _inputs=['Hello World!'])
-        self.assertIn('b', student.variables)
-        self.assertEqual(student.variables['b'], 'Hello World!')
+        self.assertIn('b', student.data)
+        self.assertEqual(student.data['b'], 'Hello World!')
                      
     def test_oo(self):
         # Load the "bank.py" code
@@ -42,15 +42,15 @@ class TestCode(unittest.TestCase):
         student = Sandbox()
         student.run(student_code, _as_filename='bank.py')
         # Check that we created the class
-        self.assertIn('Bank', student.variables)
+        self.assertIn('Bank', student.data)
         # Now let's try making an instance
         student.call('Bank', 50, _target='bank')
-        self.assertIsInstance(student.variables['bank'], student.variables['Bank'])
+        self.assertIsInstance(student.data['bank'], student.data['Bank'])
         # Can we save money?
         student.call('bank.save', 32)
         self.assertTrue(student._)
         # What about extracting money?
-        student.variables['bank'].balance += 100
+        student.data['bank'].balance += 100
         student.call('bank.take', 100)
         self.assertTrue(student._)
     
@@ -87,6 +87,33 @@ class TestCode(unittest.TestCase):
                          ["Give me a word", "Dogs!", 
                           "Give me a word", "Are!", 
                           "Give me a word", "Great!"])
+    
+    def test_get_by_types(self):
+        student_code = dedent('''
+            my_int = 0
+            my_other_int = 5
+            my_str = "Hello there!"
+            response_str = "General Kenobi!"
+            a_list = [1,2,3]
+            another_list = [4,5,6]
+        ''')
+        student = Sandbox()
+        student.run(student_code, _as_filename='student.py')
+        # ints
+        ints = student.get_names_by_type(int)
+        self.assertEqual(len(ints), 2)
+        self.assertIn('my_int', ints)
+        self.assertIn('my_other_int', ints)
+        # lists
+        lists = student.get_names_by_type(list)
+        self.assertEqual(len(lists), 2)
+        self.assertIn('a_list', lists)
+        self.assertIn('another_list', lists)
+        # strs
+        strs = student.get_values_by_type(str)
+        self.assertEqual(len(strs), 2)
+        self.assertIn('Hello there!', strs)
+        self.assertIn('General Kenobi!', strs)
 
 if __name__ == '__main__':
     unittest.main(buffer=False)
