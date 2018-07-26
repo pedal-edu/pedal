@@ -21,9 +21,8 @@ class StretchyTreeMatcher:
 
     def find_matches(self, other, filename="__main__"):
         # TODO: check that both are ast nodes at the module level
-        other_tree = None
         if type(other) == str:
-            ast.parse(other, filename)
+            other_tree = ast.parse(other, filename)
         else:
             other_tree = other
 

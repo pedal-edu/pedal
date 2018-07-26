@@ -8,6 +8,10 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 
 from pedal.cait.stretchy_tree_matching import *
 from pedal.cait.easy_node import *
+from pedal.source import set_source
+from pedal.tifa import tifa_analysis
+from pedal.report import MAIN_REPORT
+from pedal.cait.cait_api import *
 
 '''
 _accu_ = 0
@@ -30,6 +34,10 @@ def parse_code(student_code):
 
 
 class CaitTests(unittest.TestCase):
+
+    def setUp(self):
+        MAIN_REPORT.clear()
+
     def test_var_match(self):
         # print("TESTING VAR MATCH")
         # tests whether variables are stored correctly
@@ -273,7 +281,8 @@ class CaitTests(unittest.TestCase):
         # print("TESTING PASS MATCH")
         std_code = 'import matplotlib.pyplot as plt\nquakes = [1,2,3,4]\nquakes_in_miles = []\nfor quakes in quakes:' \
                    '\n    quakes_in_miles.append(quake * 0.62)\nplt.hist(quakes_in_miles)\nplt.xlabel("Depth in Miles")' \
-                   '\nplt.ylabel("Number of Earthquakes")\nplt.title("Distribution of Depth in Miles of Earthquakes")\nplt.show()'
+                   '\nplt.ylabel("Number of Earthquakes")\nplt.title("Distribution of Depth in Miles of Earthquakes")' \
+                   '\nplt.show()'
         ins_code = "for _item_ in _item_:\n    pass"
         ins_tree = StretchyTreeMatcher(ins_code)
         ins_ast = ins_tree.rootNode
@@ -288,8 +297,6 @@ class CaitTests(unittest.TestCase):
 
     def test_meta_stretch(self):
         # print("TESTING META STRETCH")
-        fail_count = 0
-        success_count = 0
         std_code = ''.join([
             'steps_hiked_list = [1,2,3,4]\n',
             'total = 0\n',
@@ -311,3 +318,44 @@ class CaitTests(unittest.TestCase):
             print(ins_ast)
             print(std_ast)
             print(mappings)
+
+    def test_parse_program(self):
+        # noinspection PyBroadException
+        try:
+            parse_program()
+            self.assertTrue(False, "Program did not throw exception")
+        except Exception:
+            self.assertTrue(True, "Should NOT FAIL")
+        set_source("fun = 1 + 0")
+        parse_program()
+        self.assertTrue('cait' in MAIN_REPORT, "No parsing happened")
+
+    def test_def_use_error(self):
+        set_source("fun = fun + 1")
+        parse_program()
+        name_node = MAIN_REPORT["source"]["ast"].body[0].easy_node.target
+        self.assertTrue(def_use_error(name_node), "def_use error should have been found but wasn't")
+        self.assertTrue(def_use_error("fun"), "def_use error should have been found but wasn't")
+        self.assertFalse(def_use_error("gitax"), "variable doesn't exist")
+
+    def test_data_type(self):
+        set_source("fun = 1 + 1")
+        parse_program()
+        name_node = MAIN_REPORT["source"]["ast"].body[0].easy_node.target
+        self.assertTrue(data_type(name_node).is_equal(int), "Data type not successfully found from name node")
+        self.assertTrue(data_type("fun").is_equal(int), "Data type not successfully found from str name")
+
+    def test_find_match(self):
+        set_source("fun = 1 + 1")
+        parse_program()
+        match = find_match("_var_ = __expr__")
+        self.assertTrue(type(match) == AstMap, "Match not found")
+
+
+    def test_find_matches(self):
+        set_source("fun = 1 + 1\nfun2 = 2 + 2")
+        parse_program()
+        matches = find_matches("_var_ = __expr__")
+        self.assertTrue(type(matches) == list, "find_matches did not return a list")
+        self.assertTrue(type(matches[0]) == AstMap, "find_matches does not contain an AstMap")
+        self.assertTrue(len(matches) == 2, "find_matches does not return the correct number of matches")

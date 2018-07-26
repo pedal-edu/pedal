@@ -1,7 +1,7 @@
 import ast
 import pedal.cait.ast_helpers as ast_str
 from types import MethodType
-
+from pedal.report import Report, Feedback, MAIN_REPORT
 
 class EasyNode:
     """
@@ -131,8 +131,6 @@ class EasyNode:
         '''
         Non-ast node attributes
         '''
-        if key == 'data_type':
-            return self.get_data_type()
         if key == 'next_tree':
             return self.get_next_tree()
         if key == 'ast_name':
