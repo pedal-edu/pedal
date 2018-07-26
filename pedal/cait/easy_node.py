@@ -91,7 +91,6 @@ class EasyNode:
 		node_counter.visit(self.astNode)
 		out_of_tree = node_counter.counter >= len(self.linear_tree)  # check if out of bounds
 		# len(self.children) > 0 and self.children[-1] == node_counter
-		# in_subtree = 0  # check if validly outside of subtree  # TODO: CHECK THIS
 		if out_of_tree:
 			return None
 		return self.linear_tree[node_counter.counter]
@@ -115,23 +114,50 @@ class EasyNode:
 		return type(node).__name__
 
 	def __getattr__(self, item):
-		if item == 'data_type':
+		key = item
+		'''
+		Non-ast node attributes based on ast_node attributes
+		'''
+		if key == "target":
+			key = "targets"
+		if item in AST_SINGLE_FUNCTIONS:
+			key = item[:-5]  # strip suffix '_name'
+		if item in AST_ARRAYS_OF_FUNCTIONS:
+			key = item[:-6]  # strip suffix '_names'
+
+		'''
+		Non-ast node attributes
+		'''
+		if key == 'data_type':
 			return self.get_data_type()
-		if item == 'next_tree':
+		if key == 'next_tree':
 			return self.get_next_tree()
-		if item == 'ast_name':
+		if key == 'ast_name':
 			return EasyNode.get_ast_name(self.astNode)
-		else:
-			if hasattr(self.astNode, item):
+		else:  # ast node attributes or derivative attributes
+			if hasattr(self.astNode, key):
 				# noinspection PyBroadException
 				try:
-					field = self.astNode.__getattr__(item)
+					field = self.astNode.__getattribute__(key)
 				except Exception:
-					return None
-				if EasyNode.get_ast_name(self.astNode) == "Assign" and item == "targets":
-					return self.children[0]
+					field = None
+				if EasyNode.get_ast_name(self.astNode) == "Assign" and item != key:
+					if item == "target":
+						return field[0].easy_node  # Get's the relevant ast node
+					elif item == "targets":
+						easy_array = []
+						for node in field:
+							easy_array.append(node.easy_node)
+						return easy_array
+				elif item in AST_SINGLE_FUNCTIONS:
+					return type(field).__name__
+				elif item in AST_ARRAYS_OF_FUNCTIONS:
+					str_ops_list = []
+					for op in field:
+						str_ops_list.append(type(op).__name__)
+						return str_ops_list
 				elif isinstance(field, ast.AST):
-					return self.get_child(field)
+					return field.easy_node
 				else:
 					return field
 
@@ -158,3 +184,5 @@ class EasyNode:
 		return visitor.items
 
 
+AST_SINGLE_FUNCTIONS = ["ctx_name", "op_name"]
+AST_ARRAYS_OF_FUNCTIONS = ["ops_names"]

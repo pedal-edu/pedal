@@ -10,7 +10,6 @@ def is_primitive(item):
 
 class StretchyTreeMatcher:
 	def __init__(self, code, filename="__main__"):
-		# TODO: check that both are ast nodes at the module level
 		if type(code) == str:
 			ast_node = ast.parse(code, filename)
 		else:

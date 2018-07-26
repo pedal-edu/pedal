@@ -99,7 +99,8 @@ class AstMap:
 		:param other: (type AstMap) the other AstMap to be merged with
 		:return: self modified by adding the contents of other
 		"""
-		# TODO: check if other is also an AstMap.
+		if type(other) != type(self):
+			raise TypeError
 		# merge all mappings
 		other_map = other.mappings
 		for other_map_key, other_map_value in zip(other_map.keys, other_map.values):

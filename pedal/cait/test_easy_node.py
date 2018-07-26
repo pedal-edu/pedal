@@ -43,4 +43,28 @@ class EasyNodeTest(unittest.TestCase):
 		if_set_if0 = if0_node.find_all("If")
 		self.assertTrue(len(if_set_if0) == 1, "Found {} ifs, when 1 should be found".format(len(if_set_if0)))
 
+	def test___getattr__(self):
+		program = ast.parse("x = 0")
+		program = EasyNode(program)
+		self.assertTrue(program.ast_name == "Module", "Expected ast_name of 'Module', not{}".format(program.ast_name))
 
+		assign = program.children[0]
+		assign_value = assign.value
+		self.assertTrue(assign_value.ast_name == "Num", "__getattribute__ fallthrough failed")
+
+		assign_targets = assign.targets
+		self.assertTrue(type(assign_targets) == list, "expected list, got {} instead".format(list))
+
+		assign_target = assign.target
+		self.assertTrue(type(assign_target) == EasyNode, "Expected EasyNode, got {} instead".format(assign_target))
+
+		program1 = ast.parse("0 < x < 1")
+		program1 = EasyNode(program1)
+		binops_node = program1.children[0].value
+
+		binops_names = binops_node.ops_names
+		binops_funcs = binops_node.ops
+		self.assertTrue(type(binops_funcs) == list, "Expected list, got {} instead".format(type(binops_funcs)))
+		self.assertTrue(type(binops_names) == list, "Expected list, got {} instead".format(type(binops_funcs)))
+		self.assertTrue(isinstance(binops_funcs[0], ast.cmpop), "Expected list, got {} instead".format(type(binops_funcs)))
+		self.assertTrue(type(binops_names[0]) == str, "Expected ast.cmpop")
