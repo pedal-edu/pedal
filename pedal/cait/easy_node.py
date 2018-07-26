@@ -69,10 +69,6 @@ class EasyNode:
         """
         raise NotImplementedError
 
-    def get_data_type(self):
-        # TODO: TIFA
-        raise NotImplementedError
-
     def get_next_tree(self):
         """Gets the next tree in the AST
         This method gets the next AST node that is of equal or higher level than self. Returns None if the end of the
