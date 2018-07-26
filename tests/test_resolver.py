@@ -5,6 +5,8 @@ import sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from pedal.report import *
+from pedal.source import set_source
+from pedal.tifa import tifa_analysis
 from pedal.resolvers import simple
 
 class TestCode(unittest.TestCase):
@@ -29,6 +31,13 @@ class TestCode(unittest.TestCase):
         success, message = simple.resolve()
         self.assertTrue(success)
         self.assertEqual(message, 'You should always create unit tests.')
+    
+    def test_hidden_error(self):
+        clear_report()
+        set_source('import pedal')
+        tifa_analysis()
+        success, message = simple.resolve()
+        self.assertNotEqual(message, (False,))
 
 if __name__ == '__main__':
     unittest.main(buffer=False)

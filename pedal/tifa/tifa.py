@@ -59,7 +59,7 @@ class Tifa(ast.NodeVisitor):
             data = {}
         if 'position' not in data:
             data['position'] = self.locate()
-        data['message'] = _format_message(issue, data),
+        data['message'] = _format_message(issue, data)
         self.report.attach(issue, category='Analyzer', tool='TIFA',
                            mistakes=data)
         if issue not in self.report['tifa']['issues']:

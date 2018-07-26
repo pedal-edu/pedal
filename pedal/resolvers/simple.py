@@ -33,8 +33,12 @@ def resolve(report=None):
         if feedback.result is not None:
             success = success or feedback.result
         if feedback.mistakes is not None:
-            message = parse_component(feedback.mistakes)
+            m = parse_component(feedback.mistakes)
+            if m is not False:
+                message = m
         if feedback.misconceptions is not None:
-            message = parse_component(feedback.misconceptions)
+            m = parse_component(feedback.misconceptions)
+            if m is not False:
+                message = m
 
     return success, message
