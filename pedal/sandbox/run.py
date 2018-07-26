@@ -68,6 +68,8 @@ import ast
 import re
 import types
 import sys
+
+from pedal.report import MAIN_REPORT
     
 from pedal.sandbox import mocked
 from pedal.sandbox.timeout import timeout
