@@ -61,7 +61,7 @@ def tifa_analysis(python_3=True):
     Perform the TIFA analysis and attach the results to the MAIN_REPORT.
     '''
     t = Tifa(python_3=python_3)
-    tifa.process_code(MAIN_REPORT['source']['code'])
+    t.process_code(MAIN_REPORT['source']['code'])
 
 __all__ = ['NAME', 'DESCRIPTION', 'SHORT_DESCRIPTION',
            'REQUIRES', 'OPTIONALS',
