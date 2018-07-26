@@ -29,6 +29,7 @@ class Type:
     '''
     fields = {}
     immutable = False
+    singular_name = 'a type'
     def clone(self):
         return self.__class__()
     def __str__(self):
@@ -51,6 +52,14 @@ class Type:
         return UnknownType()
     def is_empty(self):
         return True
+    def is_equal(self, other):
+        # TODO: Make this more sophisticated!
+        if type(self) not in TYPE_LOOKUPS:
+            return False
+        return other in TYPE_LOOKUPS[type(self)]
+    def is_instance(self, other):
+        # TODO: Implement this correctly
+        return self.is_equal(other)
     
 
 class UnknownType(Type):
@@ -73,6 +82,7 @@ class FunctionType(Type):
         element: Returns the first argument's first element's type
         void: Returns the NoneType
     '''
+    singular_name = 'a function'
     def __init__(self, definition=None, name="*Anonymous", returns=None):
         if returns is not None and definition is None:
             if returns == 'identity':
@@ -95,23 +105,28 @@ class FunctionType(Type):
         self.name = name
         
 class ClassType(Type):
+    singular_name = 'a class'
     def __init__(self, name):
         self.name = name
         
 class NumType(Type):
+    singular_name = 'a number'
     immutable = True
     def index(self, i):
         return UnknownType()
     
 class NoneType(Type):
+    singular_name = 'a None'
     immutable = True
     
 class BoolType(Type):
+    singular_name = 'a boolean'
     immutable = True
 
 class TupleType(Type):
     '''
     '''
+    singular_name = 'a tuple'
     def __init__(self, subtypes=None):
         if subtypes is None:
             subtypes = []
@@ -126,6 +141,7 @@ class TupleType(Type):
     immutable = True
 
 class ListType(Type):
+    singular_name = 'a list'
     def __init__(self, subtype=None, empty=True):
         if subtype is None:
             subtype = UnknownType()
@@ -150,8 +166,13 @@ class ListType(Type):
         return self.empty
 
 class StrType(Type):
+    singular_name = 'a string'
+    def __init__(self, empty=False):
+        self.empty = empty
     def index(self, i):
         return StrType()
+    def is_empty(self):
+        return self.empty
     fields = _dict_extends(Type.fields, {})
     immutable = True
 
@@ -195,6 +216,7 @@ StrType.fields.update({
     "splitlines": FunctionType(name='splitlines', returns=ListType(StrType()))
 })
 class FileType(Type):
+    singular_name = 'a file'
     def index(self, i):
         return StrType()
     fields = _dict_extends(Type.fields, {
@@ -204,6 +226,7 @@ class FileType(Type):
     })
     
 class DictType(Type):
+    singular_name = 'a dictionary'
     def __init__(self, empty=False, literals=None, keys=None, values=None):
         self.empty = empty
         self.literals = literals
@@ -249,6 +272,7 @@ class DictType(Type):
         return Type.load_attr(self, attr, tifa, callee, callee_position)
 
 class ModuleType(Type):
+    singular_name = 'a module'
     def __init__(self, name="*UnknownModule", submodules=None, fields=None):
         self.name = name
         if submodules is None:
@@ -259,11 +283,33 @@ class ModuleType(Type):
         self.fields = fields
 
 class SetType(ListType):
-    pass
+    singular_name = 'a set'
 
 class GeneratorType(ListType):
-    pass
+    singular_name = 'a generator'
 
 # Custom parking class in blockpy    
-class TimeType(Type): pass
-class DayType(Type): pass
+class TimeType(Type):
+    singular_name = 'a time of day'
+
+class DayType(Type):
+    singular_name = 'a day of the week'
+
+try:
+    from numbers import Number
+except:
+    Number = int
+
+TYPE_LOOKUPS = {
+    FunctionType: ('function', FunctionType, 'FunctionType'),
+    ClassType: ('class', ClassType, 'ClassType'),
+    NumType: ('num', int, float, complex, NumType, Number, 'NumType'),
+    BoolType: ('bool', bool, BoolType, 'BoolType'),
+    NoneType: ('None', None, NoneType, 'NoneType'),
+    TupleType: ('tuple', tuple, TupleType, 'TupleType'),
+    ListType: ('list', list, ListType, 'ListType'),
+    StrType: ('str', str, StrType, 'StrType'),
+    FileType: ('file', FileType, 'FileType'),
+    DictType: ('dict', dict, DictType, 'DictType'),
+    SetType: ('set', set, SetType, 'SetType'),
+}

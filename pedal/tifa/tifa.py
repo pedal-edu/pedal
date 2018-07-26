@@ -1,84 +1,53 @@
 import ast
 from pprint import pprint
 
-from pedal.tifa.type_definitions import (UnknownType, RecursedType, FunctionType,
-                                         ClassType, NumType, NoneType, BoolType,
-                                         TupleType, ListType, StrType,
-                                         FileType, DictType, ModuleType, 
-                                         SetType, GeneratorType, DayType, TimeType)
-from pedal.tifa.literal_definitions import (LiteralNum, LiteralBool, LiteralNone,
-                                 LiteralStr, LiteralTuple)
-from pedal.tifa.builtin_definitions import (MODULES, BUILTINS)
-    
-from pedal.tifa.type_operations import (merge_types, are_types_equal,
-                             VALID_UNARYOP_TYPES, VALID_BINOP_TYPES,
-                             ORDERABLE_TYPES, INDEXABLE_TYPES)
-        
-from pedal.tifa.identifier import Identifier
+from pedal.report import Report, Feedback, MAIN_REPORT
 
-    
+from pedal.tifa.type_definitions import (UnknownType, RecursedType,
+                                         FunctionType, ClassType, NumType,
+                                         NoneType, BoolType, TupleType,
+                                         ListType, StrType, FileType,
+                                         DictType, ModuleType, SetType,
+                                         GeneratorType, DayType, TimeType)
+from pedal.tifa.literal_definitions import (LiteralNum, LiteralBool,
+                                            LiteralNone, LiteralStr,
+                                            LiteralTuple)
+from pedal.tifa.builtin_definitions import (MODULES, BUILTINS)
+from pedal.tifa.type_operations import (merge_types, are_types_equal,
+                                        VALID_UNARYOP_TYPES, VALID_BINOP_TYPES,
+                                        ORDERABLE_TYPES, INDEXABLE_TYPES)
+from pedal.tifa.identifier import Identifier    
 from pedal.tifa.state import State
+from pedal.tifa.messages import _format_message
+
+__all__ = ['Tifa']
                      
 class Tifa(ast.NodeVisitor):
     '''
+    TIFA Class for traversing an AST and finding common issues.
     
     Args:
         python_3 (bool): Whether to parse the code in regular PYTHON_3 mode or
                          the modified AST that Skulpt uses.
+        report (Report): The report object to store data and feedback in. If
+                         left None, defaults to the global MAIN_REPORT.
     '''
     
-    def __init__(self, python_3=True):
+    def __init__(self, python_3=True, report=None):
+        if report is None:
+            self.report = MAIN_REPORT
+        self._initialize_report()
         self.PYTHON_3 = python_3
-
-    @staticmethod
-    def _error_report(error):
-        '''
-        Return a new unsuccessful report with an error present.
-        '''
-        return {"success": False, 
-                "error": error,
-                "issues": {},
-                "variables": {}}
     
-    @staticmethod
-    def _initialize_report():
+    def _initialize_report(self):
         '''
-        Return a successful report with possible set of issues.
+        Initialize a successful report with possible set of issues.
         '''
-        return {"success": True,
-                "variables": {},
-                "issues": {
-                    "Parser Failure": [], # Complete failure to parse the code
-                    "Unconnected blocks": [], # Any names with ____
-                    "Empty Body": [], # Any use of pass on its own
-                    "Malformed Conditional": [], # An if/else with empty else or if
-                    "Unnecessary Pass": [], # Any use of pass
-                    "Unread variables": [], # A variable was not read after it was defined
-                    "Undefined variables": [], # A variable was read before it was defined
-                    "Possibly undefined variables": [], # A variable was read but was not defined in every branch
-                    "Overwritten variables": [], # A written variable was written to again before being read
-                    "Append to non-list": [], # Attempted to use the append method on a non-list
-                    "Used iteration list": [], # 
-                    "Unused iteration variable": [], # 
-                    "Non-list iterations": [], # 
-                    "Empty iterations": [], # 
-                    "Type changes": [], # 
-                    "Iteration variable is iteration list": [], # 
-                    "Unknown functions": [], # 
-                    "Not a function": [], # Attempt to call non-function as function
-                    "Recursive Call": [],
-                    "Incorrect Arity": [],
-                    "Action after return": [],
-                    "Incompatible types": [], # 
-                    "Return outside function": [], # 
-                    "Read out of scope": [], # 
-                    "Write out of scope": [], # Attempted to modify a variable in a higher scope
-                    "Aliased built-in": [], # 
-                    "Method not in Type": [], # A method was used that didn't exist for that type
-                    "Submodule not found": [],
-                    "Module not found": [],
-                    "Else on loop body": [], # Used an Else on a For or While
-                }
+        self.report['tifa'] = {
+            'success': True,
+            'variables': {},
+            'top_level_variables': {},
+            'issues': {}
         }
     
     def report_issue(self, issue, data=None):
@@ -90,7 +59,12 @@ class Tifa(ast.NodeVisitor):
             data = {}
         if 'position' not in data:
             data['position'] = self.locate()
-        self.report['issues'][issue].append(data)
+        data['message'] = _format_message(issue, data)
+        self.report.attach(issue, category='Analyzer', tool='TIFA',
+                           mistakes=data)
+        if issue not in self.report['tifa']['issues']:
+            self.report['tifa']['issues'][issue] = []
+        self.report['tifa']['issues'][issue].append(data)
         
     def locate(self, node=None):
         '''
@@ -128,9 +102,14 @@ class Tifa(ast.NodeVisitor):
             ast_tree = ast.parse(code, filename)
             return self.process_ast(ast_tree)
         except Exception as error:
-            self.report = Tifa._error_report(error)
-            raise error
-            return self.report;
+            self.report['tifa']['success'] = False
+            self.report['tifa']['error'] = error
+            self.report.attach('tifa_error', category='Analyzer', tool='TIFA',
+                               mistakes={
+                                'message': "Could not parse or process code",
+                                'error': error
+                               })
+            return self.report['tifa']
     
     def process_ast(self, ast_tree):
         '''
@@ -143,33 +122,31 @@ class Tifa(ast.NodeVisitor):
             Report: The final report object created (also available as a field).
         '''
         self._reset()
-        # Initialize a new, empty report
-        self.report = Tifa._initialize_report()
         # Traverse every node
         self.visit(ast_tree);
         
         # Check afterwards
-        self.report['variables'] = self.name_map
+        self.report['tifa']['variables'] = self.name_map
         self._finish_scope()
         
         # Collect top level variables
-        self._collect_top_level_varaibles()
+        self._collect_top_level_variables()
         #print(self.report['variables'])
         
-        return self.report
+        return self.report['tifa']
     
-    def _collect_top_level_varaibles(self):
+    def _collect_top_level_variables(self):
         '''
         Walk through the variables and add any at the top level to the
         top_level_variables field of the report.
         '''
-        self.report['top_level_variables'] = {}
+        top_level_variables = self.report['tifa']['top_level_variables']
         main_path_vars = self.name_map[self.path_chain[0]]
         for full_name in main_path_vars:
             split_name = full_name.split("/")
             if len(split_name) == 2 and split_name[0] == str(self.scope_chain[0]):
                 name = split_name[1]
-                self.report['top_level_variables'][name] = main_path_vars[full_name]
+                top_level_variables[name] = main_path_vars[full_name]
     
     def _reset(self):
         '''
@@ -255,10 +232,10 @@ class Tifa(ast.NodeVisitor):
                 state = self.name_map[path_id][name]
                 if state.over == 'yes':
                     position = state.over_position
-                    self.report_issue('Overwritten variables', 
+                    self.report_issue('Overwritten Variable', 
                                      {'name': state.name, 'position': position})
                 if state.read == 'no':
-                    self.report_issue('Unread variables', 
+                    self.report_issue('Unused Variable', 
                                      {'name': state.name, 'type': state.type})
         
     def visit(self, node):
@@ -510,12 +487,12 @@ class Tifa(ast.NodeVisitor):
             iter_type = self.visit(iter)
         
         if iter_type.is_empty():
-            self.report_issue("Empty iterations", 
+            self.report_issue("Iterating over empty list", 
                               {"name": iter_list_name, 
                                "position": self.locate(iter)})
             
         if not isinstance(iter_type, INDEXABLE_TYPES):
-            self.report_issue("Non-list iterations", 
+            self.report_issue("Iterating over non-list", 
                               {"name": iter_list_name, 
                                "position": self.locate(iter)})
             
@@ -526,7 +503,7 @@ class Tifa(ast.NodeVisitor):
         
         if iter_variable_name and iter_list_name:
             if iter_variable_name == iter_list_name:
-                self.report_issue("Iteration variable is iteration list", 
+                self.report_issue("Iteration Problem", 
                                   {"name": iter_variable_name,
                                    "position": self.locate(node.target)})
 
@@ -770,7 +747,10 @@ class Tifa(ast.NodeVisitor):
         return [self.visit(statement) for statement in nodes]
                 
     def visit_Str(self, node):
-        return StrType()
+        if node.s == "":
+            return StrType(True)
+        else:
+            return StrType(False)
         
     def visit_Subscript(self, node):
         # Handle value
@@ -967,16 +947,16 @@ class Tifa(ast.NodeVisitor):
             if out_of_scope_var.exists:
                 self.report_issue("Read out of scope", {'name': name})
             else:
-                self.report_issue("Undefined variables", {'name': name})
+                self.report_issue("Initialization Problem", {'name': name})
             new_state = State(name, [], UnknownType(), 'load', position,
                               read='yes', set='no', over='no')
             self.name_map[current_path][full_name] = new_state
         else:
             new_state = self.trace_state(variable.state, "load")
             if variable.state.set == 'no':
-                self.report_issue("Undefined variables", {'name': name})
+                self.report_issue("Initialization Problem", {'name': name})
             if variable.state.set == 'maybe':
-                self.report_issue("Possibly undefined variables", {'name': name})
+                self.report_issue("Possible Initialization Problem", {'name': name})
             new_state.read = 'yes';
             if not variable.in_scope:
                 self.name_map[current_path][variable.scoped_name] = new_state

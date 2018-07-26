@@ -1,6 +1,7 @@
 from IPython.core.magic import (Magics, magics_class, line_magic, cell_magic)
-from IPython.display import Javascript, display
+from IPython.display import Javascript, display, HTML
 import json
+from textwrap import indent
 
 from requests import get
 
@@ -11,7 +12,29 @@ def blockpy_grade(assignment_id, student_code):
     response = get(BLOCKPY_URL+'load_assignment_give_feedback', data=data)
     result = response.json()
     if result['success']:
-        return exec(result['give_feedback'])
+        instructor_code = ('from pedal.report.imperative import *\n'+
+                           'clear_report()\n'+
+                           'from pedal.source import set_source\n'+
+                           'set_source('+json.dumps(student_code)+')\n'+
+                           'def run_student():\n'+
+                           '    #limit_execution_time()\n'+
+                           '    try:\n'+
+                           indent(student_code, ' '*8)+'\n'+
+                           #'        execf('+studentCode+')\n'+
+                           '    except Exception as error:\n'+
+                           '        #unlimit_execution_time()\n'+
+                           '        return error\n'+
+                           '    #unlimit_execution_time()\n'+
+                           '    return None\n'+
+                           'from pedal.tifa import tifa_analysis\n'+
+                           'tifa_analysis()\n'+
+                           result['give_feedback']+'\n'+
+                           'from pedal.resolvers import simple\n'+
+                           'SUCCESS, MESSAGE = simple.resolve()')
+        gbls = {}
+        exec(instructor_code, gbls, gbls)
+        display(HTML(gbls['MESSAGE']))
+        return gbls['MESSAGE']
     else:
         return ""
 
@@ -30,8 +53,9 @@ var instructor_code = "student_code="+source_code+"\n";
 LOCAL_GRADE = r'''instructor_code += {code}
 console.log(instructor_code);'''
 BLOCKPY_GRADE = r'''//instructor_code += "\nimport ast\nprint(ast.dump(ast.parse(student_code)))\nprint('Great')"
-instructor_code += "from instructor.plugins.grade_magic import blockpy_grade\n";
+instructor_code += "from pedal.plugins.grade_magic import blockpy_grade\n";
 instructor_code += "result=blockpy_grade({assignment}, student_code);\n"
+instructor_code += "print(result)\n"
 console.log(instructor_code);'''
 EXECUTE_CODE = r'''
 var kernel = IPython.notebook.kernel;
