@@ -167,8 +167,12 @@ class ListType(Type):
 
 class StrType(Type):
     singular_name = 'a string'
+    def __init__(self, empty=False):
+        self.empty = empty
     def index(self, i):
         return StrType()
+    def is_empty(self):
+        return self.empty
     fields = _dict_extends(Type.fields, {})
     immutable = True
 

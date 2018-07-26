@@ -747,7 +747,10 @@ class Tifa(ast.NodeVisitor):
         return [self.visit(statement) for statement in nodes]
                 
     def visit_Str(self, node):
-        return StrType()
+        if node.s == "":
+            return StrType(True)
+        else:
+            return StrType(False)
         
     def visit_Subscript(self, node):
         # Handle value

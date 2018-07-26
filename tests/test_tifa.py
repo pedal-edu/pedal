@@ -45,7 +45,7 @@ unit_tests = {
     'iterate_through_empty_list':
         ['y = []\nfor x in y:\n\tpass', ['Unused Variable', 'Initialization Problem'], ['Iterating over empty list']],
     'double_iterate_through_strings':
-        ['ss = ["Testing", "Here"]\nfor a in ss:\n    print(a)\nfor b in a:\n    print(b)', ['Iterating over non-list'], []],
+        ['ss = ["Testing", "Here"]\nfor a in ss:\n    print(a)\nfor b in a:\n    print(b)', ['Iterating over non-list', 'Iterating over empty list'], []],
     'iterate_through_number':
         ['y = 5\nfor x in y:\n\tpass', ['Unused Variable', 'Initialization Problem'], ['Iterating over non-list']],
     'iterate_over_iteration_variable':
