@@ -60,7 +60,6 @@ class TestCode(unittest.TestCase):
         student_code = 'word = input("Give me a word")\nprint(word+"!")'
         set_source(student_code)
         self.assertFalse(compatibility.get_output())
-        '''
         compatibility.queue_input("Hello")
         self.assertIsNone(compatibility.run_student())
         self.assertEqual(compatibility.get_output(), 
@@ -81,8 +80,9 @@ class TestCode(unittest.TestCase):
         self.assertIsNone(compatibility.run_student())
         self.assertIsNone(compatibility.run_student())
         self.assertEqual(compatibility.get_output(), 
-                         ["Give me a word", "Dogs!", "Give me a word", "Are!", 
-                          "Give me a word", "Great!"])'''
+                         ["Give me a word", "Dogs!", 
+                          "Give me a word", "Are!", 
+                          "Give me a word", "Great!"])
 
 if __name__ == '__main__':
     unittest.main(buffer=False)

@@ -31,8 +31,10 @@ def _check_issues(code, report):
         report['source']['success'] = False
     try:
         parsed = ast.parse(code)
+        report['source']['ast'] = parsed
     except Exception as e:
         report.attach('syntax_error', category='Syntax', tool=NAME,
                       mistakes={'message': "Failed to parse source code.",
                                 'error': e})
         report['source']['success'] = False
+        del report['source']['ast']
