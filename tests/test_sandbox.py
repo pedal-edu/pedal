@@ -5,6 +5,8 @@ import sys
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from pedal.sandbox import run_code
+import pedal.sandbox.compatibility as compatibility
+from pedal.source import set_source
 
 class TestCode(unittest.TestCase):
     def setUp(self):
@@ -53,6 +55,33 @@ class TestCode(unittest.TestCase):
         student_code = 'syntax error'
         student = run_code(student_code, _as_filename='student.py')
         self.assertIsNotNone(student.exception)
+    
+    def test_compatibility_api(self):
+        student_code = 'word = input("Give me a word")\nprint(word+"!")'
+        set_source(student_code)
+        self.assertFalse(compatibility.get_output())
+        compatibility.queue_input("Hello")
+        self.assertIsNone(compatibility.run_student())
+        self.assertEqual(compatibility.get_output(), 
+                         ["Give me a word", "Hello!"])
+        compatibility.queue_input("World", "Again")
+        self.assertIsNone(compatibility.run_student())
+        self.assertEqual(compatibility.get_output(), 
+                         ["Give me a word", "Hello!", 
+                          "Give me a word", "World!"])
+        self.assertIsNone(compatibility.run_student())
+        self.assertEqual(compatibility.get_output(),
+                         ["Give me a word", "Hello!", 
+                          "Give me a word", "World!", 
+                          "Give me a word", "Again!"])
+        compatibility.reset_output()
+        compatibility.queue_input("Dogs", "Are", "Great")
+        self.assertIsNone(compatibility.run_student())
+        self.assertIsNone(compatibility.run_student())
+        self.assertIsNone(compatibility.run_student())
+        self.assertEqual(compatibility.get_output(), 
+                         ["Give me a word", "Dogs!", "Give me a word", "Are!", 
+                          "Give me a word", "Great!"])
 
 if __name__ == '__main__':
     unittest.main(buffer=False)

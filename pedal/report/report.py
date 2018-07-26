@@ -71,4 +71,3 @@ class Report:
     
     def __contains__(self, key):
         return key in self._results
-    
