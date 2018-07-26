@@ -98,25 +98,12 @@ import ast
 import re
 import types
 import sys
+import io
+from unittest.mock import patch, mock_open, MagicMock
 
 from pedal.report import MAIN_REPORT
-    
 from pedal.sandbox import mocked
 from pedal.sandbox.timeout import timeout
-
-try:
-    import io
-except:
-    io = None
-    
-from unittest.mock import patch, mock_open, MagicMock
-fake_module = types.ModuleType('matplotlib')
-fake_module.pyplot = types.ModuleType('pyplot')
-MOCKED_MODULES = {
-        'matplotlib': fake_module,
-        'matplotlib.pyplot': fake_module.pyplot,
-        }
-fake_module.pyplot.secret = "Hello world"
     
 def _dict_extends(d1, d2):
     '''
@@ -172,6 +159,18 @@ class Sandbox:
         self.exception = exception
         # Input
         self.inputs = None
+        # Modules
+        self.setup_mocks(modules)
+        
+    def setup_mocks(self, modules):
+        fake_module = types.ModuleType('matplotlib')
+        fake_module.pyplot = types.ModuleType('pyplot')
+        self.modules = {
+                'matplotlib': fake_module,
+                'matplotlib.pyplot': fake_module.pyplot,
+                }
+        mock_plt = mocked.MockPlt()
+        mock_plt._add_to_module(fake_module.pyplot)
     
     @property
     def functions(self):
@@ -248,7 +247,6 @@ class Sandbox:
         self._ = self.data[target]
         return self._
     
-    @patch.dict(sys.modules, MOCKED_MODULES)
     def run(self, code, _as_filename=None, _modules=None, _inputs=None, 
             _example=None, _threaded=False):
         '''
@@ -288,8 +286,9 @@ class Sandbox:
             # Calling compile instead of just passing the string source to exec
             # ensures that we get meaningul filenames in the traceback when
             # tests fail or have errors.
-            compiled_code = compile(code, _as_filename, 'exec')
-            exec(compiled_code, self.data)
+            with patch.dict(sys.modules, self.modules, clear=True):
+                compiled_code = compile(code, _as_filename, 'exec')
+                exec(compiled_code, self.data)
         except StopIteration:
             input_failed = True
             result= None

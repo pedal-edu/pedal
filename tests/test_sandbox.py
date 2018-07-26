@@ -1,5 +1,6 @@
 from textwrap import dedent
 import unittest
+from pprint import pprint
 import os
 import sys
 
@@ -114,6 +115,17 @@ class TestCode(unittest.TestCase):
         self.assertEqual(len(strs), 2)
         self.assertIn('Hello there!', strs)
         self.assertIn('General Kenobi!', strs)
+    
+    def test_matplotlib(self):
+        student_code = dedent('''
+            import matplotlib.pyplot as plt
+            plt.plot([1,2,3])
+            plt.title("My line plot")
+            plt.show()
+        ''')
+        student = Sandbox()
+        student.run(student_code, _as_filename='student.py')
+        print(student.modules['matplotlib.pyplot'])
 
 if __name__ == '__main__':
     unittest.main(buffer=False)

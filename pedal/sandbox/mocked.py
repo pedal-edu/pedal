@@ -83,3 +83,70 @@ def _override_builtins(namespace, custom_builtins):
     namespace["__builtins__"] = _default_builtins.copy()
     for name, function in custom_builtins.items():
         namespace["__builtins__"][name] = function
+
+class MockPlt:
+    '''
+    Mock MatPlotLib library that can be used to capture plot data.
+    '''
+    def __init__(self):
+        self._reset_plots()
+    def show(self, **kwargs):
+        self.plots.append(self.active_plot)
+        self._reset_plot()
+    def unshown_plots(self):
+        return self.active_plot['data']
+    def __repr__(self):
+        return repr(self.plots)
+    def __str__(self):
+        return str(self.plots)
+    def _reset_plots(self):
+        self.plots = []
+        self._reset_plot()
+    def _reset_plot(self):
+        self.active_plot = {'data': [], 
+                            'xlabel': None, 'ylabel': None, 
+                            'title': None, 'legend': False}
+    def hist(self, data, **kwargs):
+        label = kwargs.get('label', None)
+        self.active_plot['data'].append({'type': 'Histogram', 'values': data, 'label': label})
+    def plot(self, xs, ys=None, **kwargs):
+        label = kwargs.get('label', None)
+        if ys == None:
+            self.active_plot['data'].append({'type': 'Line', 
+                                            'x': range(len(xs)), 'y': xs, 'label': label})
+        else:
+            self.active_plot['data'].append({'type': 'Line', 'x': xs, 'y': ys, 'label': label})
+    def scatter(self, xs, ys, **kwargs):
+        label = kwargs.get('label', None)
+        self.active_plot['data'].append({'type': 'Scatter', 'x': xs, 'y': ys, 'label': label})
+    def xlabel(self, label, **kwargs):
+        self.active_plot['xlabel'] = label
+    def title(self, label, **kwargs):
+        self.active_plot['title'] = label
+    def suptitle(self, label, **kwargs):
+        self.title(label, **kwargs)
+    def ylabel(self, label, **kwargs):
+        self.active_plot['ylabel'] = label
+    def legend(self, **kwargs):
+        self.active_plot['legend'] = True
+    def _add_to_module(self, module):
+        for name, value in self._generate_patches().items():
+            setattr(module, name, value)
+    def _generate_patches(self):
+        def dummy(**kwargs):
+            pass
+        return dict(hist=self.hist, plot=self.plot, 
+                    scatter=self.scatter, show=self.show,
+                    xlabel=self.xlabel, ylabel=self.ylabel, 
+                    title=self.title, legend=self.legend,
+                    xticks=dummy, yticks=dummy,
+                    autoscale=dummy, axhline=dummy,
+                    axhspan=dummy, axvline=dummy,
+                    axvspan=dummy, clf=dummy,
+                    cla=dummy, close=dummy,
+                    figlegend=dummy, figimage=dummy,
+                    suptitle=self.suptitle, text=dummy,
+                    tick_params=dummy, ticklabel_format=dummy,
+                    tight_layout=dummy, xkcd=dummy,
+                    xlim=dummy, ylim=dummy,
+                    xscale=dummy, yscale=dummy)

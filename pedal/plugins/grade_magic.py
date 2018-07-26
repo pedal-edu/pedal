@@ -28,6 +28,7 @@ def blockpy_grade(assignment_id, student_code):
                            #'    return None\n'+
                            'from pedal.sandbox.compatibility import *\n'+
                            'run_student()\n'+
+                           'student = get_sandbox()\n'+
                            'from pedal.tifa import tifa_analysis\n'+
                            'tifa_analysis()\n'+
                            result['give_feedback']+'\n'+
