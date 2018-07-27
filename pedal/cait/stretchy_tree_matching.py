@@ -10,7 +10,7 @@ def is_primitive(item):
 
 class StretchyTreeMatcher:
     def __init__(self, code, filename="__main__"):
-        if type(code) == str:
+        if isinstance(code, str):
             ast_node = ast.parse(code, filename)
         else:
             ast_node = code
@@ -21,7 +21,7 @@ class StretchyTreeMatcher:
 
     def find_matches(self, other, filename="__main__"):
         # TODO: check that both are ast nodes at the module level
-        if type(other) == str:
+        if isinstance(other, str):
             other_tree = ast.parse(other, filename)
         else:
             other_tree = other
@@ -171,7 +171,7 @@ class StretchyTreeMatcher:
                 running_maps = []
                 running_sibs = []
                 # accumulate all potential matches for current child
-                for j, std_child in enumerate(std_node.children[youngest_sib:], start=youngest_sib):
+                for j, std_child in enumerate(std_node.children[youngest_sib:], youngest_sib):
                     std_child = std_node.children[j]
                     new_mapping = self.deep_find_match(insChild, std_child, True)
                     if new_mapping:
@@ -324,10 +324,10 @@ class StretchyTreeMatcher:
 
             is_match = ins_field == std_field
 
-            if type(ins_value) != list:
+            if not isinstance(ins_value, list):
                 ins_value = [ins_value]
 
-            if type(std_value) != list:
+            if not isinstance(std_value, list):
                 std_value = [std_value]
 
             # is_match = len(ins_value) == len(std_value)# for stretchy matching this isn't True

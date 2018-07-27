@@ -40,7 +40,7 @@ class EasyNode:
                 continue
 
             # If the children are not in an array, wrap it in an array for consistency in the code the follows
-            if type(value) != list:
+            if not isinstance(value, list):
                 value = [value]
 
             # Reference ast_node_visitor.js for the original behavior and keep note of it for the purposes of handling

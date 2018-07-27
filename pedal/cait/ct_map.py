@@ -87,7 +87,8 @@ class CtMap:
         # return ''.join(["keys = ", self.keys.__str__(), ", values = ", self.values.__str__()])
         collector = ""
         for key, value in zip(self.keys, self.values):
-            collector = ''.join([collector, "[", key, ": ", value.__str__(), "], "])
+            collector += '{}[{}: {}], '.format(collector, key, value)
+            #collector = ''.join([collector, "[", key, ": ", value.__str__(), "], "])
         return collector
 
     def __repr__(self):

@@ -54,10 +54,10 @@ def def_use_error(node, report=None):
     :return: True if the given name has a def_use_error
     """
     cait_obj = Cait(report)
-    if type(node) != str and node.ast_name != "Name":
+    if not isinstance(node, str) and node.ast_name != "Name":
         raise TypeError
     def_use_vars = cait_obj.report['tifa']['issues']['Initialization Problem']
-    if type(node) == str:
+    if not isinstance(node, str):
         node_id = node
     else:
         node_id = node.id
@@ -79,9 +79,9 @@ def data_type(node, report=None):
     :return: the type of the object (Tifa type) or None if a type doesn't exist
     """
     cait_obj = Cait(report)
-    if type(node) != str and node.ast_name != "Name":
+    if not isinstance(node, str) and node.ast_name != "Name":
         raise TypeError
-    if type(node) == str:
+    if isinstance(node, str):
         node_id = node
     else:
         node_id = node.id
