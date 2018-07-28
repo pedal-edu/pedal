@@ -48,7 +48,7 @@ def by_priority(feedback):
             offset = .1
     return value + offset
 
-def parse_component(component):
+def parse_message(component):
     if isinstance(component, str):
         return component
     elif isinstance(component, list):
@@ -63,6 +63,14 @@ def parse_component(component):
     else:
         raise ValueError("Invalid component type: "+str(type(component)))
 
+def parse_data(component):
+    if isinstance(component, str):
+        return [{'message': component}]
+    elif isinstance(component, list):
+        return component
+    elif isinstance(component, dict):
+        return [component]
+
 MESSAGE_TYPES = ['hints', 'mistakes', 'misconceptions', 
                  'constraints', 'metacognitives']
 def parse_feedback(feedback):
@@ -70,18 +78,20 @@ def parse_feedback(feedback):
     success = False
     performance = 0
     message = None
+    data = []
     # Actual processing
     for feedback_type in MESSAGE_TYPES:
         feedback_value = getattr(feedback, feedback_type)
         if feedback_value is not None:
-            parsed_message = parse_component(feedback_value)
+            data.extend(parse_data(feedback_value))
+            parsed_message = parse_message(feedback_value)
             if parsed_message is not None:
                 message = parsed_message
     if feedback.result is not None:
         success = feedback.result
     if feedback.performance is not None:
         performance = feedback.performance
-    return success, performance, message
+    return success, performance, message, data
 
 '''
     if (!suppress['parser'] && !report['parser'].success) {
@@ -168,20 +178,22 @@ def resolve(report=None, priority_key=None):
     final_message = None
     final_category = "Instructor"
     final_label = ""
+    final_data = None
     for feedback in feedbacks:
         if feedback.category in suppressions:
             if True in suppressions[feedback.category]:
                 continue
             elif feedback.label in suppressions[feedback.category]:
                 continue
-        success, partial, message = parse_feedback(feedback)
+        success, partial, message, data = parse_feedback(feedback)
         final_success = success or final_success
         final_score += partial
         if message is not None and final_message is None:
             final_message = message
             final_category = feedback.category
             final_label = feedback.label
+            final_data = data
     if final_message is None:
         final_message = "No errors reported."
     return (final_success, final_score, final_category, 
-            final_label, final_message)
+            final_label, final_message, final_data)

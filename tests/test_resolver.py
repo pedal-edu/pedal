@@ -13,22 +13,22 @@ class TestCode(unittest.TestCase):
 
     def test_gently(self):
         clear_report()
-        success, score, category, label, message = simple.resolve()
+        success, score, category, label, message, data = simple.resolve()
         self.assertFalse(success)
         self.assertEqual(message, "No errors reported.")
         
         gently('You should always create unit tests.')
-        success, score, category, label, message = simple.resolve()
+        success, score, category, label, message, data = simple.resolve()
         self.assertFalse(success)
         self.assertEqual(message, 'You should always create unit tests.')
         
         gently('A boring message that we should not show.')
-        success, score, category, label, message = simple.resolve()
+        success, score, category, label, message, data = simple.resolve()
         self.assertFalse(success)
         self.assertEqual(message, 'You should always create unit tests.')
         
         set_success()
-        success, score, category, label, message = simple.resolve()
+        success, score, category, label, message, data = simple.resolve()
         self.assertTrue(success)
         self.assertEqual(message, 'You should always create unit tests.')
     
@@ -36,7 +36,7 @@ class TestCode(unittest.TestCase):
         clear_report()
         set_source('import pedal')
         tifa_analysis()
-        success, score, category, label, message = simple.resolve()
+        success, score, category, label, message, data = simple.resolve()
         self.assertNotEqual(message, (False,))
 
 if __name__ == '__main__':
