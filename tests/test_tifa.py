@@ -339,8 +339,12 @@ class TestVariables(unittest.TestCase):
         self.assertNotIn('b', unset_variables)
         self.assertIn('c', unset_variables)
     
+    '''
     def test_tifa_graceful_errors(self):
-        pass
+        student_code = '1 + "Banana"'
+        set_source(student_code)
+        exception = compatibility.run_student()
+        self.assertIsNotNone(exception)'''
 
 if __name__ == '__main__':
     unittest.main(buffer=False)

@@ -195,5 +195,7 @@ def resolve(report=None, priority_key=None):
             final_data = data
     if final_message is None:
         final_message = "No errors reported."
+    final_hide_correctness = suppressions.get('success', False)
     return (final_success, final_score, final_category, 
-            final_label, final_message, final_data)
+            final_label, final_message, final_data,
+            final_hide_correctness)
