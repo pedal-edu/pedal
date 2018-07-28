@@ -195,7 +195,6 @@ class CaitTests(unittest.TestCase):
             mappings = mappings[0]
             if mappings:
                 self.assertTrue(len(mappings.conflict_keys) == 0, "Conflicting keys when there shouldn't be")
-                print(mappings.symbol_table.keys)
                 self.assertTrue(
                     mappings.symbol_table.size() == 4 and
                     len(mappings.symbol_table.values[0]) == 3 and

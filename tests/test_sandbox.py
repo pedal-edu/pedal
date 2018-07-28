@@ -125,7 +125,9 @@ class TestCode(unittest.TestCase):
         ''')
         student = Sandbox()
         student.run(student_code, _as_filename='student.py')
-        print(student.modules['matplotlib.pyplot'])
+        self.assertIn('matplotlib.pyplot', student.modules)
+        plt = student.modules['matplotlib.pyplot']
+        self.assertEqual(len(plt.plots), 1)
 
 if __name__ == '__main__':
     unittest.main(buffer=False)

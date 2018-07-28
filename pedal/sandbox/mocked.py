@@ -87,6 +87,9 @@ def _override_builtins(namespace, custom_builtins):
 class MockPlt:
     '''
     Mock MatPlotLib library that can be used to capture plot data.
+    
+    Attributes:
+        plots (list of dict): The internal list of plot dictionaries.
     '''
     def __init__(self):
         self._reset_plots()

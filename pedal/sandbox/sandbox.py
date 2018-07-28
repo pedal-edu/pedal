@@ -163,14 +163,16 @@ class Sandbox:
         self.setup_mocks(modules)
         
     def setup_mocks(self, modules):
+        self.mocked_modules = {}
+        self.modules = {}
+        # MatPlotLib's PyPlot
         fake_module = types.ModuleType('matplotlib')
         fake_module.pyplot = types.ModuleType('pyplot')
-        self.modules = {
-                'matplotlib': fake_module,
-                'matplotlib.pyplot': fake_module.pyplot,
-                }
+        self.mocked_modules['matplotlib'] = fake_module
+        self.mocked_modules['matplotlib.pyplot'] = fake_module.pyplot
         mock_plt = mocked.MockPlt()
         mock_plt._add_to_module(fake_module.pyplot)
+        self.modules['matplotlib.pyplot'] = mock_plt
     
     @property
     def functions(self):
@@ -286,7 +288,7 @@ class Sandbox:
             # Calling compile instead of just passing the string source to exec
             # ensures that we get meaningul filenames in the traceback when
             # tests fail or have errors.
-            with patch.dict(sys.modules, self.modules, clear=True):
+            with patch.dict(sys.modules, self.mocked_modules, clear=True):
                 compiled_code = compile(code, _as_filename, 'exec')
                 exec(compiled_code, self.data)
         except StopIteration:
