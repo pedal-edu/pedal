@@ -89,6 +89,12 @@ class TestCode(unittest.TestCase):
                           "Give me a word", "Are!", 
                           "Give me a word", "Great!"])
     
+    def test_compatibility_exceptions(self):
+        student_code = '1 + "Banana"'
+        set_source(student_code)
+        exception = compatibility.run_student()
+        self.assertIsNotNone(exception)
+    
     def test_get_by_types(self):
         student_code = dedent('''
             my_int = 0

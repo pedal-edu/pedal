@@ -14,20 +14,20 @@ class TestCode(unittest.TestCase):
         set_source('')
         feedback = get_all_feedback()
         self.assertTrue(feedback)
-        self.assertEqual(feedback[0].label, 'blank_source')
+        self.assertEqual(feedback[0].label, 'blank source')
         
         clear_report()
         set_source('                  \n\n\n \n\n\n      ')
         feedback = get_all_feedback()
         self.assertTrue(feedback)
-        self.assertEqual(feedback[0].label, 'blank_source')
+        self.assertEqual(feedback[0].label, 'blank source')
 
     def test_catches_syntax_errors(self):
         clear_report()
         set_source('a b c')
         feedback = get_all_feedback()
         self.assertTrue(feedback)
-        self.assertEqual(feedback[0].label, 'syntax_error')
+        self.assertEqual(feedback[0].label, 'syntax error')
 
 if __name__ == '__main__':
     unittest.main(buffer=False)

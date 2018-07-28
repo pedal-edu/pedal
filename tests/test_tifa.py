@@ -338,6 +338,9 @@ class TestVariables(unittest.TestCase):
         self.assertNotIn('a', unset_variables)
         self.assertNotIn('b', unset_variables)
         self.assertIn('c', unset_variables)
+    
+    def test_tifa_graceful_errors(self):
+        pass
 
 if __name__ == '__main__':
     unittest.main(buffer=False)
