@@ -359,3 +359,9 @@ class CaitTests(unittest.TestCase):
         self.assertTrue(type(matches) == list, "find_matches did not return a list")
         self.assertTrue(type(matches[0]) == AstMap, "find_matches does not contain an AstMap")
         self.assertTrue(len(matches) == 2, "find_matches does not return the correct number of matches")
+    
+    def test_invalid_code(self):
+        set_source("float('0') + 1")
+        parse_program()
+        matches = find_match("_var_ = __expr__")
+        self.assertIsNone(matches)

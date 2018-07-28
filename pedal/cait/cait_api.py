@@ -94,9 +94,13 @@ def find_match(ins_code, std_code=None, report=None):
 
     :param ins_code: Instructor defined pattern
     :param std_code: Student code
-    :return: First match of tree inclusion of instructor in student
+    :return: First match of tree inclusion of instructor in student or None
     """
-    return find_matches(ins_code=ins_code, std_code=std_code, report=report)[0]
+    matches = find_matches(ins_code=ins_code, std_code=std_code, report=report)
+    if matches:
+        return matches[0]
+    else:
+        return None
 
 
 def find_matches(ins_code, std_code=None, report=None):
