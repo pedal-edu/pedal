@@ -63,7 +63,8 @@ class TestCode(unittest.TestCase):
         compatibility.raise_exception(ne)
         (success, score, category, label, 
          message, data, hide) = simple.resolve()
-        self.assertEqual(message, "Hey what happened???")
+        self.assertEqual(message, "<pre>name 'a' is not defined</pre>\n"+
+        "A name error almost always means that you have used a variable before it has a value.  Often this may be a simple typo, so check the spelling carefully.  <br><b>Suggestion: </b>Check the right hand side of assignment statements and your function calls, this is the most likely place for a NameError to be found. It really helps to step through your code, one line at a time, mentally keeping track of your variables.")
 
 if __name__ == '__main__':
     unittest.main(buffer=False)

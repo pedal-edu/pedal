@@ -50,7 +50,7 @@ def raise_exception(exception, report=None):
     sandbox = _check_sandbox(report)
     if exception is None:
         return
-    extended = EXTENDED_ERROR_EXPLANATION.get(exception.__class__.__name__, "")
+    extended = EXTENDED_ERROR_EXPLANATION.get(exception.__class__, "")
     message = "<pre>{}</pre>\n{}".format(exception, extended)
     report.attach(str(exception), category='Runtime', tool='Sandbox',
                   mistakes={'message': message, 'error': exception})
