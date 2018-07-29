@@ -16,8 +16,6 @@ class Cait:
             set_source(std_code, self.report)
 
         if 'cait' not in self.report:
-            # tifa_analysis(self.report)  # TODO: Wait till this is implemented
-            tifa_analysis()  # TODO: get rid of this when TIFA can take reports
             self._initialize_report()
 
     def _initialize_report(self):
@@ -37,9 +35,9 @@ def parse_program():
     """
     try:
         if MAIN_REPORT["source"]["success"]:
-            tifa_analysis()
             std_ast = MAIN_REPORT['source']['ast']
             MAIN_REPORT['cait']['matcher'] = None
+            return std_ast
         else:
             raise Exception("No source code found")
     except Exception:

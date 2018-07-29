@@ -327,7 +327,7 @@ class Sandbox:
 def _threaded_execution(code, filename, inputs=None):
     pass
     
-def _make_inputs(*input_list, repeat=None):
+def _make_inputs(*input_list, **kwargs):
     '''
     Helper function for creating mock user input.
     
@@ -338,6 +338,10 @@ def _make_inputs(*input_list, repeat=None):
                              will return the next element of input_list each
                              time it is called.
     '''
+    if 'repeat' in kwargs:
+        repeat = kwargs['repeat']
+    else:
+        repeat = None
     generator = iter(input_list)
     def mock_input(prompt=''):
         print(prompt)

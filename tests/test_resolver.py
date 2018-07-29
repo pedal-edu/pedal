@@ -8,6 +8,7 @@ from pedal.report import *
 from pedal.source import set_source
 from pedal.tifa import tifa_analysis
 from pedal.resolvers import simple
+import pedal.sandbox.compatibility as compatibility
 
 class TestCode(unittest.TestCase):
 
@@ -51,6 +52,18 @@ class TestCode(unittest.TestCase):
         (success, score, category, label, 
          message, data, hide) = simple.resolve()
         self.assertEqual(message, "No errors reported.")
+    
+    def test_premade_exceptions(self):
+        try:
+            a
+        except Exception as e:
+            ne = e
+        clear_report()
+        set_source('a=0\na')
+        compatibility.raise_exception(ne)
+        (success, score, category, label, 
+         message, data, hide) = simple.resolve()
+        self.assertEqual(message, "Hey what happened???")
 
 if __name__ == '__main__':
     unittest.main(buffer=False)

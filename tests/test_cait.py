@@ -365,3 +365,10 @@ class CaitTests(unittest.TestCase):
         parse_program()
         matches = find_match("_var_ = __expr__")
         self.assertIsNone(matches)
+    
+        
+    def test_old_stye_api(self):    
+        set_source("a = open('file.txt')")
+        ast = parse_program()
+        calls = ast.find_all("Call")
+        self.assertEqual(len(calls), 1)

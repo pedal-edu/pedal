@@ -178,7 +178,7 @@ def resolve(report=None, priority_key=None):
     final_message = None
     final_category = "Instructor"
     final_label = ""
-    final_data = None
+    final_data = []
     for feedback in feedbacks:
         if feedback.category in suppressions:
             if True in suppressions[feedback.category]:
