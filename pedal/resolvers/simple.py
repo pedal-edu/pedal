@@ -180,10 +180,11 @@ def resolve(report=None, priority_key=None):
     final_label = ""
     final_data = []
     for feedback in feedbacks:
-        if feedback.category in suppressions:
-            if True in suppressions[feedback.category]:
+        category = feedback.category.lower()
+        if category in suppressions:
+            if True in suppressions[category]:
                 continue
-            elif feedback.label in suppressions[feedback.category]:
+            elif feedback.label.lower() in suppressions[category]:
                 continue
         success, partial, message, data = parse_feedback(feedback)
         final_success = success or final_success

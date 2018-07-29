@@ -1,7 +1,28 @@
+# Skulpt has weird errors, and is missing some errors. Compatibility.
 try:
     ParseError
 except NameError:
     class ParseError(Exception): pass
+try:
+    SyntaxError
+except NameError:
+    class SyntaxError(Exception): pass
+try:
+    ReferenceError
+except NameError:
+    class ReferenceError(Exception): pass
+try:
+    EOFError
+except NameError:
+    class EOFError(Exception): pass
+try:
+    MemoryError
+except NameError:
+    class MemoryError(Exception): pass
+try:
+    OSError
+except NameError:
+    class OSError(Exception): pass
 try:
     TokenError
 except NameError:

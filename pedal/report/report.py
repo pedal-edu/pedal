@@ -53,6 +53,9 @@ class Report:
         self.feedback.append(Feedback(label, **kwargs))
 
     def suppress(self, category, label=True):
+        category = category.lower()
+        if isinstance(label, str):
+            label = label.lower()
         if category not in self.suppressions:
             self.suppressions[category] = []
         self.suppressions[category].append(label)

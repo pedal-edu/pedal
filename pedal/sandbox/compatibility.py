@@ -15,7 +15,7 @@ def run_student(raise_exceptions=False, report=None):
     source_code = report['source']['code']
     sandbox.run(source_code)
     if raise_exceptions:
-        self.raise_exception(sandbox.exception)
+        raise_exception(sandbox.exception, report=report)
     return sandbox.exception
 
 def queue_input(*inputs, **kwargs):
@@ -51,7 +51,9 @@ def raise_exception(exception, report=None):
     if exception is None:
         return
     extended = EXTENDED_ERROR_EXPLANATION.get(exception.__class__, "")
-    message = "<pre>{}</pre>\n{}".format(exception, extended)
-    report.attach(str(exception), category='Runtime', tool='Sandbox',
+    message = "<pre>{}</pre>\n{}".format(str(exception), extended)
+    # Skulpt compatible name lookup
+    name = str(exception.__class__)[8:-2]
+    report.attach(name, category='Runtime', tool='Sandbox',
                   mistakes={'message': message, 'error': exception})
     sandbox.exception = exception

@@ -53,6 +53,17 @@ class TestCode(unittest.TestCase):
          message, data, hide) = simple.resolve()
         self.assertEqual(message, "No errors reported.")
     
+    def test_suppression(self):
+        clear_report()
+        set_source('1+"Hello"')
+        tifa_analysis()
+        compatibility.run_student(raise_exceptions=True)
+        suppress("analyzer")
+        (success, score, category, label, 
+         message, data, hide) = simple.resolve()
+        self.assertEqual(category, "Runtime")
+        self.assertEqual(label, "TypeError")
+    
     def test_premade_exceptions(self):
         try:
             a
