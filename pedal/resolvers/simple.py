@@ -177,7 +177,7 @@ def resolve(report=None, priority_key=None):
     final_score = 0
     final_message = None
     final_category = "Instructor"
-    final_label = ""
+    final_label = "no errors"
     final_data = []
     for feedback in feedbacks:
         category = feedback.category.lower()
@@ -197,6 +197,11 @@ def resolve(report=None, priority_key=None):
     if final_message is None:
         final_message = "No errors reported."
     final_hide_correctness = suppressions.get('success', False)
+    if (not final_hide_correctness and final_success and
+        final_label == 'no errors' and
+        final_category == 'Instructor'):
+        final_label = 'complete'
+        final_message = "Great work!"
     return (final_success, final_score, final_category, 
             final_label, final_message, final_data,
             final_hide_correctness)

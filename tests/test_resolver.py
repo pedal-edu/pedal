@@ -53,7 +53,7 @@ class TestCode(unittest.TestCase):
          message, data, hide) = simple.resolve()
         self.assertEqual(message, "No errors reported.")
     
-    def test_suppression(self):
+    def test_analyzer_suppression(self):
         clear_report()
         set_source('1+"Hello"')
         tifa_analysis()
@@ -63,6 +63,17 @@ class TestCode(unittest.TestCase):
          message, data, hide) = simple.resolve()
         self.assertEqual(category, "Runtime")
         self.assertEqual(label, "TypeError")
+    
+    def test_runtime_suppression(self):
+        clear_report()
+        set_source('import json\njson.loads("0")+"1"')
+        tifa_analysis()
+        compatibility.run_student(raise_exceptions=True)
+        suppress("Runtime")
+        (success, score, category, label, 
+         message, data, hide) = simple.resolve()
+        self.assertEqual(category, "Instructor")
+        self.assertEqual(message, "No errors reported.")
     
     def test_premade_exceptions(self):
         try:
@@ -76,6 +87,45 @@ class TestCode(unittest.TestCase):
          message, data, hide) = simple.resolve()
         self.assertEqual(message, "<pre>name 'a' is not defined</pre>\n"+
         "A name error almost always means that you have used a variable before it has a value.  Often this may be a simple typo, so check the spelling carefully.  <br><b>Suggestion: </b>Check the right hand side of assignment statements and your function calls, this is the most likely place for a NameError to be found. It really helps to step through your code, one line at a time, mentally keeping track of your variables.")
+    
+    def test_suppress_premade(self):
+        try:
+            a
+        except Exception as e:
+            ne = e
+        clear_report()
+        set_source('import json\njson.loads("0")+"1"')
+        tifa_analysis()
+        compatibility.raise_exception(ne)
+        suppress("Runtime")
+        (success, score, category, label, 
+         message, data, hide) = simple.resolve()
+        self.assertEqual(category, "Instructor")
+        self.assertEqual(label, "no errors")
+        self.assertEqual(message, "No errors reported.")
+    
+    def test_success(self):
+        clear_report()
+        set_source('a=0\na')
+        tifa_analysis()
+        set_success()
+        (success, score, category, label, 
+         message, data, hide) = simple.resolve()
+        self.assertEqual(category, "Instructor")
+        self.assertEqual(label, "complete")
+        self.assertEqual(message, "Great work!")
+    
+    def test_success_suppression(self):
+        clear_report()
+        set_source('a=0\na')
+        tifa_analysis()
+        set_success()
+        suppress('success')
+        (success, score, category, label, 
+         message, data, hide) = simple.resolve()
+        self.assertEqual(category, "Instructor")
+        self.assertEqual(label, "no errors")
+        self.assertEqual(message, "No errors reported.")
 
 if __name__ == '__main__':
     unittest.main(buffer=False)
