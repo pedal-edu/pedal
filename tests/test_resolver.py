@@ -126,6 +126,18 @@ class TestCode(unittest.TestCase):
         self.assertEqual(category, "Instructor")
         self.assertEqual(label, "no errors")
         self.assertEqual(message, "No errors reported.")
+    
+    def test_empty(self):
+        clear_report()
+        set_source('    ')
+        tifa_analysis()
+        compatibility.run_student(raise_exceptions=True)
+        (success, score, category, label, 
+         message, data, hide) = simple.resolve()
+        self.assertEqual(category, "Syntax")
+        self.assertEqual(label, "blank source")
+        self.assertEqual(message, "Source code file is blank.")
+        
 
 if __name__ == '__main__':
     unittest.main(buffer=False)

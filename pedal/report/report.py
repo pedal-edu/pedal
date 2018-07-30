@@ -41,6 +41,7 @@ class Report:
         if line is not None:
             misconception['line'] = line
         self.feedback.append(Feedback('explain', priority=priority,
+                                      category='instructor',
                                       misconceptions=misconception))
 
     def gently(self, message, line=None):
