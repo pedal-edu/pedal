@@ -36,7 +36,12 @@ def parse_program():
         if MAIN_REPORT["source"]["success"]:
             std_ast = MAIN_REPORT['source']['ast']
             MAIN_REPORT['cait']['matcher'] = None
-            return EasyNode(std_ast)
+            try:
+                std_easy = MAIN_REPORT['cait']['std_ast']
+            except KeyError:
+                MAIN_REPORT['cait']['std_ast'] = EasyNode(std_ast)
+                std_easy = MAIN_REPORT['cait']['std_ast']
+            return std_easy
         else:
             raise Exception("No source code found")
     except Exception:
