@@ -351,7 +351,6 @@ class CaitTests(unittest.TestCase):
         match = find_match("_var_ = __expr__")
         self.assertTrue(type(match) == AstMap, "Match not found")
 
-
     def test_find_matches(self):
         set_source("fun = 1 + 1\nfun2 = 2 + 2")
         parse_program()

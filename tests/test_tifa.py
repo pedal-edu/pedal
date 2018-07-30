@@ -292,7 +292,8 @@ def make_tester(code, nones, somes):
 for name, (code, nones, somes) in unit_tests.items():
     if SILENCE_EXCEPT is None or SILENCE_EXCEPT == name:
         setattr(TestCode, 'test_code_{}'.format(name), make_tester(code, nones, somes))
-        
+
+
 class TestVariables(unittest.TestCase):
     def test_type_comparisons(self):
         tifa = pedal.tifa.Tifa()

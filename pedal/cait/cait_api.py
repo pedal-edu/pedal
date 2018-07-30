@@ -1,4 +1,3 @@
-import pedal.cait.stretchy_tree_matching as tree_match
 from pedal.report import Report, MAIN_REPORT
 from pedal.source import set_source
 from pedal.tifa import tifa_analysis
