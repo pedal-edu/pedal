@@ -111,7 +111,7 @@ class TestCode(unittest.TestCase):
         set_success()
         (success, score, category, label, 
          message, data, hide) = simple.resolve()
-        self.assertEqual(category, "Instructor")
+        self.assertEqual(category, "Complete")
         self.assertEqual(label, "complete")
         self.assertEqual(message, "Great work!")
     

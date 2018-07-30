@@ -200,6 +200,7 @@ def resolve(report=None, priority_key=None):
     if (not final_hide_correctness and final_success and
         final_label == 'no errors' and
         final_category == 'Instructor'):
+        final_category = 'Complete'
         final_label = 'complete'
         final_message = "Great work!"
     return (final_success, final_score, final_category, 
