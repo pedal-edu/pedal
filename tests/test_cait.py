@@ -372,5 +372,5 @@ class CaitTests(unittest.TestCase):
         calls = ast.find_all("Call")
         self.assertEqual(len(calls), 1)
         self.assertEqual(calls[0].func.ast_name, 'Name')
-        self.assertEqual(calls[0].func.id == 'open')
+        self.assertTrue(calls[0].func.id == 'open')
         self.assertEqual(len(calls[0].args), 1)
