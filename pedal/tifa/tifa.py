@@ -12,7 +12,7 @@ from pedal.tifa.type_definitions import (UnknownType, RecursedType,
 from pedal.tifa.literal_definitions import (LiteralNum, LiteralBool,
                                             LiteralNone, LiteralStr,
                                             LiteralTuple)
-from pedal.tifa.builtin_definitions import (MODULES, BUILTINS)
+from pedal.tifa.builtin_definitions import (get_builtin_module, get_builtin_function)
 from pedal.tifa.type_operations import (merge_types, are_types_equal,
                                         VALID_UNARYOP_TYPES, VALID_BINOP_TYPES,
                                         ORDERABLE_TYPES, INDEXABLE_TYPES)
@@ -712,7 +712,7 @@ class Tifa(ast.NodeVisitor):
                 return NoneType()
             else:
                 variable = self.find_variable_scope(name)
-                builtin = BUILTINS.get(name)
+                builtin = get_builtin_function(name)
                 if not variable.exists and builtin:
                     return builtin
                 else:
@@ -977,8 +977,9 @@ class Tifa(ast.NodeVisitor):
                         module type.
         '''
         module_names = chain.split('.')
-        if module_names[0] in MODULES:
-            base_module = MODULES[module_names[0]]
+        potential_module = get_builtin_module(module_names[0])
+        if potential_module is not None:
+            base_module = potential_module
             for module in module_names:
                 if (isinstance(base_module, ModuleType) and 
                     module in base_module.submodules):
