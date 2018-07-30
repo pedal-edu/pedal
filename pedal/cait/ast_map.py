@@ -30,9 +30,9 @@ class AstMap:
         :param std_node: student node representing variable
         :return: number of conflicts generated
         """
-        if type(std_node) != EasyNode:
+        if not isinstance(std_node, EasyNode):
             raise TypeError
-        if type(ins_node) == str:
+        if isinstance(ins_node, str):
             key = ins_node
         else:
             key = ins_node.astNode.id
@@ -59,7 +59,7 @@ class AstMap:
         :param std_node: student ast subtree corresponding to the symbol
         :return: nothing
         """
-        if type(std_node) != EasyNode:
+        if not isinstance(std_node, EasyNode):
             raise TypeError
         self.exp_table.set(ins_node.astNode.id, std_node)
 
@@ -70,7 +70,7 @@ class AstMap:
         :param std_node: student ast node
         :return: nothing
         """
-        if type(std_node) != EasyNode:
+        if not isinstance(std_node, EasyNode):
             raise TypeError
         self.mappings.set(ins_node, std_node)
 
@@ -121,7 +121,7 @@ class AstMap:
         :param ins_id: the instructor variable defined in the pattern
         :return: the associated student name node
         """
-        if type(ins_id) is str:
+        if isinstance(ins_id, str):
             # noinspection PyBroadException
             try:
                 return self.symbol_table.get(ins_id)
@@ -134,7 +134,7 @@ class AstMap:
         :param ins_id: the instructor variable defined in the pattern
         :return: the associated student subtree node
         """
-        if type(ins_id) is str:
+        if isinstance(ins_id, str):
             # noinspection PyBroadException
             try:
                 return self.exp_table.get(ins_id)

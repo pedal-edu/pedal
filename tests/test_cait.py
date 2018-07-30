@@ -329,7 +329,7 @@ class CaitTests(unittest.TestCase):
         set_source("fun = 1 + 0")
         parse_program()
         self.assertTrue('cait' in MAIN_REPORT, "No parsing happened")
-
+    '''
     def test_def_use_error(self):
         set_source("fun = fun + 1")
         parse_program()
@@ -343,7 +343,7 @@ class CaitTests(unittest.TestCase):
         parse_program()
         name_node = MAIN_REPORT["source"]["ast"].body[0].easy_node.target
         self.assertTrue(data_type(name_node).is_equal(int), "Data type not successfully found from name node")
-        self.assertTrue(data_type("fun").is_equal(int), "Data type not successfully found from str name")
+        self.assertTrue(data_type("fun").is_equal(int), "Data type not successfully found from str name")'''
 
     def test_find_match(self):
         set_source("fun = 1 + 1")
@@ -358,3 +358,19 @@ class CaitTests(unittest.TestCase):
         self.assertTrue(type(matches) == list, "find_matches did not return a list")
         self.assertTrue(type(matches[0]) == AstMap, "find_matches does not contain an AstMap")
         self.assertTrue(len(matches) == 2, "find_matches does not return the correct number of matches")
+    
+    def test_invalid_code(self):
+        set_source("float('0') + 1")
+        parse_program()
+        matches = find_match("_var_ = __expr__")
+        self.assertIsNone(matches)
+    
+        
+    def test_old_stye_api(self):    
+        set_source("a = open('file.txt')")
+        ast = parse_program()
+        calls = ast.find_all("Call")
+        self.assertEqual(len(calls), 1)
+        self.assertEqual(calls[0].func.ast_name, 'Name')
+        self.assertEqual(calls[0].func.id == 'open')
+        self.assertEqual(len(calls[0].args), 1)

@@ -107,7 +107,7 @@ def _format_message(issue, data):
                 "over sequences like lists."
                 ).format(line=data['position']['line'], name=data['name'])
     elif issue == 'Incompatible types':
-        op = OPERATION_DESCRIPTION.get(data['operation'], 
+        op = OPERATION_DESCRIPTION.get(data['operation'].__class__, 
                                        str(data['operation']))
         left = data['left'].singular_name
         right = data['right'].singular_name

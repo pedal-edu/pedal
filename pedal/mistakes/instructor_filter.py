@@ -7,7 +7,7 @@ Name: missing_if_in_for
 Pattern:
 missing
 for <item> in ___ :
-    if …<item> … :
+    if ...<item> ... :
 
 Feedback: The arrangement of decision and iteration is not correct for the filter pattern.
 
@@ -26,7 +26,7 @@ def missing_if_in_for():
 Name: append_not_in_if
 Pattern:
 missing
-if … :
+if ... :
    ___.append(___)
 
 Feedback: Only items satisfying some condition should be appended to the list.

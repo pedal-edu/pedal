@@ -8,27 +8,32 @@ from pedal.report import *
 from pedal.source import set_source
 from pedal.tifa import tifa_analysis
 from pedal.resolvers import simple
+import pedal.sandbox.compatibility as compatibility
 
 class TestCode(unittest.TestCase):
 
     def test_gently(self):
         clear_report()
-        success, message = simple.resolve()
+        (success, score, category, label, 
+         message, data, hide) = simple.resolve()
         self.assertFalse(success)
         self.assertEqual(message, "No errors reported.")
         
         gently('You should always create unit tests.')
-        success, message = simple.resolve()
+        (success, score, category, label, 
+         message, data, hide) = simple.resolve()
         self.assertFalse(success)
         self.assertEqual(message, 'You should always create unit tests.')
         
         gently('A boring message that we should not show.')
-        success, message = simple.resolve()
+        (success, score, category, label, 
+         message, data, hide) = simple.resolve()
         self.assertFalse(success)
         self.assertEqual(message, 'You should always create unit tests.')
         
         set_success()
-        success, message = simple.resolve()
+        (success, score, category, label, 
+         message, data, hide) = simple.resolve()
         self.assertTrue(success)
         self.assertEqual(message, 'You should always create unit tests.')
     
@@ -36,8 +41,103 @@ class TestCode(unittest.TestCase):
         clear_report()
         set_source('import pedal')
         tifa_analysis()
-        success, message = simple.resolve()
-        self.assertNotEqual(message, (False,))
+        (success, score, category, label, 
+         message, data, hide) = simple.resolve()
+        self.assertNotEqual(message, "No errors reported.")
+    
+    def test_unmessaged_tifa(self):
+        clear_report()
+        set_source('import random\nrandom')
+        tifa_analysis()
+        (success, score, category, label, 
+         message, data, hide) = simple.resolve()
+        self.assertEqual(message, "No errors reported.")
+    
+    def test_analyzer_suppression(self):
+        clear_report()
+        set_source('1+"Hello"')
+        tifa_analysis()
+        compatibility.run_student(raise_exceptions=True)
+        suppress("analyzer")
+        (success, score, category, label, 
+         message, data, hide) = simple.resolve()
+        self.assertEqual(category, "Runtime")
+        self.assertEqual(label, "TypeError")
+    
+    def test_runtime_suppression(self):
+        clear_report()
+        set_source('import json\njson.loads("0")+"1"')
+        tifa_analysis()
+        compatibility.run_student(raise_exceptions=True)
+        suppress("Runtime")
+        (success, score, category, label, 
+         message, data, hide) = simple.resolve()
+        self.assertEqual(category, "Instructor")
+        self.assertEqual(message, "No errors reported.")
+    
+    def test_premade_exceptions(self):
+        try:
+            a
+        except Exception as e:
+            ne = e
+        clear_report()
+        set_source('a=0\na')
+        compatibility.raise_exception(ne)
+        (success, score, category, label, 
+         message, data, hide) = simple.resolve()
+        self.assertEqual(message, "<pre>name 'a' is not defined</pre>\n"+
+        "A name error almost always means that you have used a variable before it has a value.  Often this may be a simple typo, so check the spelling carefully.  <br><b>Suggestion: </b>Check the right hand side of assignment statements and your function calls, this is the most likely place for a NameError to be found. It really helps to step through your code, one line at a time, mentally keeping track of your variables.")
+    
+    def test_suppress_premade(self):
+        try:
+            a
+        except Exception as e:
+            ne = e
+        clear_report()
+        set_source('import json\njson.loads("0")+"1"')
+        tifa_analysis()
+        compatibility.raise_exception(ne)
+        suppress("Runtime")
+        (success, score, category, label, 
+         message, data, hide) = simple.resolve()
+        self.assertEqual(category, "Instructor")
+        self.assertEqual(label, "no errors")
+        self.assertEqual(message, "No errors reported.")
+    
+    def test_success(self):
+        clear_report()
+        set_source('a=0\na')
+        tifa_analysis()
+        set_success()
+        (success, score, category, label, 
+         message, data, hide) = simple.resolve()
+        self.assertEqual(category, "Complete")
+        self.assertEqual(label, "complete")
+        self.assertEqual(message, "Great work!")
+    
+    def test_success_suppression(self):
+        clear_report()
+        set_source('a=0\na')
+        tifa_analysis()
+        set_success()
+        suppress('success')
+        (success, score, category, label, 
+         message, data, hide) = simple.resolve()
+        self.assertEqual(category, "Instructor")
+        self.assertEqual(label, "no errors")
+        self.assertEqual(message, "No errors reported.")
+    
+    def test_empty(self):
+        clear_report()
+        set_source('    ')
+        tifa_analysis()
+        compatibility.run_student(raise_exceptions=True)
+        (success, score, category, label, 
+         message, data, hide) = simple.resolve()
+        self.assertEqual(category, "Syntax")
+        self.assertEqual(label, "blank source")
+        self.assertEqual(message, "Source code file is blank.")
+        
 
 if __name__ == '__main__':
     unittest.main(buffer=False)

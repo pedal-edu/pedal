@@ -23,7 +23,7 @@ class Report:
     
     def clear(self):
         self.feedback = []
-        self.suppressions = []
+        self.suppressions = {}
         self._results = {}
 
     def set_success(self):
@@ -34,13 +34,14 @@ class Report:
                                       mistakes=message))
         
     def hide_correctness(self):
-        self.suppressions
+        self.suppressions['success'] = []
         
     def explain(self, message, priority='medium', line=None):
         misconception = {'message': message}
         if line is not None:
             misconception['line'] = line
         self.feedback.append(Feedback('explain', priority=priority,
+                                      category='instructor',
                                       misconceptions=misconception))
 
     def gently(self, message, line=None):
@@ -52,8 +53,13 @@ class Report:
     def attach(self, label, **kwargs):
         self.feedback.append(Feedback(label, **kwargs))
 
-    def suppress(self, category, label=None):
-        self.suppressions.append((category, label))
+    def suppress(self, category, label=True):
+        category = category.lower()
+        if isinstance(label, str):
+            label = label.lower()
+        if category not in self.suppressions:
+            self.suppressions[category] = []
+        self.suppressions[category].append(label)
         
     def log(self, message):
         pass

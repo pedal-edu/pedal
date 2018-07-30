@@ -61,11 +61,12 @@ class Tifa(ast.NodeVisitor):
         if 'position' not in data:
             data['position'] = self.locate()
         data['message'] = _format_message(issue, data)
-        self.report.attach(issue, category='Analyzer', tool='TIFA',
-                           mistakes=data)
         if issue not in self.report['tifa']['issues']:
             self.report['tifa']['issues'][issue] = []
         self.report['tifa']['issues'][issue].append(data)
+        if data['message'] != False:
+            self.report.attach(issue, category='Analyzer', tool='TIFA',
+                               mistakes=data)
         
     def locate(self, node=None):
         '''
@@ -983,7 +984,7 @@ class Tifa(ast.NodeVisitor):
                     module in base_module.submodules):
                     base_module = base_module.submodules[module]
                 else:
-                    self.report_issue("Submodule not found", {"name": chain})
+                    self.report_issue("Module not found", {"name": chain})
             return base_module
         else:
             self.report_issue("Module not found", {"name": chain})

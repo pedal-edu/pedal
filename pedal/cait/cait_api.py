@@ -15,8 +15,6 @@ class Cait:
             set_source(std_code, self.report)
 
         if 'cait' not in self.report:
-            # tifa_analysis(self.report)  # TODO: Wait till this is implemented
-            tifa_analysis()  # TODO: get rid of this when TIFA can take reports
             self._initialize_report()
 
     def _initialize_report(self):
@@ -36,9 +34,9 @@ def parse_program():
     """
     try:
         if MAIN_REPORT["source"]["success"]:
-            tifa_analysis()
             std_ast = MAIN_REPORT['source']['ast']
             MAIN_REPORT['cait']['matcher'] = None
+            return std_ast
         else:
             raise Exception("No source code found")
     except Exception:
@@ -53,10 +51,10 @@ def def_use_error(node, report=None):
     :return: True if the given name has a def_use_error
     """
     cait_obj = Cait(report)
-    if type(node) != str and node.ast_name != "Name":
+    if not isinstance(node, str) and node.ast_name != "Name":
         raise TypeError
     def_use_vars = cait_obj.report['tifa']['issues']['Initialization Problem']
-    if type(node) == str:
+    if not isinstance(node, str):
         node_id = node
     else:
         node_id = node.id
@@ -78,9 +76,9 @@ def data_type(node, report=None):
     :return: the type of the object (Tifa type) or None if a type doesn't exist
     """
     cait_obj = Cait(report)
-    if type(node) != str and node.ast_name != "Name":
+    if not isinstance(node, str) and node.ast_name != "Name":
         raise TypeError
-    if type(node) == str:
+    if isinstance(node, str):
         node_id = node
     else:
         node_id = node.id
@@ -93,9 +91,13 @@ def find_match(ins_code, std_code=None, report=None):
 
     :param ins_code: Instructor defined pattern
     :param std_code: Student code
-    :return: First match of tree inclusion of instructor in student
+    :return: First match of tree inclusion of instructor in student or None
     """
-    return find_matches(ins_code=ins_code, std_code=std_code, report=report)[0]
+    matches = find_matches(ins_code=ins_code, std_code=std_code, report=report)
+    if matches:
+        return matches[0]
+    else:
+        return None
 
 
 def find_matches(ins_code, std_code=None, report=None):

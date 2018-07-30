@@ -11,6 +11,7 @@ DESCRIPTION = '''
 '''
 REQUIRES = []
 OPTIONALS = []
+CATEGORY = 'Syntax'
 
 __all__ = ['NAME', 'DESCRIPTION', 'SHORT_DESCRIPTION',
            'REQUIRES', 'OPTIONALS',
@@ -26,14 +27,14 @@ def set_source(code, filename='__main__.py', report=None):
 
 def _check_issues(code, report):
     if code.strip() == '':
-        report.attach('blank_source', category='Syntax', tool=NAME,
+        report.attach('blank source', category=CATEGORY, tool=NAME,
                       mistakes="Source code file is blank.")
         report['source']['success'] = False
     try:
         parsed = ast.parse(code)
         report['source']['ast'] = parsed
     except Exception as e:
-        report.attach('syntax_error', category='Syntax', tool=NAME,
+        report.attach('syntax error', category=CATEGORY, tool=NAME,
                       mistakes={'message': "Failed to parse source code.",
                                 'error': e})
         report['source']['success'] = False
