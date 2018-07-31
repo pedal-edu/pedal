@@ -163,6 +163,17 @@ class TestFunctions(unittest.TestCase):
             self.assertIsNone(unit_test('a', (1, 2, 3)))
         self.assertEqual(e.message, "The function <code>a</code> was "
                          "not defined.")
+    
+    def test_output_test(self):
+        # All passing
+        with Execution('def a(x):\n  print(x+1)\na(1)') as e:
+            self.assertIsNotNone(output_test('a', (2, "3")))
+        self.assertEqual(e.message, "No errors reported.")
+        
+        # All failing
+        with Execution('def a(x,y):\n  print(x-y)\na(1,2)') as e:
+            self.assertIsNone(output_test('a', (1, 2, "3")))
+        self.assertIn("wrong output 1/1 times", e.message)
 
 if __name__ == '__main__':
     unittest.main(buffer=False)

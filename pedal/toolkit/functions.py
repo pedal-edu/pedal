@@ -57,9 +57,7 @@ def output_test(name, *tests):
                     tip = out[1]
                     out = out[0]
                 template = "<td><code>{}</code></td>"+("<td><pre>{}</pre></td>"*2)
-                compatibility.reset_output()
-                the_function(*inp)
-                test_out = compatibility.get_output()
+                test_out = compatibility.capture_output(the_function, *inp)
                 if isinstance(out, str):
                     if len(test_out) < 1:
                         message = template.format(inputs, repr(out), "<i>No output</i>", tip)

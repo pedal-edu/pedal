@@ -102,13 +102,23 @@ class Tifa(ast.NodeVisitor):
         # Attempt parsing - might fail!
         try:
             ast_tree = ast.parse(code, filename)
+        except Exception as error:
+            self.report['tifa']['success'] = False
+            self.report['tifa']['error'] = error
+            self.report.attach('tifa_error', category='Analyzer', tool='TIFA',
+                               mistakes={
+                                'message': "Could not parse code",
+                                'error': error
+                               })
+            return self.report['tifa']
+        try:
             return self.process_ast(ast_tree)
         except Exception as error:
             self.report['tifa']['success'] = False
             self.report['tifa']['error'] = error
             self.report.attach('tifa_error', category='Analyzer', tool='TIFA',
                                mistakes={
-                                'message': "Could not parse or process code",
+                                'message': "Could not process code",
                                 'error': error
                                })
             return self.report['tifa']

@@ -81,7 +81,7 @@ def _format_message(issue, data):
     elif issue == 'Unused Variable':
         # A variable was not read after it was defined
         name = data['name']
-        if data['type'].is_equal('Function'):
+        if data['type'].is_equal('function'):
             kind = 'function'
             body = 'definition'
         else:

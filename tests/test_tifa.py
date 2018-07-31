@@ -340,6 +340,19 @@ class TestVariables(unittest.TestCase):
         self.assertNotIn('b', unset_variables)
         self.assertIn('c', unset_variables)
     
+    def test_weirdness(self):
+        tifa = pedal.tifa.Tifa()
+        tifa.process_code('def a(x):\n    return x\na(1)')
+        issues = tifa.report['tifa']['issues']
+        self.assertTrue(tifa.report['tifa']['success'])
+        
+        tifa = pedal.tifa.Tifa()
+        tifa.process_code('def a(x):\n    return x\n')
+        issues = tifa.report['tifa']['issues']
+        self.assertEqual(issues['Unused Variable'][0]['message'], 
+                         "The function <code>a</code> was given a definition, "
+                         "but was never used after that.")
+    
     '''
     def test_tifa_graceful_errors(self):
         student_code = '1 + "Banana"'

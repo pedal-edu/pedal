@@ -38,6 +38,16 @@ def get_output(report=None):
     sandbox = _check_sandbox(report)
     return sandbox.output
 
+def capture_output(function, *args, **kwargs):
+    if 'report' in kwargs:
+        report = kwargs['report']
+    else:
+        report = MAIN_REPORT
+    sandbox = _check_sandbox(report)
+    sandbox.set_output(None)
+    sandbox.call(function.__name__, *args)
+    return sandbox.output
+
 def get_sandbox(report=None):
     if report is None:
         report = MAIN_REPORT
