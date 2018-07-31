@@ -40,3 +40,8 @@ def _check_issues(code, report):
         report['source']['success'] = False
         if 'ast' in report['source']:
             del report['source']['ast']
+
+def get_program(report=None):
+    if report is None:
+        report = MAIN_REPORT
+    return report['source']['code']

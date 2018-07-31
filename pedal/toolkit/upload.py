@@ -1,5 +1,6 @@
 import re
-from instructor import *
+from pedal.source import get_program
+from pedal.report.imperative import gently
 
 # Feedback for author's name
 def check_author_name_on_header():

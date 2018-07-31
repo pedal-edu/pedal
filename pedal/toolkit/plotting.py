@@ -32,7 +32,8 @@ def ensure_correct_plot(type):
 
 def ensure_show():
     if not function_is_called("show"):
-        gently("You have not called <code>show</code> function, which actually creates the graph.")
+        gently("You have not called <code>show</code> function, which "
+               "actually creates the graph.")
         return True
     return False
 

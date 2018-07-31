@@ -22,6 +22,8 @@ from pedal.toolkit.utilities import (is_top_level, function_prints,
                                      prevent_builtin_usage, find_operation,
                                      prevent_advanced_iteration,
                                      ensure_operation, prevent_operation)
+from pedal.toolkit.imports import ensure_imports
+from pedal.toolkit.printing import ensure_prints
 
 class Execution:
     def __init__(self, code):
@@ -362,6 +364,45 @@ class TestUtilities(unittest.TestCase):
         with Execution('not (1 + 1) and 1 < 1 <= 10') as e:
             ast = parse_program()
             self.assertFalse(find_operation(">", ast))
+
+class TestImports(unittest.TestCase):
+    def test_ensure_imports(self):
+        with Execution('json = "0"\njson.loads("0")+0') as e:
+            self.assertTrue(ensure_imports("json"))
+        self.assertEqual(e.message, "You need to import the <code>json</code> "
+                         "module.")
+        with Execution('from requests import json\njson.loads("0")+0') as e:
+            self.assertTrue(ensure_imports("json"))
+        self.assertEqual(e.message, "You need to import the <code>json</code> "
+                         "module.")
+        with Execution('import json\njson.loads("0")+0') as e:
+            self.assertFalse(ensure_imports("json"))
+        self.assertEqual(e.message, "No errors reported.")
+        with Execution('from json import loads\nloads("0")+0') as e:
+            self.assertFalse(ensure_imports("json"))
+        self.assertEqual(e.message, "No errors reported.")
+        
+class TestPrints(unittest.TestCase):
+    def test_ensure_prints(self):
+        with Execution('print(1)\nprint(2)') as e:
+            self.assertFalse(ensure_prints(1))
+        self.assertEqual(e.message, "You are printing too many times!")
+        with Execution('print(1)\nprint(2)') as e:
+            self.assertFalse(ensure_prints(3))
+        self.assertEqual(e.message, "You are not printing enough things!")
+        with Execution('a = 0\na') as e:
+            self.assertFalse(ensure_prints(1))
+        self.assertEqual(e.message, "You are not using the print function!")
+        with Execution('def x():\n  print(x)\nx()') as e:
+            self.assertFalse(ensure_prints(1))
+        self.assertEqual(e.message, "You have a print function that is not at "
+                                    "the top level. That is incorrect for "
+                                    "this problem!")
+        with Execution('print(1)\nprint(2)') as e:
+            prints = ensure_prints(2)
+            self.assertNotEqual(prints, False)
+            self.assertEqual(len(prints), 2)
+        self.assertEqual(e.message, "No errors reported.")
 
 if __name__ == '__main__':
     unittest.main(buffer=False)
