@@ -102,10 +102,10 @@ def prevent_builtin_usage(function_names):
     seen = set()
     for name in names:
         if name.id not in seen:
-            if name.ctx == "Load" and name.id in function_names:
-                explain("You cannot use the builtin function <code>{}</code>. If you are naming a variable, consider a more specific name.".format(name.id))
-            seen.add(name.id)
-            return name.id
+            if name.ctx.ast_name == "Load" and name.id in function_names:
+                explain("You cannot use the builtin function <code>{}</code>.".format(name.id))
+                seen.add(name.id)
+                return name.id
     return None
     
 def prevent_literal(*literals):
@@ -199,21 +199,21 @@ def find_operation(op_name, root):
         compares = root.find_all("Compare")
         for compare in compares:
             for op in compare.ops:
-                if op == COMPARE_OP_NAMES[op_name]:
+                if op.ast_name == COMPARE_OP_NAMES[op_name]:
                     return compare
     elif op_name in BOOL_OP_NAMES:
         boolops = root.find_all("BoolOp")
         for boolop in boolops:
-            if boolop.op == BOOL_OP_NAMES[op_name]:
+            if boolop.op_name == BOOL_OP_NAMES[op_name]:
                 return boolop
     elif op_name in BIN_OP_NAMES:
         binops = root.find_all("BinOp")
         for binop in binops:
-            if binop.op == BIN_OP_NAMES[op_name]:
+            if binop.op_name == BIN_OP_NAMES[op_name]:
                 return binop
     elif op_name in UNARY_OP_NAMES:
         unaryops = root.find_all("UnaryOp")
         for unaryop in unaryops:
-            if unaryop.op == UNARY_OP_NAMES[op_name]:
+            if unaryop.op_name == UNARY_OP_NAMES[op_name]:
                 return unaryop
     return False

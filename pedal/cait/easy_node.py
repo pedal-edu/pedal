@@ -209,7 +209,6 @@ class EasyNode:
         visitor = ast.NodeVisitor()
         has_name = []
         def visit_Name(self, potential):
-            print(node.id, potential.id)
             has_name.append(node.id == potential.id)
             return self.generic_visit(potential)
         visitor.visit_Name = MethodType(visit_Name, visitor)

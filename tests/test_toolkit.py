@@ -16,8 +16,12 @@ from pedal.toolkit.functions import match_signature, output_test, unit_test
 from pedal.toolkit.utilities import (is_top_level, function_prints,
                                      no_nested_function_definitions,
                                      find_function_calls, function_is_called,
-                                     only_printing_variables,
-                                     find_prior_initializations,)
+                                     only_printing_variables, prevent_literal,
+                                     find_prior_initializations,
+                                     prevent_unused_result, ensure_literal,
+                                     prevent_builtin_usage, find_operation,
+                                     prevent_advanced_iteration,
+                                     ensure_operation, prevent_operation)
 
 class Execution:
     def __init__(self, code):
@@ -257,6 +261,107 @@ class TestUtilities(unittest.TestCase):
             self.assertEqual(ast.body[3].value.ast_name, "Name")
             priors = find_prior_initializations(ast.body[3].value)
             self.assertEqual(len(priors), 2)
+    
+    def test_prevent_unused_result(self):
+        with Execution('a="H  "\na.strip()') as e:
+            prevent_unused_result()
+        self.assertEqual(e.message, "Remember! You cannot modify a string "
+                         "directly. Instead, you should assign the result "
+                         "back to the string variable.")
+        
+        with Execution('a="H  "\nb=a.strip()\nb') as e:
+            prevent_unused_result()
+        self.assertEqual(e.message, "No errors reported.")
+        
+        with Execution('a=[]\na.append(1)\na') as e:
+            prevent_unused_result()
+        self.assertEqual(e.message, "No errors reported.")
+    
+    def test_prevent_builtin_usage(self):
+        with Execution('sum([1,2,3])') as e:
+            self.assertEqual(prevent_builtin_usage(['sum', 'min']), 'sum')
+        self.assertEqual(e.message, "You cannot use the builtin function "
+                         "<code>sum</code>.")
+        
+        with Execution('max([1,2,3])') as e:
+            self.assertIsNone(prevent_builtin_usage(['sum', 'min']))
+        self.assertEqual(e.message, "No errors reported.")
+        
+        with Execution('trick=sum\ntrick([1,2,3])') as e:
+            self.assertEqual(prevent_builtin_usage(['min', 'sum']), 'sum')
+        self.assertEqual(e.message, "You cannot use the builtin function "
+                         "<code>sum</code>.")
+    
+    def test_prevent_literal(self):
+        with Execution('a = 5\na') as e:
+            self.assertEqual(prevent_literal(3, 4, 5), 5)
+        self.assertEqual(e.message, "Do not use the literal value "
+                         "<code>5</code> in your code.")
+        with Execution('print("Hello")') as e:
+            self.assertEqual(prevent_literal("Hello"), "Hello")
+        self.assertEqual(e.message, "Do not use the literal value "
+                         "<code>'Hello'</code> in your code.")
+        with Execution('print("Hello", 5)') as e:
+            self.assertFalse(prevent_literal("Fire", 3, 4))
+        self.assertEqual(e.message, "No errors reported.")
+    
+    def test_ensure_literal(self):
+        with Execution('a = 5\na') as e:
+            self.assertEqual(ensure_literal(3, 4, 5), 3)
+        self.assertEqual(e.message, "You need the literal value "
+                         "<code>3</code> in your code.")
+        with Execution('print("Hell")') as e:
+            self.assertEqual(ensure_literal("Hello"), "Hello")
+        self.assertEqual(e.message, "You need the literal value "
+                         "<code>'Hello'</code> in your code.")
+        with Execution('print("Fire", 3, 4)') as e:
+            self.assertFalse(ensure_literal("Fire", 3, 4))
+        self.assertEqual(e.message, "No errors reported.")
+    
+    def test_prevent_advanced_iteration(self):
+        with Execution('while False:\n  pass') as e:
+            prevent_advanced_iteration()
+        self.assertEqual(e.message, "You should not use a <code>while</code> "
+                         "loop to solve this problem.")
+        with Execution('trick=sum\ntrick([1,2,3])') as e:
+            prevent_advanced_iteration()
+        self.assertEqual(e.message, "You cannot use the builtin function "
+                         "<code>sum</code>.")
+    
+    def test_ensure_operation(self):
+        with Execution('print(1-1)') as e:
+            self.assertFalse(ensure_operation("+"))
+        self.assertEqual(e.message, "You are not using the <code>+</code> "
+                         "operator.")
+        with Execution('print(1+1)') as e:
+            self.assertNotEqual(ensure_operation("+"), False)
+        self.assertEqual(e.message, "No errors reported.")
+    
+    def test_prevent_operation(self):
+        with Execution('print(1+1)') as e:
+            self.assertNotEqual(prevent_operation("+"), False)
+        self.assertEqual(e.message, "You may not use the <code>+</code> "
+                         "operator.")
+        with Execution('print(1-1)') as e:
+            self.assertFalse(prevent_operation("+"))
+        self.assertEqual(e.message, "No errors reported.")
+    
+    def test_find_operation(self):
+        with Execution('1+1') as e:
+            ast = parse_program()
+            self.assertNotEqual(find_operation("+", ast), False)
+        with Execution('1>1') as e:
+            ast = parse_program()
+            self.assertNotEqual(find_operation(">", ast), False)
+        with Execution('True and True') as e:
+            ast = parse_program()
+            self.assertNotEqual(find_operation("and", ast), False)
+        with Execution('not True') as e:
+            ast = parse_program()
+            self.assertNotEqual(find_operation("not", ast), False)
+        with Execution('not (1 + 1) and 1 < 1 <= 10') as e:
+            ast = parse_program()
+            self.assertFalse(find_operation(">", ast))
 
 if __name__ == '__main__':
     unittest.main(buffer=False)
