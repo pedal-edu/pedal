@@ -1,4 +1,5 @@
-from instructor import *
+from pedal.cait.cait_api import parse_program
+from pedal.report.imperative import gently
 
 def ensure_imports(*modules):
     ast = parse_program()
@@ -6,7 +7,7 @@ def ensure_imports(*modules):
         imports= ast.find_all("Import")
         import_froms = ast.find_all("ImportFrom")
         if not imports and not import_froms:
-            gently("You need to import the <code>{}</code> module!".format(module))
+            gently("You need to import the <code>{}</code> module.".format(module))
             return True
         success = False
         if imports:

@@ -1,5 +1,6 @@
-from instructor import *
-from instructor_utility import *
+from pedal.cait.cait_api import parse_program
+from pedal.report.imperative import gently
+from pedal.toolkit.utilities import find_function_calls, is_top_level
 
 def ensure_prints(count):
     prints = find_function_calls('print')
