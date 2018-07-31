@@ -44,6 +44,17 @@ class EasyNodeTest(unittest.TestCase):
         if0_node = program.children[1]
         if_set_if0 = if0_node.find_all("If")
         self.assertTrue(len(if_set_if0) == 1, "Found {} ifs, when 1 should be found".format(len(if_set_if0)))
+    
+    def test_has(self):
+        program = ast.parse("x\ny\nx = 0")
+        program = EasyNode(program)
+        x = program.body[0].value
+        y = program.body[1].value
+        line3 = program.body[2]
+        self.assertTrue(line3.has(x))
+        self.assertFalse(line3.has(y))
+        self.assertTrue(line3.has(0))
+        self.assertFalse(line3.has(1))
 
     def test___getattr__(self):
         program = ast.parse("x = 0")
@@ -68,6 +79,6 @@ class EasyNodeTest(unittest.TestCase):
         binops_funcs = binops_node.ops
         self.assertTrue(type(binops_funcs) == list, "Expected list, got {} instead".format(type(binops_funcs)))
         self.assertTrue(type(binops_names) == list, "Expected list, got {} instead".format(type(binops_funcs)))
-        self.assertTrue(isinstance(binops_funcs[0], ast.cmpop),
-                        "Expected list, got {} instead".format(type(binops_funcs)))
+        self.assertTrue(isinstance(binops_funcs[0].astNode, ast.cmpop),
+                        "Expected ast.cmpop, got {} instead".format(type(binops_funcs[0])))
         self.assertTrue(type(binops_names[0]) == str, "Expected ast.cmpop")

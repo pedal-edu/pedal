@@ -6,11 +6,11 @@ from pedal.sandbox import compatibility
 DELTA = 0.001
 
 def get_arg_name(node):
-    try:
-        # Python 2 version
-        return node.id
-    except AttributeError:
+    name = node.id
+    if name is None:
         return node.arg
+    else:
+        return name
 
 def match_signature(name, length, *parameters):
     ast = parse_program()

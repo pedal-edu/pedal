@@ -59,6 +59,8 @@ def only_printing_variables():
             for arg in a_call.args:
                 if arg.ast_name != "Name":
                     return False
+                elif arg.id in ('True', 'False', 'None'):
+                    return False
     return True
 
 def find_prior_initializations(node):

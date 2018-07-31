@@ -51,7 +51,9 @@ class EasyNode:
             # (e.g. a load function) instead of a child node
             for sub_value in value:
                 if isinstance(sub_value, ast.AST):
-                    new_child = EasyNode(sub_value, my_field=field, tid=tid_count + 1, lin_tree=self.linear_tree,
+                    new_child = EasyNode(sub_value, my_field=field, 
+                                         tid=tid_count + 1, 
+                                         lin_tree=self.linear_tree,
                                          ancestor=self)
                     self.children.append(new_child)
                     tid_count = len(self.linear_tree) - 1
@@ -160,6 +162,13 @@ class EasyNode:
                         return str_ops_list
                 elif isinstance(field, ast.AST):
                     return field.easy_node
+                elif isinstance(field, list):
+                    try:
+                        return [f.easy_node for f in field]
+                    except AttributeError:
+                        # This can only happen in NonLocals, which has a list
+                        # of raw strings in the `names` property
+                        return field
                 else:
                     return field
 
@@ -184,7 +193,28 @@ class EasyNode:
         setattr(visitor, func_name, MethodType(func_ref, visitor))
         visitor.visit(self.astNode)
         return visitor.items
-
+    
+    def has(self, node):
+        if isinstance(node, (int, float)):
+            visitor = ast.NodeVisitor()
+            has_num = []
+            def visit_Num(self, potential):
+                has_num.append(node == potential.n)
+                return self.generic_visit(potential)
+            visitor.visit_Num = MethodType(visit_Num, visitor)
+            visitor.visit(self.astNode)
+            return any(has_num)
+        elif node.ast_name != "Name":
+            return False
+        visitor = ast.NodeVisitor()
+        has_name = []
+        def visit_Name(self, potential):
+            print(node.id, potential.id)
+            has_name.append(node.id == potential.id)
+            return self.generic_visit(potential)
+        visitor.visit_Name = MethodType(visit_Name, visitor)
+        visitor.visit(self.astNode)
+        return any(has_name)
 
 AST_SINGLE_FUNCTIONS = ["ctx_name", "op_name"]
 AST_ARRAYS_OF_FUNCTIONS = ["ops_names"]

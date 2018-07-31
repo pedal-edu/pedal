@@ -2,15 +2,22 @@ import unittest
 import os
 import sys
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+pedal_library = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.insert(0, pedal_library)
 
 from pedal.report import *
 from pedal.source import set_source
 from pedal.tifa import tifa_analysis
 from pedal.resolvers import simple
 from pedal.sandbox import compatibility
+from pedal.cait.cait_api import parse_program
 from pedal.toolkit.files import files_not_handled_correctly
 from pedal.toolkit.functions import match_signature, output_test, unit_test
+from pedal.toolkit.utilities import (is_top_level, function_prints,
+                                     no_nested_function_definitions,
+                                     find_function_calls, function_is_called,
+                                     only_printing_variables,
+                                     find_prior_initializations,)
 
 class Execution:
     def __init__(self, code):
@@ -174,6 +181,82 @@ class TestFunctions(unittest.TestCase):
         with Execution('def a(x,y):\n  print(x-y)\na(1,2)') as e:
             self.assertIsNone(output_test('a', (1, 2, "3")))
         self.assertIn("wrong output 1/1 times", e.message)
+
+class TestUtilities(unittest.TestCase):
+    def test_is_top_level(self):
+        with Execution('print("Test")\ndef a(x):\n  print(x+1)\na(1)') as e:
+            ast = parse_program()
+            defs = ast.find_all('FunctionDef')
+            self.assertEqual(len(defs), 1)
+            self.assertTrue(is_top_level(defs[0]))
+            self.assertEqual(len(defs[0].body), 1)
+            self.assertFalse(is_top_level(defs[0].body[0]))
+            calls = ast.find_all('Call')
+            self.assertEqual(len(calls), 3)
+            self.assertTrue(is_top_level(calls[0]))
+            self.assertFalse(is_top_level(calls[1]))
+        self.assertEqual(e.message, "No errors reported.")
+    
+    def test_no_nested_function_definitions(self):
+        with Execution('if True:\n  def x():\n    pass\n  x()') as e:
+            self.assertFalse(no_nested_function_definitions())
+        self.assertEqual(e.message, "You have defined a function inside of "
+                         "another block. For instance, you may have placed it "
+                         "inside another function definition, or inside of a "
+                         "loop. Do not nest your function definition!")
+        with Execution('if True:\n  pass\ndef x():\n  pass\nx()') as e:
+            self.assertTrue(no_nested_function_definitions())
+        self.assertEqual(e.message, "No errors reported.")
+    
+    def test_function_prints(self):
+        # Function prints
+        with Execution('def a(x):\n  print(x+1)\na(1)') as e:
+            self.assertTrue(function_prints())
+        self.assertEqual(e.message, "No errors reported.")
+        # Function only returns, no prints
+        with Execution('def a(x):\n  return x+1\na(1)') as e:
+            self.assertFalse(function_prints())
+        self.assertEqual(e.message, "No errors reported.")
+        # Function does not print, but prints exist
+        with Execution('print("T")\ndef a(x):\n  x\na(1)\nprint("E")') as e:
+            self.assertFalse(function_prints())
+        self.assertEqual(e.message, "No errors reported.")
+    
+    def test_find_function_calls(self):
+        with Execution('def a(x):\n  print(x,1)\na(1)\nprint("T")') as e:
+            prints = find_function_calls('print')
+            self.assertEqual(len(prints), 2)
+            self.assertEqual(len(prints[0].args), 2)
+            self.assertEqual(len(prints[1].args), 1)
+        self.assertEqual(e.message, "No errors reported.")
+        with Execution('a=[]\na.append(a)\na.pop()\n') as e:
+            pops = find_function_calls('pop')
+            self.assertEqual(len(pops), 1)
+            self.assertEqual(len(pops[0].args), 0)
+        self.assertEqual(e.message, "No errors reported.")
+    
+    def test_function_is_called(self):
+        with Execution('a=[]\na.append(a)\na.pop()\n') as e:
+            self.assertTrue(function_is_called('pop'))
+            self.assertFalse(function_is_called('print'))
+        self.assertEqual(e.message, "No errors reported.")
+    
+    def test_only_printing_variables(self):
+        with Execution('a,b=0,1\nprint(a,b)') as e:
+            self.assertTrue(only_printing_variables())
+        with Execution('print(0,"True", True)') as e:
+            self.assertFalse(only_printing_variables())
+        with Execution('print(True)') as e:
+            self.assertFalse(only_printing_variables())
+    
+    def test_find_prior_initializations(self):
+        with Execution('a=0\na\na=5\na') as e:
+            ast = parse_program()
+            self.assertEqual(len(ast.body), 4)
+            self.assertEqual(ast.body[3].ast_name, "Expr")
+            self.assertEqual(ast.body[3].value.ast_name, "Name")
+            priors = find_prior_initializations(ast.body[3].value)
+            self.assertEqual(len(priors), 2)
 
 if __name__ == '__main__':
     unittest.main(buffer=False)
