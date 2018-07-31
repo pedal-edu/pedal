@@ -23,6 +23,7 @@ class Execution:
     
     def __exit__(self, *args):
         compatibility.run_student(raise_exceptions=True)
+        suppress("runtime", "FileNotFoundError")
         (self.success, self.score, self.category, self.label, 
          self.message, self.data, self.hide) = simple.resolve()
 

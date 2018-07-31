@@ -127,11 +127,11 @@ def ensure_literal(*literals):
     for literal in literals:
         if isinstance(literal, (int, float)):
             if literal not in num_values:
-                explain("You need the literal value <code>{}</code> in your code.".format(repr(literal)), 'verifier')
+                explain("You need the literal value <code>{}</code> in your code.".format(repr(literal)))
                 return literal
         elif isinstance(literal, str):
             if literal not in str_values:
-                explain("You need the literal value <code>{}</code> in your code.".format(repr(literal)), 'verifier')
+                explain("You need the literal value <code>{}</code> in your code.".format(repr(literal)))
                 return literal
     return False
     
