@@ -17,13 +17,9 @@ from pedal.cait.cait_api import *
 _accu_ = 0
 _iList_ = [1,2,3,4]
 for _item_ in _iList_:
-	_accu_ = _accu_ + _item_
+    accu_ = _accu_ + _item_
 print(_accu_)
 '''
-
-
-def eprint(*args, **kwargs):
-    print(*args, file=sys.stderr, **kwargs)
 
 
 def parse_code(student_code):
@@ -155,8 +151,16 @@ class CaitTests(unittest.TestCase):
 
     def test_generic_match(self):
         # print("TESTING SAME ORDER")
-        std_code = "_sum = 0\n_list = [1,2,3,4]\nfor item in _list:\n    _sum = _sum + item\nprint(_sum)"
-        ins_code = "_accu_ = 0\n_iList_ = __listInit__\nfor _item_ in _iList_:\n    _accu_ = _accu_ + _item_\nprint(_accu_)"
+        std_code = "_sum = 0\n" \
+                   "_list = [1,2,3,4]\n" \
+                   "for item in _list:\n" \
+                   "    _sum = _sum + item\n" \
+                   "print(_sum)"
+        ins_code = '_accu_ = 0\n' \
+                   '_iList_ = __listInit__\n' \
+                   'for _item_ in _iList_:\n' \
+                   '    _accu_ = _accu_ + _item_\n' \
+                   'print(_accu_)'
         # var std_code = "_sum = 12 + 13"
         # var ins_code = "_accu_ = 12 + 11"
         ins_tree = StretchyTreeMatcher(ins_code)
@@ -183,8 +187,15 @@ class CaitTests(unittest.TestCase):
 
     def test_many_to_one(self):
         # print("TESTING MANY TO ONE")
-        std_code = "_sum = 0\nlist = [1,2,3,4]\nfor item in list:\n    _sum = _sum + item\nprint(_sum)"
-        ins_code = "_accu_ = 0\n_iList_ = __listInit__\nfor _item_ in _iList_:\n    _accu_ = _accu2_ + _item_\nprint(_accu_)"
+        std_code = "_sum = 0\nlist = [1,2,3,4]\n" \
+                   "for item in list:\n" \
+                   "    _sum = _sum + item\n" \
+                   "print(_sum)"
+        ins_code = "_accu_ = 0\n" \
+                   "_iList_ = __listInit__\n" \
+                   "for _item_ in _iList_:\n" \
+                   "    _accu_ = _accu2_ + _item_\n" \
+                   "print(_accu_)"
         ins_tree = StretchyTreeMatcher(ins_code)
         ins_ast = ins_tree.rootNode
         std_ast = parse_code(std_code)
@@ -209,10 +220,18 @@ class CaitTests(unittest.TestCase):
 
     def test_commutativity(self):
         # print("TESTING COMMUTATIVITY ADDITION")
-        fail_count = 0
-        success_count = 0
-        std_code = "_sum = 0\nlist = [1,2,3,4]\nfor item in list:\n    _sum = item + _sum\nprint(_sum)"
-        ins_code = "_accu_ = 0\n_iList_ = __listInit__\nfor _item_ in _iList_:\n    _accu_ = _accu_ + _item_\nprint(_accu_)"
+        # fail_count = 0
+        # success_count = 0
+        std_code = "_sum = 0\n" \
+                   "list = [1,2,3,4]\n" \
+                   "for item in list:\n" \
+                   "    _sum = item + _sum\n" \
+                   "print(_sum)"
+        ins_code = "_accu_ = 0\n" \
+                   "_iList_ = __listInit__\n" \
+                   "for _item_ in _iList_:\n" \
+                   "    _accu_ = _accu_ + _item_\n" \
+                   "print(_accu_)"
         ins_tree = StretchyTreeMatcher(ins_code)
         ins_ast = ins_tree.rootNode
         std_ast = parse_code(std_code)
@@ -230,8 +249,16 @@ class CaitTests(unittest.TestCase):
 
     def test_one_to_many(self):
         # print("TESTING ONE TO MANY")
-        std_code = "_sum = 0\nlist = [1,2,3,4]\nfor item in list:\n    _sum = _sum + _sum\nprint(_sum)"
-        ins_code = "_accu_ = 0\n_iList_ = __listInit__\nfor _item_ in _iList_:\n    _accu_ = _accu_ + _item_\nprint(_accu_)"
+        std_code = "_sum = 0\n" \
+                   "list = [1,2,3,4]\n" \
+                   "for item in list:\n" \
+                   "    _sum = _sum + _sum\n" \
+                   "print(_sum)"
+        ins_code = "_accu_ = 0\n" \
+                   "_iList_ = __listInit__\n" \
+                   "for _item_ in _iList_:\n" \
+                   "    _accu_ = _accu_ + _item_\n" \
+                   "print(_accu_)"
         ins_tree = StretchyTreeMatcher(ins_code)
         ins_ast = ins_tree.rootNode
         std_ast = parse_code(std_code)
@@ -247,14 +274,23 @@ class CaitTests(unittest.TestCase):
         # print("TESTING MULTI-MATCH")
         # var std_code = "_sum = 0\ncount = 0\nlist = [1,2,3,4]\nfor item in list:\n    _sum = _sum + item\n    count" \
         # " = count + 1\nprint(_sum)"
-        std_code = "_sum = 0\ncount = 0\n_list = [1,2,3,4]\nfor item in _list:\n    _sum = _sum + count\n    count = _sum " \
-                   "+ count\nprint(_sum) "
-        ins_code = "_accu_ = 0\n_iList_ = __listInit__\nfor _item_ in _iList_:\n    _accu_ = _accu_ + __exp__\nprint(_accu_)"
+        std_code = "_sum = 0\n" \
+                   "count = 0\n" \
+                   "_list = [1,2,3,4]\n" \
+                   "for item in _list:\n" \
+                   "    _sum = _sum + count\n" \
+                   "    count = _sum + count\n" \
+                   "print(_sum) "
+        ins_code = "_accu_ = 0\n" \
+                   "_iList_ = __listInit__\n" \
+                   "for _item_ in _iList_:\n" \
+                   "    _accu_ = _accu_ + __exp__\n" \
+                   "print(_accu_)"
         ins_tree = StretchyTreeMatcher(ins_code)
         ins_ast = ins_tree.rootNode
         std_ast = parse_code(std_code)
         mappings = ins_tree.find_matches(std_ast.astNode)
-        self.assertFalse(len(mappings) > 1, "too many matchings found")
+        self.assertFalse(len(mappings) > 1, "too many matches found")
 
         debug_print = False
         if debug_print:
@@ -263,9 +299,18 @@ class CaitTests(unittest.TestCase):
             print(mappings)
 
     def test_multimatch_true(self):
-        std_code = "_sum = 0\ncount = 0\n_list = [1,2,3,4]\nfor item in _list:\n    _sum = _sum + count\n    count = _sum " \
-                   "+ count\nprint(_sum) "
-        ins_code = "_accu_ = 0\n_iList_ = __listInit__\nfor _item_ in _iList_:\n    _accu_ = _accu_ + __exp__"
+        std_code = "_sum = 0\n" \
+                   "count = 0\n" \
+                   "_list = [1,2,3,4]\n" \
+                   "for item in _list:\n" \
+                   "    _sum = _sum + count\n" \
+                   "    count = _sum " \
+                   "+ count\n" \
+                   "print(_sum) "
+        ins_code = "_accu_ = 0\n" \
+                   "_iList_ = __listInit__\n" \
+                   "for _item_ in _iList_:\n" \
+                   "    _accu_ = _accu_ + __exp__"
         ins_tree = StretchyTreeMatcher(ins_code)
         ins_ast = ins_tree.rootNode
         std_ast = parse_code(std_code)
@@ -279,11 +324,18 @@ class CaitTests(unittest.TestCase):
 
     def test_pass(self):
         # print("TESTING PASS MATCH")
-        std_code = 'import matplotlib.pyplot as plt\nquakes = [1,2,3,4]\nquakes_in_miles = []\nfor quakes in quakes:' \
-                   '\n    quakes_in_miles.append(quake * 0.62)\nplt.hist(quakes_in_miles)\nplt.xlabel("Depth in Miles")' \
-                   '\nplt.ylabel("Number of Earthquakes")\nplt.title("Distribution of Depth in Miles of Earthquakes")' \
-                   '\nplt.show()'
-        ins_code = "for _item_ in _item_:\n    pass"
+        std_code = 'import matplotlib.pyplot as plt\n' \
+                   'quakes = [1,2,3,4]\n' \
+                   'quakes_in_miles = []\n' \
+                   'for quakes in quakes:\n' \
+                   '    quakes_in_miles.append(quake * 0.62)\n' \
+                   'plt.hist(quakes_in_miles)\n' \
+                   'plt.xlabel("Depth in Miles")\n' \
+                   'plt.ylabel("Number of Earthquakes")\n' \
+                   'plt.title("Distribution of Depth in Miles of Earthquakes")\n' \
+                   'plt.show()'
+        ins_code = "for _item_ in _item_:\n" \
+                   "    pass"
         ins_tree = StretchyTreeMatcher(ins_code)
         ins_ast = ins_tree.rootNode
         std_ast = parse_code(std_code)
@@ -303,7 +355,8 @@ class CaitTests(unittest.TestCase):
             'for steps_hiked in steps_hiked_list:\n',
             '    total = steps_hiked + total\n',
             '    steps = steps + 1'])
-        ins_code = "for ___ in ___:\n" + "    ___ = _sum_ + ___"
+        ins_code = "for ___ in ___:\n" \
+                   "    ___ = _sum_ + ___"
         ins_tree = StretchyTreeMatcher(ins_code)
         ins_ast = ins_tree.rootNode
         std_ast = parse_code(std_code)
@@ -364,12 +417,11 @@ class CaitTests(unittest.TestCase):
         parse_program()
         matches = find_match("_var_ = __expr__")
         self.assertIsNone(matches)
-    
-        
-    def test_old_style_api(self):    
+
+    def test_old_style_api(self):
         set_source("a = open('file.txt')")
-        ast = parse_program()
-        calls = ast.find_all("Call")
+        std_ast = parse_program()
+        calls = std_ast.find_all("Call")
         self.assertEqual(len(calls), 1)
         self.assertEqual(calls[0].func.ast_name, 'Name')
         self.assertEqual(calls[0].func.id, 'open')
@@ -377,6 +429,6 @@ class CaitTests(unittest.TestCase):
         
         clear_report()
         set_source("def a():\n  pass\na()")
-        ast = parse_program()
-        defs = ast.find_all("FunctionDef")
+        std_ast = parse_program()
+        defs = std_ast.find_all("FunctionDef")
         self.assertEqual(len(defs), 1)
