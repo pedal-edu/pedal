@@ -24,6 +24,7 @@ class Cait:
         if self.report["source"]["success"]:
             std_ast = self.report['source']['ast']
             self.report['cait'] = {}
+            self.report['cait']['std_ast'] = EasyNode(std_ast)
 
 
 # noinspection PyBroadException
@@ -36,7 +37,12 @@ def parse_program():
         if MAIN_REPORT["source"]["success"]:
             std_ast = MAIN_REPORT['source']['ast']
             MAIN_REPORT['cait']['matcher'] = None
-            return EasyNode(std_ast)
+            try:
+                std_easy = MAIN_REPORT['cait']['std_ast']
+            except KeyError:
+                MAIN_REPORT['cait']['std_ast'] = EasyNode(std_ast)
+                std_easy = MAIN_REPORT['cait']['std_ast']
+            return std_easy
         else:
             raise Exception("No source code found")
     except Exception:
@@ -82,8 +88,7 @@ def data_type(node, report=None):
         node_id = node
     else:
         node_id = node.id
-        return cait_obj.report['tifa']["top_level_variables"][node_id].type
-    return False
+    return cait_obj.report['tifa']["top_level_variables"][node_id].type
 
 
 def find_match(ins_code, std_code=None, report=None):
