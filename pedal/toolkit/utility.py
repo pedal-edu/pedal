@@ -1,4 +1,5 @@
-from instructor import *
+from pedal.cait.cait_api import parse_program
+from pedal.report.imperative import gently, explain
 
 def is_top_level(ast_node):
     ast = parse_program()
@@ -214,57 +215,3 @@ def find_operation(op_name, root):
             if unaryop.op == UNARY_OP_NAMES[op_name]:
                 return unaryop
     return False
-'''
-    
-    mod.no_nonlist_nums = new Sk.builtin.func(function(source) {
-        Sk.builtin.pyCheckArgs("no_nonlist_nums", arguments, 1, 1);
-        Sk.builtin.pyCheckType("source", "string", Sk.builtin.checkString(source));
-        
-        source = source.v;
-        
-        var num_list = getNonListNums(source);
-        
-        var count = 0;
-        for (var i = 0, len = num_list.length; i < len; i = i+1) {
-            if (num_list[i].v != 0 && num_list[i].v != 1) {
-                return Sk.ffi.remapToPy(true);
-            }
-        }
-        return Sk.ffi.remapToPy(false);
-    });
-
-
-    
-    /**
-     * Given source code as a string, return a list of all of the AST elements
-     * that are Num (aka numeric literals) but that are not inside List elements.
-     *
-     * @param {String} source - Python source code.
-     * @returns {Array.number} The list of JavaScript numeric literals that were found.
-     */
-    function getNonListNums(source) {
-        if (!(source in parses)) {
-            var parse = Sk.parse("__main__", source);
-            parses[source] = Sk.astFromParse(parse.cst, "__main__", parse.flags);
-        }
-        var ast = parses[source];
-        var visitor = new NodeVisitor();
-        var insideList = false;
-        var nums = [];
-        visitor.visit_List = function(node) {
-            insideList = true;
-            this.generic_visit(node);
-            insideList = false;
-        }
-        visitor.visit_Num = function(node) {
-            if (!insideList) {
-                nums.push(node.n);
-            }
-            this.generic_visit(node);
-        }
-        visitor.visit(ast);
-        return nums;
-    }
-    
-    
- '''

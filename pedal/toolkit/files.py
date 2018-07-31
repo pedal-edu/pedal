@@ -1,7 +1,12 @@
-from instructor import *
-from instructor_utility import *
+from pedal.cait.cait_api import parse_program
+from pedal.report.imperative import gently, explain
+from pedal.toolkit.utility import ensure_literal
 
 def files_not_handled_correctly(*filenames):
+    '''
+    Statically detect if files have been opened and closed correctly.
+    This is only useful in the case of very simplistic file handling.
+    '''
     if filenames and isinstance(filenames[0], int):
         num_filenames = filenames[0]
         actual_filenames = False
@@ -16,19 +21,22 @@ def files_not_handled_correctly(*filenames):
         if a_call.func.ast_name == 'Name':
             if a_call.func.id == 'open':
                 if not a_call.args:
-                    gently("You have called the <code>open</code> function without any arguments. It needs a filename.")
+                    gently("You have called the <code>open</code> function "
+                           "without any arguments. It needs a filename.")
                     return True
                 called_open.append(a_call)
             elif a_call.func.id == 'close':
-                explain("You have attempted to call <code>close</code> as a function, but it is actually a method of the file object.")
+                explain("You have attempted to call <code>close</code> as a "
+                        "function, but it is actually a method of the "
+                        "file object.", 'verifier')
                 return True
         elif a_call.func.ast_name == 'Attribute':
             if a_call.func.attr == 'open':
-                gently("You have attempted to call <code>open</code> as a method, but it is actually a built-in function.")
+                gently("You have attempted to call <code>open</code> as a "
+                       "method, but it is actually a built-in function.")
                 return True
             elif a_call.func.attr == 'close':
                 closed.append(a_call)
-        
     if len(called_open) < num_filenames:
         gently("You have not opened all the files you were supposed to.")
         return True
@@ -44,4 +52,5 @@ def files_not_handled_correctly(*filenames):
         return True
     if actual_filenames:
         ensure_literal(*filenames)
+        return True
     return False
