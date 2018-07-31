@@ -34,19 +34,18 @@ def parse_program():
     :return: student AST
     """
     try:
+        std_easy = MAIN_REPORT['cait']['std_ast']
+    except KeyError:
         if MAIN_REPORT["source"]["success"]:
             std_ast = MAIN_REPORT['source']['ast']
             MAIN_REPORT['cait']['matcher'] = None
-            try:
-                std_easy = MAIN_REPORT['cait']['std_ast']
-            except KeyError:
-                MAIN_REPORT['cait']['std_ast'] = EasyNode(std_ast)
-                std_easy = MAIN_REPORT['cait']['std_ast']
-            return std_easy
         else:
-            raise Exception("No source code found")
-    except Exception:
-        raise Exception("No source code found")
+            MAIN_REPORT.attach("No source code found", tool='cait', 
+                               category='analyzer')
+            std_ast = ast.parse('')
+        MAIN_REPORT['cait']['std_ast'] = EasyNode(std_ast)
+        std_easy = MAIN_REPORT['cait']['std_ast']
+    return std_easy
 
 
 def def_use_error(node, report=None):

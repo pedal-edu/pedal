@@ -1,6 +1,6 @@
 from pedal.cait.cait_api import parse_program
 from pedal.report.imperative import gently, explain
-from pedal.toolkit.utility import ensure_literal
+from pedal.toolkit.utilities import ensure_literal
 
 def files_not_handled_correctly(*filenames):
     '''

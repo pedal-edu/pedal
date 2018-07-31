@@ -1,9 +1,16 @@
 from pedal.cait.cait_api import parse_program
 from pedal.report.imperative import gently, explain
-from pedal.toolkit.utility import ensure_literal
-from pedal.sandbox.compatibility import get_output, get_student_data
+from pedal.toolkit.utilities import ensure_literal
+from pedal.sandbox import compatibility
 
 DELTA = 0.001
+
+def get_arg_name(node):
+    try:
+        # Python 2 version
+        return node.id
+    except AttributeError:
+        return node.arg
 
 def match_signature(name, length, *parameters):
     ast = parse_program()
@@ -17,8 +24,10 @@ def match_signature(name, length, *parameters):
                 gently("The function named <code>{}</code> has more parameters ({}) than expected ({}).".format(name, found_length, length))
             elif parameters:
                 for parameter, arg in zip(parameters, a_def.args.args):
-                    if arg.id != parameter:
-                        gently("Error in definition of <code>{}</code>. Expected a parameter named {}, instead found {}.".format(name, parameter, arg.id))
+                    arg_name = get_arg_name(arg)
+                    if arg_name != parameter:
+                        gently("Error in definition of <code>{}</code>. Expected a parameter named {}, instead found {}.".format(name, parameter, arg_name))
+                        return None
                 else:
                     return a_def
             else:
@@ -27,9 +36,10 @@ def match_signature(name, length, *parameters):
         gently("No function named <code>{}</code> was found.".format(name))
     return None
     
-GREEN_CHECK = "<td style='font-weight: bold;color: green;text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;'>&#10004;</td>"
+GREEN_CHECK = "<td class='green-check-mark'>&#10004;</td>"
 RED_X = "<td>&#10060;</td>"
 def output_test(name, *tests):
+    student = compatibility.get_student_data()
     if name in student.data:
         the_function = student.data[name]
         if callable(the_function):
@@ -47,9 +57,9 @@ def output_test(name, *tests):
                     tip = out[1]
                     out = out[0]
                 template = "<td><code>{}</code></td>"+("<td><pre>{}</pre></td>"*2)
-                reset_output()
+                compatibility.reset_output()
                 the_function(*inp)
-                test_out = get_output()
+                test_out = compatibility.get_output()
                 if isinstance(out, str):
                     if len(test_out) < 1:
                         message = template.format(inputs, repr(out), "<i>No output</i>", tip)
@@ -74,7 +84,10 @@ def output_test(name, *tests):
                         message = "<tr class=''>"+GREEN_CHECK+message+"</tr>"
                         success_count += 1
                 elif out != test_out:
-                    message = template.format(inputs, repr(out), repr(test_out[0]), tip)
+                    if len(test_out) < 1:
+                        message = template.format(inputs, repr(out), "<i>No output</i>", tip)
+                    else:
+                        message = template.format(inputs, repr(out), repr(test_out[0]), tip)
                     message = "<tr class=''>"+RED_X+message+"</tr>"
                     if tip:
                         message += "<tr class='info'><td colspan=4>"+tip+"</td></tr>"
@@ -98,6 +111,7 @@ def output_test(name, *tests):
 Show a table
 '''
 def unit_test(name, *tests):
+    student = compatibility.get_student_data()
     if name in student.data:
         the_function = student.data[name]
         if callable(the_function):

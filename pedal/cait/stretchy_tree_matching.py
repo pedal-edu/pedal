@@ -25,7 +25,7 @@ class StretchyTreeMatcher:
             other_tree = ast.parse(other, filename)
         else:
             other_tree = other
-        if type(other_tree) == EasyNode:
+        if isinstance(other_tree, EasyNode):
             easy_other = other_tree
         else:
             easy_other = EasyNode(other_tree, "none")

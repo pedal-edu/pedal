@@ -10,7 +10,7 @@ from pedal.cait.stretchy_tree_matching import *
 from pedal.cait.easy_node import *
 from pedal.source import set_source
 from pedal.tifa import tifa_analysis
-from pedal.report import MAIN_REPORT
+from pedal.report import MAIN_REPORT, clear_report
 from pedal.cait.cait_api import *
 
 '''
@@ -366,11 +366,17 @@ class CaitTests(unittest.TestCase):
         self.assertIsNone(matches)
     
         
-    def test_old_stye_api(self):    
+    def test_old_style_api(self):    
         set_source("a = open('file.txt')")
         ast = parse_program()
         calls = ast.find_all("Call")
         self.assertEqual(len(calls), 1)
         self.assertEqual(calls[0].func.ast_name, 'Name')
-        self.assertTrue(calls[0].func.id == 'open')
+        self.assertEqual(calls[0].func.id, 'open')
         self.assertEqual(len(calls[0].args), 1)
+        
+        clear_report()
+        set_source("def a():\n  pass\na()")
+        ast = parse_program()
+        defs = ast.find_all("FunctionDef")
+        self.assertEqual(len(defs), 1)

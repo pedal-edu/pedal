@@ -5,10 +5,12 @@ from pedal.report import Report, Feedback, MAIN_REPORT
 
 class EasyNode:
     """
-    A wrapper class for AST nodes. Linearizes access to the children of the ast node and saves the field this AST node
+    A wrapper class for AST nodes. Linearizes access to the children of the ast
+    node and saves the field this AST node
     originated from.
 
-    TODO: May want to just add fields and methods to the existing AST nodes and use a production pattern instead.
+    TODO: May want to just add fields and methods to the existing AST nodes and
+    use a production pattern instead.
     """
 
     def __init__(self, ast_node, my_field='', tid=0, lin_tree=None, ancestor=None):
@@ -39,7 +41,8 @@ class EasyNode:
             if value is None:
                 continue
 
-            # If the children are not in an array, wrap it in an array for consistency in the code the follows
+            # If the children are not in an array, wrap it in an array for
+            # consistency in the code the follows
             if not isinstance(value, list):
                 value = [value]
 
@@ -131,6 +134,8 @@ class EasyNode:
             return self.get_next_tree()
         if key == 'ast_name':
             return EasyNode.get_ast_name(self.astNode)
+        elif key == '_name':
+            return self.astNode.name
         else:  # ast node attributes or derivative attributes
             if hasattr(self.astNode, key):
                 # noinspection PyBroadException
