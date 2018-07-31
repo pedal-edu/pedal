@@ -1,4 +1,7 @@
-from instructor import *
+from pedal.cait.cait_api import parse_program
+from pedal.report.imperative import gently, explain
+from pedal.toolkit.utility import ensure_literal
+from pedal.sandbox.compatibility import get_output, get_student_data
 
 DELTA = 0.001
 
