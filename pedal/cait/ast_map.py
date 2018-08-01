@@ -20,6 +20,8 @@ class AstMap:
         self.symbol_table = CtMap()
         self.exp_table = CtMap()
         self.conflict_keys = []
+        self.match_root = None
+        self.match_lineno = 0
 
     def add_var_to_sym_table(self, ins_node, std_node):
         """

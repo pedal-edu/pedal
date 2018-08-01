@@ -43,12 +43,18 @@ class StretchyTreeMatcher:
         matching = self.deep_find_match(ins_node, std_node, True)
         # if a direct matching is found
         if matching:
+            for match in matching:
+                match.match_root = std_node
+                match.match_lineno = match.mappings.values[1].lineno
             return matching  # return it
         else:  # otherwise
             # try to matching ins_node to each child of std_node, recursively
             for std_child in std_node.children:
                 matching = self.any_node_match(ins_node, std_child)
                 if matching:
+                    for match in matching:
+                        match.match_root = std_child
+                        match.match_lineno = match.mappings.values[1].lineno
                     return matching
         return False
 
@@ -316,6 +322,9 @@ class StretchyTreeMatcher:
         is_match = len(ins_field_list) == len(std_field_list) and type(ins).__name__ == type(
             std).__name__ and meta_matched
         for insTup, stdTup in zip(ins_field_list, std_field_list):
+            if not is_match:
+                break
+
             ins_field = insTup[0]
             ins_value = insTup[1]
             std_field = stdTup[0]

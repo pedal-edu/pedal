@@ -217,6 +217,12 @@ class EasyNode:
         visitor.visit(self.astNode)
         return any(has_name)
 
+    def is_before(self, other):
+        try:
+            return self.tree_id < other.tree_id and self.linear_tree == other.linear_tree
+        except Exception:
+            raise TypeError
+
 
 AST_SINGLE_FUNCTIONS = ["ctx_name", "op_name"]
 AST_ARRAYS_OF_FUNCTIONS = ["ops_names"]

@@ -2,50 +2,45 @@ from pedal.cait.cait_api import *
 from pedal.report.imperative import *
 import pedal.mistakes.instructor_append as append_api
 from pedal.toolkit.utilities import *
+from pedal.sandbox.compatibility import *
 
 
 # ################8.2 Start#######################
 def wrong_list_length_8_2():
-    std_ast = parse_program()
-    assignments = std_ast.find_all('Assign')
-    for assignment in assignments:
-        right = assignment.value
-        left = assignment.targets
-        if right.std_ast_name == 'List' and left.std_ast_name == 'Name':
-            if len(right.elts) < 3:
-                explain('You must have at lestd_ast three pieces<br><br><i>(list length_8.2)<i></br>')
+    matches = find_matches("_list_ = __expr__")
+    if matches:
+        for match in matches:
+            __expr__ = match.exp_table.get("__expr__")
+            if __expr__.ast_name == "List" and len(__expr__.elts) < 3:
+                explain('You must have at least three pieces<br><br><i>(list length_8.2)<i></br>')
+                return True
+    return False
 
 
 def missing_list_initialization_8_2():
-    std_ast = parse_program()
-    assignments = std_ast.find_all('Assign')
-    is_missing = True
-    for assignment in assignments:
-        right = assignment.value
-        left = assignment.targets
-        if left.id == 'shopping_cart':
-            if right.std_ast_name == 'List':
-                is_missing = False
-                break
-    if is_missing:
-        explain('You must set the variable <code>shopping_cart</code> to a list containing the prices of items in the'
-                ' shopping cart.<br><br><i>(missing_list_init_8.2)<i></br>')
+    matches = find_matches("shopping_cart = __expr__")
+    if matches:
+        for match in matches:
+            __expr__ = match.exp_table.get("__expr__")
+            if __expr__.ast_name == "List":
+                return False
+    explain(
+        'You must set the variable <code>shopping_cart</code> to a list containing the prices of items in the'
+        ' shopping cart.<br><br><i>(missing_list_init_8.2)<i></br>')
+    return True
 
 
 def wrong_list_is_constant_8_2():
-    std_ast = parse_program()
-    assignments = std_ast.find_all('Assign')
-    is_number = False
-    for assignment in assignments:
-        right = assignment.value
-        left = assignment.targets
-        if left.id == 'shopping_cart':
-            if right.std_ast_name == 'Num':
-                is_number = True
-                break
-    if is_number:
-        explain('You must set <code>shoppping_cart</code> to a list of values not to a single number.<br><br><i>'
-                '(list_is_const_8.2)<i></br>')
+    matches = find_matches("shopping_cart = __expr__")
+    if matches:
+        for match in matches:
+            __expr__ = match.exp_table.get("__expr__")
+            if __expr__.ast_name == "Num":
+                explain(
+                    'You must set <code>shoppping_cart</code> to a list of values not to a single number.<br><br><i>'
+                    '(list_is_const_8.2)<i></br>')
+                return True
+    return False
 
 
 def list_all_zeros_8_2():
@@ -54,13 +49,15 @@ def list_all_zeros_8_2():
     is_all_zero = True
     for init_list in lists:
         for node in init_list.elts:
-            if node.std_ast_name == 'Num' and node.n != 0:
+            if node.ast_name == 'Num' and node.n != 0:
                 is_all_zero = False
                 break
         if is_all_zero:
             break
     if is_all_zero:
         explain('Try seeing what happens when you change the numbers in the list.<br><br><i>(default_list_8.2)<i></br>')
+        return True
+    return False
 
 
 # ################8.2 End#######################
@@ -68,87 +65,57 @@ def list_all_zeros_8_2():
 
 # ################8.3 Start#######################
 def wrong_list_initialization_placement_8_3():
-    std_ast = parse_program()
-    assignments = std_ast.find_all('Assign')
-    is_placed_wrong = True
-    lineno = None
-    for assignment in assignments:
-        # right = assignment.value
-        left = assignment.targets
-        if left.id == 'episode_length_list':
-            lineno = left.lineno
-    loops = std_ast.find_all('For')
-    for loop in loops:
-        if loop.lineno > lineno:
-            is_placed_wrong = False
-    if is_placed_wrong:
-        explain('The list of episode lengths (<code>episode_length_list</code>) must be initialized before the'
-                ' iteration which uses this list.<br><br><i>(init_place_8.3)<i></br>')
-    return True
+    for_matches = find_matches("for ___ in ___:"
+                           "    pass")
+    init_matches = find_matches("episode_length_list = ___")
+    if init_matches and for_matches:
+        for for_match in for_matches:
+            for_lineno = for_match.match_lineno
+            for init_match in init_matches:
+                if init_match.match_lineno > for_lineno:
+                    explain(
+                        'The list of episode lengths (<code>episode_length_list</code>) must be initialized before the'
+                        ' iteration which uses this list.<br><br><i>(init_place_8.3)<i></br>')
+                    return True
+    return False
 
 
 def wrong_accumulator_initialization_placement_8_3():
-    std_ast = parse_program()
-    assignments = std_ast.find_all('Assign')
-    is_placed_wrong = True
-    lineno = None
-    for assignment in assignments:
-        right = assignment.value
-        left = assignment.targets
-        if left.id == 'sum_length' and right.std_ast_name == 'Num' and right.n == 0:
-            lineno = left.lineno
-    loops = std_ast.find_all('For')
-    for loop in loops:
-        if lineno is None:
-            break
-        if loop.lineno > lineno:
-            is_placed_wrong = False
-    if is_placed_wrong:
-        explain('The variable to hold the sum of the episode lengths (<code>sum_length</code>) must be initialized '
-                'before the iteration which uses this variable.<br><br><i>(accu_init_place_8.3)<i></br>')
-    return is_placed_wrong 
+    for_matches = find_matches("for ___ in ___:"
+                               "    pass")
+    init_matches = find_matches("sum_length = ___")
+    if init_matches and for_matches:
+        for for_match in for_matches:
+            for_lineno = for_match.match_lineno
+            for init_match in init_matches:
+                if init_match.match_lineno > for_lineno:
+                    explain(
+                        'The variable to hold the sum of the episode lengths (<code>sum_length</code>) must be '
+                        'initialized before the iteration which uses this variable.<br><br><i>'
+                        '(accu_init_place_8.3)<i></br>')
+                    return True
+    return False
 
 
 def wrong_iteration_body_8_3():
-    std_ast = parse_program()
-    is_placed_wrong = True
-    loops = std_ast.find_all('For')
-    for loop in loops:
-        assignments = loop.find_all('Assign')
-        for assignment in assignments:
-            right = assignment.value
-            left = assignment.targets
-            if left.id == 'sum_length' and right.std_ast_name == 'BinOp' and right.op == 'Add':
-                is_placed_wrong = False
-    if is_placed_wrong:
+    match = find_match("for _item_ in _list_:\n"
+                       "    sum_length = ___ + ___\n")
+    if not match:
         explain('The addition of each episode length to the total length is not in the correct place.<br><br><i>'
                 '(iter_body_8.3)<i></br>')
-    return is_placed_wrong
+        return True
+    return False
 
 
 def wrong_print_8_3():
-    std_ast = parse_program()
-    for_loops = std_ast.find_all('For')
-    # has_for = len(for_loops) > 0
-    for_loc = []
-    wrong_print_placement = True
-    for loop in for_loops:
-        end_node = loop.next_tree
-        if end_node is not None:
-            for_loc.append(end_node.lineno)
-    calls = std_ast.find_all('Call')
-    for call in calls:
-        if call.func.id == 'print':
-            for loc in for_loc:
-                if call.func.lineno >= loc:
-                    wrong_print_placement = False
-                    break
-            if not wrong_print_placement:
-                break
-    if wrong_print_placement:
+    match = find_match("for _item_ in _list_:\n"
+                       "    pass\n"
+                       "print(_total_)")
+    if not match:
         explain('The output of the total length of time is not in the correct place. The total length of time should be'
                 ' output only once after the total length of time has been computed.<br><br><i>(print_8.3)<i></br>')
-
+        return True
+    return False
 # ################8.3 End#######################
 
 
@@ -168,14 +135,14 @@ def missing_addition_slot_empty_8_4():
     std_ast = parse_program()
     assignments = std_ast.find_all('Assign')
     for assignment in assignments:
-        left = assignment.targets
+        left = assignment.target
         right = assignment.value
         if left.id == 'sum_pages':
             binOp = right.find_all('BinOp')
             if len(binOp) == 1:
                 binOp = binOp[0]
                 if binOp.op == 'Add':
-                    if binOp.left.std_ast_name == 'Name' and binOp.right.std_ast_name == 'Name':
+                    if binOp.left.ast_name == 'Name' and binOp.right.ast_name == 'Name':
                         if binOp.has(left):
                             if binOp.left.id == '___' or binOp.right.id == '___':
                                 explain('You must fill in the empty slot in the addition.<br><br><i>'
@@ -190,13 +157,13 @@ def wrong_names_not_agree_8_4():
     for loop in for_loops:
         iter_prop = loop.target
         list_prop = loop.iter
-        if list_prop.std_ast_name == 'Name' and iter_prop.std_ast_name == 'Name':
+        if list_prop.ast_name == 'Name' and iter_prop.ast_name == 'Name':
             assignments = loop.find_all('Assign')
             for assignment in assignments:
                 binops = assignment.find_all('BinOp')
                 if len(binops) > 0:
-                    lhs = assignment.targets
-                    if lhs.std_ast_name == 'Name' and lhs.id == 'sum_pages':
+                    lhs = assignment.target
+                    if lhs.ast_name == 'Name' and lhs.id == 'sum_pages':
                         for binop in binops:
                             if binop.has(lhs) and binop.op == 'Add':
                                 if not binop.has(iter_prop):
@@ -242,6 +209,15 @@ def wrong_should_be_counting():  # This doesn't do as it is intended to do!
                             'the list.<br><br><i>(not_count)<i></br>')
 
 
+def m_wrong_should_be_counting():
+    pattern = 'for x in ___:\n' \
+              '    count = count + x'
+    match = find_match(pattern)
+    if match:
+        explain('This problem asks for the number of items in the '
+                'list not the total of all the values in '
+                'the list.<br><br><i>(not_count)<i></br>')
+
 def wrong_should_be_summing():
     std_ast = parse_program()
     for_loops = std_ast.find_all('For')
@@ -259,13 +235,13 @@ def missing_addition_slot_empty():
     std_ast = parse_program()
     assignments = std_ast.find_all('Assign')
     for assignment in assignments:
-        # left = assignment.targets
+        # left = assignment.target
         right = assignment.value
         binOp = right.find_all('BinOp')
         if len(binOp) == 1:
             binOp = binOp[0]
             if binOp.op == 'Add':
-                if binOp.left.std_ast_name == 'Name' and binOp.right.std_ast_name == 'Name':
+                if binOp.left.ast_name == 'Name' and binOp.right.ast_name == 'Name':
                     if binOp.left.id == '___' or binOp.right.id == '___':
                         explain('You must fill in the empty slot in the addition.<br><br><i>(add_empty)<i></br>')
                         return True
@@ -305,7 +281,7 @@ def missing_counting_list():
                 binops = assignment.find_all('BinOp')
                 if len(binops) < 1:
                     continue
-                lhs = assignment.targets
+                lhs = assignment.target
                 for binop in binops:
                     if binop.has(lhs) and binop.has(1) and binop.op == 'Add':
                         has_count = True
@@ -327,7 +303,7 @@ def missing_summing_list():
                 binops = assignment.find_all('BinOp')
                 if len(binops) < 1:
                     continue
-                lhs = assignment.targets
+                lhs = assignment.target
                 for binop in binops:
                     if binop.has(lhs) and binop.has(iter_prop) and binop.op == 'Add':
                         has_total = True
@@ -345,7 +321,7 @@ def missing_zero_initialization():
         for assignment in assignments:
             binops = assignment.find_all('BinOp')
             if len(binops) > 0:
-                lhs = assignment.targets
+                lhs = assignment.target
                 for binop in binops:
                     if binop.has(lhs) and binop.op == 'Add':
                         accumulator = lhs
@@ -355,7 +331,7 @@ def missing_zero_initialization():
         assignments = std_ast.find_all('Assign')
         for assignment in assignments:
             if loop_acu.lineno > assignment.lineno:
-                lhs = assignment.targets
+                lhs = assignment.target
                 if lhs.id == accumulator.id and assignment.has(0):
                     accu_init = True
                     break
@@ -374,7 +350,7 @@ def wrong_printing_list():
     log(calls)
     for call in calls:
         if call.func.id == 'print':
-            if call.args[0].std_ast_name == 'Name' and call.args[0].data_type != 'Num':
+            if call.args[0].ast_name == 'Name' and call.args[0].data_type != 'Num':
                 explain('You should be printing a single value.<br><br><i>(list_print)<i></br>')
 
 
@@ -402,7 +378,7 @@ def missing_average():
                 break
             right = binop.right
             left = binop.left
-            if right.std_ast_name == 'Name' and left.std_ast_name == 'Name':
+            if right.ast_name == 'Name' and left.ast_name == 'Name':
                 if right.id != left.id:
                     has_average = True
                     break
@@ -419,10 +395,10 @@ def warning_average_in_iteration():
             binops = assignment.find_all('BinOp')
             for binop in binops:
                 if binop.op == 'Div':
-                    # assName = assignment.targets
+                    # assName = assignment.target
                     numerator = binop.left
                     denominator = binop.right
-                    if numerator.std_ast_name == 'Name' and denominator.std_ast_name == 'Name':
+                    if numerator.ast_name == 'Name' and denominator.ast_name == 'Name':
                         explain('An average value is best computed after the properties name <code>{0!s}</code>(total)'
                                 ' and <code>{1!s}</code> are completely known rather than recomputing the average on'
                                 ' each iteration.<br><br><i>(avg_in_iter)<i></br>'.format(numerator.id, denominator.id))
@@ -442,9 +418,9 @@ def wrong_average_denominator():
         assignments = loop.find_all('Assign')
         for assignment in assignments:
             if assignment.has(1):
-                ass_left = assignment.targets
+                ass_left = assignment.target
                 ass_right = assignment.value
-                if ass_right.std_ast_name == 'BinOp' and ass_right.op == 'Add':
+                if ass_right.ast_name == 'BinOp' and ass_right.op == 'Add':
                     if ass_right.has(ass_left):
                         count_vars.append(ass_left)
                         loc_array.append(loc)
@@ -453,8 +429,8 @@ def wrong_average_denominator():
     for assignment in assignments:
         index = 0
         for loc in loc_array:
-            if assignment.lineno >= loc and assignment.value.std_ast_name == 'BinOp':
-                ass_left = assignment.targets
+            if assignment.lineno >= loc and assignment.value.ast_name == 'BinOp':
+                ass_left = assignment.target
                 binop = assignment.value
                 if binop.op == 'Div' and not binop.has(ass_left):
                     numerator = assignment.value.left
@@ -485,9 +461,9 @@ def wrong_average_numerator():
         assignments = loop.find_all('Assign')
         for assignment in assignments:
             if assignment.has(iter_prop):
-                ass_left = assignment.targets
+                ass_left = assignment.target
                 ass_right = assignment.value
-                if ass_right.std_ast_name == 'BinOp' and ass_right.op == 'Add':
+                if ass_right.ast_name == 'BinOp' and ass_right.op == 'Add':
                     if ass_right.has(ass_left):
                         total_vars.append(ass_left)
                         loc_array.append(loc)
@@ -496,8 +472,8 @@ def wrong_average_numerator():
     for assignment in assignments:
         index = 0
         for loc in loc_array:
-            if assignment.lineno >= loc and assignment.value.std_ast_name == 'BinOp':
-                ass_left = assignment.targets
+            if assignment.lineno >= loc and assignment.value.ast_name == 'BinOp':
+                ass_left = assignment.target
                 binop = assignment.value
                 if binop.op == 'Div' and not binop.has(ass_left):
                     numerator = assignment.value.left
@@ -555,7 +531,7 @@ def iterator_is_function():
     for_loops = std_ast.find_all('For')
     for loop in for_loops:
         list_prop = loop.iter
-        if list_prop.std_ast_name == 'Call':
+        if list_prop.ast_name == 'Call':
             explain('You should make a variable for the list instead of using a function call for the list'
                     '<br><br><i>(iter_is_func)<i></br>')
 
@@ -566,7 +542,7 @@ def wrong_list_initialization_9_1():
     assignments = std_ast.find_all('Assign')
     has_call = False
     for assignment in assignments:
-        if assignment.targets.id == 'rainfall_list':
+        if assignment.target.id == 'rainfall_list':
             call = assignment.find_all('Call')
             if len(call) == 1:
                 args = call[0].args
@@ -585,7 +561,7 @@ def wrong_accumulator_initialization_9_1():
     assignments = std_ast.find_all('Assign')
     has_assignment = False
     for assignment in assignments:
-        if assignment.targets.id == 'rainfall_sum' and assignment.value.std_ast_name == 'Num':
+        if assignment.target.id == 'rainfall_sum' and assignment.value.ast_name == 'Num':
             if assignment.value.n == 0:
                 has_assignment = True
                 break
@@ -600,9 +576,9 @@ def wrong_accumulation_9_1():
     assignments = std_ast.find_all('Assign')
     has_assignment = False
     for assignment in assignments:
-        target = assignment.targets
+        target = assignment.target
         if target.id == 'rainfall_sum':
-            if assignment.value.std_ast_name == 'BinOp':
+            if assignment.value.ast_name == 'BinOp':
                 binop = assignment.value
                 if binop.op == 'Add':
                     left = binop.left
@@ -624,7 +600,7 @@ def wrong_list_initialization_placement_9_1():
     list_init = None
     init_after_loop = False
     for assignment in assignments:
-        if assignment.targets.id == 'rainfall_list':
+        if assignment.target.id == 'rainfall_list':
             list_init = assignment
             break
     if list_init is not None:
@@ -644,7 +620,7 @@ def wrong_accumulator_initialization_placement_9_1():
     list_init = None
     init_after_loop = False
     for assignment in assignments:
-        if assignment.targets.id == 'rainfall_sum':
+        if assignment.target.id == 'rainfall_sum':
             list_init = assignment
             break
     for loop in loops:
@@ -663,7 +639,7 @@ def wrong_iteration_body_9_1():
     for loop in loops:
         assignments = loop.find_all('Assign')
         for assignment in assignments:
-            if assignment.targets.id == 'rainfall_sum':
+            if assignment.target.id == 'rainfall_sum':
                 assignment_in_for = True
                 break
         if assignment_in_for:
@@ -704,7 +680,7 @@ def wrong_list_initialization_9_2():
     assignments = std_ast.find_all('Assign')
     has_call = False
     for assignment in assignments:
-        if assignment.targets.id == 'rainfall_list':
+        if assignment.target.id == 'rainfall_list':
             call = assignment.find_all('Call')
             if len(call) == 1:
                 args = call[0].args
@@ -723,7 +699,7 @@ def wrong_accumulator_initialization_9_2():
     assignments = std_ast.find_all('Assign')
     has_assignment = False
     for assignment in assignments:
-        if assignment.targets.id == 'rainfall_count' and assignment.value.std_ast_name == 'Num':
+        if assignment.target.id == 'rainfall_count' and assignment.value.ast_name == 'Num':
             if assignment.value.n == 0:
                 has_assignment = True
                 break
@@ -738,16 +714,16 @@ def wrong_accumulation_9_2():
     assignments = std_ast.find_all('Assign')
     has_assignment = False
     for assignment in assignments:
-        target = assignment.targets
+        target = assignment.target
         if target.id == 'rainfall_count':
-            if assignment.value.std_ast_name == 'BinOp':
+            if assignment.value.ast_name == 'BinOp':
                 binop = assignment.value
                 if binop.op == 'Add':
                     left = binop.left
                     right = binop.right
                     if (left.id == 'rainfall_count' or right.id == 'rainfall_count') and\
-                            (left.std_ast_name == 'Num' or right.std_ast_name == 'Num'):
-                        if left.std_ast_name == 'Num':
+                            (left.ast_name == 'Num' or right.ast_name == 'Num'):
+                        if left.ast_name == 'Num':
                             num_node = left
                         else:
                             num_node = right
@@ -767,7 +743,7 @@ def wrong_list_initialization_placement_9_2():
     list_init = None
     init_after_loop = False
     for assignment in assignments:
-        if assignment.targets.id == 'rainfall_list':
+        if assignment.target.id == 'rainfall_list':
             list_init = assignment
             break
     for loop in loops:
@@ -786,7 +762,7 @@ def wrong_accumulator_initialization_placement_9_2():
     list_init = None
     init_after_loop = False
     for assignment in assignments:
-        if assignment.targets.id == 'rainfall_count':
+        if assignment.target.id == 'rainfall_count':
             list_init = assignment
             break
     if list_init is not None:
@@ -827,10 +803,10 @@ def wrong_decision_body_9_2():
         if test.numeric_logic_check(1, 'var > 0'):
             assignments = if_block.find_all('Assign')
             for assignment in assignments:
-                if assignment.targets.id == 'rainfall_count':
-                    if assignment.value.std_ast_name == 'BinOp':
+                if assignment.target.id == 'rainfall_count':
+                    if assignment.value.ast_name == 'BinOp':
                         binop = assignment.value
-                        if binop.has(1) and binop.has(assignment.targets):
+                        if binop.has(1) and binop.has(assignment.target):
                             assignment_in_if = True
                             break
         if assignment_in_if:
@@ -998,7 +974,7 @@ def wrong_filter_problem_atl1_10_5():
             for append in append_list:
                 expr = append.args[0]
                 # this check seems unnecessary
-                if expr.std_ast_name == 'BinOp' and expr.op == 'Mult' and expr.has(0.62) and expr.has(iter_prop):
+                if expr.ast_name == 'BinOp' and expr.op == 'Mult' and expr.has(0.62) and expr.has(iter_prop):
                     if not cond.numeric_logic_check(0.1, 'var * 0.62 > 10'):
                         log('wrong_filter_problem_atl1_10_5')
                         explain('You are not correctly filtering out values from the list.<br><br><i>'
@@ -1016,13 +992,13 @@ def wrong_filter_problem_atl2_10_5():
         for assignment in assignments:
             for if_block in if_blocks:
                 if if_block.lineno > assignment.lineno:
-                    miles = assignment.targets
+                    miles = assignment.target
                     expr = assignment.value
                     cond = if_block.test
                     append_list = append_api.find_append_in(if_block)
                     for append in append_list:
                         if append.has(miles):
-                            if expr.std_ast_name == 'BinOp' and expr.op == 'Mult' and\
+                            if expr.ast_name == 'BinOp' and expr.op == 'Mult' and\
                                     expr.has(0.62) and expr.has(iter_prop):
                                 if not cond.numeric_logic_check(0.1, 'var > 10'):
                                     explain('You are not correctly filtering out values from the list.<br><br><i>(filt_'
@@ -1044,7 +1020,7 @@ def wrong_append_problem_atl1_10_5():
                 # this is an approximation of what's written in the code because we don't have tree matching
                 cond_binops = cond.find_all('BinOp')
                 if len(cond_binops) == 1:
-                    if not (expr.std_ast_name == 'BinOp' and expr.op == 'Mult' and
+                    if not (expr.ast_name == 'BinOp' and expr.op == 'Mult' and
                             expr.has(0.62) and expr.has(iter_prop)):
                         # if not cond.numeric_logic_check(0.1, 'var * 0.62 > 10'):  # in theory should check this
                         explain('You are not appending the correct values.<br><br><i>(app_alt1_10.5)<i></br>')
@@ -1061,16 +1037,16 @@ def wrong_append_problem_atl2_10_5():
         for assignment in assignments:
             for if_block in if_blocks:
                 if if_block.lineno > assignment.lineno:
-                    miles = assignment.targets
+                    miles = assignment.target
                     expr = assignment.value
                     cond = if_block.test
                     append_list = append_api.find_append_in(if_block)
                     for append in append_list:
                         append_var = append.args[0]
-                        if expr.std_ast_name == 'BinOp' and expr.op == 'Mult' and\
+                        if expr.ast_name == 'BinOp' and expr.op == 'Mult' and\
                                 expr.has(0.62) and expr.has(iter_prop):
                             if cond.numeric_logic_check(0.1, 'var > 10'):
-                                if append_var.std_ast_name == 'Name' and append_var.id != miles.id:
+                                if append_var.ast_name == 'Name' and append_var.id != miles.id:
                                     explain('You are not appending the correct values<br><br><i>'
                                             '(app_alt2_10.5)<i></br>')
 
@@ -1114,7 +1090,7 @@ def wrong_initialization_in_iteration():
     for loop in loops:
         assignments = loop.find_all('Assign')
         for assignment in assignments:
-            target = assignment.targets
+            target = assignment.target
             value = assignment.value
             names = value.find_all('Name')
             if len(names) == 0:
@@ -1133,7 +1109,7 @@ def wrong_duplicate_var_in_add():
     for binop in binops:
         left = binop.left
         right = binop.right
-        if left.std_ast_name == 'Name' and right.std_ast_name == 'Name':
+        if left.ast_name == 'Name' and right.ast_name == 'Name':
             if left.id == right.id:
                 explain('You are adding the same variable twice; you need two different variables in your addition.'
                         '<br><br><i>(dup_var)<i></br>')

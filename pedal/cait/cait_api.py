@@ -109,10 +109,11 @@ def find_matches(ins_code, std_code=None, report=None):
 
     :param ins_code: Instructor pattern
     :param std_code: Student Code
+    :param report:
     :return: All matches of tree inclusion of instructor in student
     """
     cait_obj = Cait(std_code=std_code, report=report)
-    std_code = cait_obj.report['source']['code']
+    std_code = cait_obj.report['cait']['std_ast']
     matcher = StretchyTreeMatcher(ins_code)
     cait_obj.report['cait']['matcher'] = matcher
     matches = cait_obj.report['cait']['matcher'].find_matches(std_code)
