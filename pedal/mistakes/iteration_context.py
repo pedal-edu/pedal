@@ -623,6 +623,8 @@ def wrong_iteration_body_9_1():
 
 
 def wrong_print_9_1():
+    """
+
     std_ast = parse_program()
     for_loops = std_ast.find_all('For')
     # has_for = len(for_loops) > 0
@@ -644,9 +646,20 @@ def wrong_print_9_1():
     if wrong_print_placement:
         explain('The output of the total rainfall amount is not in the correct place. The total rainfall should be '
                 'output only once after the total rainfall has been computed.<br><br><i>(print_9.1)<i></br>')
+    :return:
+    """
+    match = find_match("for _item_ in _list_:\n"
+                       "    pass\n"
+                       "print(_total_)")
+    if not match:
+        explain('The output of the total rainfall amount is not in the correct place. The total rainfall should be '
+                'output only once after the total rainfall has been computed.<br><br><i>(print_9.1)<i></br>')
+        return True
+    return False
 # ##########################9.1 END############################
 
 
+# TODO: Continue converting from here
 # ##########################9.2 START############################
 def wrong_list_initialization_9_2():
     std_ast = parse_program()
@@ -683,30 +696,16 @@ def wrong_accumulator_initialization_9_2():
 
 
 def wrong_accumulation_9_2():
-    std_ast = parse_program()
-    assignments = std_ast.find_all('Assign')
-    has_assignment = False
-    for assignment in assignments:
-        target = assignment.target
-        if target.id == 'rainfall_count':
-            if assignment.value.ast_name == 'BinOp':
-                binop = assignment.value
-                if binop.op == 'Add':
-                    left = binop.left
-                    right = binop.right
-                    if (left.id == 'rainfall_count' or right.id == 'rainfall_count') and\
-                            (left.ast_name == 'Num' or right.ast_name == 'Num'):
-                        if left.ast_name == 'Num':
-                            num_node = left
-                        else:
-                            num_node = right
-                        if num_node.n == 1:
-                            has_assignment = True
-                        break
-    if not has_assignment:
-        explain('The adding of another day with rainfall to the total count of days with rainfall (<code>rainfall_count'
-                '</code>) is not correct.<br><br><i>(accu_9.2)<i></br>')
-    return not has_assignment
+    matches = find_matches("rainfall_count = _item_ + 1")
+    if matches:
+        for match in matches:
+            _item_ = match.symbol_table.get("_item_")[0]
+            if _item_.id != "rainfall_count":
+                explain(
+                    'The adding of another day with rainfall to the total count of days with rainfall '
+                    '(<code>rainfall_count</code>) is not correct.<br><br><i>(accu_9.2)<i></br>')
+                return True
+    return False
 
 
 def wrong_list_initialization_placement_9_2():
@@ -726,6 +725,8 @@ def wrong_list_initialization_placement_9_2():
     if list_init is None or not init_after_loop:
         explain('The list of rainfall amount (<code>rainfall_list</code>) must be initialized before the iteration that'
                 ' uses this list.<br><br><i>(list_init_place_9.2)<i></br>')
+        return True
+    return False
 
 
 def wrong_accumulator_initialization_placement_9_2():
@@ -748,6 +749,7 @@ def wrong_accumulator_initialization_placement_9_2():
                 'initialized before the iteration which uses this variable.<br><br><i>(accu_init_place_9.2)<i></br>')
 
 
+# TODO: Implement Numeric Logic Check!
 def wrong_iteration_body_9_2():
     std_ast = parse_program()
     loops = std_ast.find_all('For')

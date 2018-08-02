@@ -376,7 +376,7 @@ class SpecificMistakeTest(unittest.TestCase):
                        "    rainfall_list = [1, 2, 3]\n")
         self.assertTrue(wrong_list_initialization_placement_9_1(), "false negative")
 
-    def test_wrong_print_9_1(self):
+    def test_wrong_iteration_body_9_1(self):
         self.to_source("for item in items:\n"
                        "    rainfall_sum = 0")
         self.assertFalse(wrong_iteration_body_9_1(), "false positive")
@@ -385,4 +385,65 @@ class SpecificMistakeTest(unittest.TestCase):
                        "    pass")
         self.assertFalse(wrong_iteration_body_9_1(), "false negative")
 
+    def test_wrong_print_9_1(self):
+        self.to_source("for item in items:\n"
+                       "    print(total)")
+        self.assertTrue(wrong_print_9_1(), "false negative")
+
+        self.to_source("for item in items:\n"
+                       "    pass\n"
+                       "print(total)")
+        self.assertFalse(wrong_print_9_1(), "false positive")
+
+    def test_wrong_list_initialization_9_2(self):
+        self.to_source('rainfall_list = weather.get("Precipitation","Location","Blacksburg, VA")')
+        self.assertFalse(wrong_list_initialization_9_2(), "false positive")
+
+        self.to_source('rainfall_list = weather.get("Precipitation","Location","Blacksburg, PA")')
+        self.assertTrue(wrong_list_initialization_9_2(), "false negative")
+
+    def test_wrong_accumulator_initialization_9_2(self):
+        self.to_source("rainfall_count = 0")
+        self.assertFalse(wrong_accumulator_initialization_9_2(), "false positive")
+
+        self.to_source('rainfall_list = weather.get("Precipitation","Location","Blacksburg, PA")')
+        self.assertTrue(wrong_accumulator_initialization_9_2(), "false negative")
+
+    def test_wrong_accumulation_9_2(self):
+        self.to_source("rainfall_count = _item_ + 1")
+        self.assertTrue(wrong_accumulation_9_2(), "false negative")
+
+        self.to_source("rainfall_count = rainfall_count + 1")
+        self.assertFalse(wrong_accumulation_9_2(), "false positive")
+
+    def test_wrong_list_initialization_placement_9_2(self):
+        self.to_source("rainfall_sum = 0\n"
+                       "rainfall_list = [1, 2, 3]\n"
+                       "for rainfall in rainfall_list:\n"
+                       "    pass\n")
+        self.assertFalse(wrong_list_initialization_placement_9_2(), "false positive")
+
+        self.to_source("rainfall_sum = 0\n"
+                       "for rainfall in rainfall_list:\n"
+                       "    pass\n"
+                       "rainfall_list = [1, 2, 3]\n")
+        self.assertTrue(wrong_list_initialization_placement_9_2(), "false negative")
+
+        self.to_source("rainfall_sum = 0\n"
+                       "for rainfall in rainfall_list:\n"
+                       "    rainfall_list = [1, 2, 3]\n")
+        self.assertTrue(wrong_list_initialization_placement_9_2(), "false negative")
+
+    def wrong_accumulator_initialization_placement_9_2(self):
+        self.to_source("rainfall_count = 0\n"
+                       "episode_length_list = [1, 2, 3]\n"
+                       "for episode in episode_length_list:\n"
+                       "    rainfall_count = rainfall_count + episode\n")
+        self.assertFalse(wrong_accumulator_initialization_placement_9_2(), "incorrect trigger of feedback")
+
+        self.to_source("episode_length_list = [1, 2, 3]\n"
+                       "for episode in episode_length_list:\n"
+                       "    rainfall_count = rainfall_count + episode\n"
+                       "sum_length = 0\n")
+        self.assertTrue(wrong_accumulator_initialization_placement_9_2(), "incorrect trigger of feedback")
 
