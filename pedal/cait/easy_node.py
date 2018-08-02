@@ -198,6 +198,7 @@ class EasyNode:
         if isinstance(node, (int, float)):
             visitor = ast.NodeVisitor()
             has_num = []
+
             def visit_Num(self, potential):
                 has_num.append(node == potential.n)
                 return self.generic_visit(potential)
@@ -208,12 +209,20 @@ class EasyNode:
             return False
         visitor = ast.NodeVisitor()
         has_name = []
+
         def visit_Name(self, potential):
             has_name.append(node.id == potential.id)
             return self.generic_visit(potential)
         visitor.visit_Name = MethodType(visit_Name, visitor)
         visitor.visit(self.astNode)
         return any(has_name)
+
+    def is_before(self, other):
+        try:
+            return self.tree_id < other.tree_id and self.linear_tree == other.linear_tree
+        except Exception:
+            raise TypeError
+
 
 AST_SINGLE_FUNCTIONS = ["ctx_name", "op_name"]
 AST_ARRAYS_OF_FUNCTIONS = ["ops_names"]

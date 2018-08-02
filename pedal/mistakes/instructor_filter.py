@@ -1,40 +1,50 @@
-from instructor_utility import *
+from pedal.cait.cait_api import *
+from pedal.report.imperative import *
+
+
 def filter_group():
     missing_if_in_for()
     append_not_in_if()
-'''
-Name: missing_if_in_for
-Pattern:
-missing
-for <item> in ___ :
-    if ...<item> ... :
 
-Feedback: The arrangement of decision and iteration is not correct for the filter pattern.
 
-'''
 def missing_if_in_for():
-    ast = parse_program()
-    loops = ast.find_all("For")
+    """
+    Name: missing_if_in_for
+    Pattern:
+    missing
+    for <item> in ___ :
+        if ...<item> ... :
+
+    Feedback: The arrangement of decision and iteration is not correct for the filter pattern.
+
+    :return:
+    """
+
+    std_ast = parse_program()
+    loops = std_ast.find_all("For")
     for loop in loops:
-        iter_prop = loop.target
         ifs = loop.find_all("If")
         if len(ifs) > 0:
-        	return False
-    explain("The arrangement of decision and iteration is not correct for the filter pattern.<br><br><i>(missing_if_in_for)<i></br>")
+            return False
+    explain("The arrangement of decision and iteration is not correct for the filter pattern.<br><br><i>"
+            "(missing_if_in_for)<i></br>")
     return True
-'''
-Name: append_not_in_if
-Pattern:
-missing
-if ... :
-   ___.append(___)
 
-Feedback: Only items satisfying some condition should be appended to the list.
 
-'''
 def append_not_in_if():
-    ast = parse_program()
-    ifs = ast.find_all("If")
+    """
+    Name: append_not_in_if
+    Pattern:
+    missing
+    if ... :
+       ___.append(___)
+
+    Feedback: Only items satisfying some condition should be appended to the list.
+
+    :return:
+    """
+    std_ast = parse_program()
+    ifs = std_ast.find_all("If")
     for if_block in ifs:
         calls = if_block.find_all("Call")
         for node in calls:
