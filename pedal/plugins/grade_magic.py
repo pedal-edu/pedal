@@ -115,4 +115,5 @@ def _jupyter_server_extension_paths():
 
 # jupyter serverextension enable --py pedal.plugins.grade_magic
 def load_jupyter_server_extension(nbapp):
-    nbapp.register_magics(GradeMagic)
+    from IPython import get_ipython
+    get_ipython().register_magics(GradeMagic)
