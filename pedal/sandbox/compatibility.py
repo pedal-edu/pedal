@@ -65,7 +65,9 @@ def raise_exception(exception, report=None):
     # Skulpt compatible name lookup
     name = str(exception.__class__)[8:-2]
     report.attach(name, category='Runtime', tool='Sandbox',
-                  mistakes={'message': message, 'error': exception})
+                  mistakes={'message': message, 
+                            'error': exception,
+                            'traceback': exception.__traceback__})
     sandbox.exception = exception
     
 def get_student_data(report=None):
