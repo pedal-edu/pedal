@@ -106,6 +106,13 @@ class GradeMagic(Magics):
         
 def load_ipython_extension(ipython):
     ipython.register_magics(GradeMagic)
+    
+# You need both this and the next function to register pedal with jupyter
+def _jupyter_server_extension_paths():
+    return [{
+        "module": "pedal.plugins.grade_magic"
+    }]
 
+# jupyter serverextension enable --py pedal.plugins.grade_magic
 def load_jupyter_server_extension(nbapp):
     nbapp.register_magics(GradeMagic)
