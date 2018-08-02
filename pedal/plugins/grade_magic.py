@@ -12,36 +12,43 @@ def blockpy_grade(assignment_id, student_code):
     response = get(BLOCKPY_URL+'load_assignment_give_feedback', data=data)
     result = response.json()
     if result['success']:
-        instructor_code = ('from pedal.report.imperative import *\n'+
+        instructor_code = ('from pedal.report import *\n'+
+                           'from pedal.report.imperative import *\n'+
                            'clear_report()\n'+
                            'from pedal.source import set_source\n'+
                            'set_source('+json.dumps(student_code)+')\n'+
-                           #'def run_student():\n'+
-                           #'    #limit_execution_time()\n'+
-                           #'    try:\n'+
-                           #indent(student_code, ' '*8)+'\n'+
-                           #'        execf('+studentCode+')\n'+
-                           #'    except Exception as error:\n'+
-                           #'        #unlimit_execution_time()\n'+
-                           #'        return error\n'+
-                           #'    #unlimit_execution_time()\n'+
-                           #'    return None\n'+
                            'from pedal.sandbox.compatibility import *\n'+
                            'run_student()\n'+
                            'student = get_sandbox()\n'+
                            'from pedal.tifa import tifa_analysis\n'+
-                           'tifa_analysis()\n'+
+                           'tifa_analysis(True)\n'+
+                           'from pedal.sandbox import compatibility\n'+
+                           'student = compatibility.get_student_data()\n'+
+                           'compatibility.run_student(True)\n'+
+                           'from pedal.cait.cait_api import parse_program\n'+
                            result['give_feedback']+'\n'+
                            'from pedal.resolvers import simple\n'+
-                           'SUCCESS, MESSAGE = simple.resolve()')
+                           'SUCCESS, SCORE, CATEGORY, LABEL, MESSAGE, DATA, HIDE = simple.resolve()')
         gbls = {}
         exec(instructor_code, gbls, gbls)
-        display(HTML(gbls['MESSAGE']))
-        return gbls['MESSAGE']
+        tb_if_any = ''#json.dumps(gbls['DATA'].get('sandbox', {}))
+        display(HTML(gbls['CATEGORY']+'<br>'+
+                     gbls['LABEL']+'<br>'+
+                     gbls['MESSAGE']+'<br>'+
+                     '<pre>{}</pre>'.format(tb_if_any)))
+        return ('<strong>'+gbls['CATEGORY']+'</strong>: '+
+                     gbls['LABEL']+'<br>'+
+                     gbls['MESSAGE']+'<br>')
     else:
         return ""
 
+
 EMBED_STUDENT_CODE = r'''
+var cells = Jupyter.notebook.get_cells();
+if (cells.length > 0) {
+    var last = cells[cells.length-1];
+    $(last.element).animate({"background-color": "#F6FAFF"}, 1000);
+}
 var source_code = Jupyter.notebook.get_cells().map(function(cell) {
     if (cell.cell_type == "code") {
         var source = cell.code_mirror.getValue();
@@ -62,15 +69,25 @@ instructor_code += "print(result)\n"
 console.log(instructor_code);'''
 EXECUTE_CODE = r'''
 var kernel = IPython.notebook.kernel;
-var t = kernel.execute(instructor_code, { 'iopub' : {'output' : function(x) {
-    if (x.msg_type == "error") {
-        console.error(x.content);
-        element.text(x.content.ename+": "+x.content.evalue+"\n"+x.content.traceback.join("\n"))
-    } else {
-        element.html(x.content.text.replace(/\n/g, "<br>"));
-        //console.log(x);
-    }
-}}});'''
+if (kernel !== null) {
+    var t = kernel.execute(instructor_code, { 'iopub' : {'output' : function(x) {
+        if (x.msg_type == "error") {
+            console.error(x);
+            console.error(x.content);
+            element.text(x.content.ename+": "+x.content.evalue+"\n"+x.content.traceback.join("\n"))
+        } else if (!x.content.data && x.content.text) {
+            console.log(x);
+            element.html(x.content.text.replace(/\n/g, "<br>"));
+            //console.log(x);
+        } else {
+            console.log(x);
+        }
+        if (cells.length > 0) {
+            var last = cells[cells.length-1];
+            $(last.element).animate({"background-color": "white"}, 1000);
+        }
+    }}});
+}'''
 
 @magics_class
 class GradeMagic(Magics):
@@ -89,6 +106,14 @@ class GradeMagic(Magics):
         
 def load_ipython_extension(ipython):
     ipython.register_magics(GradeMagic)
+    
+# You need both this and the next function to register pedal with jupyter
+def _jupyter_server_extension_paths():
+    return [{
+        "module": "pedal.plugins.grade_magic"
+    }]
 
+# jupyter serverextension enable --py pedal.plugins.grade_magic
 def load_jupyter_server_extension(nbapp):
-    nbapp.register_magics(GradeMagic)
+    from IPython import get_ipython
+    get_ipython().register_magics(GradeMagic)

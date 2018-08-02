@@ -1,6 +1,7 @@
 import unittest
 import os
 import sys
+from textwrap import dedent
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import pedal.tifa
@@ -352,6 +353,20 @@ class TestVariables(unittest.TestCase):
         self.assertEqual(issues['Unused Variable'][0]['message'], 
                          "The function <code>a</code> was given a definition, "
                          "but was never used after that.")
+        
+        tifa = pedal.tifa.Tifa()
+        tifa.process_code(dedent('''
+        import tate
+        art = tate.get_artwork()
+        h = [a['dimensions']['height'] for a in art if a['artist']['birth']['year'] > 1000]
+        b = [a['artist']['birth']['year'] for a in art 
+             if a['artist']['birth']['year'] > 1000]
+        import matplotlib.pyplot as plt
+        plt.scatter(b, h, alpha=.1)
+        plt.show()'''))
+        issues = tifa.report['tifa']['issues']
+        self.assertTrue(tifa.report['tifa']['success'])
+        
     
     '''
     def test_tifa_graceful_errors(self):
