@@ -72,7 +72,93 @@ class EasyNode:
         :param expr: the "Compare" or "BoolOp" tree to check self against
         :return: True if self (typically student node) and expr are equivalent boolean expressions
         """
-        raise NotImplementedError
+        ins_expr = EasyNode(ast.parse(expr)).body[0].value
+        ins_nums = ins_expr.find_all("Num")
+        std_nums = self.find_all("Num")
+        test_nums = []
+        for num in ins_nums:
+            raw_num = num.n
+            test_nums.append(raw_num)
+            test_nums.append(raw_num + mag)
+            test_nums.append(raw_num - mag)
+        for num in std_nums:
+            raw_num = num.n
+            test_nums.append(raw_num)
+            test_nums.append(raw_num + mag)
+            test_nums.append(raw_num - mag)
+
+        def eval_bool_comp(num_list, comp_ast):
+            comparators = comp_ast.comparators
+            ops = comp_ast.ops_names
+            comps = []
+            results = []
+            current = comp_ast.left
+            current = "Name" if current.ast_name == "Name" else current.n
+            left = current
+            for comp in comparators:
+                if comp.ast_name == "Name":
+                    comps.append("Name")
+                else:
+                    comps.append(comp.n)
+            for num_i in num_list:
+                # current = num_i if current == "Name" else current
+                result = True
+                for op, comp in zip(ops, comps):
+                    current = num_i if current == "Name" else current
+                    comp_p = num_i if comp == "Name" else comp
+                    res = {
+                        "Eq": current == comp_p,
+                        "NotEq": current != comp_p,
+                        "Lt": current < comp_p,
+                        "LtE": current <= comp_p,
+                        "Gt": current > comp_p,
+                        "GtE": current >= comp_p,
+                    }[op]
+                    current = comp
+                    result = result and res
+                    if not result:
+                        break
+                results.append(result)
+                current = left
+            return results
+
+        def eval_boolop(num_list, boolop_ast):
+            boolop = boolop_ast.op_name
+            values = boolop_ast.values
+            results_c = None
+            is_and = boolop == "And"
+            for value in values:
+                if value.ast_name == "Compare":
+                    results = eval_bool_comp(num_list, value)
+                else:  # should be boolop
+                    results = eval_boolop(num_list, value)
+                if results_c is None:
+                    results_c = results
+                else:
+                    new_result = []
+                    for result1, result2 in zip(results_c, results):
+                        if is_and:
+                            new_result.append(result1 and result2)
+                        else:
+                            new_result.append(result1 or result2)
+                    results_c = new_result
+            return results_c
+
+        if ins_expr.ast_name == "Compare":
+            ins_res = eval_bool_comp(test_nums, ins_expr)
+        elif ins_expr.ast_name == "BoolOp":
+            ins_res = eval_boolop(test_nums, ins_expr)
+        else:
+            raise TypeError
+
+        if self.ast_name == "Compare":
+            std_res = eval_bool_comp(test_nums, self)
+        elif self.ast_name == "BoolOp":
+            std_res = eval_boolop(test_nums, self)
+        else:
+            raise TypeError
+
+        return ins_res == std_res
 
     def get_next_tree(self):
         """Gets the next tree in the AST
