@@ -49,7 +49,10 @@ if (cells.length > 0) {
     var last = cells[cells.length-1];
     $(last.element).animate({"background-color": "#F6FAFF"}, 1000);
 }
-var source_code = Jupyter.notebook.get_cells().map(function(cell) {
+var source_code = Jupyter.notebook.get_cells()
+    .filter(function(cell) {
+        return cell.cell_type == "code";
+    }).map(function(cell) {
     if (cell.cell_type == "code") {
         var source = cell.code_mirror.getValue();
         if (!source.startsWith("%")) {
@@ -117,3 +120,10 @@ def _jupyter_server_extension_paths():
 def load_jupyter_server_extension(nbapp):
     from IPython import get_ipython
     get_ipython().register_magics(GradeMagic)
+
+'''
+Need to have the following startup script copied over:
+from pedal.plugins.grade_magic import GradeMagic
+from IPython import get_ipython
+get_ipython().register_magics(GradeMagic)
+'''

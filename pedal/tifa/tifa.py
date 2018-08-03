@@ -8,7 +8,8 @@ from pedal.tifa.type_definitions import (UnknownType, RecursedType,
                                          NoneType, BoolType, TupleType,
                                          ListType, StrType, FileType,
                                          DictType, ModuleType, SetType,
-                                         GeneratorType, DayType, TimeType)
+                                         GeneratorType, DayType, TimeType,
+                                         type_from_json)
 from pedal.tifa.literal_definitions import (LiteralNum, LiteralBool,
                                             LiteralNone, LiteralStr,
                                             LiteralTuple)
@@ -541,9 +542,10 @@ class Tifa(ast.NodeVisitor):
             for key, value in zip(node.keys, node.values):
                 key, value = self.visit(key), self.visit(value)
                 literal = Tifa.get_literal(key)
+                values.append(value)
+                keys.append(key)
                 if literal is not None:
                     literals.append(literal)
-                    values.append(value)
                 else:
                     all_literals = False;
             if all_literals:
@@ -998,8 +1000,14 @@ class Tifa(ast.NodeVisitor):
                     self.report_issue("Module not found", {"name": chain})
             return base_module
         else:
-            self.report_issue("Module not found", {"name": chain})
-            return ModuleType()
+            try:
+                actual_module = __import__(chain, globals(), {}, 
+                                           ['_tifa_definitions'])
+                definitions = actual_module._tifa_definitions()
+                return type_from_json(definitions)
+            except Exception:
+                self.report_issue("Module not found", {"name": chain})
+                return ModuleType()
             
     def combine_states(self, left, right):
         state = State(left.name, [left], left.type, 'branch', self.locate(),

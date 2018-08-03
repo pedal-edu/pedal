@@ -201,3 +201,9 @@ def get_builtin_function(name):
         return FunctionType(name="min", returns='element')
     elif name == "zip":
         return FunctionType(name="zip", returns=_builtin_zip)
+    elif name == "__import__":
+        return FunctionType(name="__import__", returns=ModuleType())
+    elif name == "globals":
+        return FunctionType(name="globals", 
+                            returns=DictType(keys=StrType(), 
+                                             values=UnknownType()))

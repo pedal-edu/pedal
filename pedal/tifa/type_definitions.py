@@ -1,4 +1,5 @@
-from pedal.tifa.literal_definitions import LiteralNum
+from pedal.tifa.literal_definitions import (LiteralNum, LiteralStr, 
+                                            literal_from_json)
 
 def _dict_extends(d1, d2):
     '''
@@ -313,3 +314,32 @@ TYPE_LOOKUPS = {
     DictType: ('dict', dict, DictType, 'DictType'),
     SetType: ('set', set, SetType, 'SetType'),
 }
+
+def type_from_json(val):
+    if val['type'] == 'DictType':
+        values = [type_from_json(v) for v in val['values']]
+        empty = val.get('empty', None)
+        if 'literals' in val:
+            literals = [literal_from_json(l) for l in val['literals']]
+            return DictType(empty, literals=literals, values=values)
+        else:
+            keys = [type_from_json(k) for k in val['keys']]
+            return DictType(empty, keys=keys, values=values)
+    elif val['type'] == 'ListType':
+        return ListType(type_from_json(val.get('subtype', None)), 
+                        val.get('empty', None))
+    elif val['type'] == 'StrType':
+        return StrType(val.get('empty', None))
+    elif val['type'] == 'BoolType':
+        return BoolType()
+    elif val['type'] == 'NoneType':
+        return NoneType()
+    elif val['type'] == 'NumType':
+        return NumType()
+    elif val['type'] == 'ModuleType':
+        submodules = {name: type_from_json(m)
+                      for name, m in val.get('submodules', {}).items()}
+        fields = {name: type_from_json(m)
+                  for name, m in val.get('fields', {}).items()}
+        return ModuleType(name=val.get('name'), submodules=submodules,
+                          fields=fields)

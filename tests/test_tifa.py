@@ -5,6 +5,8 @@ from textwrap import dedent
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import pedal.tifa
+import pedal.tifa.type_definitions as defs
+import pedal.tifa.literal_definitions as literal_defs
 
 unit_tests = {
     # Source Code, Shouldn't catch this, Should catch this
@@ -374,6 +376,65 @@ class TestVariables(unittest.TestCase):
         set_source(student_code)
         exception = compatibility.run_student()
         self.assertIsNotNone(exception)'''
+    
+    def test_json_types(self):
+        t = defs.type_from_json({'type': 'NumType'})
+        self.assertIsInstance(t, defs.NumType)
+        t = defs.type_from_json({'type': 'StrType'})
+        self.assertIsInstance(t, defs.StrType)
+        t = defs.type_from_json({'type': 'BoolType'})
+        self.assertIsInstance(t, defs.BoolType)
+        t = defs.type_from_json({'type': 'NoneType'})
+        self.assertIsInstance(t, defs.NoneType)
+        t = defs.type_from_json({'type': 'ListType', 
+                                 'subtype': {'type': 'NumType'}})
+        self.assertIsInstance(t, defs.ListType)
+        self.assertIsInstance(t.subtype, defs.NumType)
+        
+        l1 = {'type': 'LiteralStr', 'value': 'First'}
+        l2 = {'type': 'LiteralStr', 'value': 'Second'}
+        v1, v2 = {'type': 'StrType'}, {'type': 'NumType'}
+        t = defs.type_from_json({'type': 'DictType', 'literals': [l1, l2],
+                                'values': [v1, v2]})
+        self.assertIsInstance(t, defs.DictType)
+        self.assertIsInstance(t.literals, list)
+        self.assertEqual(len(t.literals), 2)
+        self.assertIsInstance(t.literals[0], literal_defs.LiteralStr)
+        self.assertEqual(t.literals[0].value, 'First')
+        self.assertIsInstance(t.literals[1], literal_defs.LiteralStr)
+        self.assertEqual(t.literals[1].value, 'Second')
+        self.assertIsInstance(t.values, list)
+        self.assertEqual(len(t.values), 2)
+        self.assertIsInstance(t.values[0], defs.StrType)
+        self.assertIsInstance(t.values[1], defs.NumType)
+        
+        # Try to parse the Broadway type definition
+        complex_type = {"type": "ModuleType",
+                "fields": {
+                    'get': {"type": "ListType", "empty": False, 
+                            "subtype": {"type": "NumType"}},
+                
+                    'get_shows': 
+		{"type": "ListType", "subtype": 
+			{"type": "DictType", "literals": [{"type": "LiteralStr", "value": 'Statistics'}, {"type": "LiteralStr", "value": 'Show'}, {"type": "LiteralStr", "value": 'Date'}], "values": [
+				{"type": "DictType", "literals": [{"type": "LiteralStr", "value": 'Capacity'}, {"type": "LiteralStr", "value": 'Attendance'}, {"type": "LiteralStr", "value": 'Performances'}, {"type": "LiteralStr", "value": 'Gross'}, {"type": "LiteralStr", "value": 'Gross Potential'}], "values": [
+					{"type": "NumType"}, 
+					{"type": "NumType"}, 
+					{"type": "NumType"}, 
+					{"type": "NumType"}, 
+					{"type": "NumType"}]}, 
+				{"type": "DictType", "literals": [{"type": "LiteralStr", "value": 'Type'}, {"type": "LiteralStr", "value": 'Theatre'}, {"type": "LiteralStr", "value": 'Name'}], "values": [
+					{"type": "StrType"}, 
+					{"type": "StrType"}, 
+					{"type": "StrType"}]}, 
+				{"type": "DictType", "literals": [{"type": "LiteralStr", "value": 'Day'}, {"type": "LiteralStr", "value": 'Month'}, {"type": "LiteralStr", "value": 'Year'}, {"type": "LiteralStr", "value": 'Full'}], "values": [
+					{"type": "NumType"}, 
+					{"type": "NumType"}, 
+					{"type": "NumType"}, 
+					{"type": "StrType"}]}]}},
+                
+                }}
+        defs.type_from_json(complex_type)
 
 if __name__ == '__main__':
     unittest.main(buffer=False)

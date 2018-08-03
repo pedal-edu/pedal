@@ -46,3 +46,12 @@ class LiteralTuple(LiteralValue):
 class LiteralNone(LiteralValue):
     def type(self):
         return LiteralNone()
+
+def literal_from_json(val):
+    if val['type'] == 'LiteralStr':
+        return LiteralStr(val['value'])
+    elif val['type'] == 'LiteralNum':
+        return LiteralNum(val['value'])
+    elif val['type'] == 'LiteralBool':
+        return LiteralBool(val['value'])
+    
