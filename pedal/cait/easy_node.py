@@ -64,9 +64,10 @@ class EasyNode:
     def numeric_logic_check(self, mag, expr):
         """
         If this node is a Compare or BoolOp node, sees if the logic in expr (a javascript string being a logical
-        statement) matches the logic of self.  This assumes that we are only comparing numerical values to a single
+        statement) matches the logic of self. This assumes that we are only comparing numerical values to a single
         variable
         TODO: modify this to take multiple variables over multiple BoolOps
+        TODO: modify to at least handle arithmetic expressions!
         :param mag: the order of magnitude that should be added to numbers to check logic, 1 is usually a good value,
                     especially when working with the set of integers.
         :param expr: the "Compare" or "BoolOp" tree to check self against
@@ -93,18 +94,21 @@ class EasyNode:
             comps = []
             results = []
             current = comp_ast.left
+            # TODO: current might be an arithmetic expression
             current = "Name" if current.ast_name == "Name" else current.n
             left = current
             for comp in comparators:
                 if comp.ast_name == "Name":
                     comps.append("Name")
                 else:
+                    # TODO: comp might be an arithmetic expression
                     comps.append(comp.n)
             for num_i in num_list:
                 # current = num_i if current == "Name" else current
                 result = True
                 for op, comp in zip(ops, comps):
                     current = num_i if current == "Name" else current
+                    # TODO: comp might be an arithmetic expression
                     comp_p = num_i if comp == "Name" else comp
                     res = {
                         "Eq": current == comp_p,
@@ -134,7 +138,7 @@ class EasyNode:
                     results = eval_boolop(num_list, value)
                 if results_c is None:
                     results_c = results
-                else:
+                else:  # compile results
                     new_result = []
                     for result1, result2 in zip(results_c, results):
                         if is_and:
