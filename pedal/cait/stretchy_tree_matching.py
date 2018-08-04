@@ -130,7 +130,11 @@ class StretchyTreeMatcher:
 
     def deep_find_match_binflex(self, ins_node, std_node, check_meta=False):
         base_mappings = self.shallow_match(ins_node, std_node, check_meta)
+        if not base_mappings:
+            return False
         op_mappings = self.shallow_match(ins_node.children[1], std_node.children[1], check_meta=True)
+        if not op_mappings:
+            return False
         base_mappings = [base_mappings[0].new_merged_map(op_mappings[0])]
 
         if base_mappings:
