@@ -747,92 +747,62 @@ def wrong_accumulator_initialization_placement_9_2():
     if list_init is None or not init_after_loop:
         explain('The variable for the count of the number of days having rain (<code>rainfall_count</code>) must be '
                 'initialized before the iteration which uses this variable.<br><br><i>(accu_init_place_9.2)<i></br>')
+        return True
+    return False
 
 
-# TODO: Implement Numeric Logic Check!
 def wrong_iteration_body_9_2():
-    std_ast = parse_program()
-    loops = std_ast.find_all('For')
-    correct_if = False
-    for loop in loops:
-        if_blocks = loop.find_all('If')
-        for if_block in if_blocks:
-            test = if_block.test
-            if test.numeric_logic_check(1, 'var > 0'):
-                correct_if = True
-                break
-        if correct_if:
-            break
-    if not correct_if:
-        explain('The test (if) to determine if a given amount of rainfall is greater than (>) zero is not in the '
-                'correct place.<br><br><i>(iter_body_9.2)<i></br>')
-    return not correct_if
+    matches = find_matches("for _item_ in _list_:\n"
+                           "    if __expr__:\n"
+                           "        pass")
+    if matches:
+        for match in matches:
+            __expr__ = match.exp_table.get("__expr__")
+            if __expr__.numeric_logic_check(1, 'var > 0'):
+                return False
+    explain('The test (if) to determine if a given amount of rainfall is greater than (>) zero is not in the '
+            'correct place.<br><br><i>(iter_body_9.2)<i></br>')
+    return True
 
 
 def wrong_decision_body_9_2():
-    std_ast = parse_program()
-    if_blocks = std_ast.find_all('If')
-    assignment_in_if = False
-    for if_block in if_blocks:
-        test = if_block.test
-        if test.numeric_logic_check(1, 'var > 0'):
-            assignments = if_block.find_all('Assign')
-            for assignment in assignments:
-                if assignment.target.id == 'rainfall_count':
-                    if assignment.value.ast_name == 'BinOp':
-                        binop = assignment.value
-                        if binop.has(1) and binop.has(assignment.target):
-                            assignment_in_if = True
-                            break
-        if assignment_in_if:
-            break
-    if not assignment_in_if:
-        explain('The increase by 1 in the number of days having rainfall (<code>rainfall_count</code>) is not in the '
-                'correct place.<br><br><i>(dec_body_9.2)<i></br>')
+    matches = find_matches("if __expr__:\n"
+                           "    rainfall_count = rainfall_count + 1")
+    if matches:
+        for match in matches:
+            __expr__ = match.exp_table.get("__expr__")
+            if __expr__.numeric_logic_check(1, 'var > 0'):
+                return False
+    explain('The increase by 1 in the number of days having rainfall (<code>rainfall_count</code>) is not in the '
+            'correct place.<br><br><i>(dec_body_9.2)<i></br>')
+    return True
 
 
 def wrong_print_9_2():
-    std_ast = parse_program()
-    for_loops = std_ast.find_all('For')
-    # has_for = len(for_loops) > 0
-    for_loc = []
-    wrong_print_placement = True
-    for loop in for_loops:
-        end_node = loop.next_tree
-        if end_node is not None:
-            for_loc.append(end_node.lineno)
-    calls = std_ast.find_all('Call')
-    for call in calls:
-        if call.func.id == 'print':
-            for loc in for_loc:
-                if call.func.lineno >= loc:
-                    wrong_print_placement = False
-                    break
-            if not wrong_print_placement:
-                break
-    if wrong_print_placement:
+    match = find_match("for _item_ in _list_:\n"
+                       "    pass\n"
+                       "print(_total_)")
+    if not match:
         explain('The output of the total number of days with rainfall is not in the correct place. The total number of '
                 'days should be output only once after the total number of days has been computed.<br><br><i>'
                 '(print_9.2)<i></br>')
-    return wrong_print_placement
+        return True
+    return False
 # ##########################9.2 END############################
 
 
 # ##########################9.6 START############################
 def wrong_comparison_9_6():
-    std_ast = parse_program()
-    if_blocks = std_ast.find_all('If')
-    if_error = False
-    for if_block in if_blocks:
-        if not if_block.has(80):
-            if_error = True
-            break
-        elif not if_block.test.numeric_logic_check(1, 'var > 80'):
-            if_error = True
-            break
-    if if_error:
-        explain('In this problem you should be finding temperatures above 80 degrees.<br><br><i>(comp_9.6)<i></br>')
-    return if_error
+    matches = find_matches("if __comp__:\n"
+                           "    pass")
+    if matches:
+        for match in matches:
+            __comp__ = match.exp_table.get("__comp__")
+            if not __comp__.numeric_logic_check(1, 'var > 80'):
+                explain(
+                    'In this problem you should be finding temperatures above 80 degrees.<br><br><i>(comp_9.6)<i></br>')
+                return True
+    return False
 # ##########################9.6 END############################
 
 

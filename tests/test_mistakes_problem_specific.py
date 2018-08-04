@@ -434,7 +434,7 @@ class SpecificMistakeTest(unittest.TestCase):
                        "    rainfall_list = [1, 2, 3]\n")
         self.assertTrue(wrong_list_initialization_placement_9_2(), "false negative")
 
-    def wrong_accumulator_initialization_placement_9_2(self):
+    def test_wrong_accumulator_initialization_placement_9_2(self):
         self.to_source("rainfall_count = 0\n"
                        "episode_length_list = [1, 2, 3]\n"
                        "for episode in episode_length_list:\n"
@@ -447,3 +447,56 @@ class SpecificMistakeTest(unittest.TestCase):
                        "sum_length = 0\n")
         self.assertTrue(wrong_accumulator_initialization_placement_9_2(), "incorrect trigger of feedback")
 
+    def test_wrong_iteration_body_9_2(self):
+        self.to_source("for item in items:\n"
+                       "    if item > 0:\n"
+                       "        pass")
+        self.assertFalse(wrong_iteration_body_9_2(), "false positive")
+
+        self.to_source("for item in items:\n"
+                       "    if item < 0:\n"
+                       "        pass")
+        self.assertTrue(wrong_iteration_body_9_2(), "false negative")
+
+        self.to_source("for item in items:\n"
+                       "    pass")
+        self.assertTrue(wrong_iteration_body_9_2(), "false negative")
+
+    def test_wrong_decision_body_9_2(self):
+        self.to_source("if item > 0:\n"
+                       "    rainfall_count = rainfall_count + 1")
+        self.assertFalse(wrong_decision_body_9_2(), "false positive")
+
+        self.to_source("if item < 0:\n"
+                       "    rainfall_count = rainfall_count + 1")
+        self.assertTrue(wrong_decision_body_9_2(), "false negative")
+
+        self.to_source("rainfall_count = rainfall_count + 1")
+        self.assertTrue(wrong_decision_body_9_2(), "false negative")
+
+    def wrong_print_9_2(self):
+        self.to_source("for item in items:\n"
+                       "    print(total)")
+        self.assertTrue(wrong_print_9_2(), "false negative")
+
+        self.to_source("print(total)\n"
+                       "for item in items:\n"
+                       "    pass")
+        self.assertTrue(wrong_print_9_2(), "false negative")
+
+        self.to_source("for item in items:\n"
+                       "    pass\n"
+                       "print(total)")
+        self.assertFalse(wrong_print_9_2(), "false positive")
+
+    def test_wrong_comparison_9_6(self):
+        self.to_source("if x < 80:\n"
+                       "    pass")
+        self.assertTrue(wrong_comparison_9_6(), "false positive")
+
+        self.to_source("if x > 80:\n"
+                       "    pass")
+        self.assertFalse(wrong_comparison_9_6(), "false negative")
+
+        self.to_source("x > 80")
+        self.assertTrue(wrong_comparison_9_6(), "false negative")

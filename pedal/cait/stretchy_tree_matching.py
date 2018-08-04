@@ -16,6 +16,8 @@ class StretchyTreeMatcher:
             ast_node = code
         if ast_node is None:
             self.rootNode = None
+        elif isinstance(ast_node, EasyNode):
+            self.rootNode = ast_node
         else:
             self.rootNode = EasyNode(ast_node, "none")
 
