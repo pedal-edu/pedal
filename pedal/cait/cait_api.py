@@ -118,3 +118,20 @@ def find_matches(ins_code, std_code=None, report=None):
     cait_obj.report['cait']['matcher'] = matcher
     matches = cait_obj.report['cait']['matcher'].find_matches(std_code)
     return matches
+
+
+def find_expr_sub_matches(ins_expr, std_expr):
+    """Finds ins_expr in std_expr
+
+    :param ins_expr: the expression to find (str that MUST evaluate to Expr)
+    :param std_expr: student subtree
+    :return: a list of matches or False if no matches found
+    """
+    if not isinstance(ins_expr, str):
+        raise TypeError("ins_expr expected str, found {0}".format(type(ins_expr)))
+    matcher = StretchyTreeMatcher(ins_expr)
+    expr_node = matcher.rootNode.children[0]
+    if expr_node.ast_name != "Expr":
+        raise ValueError("ins_expr does not evaluate to an Expr node")
+    matcher.rootNode = expr_node.value
+    return matcher.find_matches(std_expr, False)

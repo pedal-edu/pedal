@@ -441,7 +441,8 @@ class CaitTests(unittest.TestCase):
         self.assertTrue(matcher2.find_matches(student_code, check_meta=False))
         matches = matcher1.find_matches(student_code)
         self.assertTrue(matches)
+
         __expr__ = matches[0].exp_table.get("__expr__")
-        matches2 = matcher2.find_matches(__expr__.parent, check_meta=False)
+        matches2 = find_expr_sub_matches("0.4*_item_", __expr__)
         self.assertTrue(matches2)
 
