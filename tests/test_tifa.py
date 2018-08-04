@@ -2,6 +2,7 @@ import unittest
 import os
 import sys
 from textwrap import dedent
+from pprint import pprint
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import pedal.tifa
@@ -435,6 +436,15 @@ class TestVariables(unittest.TestCase):
                 
                 }}
         defs.type_from_json(complex_type)
+    
+    def test_custom_module_import(self):
+        tifa = pedal.tifa.Tifa()
+        tifa.process_code('import weather\n'+
+                          'rs = weather.get_weather()\n'+
+                          'for r in rs:\n'+
+                          '  0+r["Data"]["Precipitation"]')
+        issues = tifa.report['tifa']['issues']
+        self.assertTrue(tifa.report['tifa']['success'])
 
 if __name__ == '__main__':
     unittest.main(buffer=False)

@@ -1,5 +1,6 @@
 from pedal.tifa.literal_definitions import (LiteralNum, LiteralStr, 
-                                            literal_from_json)
+                                            literal_from_json,
+                                            are_literals_equal)
 
 def _dict_extends(d1, d2):
     '''
@@ -343,3 +344,6 @@ def type_from_json(val):
                   for name, m in val.get('fields', {}).items()}
         return ModuleType(name=val.get('name'), submodules=submodules,
                           fields=fields)
+    elif val['type'] == 'FunctionType':
+        returns = type_from_json(val.get('returns', {'type': 'NoneType'}))
+        return FunctionType(name=val.get('name'), returns=returns)
