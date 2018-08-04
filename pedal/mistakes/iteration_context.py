@@ -121,60 +121,48 @@ def wrong_print_8_3():
 
 # ################8.4 Start#######################
 def missing_target_slot_empty_8_4():
-    std_ast = parse_program()
-    for_loops = std_ast.find_all('For')
-    for loop in for_loops:
-        iter_prop = loop.target
-        if iter_prop.id == '___':
-            explain('You must fill in the empty slot in the iteration.<br><br><i>(target_empty_8.4)<i></br>')
-            return False
-    return True
+    matches = find_matches("for _item_ in pages_count_list:\n"
+                       "    pass")
+    if matches:
+        for match in matches:
+            _item_ = match.symbol_table.get("_item_")[0]
+            if _item_.id == "___":
+                explain('You must fill in the empty slot in the iteration.<br><br><i>(target_empty_8.4)<i></br>')
+                return True
+    return False
 
 
 def missing_addition_slot_empty_8_4():
-    std_ast = parse_program()
-    assignments = std_ast.find_all('Assign')
-    for assignment in assignments:
-        left = assignment.target
-        right = assignment.value
-        if left.id == 'sum_pages':
-            binOp = right.find_all('BinOp')
-            if len(binOp) == 1:
-                binOp = binOp[0]
-                if binOp.op == 'Add':
-                    if binOp.left.ast_name == 'Name' and binOp.right.ast_name == 'Name':
-                        if binOp.has(left):
-                            if binOp.left.id == '___' or binOp.right.id == '___':
-                                explain('You must fill in the empty slot in the addition.<br><br><i>'
-                                        '(add_empty_8.4)<i></br>')
-                                return True
+    matches = find_matches("sum_pages + _item_")
+    if matches:
+        for match in matches:
+            _item_ = match.symbol_table.get("_item_")[0]
+            if _item_.id == "___":
+                explain('You must fill in the empty slot in the addition.<br><br><i>(add_empty_8.4)<i></br>')
+                return True
     return False
 
 
 def wrong_names_not_agree_8_4():
-    std_ast = parse_program()
-    for_loops = std_ast.find_all('For')
-    for loop in for_loops:
-        iter_prop = loop.target
-        list_prop = loop.iter
-        if list_prop.ast_name == 'Name' and iter_prop.ast_name == 'Name':
-            assignments = loop.find_all('Assign')
-            for assignment in assignments:
-                binops = assignment.find_all('BinOp')
-                if len(binops) > 0:
-                    lhs = assignment.target
-                    if lhs.ast_name == 'Name' and lhs.id == 'sum_pages':
-                        for binop in binops:
-                            if binop.has(lhs) and binop.op == 'Add':
-                                if not binop.has(iter_prop):
-                                    explain('Each value of <code>{0!s}</code> must be added to <code>{1!s}</code>.'
-                                            '<br><br><i>(name_agree_8.4)<i></br>'.format(iter_prop.id, lhs.id))
-                                    return True
+    matches = find_matches("for _item1_ in pages_count_list:\n"
+                           "    sum_pages = sum_pages + _item2_")
+    if matches:
+        for match in matches:
+            # in theory, these will always be different? should test in test_cait
+            _item1_ = match.symbol_table.get("_item1_")[0]
+            _item2_ = match.symbol_table.get("_item2_")[0]
+            if _item1_.id != _item2_.id:
+                explain('Each value of <code>{0!s}</code> must be added to <code>{1!s}</code>.<br><br><i>'
+                        '(name_agree_8.4)<i></br>'.format(_item1_.id, _item2_.id))
+                return True
     return False
 
 
 # ################8.4 End#######################
 def wrong_modifying_list_8_5():
+    """
+
+    # old code for record keeping because significantly different semantics
     std_ast = parse_program()
     list_init = std_ast.find_all('List')
     true_sum = 0
@@ -183,9 +171,20 @@ def wrong_modifying_list_8_5():
             true_sum = value.n + true_sum
     if true_sum != sum([20473, 27630, 17849, 19032, 16378]) or len(list_init) == 0:
         explain('Don\'t modify the list<br><br><i>(mod_list_8.5)<i></br>')
+        return True
+    return  False
+
+    :return:
+    """
+    match = find_match("_list_ = [20473, 27630, 17849, 19032, 16378]")
+    if not match:
+        explain('Don\'t modify the list<br><br><i>(mod_list_8.5)<i></br>')
+        return True
+    return False
 
 
 def wrong_modifying_list_8_6():
+    """
     std_ast = parse_program()
     list_init = std_ast.find_all('List')
     true_sum = 0
@@ -193,9 +192,17 @@ def wrong_modifying_list_8_6():
         true_sum = value.n + true_sum
     if true_sum != sum([2.9, 1.5, 2.3, 6.1]):
         explain('Don\'t modify the list<br><br><i>(mod_list_8.6)<i></br>')
+    :return:
+    """
+    match = find_match("_list_ = [2.9, 1.5, 2.3, 6.1]")
+    if not match:
+        explain('Don\'t modify the list<br><br><i>(mod_list_8.6)<i></br>')
+        return True
+    return False
 
 
-def wrong_should_be_counting():  # This doesn't do as it is intended to do!
+def wrong_should_be_counting():
+    """
     std_ast = parse_program()
     for_loops = std_ast.find_all('For')
     for loop in for_loops:
@@ -207,18 +214,19 @@ def wrong_should_be_counting():  # This doesn't do as it is intended to do!
                 if binop.has(iter_prop) and binop.op == 'Add':
                     explain('This problem asks for the number of items in the list not the total of all the values in '
                             'the list.<br><br><i>(not_count)<i></br>')
-
-
-def m_wrong_should_be_counting():
-    pattern = 'for x in ___:\n' \
-              '    count = count + x'
-    match = find_match(pattern)
+    :return:
+    """
+    match = find_match("for _item_ in ___:\n"
+                       "    ___ = ___ + _item_")
     if match:
-        explain('This problem asks for the number of items in the '
-                'list not the total of all the values in '
-                'the list.<br><br><i>(not_count)<i></br>')
+        explain('This problem asks for the number of items in the list not the total of all the values in the list.'
+                '<br><br><i>(not_count)<i></br>')
+        return True
+    return False
+
 
 def wrong_should_be_summing():
+    """
     std_ast = parse_program()
     for_loops = std_ast.find_all('For')
     for loop in for_loops:
@@ -229,9 +237,18 @@ def wrong_should_be_summing():
                 if binop.has(1) and binop.op == 'Add':
                     explain('This problem asks for the total of all the values in the list not the number of items in '
                             'the list.<br><br><i>(not_sum)<i></br>')
+    """
+    match = find_match("for _item_ in ___:\n"
+                       "    ___ = ___ + 1")
+    if match:
+        explain('This problem asks for the total of all the values in the list not the number of items in '
+               'the list.<br><br><i>(not_sum)<i></br>')
+        return True
+    return False
 
 
 def missing_addition_slot_empty():
+    """
     std_ast = parse_program()
     assignments = std_ast.find_all('Assign')
     for assignment in assignments:
@@ -246,9 +263,21 @@ def missing_addition_slot_empty():
                         explain('You must fill in the empty slot in the addition.<br><br><i>(add_empty)<i></br>')
                         return True
     return False
+    :return:
+    """
+    matches = find_matches("___ + _item_")
+    if matches:
+        for match in matches:
+            _item_ = match.symbol_table.get("_item_")[0]
+            if _item_.id == "___":
+                explain('You must fill in the empty slot in the addition.<br><br><i>(add_empty)<i></br>')
+                return True
+    return False
 
 
 def wrong_cannot_sum_list():
+    """
+
     std_ast = parse_program()
     for_loops = std_ast.find_all('For')
     for loop in for_loops:
@@ -260,15 +289,27 @@ def wrong_cannot_sum_list():
                 if binop.has(list_prop) and binop.op == 'Add':
                     explain('Addition can only be done with a single value at a time, not with an entire list at one'
                             ' time.<br><br><i>(sum_list)<i></br>')
+    :return:
+    """
+    match = find_matches("for ___ in _list_ :\n"
+                         "    ___ = ___ + _list_")
+    if match:
+        explain('Addition can only be done with a single value at a time, not with an entire list at one'
+                ' time.<br><br><i>(sum_list)<i></br>')
+        return True
+    return False
 
 
 def missing_no_print():
     prints = find_match('print(___)')
     if not prints:
         explain('Program does not output anything.<br><br><i>(no_print)<i></br>')
+        return True
+    return False
 
 
 def missing_counting_list():
+    """
     std_ast = parse_program()
     has_count = False
     for_loops = std_ast.find_all('For')
@@ -287,9 +328,18 @@ def missing_counting_list():
                         has_count = True
     if not has_count:
         explain('Count the total number of items in the list using iteration.<br><br><i>(miss_count_list)<i></br>')
+    :return:
+    """
+    match = find_matches("for ___ in ___:\n"
+                         "    _sum_ = _sum_ + 1")
+    if not match:
+        explain('Count the total number of items in the list using iteration.<br><br><i>(miss_count_list)<i></br>')
+        return True
+    return False
 
 
 def missing_summing_list():
+    """
     std_ast = parse_program()
     has_total = False
     for_loops = std_ast.find_all('For')
@@ -309,9 +359,19 @@ def missing_summing_list():
                         has_total = True
     if not has_total:
         explain('Sum the total of all list elements using iteration.<br><br><i>(miss_sum_list)<i></br>')
+    :return:
+    """
+    match = find_matches("for _item_ in ___:\n"
+                         "    _sum_ = _sum_ + _item_")
+    if not match:
+        explain('Sum the total of all list elements using iteration.<br><br><i>(miss_sum_list)<i></br>')
+        return True
+    return False
 
 
 def missing_zero_initialization():
+    """
+
     std_ast = parse_program()
     for_loops = std_ast.find_all('For')
     accumulator = None
@@ -341,276 +401,189 @@ def missing_zero_initialization():
                 ' in an appropriate location<br><br><i>(miss_zero_init)<i></br>'.format(accumulator.id))
         return False
     return True
+    :return:
+    """
+    matches01 = find_matches("for ___ in ___:\n"
+                             "    _sum_ = _sum_ + ___")
+    if matches01:
+        matches02 = find_matches("_sum_ = 0")
+        for match01 in matches01:
+            _sum_ = match01.symbol_table.get("_sum_")[0]
+            if not matches02:
+                break
+            lineno_01 = match01.match_lineno
+            for match02 in matches02:
+                lineno_02 = match02.match_lineno
+                new_matching = match01.new_merged_map(match02)
+                valid = len(new_matching.conflict_keys) == 0
+                if not valid:
+                    continue
+                if lineno_02 > lineno_01:
+                    matches02 = False
+                    break
+        if not matches02:
+            explain('The addition on the first iteration step is not correct because either the variable '
+                    '<code>{0!s}</code> has not been initialized to an appropriate initial value or it has not been'
+                    ' placed in an appropriate location<br><br><i>(miss_zero_init)<i></br>'.format(_sum_.id))
+            return True
+    return False
 
 
 def wrong_printing_list():
-    std_ast = parse_program()
-    # for_loops = std_ast.find_all('For')
-    calls = std_ast.find_all('Call')
-    log(calls)
-    for call in calls:
-        if call.func.id == 'print':
-            if call.args[0].ast_name == 'Name' and call.args[0].data_type != 'Num':
-                explain('You should be printing a single value.<br><br><i>(list_print)<i></br>')
+    match = find_match("for ___ in ___:\n"
+                       "    print(___)")
+    if match:
+        explain('You should be printing a single value.<br><br><i>(list_print)<i></br>')
+        return True
+    return False
 
 
+# TODO: This might be reason to rethink letting instructor symbols map to multiple items
 def missing_average():
-    std_ast = parse_program()
-    for_loops = std_ast.find_all('For')
-    has_for = len(for_loops) > 0
-    has_average = False
-    for_loc = []
-    for loop in for_loops:
-        end_node = loop.next_tree
-        if end_node is not None:
-            for_loc.append(end_node.lineno)
-    if has_for:
-        binops = std_ast.find_all('BinOp')
-        for binop in binops:
-            if binop.op != 'Div':
-                continue
-            is_after = False
-            for lineno in for_loc:
-                if lineno <= binop.lineno:
-                    is_after = True
-                    break
-            if not is_after:
-                break
-            right = binop.right
-            left = binop.left
-            if right.ast_name == 'Name' and left.ast_name == 'Name':
-                if right.id != left.id:
-                    has_average = True
-                    break
-    if not has_average:
+    matches_missing = find_matches("for ___ in ___:\n"
+                                   "    pass\n"
+                                   "_average_ = _total_/_count_")
+    matches = []
+    if matches_missing:
+        for match in matches_missing:
+            _total_ = match.symbol_table.get("_total_")[0]
+            _count_ = match.symbol_table.get("_count_")[0]
+            _average_ = match.symbol_table.get("_average_")[0]
+            if _total_.id != _count_.id != _average_.id and _total_.id != _average_.id:
+                matches.append(match)
+
+    if not len(matches) > 0:
         explain('An average value is not computed.<br><br><i>(no_avg)<i></br>')
+        return True
+    return False
 
 
 def warning_average_in_iteration():
-    std_ast = parse_program()
-    for_loops = std_ast.find_all('For')
-    for loop in for_loops:
-        assignments = loop.find_all('Assign')
-        for assignment in assignments:
-            binops = assignment.find_all('BinOp')
-            for binop in binops:
-                if binop.op == 'Div':
-                    # assName = assignment.target
-                    numerator = binop.left
-                    denominator = binop.right
-                    if numerator.ast_name == 'Name' and denominator.ast_name == 'Name':
-                        explain('An average value is best computed after the properties name <code>{0!s}</code>(total)'
-                                ' and <code>{1!s}</code> are completely known rather than recomputing the average on'
-                                ' each iteration.<br><br><i>(avg_in_iter)<i></br>'.format(numerator.id, denominator.id))
+    matches = find_matches("for ___ in ___:\n"
+                           "    _average_ = _total_/_count_\n")
+    if matches:
+        for match in matches:
+            _total_ = match.symbol_table.get("_total_")[0]
+            _count_ = match.symbol_table.get("_count_")[0]
+            _average_ = match.symbol_table.get("_average_")[0]
+            if _total_.id != _count_.id != _average_.id and _total_.id != _average_.id:
+                explain('An average value is best computed after the properties name <code>{0!s}</code>(total)'
+                        ' and <code>{1!s}</code> are completely known rather than recomputing the average on'
+                        ' each iteration.<br><br><i>(avg_in_iter)<i></br>'.format(_total_.id, _count_.id))
+                return True
+    return False
 
 
 def wrong_average_denominator():
-    std_ast = parse_program()
-    for_loops = std_ast.find_all('For')
-    count_vars = []
-    loc_array = []
-    for loop in for_loops:
-        # iter_prop = loop.target
-        end_node = loop.next_tree
-        if end_node is None:
-            continue
-        loc = end_node.lineno
-        assignments = loop.find_all('Assign')
-        for assignment in assignments:
-            if assignment.has(1):
-                ass_left = assignment.target
-                ass_right = assignment.value
-                if ass_right.ast_name == 'BinOp' and ass_right.op == 'Add':
-                    if ass_right.has(ass_left):
-                        count_vars.append(ass_left)
-                        loc_array.append(loc)
-    assignments = std_ast.find_all('Assign')
-    denominator_wrong = False
-    for assignment in assignments:
-        index = 0
-        for loc in loc_array:
-            if assignment.lineno >= loc and assignment.value.ast_name == 'BinOp':
-                ass_left = assignment.target
-                binop = assignment.value
-                if binop.op == 'Div' and not binop.has(ass_left):
-                    numerator = assignment.value.left
-                    denominator = assignment.value.right
-                    if numerator.id != denominator.id and denominator.id != count_vars[index].id:
-                        denominator_wrong = True
-            if denominator_wrong:
-                break
-            index = index + 1
-        if denominator_wrong:
-            break
-    if denominator_wrong:
-        explain('The average is not calculated correctly.<br><br><i>(avg_denom)<i></br>')
-    return denominator_wrong
+    matches = find_matches("for ___ in ___:\n"
+                           "    _count_ = _count_ + 1\n"
+                           "_average_ = _total_/_value_")
+    if matches:
+        for match in matches:
+            _count_ = match.symbol_table.get("_count_")[0]
+            _value_ = match.symbol_table.get("_value_")[0]
+            if _count_.id != _value_.id:
+                explain('The average is not calculated correctly.<br><br><i>(avg_denom)<i></br>')
+                return True
+    return False
 
 
 def wrong_average_numerator():
-    std_ast = parse_program()
-    for_loops = std_ast.find_all('For')
-    total_vars = []
-    loc_array = []
-    for loop in for_loops:
-        iter_prop = loop.target
-        end_node = loop.next_tree
-        if end_node is None:
-            continue
-        loc = end_node.lineno
-        assignments = loop.find_all('Assign')
-        for assignment in assignments:
-            if assignment.has(iter_prop):
-                ass_left = assignment.target
-                ass_right = assignment.value
-                if ass_right.ast_name == 'BinOp' and ass_right.op == 'Add':
-                    if ass_right.has(ass_left):
-                        total_vars.append(ass_left)
-                        loc_array.append(loc)
-    assignments = std_ast.find_all('Assign')
-    numerator_wrong = False
-    for assignment in assignments:
-        index = 0
-        for loc in loc_array:
-            if assignment.lineno >= loc and assignment.value.ast_name == 'BinOp':
-                ass_left = assignment.target
-                binop = assignment.value
-                if binop.op == 'Div' and not binop.has(ass_left):
-                    numerator = assignment.value.left
-                    denominator = assignment.value.right
-                    if numerator.id != denominator.id and numerator.id != total_vars[index].id:
-                        numerator_wrong = True
-            if numerator_wrong:
-                break
-            index = index + 1
-        if numerator_wrong:
-            break
-    if numerator_wrong:
-        explain('The average is not calculated correctly.<br><br><i>(avg_numer)<i></br>')
-    return numerator_wrong
+    matches = find_matches("for _item_ in ___:\n"
+                           "    _total_ = _total_ + _item_\n"
+                           "_average_ = _value_/_count_")
+    if matches:
+        for match in matches:
+            _total_ = match.symbol_table.get("_total_")[0]
+            _value_ = match.symbol_table.get("_value_")[0]
+            if _total_.id != _value_.id:
+                explain('The average is not calculated correctly.<br><br><i>(avg_numer)<i></br>')
+                return True
+    return False
 
 
 # #######################AVERAGE END###########################
 def wrong_compare_list():
-    std_ast = parse_program()
-    for_loops = std_ast.find_all('For')
-    is_comparing_list = False
-    offending_list = ''
-    for loop in for_loops:
-        list_prop = loop.iter
-        ifs = std_ast.find_all('If')
-        for if_block in ifs:
-            if if_block.test.has(list_prop):
-                is_comparing_list = True
-                offending_list = list_prop.id
-                break
-        if is_comparing_list:
-            break
-    if is_comparing_list:
-        explain('Each item in the list <code>{0!s}</code> must be compared one item at a time.<br><br><i>'
-                '(comp_list)<i></br>'.format(offending_list))
-    return is_comparing_list
+    matches = find_matches("for ___ in _list_:\n"
+                           "    if __expr__:\n"
+                           "        pass")
+    if matches:
+        for match in matches:
+            _list_ = match.symbol_table.get("_list_")[0]
+            __expr__ = match.exp_table.get("__expr__")
+            if __expr__.has(_list_.astNode):
+                explain('Each item in the list <code>{0!s}</code> must be compared one item at a time.<br><br><i>'
+                        '(comp_list)<i></br>'.format(_list_.id))
+                return True
+    return False
 
 
 def wrong_for_inside_if():
-    std_ast = parse_program()
-    if_blocks = std_ast.find_all('If')
-    if_inside_for = False
-    for if_block in if_blocks:
-        loops = if_block.find_all('For')
-        if len(loops) > 0:
-            if_inside_for = True
-            break
-    if if_inside_for:
+    match = find_match("if ___:\n"
+                       "    for ___ in ___:\n"
+                       "        pass")
+    if match:
         explain('The iteration should not be inside the decision block.<br><br><i>(for_in_if)<i></br>')
-    return if_inside_for
+        return True
+    return False
 
 
 def iterator_is_function():
     std_ast = parse_program()
     for_loops = std_ast.find_all('For')
-    for loop in for_loops:
-        list_prop = loop.iter
-        if list_prop.ast_name == 'Call':
-            explain('You should make a variable for the list instead of using a function call for the list'
-                    '<br><br><i>(iter_is_func)<i></br>')
+    # noinspection PyBroadException
+    try:
+        for loop in for_loops:
+            list_prop = loop.iter
+            if list_prop.ast_name == 'Call':
+                explain('You should make a variable for the list instead of using a function call for the list'
+                        '<br><br><i>(iter_is_func)<i></br>')
+                return True
+    except Exception:
+        return False
+    return False
 
 
 # ##########################9.1 START############################
 def wrong_list_initialization_9_1():
-    std_ast = parse_program()
-    assignments = std_ast.find_all('Assign')
-    has_call = False
-    for assignment in assignments:
-        if assignment.target.id == 'rainfall_list':
-            call = assignment.find_all('Call')
-            if len(call) == 1:
-                args = call[0].args
-                if len(args) == 3:
-                    if args[0].s == 'Precipitation' and args[1].s == 'Location' and args[2].s == 'Blacksburg, VA':
-                        has_call = True
-                        break
-    if not has_call:
+    match = find_match('rainfall_list = weather.get("Precipitation","Location","Blacksburg, VA")')
+    if not match:
         explain('The list of rainfall amounts (<code>rainfall_list</code>) is not initialized properly.'
                 '<br><br><i>(list_init_9.1)<i></br>')
-    return not has_call
+        return True
+    return False
 
 
 def wrong_accumulator_initialization_9_1():
-    std_ast = parse_program()
-    assignments = std_ast.find_all('Assign')
-    has_assignment = False
-    for assignment in assignments:
-        if assignment.target.id == 'rainfall_sum' and assignment.value.ast_name == 'Num':
-            if assignment.value.n == 0:
-                has_assignment = True
-                break
-    if not has_assignment:
+    match = find_match("rainfall_sum = 0")
+    if not match:
         explain('The variable to hold the total value of the rainfall amounts (<code>rainfall_sum</code>) is not '
                 'initialized properly.<br><br><i>(accu_init_9.1)<i></br>')
-    return not has_assignment
+        return True
+    return False
 
 
 def wrong_accumulation_9_1():
-    std_ast = parse_program()
-    assignments = std_ast.find_all('Assign')
-    has_assignment = False
-    for assignment in assignments:
-        target = assignment.target
-        if target.id == 'rainfall_sum':
-            if assignment.value.ast_name == 'BinOp':
-                binop = assignment.value
-                if binop.op == 'Add':
-                    left = binop.left
-                    right = binop.right
-                    if (left.id == 'rainfall_sum' or right.id == 'rainfall_sum') and \
-                            (left.id == 'rainfall' or right.id == 'rainfall'):
-                        has_assignment = True
-                        break
-    if not has_assignment:
-        explain('The addition of each rainfall amount to <code>rainfall_sum</code> is not correct.'
-                '<br><br><i>(accu_9.1)<i></br>')
-    return not has_assignment
+    matches = find_matches("rainfall_sum = _item_ + rainfall")
+    if matches:
+        for match in matches:
+            _item_ = match.symbol_table.get("_item_")[0]
+            if _item_.id != "rainfall_sum":
+                explain('The addition of each rainfall amount to <code>rainfall_sum</code> is not correct.'
+                        '<br><br><i>(accu_9.1)<i></br>')
+                return True
+    return False
 
 
 def wrong_list_initialization_placement_9_1():
-    std_ast = parse_program()
-    assignments = std_ast.find_all('Assign')
-    loops = std_ast.find_all('For')
-    list_init = None
-    init_after_loop = False
-    for assignment in assignments:
-        if assignment.target.id == 'rainfall_list':
-            list_init = assignment
-            break
-    if list_init is not None:
-        for loop in loops:
-            if loop.lineno > list_init.lineno:
-                init_after_loop = True
-                break
-    if list_init is None or not init_after_loop:
+    match = find_match("rainfall_list = ___\n"
+                       "for _item_ in _list_:\n"
+                       "    pass")
+    if not match:
         explain('The list of rainfall amount (<code>rainfall_list</code>) must be initialized before the iteration that'
                 ' uses this list.<br><br><i>(list_init_place_9.1)<i></br>')
+        return True
+    return False
 
 
 def wrong_accumulator_initialization_placement_9_1():
@@ -650,6 +623,8 @@ def wrong_iteration_body_9_1():
 
 
 def wrong_print_9_1():
+    """
+
     std_ast = parse_program()
     for_loops = std_ast.find_all('For')
     # has_for = len(for_loops) > 0
@@ -671,9 +646,20 @@ def wrong_print_9_1():
     if wrong_print_placement:
         explain('The output of the total rainfall amount is not in the correct place. The total rainfall should be '
                 'output only once after the total rainfall has been computed.<br><br><i>(print_9.1)<i></br>')
+    :return:
+    """
+    match = find_match("for _item_ in _list_:\n"
+                       "    pass\n"
+                       "print(_total_)")
+    if not match:
+        explain('The output of the total rainfall amount is not in the correct place. The total rainfall should be '
+                'output only once after the total rainfall has been computed.<br><br><i>(print_9.1)<i></br>')
+        return True
+    return False
 # ##########################9.1 END############################
 
 
+# TODO: Continue converting from here
 # ##########################9.2 START############################
 def wrong_list_initialization_9_2():
     std_ast = parse_program()
@@ -710,30 +696,16 @@ def wrong_accumulator_initialization_9_2():
 
 
 def wrong_accumulation_9_2():
-    std_ast = parse_program()
-    assignments = std_ast.find_all('Assign')
-    has_assignment = False
-    for assignment in assignments:
-        target = assignment.target
-        if target.id == 'rainfall_count':
-            if assignment.value.ast_name == 'BinOp':
-                binop = assignment.value
-                if binop.op == 'Add':
-                    left = binop.left
-                    right = binop.right
-                    if (left.id == 'rainfall_count' or right.id == 'rainfall_count') and\
-                            (left.ast_name == 'Num' or right.ast_name == 'Num'):
-                        if left.ast_name == 'Num':
-                            num_node = left
-                        else:
-                            num_node = right
-                        if num_node.n == 1:
-                            has_assignment = True
-                        break
-    if not has_assignment:
-        explain('The adding of another day with rainfall to the total count of days with rainfall (<code>rainfall_count'
-                '</code>) is not correct.<br><br><i>(accu_9.2)<i></br>')
-    return not has_assignment
+    matches = find_matches("rainfall_count = _item_ + 1")
+    if matches:
+        for match in matches:
+            _item_ = match.symbol_table.get("_item_")[0]
+            if _item_.id != "rainfall_count":
+                explain(
+                    'The adding of another day with rainfall to the total count of days with rainfall '
+                    '(<code>rainfall_count</code>) is not correct.<br><br><i>(accu_9.2)<i></br>')
+                return True
+    return False
 
 
 def wrong_list_initialization_placement_9_2():
@@ -753,6 +725,8 @@ def wrong_list_initialization_placement_9_2():
     if list_init is None or not init_after_loop:
         explain('The list of rainfall amount (<code>rainfall_list</code>) must be initialized before the iteration that'
                 ' uses this list.<br><br><i>(list_init_place_9.2)<i></br>')
+        return True
+    return False
 
 
 def wrong_accumulator_initialization_placement_9_2():
@@ -775,6 +749,7 @@ def wrong_accumulator_initialization_placement_9_2():
                 'initialized before the iteration which uses this variable.<br><br><i>(accu_init_place_9.2)<i></br>')
 
 
+# TODO: Implement Numeric Logic Check!
 def wrong_iteration_body_9_2():
     std_ast = parse_program()
     loops = std_ast.find_all('For')

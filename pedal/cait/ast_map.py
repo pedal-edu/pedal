@@ -21,7 +21,7 @@ class AstMap:
         self.exp_table = CtMap()
         self.conflict_keys = []
         self.match_root = None
-        self.match_lineno = 0
+        self.match_lineno = -1
 
     def add_var_to_sym_table(self, ins_node, std_node):
         """

@@ -64,15 +64,127 @@ class EasyNode:
     def numeric_logic_check(self, mag, expr):
         """
         If this node is a Compare or BoolOp node, sees if the logic in expr (a javascript string being a logical
-        statement) matches the logic of self.  This assumes that we are only comparing numerical values to a single
+        statement) matches the logic of self. This assumes that we are only comparing numerical values to a single
         variable
-        TODO: modify this to take multiple variables over multiple BoolOps
+        TODO: modify this to take multiple variables
+        TODO: modify to support more than +, -, *, and / BinOps
+        TODO: modify to support unary operators other than USub and Not
         :param mag: the order of magnitude that should be added to numbers to check logic, 1 is usually a good value,
                     especially when working with the set of integers.
         :param expr: the "Compare" or "BoolOp" tree to check self against
         :return: True if self (typically student node) and expr are equivalent boolean expressions
         """
-        raise NotImplementedError
+        def eval_unop(unop_num, unop_node):
+            operand = eval_selector(unop_num, unop_node.operand)
+            op = unop_node.op_name
+
+            return {"USub": -operand,
+                    "Not": not operand}[op]
+
+        def eval_binop(binop_num, binop_node):
+            left = eval_selector(binop_num, binop_node.left)
+            right = eval_selector(binop_num, binop_node.right)
+            op = binop_node.op_name
+
+            return {
+                "Add": left + right,
+                "Sub": left - right,
+                "Mult": left * right,
+                "Div": left/right}[op]
+
+        def eval_selector(op_num, op_expr):
+            op_expr = op_num if op_expr.ast_name == "Name" else op_expr
+            if isinstance(op_expr, (int, float)):
+                return op_expr
+            if op_expr.ast_name == "BinOp":
+                return eval_binop(op_num, op_expr)
+            if op_expr.ast_name == "UnaryOp":
+                return eval_unop(op_num, op_expr)
+            if op_expr.ast_name == "Num":
+                return op_expr.n
+            raise NotImplementedError
+
+        def eval_bool_comp(num_list, comp_ast):
+            ops = comp_ast.ops_names
+            comps = comp_ast.comparators
+            results = []
+            current = comp_ast.left
+            left = current
+
+            for num_i in num_list:
+                result = True
+                for op, comp in zip(ops, comps):
+                    current = eval_selector(num_i, current)
+                    comp_p = eval_selector(num_i, comp)
+
+                    res = {
+                        "Eq": current == comp_p,
+                        "NotEq": current != comp_p,
+                        "Lt": current < comp_p,
+                        "LtE": current <= comp_p,
+                        "Gt": current > comp_p,
+                        "GtE": current >= comp_p,
+                    }[op]
+                    current = comp
+                    result = result and res
+                    if not result:
+                        break
+                results.append(result)
+                current = left
+            return results
+
+        def eval_boolop(num_list, boolop_ast):
+            boolop = boolop_ast.op_name
+            values = boolop_ast.values
+            results_c = None
+            is_and = boolop == "And"
+            for value in values:
+                if value.ast_name == "Compare":
+                    results = eval_bool_comp(num_list, value)
+                else:  # should be boolop
+                    results = eval_boolop(num_list, value)
+                if results_c is None:
+                    results_c = results
+                else:  # compile results
+                    new_result = []
+                    for result1, result2 in zip(results_c, results):
+                        if is_and:
+                            new_result.append(result1 and result2)
+                        else:
+                            new_result.append(result1 or result2)
+                    results_c = new_result
+            return results_c
+
+        ins_expr = EasyNode(ast.parse(expr)).body[0].value
+        ins_nums = ins_expr.find_all("Num")
+        std_nums = self.find_all("Num")
+        test_nums = []
+        for num in ins_nums:
+            raw_num = num.n
+            test_nums.append(raw_num)
+            test_nums.append(raw_num + mag)
+            test_nums.append(raw_num - mag)
+        for num in std_nums:
+            raw_num = num.n
+            test_nums.append(raw_num)
+            test_nums.append(raw_num + mag)
+            test_nums.append(raw_num - mag)
+
+        if ins_expr.ast_name == "Compare":
+            ins_res = eval_bool_comp(test_nums, ins_expr)
+        elif ins_expr.ast_name == "BoolOp":
+            ins_res = eval_boolop(test_nums, ins_expr)
+        else:
+            raise TypeError
+
+        if self.ast_name == "Compare":
+            std_res = eval_bool_comp(test_nums, self)
+        elif self.ast_name == "BoolOp":
+            std_res = eval_boolop(test_nums, self)
+        else:
+            raise TypeError
+
+        return ins_res == std_res
 
     def get_next_tree(self):
         """Gets the next tree in the AST
