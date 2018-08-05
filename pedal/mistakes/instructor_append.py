@@ -9,7 +9,7 @@ def append_group_on_change():
 def append_group():
     missing_append_in_iteration()
     missing_append_list_initialization()
-    wrong_append_list_initiatization()
+    wrong_append_list_initialization()
     wrong_not_append_to_list()
     append_list_wrong_slot()
 
@@ -43,32 +43,19 @@ def missing_append_in_iteration():
         return True
     return False
 
-'''
-def wrong_not_append_to_list():
-    std_ast = parse_program()
-    for_loops = std_ast.find_all("For")
-    for loop in for_loops:
-        append_nodes = find_append_in(loop)
-        for node in append_nodes:
-            listNode = node.func.value
-            if listNode.data_type != "List" and listNode.id != "___":
-                explain("Values can only be appended to a list. The property <code>{0!s}</code> is either not "
-                        "initialized, not initialized correctly, or is confused with another property.<br><br><i>"
-                        "(app_not_list)<i></br>".format(listNode.id))
-'''
-
 
 def wrong_not_append_to_list():
-    std_ast = parse_program()
-    for_loops = std_ast.find_all("For")
-    for loop in for_loops:
-        append_nodes = find_append_in(loop)
-        for node in append_nodes:
-            listNode = node.func.value
-            if listNode.data_type != "List" and listNode.id != "___":
+    matches = find_matches("for ___ in ___:\n"
+                           "    _target_.append(___)")
+    if matches:
+        for match in matches:
+            _target_ = match.symbol_table.get("_target_")[0].astNode
+            if not data_type(_target_).is_instance(list):
                 explain("Values can only be appended to a list. The property <code>{0!s}</code> is either not "
                         "initialized, not initialized correctly, or is confused with another property.<br><br><i>"
-                        "(app_not_list)<i></br>".format(listNode.id))
+                        "(app_not_list)<i></br>".format(_target_.id))
+                return True
+    return False
 
 
 def missing_append_list_initialization():
@@ -93,38 +80,32 @@ def missing_append_list_initialization():
     return False
 
 
-def wrong_append_list_initiatization():
-    std_ast = parse_program()
-    for_loops = std_ast.find_all("For")
-    loop_appends = []
-    for loop in for_loops:
-        loop_appends.extend(find_append_in(loop))
-    assignments = std_ast.find_all("Assign")
-    for append_call in loop_appends:
-        append_loc = append_call.lineno
-        append_var = append_call.func.value
-        init_fail = False
-        for assignment in assignments:
-            if assignment.has(append_var) and assignment.lineno < append_loc:
-                if assignment.value.ast_name == "List":
-                    if len(assignment.value.elts) != 0:
-                        init_fail = True
-                else:  # or if its not even a list
-                    init_fail = True
-            if init_fail and append_var.id != "___":
+def wrong_append_list_initialization():
+    matches = find_matches("_list_ = __expr__\n"
+                           "for ___ in ___:\n"
+                           "    _list_.append(___)")
+    if matches:
+        for match in matches:
+            _list_ = match.symbol_table.get("_list_")[0].astNode
+            __expr__ = match.exp_table.get("__expr__")
+            if (__expr__.ast_name == "List" and len(__expr__.elts) != 0 or
+               __expr__.ast_name != "List"):
                 explain("The list property <code>{0!s}</code> is either not initialized correctly or mistaken for"
                         " another property. The list you append to should be initialized to an empty list.<br><br><i>"
-                        "(app_list_init)<i></br>".format(append_var.id))
-                return
+                        "(app_list_init)<i></br>".format(_list_.id))
+                return True
+    return False
 
 
 def append_list_wrong_slot():
-    std_ast = parse_program()
-    append_calls = find_append_in(std_ast)
-    for append_call in append_calls:
-        arg = append_call.args[0]
-        caller = append_call.func.value
-        if arg.ast_name == "Name":
-            if arg.data_type == "List" and caller.id != "___":
+    matches = find_matches("_target_.append(_item_)")
+    if matches:
+        for match in matches:
+            _item_ = match.symbol_table.get("_item_")[0].astNode
+            _target_ = match.symbol_table.get("_target_")[0].astNode
+            if data_type(_item_).is_instance(list):
                 explain("You should not append a list (<code>{0!s}</code>) to <code>{1!s}</code>.<br><br><i>"
-                        "(app_list_slot)<i></br>".format(arg.id, caller.id))
+                        "(app_list_slot)<i></br>".format(_item_.id, _target_.id))
+                return True
+    return False
+

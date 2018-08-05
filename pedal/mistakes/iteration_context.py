@@ -747,348 +747,330 @@ def wrong_accumulator_initialization_placement_9_2():
     if list_init is None or not init_after_loop:
         explain('The variable for the count of the number of days having rain (<code>rainfall_count</code>) must be '
                 'initialized before the iteration which uses this variable.<br><br><i>(accu_init_place_9.2)<i></br>')
+        return True
+    return False
 
 
-# TODO: Implement Numeric Logic Check!
 def wrong_iteration_body_9_2():
-    std_ast = parse_program()
-    loops = std_ast.find_all('For')
-    correct_if = False
-    for loop in loops:
-        if_blocks = loop.find_all('If')
-        for if_block in if_blocks:
-            test = if_block.test
-            if test.numeric_logic_check(1, 'var > 0'):
-                correct_if = True
-                break
-        if correct_if:
-            break
-    if not correct_if:
-        explain('The test (if) to determine if a given amount of rainfall is greater than (>) zero is not in the '
-                'correct place.<br><br><i>(iter_body_9.2)<i></br>')
-    return not correct_if
+    matches = find_matches("for _item_ in _list_:\n"
+                           "    if __expr__:\n"
+                           "        pass")
+    if matches:
+        for match in matches:
+            __expr__ = match.exp_table.get("__expr__")
+            if __expr__.numeric_logic_check(1, 'var > 0'):
+                return False
+    explain('The test (if) to determine if a given amount of rainfall is greater than (>) zero is not in the '
+            'correct place.<br><br><i>(iter_body_9.2)<i></br>')
+    return True
 
 
 def wrong_decision_body_9_2():
-    std_ast = parse_program()
-    if_blocks = std_ast.find_all('If')
-    assignment_in_if = False
-    for if_block in if_blocks:
-        test = if_block.test
-        if test.numeric_logic_check(1, 'var > 0'):
-            assignments = if_block.find_all('Assign')
-            for assignment in assignments:
-                if assignment.target.id == 'rainfall_count':
-                    if assignment.value.ast_name == 'BinOp':
-                        binop = assignment.value
-                        if binop.has(1) and binop.has(assignment.target):
-                            assignment_in_if = True
-                            break
-        if assignment_in_if:
-            break
-    if not assignment_in_if:
-        explain('The increase by 1 in the number of days having rainfall (<code>rainfall_count</code>) is not in the '
-                'correct place.<br><br><i>(dec_body_9.2)<i></br>')
+    matches = find_matches("if __expr__:\n"
+                           "    rainfall_count = rainfall_count + 1")
+    if matches:
+        for match in matches:
+            __expr__ = match.exp_table.get("__expr__")
+            if __expr__.numeric_logic_check(1, 'var > 0'):
+                return False
+    explain('The increase by 1 in the number of days having rainfall (<code>rainfall_count</code>) is not in the '
+            'correct place.<br><br><i>(dec_body_9.2)<i></br>')
+    return True
 
 
 def wrong_print_9_2():
-    std_ast = parse_program()
-    for_loops = std_ast.find_all('For')
-    # has_for = len(for_loops) > 0
-    for_loc = []
-    wrong_print_placement = True
-    for loop in for_loops:
-        end_node = loop.next_tree
-        if end_node is not None:
-            for_loc.append(end_node.lineno)
-    calls = std_ast.find_all('Call')
-    for call in calls:
-        if call.func.id == 'print':
-            for loc in for_loc:
-                if call.func.lineno >= loc:
-                    wrong_print_placement = False
-                    break
-            if not wrong_print_placement:
-                break
-    if wrong_print_placement:
+    match = find_match("for _item_ in _list_:\n"
+                       "    pass\n"
+                       "print(_total_)")
+    if not match:
         explain('The output of the total number of days with rainfall is not in the correct place. The total number of '
                 'days should be output only once after the total number of days has been computed.<br><br><i>'
                 '(print_9.2)<i></br>')
-    return wrong_print_placement
+        return True
+    return False
 # ##########################9.2 END############################
 
 
 # ##########################9.6 START############################
 def wrong_comparison_9_6():
-    std_ast = parse_program()
-    if_blocks = std_ast.find_all('If')
-    if_error = False
-    for if_block in if_blocks:
-        if not if_block.has(80):
-            if_error = True
-            break
-        elif not if_block.test.numeric_logic_check(1, 'var > 80'):
-            if_error = True
-            break
-    if if_error:
-        explain('In this problem you should be finding temperatures above 80 degrees.<br><br><i>(comp_9.6)<i></br>')
-    return if_error
+    matches = find_matches("if __comp__:\n"
+                           "    pass")
+    if matches:
+        for match in matches:
+            __comp__ = match.exp_table.get("__comp__")
+            if not __comp__.numeric_logic_check(1, 'var > 80'):
+                explain(
+                    'In this problem you should be finding temperatures above 80 degrees.<br><br><i>(comp_9.6)<i></br>')
+                return True
+    return False
 # ##########################9.6 END############################
 
 
 # ##########################10.2 START############################
 def wrong_conversion_10_2():
-    std_ast = parse_program()
-    loops = std_ast.find_all('For')
-    has_conversion = False
-    conversion_var = ''
-    for loop in loops:
-        binops = loop.find_all('BinOp')
-        iter_prop = loop.target
-        conversion_var = iter_prop.id
-        for binop in binops:
-            if binop.has(iter_prop) and binop.has(0.04) and binop.op == 'Mult':
-                conversion_var = iter_prop.id
-                has_conversion = True
-                break
-    if conversion_var != '' and not has_conversion:
+    """
+    '''
+    # code version 2 start
+    binops = __expr__.find_all('BinOp')
+    for binop in binops:
+        if binop.has(_target_.astNode) and binop.has(0.04) and binop.op_name == 'Mult':
+            return False
+    # code version 2 end
+    '''
+    :return:
+    """
+    matches = find_matches("for _target_ in ___:\n"
+                           "    __expr__")
+    if matches:
+        for match in matches:
+            # code version 1 start
+            _target_ = match.symbol_table.get("_target_")[0]
+            __expr__ = match.exp_table.get("__expr__")
+            matches02 = find_expr_sub_matches("_target_*0.04", __expr__)
+            if matches02:
+                for match02 in matches02:
+                    _target_02 = match02.symbol_table.get("_target_")[0]
+                    if _target_.id == _target_02.id:
+                        return False
+            # code version 1 end
         explain('The conversion of <code>{0!s}</code> to inches is not correct.<br><br><i>'
-                '(conv_10.2)<i></br>'.format(conversion_var))
+                '(conv_10.2)<i></br>'.format(_target_.id))
+        return True
+    return False
 # ##########################10.2 END############################
 
 
 # ##########################10.3 START############################
 def wrong_filter_condition_10_3():
-    std_ast = parse_program()
-    loops = std_ast.find_all('For')
-    correct_if = False
-    for loop in loops:
-        if_blocks = loop.find_all('If')
-        for if_block in if_blocks:
-            test = if_block.test
-            if test.numeric_logic_check(1, 'var > 0') or test.numeric_logic_check(1, 'var != 0'):
-                correct_if = True
-                break
-    if not correct_if:
+    matches = find_matches("if __expr__:\n"
+                           "    pass")
+    if matches:
+        for match in matches:
+            __expr__ = match.exp_table.get("__expr__")
+            if __expr__.numeric_logic_check(1, "var > 0"):
+                return False
         explain('The condition used to filter the year when artists died is not correct.<br><br><i>(filt_10.3)<i></br>')
-    return not correct_if
+        return True
+    return False
 # ##########################10.3 END############################
 
 
 # ##########################10.4 START############################
 def wrong_and_filter_condition_10_4():
-    std_ast = parse_program()
-    loops = std_ast.find_all('For')
-    correct_if = False
-    for loop in loops:
-        if_blocks = loop.find_all('If')
-        for if_block in if_blocks:
-            test = if_block.test
-            if test.numeric_logic_check(1, '32 <= temp && temp <= 50'):
-                correct_if = True
-                break
-    if not correct_if:
-        explain('The condition used to filter the temperatures into the specified range of temperatures is not correct.'
-                '<br><br><i>(filt_and_10.4)<i></br>')
-    return not correct_if
+    matches = find_matches("for _temp_ in _list_:\n"
+                           "    if __expr__:\n"
+                           "        pass")
+    if matches:
+        for match in matches:
+            _temp_ = match.symbol_table.get("_temp_")[0]
+            __expr__ = match.exp_table.get("__expr__")
+            if (__expr__.has(_temp_.astNode) and
+                    not __expr__.numeric_logic_check(1, "32 <= temp <= 50")):
+                explain(
+                    'The condition used to filter the temperatures into the specified range of temperatures is not '
+                    'correct.<br><br><i>(filt_and_10.4)<i></br>')
+                return True
+    return False
 
 
 def wrong_nested_filter_condition_10_4():
-    std_ast = parse_program()
-    loops = std_ast.find_all('For')
-    correct_if = False
-    for loop in loops:
-        if_blocks = loop.find_all('If')
-        for if_block in if_blocks:
-            test1 = if_block.test
-            if_blocks2 = if_block.find_all('If')
-            for if_block2 in if_blocks2:
-                test2 = if_block2.test
-                if test1.numeric_logic_check(1, '32 <= temp') and test2.numeric_logic_check(1, 'temp <= 50'):
-                    correct_if = True
-                    break
-                elif test2.numeric_logic_check(1, '32 <= temp') and test1.numeric_logic_check(1, 'temp <= 50'):
-                    correct_if = True
-                    break
-    if not correct_if:
-        explain('The decisions used to filter the temperatures into the specified range of temperatures is not correct.'
-                '<br><br><i>(nest_filt_10.4)<i></br>')
-    return not correct_if
+    matches = find_matches("for _temp_ in _list_:\n"
+                           "    if __cond1__:\n"
+                           "        if __cond2__:\n"
+                           "            pass")
+    if matches:
+        for match in matches:
+            _temp_ = match.symbol_table.get("_temp_")[0].astNode
+            __cond1__ = match.exp_table.get("__cond1__")
+            __cond2__ = match.exp_table.get("__cond2__")
+            if not (__cond1__.has(_temp_) and __cond2__.has(_temp_) and
+               (__cond1__.numeric_logic_check(1, "32 <= temp") and __cond2__.numeric_logic_check(1, "temp <= 50") or
+               __cond2__.numeric_logic_check(1, "32 <= temp") and __cond1__.numeric_logic_check(1, "temp <= 50"))):
+                explain(
+                    'The decisions used to filter the temperatures into the specified range of temperatures is not '
+                    'correct.<br><br><i>(nest_filt_10.4)<i></br>')
+                return True
+    return False
 # ##########################10.4 END############################
 
 
 # ########################10.5 START###############################
 def wrong_conversion_problem_10_5():
-    std_ast = parse_program()
-    loops = std_ast.find_all('For')
-    is_wrong_conversion = False
-    for loop in loops:
-        iter_prop = loop.target
-        binops = loop.find_all('BinOp')
-        for binop in binops:
-            if not (binop.op == 'Mult' and binop.has(iter_prop) and binop.has(0.62)):
-                is_wrong_conversion = True
-                break
-        if is_wrong_conversion:
-            break
-    if is_wrong_conversion:
-        log('wrong_conversion_problem_10_5')
+    matches = find_matches("for _item_ in ___:\n"
+                           "    __expr__")
+    if matches:
+        for match in matches:
+            _item_ = match.symbol_table.get("_item_")[0]
+            __expr__ = match.exp_table.get("__expr__")
+            matches02 = find_expr_sub_matches("_item_*0.62", __expr__)
+            if matches02:
+                for match02 in matches02:
+                    _item_02 = match02.symbol_table.get("_item_")[0]
+                    if _item_02.id == _item_.id:
+                        return False
         explain('The conversion from kilometers to miles is not correct.<br><br><i>(conv_10.5)<i></br>')
+        return True
+    return False
 
 
 def wrong_filter_problem_atl1_10_5():
-    std_ast = parse_program()
-    loops = std_ast.find_all('For')
-    # correct_filter = False
-    for loop in loops:
-        iter_prop = loop.target
-        if_blocks = loop.find_all('If')
-        for if_block in if_blocks:
-            cond = if_block.test
-            append_list = append_api.find_append_in(if_block)
-            for append in append_list:
-                expr = append.args[0]
-                # this check seems unnecessary
-                if expr.ast_name == 'BinOp' and expr.op == 'Mult' and expr.has(0.62) and expr.has(iter_prop):
-                    if not cond.numeric_logic_check(0.1, 'var * 0.62 > 10'):
-                        log('wrong_filter_problem_atl1_10_5')
+    """
+    find pattern where expression is equal to _item_*0.62 and
+    where the condition is not equivalent to _expr_ > 10
+    :return:
+    """
+
+    matches = find_matches("for _item_ in ___:\n"
+                           "    if __cond__:\n"
+                           "        _list_.append(__expr__)")
+    if matches:
+        for match in matches:
+            _item_ = match.symbol_table.get("_item_")[0].astNode
+            __cond__ = match.exp_table.get("__cond__")
+            __expr__ = match.exp_table.get("__expr__")
+            matches02 = find_expr_sub_matches("_item_*0.62", __expr__)
+            if matches02:
+                for match02 in matches02:
+                    _item_02 = match02.symbol_table.get("_item_")[0].astNode
+                    if (_item_.id == _item_02.id and
+                       __cond__.has(_item_) and
+                       not __cond__.numeric_logic_check(0.1, "item > 16.1290322580645")):
                         explain('You are not correctly filtering out values from the list.<br><br><i>'
                                 '(filt_alt1_10.5)<i></br>')
+                        return True
+    return False
 
 
 def wrong_filter_problem_atl2_10_5():
-    std_ast = parse_program()
-    loops = std_ast.find_all('For')
-    # correct_filter = False
-    for loop in loops:
-        iter_prop = loop.target
-        assignments = loop.find_all('Assign')
-        if_blocks = loop.find_all('If')
-        for assignment in assignments:
-            for if_block in if_blocks:
-                if if_block.lineno > assignment.lineno:
-                    miles = assignment.target
-                    expr = assignment.value
-                    cond = if_block.test
-                    append_list = append_api.find_append_in(if_block)
-                    for append in append_list:
-                        if append.has(miles):
-                            if expr.ast_name == 'BinOp' and expr.op == 'Mult' and\
-                                    expr.has(0.62) and expr.has(iter_prop):
-                                if not cond.numeric_logic_check(0.1, 'var > 10'):
-                                    explain('You are not correctly filtering out values from the list.<br><br><i>(filt_'
-                                            'alt2_10.5)<i></br>')
+    matches = find_matches("for _item_ in ___:\n"
+                           "    _miles_ = __expr__\n"
+                           "    if __cond__:\n"
+                           "        _list_.append(_miles_)")
+    if matches:
+        for match in matches:
+            __expr__ = match.exp_table.get("__expr__")
+            __cond__ = match.exp_table.get("__cond__")
+            _item_ = match.symbol_table.get("_item_")[0].astNode
+            _miles_ = match.symbol_table.get("_miles_")[0].astNode
+            matches02 = find_expr_sub_matches("_item_*0.62", __expr__)
+            if matches02:
+                for match02 in matches02:
+                    _item_02 = match02.symbol_table.get("_item_")[0].astNode
+                    if _item_.id == _item_02.id:
+                        if not (__cond__.has(_miles_) and
+                           __cond__.numeric_logic_check(1, "_item_ > 10")):
+                            explain('You are not correctly filtering out values from the list.<br><br><i>'
+                                    '(filt_alt2_10.5)<i></br>')
+                            return True
+    return False
 
 
 def wrong_append_problem_atl1_10_5():
-    std_ast = parse_program()
-    loops = std_ast.find_all('For')
-    # correct_filter = False
-    for loop in loops:
-        iter_prop = loop.target
-        if_blocks = loop.find_all('If')
-        for if_block in if_blocks:
-            cond = if_block.test
-            append_list = append_api.find_append_in(if_block)
-            for append in append_list:
-                expr = append.args[0]
-                # this is an approximation of what's written in the code because we don't have tree matching
-                cond_binops = cond.find_all('BinOp')
-                if len(cond_binops) == 1:
-                    if not (expr.ast_name == 'BinOp' and expr.op == 'Mult' and
-                            expr.has(0.62) and expr.has(iter_prop)):
-                        # if not cond.numeric_logic_check(0.1, 'var * 0.62 > 10'):  # in theory should check this
-                        explain('You are not appending the correct values.<br><br><i>(app_alt1_10.5)<i></br>')
+    matches = find_matches("for _item_ in ___:\n"
+                           "    if __cond__:\n"
+                           "        _list_.append(__expr__)")
+    if matches:
+        for match in matches:
+            _item_ = match.symbol_table.get("_item_")[0].astNode
+            __cond__ = match.exp_table.get("__cond__")
+            __expr__ = match.exp_table.get("__expr__")
+            if (__cond__.numeric_logic_check(0.1, "item > 16.1290322580645") and
+               __cond__.has(_item_)):
+                matches02 = find_expr_sub_matches("{}*0.62".format(_item_.id), __expr__)
+                if not matches02:
+                    explain('You are not appending the correct values.<br><br><i>(app_alt1_10.5)<i></br>')
+                    return True
+    return False
 
 
 def wrong_append_problem_atl2_10_5():
-    std_ast = parse_program()
-    loops = std_ast.find_all('For')
-    # correct_filter = False
-    for loop in loops:
-        iter_prop = loop.target
-        assignments = loop.find_all('Assign')
-        if_blocks = loop.find_all('If')
-        for assignment in assignments:
-            for if_block in if_blocks:
-                if if_block.lineno > assignment.lineno:
-                    miles = assignment.target
-                    expr = assignment.value
-                    cond = if_block.test
-                    append_list = append_api.find_append_in(if_block)
-                    for append in append_list:
-                        append_var = append.args[0]
-                        if expr.ast_name == 'BinOp' and expr.op == 'Mult' and\
-                                expr.has(0.62) and expr.has(iter_prop):
-                            if cond.numeric_logic_check(0.1, 'var > 10'):
-                                if append_var.ast_name == 'Name' and append_var.id != miles.id:
-                                    explain('You are not appending the correct values<br><br><i>'
-                                            '(app_alt2_10.5)<i></br>')
+    matches = find_matches("for _item_ in ___:\n"
+                           "    _miles_ = _item_ * 0.62\n"
+                           "    if __cond__:\n"
+                           "        _list_.append(_var_)")
+    if matches:
+        for match in matches:
+            __cond__ = match.exp_table.get("__cond__")
+            _miles_ = match.symbol_table.get("_miles_")[0].astNode
+            _var_ = match.symbol_table.get("_var_")[0].astNode
+            if __cond__.has(_miles_) and __cond__.numeric_logic_check(1, "_miles_ > 10"):
+                if _var_.id != _miles_.id:
+                    explain('You are not appending the correct values<br><br><i>(app_alt2_10.5)<i></br>')
+                    return True
+    return False
 
 
 # ########################10.5 END###############################
 def wrong_debug_10_6():
-    std_ast = parse_program()
-    # cheating because using length of 1
-    loops = std_ast.find_all('For')
-    bad_change = False
-    if len(loops) != 1:
-        bad_change = True
-    else:
-        append_calls = append_api.find_append_in(loops[0])
-        if len(append_calls) is not None:
-            bad_change = True
-    if not bad_change:
-        # item = loops[0].target
-        list1 = loops[0].iter
-        list2 = append_calls[0].func.value.id
-        if list1.id != 'quakes' or list2.id != 'quakes_in_miles':
-            bad_change = True
-    if bad_change:
-        explain('This is not one of the two changes needed. Undo the change and try again.<br><br><i>'
-                '(debug_10.6)<i></br>')
+    '''
+
+
+
+
+    :return:
+    '''
+    matches = find_matches('quakes = earthquakes.get("depth","(None)","")\n'
+                           'quakes_in_miles = []\n'
+                           'for quake in _list1_:\n'
+                           '    _list2_.append(quake * 0.62)\n'
+                           'plt.hist(quakes_in_miles)\n'
+                           'plt.xlabel("Depth in Miles")\n'
+                           'plt.ylabel("Number of Earthquakes")\n'
+                           'plt.title("Distribution of Depth in Miles of Earthquakes")\n'
+                           'plt.show()')
+    if matches:
+        for match in matches:
+            _list1_ = match.symbol_table.get("_list1_")[0].astNode
+            _list2_ = match.symbol_table.get("_list2_")[0].astNode
+            master_list = ["quake", "quakes", "quakes_in_miles"]
+            if (_list1_.id in master_list and _list2_.id in master_list and
+               _list1_.id != "quakes_in_miles" and _list2_.id != "quakes" and
+               (_list1_.id != "quake" or _list2_.id != "quake")):
+                return False
+    explain('This is not one of the two changes needed. Undo the change and try again.<br><br><i>(debug_10.6)<i></br>')
+    return True
 
 
 def wrong_debug_10_7():
-    std_ast = parse_program()
-    if_blocks = std_ast.find_all('If')
-    if len(if_blocks) > 1 or if_blocks[0].test.left.id != 'book':
+    match = find_match("filtered_sentence_counts = []\n"
+                       "book_sentence_counts = classics.get('sentences','(None)','')\n"
+                       "for book in book_sentence_counts:\n"
+                       "    if book >= 5000:\n"
+                       "        filtered_sentence_counts.append(book)\n"
+                       "plt.hist(filtered_sentence_counts)\n"
+                       "plt.title('Distribution of Number of Sentences in Long Books')\n"
+                       "plt.xlabel('Number of Sentences')\n"
+                       "plt.ylabel('Number of Long Books')\n"
+                       "plt.show()\n")
+
+    if not match:
         explain('This is not the change needed. Undo the change and try again.<br><br><i>(debug_10.7)<i></br>')
+        return True
+    return False
 
 
 # ########################.....###############################
 def wrong_initialization_in_iteration():
-    std_ast = parse_program()
-    loops = std_ast.find_all('For')
-    init_in_loop = False
-    target = None
-    for loop in loops:
-        assignments = loop.find_all('Assign')
-        for assignment in assignments:
-            target = assignment.target
-            value = assignment.value
-            names = value.find_all('Name')
-            if len(names) == 0:
-                init_in_loop = True
-                break
-        if init_in_loop:
-            break
-    if init_in_loop:
-        explain('You only need to initialize <code>{0!s}</code> once. Remember that statements in an iteration block '
-                'happens multiple times'.format(target.id))
+    matches = find_matches("for ___ in ___:\n"
+                           "    _assign_ = __expr__")
+    if matches:
+        for match in matches:
+            __expr__ = match.exp_table.get("__expr__")
+            _assign_ = match.symbol_table.get("_assign_")[0].astNode
+            if len(__expr__.find_all("Name")) == 0:
+                explain(
+                    'You only need to initialize <code>{0!s}</code> once. Remember that statements in an iteration '
+                    'block happens multiple times<br><br><i>(wrong_init_in_iter)<i></br>'.format(_assign_.id))
+                return True
+    return False
 
 
 def wrong_duplicate_var_in_add():
-    std_ast = parse_program()
-    binops = std_ast.find_all('BinOp')
-    for binop in binops:
-        left = binop.left
-        right = binop.right
-        if left.ast_name == 'Name' and right.ast_name == 'Name':
-            if left.id == right.id:
-                explain('You are adding the same variable twice; you need two different variables in your addition.'
-                        '<br><br><i>(dup_var)<i></br>')
-                return True
+    match = find_match("_item_ + _item_")
+    if match:
+        explain('You are adding the same variable twice; you need two different variables in your addition.'
+                '<br><br><i>(dup_var)<i></br>')
+        return True
     return False
 
 
@@ -1111,10 +1093,32 @@ def plot_group_error(output=None):
 
 
 def all_labels_present():  # TODO: make sure it's before the show, maybe check for default values
-    x_labels = len(find_function_calls('xlabel'))
-    y_labels = len(find_function_calls('ylabel'))
-    titles = len(find_function_calls('title'))
-    if x_labels < 1 or y_labels < 1 or titles < 1:
-        explain('Make sure you supply labels to all your axes and provide a title<br><br><i>(labels_present)<i></br>')
-        return False
-    return True
+    """
+    plt.title("Distribution of Number of Sentences in Long Books")
+    plt.xlabel("Number of Sentences")
+    plt.ylabel("Number of Long Books")
+    plt.show()
+    :return:
+    """
+
+    match = find_match("plt.title(___)\nplt.show()")
+    match02 = find_match("plt.xlabel(___)\nplt.show()")
+    match03 = find_match("plt.ylabel(___)\nplt.show()")
+
+    if (not match) or (not match02) or (not match03):
+        explain('Make sure you supply labels to all your axes and provide a title and then call show<br><br><i>'
+                '(labels_present)<i></br>')
+        # explain('Make sure you supply labels to all your axes and provide a title<br><br><i>(labels_present)<i></br>')
+        return True
+    return False
+
+
+def hard_code_8_5():  # TODO: This one's weird
+    match = find_matches("print(__num__)")
+    if match:
+        for m in match:
+            __num__ = m.exp_table.get("__num__")
+            if len(__num__.find_all("Num")) > 0:
+                explain("Use iteration to calculate the sum.<br><br><i>(hard_code_8.5)<i></br>")
+                return True
+    return False
