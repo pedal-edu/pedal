@@ -5,24 +5,6 @@ from pedal.toolkit.utilities import *
 from pedal.sandbox.compatibility import *
 
 
-def iteration_group():
-    list_initialization_misplaced()  # list_init_misplaced
-    wrong_target_is_list()  # target_is_list
-    wrong_list_repeated_in_for()  # list_repeat#should be moved before target_is_list
-    missing_iterator_initialization()  # no_iter_init,no_iter_init-blank
-    list_not_initialized_on_run()  # no_list_init
-    wrong_iterator_not_list()  # iter_not_list
-    missing_target_slot_empty()  # target_empty
-    missing_for_slot_empty()  # for_incomplete
-    wrong_target_reassigned()  # target_reassign
-
-
-def iteration_group_on_change():
-    wrong_target_is_list()
-    wrong_list_repeated_in_for()
-    wrong_iterator_not_list()
-
-
 # ################8.2 Start#######################
 def wrong_list_length_8_2():
     matches = find_matches("_list_ = __expr__")
@@ -1131,108 +1113,6 @@ def all_labels_present():  # TODO: make sure it's before the show, maybe check f
     return False
 
 
-def wrong_target_is_list():
-    match = find_match("for _item_ in ___:\n    pass")
-    if match:
-        _item_ = match.symbol_table.get("_item_")[0].astNode
-        if data_type(_item_).is_instance(list):
-            explain('The property <code>{0!s}</code> is a list and should not be placed in the iteration property slot'
-                    ' of the "for" block<br><br><i>(target_is_list)<i></br>.'.format(_item_.id))
-            return True
-    return False
-
-
-# this conflicts with list_in_wrong_slot_in_for
-def wrong_list_repeated_in_for():
-    match = find_match("for _item_ in _item_:\n    pass")
-    if match:
-        _item_ = match.symbol_table.get("_item_")[0].astNode
-        if data_type(_item_).is_instance(list):
-            explain('The <code>{0!s}</code> property can only appear once in the "for" block <br><br><i>'
-                    '(list_repeat)<i></br>'.format(_item_.id))
-            return True
-    return False
-
-
-# this isn't consistent with the pattern you wrote
-def missing_iterator_initialization():
-    match = find_match("for ___ in _list_:\n    pass")
-    if match:
-        _list_ = match.symbol_table.get("_list_")[0].astNode
-        if _list_.id == "___":
-            explain("The slot to hold a list in the iteration is empty.<br><br><i>(no_iter_init-blank)<i></br>")
-            return True
-        elif not data_type(_list_).is_instance(list):
-            explain("The property <code>{0!s}</code> is in the list slot of the iteration but is not a list."
-                    "<br><br><i>(no_iter_init)<i></br>".format(_list_.id))
-            return True
-    return False
-
-
-# TODO: We need to cover the different cases for these
-def wrong_iterator_not_list():
-    match = find_match("for ___ in _item_:\n    pass")
-    if match:
-        _item_ = match.symbol_table.get("_item_")[0].astNode
-        if not data_type(_item_).is_instance(list):
-            explain("The property <code>{0!s}</code> has been set to something that is not a list but is placed in the "
-                    "iteration block that must be a list.<br><br><i>(iter_not_list)<i></br>".format(_item_.id))
-            return True
-    return False
-
-
-def missing_target_slot_empty():
-    match = find_match("for _item_ in ___:\n    pass")
-    if match:
-        _item_ = match.symbol_table.get("_item_")[0].astNode
-        if _item_.id == "___":
-            explain("You must fill in the empty slot in the iteration.<br><br><i>(target_empty)<i></br>")
-            return True
-    return False
-
-
-def list_not_initialized_on_run():
-    match = find_match("for ___ in _item_:\n    pass")
-    if match:
-        _item_ = match.symbol_table.get("_item_")[0].astNode
-        if data_type(_item_).is_instance(None):
-            explain("The list in your for loop has not been initialized<br><br><i>(no_list_init)<i></br>")
-            return True
-    return False
-
-
-def list_initialization_misplaced():
-    match = find_match("for ___ in _item_:\n    pass")
-    if match:
-        _item_ = match.symbol_table.get("_item_")[0].astNode
-        if data_type(_item_).is_instance(list) and def_use_error(_item_):
-            explain("Initialization of <code>{0!s}</code> is a list but either in the wrong place or redefined"
-                    "<br><br><i>(list_init_misplaced)<i></br>".format(_item_.id))
-            return True
-    return False
-
-
-def missing_for_slot_empty():
-    match = find_match("for _item_ in _list_:\n    pass")
-    if match:
-        _item_ = match.symbol_table.get("_item_")[0].astNode
-        _list_ = match.symbol_table.get("_list_")[0].astNode
-        if _item_.id == "___" or _list_.id == "___":
-            explain("You must fill in the empty slot in the iteration.<br><br><i>(for_incomplete)<i></br>")
-            return True
-    return False
-
-
-def wrong_target_reassigned():
-    match = find_match("for _item_ in ___:\n   _item_ = ___")
-    if match:
-        _item_ = match.symbol_table.get("_item_")[0].astNode
-        explain("The property <code>{0!s}</code> has been reassigned. The iteration property shouldn't be reassigned"
-                "<br><br><i>(target_reassign)<i></br>".format(_item_.id))
-        return True
-    return False
-
-
 def hard_code_8_5():  # TODO: This one's weird
     match = find_matches("print(__num__)")
     if match:
@@ -1241,13 +1121,4 @@ def hard_code_8_5():  # TODO: This one's weird
             if len(__num__.find_all("Num")) > 0:
                 explain("Use iteration to calculate the sum.<br><br><i>(hard_code_8.5)<i></br>")
                 return True
-    return False
-
-
-def dup_var_8_5():
-    match = find_match("_item_ + _item_")
-    if match:
-        explain("You are adding the same variable twice; you need two different variables in your addition."
-                "<br><br><i>(dup_var_8.5)<i></br>")
-        return True
     return False
