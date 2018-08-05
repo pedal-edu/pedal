@@ -12,14 +12,10 @@ from pedal.tifa import tifa_analysis
 from pedal.report import MAIN_REPORT, clear_report
 from pedal.cait.cait_api import *
 from pedal.mistakes.iteration_context import *
+from tests.mistake_test_template import *
 
 
-class SpecificMistakeTest(unittest.TestCase):
-    @staticmethod
-    def to_source(source):
-        MAIN_REPORT.clear()
-        set_source(source)
-        parse_program()
+class SpecificMistakeTest(MistakeTest):
 
     def test_wrong_list_length_8_2(self):
         self.to_source("fun = [1, 2, 3]")
