@@ -58,11 +58,14 @@ def def_use_error(node, report=None):
     cait_obj = Cait(report)
     if not isinstance(node, str) and node.ast_name != "Name":
         raise TypeError
-    def_use_vars = cait_obj.report['tifa']['issues']['Initialization Problem']
+    try:
+        def_use_vars = cait_obj.report['tifa']['issues']['Initialization Problem']
+    except KeyError:
+        return False
     if not isinstance(node, str):
-        node_id = node
-    else:
         node_id = node.id
+    else:
+        node_id = node
     has_error = False
     for issue in def_use_vars:
         name = issue['name']
