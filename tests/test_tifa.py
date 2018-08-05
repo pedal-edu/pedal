@@ -445,6 +445,18 @@ class TestVariables(unittest.TestCase):
                           '  0+r["Data"]["Precipitation"]')
         issues = tifa.report['tifa']['issues']
         self.assertTrue(tifa.report['tifa']['success'])
+    
+    def test_get_types(self):
+        tifa = pedal.tifa.Tifa()
+        tifa.process_code('a=0\na="Hello"\na=[1,2,3]\na=1')
+        a = tifa.report['tifa']['top_level_variables']['a']
+        self.assertTrue(a.was_type('num'))
+        self.assertTrue(a.was_type(int))
+        self.assertTrue(a.was_type('NumType'))
+        self.assertTrue(a.was_type(defs.NumType))
+        self.assertFalse(a.was_type(bool))
+        self.assertFalse(a.was_type(defs.DictType))
+        self.assertTrue(a.was_type('ListType'))
 
 if __name__ == '__main__':
     unittest.main(buffer=False)
