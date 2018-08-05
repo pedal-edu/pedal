@@ -30,7 +30,7 @@ def wrong_target_is_list():
     match = find_match("for _item_ in ___:\n    pass")
     if match:
         _item_ = match.symbol_table.get("_item_")[0].astNode
-        if data_type(_item_).is_instance(list):
+        if data_state(_item_).was_type(list):
             explain('The property <code>{0!s}</code> is a list and should not be placed in the iteration property slot'
                     ' of the "for" block<br><br><i>(target_is_list)<i></br>.'.format(_item_.id))
             return True
@@ -42,7 +42,7 @@ def wrong_list_repeated_in_for():
     match = find_match("for _item_ in _item_:\n    pass")
     if match:
         _item_ = match.symbol_table.get("_item_")[0].astNode
-        if data_type(_item_).is_instance(list):
+        if data_state(_item_).was_type(list):
             explain('The <code>{0!s}</code> property can only appear once in the "for" block <br><br><i>'
                     '(list_repeat)<i></br>'.format(_item_.id))
             return True
@@ -57,7 +57,7 @@ def missing_iterator_initialization():
         if _list_.id == "___":
             explain("The slot to hold a list in the iteration is empty.<br><br><i>(no_iter_init-blank)<i></br>")
             return True
-        elif not data_type(_list_).is_instance(list):
+        elif not data_state(_list_).was_type(list):
             explain("The property <code>{0!s}</code> is in the list slot of the iteration but is not a list."
                     "<br><br><i>(no_iter_init)<i></br>".format(_list_.id))
             return True
@@ -69,7 +69,7 @@ def wrong_iterator_not_list():
     match = find_match("for ___ in _item_:\n    pass")
     if match:
         _item_ = match.symbol_table.get("_item_")[0].astNode
-        if not data_type(_item_).is_instance(list):
+        if not data_state(_item_).was_type(list):
             explain("The property <code>{0!s}</code> has been set to something that is not a list but is placed in the "
                     "iteration block that must be a list.<br><br><i>(iter_not_list)<i></br>".format(_item_.id))
             return True
@@ -100,7 +100,7 @@ def list_initialization_misplaced():
     match = find_match("for ___ in _item_:\n    pass")
     if match:
         _item_ = match.symbol_table.get("_item_")[0].astNode
-        if data_type(_item_).is_instance(list) and def_use_error(_item_):
+        if data_state(_item_).was_type(list) and def_use_error(_item_):
             explain("Initialization of <code>{0!s}</code> is a list but either in the wrong place or redefined"
                     "<br><br><i>(list_init_misplaced)<i></br>".format(_item_.id))
             return True

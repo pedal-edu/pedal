@@ -77,7 +77,7 @@ def def_use_error(node, report=None):
 
 
 # noinspection PyBroadException
-def data_type(node, report=None):
+def data_state(node, report=None):
     """
 
     :param node: EasyNode/ast node whose type to retrieve
@@ -91,7 +91,11 @@ def data_type(node, report=None):
         node_id = node
     else:
         node_id = node.id
-    return cait_obj.report['tifa']["top_level_variables"][node_id].type
+    return cait_obj.report['tifa']["top_level_variables"][node_id]
+
+
+def data_type(node, report=None):
+    return data_state(node, report=report).type
 
 
 def find_match(ins_code, std_code=None, report=None):
