@@ -21,16 +21,11 @@ def histogram_missing():
 
     :return:
     """
-    std_ast = parse_program()
-    calls = std_ast.find_all("Call")
-    plotting = False
-    for call in calls:
-        if call.func.attr == "hist" and call.func.value.id == "plt":
-            plotting = True
-            break
-    if not plotting:
+    match = find_match("plt.hist(___)")
+    if not match:
         explain("The program should display a histogram.<br><br><i>(histo_missing)<i></br>")
-    return not plotting
+        return True
+    return False
 
 
 def plot_show_missing():
@@ -44,17 +39,12 @@ def plot_show_missing():
 
     :return:
     """
-    std_ast = parse_program()
-    calls = std_ast.find_all("Call")
-    plotting = False
-    for call in calls:
-        if call.func.attr == "show" and call.func.value.id == "plt":
-            plotting = True
-            break
-    if not plotting:
+    match = find_match("plt.show()")
+    if not match:
         explain("The plot must be explicitly shown to appear in the Printer area."
                 "<br><br><i>(plot_show_missing)<i></br>")
-    return not plotting
+        return True
+    return False
 
 
 def histogram_argument_not_list():
@@ -70,23 +60,15 @@ def histogram_argument_not_list():
 
     :return:
     """
-    std_ast = parse_program()
-    calls = std_ast.find_all("Call")
-    arg_name = ""
-    for call in calls:
-        if call.func.attr == "hist" and call.func.value.id == "plt":
-            arg = call.args[0]
-            if arg is not None and not (arg.data_type == "List" or arg.ast_name == "List"):
-                arg_name = arg.id
-                break
-    if arg_name != "":
-        if arg_name == "___":
-            explain("Making a histogram requires a list; the list is missing.<br><br><i>"
-                    "(hist_arg_not_list_blank)<i></br>")
-        else:
-            explain("Making a histogram requires a list; <code>{0!s}</code> is not a list.<br><br><i>"
-                    "(hist_arg_not_list)<i></br>".format(arg_name))
-    return arg_name != ""
+    matches = find_matches("plt.hist(_argument_)")
+    if matches:
+        for match in matches:
+            _argument_ = match.symbol_table.get("_argument_")[0].astNode
+            if not data_type(_argument_).is_instance(list):
+                explain("Making a histogram requires a list; <code>{0!s}</code> is not a list.<br><br><i>"
+                        "(hist_arg_not_list)<i></br>".format(_argument_.id))
+                return True
+    return False
 
 
 def histogram_wrong_list():
@@ -105,33 +87,17 @@ def histogram_wrong_list():
 
     :return:
     """
-    std_ast = parse_program()
-    loops = std_ast.find_all("For")
-    append_targets = []
-    for loop in loops:
-        calls = loop.find_all("Call")
-        for call in calls:
-            if call.func.attr == "append":
-                append_targets.append(call.func.value)
-    all_proper_plot = True
-    # should probably actually check for the location of plt.hist
-    calls = std_ast.find_all("Call")
-    for call in calls:
-        if call.func.attr == "hist" and call.func.value.id == "plt":
-            arg = call.args[0]
-            proper_plot = False
-            if arg.ast_name == "Name":
-                for name in append_targets:
-                    if name.id == arg.id:
-                        proper_plot = True
-                        break
-                if not proper_plot:
-                    all_proper_plot = False
-                    break
-            else:
-                all_proper_plot = False
-                break
-    if not all_proper_plot:
-        explain("The list created in the iteration is not the list being used to create the histogram.<br><br><i>"
-                "(histo_wrong_list)<i></br>")
-    return not all_proper_plot
+    matches = find_matches("for ___ in ___:\n"
+                           "    _target_.append(___)\n"
+                           "plt.hist(_list_)")
+    if matches:
+        for match in matches:
+            _target_ = match.symbol_table.get("_target_")[0].astNode
+            _list_ = match.symbol_table.get("_list_")[0].astNode
+            if _target_.id != _list_.id:
+                explain(
+                    "The list created in the iteration is not the list being used to create the histogram.<br><br><i>"
+                    "(histo_wrong_list)<i></br>")
+                return True
+    return False
+
