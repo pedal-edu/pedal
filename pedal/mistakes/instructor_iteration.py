@@ -77,33 +77,6 @@ def wrong_iterator_not_list():
 
 
 def missing_target_slot_empty():
-    for_loops = all_for_loops()
-    for loop in for_loops:
-        iter_prop = loop.target
-        if iter_prop.id == "___":
-            explain("You must fill in the empty slot in the iteration.<br><br><i>(target_empty)<i></br>")
-            return True
-    return False
-
-
-def list_not_initialized_on_run():
-    for_loops = all_for_loops()
-    for loop in for_loops:
-        list_prop = loop.iter
-        if list_prop.data_type is None:
-            explain("The list in your for loop has not been initialized<br><br><i>(no_list_init)<i></br>")
-
-
-def list_initialization_misplaced():
-    for_loops = all_for_loops()
-    for loop in for_loops:
-        list_prop = loop.iter
-        if list_prop.data_type == "List" and def_use_error(list_prop):
-            explain("Initialization of <code>{0!s}</code> is a list but either in the wrong place or redefined"
-                    "<br><br><i>(list_init_misplaced)<i></br>".format(list_prop.id))
-
-
-def missing_target_slot_empty():
     match = find_match("for _item_ in ___:\n    pass")
     if match:
         _item_ = match.symbol_table.get("_item_")[0].astNode
