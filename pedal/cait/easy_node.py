@@ -74,6 +74,7 @@ class EasyNode:
         :param expr: the "Compare" or "BoolOp" tree to check self against
         :return: True if self (typically student node) and expr are equivalent boolean expressions
         """
+
         def eval_unop(unop_num, unop_node):
             operand = eval_selector(unop_num, unop_node.operand)
             op = unop_node.op_name
@@ -170,17 +171,17 @@ class EasyNode:
             test_nums.append(raw_num + mag)
             test_nums.append(raw_num - mag)
 
-        if ins_expr.ast_name == "Compare":
-            ins_res = eval_bool_comp(test_nums, ins_expr)
-        elif ins_expr.ast_name == "BoolOp":
-            ins_res = eval_boolop(test_nums, ins_expr)
-        else:
-            raise TypeError
-
         if self.ast_name == "Compare":
             std_res = eval_bool_comp(test_nums, self)
         elif self.ast_name == "BoolOp":
             std_res = eval_boolop(test_nums, self)
+        else:
+            return False
+
+        if ins_expr.ast_name == "Compare":
+            ins_res = eval_bool_comp(test_nums, ins_expr)
+        elif ins_expr.ast_name == "BoolOp":
+            ins_res = eval_boolop(test_nums, ins_expr)
         else:
             raise TypeError
 

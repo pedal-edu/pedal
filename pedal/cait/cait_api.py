@@ -122,7 +122,7 @@ def find_matches(ins_code, std_code=None, report=None):
 
 def find_expr_sub_matches(ins_expr, std_expr):
     """Finds ins_expr in std_expr
-
+    # TODO: Add code to make ins_expr accept EasyNodes
     :param ins_expr: the expression to find (str that MUST evaluate to Expr)
     :param std_expr: student subtree
     :return: a list of matches or False if no matches found

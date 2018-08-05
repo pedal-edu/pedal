@@ -446,3 +446,17 @@ class CaitTests(unittest.TestCase):
         matches2 = find_expr_sub_matches("0.4*_item_", __expr__)
         self.assertTrue(matches2)
 
+    def test_symbol_mapping(self):
+        student_code = ("item = 0\n"
+                        "item2 = 1")
+        matcher1 = StretchyTreeMatcher("_item_ = 0\n"
+                                       "_item_ = 1")
+        match = matcher1.find_matches(student_code)
+        self.assertFalse(match, "One student variable is mapping to multiple instructor variables")
+
+        student_code = ("item = 0\n"
+                        "item = 1")
+        matcher2 = StretchyTreeMatcher("_item_ = 0\n"
+                                       "_item2_ = 1")
+        match2 = matcher2.find_matches(student_code)
+        self.assertTrue(match2, "One instructor variable should be able to map to multiple student variables, but isn't")

@@ -492,11 +492,244 @@ class SpecificMistakeTest(unittest.TestCase):
     def test_wrong_comparison_9_6(self):
         self.to_source("if x < 80:\n"
                        "    pass")
-        self.assertTrue(wrong_comparison_9_6(), "false positive")
+        self.assertTrue(wrong_comparison_9_6(), "false negative")
 
         self.to_source("if x > 80:\n"
                        "    pass")
-        self.assertFalse(wrong_comparison_9_6(), "false negative")
+        self.assertFalse(wrong_comparison_9_6(), "false positive")
 
         self.to_source("x > 80")
-        self.assertTrue(wrong_comparison_9_6(), "false negative")
+        self.assertFalse(wrong_comparison_9_6(), "false positive")
+
+    def test_wrong_conversion_10_2(self):
+        self.to_source("for target in targets:\n"
+                       "    target = target * 0.04")
+        self.assertFalse(wrong_conversion_10_2(), "false positive")
+        self.to_source("for target in targets:\n"
+                       "    target = target * 0.5")
+        self.assertTrue(wrong_conversion_10_2(), "false negative")
+
+        self.to_source("target = target * 0.5")
+        self.assertFalse(wrong_conversion_10_2(), "false positive")
+
+    def test_wrong_filter_condition_10_3(self):
+        self.to_source("if x < 0:\n"
+                       "    pass")
+        self.assertTrue(wrong_filter_condition_10_3(), "false negative")
+
+        self.to_source("if x > 0:\n"
+                       "    pass")
+        self.assertFalse(wrong_filter_condition_10_3(), "false positive")
+
+        self.to_source("x > 0")
+        self.assertFalse(wrong_filter_condition_10_3(), "false positive")
+
+    def test_wrong_and_filter_condition_10_4(self):
+        self.to_source("for temp in temps:\n"
+                       "    if 32 <= temp <= 50:\n"
+                       "        pass")
+        self.assertFalse(wrong_and_filter_condition_10_4(), "false positive")
+        self.assertFalse(wrong_nested_filter_condition_10_4(), "false positive")
+
+        self.to_source("for temp in temps:\n"
+                       "    if 32 >= temp <= 50:\n"
+                       "        pass")
+        self.assertTrue(wrong_and_filter_condition_10_4(), "false negative")
+        self.assertFalse(wrong_nested_filter_condition_10_4(), "false positive")
+
+    def test_wrong_and_filter_condition_10_4(self):
+        self.to_source("for temp in temps:\n"
+                       "    if 32 <= temp:\n"
+                       "        if temp <= 50:\n"
+                       "            pass")
+        self.assertFalse(wrong_and_filter_condition_10_4(), "false positive")
+        self.assertFalse(wrong_nested_filter_condition_10_4(), "false positive")
+
+        self.to_source("for temp in temps:\n"
+                       "    if 32 >= temp:\n"
+                       "        if temp <= 50:\n"
+                       "            pass")
+        self.assertTrue(wrong_and_filter_condition_10_4(), "false negative")
+        self.assertTrue(wrong_nested_filter_condition_10_4(), "false negative")
+
+        self.to_source("for temp in temps:\n"
+                       "    if 50 >= temp:\n"
+                       "        if temp >= 32:\n"
+                       "            pass")
+        self.assertTrue(wrong_and_filter_condition_10_4(), "false negative")
+        self.assertFalse(wrong_nested_filter_condition_10_4(), "false positive")
+
+    def test_wrong_conversion_problem_10_5(self):
+        self.to_source("for target in targets:\n"
+                       "    target = target * 0.62")
+        self.assertFalse(wrong_conversion_problem_10_5(), "false positive")
+
+        self.to_source("for target in targets:\n"
+                       "    target = target * 0.5")
+        self.assertTrue(wrong_conversion_problem_10_5(), "false negative")
+
+        self.to_source("target = target * 0.5")
+        self.assertFalse(wrong_conversion_problem_10_5(), "false positive")
+
+    def test_wrong_filter_problem_atl1_10_5(self):
+        self.to_source("for item in items:\n"
+                       "    if item*0.62 > 10:\n"
+                       "        new_list.append(0.62*item)")
+        self.assertFalse(wrong_filter_problem_atl1_10_5(), "False Positive")
+
+        self.to_source("for item in items:\n"
+                       "    if item*0.61 > 10:\n"
+                       "        new_list.append(0.62*item)")
+        self.assertTrue(wrong_filter_problem_atl1_10_5(), "False negative")
+
+    def test_wrong_filter_problem_atl2_10_5(self):
+        self.to_source("for item in items:\n"
+                       "    miles = item * 0.62\n"
+                       "    if miles > 10:\n"
+                       "        new_list.append(miles)")
+        self.assertFalse(wrong_filter_problem_atl2_10_5(), "False Positive")
+
+        self.to_source("for item in items:\n"
+                       "    miles = item * 0.62\n"
+                       "    if item > 10:\n"
+                       "        new_list.append(miles)")
+        self.assertTrue(wrong_filter_problem_atl2_10_5(), "False negative")
+
+    def test_wrong_append_problem_atl1_10_5(self):
+        self.to_source("for item in items:\n"
+                       "    if item * 0.62 > 10:\n"
+                       "        _list_.append(item)")
+        self.assertTrue(wrong_append_problem_atl1_10_5(), "False negative")
+        self.to_source("for item in items:\n"
+                       "    if item * 0.62 > 10:\n"
+                       "        _list_.append(0.62 * item)")
+        self.assertFalse(wrong_append_problem_atl1_10_5(), "False positive")
+
+    def test_wrong_append_problem_atl2_10_5(self):
+        self.to_source("for item in items:\n"
+                       "    miles = item*0.62\n"
+                       "    if miles > 10:\n"
+                       "        _list_.append(miles)")
+        self.assertFalse(wrong_append_problem_atl2_10_5(), "false positive")
+
+        self.to_source("for item in items:\n"
+                       "    miles = item*0.62\n"
+                       "    if miles > 10:\n"
+                       "        _list_.append(item)")
+        self.assertTrue(wrong_append_problem_atl2_10_5(), "false negative")
+
+    def test_wrong_debug_10_6(self):
+        self.to_source("quakes = earthquakes.get('depth','(None)','')\n"
+                       "quakes_in_miles = []\n"
+                       "for quake in quake:\n"
+                       "    quake.append(quake * 0.62)\n"
+                       "plt.hist(quakes_in_miles)\n"
+                       "plt.xlabel('Depth in Miles')\n"
+                       "plt.ylabel('Number of Earthquakes')\n"
+                       "plt.title('Distribution of Depth in Miles of Earthquakes')\n"
+                       "plt.show()")
+        self.assertTrue(wrong_debug_10_6(), "false negative")
+
+        self.to_source('quakes = earthquakes.get("depth","(None)","")\n'
+                       'quakes_in_miles = []\n'
+                       'for quake in quakes:\n'
+                       '    quake.append(quake * 0.62)\n'
+                       'plt.hist(quakes_in_miles)\n'
+                       'plt.xlabel("Depth in Miles")\n'
+                       'plt.ylabel("Number of Earthquakes")\n'
+                       'plt.title("Distribution of Depth in Miles of Earthquakes")\n'
+                       'plt.show()')
+        self.assertFalse(wrong_debug_10_6(), "false positive")
+
+        self.to_source('quakes = earthquakes.get("depth","(None)","")\n'
+                       'quakes_in_miles = []\n'
+                       'for quake in quakes:\n'
+                       '    quakes_in_miles.append(quake * 0.62)\n'
+                       'plt.hist(quakes_in_miles)\n'
+                       'plt.xlabel("Depth in Miles")\n'
+                       'plt.ylabel("Number of Earthquakes")\n'
+                       'plt.title("Distribution of Depth in Miles of Earthquakes")\n'
+                       'plt.show()')
+        self.assertFalse(wrong_debug_10_6(), "false positive")
+
+        self.to_source('quakes = earthquakes.get("depth","(None)","")\n'
+                       'quakes_in_miles = []\n'
+                       'for quake in quake:\n'
+                       '    quakes_in_miles.append(quake * 0.62)\n'
+                       'plt.hist(quakes_in_miles)\n'
+                       'plt.xlabel("Depth in Miles")\n'
+                       'plt.ylabel("Number of Earthquakes")\n'
+                       'plt.title("Distribution of Depth in Miles of Earthquakes")\n'
+                       'plt.show()')
+        self.assertFalse(wrong_debug_10_6(), "false positive")
+
+        self.to_source('quakes = earthquakes.get("depth","(None)","")\n'
+                       'quakes_in_miles = []\n'
+                       'for quake in quakes_in_miles:\n'
+                       '    quakes.append(quake * 0.62)\n'
+                       'plt.hist(quakes_in_miles)\n'
+                       'plt.xlabel("Depth in Miles")\n'
+                       'plt.ylabel("Number of Earthquakes")\n'
+                       'plt.title("Distribution of Depth in Miles of Earthquakes")\n'
+                       'plt.show()')
+        self.assertTrue(wrong_debug_10_6(), "false negative")
+
+    def test_wrong_debug_10_7(self):
+        self.to_source("filtered_sentence_counts = []\n"
+                       "book_sentence_counts = classics.get('sentences','(None)','')\n"
+                       "for book in book_sentence_counts:\n"
+                       "    if book >= 5000:\n"
+                       "        filtered_sentence_counts.append(book)\n"
+                       "plt.hist(filtered_sentence_counts)\n"
+                       "plt.title('Distribution of Number of Sentences in Long Books')\n"
+                       "plt.xlabel('Number of Sentences')\n"
+                       "plt.ylabel('Number of Long Books')\n"
+                       "plt.show()\n")
+        self.assertFalse(wrong_debug_10_7(), "false positive")
+
+        self.to_source("filtered_sentence_counts = []\n"
+                       "book_sentence_counts = classics.get('sentences','(None)','')\n"
+                       "for book in book_sentence_counts:\n"
+                       "    if book_sentence_counts >= 5000:\n"
+                       "        filtered_sentence_counts.append(book)\n"
+                       "plt.hist(filtered_sentence_counts)\n"
+                       "plt.title('Distribution of Number of Sentences in Long Books')\n"
+                       "plt.xlabel('Number of Sentences')\n"
+                       "plt.ylabel('Number of Long Books')\n"
+                       "plt.show()\n")
+        self.assertTrue(wrong_debug_10_7(), "false negative")
+
+    def test_wrong_initialization_in_iteration(self):
+        self.to_source("for item in items:\n"
+                       "    item = 0")
+        self.assertTrue(wrong_initialization_in_iteration(), "False negative")
+
+        self.to_source("item = 0\n"
+                       "for item in items:\n"
+                       "    pass")
+        self.assertFalse(wrong_initialization_in_iteration(), "False positive")
+
+    def test_wrong_duplicate_var_in_add(self):
+        self.to_source("item3 = item + item2")
+        self.assertFalse(wrong_duplicate_var_in_add(), "false positive")
+
+        self.to_source("item3 = item + item")
+        self.assertTrue(wrong_duplicate_var_in_add(), "false negative")
+
+    def test_all_labels_present(self):
+        self.to_source("plt.title(___)\n"
+                       "plt.xlabel(___)\n"
+                       "plt.ylabel(___)\n")
+        self.assertTrue(all_labels_present(), "false positive")
+
+        self.to_source("plt.title(___)\n"
+                       "plt.xlabel(___)\n"
+                       "plt.show()\n"
+                       "plt.ylabel(___)\n")
+        self.assertTrue(all_labels_present(), "false positive")
+
+        self.to_source("plt.ylabel(___)\n"
+                       "plt.title(___)\n"
+                       "plt.xlabel(___)\n"
+                       "plt.show()\n")
+        self.assertFalse(all_labels_present(), "false positive")
