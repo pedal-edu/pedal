@@ -20,7 +20,7 @@ class AppendMistakeTest(MistakeTest):
                        "items = [1, 2, 3]")
         self.assertTrue(wrong_target_is_list(), "false negative (safe version)")
 
-        # TODO: TIFA Discussion
+        # TODO: TIFA Discussion: items gets technically overwritten...
         self.to_source("items = [1, 2, 3]\n"
                        "for items in item:\n"
                        "    pass")
@@ -33,7 +33,7 @@ class AppendMistakeTest(MistakeTest):
                        "item = [1, 2, 3]")
         self.assertTrue(wrong_list_repeated_in_for(), "false negative (safe version)")
 
-        # TODO: TIFA Discussion
+        # TODO: TIFA Discussion: item gets technically overwritten, but should it be list?
         self.to_source("item = [1, 2, 3]\n"
                        "for item in item:\n"
                        "    pass\n")
@@ -79,7 +79,6 @@ class AppendMistakeTest(MistakeTest):
     def test_list_not_initialized_on_run(self):
         self.to_source("for item in items:\n"
                        "    pass")
-        # TODO: TIFA Discussion
         self.assertTrue(list_not_initialized_on_run(), "false negative")
 
     def test_list_initialization_misplaced(self):

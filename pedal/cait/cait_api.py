@@ -25,6 +25,7 @@ class Cait:
             std_ast = self.report['source']['ast']
             self.report['cait'] = {}
             self.report['cait']['std_ast'] = EasyNode(std_ast)
+            tifa_analysis(report=self.report)
 
 
 # noinspection PyBroadException

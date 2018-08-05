@@ -90,7 +90,7 @@ def list_not_initialized_on_run():
     match = find_match("for ___ in _item_:\n    pass")
     if match:
         _item_ = match.symbol_table.get("_item_")[0].astNode
-        if data_type(_item_).is_instance(None):
+        if def_use_error(_item_):
             explain("The list in your for loop has not been initialized<br><br><i>(no_list_init)<i></br>")
             return True
     return False
