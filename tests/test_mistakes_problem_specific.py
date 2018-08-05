@@ -533,7 +533,7 @@ class SpecificMistakeTest(MistakeTest):
         self.assertTrue(wrong_and_filter_condition_10_4(), "false negative")
         self.assertFalse(wrong_nested_filter_condition_10_4(), "false positive")
 
-    def test_wrong_and_filter_condition_10_4(self):
+    def test_wrong_nested_filter_condition_10_4(self):
         self.to_source("for temp in temps:\n"
                        "    if 32 <= temp:\n"
                        "        if temp <= 50:\n"
@@ -729,7 +729,6 @@ class SpecificMistakeTest(MistakeTest):
                        "plt.xlabel(___)\n"
                        "plt.show()\n")
         self.assertFalse(all_labels_present(), "false positive")
-
 
     def test_hard_code_8_5(self):
         self.to_source("print(12)")
