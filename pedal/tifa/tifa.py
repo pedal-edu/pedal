@@ -1006,7 +1006,8 @@ class Tifa(ast.NodeVisitor):
                 definitions = actual_module._tifa_definitions()
                 return type_from_json(definitions)
             except Exception as e:
-                self.report_issue("Module not found", {"name": chain})
+                self.report_issue("Module not found", 
+                                  {"name": chain, "error": str(e)})
                 return ModuleType()
             
     def combine_states(self, left, right):

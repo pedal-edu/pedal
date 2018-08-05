@@ -101,7 +101,7 @@ class TestCode(unittest.TestCase):
         (success, score, category, label, 
          message, data, hide) = simple.resolve()
         self.assertEqual(category, "Instructor")
-        self.assertEqual(label, "no errors")
+        self.assertEqual(label, "No errors")
         self.assertEqual(message, "No errors reported.")
     
     def test_success(self):
@@ -112,7 +112,7 @@ class TestCode(unittest.TestCase):
         (success, score, category, label, 
          message, data, hide) = simple.resolve()
         self.assertEqual(category, "Complete")
-        self.assertEqual(label, "complete")
+        self.assertEqual(label, "Complete")
         self.assertEqual(message, "Great work!")
     
     def test_success_suppression(self):
@@ -124,7 +124,7 @@ class TestCode(unittest.TestCase):
         (success, score, category, label, 
          message, data, hide) = simple.resolve()
         self.assertEqual(category, "Instructor")
-        self.assertEqual(label, "no errors")
+        self.assertEqual(label, "No errors")
         self.assertEqual(message, "No errors reported.")
     
     def test_empty(self):

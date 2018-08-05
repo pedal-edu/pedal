@@ -5,11 +5,6 @@ import sys
 pedal_library = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.insert(0, pedal_library)
 
-from pedal.report import *
-from pedal.source import set_source
-from pedal.tifa import tifa_analysis
-from pedal.resolvers import simple
-from pedal.sandbox import compatibility
 from pedal.cait.cait_api import parse_program
 from pedal.toolkit.files import files_not_handled_correctly
 from pedal.toolkit.functions import match_signature, output_test, unit_test
@@ -24,22 +19,7 @@ from pedal.toolkit.utilities import (is_top_level, function_prints,
                                      ensure_operation, prevent_operation)
 from pedal.toolkit.imports import ensure_imports
 from pedal.toolkit.printing import ensure_prints
-
-class Execution:
-    def __init__(self, code):
-        self.code = code
-    
-    def __enter__(self):
-        clear_report()
-        set_source(self.code)
-        tifa_analysis()
-        compatibility.run_student(raise_exceptions=True)
-        return self
-    
-    def __exit__(self, *args):
-        suppress("runtime", "FileNotFoundError")
-        (self.success, self.score, self.category, self.label, 
-         self.message, self.data, self.hide) = simple.resolve()
+from execution_helper import Execution
 
 class TestFiles(unittest.TestCase):
 

@@ -5,6 +5,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 
 from tests.mistake_test_template import *
 from pedal.mistakes.instructor_iteration import *
+from pedal.report import MAIN_REPORT
 
 
 class AppendMistakeTest(MistakeTest):
@@ -25,7 +26,7 @@ class AppendMistakeTest(MistakeTest):
                        "for items in item:\n"
                        "    pass")
         self.assertTrue(wrong_target_is_list(), "false negative")
-
+    
     def test_wrong_list_repeated_in_for(self):
         self.to_source("item = [1, 2, 3]\n"
                        "for item in item:\n"

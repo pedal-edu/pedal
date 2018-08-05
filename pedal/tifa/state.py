@@ -1,4 +1,10 @@
 
+def check_trace(state):
+        past_types = [state.type]
+        for past_state in variable.trace:
+            past_types.extend(check_trace(past_state))
+        return past_types
+
 class State:
     '''
     A representation of a variable at a particular point in time of the program.
@@ -60,4 +66,11 @@ class State:
         Create a string representation of this State.
         '''
         return str(self)
-        
+    
+    def get_types(self):
+        '''
+        Retrieve all the types that this variable took on over its entire
+        trace.
+        '''
+        return check_trace(self)
+    
