@@ -586,6 +586,7 @@ def wrong_list_initialization_placement_9_1():
     return False
 
 
+# TODO: Convert this to matching API
 def wrong_accumulator_initialization_placement_9_1():
     std_ast = parse_program()
     assignments = std_ast.find_all('Assign')
@@ -605,6 +606,7 @@ def wrong_accumulator_initialization_placement_9_1():
                 'before the iteration which uses this variable.<br><br><i>(accu_init_place_9.1)<i></br>')
 
 
+# TODO: Convert this to matching API
 def wrong_iteration_body_9_1():
     std_ast = parse_program()
     loops = std_ast.find_all('For')
@@ -659,8 +661,8 @@ def wrong_print_9_1():
 # ##########################9.1 END############################
 
 
-# TODO: Continue converting from here
 # ##########################9.2 START############################
+# TODO: Convert this to matching API
 def wrong_list_initialization_9_2():
     std_ast = parse_program()
     assignments = std_ast.find_all('Assign')
@@ -680,6 +682,7 @@ def wrong_list_initialization_9_2():
     return not has_call
 
 
+# TODO: Convert this to matching API
 def wrong_accumulator_initialization_9_2():
     std_ast = parse_program()
     assignments = std_ast.find_all('Assign')
@@ -708,6 +711,7 @@ def wrong_accumulation_9_2():
     return False
 
 
+# TODO: Convert this to matching API
 def wrong_list_initialization_placement_9_2():
     std_ast = parse_program()
     assignments = std_ast.find_all('Assign')
@@ -729,6 +733,7 @@ def wrong_list_initialization_placement_9_2():
     return False
 
 
+# TODO: Convert this to matching API
 def wrong_accumulator_initialization_placement_9_2():
     std_ast = parse_program()
     assignments = std_ast.find_all('Assign')
@@ -1113,6 +1118,7 @@ def all_labels_present():  # TODO: make sure it's before the show, maybe check f
     return False
 
 
+# TODO: Convert this to matching API
 def hard_code_8_5():  # TODO: This one's weird
     match = find_matches("print(__num__)")
     if match:
