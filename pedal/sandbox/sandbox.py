@@ -100,6 +100,7 @@ import types
 import sys
 import io
 from unittest.mock import patch, mock_open, MagicMock
+import traceback
 
 from pedal.report import MAIN_REPORT
 from pedal.sandbox import mocked
@@ -157,6 +158,7 @@ class Sandbox:
         self.backups = {}
         # Exception
         self.exception = exception
+        self.exception_position = None
         # Input
         self.inputs = None
         # Modules
@@ -280,6 +282,7 @@ class Sandbox:
         sys.stdout = capture_stdout
         #sys.stdin = injectin
         self.exception = None
+        self.exception_position = None
         
         if callable(self.pre_execution):
             self.pre_execution()
@@ -301,13 +304,15 @@ class Sandbox:
                 code = example
             _raise_improved_error(e, code)'''
             self.exception = e
+            cl, exc, tb = sys.exc_info()
+            line_number = traceback.extract_tb(tb)[-1][1]
+            self.exception_position = {'line': line_number}
         finally:
             sys.stdout = old_stdout
             #sys.stdin = old_stdin
             if callable(self.post_execution):
                 self.post_execution()
         self.append_output(capture_stdout.getvalue())
-        
         # Clean up
         self.purge_temporaries()
     

@@ -1,3 +1,5 @@
+import sys
+
 from pedal.sandbox.sandbox import Sandbox
 from pedal.sandbox.messages import EXTENDED_ERROR_EXPLANATION
 
@@ -15,7 +17,8 @@ def run_student(raise_exceptions=False, report=None):
     source_code = report['source']['code']
     sandbox.run(source_code)
     if raise_exceptions:
-        raise_exception(sandbox.exception, report=report)
+        raise_exception(sandbox.exception, sandbox.exception_position, 
+                        report=report)
     return sandbox.exception
 
 def queue_input(*inputs, **kwargs):
@@ -54,7 +57,7 @@ def get_sandbox(report=None):
     sandbox = _check_sandbox(report)
     return sandbox
 
-def raise_exception(exception, report=None):
+def raise_exception(exception, position=None, report=None):
     if report is None:
         report = MAIN_REPORT
     sandbox = _check_sandbox(report)
@@ -64,17 +67,11 @@ def raise_exception(exception, report=None):
     message = "<pre>{}</pre>\n{}".format(str(exception), extended)
     # Skulpt compatible name lookup
     name = str(exception.__class__)[8:-2]
-    try:
-        traceback = exception.__traceback__
-    except:
-        try:
-            traceback = exception.traceback
-        except:
-            traceback = None
     report.attach(name, category='Runtime', tool='Sandbox',
                   mistakes={'message': message, 
                             'error': exception,
-                            'traceback': traceback})
+                            'position': position,
+                            'traceback': None})
     sandbox.exception = exception
     
 def get_student_data(report=None):

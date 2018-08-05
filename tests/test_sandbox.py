@@ -56,10 +56,12 @@ class TestCode(unittest.TestCase):
         self.assertTrue(student._)
     
     def test_improved_exceptions(self):
-        student_code = 'syntax error'
+        student_code = '0+"1"'
         student = Sandbox()
         student.run(student_code, _as_filename='student.py')
         self.assertIsNotNone(student.exception)
+        self.assertIsInstance(student.exception, TypeError)
+        self.assertEqual(student.exception_position, {'line': 1})
     
     def test_compatibility_api(self):
         student_code = 'word = input("Give me a word")\nprint(word+"!")'
