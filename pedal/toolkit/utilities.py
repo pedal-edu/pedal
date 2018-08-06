@@ -97,15 +97,6 @@ def prevent_builtin_usage(function_names):
             if a_call.func.id in function_names:
                 explain("You cannot use the builtin function <code>{}</code>.".format(a_call.func.id))
                 return a_call.func.id
-    # Prevent tricky redeclarations!
-    names = ast.find_all('Name')
-    seen = set()
-    for name in names:
-        if name.id not in seen:
-            if name.ctx.ast_name == "Load" and name.id in function_names:
-                explain("You cannot use the builtin function <code>{}</code>.".format(name.id))
-                seen.add(name.id)
-                return name.id
     return None
     
 def prevent_literal(*literals):

@@ -268,11 +268,6 @@ class TestUtilities(unittest.TestCase):
         with Execution('max([1,2,3])') as e:
             self.assertIsNone(prevent_builtin_usage(['sum', 'min']))
         self.assertEqual(e.message, "No errors reported.")
-        
-        with Execution('trick=sum\ntrick([1,2,3])') as e:
-            self.assertEqual(prevent_builtin_usage(['min', 'sum']), 'sum')
-        self.assertEqual(e.message, "You cannot use the builtin function "
-                         "<code>sum</code>.")
     
     def test_prevent_literal(self):
         with Execution('a = 5\na') as e:
@@ -305,7 +300,7 @@ class TestUtilities(unittest.TestCase):
             prevent_advanced_iteration()
         self.assertEqual(e.message, "You should not use a <code>while</code> "
                          "loop to solve this problem.")
-        with Execution('trick=sum\ntrick([1,2,3])') as e:
+        with Execution('sum([1,2,3])') as e:
             prevent_advanced_iteration()
         self.assertEqual(e.message, "You cannot use the builtin function "
                          "<code>sum</code>.")
