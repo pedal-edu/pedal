@@ -6,7 +6,8 @@ DEFAULT_CATEGORY_PRIORITY = [
     'mistakes',
     'runtime',
     'instructor',
-    'uncategorized'
+    'positive',
+    'uncategorized',
 ]
 
 # For compatibility with the old feedback API
@@ -93,68 +94,6 @@ def parse_feedback(feedback):
         performance = feedback.performance
     return success, performance, message, data
 
-'''
-    if (!suppress['parser'] && !report['parser'].success) {
-        var parserReport = report['parser'].error;
-        this.convertSkulptSyntax(parserReport);
-        return 'parser';
-    }
-    // Error in Instructor Feedback code
-    if (!report['instructor'].success) {
-        this.presentInstructorError();
-    }
-    if (report['instructor'].compliments && report['instructor'].compliments.length) {
-        //this.compliment(report['instructor'].compliments);
-        console.log(report['instructor'].compliments);
-    }
-    if (suppress['instructor'] !== true && complaint && complaint.length) {
-        complaint.sort(BlockPyFeedback.sortPriorities);
-        this.instructorFeedback(complaint[0].name, complaint[0].message, complaint[0].line);
-        return 'instructor';
-    }
-    // Analyzer
-    if (!report['instructor'].hide_correctness &&
-        suppress['analyzer'] !== true) {//if a subtype is specified, or no suppression requested, present feedback
-        if (!report['analyzer'].success) {
-            this.internalError(report['analyzer'].error, "Analyzer Error", "Error in analyzer. Please show the above message to an instructor!");
-            return 'analyzer';
-        }
-        var wasPresented = this.presentAnalyzerFeedback();
-        if (wasPresented) {
-            return 'analyzer';
-        }
-    }
-    // Student runtime errors
-    if (!suppress['student']) {
-        if (!report['student'].success) {
-            this.printError(report['student'].error);
-            return 'student';
-        }
-    }
-    // No instructor feedback if hiding correctness
-    if (report['instructor'].hide_correctness == true) {
-        this.noErrors()
-        return 'no errors';
-    }
-    // Gentle instructor feedback
-    if (suppress['instructor'] !== true && gentleComplaints.length) {
-        this.instructorFeedback(gentleComplaints[0].name, 
-                                gentleComplaints[0].message, 
-                                gentleComplaints[0].line);
-        return 'instructor';
-    }
-    //instructor completion flag
-    if (suppress['instructor'] !== true && report['instructor'].complete) {
-        this.complete();
-        return 'success';
-    }
-    if (!suppress['no errors']) {
-        this.noErrors()
-        return 'no errors';
-    }
-    return 'completed';
-'''
-
 def resolve(report=None, priority_key=None):
     '''
     Args:
@@ -189,7 +128,9 @@ def resolve(report=None, priority_key=None):
         success, partial, message, data = parse_feedback(feedback)
         final_success = success or final_success
         final_score += partial
-        if message is not None and final_message is None:
+        if (message is not None and 
+            final_message is None and
+            feedback.priority != 'positive'):
             final_message = message
             final_category = feedback.category
             final_label = feedback.label

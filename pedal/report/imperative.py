@@ -20,7 +20,7 @@ def compliment(message, line=None):
     MAIN_REPORT.compliment(message, line)
 
 
-def give_partial(value, message):
+def give_partial(value, message=None):
     MAIN_REPORT.give_partial(value, message)
 
 

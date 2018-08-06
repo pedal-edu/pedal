@@ -10,6 +10,8 @@ from pedal.tifa import tifa_analysis
 from pedal.resolvers import simple
 import pedal.sandbox.compatibility as compatibility
 
+from execution_helper import Execution
+
 class TestCode(unittest.TestCase):
 
     def test_gently(self):
@@ -52,6 +54,30 @@ class TestCode(unittest.TestCase):
         (success, score, category, label, 
          message, data, hide) = simple.resolve()
         self.assertEqual(message, "No errors reported.")
+    
+    def test_partials(self):
+        with Execution('0') as e:
+            give_partial(.1, "You had a zero in your code.")
+            give_partial(.1, "You looped correctly.")
+        self.assertEqual(e.message, "No errors reported.")
+        self.assertEqual(e.score, .2)
+        self.assertFalse(e.success)
+        
+        with Execution('0') as e:
+            give_partial(.1, "You had a zero in your code.")
+            give_partial(.1, "You looped correctly.")
+            gently("Okay but you still only wrote 0.")
+        self.assertEqual(e.message, "Okay but you still only wrote 0.")
+        self.assertEqual(e.score, .2)
+        self.assertFalse(e.success)
+        
+        with Execution('0') as e:
+            give_partial(.1, "You had a zero in your code.")
+            give_partial(.1, "You looped correctly.")
+            set_success()
+        self.assertEqual(e.message, "Great work!")
+        self.assertEqual(e.score, .2)
+        self.assertTrue(e.success)
     
     def test_analyzer_suppression(self):
         clear_report()

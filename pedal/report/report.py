@@ -27,10 +27,12 @@ class Report:
         self._results = {}
 
     def set_success(self):
-        self.feedback.append(Feedback('set_success', result=True))
+        self.feedback.append(Feedback('set_success', priority='positive',
+                                      result=True))
         
-    def give_partial(self, value, message):
+    def give_partial(self, value, message=None):
         self.feedback.append(Feedback('give_partial', performance=value,
+                                      priority='positive',
                                       mistakes=message))
         
     def hide_correctness(self):
