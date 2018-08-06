@@ -161,7 +161,7 @@ class TestCode(unittest.TestCase):
         (success, score, category, label, 
          message, data, hide) = simple.resolve()
         self.assertEqual(category, "Syntax")
-        self.assertEqual(label, "blank source")
+        self.assertEqual(label, "Blank source")
         self.assertEqual(message, "Source code file is blank.")
         
 

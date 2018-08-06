@@ -382,6 +382,7 @@ class CaitTests(unittest.TestCase):
         set_source("fun = 1 + 0")
         parse_program()
         self.assertTrue('cait' in MAIN_REPORT, "No parsing happened")
+    
     '''
     def test_def_use_error(self):
         set_source("fun = fun + 1")
@@ -432,6 +433,12 @@ class CaitTests(unittest.TestCase):
         std_ast = parse_program()
         defs = std_ast.find_all("FunctionDef")
         self.assertEqual(len(defs), 1)
+        
+        clear_report()
+        set_source("1 < 1")
+        std_ast = parse_program()
+        compares = std_ast.find_all("Compare")
+        self.assertEqual(len(compares), 1)
 
     def test_matches_in_matches(self):
         matcher1 = StretchyTreeMatcher("if __expr__:\n    pass")

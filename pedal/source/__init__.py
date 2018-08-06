@@ -27,16 +27,18 @@ def set_source(code, filename='__main__.py', report=None):
 
 def _check_issues(code, report):
     if code.strip() == '':
-        report.attach('blank source', category=CATEGORY, tool=NAME,
+        report.attach('Blank source', category=CATEGORY, tool=NAME,
                       mistakes="Source code file is blank.")
         report['source']['success'] = False
     try:
         parsed = ast.parse(code)
         report['source']['ast'] = parsed
-    except Exception as e:
-        report.attach('syntax error', category=CATEGORY, tool=NAME,
-                      mistakes={'message': "Failed to parse source code.",
-                                'error': e})
+    except SyntaxError as e:
+        report.attach('Syntax error', category=CATEGORY, tool=NAME,
+                      mistakes={'message': "Invalid syntax on line "
+                                           +str(e.lineno),
+                                'error': e,
+                                'position': {"line": e.lineno}})
         report['source']['success'] = False
         if 'ast' in report['source']:
             del report['source']['ast']

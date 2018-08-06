@@ -93,7 +93,7 @@ def _format_message(issue, data):
     elif issue == 'Overwritten Variable':
         return ("The variable <code>{name}</code> was given a value, but "
                 "<code>{name}</code> was changed on line {line} before it "
-                "was used. One of the times that you gave <code>{line}</code> "
+                "was used. One of the times that you gave <code>{name}</code> "
                 "a value was incorrect."
                 ).format(line=data['position']['line'], name=data['name'])
     elif issue == 'Iterating over empty list':

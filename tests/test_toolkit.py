@@ -318,6 +318,9 @@ class TestUtilities(unittest.TestCase):
         with Execution('print(1+1)') as e:
             self.assertNotEqual(ensure_operation("+"), False)
         self.assertEqual(e.message, "No errors reported.")
+        with Execution('print(1!=1)') as e:
+            self.assertNotEqual(ensure_operation("!="), False)
+        self.assertEqual(e.message, "No errors reported.")
     
     def test_prevent_operation(self):
         with Execution('print(1+1)') as e:
@@ -327,6 +330,10 @@ class TestUtilities(unittest.TestCase):
         with Execution('print(1-1)') as e:
             self.assertFalse(prevent_operation("+"))
         self.assertEqual(e.message, "No errors reported.")
+        with Execution('1 < 1') as e:
+            self.assertNotEqual(prevent_operation("<"), False)
+        self.assertEqual(e.message, "You may not use the <code><</code> "
+                         "operator.")
     
     def test_find_operation(self):
         with Execution('1+1') as e:

@@ -194,7 +194,7 @@ def prevent_operation(op_name, root=None):
         gently("You may not use the <code>{}</code> operator.".format(op_name))
     return result
     
-def find_operation(op_name, root):    
+def find_operation(op_name, root):
     if op_name in COMPARE_OP_NAMES:
         compares = root.find_all("Compare")
         for compare in compares:

@@ -1,0 +1,24 @@
+Version 1
+---------
+
+Operator's names can now be accessed with "op_name" instead of "op".
+
+Nodes no longer have a .data_type field; instead you must use the data_type helper function
+    
+    from pedal.cait.cait_api import data_type
+    names = ast.find_all("Name")
+    data_type(names[0]).is_equal("StrType")
+
+Various instructor_* libraries have been moved into pedal.toolkits and pedal.mistakes
+    from instructor_printing -> from pedal.toolkit.printing import *
+    from instructor_utility -> from pedal.toolkit.utilities import *
+
+from pedal.toolkit.printing import *
+from pedal.toolkit.utilities import *
+from pedal.toolkit.functions import *
+
+Still to fix:
+#20??: Needs to point the exampe out to the correct place
+#22.5: Need to fix output_test in toolkit.functions
+#25.3: Needs to point the example out to the correct place
+#25.4: WE
