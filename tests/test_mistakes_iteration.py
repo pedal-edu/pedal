@@ -26,6 +26,11 @@ class AppendMistakeTest(MistakeTest):
                        "for items in item:\n"
                        "    pass")
         self.assertTrue(wrong_target_is_list(), "false negative")
+        
+        self.to_source("credits = [1, 2, 3]\n"
+                       "for credit in credits:\n"
+                       "    print(credit)")
+        self.assertFalse(wrong_target_is_list())
     
     def test_wrong_list_repeated_in_for(self):
         self.to_source("item = [1, 2, 3]\n"

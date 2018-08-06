@@ -457,6 +457,12 @@ class TestVariables(unittest.TestCase):
         self.assertFalse(a.was_type(bool))
         self.assertFalse(a.was_type(defs.DictType))
         self.assertTrue(a.was_type('ListType'))
+        
+        tifa = pedal.tifa.Tifa()
+        tifa.process_code('credits=[1,2,3,4]\nfor credit in credits:\n  print(credit)')
+        credit = tifa.report['tifa']['top_level_variables']['credit']
+        self.assertFalse(credit.was_type(list))
+        self.assertTrue(credit.was_type(int))
 
 if __name__ == '__main__':
     unittest.main(buffer=False)
