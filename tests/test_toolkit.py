@@ -346,6 +346,9 @@ class TestUtilities(unittest.TestCase):
         with Execution('not (1 + 1) and 1 < 1 <= 10') as e:
             ast = parse_program()
             self.assertFalse(find_operation(">", ast))
+        with Execution('1 in [1,2,3]') as e:
+            ast = parse_program()
+            self.assertNotEqual(find_operation("in", ast), False)
 
 class TestImports(unittest.TestCase):
     def test_ensure_imports(self):

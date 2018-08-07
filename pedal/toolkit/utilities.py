@@ -145,7 +145,7 @@ COMPARE_OP_NAMES = {
     "!=": "NotEq", 
     "is": "Is", 
     "is not": "IsNot", 
-    "in": "In_", 
+    "in": "In", 
     "not in": "NotIn"}
 BOOL_OP_NAMES = {
     "and": "And",
