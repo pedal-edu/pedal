@@ -96,6 +96,10 @@ unit_tests = {
         ['x = range(100)\nfor y in x:\n    print(y)', ['Iterating over non-list'], []],
     'iterate_over_ranges_atomic_subtype':
         ['x = range(100)\nfor y in x:\n    pass\nfor z in y:\n    print(z)', [], ['Iterating over non-list']],
+    'iterate_over_split':
+        ['for x in "a,b,c".split(","):\n  x+""', ['Iterating over non-list', 'Iterating over empty list'], []],
+    'iterate_over_string_upper':
+        ['for l in "abc".upper():\n  l+""', ['Iterating over non-list', 'Iterating over empty list'], []],
     
     # Incompatible types
     'add_int_str':

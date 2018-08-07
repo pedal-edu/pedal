@@ -213,9 +213,9 @@ StrType.fields.update({
     "istitle": FunctionType(name='istitle', returns=BoolType()),
     "isupper": FunctionType(name='isupper', returns=BoolType()),
     # Methods that return List of Strings
-    "rsplit": FunctionType(name='rsplit', returns=ListType(StrType())),
-    "split": FunctionType(name='split', returns=ListType(StrType())),
-    "splitlines": FunctionType(name='splitlines', returns=ListType(StrType()))
+    "rsplit": FunctionType(name='rsplit', returns=ListType(StrType(), empty=False)),
+    "split": FunctionType(name='split', returns=ListType(StrType(), empty=False)),
+    "splitlines": FunctionType(name='splitlines', returns=ListType(StrType(), empty=False))
 })
 class FileType(Type):
     singular_name = 'a file'
