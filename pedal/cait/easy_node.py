@@ -235,7 +235,8 @@ class EasyNode:
         '''
         Non-ast node attributes based on ast_node attributes
         '''
-        if key == "target":
+        node_name = EasyNode.get_ast_name(self.astNode)
+        if node_name == "Assign" and key == "target":
             key = "targets"
         if item in AST_SINGLE_FUNCTIONS:
             key = item[:-5]  # strip suffix '_name'
@@ -248,7 +249,7 @@ class EasyNode:
         if key == 'next_tree':
             return self.get_next_tree()
         if key == 'ast_name':
-            return EasyNode.get_ast_name(self.astNode)
+            return node_name
         elif key == '_name':
             return self.astNode.name
         else:  # ast node attributes or derivative attributes
@@ -258,7 +259,7 @@ class EasyNode:
                     field = self.astNode.__getattribute__(key)
                 except Exception:
                     field = None
-                if EasyNode.get_ast_name(self.astNode) == "Assign" and item != key:
+                if node_name == "Assign" and item != key:
                     if item == "target":
                         return field[0].easy_node  # Get's the relevant ast node
                     elif item == "targets":

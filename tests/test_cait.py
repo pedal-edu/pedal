@@ -439,6 +439,13 @@ class CaitTests(unittest.TestCase):
         std_ast = parse_program()
         compares = std_ast.find_all("Compare")
         self.assertEqual(len(compares), 1)
+        
+        clear_report()
+        set_source("for x in y:\n  x")
+        std_ast = parse_program()
+        loops = std_ast.find_all("For")
+        self.assertEqual(len(loops), 1)
+        self.assertEqual(loops[0].target.ast_name, "Name")
 
     def test_matches_in_matches(self):
         matcher1 = StretchyTreeMatcher("if __expr__:\n    pass")

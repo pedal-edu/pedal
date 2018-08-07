@@ -97,15 +97,23 @@ def _format_message(issue, data):
                 "a value was incorrect."
                 ).format(line=data['position']['line'], name=data['name'])
     elif issue == 'Iterating over empty list':
-        return ("The variable <code>{name}</code> was set as an empty list, "
+        if 'name' not in data or data['name'] is None:
+            expression = "expression"
+        else:
+            expression = "variable <code>{}</code>".format(data['name'])
+        return ("The {expression} was set as an empty list, "
                 "and then you attempted to use it in an iteration on line "
                 "{line}. You should only iterate over non-empty lists."
-                ).format(line=data['position']['line'], name=data['name'])
+                ).format(line=data['position']['line'], expression=expression)
     elif issue == 'Iterating over non-list':
-        return ("The variable <code>{name}</code> is not a list, but you used "
+        if 'name' not in data or data['name'] is None:
+            expression = "expression"
+        else:
+            expression = "variable <code>{}</code>".format(data['name'])
+        return ("The {expression} is not a list, but you used "
                 "it in the iteration on line {line}. You should only iterate "
                 "over sequences like lists."
-                ).format(line=data['position']['line'], name=data['name'])
+                ).format(line=data['position']['line'], expression=expression)
     elif issue == 'Incompatible types':
         op = OPERATION_DESCRIPTION.get(data['operation'].__class__, 
                                        str(data['operation']))
