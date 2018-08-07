@@ -262,11 +262,13 @@ class EasyNode:
                 if node_name == "Assign" and item != key:
                     if item == "target":
                         return field[0].easy_node  # Get's the relevant ast node
-                    elif item == "targets":
+                    elif item == "targets" and isinstance(field, list):
                         easy_array = []
                         for node in field:
                             easy_array.append(node.easy_node)
                         return easy_array
+                    else:
+                        return field
                 elif item in AST_SINGLE_FUNCTIONS:
                     return type(field).__name__
                 elif item in AST_ARRAYS_OF_FUNCTIONS:

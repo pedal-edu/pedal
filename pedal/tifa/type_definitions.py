@@ -226,6 +226,8 @@ class FileType(Type):
         'read': FunctionType(name='read', returns=StrType()),
         'readlines': FunctionType(name='readlines', returns=ListType(StrType(), False))
     })
+    def is_empty(self):
+        return False
     
 class DictType(Type):
     singular_name = 'a dictionary'
