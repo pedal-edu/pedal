@@ -2,10 +2,11 @@ from pedal.report import MAIN_REPORT
 
 DEFAULT_CATEGORY_PRIORITY = [
     'syntax',
-    'analyzer',
-    'mistakes',
-    'runtime',
     'instructor',
+    'mistakes',
+    'analyzer',
+    'student',
+    'runtime',
     'positive',
     'uncategorized',
 ]

@@ -456,6 +456,11 @@ class CaitTests(unittest.TestCase):
         self.assertEqual(len(assigns[0].targets), 1)
         self.assertEqual(assigns[0].targets[0].ast_name, 'Tuple')
         self.assertEqual(assigns[0].targets[0].elts[0].id, 'a')
+        
+        clear_report()
+        set_source('from pprint import *')
+        std_ast = parse_program()
+        
 
     def test_matches_in_matches(self):
         matcher1 = StretchyTreeMatcher("if __expr__:\n    pass")
