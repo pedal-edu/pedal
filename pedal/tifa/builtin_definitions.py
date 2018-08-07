@@ -29,6 +29,20 @@ def get_builtin_module(name):
             fields={
                 'randint': FunctionType(name='randint', returns=NumType())
             })
+    elif name == 'string':
+        return ModuleType('string',
+            fields = {
+                'letters': StrType(empty=False),
+                'digits': StrType(empty=False),
+                'ascii_letters': StrType(empty=False),
+                'punctuation': StrType(empty=False),
+                'printable': StrType(empty=False),
+                'whitespace': StrType(empty=False),
+                'ascii_uppercase': StrType(empty=False),
+                'ascii_lowercase': StrType(empty=False),
+                'hexdigits': StrType(empty=False),
+                'octdigits': StrType(empty=False),
+            })
     elif name == 'turtle':
         return ModuleType('turtle',
                 fields={

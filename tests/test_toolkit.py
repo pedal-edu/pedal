@@ -79,6 +79,9 @@ class TestFiles(unittest.TestCase):
         self.assertEqual(e.message, "You need the literal value "
                          "<code>'X.txt'</code> in your code.")
         
+        with Execution('with open("A.txt") as out:\n  print(out.read())') as e:
+            self.assertFalse(files_not_handled_correctly("A.txt"))
+        self.assertEqual(e.message, "No errors reported.")
         
         with Execution('a = open("filename.txt")\na.close()') as e:
             self.assertFalse(files_not_handled_correctly(1))

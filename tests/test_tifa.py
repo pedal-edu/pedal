@@ -273,6 +273,10 @@ unit_tests = {
         ['3 in {a:a for a in [1,2,3]}', ['Unused Variable', "Incompatible types"], []],
     'int_membership_in_comprehension':
         ['4 in (a for a in [1,2,3])', ['Unused Variable', "Incompatible types"], []],
+    
+    # Built-in modules
+    'import_string_letters':
+        ['import string\nstring.letters+""', ['Incompatible types'], []],
 }
 
 class TestCode(unittest.TestCase):

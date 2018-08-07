@@ -51,6 +51,5 @@ def files_not_handled_correctly(*filenames):
         gently("You have closed more files than you were supposed to.")
         return True
     if actual_filenames:
-        ensure_literal(*filenames)
-        return True
+        return ensure_literal(*filenames)
     return False
