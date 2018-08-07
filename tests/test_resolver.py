@@ -39,6 +39,14 @@ class TestCode(unittest.TestCase):
         self.assertTrue(success)
         self.assertEqual(message, 'You should always create unit tests.')
     
+    def test_explain(self):
+        with Execution('1+""') as e:
+            explain("You cannot add those.")
+        self.assertEqual(e.message, "You cannot add those.")
+        with Execution('1+""') as e:
+            gently("You cannot add those.")
+        self.assertEqual(e.label, "Incompatible types")
+    
     def test_hidden_error(self):
         clear_report()
         set_source('import pedal')
