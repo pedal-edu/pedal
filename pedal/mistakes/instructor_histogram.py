@@ -101,3 +101,17 @@ def histogram_wrong_list():
                 return True
     return False
 
+
+def histogram_wrong_placement():
+    matches = find_matches("for ___ in ___:\n"
+                           "    pass\n")
+    if matches:
+        matches02 = find_matches("plt.hist(___)")
+        for match in matches:
+            if matches02:
+                for match02 in matches02:
+                    if match02.match_lineno > match.match_lineno:
+                        return False
+    explain("The histogram should be plotted only once, after the new list has been created"
+            "<br><br><i>(histo_wrong_place)<i></br>")
+    return True

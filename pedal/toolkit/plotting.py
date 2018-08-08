@@ -1,10 +1,12 @@
-from instructor import *
-from instructor_utility import *
+from pedal.toolkit.utilities import *
+from pedal.cait.cait_api import *
 
 
 PLOT_LABEL = {'plot': 'line plot', 
               'hist': 'histogram', 
               'scatter': 'scatter plot'}
+
+
 def prevent_incorrect_plt():
     ast = parse_program()
     plts = [n for n in ast.find_all("Name") if n.id == 'plt']
