@@ -20,7 +20,7 @@ from pedal.toolkit.utilities import (is_top_level, function_prints,
                                      ensure_operation, prevent_operation)
 from pedal.toolkit.imports import ensure_imports
 from pedal.toolkit.printing import ensure_prints
-from pedal.toolkit.plotting import check_for_plot
+from pedal.toolkit.plotting import check_for_plot, prevent_incorrect_plt
 from execution_helper import Execution
 
 class TestFiles(unittest.TestCase):
@@ -398,10 +398,10 @@ class TestPlots(unittest.TestCase):
     def test_check_for_plot(self):
         student_code = dedent('''
             import matplotlib.pyplot as plt
-            plt.plot([1,2,3])
+            plt.hist([1,2,3])
             plt.title("My line plot")
             plt.show()
-            plt.hist([1,2,3])
+            plt.plot([4,5,6])
             plt.show()
         ''')
         with Execution(student_code) as e:
@@ -412,6 +412,109 @@ class TestPlots(unittest.TestCase):
             self.assertEqual(check_for_plot('hist', [1,2,3,4]),
                              "You have created a histogram, but it does not "
                              "have the right data.")
+        
+        with Execution(student_code) as e:
+            self.assertEqual(check_for_plot('line', [4,5,6]), False)
+        self.assertEqual(e.message, "No errors reported.")
+        
+        with Execution(student_code) as e:
+            self.assertEqual(check_for_plot('line', [4,5,6,7]),
+                             "You have created a line plot, but it does not "
+                             "have the right data.")
+        
+        student_code = dedent('''
+            import matplotlib.pyplot as plt
+            plt.plot([1,2,3])
+            plt.title("My line plot")
+            plt.show()
+        ''')
+        with Execution(student_code) as e:
+            self.assertEqual(check_for_plot('hist', [1, 2, 3]),
+                             "You have plotted the right data, but you appear "
+                             "to have not plotted it as a histogram.")
+                             
+        student_code = dedent('''
+            import matplotlib.pyplot as plt
+            plt.plot([1,2,3])
+            plt.title("Wrong graph with the right data")
+            plt.show()
+            plt.hist([4,5,6])
+            plt.title("Right graph with the wrong data")
+            plt.show()
+        ''')
+        with Execution(student_code) as e:
+            self.assertEqual(check_for_plot('hist', [1, 2, 3]),
+                             "You have created a histogram, but it does not "
+                             "have the right data. That data appears to have "
+                             "been plotted in another graph.")
+        
+        student_code = dedent('''
+            import matplotlib.pyplot as plt
+            plt.plot([1,2,3])
+            plt.title("My line plot")
+            plt.show()
+        ''')
+        with Execution(student_code) as e:
+            self.assertEqual(check_for_plot('hist', [4, 5, 6]),
+                             "You have not created a histogram with the "
+                             "proper data.")
+        
+        student_code = dedent('''
+            import matplotlib.pyplot as plt
+            plt.scatter([], [])
+            plt.title("Nothingness and despair")
+            plt.show()
+        ''')
+        with Execution(student_code) as e:
+            self.assertEqual(check_for_plot('scatter', []), False)
+        
+        student_code = dedent('''
+            import matplotlib.pyplot as plt
+            plt.scatter([1,2,3], [4,5,6])
+            plt.title("Some actual stuff")
+            plt.show()
+        ''')
+        with Execution(student_code) as e:
+            self.assertEqual(check_for_plot('scatter', [[1,2,3], [4,5,6]]),
+                             False)
+    
+    def test_prevent_incorrect_plt(self):
+        student_code = dedent('''
+            import matplotlib.pyplot
+            plt.scatter([1,2,3], [4,5,6])
+            plt.title("Some actual stuff")
+            plt.show()
+        ''')
+        with Execution(student_code) as e:
+            self.assertEqual(prevent_incorrect_plt(), True)
+        self.assertEqual(e.message, "You have imported the "
+                         "<code>matplotlib.pyplot</code> module, but you did "
+                         "not rename it to <code>plt</code> using "
+                         "<code>import matplotlib.pyplot as plt</code>.")
+        
+        student_code = dedent('''
+            import matplotlib.pyplot as plt
+            scatter([1,2,3], [4,5,6])
+            plt.title("Some actual stuff")
+            plt.show()
+        ''')
+        with Execution(student_code) as e:
+            self.assertEqual(prevent_incorrect_plt(), True)
+        self.assertEqual(e.message, "You have attempted to use the MatPlotLib "
+                         "function named <code>scatter</code>. However, you "
+                         "imported MatPlotLib in a way that does not "
+                         "allow you to use the function directly. I "
+                         "recommend you use <code>plt.scatter</code> instead, "
+                         "after you use <code>import matplotlib.pyplot as "
+                         "plt</code>.")
+        student_code = dedent('''
+            import matplotlib.pyplot as plt
+            plt.scatter([1,2,3], [4,5,6])
+            plt.title("Some actual stuff")
+            plt.show()
+        ''')
+        with Execution(student_code) as e:
+            self.assertEqual(prevent_incorrect_plt(), False)
 
 if __name__ == '__main__':
     unittest.main(buffer=False)

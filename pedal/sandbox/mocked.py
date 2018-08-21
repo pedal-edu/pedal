@@ -111,17 +111,21 @@ class MockPlt:
                             'title': None, 'legend': False}
     def hist(self, data, **kwargs):
         label = kwargs.get('label', None)
-        self.active_plot['data'].append({'type': 'hist', 'values': data, 'label': label})
+        self.active_plot['data'].append({'type': 'hist', 'values': data, 
+                                         'label': label})
     def plot(self, xs, ys=None, **kwargs):
         label = kwargs.get('label', None)
         if ys == None:
             self.active_plot['data'].append({'type': 'line', 
-                                            'x': range(len(xs)), 'y': xs, 'label': label})
+                                            'x': list(range(len(xs))), 
+                                            'y': xs, 'label': label})
         else:
-            self.active_plot['data'].append({'type': 'line', 'x': xs, 'y': ys, 'label': label})
+            self.active_plot['data'].append({'type': 'line', 'x': xs, 
+                                             'y': ys, 'label': label})
     def scatter(self, xs, ys, **kwargs):
         label = kwargs.get('label', None)
-        self.active_plot['data'].append({'type': 'scatter', 'x': xs, 'y': ys, 'label': label})
+        self.active_plot['data'].append({'type': 'scatter', 'x': xs, 
+                                         'y': ys, 'label': label})
     def xlabel(self, label, **kwargs):
         self.active_plot['xlabel'] = label
     def title(self, label, **kwargs):

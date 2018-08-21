@@ -12,13 +12,23 @@ def prevent_incorrect_plt():
     ast = parse_program()
     plts = [n for n in ast.find_all("Name") if n.id == 'plt']
     if plts and def_use_error(plts[0]):
-        explain("You have imported the <code>matplotlib.pyplot</code> module, but you did not rename it to <code>plt</code> using <code>import matplotlib.pyplot as plt</code>.", 'verifier')
+        explain("You have imported the <code>matplotlib.pyplot</code> module, "
+                "but you did not rename it to <code>plt</code> using "
+                "<code>import matplotlib.pyplot as plt</code>.", 'verifier')
         return True
-    for name in ['plot', 'hist', 'scatter', 'title', 'xlabel', 'ylabel', 'show']:
+    matplotlib_names = ['plot', 'hist', 'scatter',
+                        'title', 'xlabel', 'ylabel', 'show']
+    for name in matplotlib_names:
         for n in ast.find_all("Name"):
             if n.id == name:
                 if def_use_error(n):
-                    explain("You have attempt to use the MatPlotLib function named <code>{0}</code>. However, you imported MatPlotLib in a way that does not allow you to use the function directly. I recommend you use <code>plt.{0}</code> instead, after you use <code>import matplotlib.pyplot as plt</code>.".format(name), 'verifier')
+                    explain(("You have attempted to use the MatPlotLib "
+                             "function named <code>{0}</code>. However, you "
+                             "imported MatPlotLib in a way that does not "
+                             "allow you to use the function directly. I "
+                             "recommend you use <code>plt.{0}</code> instead, "
+                             "after you use <code>import matplotlib.pyplot as "
+                             "plt</code>.").format(name), 'verifier')
                     return True
     return False
     
@@ -41,30 +51,40 @@ def ensure_show():
     return False
 
 def compare_data(type, correct, given):
-    if type == 'hist' and given['type'] == 'hist':
-        return correct == given['values']
-    elif type == 'hist':
-        return correct == given['y']
-    elif not correct: # TODO: Why this?
-        return False
-    elif isinstance(correct[0], list):
-        if len(correct[0]) != len(given['x']):
-            return False
-        for given_x, correct_x in zip(correct[0], given['x']):
-            if given_x != correct_x:
-                return False
-        for given_y, correct_y in zip(correct[1], given['y']):
-            if given_y != correct_y:
-                return False
-        return True
-    elif len(given) != len(correct):
-        return False
+    '''
+    Determines whether the given data matches any of the data found in the
+    correct data. This handles plots of different types: if a histogram
+    was plotted with the expected data for a line plot, it will return True.
+    
+    Args:
+        type (str): The expected type of this plot
+        correct (List of Int or List of List of Int): The expected data.
+        given (Dict): The actual plotted data and information
+    Returns:
+        bool: Whether the correct data was found in the given plot.
+    '''
+    # Infer arguments
+    if type == 'hist':
+        correct_xs = None
+        correct_ys = correct
+    elif not correct:
+        correct_xs = []
+        correct_ys = []
+    elif isinstance(correct[0], (tuple, list)):
+        # We were given a list of lists of ints
+        correct_xs, correct_ys = correct
     else:
-        for x, (gx, gy, c) in enumerate(zip(given['x'], given['y'], correct)):
-            if c != gy or x != gx:
-                return False
-    return True
-            
+        # Assume it is a singular list
+        correct_xs = list(range(len(correct)))
+        correct_ys = correct
+    
+    if given['type'] == 'hist':
+        return correct_ys == given['values']
+    elif type == 'hist':
+        return correct_ys == given['y']
+    else:
+        return correct_xs == given['x'] and correct_ys == given['y']
+
 
 GRAPH_TYPES = {'line': 'line plot', 
               'hist': 'histogram', 
