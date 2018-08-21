@@ -41,6 +41,13 @@ def get_output(report=None):
     sandbox = _check_sandbox(report)
     return sandbox.output
 
+def get_plots(report=None):
+    if report is None:
+        report = MAIN_REPORT
+    sandbox = _check_sandbox(report)
+    mock_plt = sandbox.modules['matplotlib.pyplot']
+    return mock_plt.plots
+
 def capture_output(function, *args, **kwargs):
     if 'report' in kwargs:
         report = kwargs['report']

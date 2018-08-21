@@ -136,6 +136,20 @@ class TestCode(unittest.TestCase):
         self.assertIn('matplotlib.pyplot', student.modules)
         plt = student.modules['matplotlib.pyplot']
         self.assertEqual(len(plt.plots), 1)
+        
+    def test_matplotlib_compatibility(self):
+        student_code = dedent('''
+            import matplotlib.pyplot as plt
+            plt.plot([1,2,3])
+            plt.title("My line plot")
+            plt.show()
+            plt.hist([1,2,3])
+            plt.show()
+        ''')
+        set_source(student_code)
+        exception = compatibility.run_student()
+        plt2 = compatibility.get_plots()
+        self.assertEqual(len(plt2), 2)
 
 if __name__ == '__main__':
     unittest.main(buffer=False)

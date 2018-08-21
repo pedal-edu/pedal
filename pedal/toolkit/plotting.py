@@ -1,5 +1,6 @@
 from pedal.toolkit.utilities import *
 from pedal.cait.cait_api import *
+from pedal.sandbox import compatibility
 
 
 PLOT_LABEL = {'plot': 'line plot', 
@@ -21,11 +22,11 @@ def prevent_incorrect_plt():
                     return True
     return False
     
-def ensure_correct_plot(type):
+def ensure_correct_plot(function_name):
     for a_plot, label in PLOT_LABEL.items():
-        if type == a_plot:
-            if not function_is_called(type):
-                gently("You are not calling the <code>{}</code> function.".format(type))
+        if function_name == a_plot:
+            if not function_is_called(function_name):
+                gently("You are not calling the <code>{}</code> function.".format(function_name))
                 return True
         elif function_is_called(a_plot):
             gently("You have called the <code>{}</code> function, which makes a {}.".format(a_plot, label))
@@ -40,22 +41,27 @@ def ensure_show():
     return False
 
 def compare_data(type, correct, given):
-    if type == 'hist':
-        return correct == given
-    elif not correct:
+    if type == 'hist' and given['type'] == 'hist':
+        return correct == given['values']
+    elif type == 'hist':
+        return correct == given['y']
+    elif not correct: # TODO: Why this?
         return False
     elif isinstance(correct[0], list):
-        if len(correct[0]) != len(given):
+        if len(correct[0]) != len(given['x']):
             return False
-        for x, y, g in zip(correct[0], correct[1], given):
-            if x != g['x'] or y != g['y']:
+        for given_x, correct_x in zip(correct[0], given['x']):
+            if given_x != correct_x:
+                return False
+        for given_y, correct_y in zip(correct[1], given['y']):
+            if given_y != correct_y:
                 return False
         return True
     elif len(given) != len(correct):
         return False
     else:
-        for x, (g, c) in enumerate(zip(given, correct)):
-            if c != g['y'] or x != g['x']:
+        for x, (gx, gy, c) in enumerate(zip(given['x'], given['y'], correct)):
+            if c != gy or x != gx:
                 return False
     return True
             
@@ -68,18 +74,18 @@ def check_for_plot(type, data):
     Returns any errors found for this plot type and data.
     In other words, if it returns False, the plot was found correctly.
     '''
+    if type == 'plot':
+        type = 'line'
     type_found = False
     data_found = False
-    for line in get_output():
-        if not isinstance(line, list):
-            continue
-        for a_plot in line:
-            data_found_here = compare_data(type, data, a_plot['data'])
+    for graph in compatibility.get_plots():
+        for a_plot in graph['data']:
+            data_found_here = compare_data(type, data, a_plot)
             if a_plot['type'] == type and data_found_here:
                 return False
             if a_plot['type'] == type:
                 type_found = True
-            if a_plot['data'] == data_found_here:
+            if data_found_here:
                 data_found = True
     type = GRAPH_TYPES.get(type, type)
     if type_found and data_found:

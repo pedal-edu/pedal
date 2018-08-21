@@ -1,6 +1,7 @@
 import unittest
 import os
 import sys
+from textwrap import dedent
 
 pedal_library = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.insert(0, pedal_library)
@@ -19,6 +20,7 @@ from pedal.toolkit.utilities import (is_top_level, function_prints,
                                      ensure_operation, prevent_operation)
 from pedal.toolkit.imports import ensure_imports
 from pedal.toolkit.printing import ensure_prints
+from pedal.toolkit.plotting import check_for_plot
 from execution_helper import Execution
 
 class TestFiles(unittest.TestCase):
@@ -391,6 +393,25 @@ class TestPrints(unittest.TestCase):
             self.assertNotEqual(prints, False)
             self.assertEqual(len(prints), 2)
         self.assertEqual(e.message, "No errors reported.")
+        
+class TestPlots(unittest.TestCase):
+    def test_check_for_plot(self):
+        student_code = dedent('''
+            import matplotlib.pyplot as plt
+            plt.plot([1,2,3])
+            plt.title("My line plot")
+            plt.show()
+            plt.hist([1,2,3])
+            plt.show()
+        ''')
+        with Execution(student_code) as e:
+            self.assertEqual(check_for_plot('hist', [1,2,3]), False)
+        self.assertEqual(e.message, "No errors reported.")
+        
+        with Execution(student_code) as e:
+            self.assertEqual(check_for_plot('hist', [1,2,3,4]),
+                             "You have created a histogram, but it does not "
+                             "have the right data.")
 
 if __name__ == '__main__':
     unittest.main(buffer=False)
