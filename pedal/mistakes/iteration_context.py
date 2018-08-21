@@ -176,7 +176,7 @@ def wrong_modifying_list_8_5():
 
     :return:
     """
-    match = find_match("_list_ = [20473, 27630, 17849, 19032, 16378]")
+    match = find_match("[20473, 27630, 17849, 19032, 16378]")
     if not match:
         explain('Don\'t modify the list<br><br><i>(mod_list_8.5)<i></br>')
         return True
