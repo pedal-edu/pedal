@@ -17,6 +17,7 @@ __all__ = ['NAME', 'DESCRIPTION', 'SHORT_DESCRIPTION',
            'REQUIRES', 'OPTIONALS',
            'set_source']
 
+
 def set_source(code, filename='__main__.py', report=None):
     if report is None:
         report = MAIN_REPORT
@@ -24,6 +25,7 @@ def set_source(code, filename='__main__.py', report=None):
     report['source']['filename'] = filename
     report['source']['success'] = True
     _check_issues(code, report)
+
 
 def _check_issues(code, report):
     if code.strip() == '':

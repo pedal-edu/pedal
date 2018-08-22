@@ -1,6 +1,8 @@
 import re
 from pedal.source import get_program
+from pedal.sandbox.compatibility import get_output
 from pedal.report.imperative import gently
+
 
 # Feedback for author's name
 def check_author_name_on_header():
