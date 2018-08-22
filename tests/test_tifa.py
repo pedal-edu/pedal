@@ -161,6 +161,8 @@ unit_tests = {
     
     'append_and_index':
         ['x=[]\nx.append(1)\nx[0]+1', ['Incompatible types'], []],
+    'indexing_used':
+        ['mag1 = 0\nmercalli = [0]\nmag1 = mercalli[mag1]\nmag1', ['Initialization Problem', 'Unused Variable', 'Overwritten Variable'], []],
     
     'created_list_but_unread':
         ['old = [1,2,3]\nnew=[]\nfor x in old:\n\tnew.append(x)', [], ['Unused Variable']],
@@ -296,6 +298,7 @@ def make_tester(code, nones, somes):
             self.fail("Error message in\n"+code+"\n"+str(tifa.report['tifa']['error']))
         for none in nones:
             if tifa.report['tifa']['issues'].get(none, []):
+                print(tifa.report['tifa']['top_level_variables'])
                 self.fail("Incorrectly detected "+none+"\n"+code+"\n")
         for some in somes:
             if not tifa.report['tifa']['issues'].get(some, []):

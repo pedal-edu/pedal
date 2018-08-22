@@ -9,7 +9,7 @@ from pedal.tifa.type_definitions import (UnknownType, RecursedType,
                                          ListType, StrType, FileType,
                                          DictType, ModuleType, SetType,
                                          GeneratorType, DayType, TimeType,
-                                         type_from_json)
+                                         type_from_json, type_to_literal)
 from pedal.tifa.literal_definitions import (LiteralNum, LiteralBool,
                                             LiteralNone, LiteralStr,
                                             LiteralTuple)
@@ -541,7 +541,7 @@ class Tifa(ast.NodeVisitor):
             keys, values, literals = [], [], []
             for key, value in zip(node.keys, node.values):
                 key, value = self.visit(key), self.visit(value)
-                literal = Tifa.get_literal(key)
+                literal = self.get_literal(key)
                 values.append(value)
                 keys.append(key)
                 if literal is not None:
@@ -771,7 +771,12 @@ class Tifa(ast.NodeVisitor):
         value_type = self.visit(node.value)
         # Handle slice
         if isinstance(node.slice, ast.Index):
-            return value_type.index(Tifa.get_literal(node.slice.value))
+            literal = self.get_literal(node.slice.value)
+            if literal is None:
+                dynamic_literal = type_to_literal(self.visit(node.slice.value))
+                return value_type.index(dynamic_literal)
+            else:
+                return value_type.index(literal)
         elif isinstance(node.slice, ast.Slice):
             return value_type
     
@@ -1100,8 +1105,7 @@ class Tifa(ast.NodeVisitor):
         else:
             return "maybe"
     
-    @staticmethod
-    def get_literal(node):
+    def get_literal(self, node):
         if isinstance(node, ast.Num):
             return LiteralNum(node.n)
         elif isinstance(node, ast.Str):
@@ -1109,7 +1113,7 @@ class Tifa(ast.NodeVisitor):
         elif isinstance(node, ast.Tuple):
             values = []
             for elt in node.elts:
-                subvalue = Tifa.get_literal(elt)
+                subvalue = self.get_literal(elt)
                 if subvalue is not None:
                     values.append(subvalue)
                 else:

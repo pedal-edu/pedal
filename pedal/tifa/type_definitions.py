@@ -351,3 +351,12 @@ def type_from_json(val):
     elif val['type'] == 'FunctionType':
         returns = type_from_json(val.get('returns', {'type': 'NoneType'}))
         return FunctionType(name=val.get('name'), returns=returns)
+
+def type_to_literal(type):
+    if isinstance(type, NumType):
+        return LiteralNum
+    elif isinstance(type, StrType):
+        return LiteralStr
+    else:
+        # TODO: Finish the mapping
+        return LiteralStr
