@@ -172,6 +172,11 @@ class TestFunctions(unittest.TestCase):
         with Execution('def a(x,y):\n  print(x-y)\na(1,2)') as e:
             self.assertIsNone(output_test('a', (1, 2, "3")))
         self.assertIn("wrong output 1/1 times", e.message)
+        
+        # All passing, multiline
+        with Execution('def a(x):\n  print(x+1)\n  print(x+2)\na(1)') as e:
+            self.assertIsNotNone(output_test('a', (4, ["5", "6"])))
+        self.assertEqual(e.message, "No errors reported.")
 
 class TestUtilities(unittest.TestCase):
     def test_is_top_level(self):

@@ -56,40 +56,44 @@ def output_test(name, *tests):
                 if isinstance(out, tuple):
                     tip = out[1]
                     out = out[0]
-                template = "<td><code>{}</code></td>"+("<td><pre>{}</pre></td>"*2)
+                message = "<td><code>{}</code></td>"+("<td><pre>{}</pre></td>"*2)
                 test_out = compatibility.capture_output(the_function, *inp)
                 if isinstance(out, str):
                     if len(test_out) < 1:
-                        message = template.format(inputs, repr(out), "<i>No output</i>", tip)
+                        message = message.format(inputs, repr(out), "<i>No output</i>", tip)
                         message = "<tr class=''>"+RED_X+message+"</tr>"
                         if tip:
                             message += "<tr class='info'><td colspan=4>"+tip+"</td></tr>"
                         success = False
                     elif len(test_out) > 1:
-                        message = template.format(inputs, repr(out), "<i>Too many outputs</i>", tip)
+                        message = message.format(inputs, repr(out), "<i>Too many outputs</i>", tip)
                         message = "<tr class=''>"+RED_X+message+"</tr>"
                         if tip:
                             message += "<tr class='info'><td colspan=4>"+tip+"</td></tr>"
                         success = False
                     elif out not in test_out:
-                        message = template.format(inputs, repr(out), repr(test_out[0]), tip)
+                        message = message.format(inputs, repr(out), repr(test_out[0]), tip)
                         message = "<tr class=''>"+RED_X+message+"</tr>"
                         if tip:
                             message += "<tr class='info'><td colspan=4>"+tip+"</td></tr>"
                         success = False
                     else:
-                        message = template.format(inputs, repr(out), repr(test_out[0]), tip)
+                        message = message.format(inputs, repr(out), repr(test_out[0]), tip)
                         message = "<tr class=''>"+GREEN_CHECK+message+"</tr>"
                         success_count += 1
                 elif out != test_out:
                     if len(test_out) < 1:
-                        message = template.format(inputs, repr(out), "<i>No output</i>", tip)
+                        message = message.format(inputs, repr(out), "<i>No output</i>", tip)
                     else:
-                        message = template.format(inputs, repr(out), repr(test_out[0]), tip)
+                        message = message.format(inputs, repr(out), repr(test_out[0]), tip)
                     message = "<tr class=''>"+RED_X+message+"</tr>"
                     if tip:
                         message += "<tr class='info'><td colspan=4>"+tip+"</td></tr>"
                     success = False
+                else:
+                    message = message.format(inputs, repr(out), repr(test_out[0]), tip)
+                    message = "<tr class=''>"+GREEN_CHECK+message+"</tr>"
+                    success_count += 1
                 result += message
             if success:
                 return the_function
