@@ -147,6 +147,8 @@ unit_tests = {
         ['def x(parameter):\n    return parameter\nx(0)\nparameter', [], ['Read out of scope']],
     'read_inside_of_scope': 
         ['def x(parameter):\n    return parameter\nx(0)', ['Read out of scope'], []],
+    'read_not_out_of_scope':
+        ['def x():\n    if 1:\n        y=0\n    else:\n        y=1\n    y\nx()\nx()', ['Read out of scope'], []],
     
     'append_to_empty_list':
         ['a = []\na.append(1)\nprint(a)', ['Initialization Problem', 'Unused Variable'], []],
@@ -284,7 +286,7 @@ unit_tests = {
 class TestCode(unittest.TestCase):
     pass
 
-SILENCE_EXCEPT = None
+SILENCE_EXCEPT = None #'read_not_out_of_scope'
 
 def make_tester(code, nones, somes):
     def test_code(self):
@@ -298,7 +300,8 @@ def make_tester(code, nones, somes):
             self.fail("Error message in\n"+code+"\n"+str(tifa.report['tifa']['error']))
         for none in nones:
             if tifa.report['tifa']['issues'].get(none, []):
-                print(tifa.report['tifa']['top_level_variables'])
+                print("")
+                pprint(tifa.report['tifa']['variables'])
                 self.fail("Incorrectly detected "+none+"\n"+code+"\n")
         for some in somes:
             if not tifa.report['tifa']['issues'].get(some, []):

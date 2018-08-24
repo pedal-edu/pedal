@@ -620,7 +620,8 @@ class Tifa(ast.NodeVisitor):
                 self.report_issue("Malformed Conditional")
         
         # Visit the bodies
-        this_path_id = self.path_id
+        #this_path_id = self.path_id
+        this_path_id = self.path_chain[0]
         if_path = Tifa.NewPath(self, this_path_id, "i")
         with if_path:
             for statement in node.body:
@@ -1157,6 +1158,7 @@ class Tifa(ast.NodeVisitor):
             self.tifa.name_map[self.id] = {}
             self.tifa.path_parents[self.id] = self.origin_path
         def __exit__(self, type, value, traceback):
+            val = self.tifa.path_chain[0]
             self.tifa.path_names.pop()
             self.tifa.path_chain.pop(0)
         
