@@ -7,6 +7,12 @@ import requests
 from IPython.core.magic import (Magics, magics_class, line_magic, cell_magic)
 from IPython.display import Javascript, display, HTML
 
+# Logging imports
+import os
+import sys
+from warnings import warn
+import time
+
 # TODO: Opportunity here to add in requests-cache. This would allow us to avoid
 # the repeated trip. However, you'll need to handle expiring the cache in a
 # smart way. One option is to write a command line script to just wipe as
@@ -16,8 +22,9 @@ from IPython.display import Javascript, display, HTML
 # This really should come in as a configuration setting somewhere.
 BLOCKPY_URL = 'https://think.cs.vt.edu/blockpy/load_assignment_give_feedback'
 
+
 def get_response_error(response):
-    '''
+    """
     Transform a Response object into a friendlier string.
     
     Args:
@@ -25,12 +32,13 @@ def get_response_error(response):
                                       some kind of error.
     Returns:
         str: A string representation of the URL response.
-    '''
+    """
     return "{} {}: {}".format(response.status_code, response.reason,
                               response.text)
 
+
 def download_on_run(assignment_id):
-    '''
+    """
     Download the on_run (give_feedback) code to use to test their solution.
     
     Args:
@@ -40,7 +48,7 @@ def download_on_run(assignment_id):
         bool: Whether or not the request was successful.
         str: If unsuccesful, a message to display to the user. Otherwise, it'll
              be the on_run code.
-    '''
+    """
     data = {'assignment_id': assignment_id}
     try:
         response = requests.get(BLOCKPY_URL, data=data)
@@ -55,6 +63,7 @@ def download_on_run(assignment_id):
         return True, result['give_feedback']
     else:
         return False, result['message']
+
 
 PEDAL_PIPELINE = '''
 from pedal.report import *
@@ -76,8 +85,9 @@ from pedal.resolvers import simple
 SUCCESS, SCORE, CATEGORY, LABEL, MESSAGE, DATA, HIDE = simple.resolve()
 '''
 
+
 def blockpy_grade(assignment_id, student_code):
-    '''
+    """
     Helper function to capture the request from the server.
     
     Args:
@@ -87,17 +97,18 @@ def blockpy_grade(assignment_id, student_code):
     
     Returns:
         str: The HTML formatted feedback for the student.
-    '''
+    """
     successful_download, on_run = download_on_run(assignment_id)
     # If it failed, let's display some information about why.
     if not successful_download:
         return on_run
     return execute_on_run_code(on_run, student_code)
 
+
 def execute_on_run_code(on_run, student_code):
-    '''
+    """
     Actually execute the on_run code for the given student code.
-    '''
+    """
     # Even though the student code is a string, we need to escape it to prevent
     # any weirdness from being in the instructor code.
     escaped_student_code = json.dumps(student_code)
@@ -110,7 +121,7 @@ def execute_on_run_code(on_run, student_code):
     label = global_variables['LABEL']
     message = global_variables['MESSAGE']
     # In some cases, we might want to override how the text is rendered.
-    if (category.lower() == 'instructor' and label.lower() == 'explain'):
+    if category.lower() == 'instructor' and label.lower() == 'explain':
         category = "Instructor Feedback"
         label = ''
     # Return the result as HTML
@@ -119,6 +130,7 @@ def execute_on_run_code(on_run, student_code):
 # The following string literals are used to create the JavaScript code that
 # creates the Python code that will execute the instructor's feedback code
 # using the student's Python code.
+
 
 # Extract out the student code, embed the result
 EXTRACT_STUDENT_CODE = r"""
@@ -207,12 +219,34 @@ if (kernel !== null) {
     }}});
 }'''
 
+
 @magics_class
 class GradeMagic(Magics):
-    '''
+    """
     This class holds the magic for the %grade and %grade_blockpy
-    '''
-    
+    """
+    def logging(self):
+        # ######Logging
+        ts = time.time()
+        logger = self.shell.logger  # logging
+        old_logfile = self.shell.logfile  # logging
+        logfname = os.path.expanduser("log_folder~/log_{}.py~".format(ts))
+        self.shell.logfile = logfname
+        loghead = u'# IPython log file\n\n'
+        try:
+            logger.logstart(logfname, loghead, 'rotate', False, True,
+                            True)
+        except:
+            self.shell.logfile = old_logfile
+            warn("Couldn't start log: %s" % sys.exc_info()[1])
+        logger.timestamp = False
+        input_hist = self.shell.history_manager.input_hist_raw
+        logger.log_write(u'\n'.join(input_hist[1:]))
+        logger.log_write(u'\n')
+        logger.timestamp = True
+        self.shell.logger.logstop()
+        # ######Logging
+
     @cell_magic
     def grade(self, line="", cell=""):
         # Concatenate the JS code and then execute it by displaying it
@@ -220,6 +254,7 @@ class GradeMagic(Magics):
         code += ANIMATE_LAST_CELL
         code += LOCAL_GRADE.format(on_run_code=json.dumps(cell))
         code += EXECUTE_CODE
+        # self.logging()  # Uncomment this if you don't call logging in notebook
         return display(Javascript(code))
     
     @line_magic
@@ -229,16 +264,19 @@ class GradeMagic(Magics):
         code += ANIMATE_LAST_CELL
         code += BLOCKPY_GRADE.format(assignment=line)
         code += EXECUTE_CODE
+        # self.logging()  # Uncomment this if you don't call logging in notebook
         return display(Javascript(code))
 
+
 def load_ipython_extension(ipython):
-    '''
+    """
     Register this plugin with Jupyter Notebooks. Although it is allegedly
     necessary in order to make this a plugin, we do not actually use it.
-    '''
+    """
     ipython.register_magics(GradeMagic)
 
-'''    
+
+'''
 DEPRECATED: The following lines of code do not seem to be necessary to
             register this plugin with Jupyter.
 def _jupyter_server_extension_paths():
