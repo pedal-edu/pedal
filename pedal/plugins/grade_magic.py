@@ -225,6 +225,27 @@ class GradeMagic(Magics):
     """
     This class holds the magic for the %grade and %grade_blockpy
     """
+
+    @line_magic
+    def grade_logstart(self, line=""):
+        # ######Logging
+        ts = time.time()
+        logger = self.shell.logger  # logging
+        old_logfile = self.shell.logfile  # logging
+        logfname = os.path.expanduser("log_folder~/log_{}.py~".format(ts))
+        self.shell.logfile = logfname
+        loghead = u'# IPython log file\n\n'
+        try:
+            logger.logstart(logfname, loghead, 'rotate', False, True,
+                            True)
+        except:
+            self.shell.logfile = old_logfile
+            warn("Couldn't start log: %s" % sys.exc_info()[1])
+
+    @line_magic
+    def grade_logstop(self, line=""):
+        self.shell.logger.logstop()
+
     def logging(self):
         # ######Logging
         ts = time.time()
