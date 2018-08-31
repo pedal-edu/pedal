@@ -11,6 +11,7 @@ from IPython.display import Javascript, display, HTML
 import os
 import sys
 from warnings import warn
+# from traitlets import Bool
 import time
 
 # TODO: Opportunity here to add in requests-cache. This would allow us to avoid
@@ -26,7 +27,7 @@ BLOCKPY_URL = 'https://think.cs.vt.edu/blockpy/load_assignment_give_feedback'
 def get_response_error(response):
     """
     Transform a Response object into a friendlier string.
-    
+
     Args:
         response (requests.Response): A Requests reponse object to parse for
                                       some kind of error.
@@ -40,7 +41,7 @@ def get_response_error(response):
 def download_on_run(assignment_id):
     """
     Download the on_run (give_feedback) code to use to test their solution.
-    
+
     Args:
         assignment_id (int OR str): The ID of the assignment to get the
                                     on_run code for.
@@ -89,12 +90,12 @@ SUCCESS, SCORE, CATEGORY, LABEL, MESSAGE, DATA, HIDE = simple.resolve()
 def blockpy_grade(assignment_id, student_code):
     """
     Helper function to capture the request from the server.
-    
+
     Args:
         assignment_id (int): The assignment ID to look up and use the on_run
                              code for.
         student_code (str): The code that was written by the student.
-    
+
     Returns:
         str: The HTML formatted feedback for the student.
     """
@@ -112,7 +113,7 @@ def execute_on_run_code(on_run, student_code):
     # Even though the student code is a string, we need to escape it to prevent
     # any weirdness from being in the instructor code.
     escaped_student_code = json.dumps(student_code)
-    instructor_code = PEDAL_PIPELINE.format(on_run=on_run, 
+    instructor_code = PEDAL_PIPELINE.format(on_run=on_run,
                                             student_code=escaped_student_code)
     # Execute the instructor code in a new environment
     global_variables = {}
@@ -126,11 +127,11 @@ def execute_on_run_code(on_run, student_code):
         label = ''
     # Return the result as HTML
     return '''<strong>{}</strong>: {}<br>{}'''.format(category, label, message)
-    
+
+
 # The following string literals are used to create the JavaScript code that
 # creates the Python code that will execute the instructor's feedback code
 # using the student's Python code.
-
 
 # Extract out the student code, embed the result
 EXTRACT_STUDENT_CODE = r"""
@@ -232,10 +233,12 @@ class GradeMagic(Magics):
         ts = time.time()
         logger = self.shell.logger  # logging
         old_logfile = self.shell.logfile  # logging
-        logfname = os.path.expanduser("log_folder~/log_{}.py~".format(ts))
+        directory = os.path.expanduser("log_folder~{}/".format(line))
+        logfname = os.path.expanduser("log_folder~{}/log_{}.py~".format(line, ts))
         self.shell.logfile = logfname
         loghead = u'# IPython log file\n\n'
         try:
+            os.makedirs(directory, exist_ok=True)
             logger.logstart(logfname, loghead, 'rotate', False, True,
                             True)
         except:
@@ -275,9 +278,9 @@ class GradeMagic(Magics):
         code += ANIMATE_LAST_CELL
         code += LOCAL_GRADE.format(on_run_code=json.dumps(cell))
         code += EXECUTE_CODE
-        # self.logging()  # Uncomment this if you don't call logging in notebook
+        # self.logging()
         return display(Javascript(code))
-    
+
     @line_magic
     def grade_blockpy(self, line=""):
         # Concatenate the JS code and then execute it by displaying it
@@ -285,7 +288,7 @@ class GradeMagic(Magics):
         code += ANIMATE_LAST_CELL
         code += BLOCKPY_GRADE.format(assignment=line)
         code += EXECUTE_CODE
-        # self.logging()  # Uncomment this if you don't call logging in notebook
+        # self.logging()
         return display(Javascript(code))
 
 
@@ -297,7 +300,7 @@ def load_ipython_extension(ipython):
     ipython.register_magics(GradeMagic)
 
 
-'''
+"""    
 DEPRECATED: The following lines of code do not seem to be necessary to
             register this plugin with Jupyter.
 def _jupyter_server_extension_paths():
@@ -309,4 +312,4 @@ def _jupyter_server_extension_paths():
 def load_jupyter_server_extension(nbapp):
     from IPython import get_ipython
     get_ipython().register_magics(GradeMagic)
-'''
+"""
