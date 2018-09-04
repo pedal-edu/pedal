@@ -69,7 +69,7 @@ class CaitTests(unittest.TestCase):
         # print("TESTING EXPRESSION MATCH")
         test_tree = StretchyTreeMatcher("__exp__ = 0")
 
-        # extracting instrutor name node
+        # extracting instructor name node
         ins_ast = test_tree.rootNode
         ins_name_node = ins_ast.children[0].children[0]
 
@@ -93,6 +93,14 @@ class CaitTests(unittest.TestCase):
                 print(ins_name_node)
                 print(std_for_loop)
                 print(mapping)
+
+        student_code2 = ("for item in item_list:\n"
+                         "    if item > 5:\n"
+                         "        item_sum = item_sum + item")
+        matcher1 = StretchyTreeMatcher("for ___ in ___:\n"
+                                       "    __expr__")
+        matches02 = matcher1.find_matches(student_code2)
+        self.assertTrue(matches02, "Expression match doesn't match to subtree")
 
     def test_wild_card_match(self):
         # tests whether Wild matches are stored correctly
@@ -459,8 +467,7 @@ class CaitTests(unittest.TestCase):
         
         clear_report()
         set_source('from pprint import *')
-        std_ast = parse_program()
-        
+        parse_program()
 
     def test_matches_in_matches(self):
         matcher1 = StretchyTreeMatcher("if __expr__:\n    pass")
