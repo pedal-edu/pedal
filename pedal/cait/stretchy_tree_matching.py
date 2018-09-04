@@ -87,7 +87,7 @@ class StretchyTreeMatcher:
             if type(std_node.astNode).__name__ == "Name":
                 return self.deep_find_match_generic(ins_node, std_node, check_meta)
         # could else return False, but shallow_match_generic should do this as well
-        elif exp_match.match(name_id) and meta_matched:  # if expression
+        elif exp_match.match(name_id):  # and meta_matched:  # if expression
             # terminate recursion, the whole subtree should match since expression nodes match to anything
             mapping.add_exp_to_sym_table(ins_node, std_node)
             matched = True
