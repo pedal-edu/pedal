@@ -483,7 +483,8 @@ class CaitTests(unittest.TestCase):
         parse_program()
 
     def test_matches_in_matches(self):
-        matcher1 = StretchyTreeMatcher("if __expr__:\n    pass")
+        matcher1 = StretchyTreeMatcher("if __expr__:\n"
+                                       "    pass")
         matcher2 = StretchyTreeMatcher("0.4*_item_")
         student_code = ("if 0.4*item < 40:\n"
                         "    pass")
@@ -492,7 +493,7 @@ class CaitTests(unittest.TestCase):
         self.assertTrue(matches)
 
         __expr__ = matches[0].exp_table.get("__expr__")
-        matches2 = find_expr_sub_matches("0.4*_item_", __expr__)
+        matches2 = find_expr_sub_matches("0.4*_item_", __expr__, as_expr=False)
         self.assertTrue(matches2)
 
     def test_symbol_mapping(self):
