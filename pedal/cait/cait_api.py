@@ -142,4 +142,4 @@ def find_expr_sub_matches(ins_expr, std_expr):
     if expr_node.ast_name != "Expr":
         raise ValueError("ins_expr does not evaluate to an Expr node")
     matcher.rootNode = expr_node.value
-    return matcher.find_matches(std_expr, False)
+    return matcher.find_matches(std_expr, check_meta=False)
