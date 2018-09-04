@@ -64,7 +64,7 @@ class CaitTests(unittest.TestCase):
                 print(std_name_node)
                 print(mapping)
 
-    def test_expresssion_match(self):
+    def test_expression_match(self):
         # tests whether expressions are stored correctly
         # print("TESTING EXPRESSION MATCH")
         test_tree = StretchyTreeMatcher("__exp__ = 0")
@@ -101,6 +101,19 @@ class CaitTests(unittest.TestCase):
                                        "    __expr__")
         matches02 = matcher1.find_matches(student_code2)
         self.assertTrue(matches02, "Expression match doesn't match to subtree")
+
+    def test_function_diving(self):
+        # TODO: Fix this bug
+        student_code1 = "print(report['station'])"
+        student_code2 = "print(report['station']['city'])"
+
+        matcher1 = StretchyTreeMatcher("___[__expr__]")
+
+        matches01 = matcher1.find_matches(student_code1)
+        matches02 = matcher1.find_matches(student_code2)
+
+        self.assertTrue(matches01)
+        self.assertTrue(matches02)
 
     def test_wild_card_match(self):
         # tests whether Wild matches are stored correctly
