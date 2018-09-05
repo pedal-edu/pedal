@@ -401,3 +401,5 @@ class StretchyTreeMatcher:
         method_name = 'shallow_match_' + type(ins_node.astNode).__name__
         target_func = getattr(self, method_name, self.shallow_match_generic)
         return target_func(ins_node, std_node, check_meta)
+
+    # TODO: Possibly add a feature for variable function names?
