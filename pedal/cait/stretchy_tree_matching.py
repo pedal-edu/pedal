@@ -41,6 +41,7 @@ class StretchyTreeMatcher:
 
     def any_node_match(self, ins_node, std_node, check_meta=True):
         # @TODO: create a more public function that converts ins_node and std_node into EasyNodes
+        # TODO: Create exhaustive any_node_match
         # matching: an object representing the mapping and the symbol table
         matching = self.deep_find_match(ins_node, std_node, check_meta)
         # if a direct matching is found
@@ -48,16 +49,21 @@ class StretchyTreeMatcher:
             for match in matching:
                 match.match_root = std_node
                 match.match_lineno = match.mappings.values[1].lineno
-            return matching  # return it
-        else:  # otherwise
-            # try to matching ins_node to each child of std_node, recursively
-            for std_child in std_node.children:
-                matching = self.any_node_match(ins_node, std_child, check_meta=check_meta)
-                if matching:
-                    for match in matching:
-                        match.match_root = std_child
-                        match.match_lineno = match.mappings.values[1].lineno
-                    return matching
+        else:
+            matching = []
+        #    return matching  # return it
+        # if not matching or exhaust:  # otherwise
+        # try to matching ins_node to each child of std_node, recursively
+        for std_child in std_node.children:
+            matching_c = self.any_node_match(ins_node, std_child, check_meta=check_meta)
+            if matching_c:
+                for match in matching_c:
+                    match.match_root = std_child
+                    match.match_lineno = match.mappings.values[1].lineno
+                # return matching
+                matching = matching + matching_c
+        if len(matching) > 0:
+            return matching
         return False
 
     def deep_find_match(self, ins_node, std_node, check_meta=True):
