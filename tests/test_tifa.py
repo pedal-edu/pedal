@@ -278,6 +278,10 @@ unit_tests = {
     'int_membership_in_comprehension':
         ['4 in (a for a in [1,2,3])', ['Unused Variable', "Incompatible types"], []],
     
+    'prevent_empty_iteration_in_appended_list':
+        ['eles = [1,2,3]\nx = []\nfor ele in eles:\n    x.append(ele)\nfor e2 in x:\n    e2+1', 
+            ['Iterating over empty list'], []],
+    
     # Built-in modules
     'import_string_letters':
         ['import string\nstring.letters+""', ['Incompatible types'], []],

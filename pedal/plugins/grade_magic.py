@@ -167,7 +167,7 @@ if (cells.length > 0) {
 # If the %grade magic is used, we run the code directly.
 LOCAL_GRADE = r'''
 on_run_code.push("from pedal.plugins.grade_magic import execute_on_run_code");
-on_run_code.push("print(execute_on_run_code({on_run_code}, student_code))");
+on_run_code.push('print(execute_on_run_code({on_run_code}, student_code))');
 '''
 
 # If the %grade_blockpy magic is used, we need to get the on_run from blockpy.

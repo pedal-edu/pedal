@@ -157,9 +157,10 @@ class ListType(Type):
         if attr == 'append':
             def _append(tifa, function_type, callee, args, position):
                 if args:
+                    cloned_type = ListType(subtype=args[0].clone(),
+                                           empty=False)
                     if callee:
-                        tifa.append_variable(callee, ListType(args[0].clone()), 
-                                             position)
+                        tifa.append_variable(callee, cloned_type, position)
                     self.empty = False
                     self.subtype = args[0]
             return FunctionType(_append, 'append')

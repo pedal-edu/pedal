@@ -38,7 +38,7 @@ _PARTIALS = sum_partials()
 from pedal.report import *
 report.set_source(STUDENT_SOURCE)
     # get_output, set_success, gently, explain
-from pedal.tifa import tifa_analysis()
+from pedal.tifa import tifa_analysis
     # tifa_analysis
 from pedal.mistakes import mistakes
     # misconceptions
