@@ -87,7 +87,7 @@ class StretchyTreeMatcher:
             if type(std_node.astNode).__name__ == "Name":
                 return self.deep_find_match_generic(ins_node, std_node, check_meta)
         # could else return False, but shallow_match_generic should do this as well
-        elif exp_match.match(name_id) and meta_matched:  # if expression
+        elif exp_match.match(name_id):  # and meta_matched:  # if expression
             # terminate recursion, the whole subtree should match since expression nodes match to anything
             mapping.add_exp_to_sym_table(ins_node, std_node)
             matched = True
@@ -155,6 +155,38 @@ class StretchyTreeMatcher:
                 return False
             return new_mappings
         return False
+
+    def deep_find_match_Expr(self, ins_node, std_node, check_meta=True):
+        """
+        An Expression node (not to be confused with expressions denoted by the instructor nodes in Name ast nodes)
+        checks whether it should be generic, or not
+        :param ins_node: Instructor ast to find in the student ast
+        :param std_node: Student AST to search for the instructor ast in
+        :param check_meta: flag to check whether the fields of the instructor node and the student node should match
+        :return: a mapping between the instructor and student asts, or False if such a mapping doesn't exist
+        """
+        if check_meta and ins_node.field != std_node.field:
+            return False
+        mapping = AstMap()
+        value = ins_node.value
+        ast_type = type(value.astNode).__name__
+        if ast_type == "Name":
+            name_id = value.astNode.id
+            exp_match = re.compile('^__.*__$')  # /regex
+            wild_card = re.compile('^___$')  # /regex
+            matched = False
+            meta_matched = (check_meta and ins_node.field == std_node.field) or not check_meta
+            if exp_match.match(name_id):  # and meta_matched:  # if expression
+                # terminate recursion, the whole subtree should match since expression nodes match to anything
+                mapping.add_exp_to_sym_table(value, std_node)
+                matched = True
+            elif wild_card.match(name_id) and meta_matched:  # if wild card, don't care
+                # terminate the recursion, the whole subtree should match since wild cards match to anything
+                matched = True
+            if matched:
+                mapping.add_node_pairing(ins_node, std_node)
+                return [mapping]
+        return self.deep_find_match_generic(ins_node, std_node, check_meta)
 
     def deep_find_match_generic(self, ins_node, std_node, check_meta=True):
         """
@@ -303,7 +335,7 @@ class StretchyTreeMatcher:
         :param ins_node: Instructor ast to find in the student ast
         :param std_node: Student AST to search for the instructor ast in
         :param check_meta: flag to check whether the fields of the instructor node and the student node should match
-        :return: a mapping between the isntructor and student asts, or False if such a mapping doesn't exist
+        :return: a mapping between the instructor and student asts, or False if such a mapping doesn't exist
         """
         if check_meta and ins_node.field != std_node.field:
             return False

@@ -64,12 +64,12 @@ class CaitTests(unittest.TestCase):
                 print(std_name_node)
                 print(mapping)
 
-    def test_expresssion_match(self):
+    def test_expression_match(self):
         # tests whether expressions are stored correctly
         # print("TESTING EXPRESSION MATCH")
         test_tree = StretchyTreeMatcher("__exp__ = 0")
 
-        # extracting instrutor name node
+        # extracting instructor name node
         ins_ast = test_tree.rootNode
         ins_name_node = ins_ast.children[0].children[0]
 
@@ -93,6 +93,27 @@ class CaitTests(unittest.TestCase):
                 print(ins_name_node)
                 print(std_for_loop)
                 print(mapping)
+
+        student_code2 = ("for item in item_list:\n"
+                         "    if item > 5:\n"
+                         "        item_sum = item_sum + item")
+        matcher1 = StretchyTreeMatcher("for ___ in ___:\n"
+                                       "    __expr__")
+        matches02 = matcher1.find_matches(student_code2)
+        self.assertTrue(matches02, "Expression match doesn't match to subtree")
+
+    def test_function_diving(self):
+        # TODO: Fix this bug
+        student_code1 = "print(report['station'])"
+        student_code2 = "print(report['station']['city'])"
+
+        matcher1 = StretchyTreeMatcher("___[__expr__]")
+
+        matches01 = matcher1.find_matches(student_code1)
+        matches02 = matcher1.find_matches(student_code2)
+
+        self.assertTrue(matches01)
+        self.assertTrue(matches02)
 
     def test_wild_card_match(self):
         # tests whether Wild matches are stored correctly
@@ -459,11 +480,11 @@ class CaitTests(unittest.TestCase):
         
         clear_report()
         set_source('from pprint import *')
-        std_ast = parse_program()
-        
+        parse_program()
 
     def test_matches_in_matches(self):
-        matcher1 = StretchyTreeMatcher("if __expr__:\n    pass")
+        matcher1 = StretchyTreeMatcher("if __expr__:\n"
+                                       "    pass")
         matcher2 = StretchyTreeMatcher("0.4*_item_")
         student_code = ("if 0.4*item < 40:\n"
                         "    pass")
@@ -472,7 +493,7 @@ class CaitTests(unittest.TestCase):
         self.assertTrue(matches)
 
         __expr__ = matches[0].exp_table.get("__expr__")
-        matches2 = find_expr_sub_matches("0.4*_item_", __expr__)
+        matches2 = find_expr_sub_matches("0.4*_item_", __expr__, as_expr=False)
         self.assertTrue(matches2)
 
     def test_symbol_mapping(self):

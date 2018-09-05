@@ -59,24 +59,18 @@ def wrong_not_append_to_list():
 
 
 def missing_append_list_initialization():
-    std_ast = parse_program()
-    for_loops = std_ast.find_all("For")
-    loop_appends = []
-    for loop in for_loops:
-        loop_appends.extend(find_append_in(loop))
-    assignments = std_ast.find_all("Assign")
-    for append_call in loop_appends:
-        append_loc = append_call.lineno
-        append_var = append_call.func.value
-        found_init = False
-        for assignment in assignments:
-            if assignment.has(append_var) and assignment.lineno < append_loc:
-                found_init = True
-                break
-        if not found_init and append_var.id != "___":
-            explain("The list property <code>{0!s}</code> must be initialized.<br><br><i>"
-                    "(no_app_list_init)<i></br>".format(append_var.id))
-            return True
+    matches = find_matches("for ___ in ___:\n"
+                           "    _new_list_.append(___)")
+    if matches:
+        for match in matches:
+            _new_list_ = match.symbol_table.get("_new_list_")[0].astNode
+            matches02 = find_matches("{} = []\n"
+                                     "for ___ in ___:\n"
+                                     "    _new_list_.append(___)".format(_new_list_.id))
+            if not matches02:
+                explain("The list property <code>{0!s}</code> must be initialized.<br><br><i>"
+                        "(no_app_list_init)<i></br>".format(_new_list_.id))
+                return True
     return False
 
 
