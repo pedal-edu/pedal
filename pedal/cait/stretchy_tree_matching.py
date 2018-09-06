@@ -21,7 +21,7 @@ class StretchyTreeMatcher:
         else:
             self.rootNode = EasyNode(ast_node, "none")
 
-    def find_matches(self, other, filename="__main__", check_meta=True):
+    def find_matches(self, other, filename="__main__", check_meta=True, cut=False):
         # TODO: check that both are ast nodes at the module level
         if isinstance(other, str):
             other_tree = ast.parse(other, filename)
@@ -31,7 +31,13 @@ class StretchyTreeMatcher:
             easy_other = other_tree
         else:
             easy_other = EasyNode(other_tree, "none")
-        return self.any_node_match(self.rootNode, easy_other, check_meta=check_meta)
+        explore_root = self.rootNode
+        if cut and (self.rootNode is not None):
+            while len(explore_root.children) == 1:
+                explore_root = explore_root.children[0]
+                explore_root.field = "none"
+        # return self.any_node_match(self.rootNode, easy_other, check_meta=check_meta)
+        return self.any_node_match(explore_root, easy_other, check_meta=check_meta, cut=cut)
 
     '''
     Finds whether ins_node can be matched to some node in the tree std_node
@@ -39,7 +45,7 @@ class StretchyTreeMatcher:
     matching does not exist
     '''
 
-    def any_node_match(self, ins_node, std_node, check_meta=True):
+    def any_node_match(self, ins_node, std_node, check_meta=True, cut=False):
         # @TODO: create a more public function that converts ins_node and std_node into EasyNodes
         # TODO: Create exhaustive any_node_match
         # matching: an object representing the mapping and the symbol table
@@ -48,18 +54,24 @@ class StretchyTreeMatcher:
         if matching:
             for match in matching:
                 match.match_root = std_node
-                match.match_lineno = match.mappings.values[1].lineno
+                if len(match.mappings.values) > 1:
+                    match.match_lineno = match.mappings.values[1].lineno
+                else:
+                    match.match_lineno = match.mappings.values[0].lineno
         else:
             matching = []
         #    return matching  # return it
         # if not matching or exhaust:  # otherwise
         # try to matching ins_node to each child of std_node, recursively
         for std_child in std_node.children:
-            matching_c = self.any_node_match(ins_node, std_child, check_meta=check_meta)
+            matching_c = self.any_node_match(ins_node, std_child, check_meta=check_meta, cut=cut)
             if matching_c:
                 for match in matching_c:
                     match.match_root = std_child
-                    match.match_lineno = match.mappings.values[1].lineno
+                    if len(match.mappings.values) > 1:
+                        match.match_lineno = match.mappings.values[1].lineno
+                    else:
+                        match.match_lineno = match.mappings.values[0].lineno
                 # return matching
                 matching = matching + matching_c
         if len(matching) > 0:

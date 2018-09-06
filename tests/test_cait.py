@@ -510,3 +510,19 @@ class CaitTests(unittest.TestCase):
                                        "_item2_ = 1")
         match2 = matcher2.find_matches(student_code)
         self.assertTrue(match2, "One instructor variable should be able to map to multiple student variables, but isn't")
+
+    def test_tree_cutting(self):
+        student_code1 = ('maxtemp_list = []\n'
+                         'mintemp_list = []\n'
+                         'for report in weather_reports:\n'
+                         '    if report["Station"]["City"] == "Blacksburg":\n'
+                         '        maxtemp_list.append(report["Data"]["Temperature"]["Max Temp"])\n'
+                         '        mintemp_list.append(report["Data"]["Temperature"]["Min Temp"])')
+
+        student_parse = EasyNode(ast.parse(student_code1))
+        matcher1 = StretchyTreeMatcher("'Blacksburg'")
+        res = find_expr_sub_matches("'Blacksburg'", student_parse, as_expr=False)
+        self.assertTrue(res, "Cutting broke sub-matching")
+
+        matches01 = matcher1.find_matches(student_code1, cut=True)
+        self.assertTrue(matches01, "Cutting doesn't work")
