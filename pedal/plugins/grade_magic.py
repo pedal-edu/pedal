@@ -233,8 +233,8 @@ class GradeMagic(Magics):
         ts = time.time()
         logger = self.shell.logger  # logging
         old_logfile = self.shell.logfile  # logging
-        directory = os.path.expanduser("log_folder~{}/".format(line))
-        logfname = os.path.expanduser("log_folder~{}/log_{}.py~".format(line, ts))
+        directory = os.path.expanduser("log_folder{}~/".format(line))
+        logfname = os.path.expanduser("log_folder{}~/log_{}.py~".format(line, ts))
         self.shell.logfile = logfname
         loghead = u'# IPython log file\n\n'
         try:
