@@ -239,7 +239,7 @@ class GradeMagic(Magics):
         loghead = u'# IPython log file\n\n'
         try:
             os.makedirs(directory, exist_ok=True)
-            logger.logstart(logfname, loghead, 'rotate', False, True,
+            logger.logstart(logfname, loghead, 'rotate', True, True,
                             True)
         except:
             self.shell.logfile = old_logfile

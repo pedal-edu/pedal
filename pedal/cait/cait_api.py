@@ -128,25 +128,27 @@ def find_matches(ins_code, std_code=None, report=None):
     return matches
 
 
-def find_expr_sub_matches(ins_expr, std_expr, as_expr=True):
+def find_expr_sub_matches(ins_expr, std_expr, as_expr=True, is_mod=False):
     """Finds ins_expr in std_expr
     # TODO: Add code to make ins_expr accept EasyNodes
     # TODO: Make this function without so much meta knowledge
     :param ins_expr: the expression to find (str that MUST evaluate to a Module node with a single child)
     :param std_expr: student subtree
     :param as_expr: whether it's an expression match or not, experimental
+    :param is_mod: currently hack for multiline sub matches
     :return: a list of matches or False if no matches found
     """
     if not isinstance(ins_expr, str):
         raise TypeError("ins_expr expected str, found {0}".format(type(ins_expr)))
     matcher = StretchyTreeMatcher(ins_expr)
-    if len(matcher.rootNode.children) != 1:
+    if not is_mod and len(matcher.rootNode.children) != 1:
         raise ValueError("ins_expr does not evaluate to a singular statement")
     else:
-        new_root = matcher.rootNode.children[0]
-        if as_expr and new_root.ast_name != "Expr":
-            raise ValueError("ins_expr does not evaluate to an Expr node or singular statement")
-            matcher.rootNode = new_root.value
-        else:
-            matcher.rootNode = new_root
+        if not is_mod:
+            new_root = matcher.rootNode.children[0]
+            if as_expr and new_root.ast_name != "Expr":
+                raise ValueError("ins_expr does not evaluate to an Expr node or singular statement")
+                matcher.rootNode = new_root.value
+            else:
+                matcher.rootNode = new_root
     return matcher.find_matches(std_expr, check_meta=False)
