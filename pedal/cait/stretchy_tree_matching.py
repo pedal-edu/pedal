@@ -87,7 +87,7 @@ class StretchyTreeMatcher:
         wild_card = re.compile('^___$')  # /regex
         mapping = AstMap()
         matched = False
-        meta_matched = (check_meta and ins_node.field == std_node.field) or not check_meta
+        meta_matched = self.metas_match(ins_node, std_node, check_meta)
         if var_match.match(name_id) and meta_matched:  # if variable
             # This if body is probably unnecessary.
             if type(std_node.astNode).__name__ == "Name":
@@ -171,7 +171,8 @@ class StretchyTreeMatcher:
         :param check_meta: flag to check whether the fields of the instructor node and the student node should match
         :return: a mapping between the instructor and student asts, or False if such a mapping doesn't exist
         """
-        if check_meta and ins_node.field != std_node.field:
+        # if check_meta and ins_node.field != std_node.field:
+        if not self.metas_match(ins_node, std_node, check_meta):
             return False
         mapping = AstMap()
         value = ins_node.value
@@ -181,7 +182,7 @@ class StretchyTreeMatcher:
             exp_match = re.compile('^__.*__$')  # /regex
             wild_card = re.compile('^___$')  # /regex
             matched = False
-            meta_matched = (check_meta and ins_node.field == std_node.field) or not check_meta
+            meta_matched = self.metas_match(ins_node, std_node, check_meta)
             if exp_match.match(name_id):  # and meta_matched:  # if expression
                 # terminate recursion, the whole subtree should match since expression nodes match to anything
                 mapping.add_exp_to_sym_table(value, std_node)
@@ -300,7 +301,7 @@ class StretchyTreeMatcher:
         wild_card = re.compile('^___$')  # /regex
         mapping = AstMap()
         matched = False
-        meta_matched = (check_meta and ins_node.field == std_node.field) or not check_meta
+        meta_matched = self.metas_match(ins_node, std_node, check_meta)
         if var_match.match(name_id) and meta_matched:  # variable
             if type(std_node.astNode).__name__ == "Name":
                 mapping.add_var_to_sym_table(ins_node, std_node)  # TODO: Capture result?
@@ -327,7 +328,8 @@ class StretchyTreeMatcher:
         :param check_meta: flag to check whether the fields of the instructor node and the student node should match
         :return: a mapping between the isntructor and student asts, or False if such a mapping doesn't exist
         """
-        if check_meta and ins_node.field != std_node.field:
+        # if check_meta and ins_node.field != std_node.field:
+        if not self.metas_match(ins_node, std_node, check_meta):
             return False
         mapping = AstMap()
         mapping.add_node_pairing(ins_node, std_node)
@@ -343,7 +345,8 @@ class StretchyTreeMatcher:
         :param check_meta: flag to check whether the fields of the instructor node and the student node should match
         :return: a mapping between the instructor and student asts, or False if such a mapping doesn't exist
         """
-        if check_meta and ins_node.field != std_node.field:
+        # if check_meta and ins_node.field != std_node.field:
+        if not self.metas_match(ins_node, std_node, check_meta):
             return False
         mapping = AstMap()
         mapping.add_node_pairing(ins_node, std_node)
@@ -362,7 +365,7 @@ class StretchyTreeMatcher:
         std = std_node.astNode
         ins_field_list = list(ast.iter_fields(ins))
         std_field_list = list(ast.iter_fields(std))
-        meta_matched = (check_meta and ins_node.field == std_node.field) or not check_meta
+        meta_matched = self.metas_match(ins_node, std_node, check_meta)
         is_match = len(ins_field_list) == len(std_field_list) and type(ins).__name__ == type(
             std).__name__ and meta_matched
         for insTup, stdTup in zip(ins_field_list, std_field_list):
@@ -407,5 +410,9 @@ class StretchyTreeMatcher:
         method_name = 'shallow_match_' + type(ins_node.astNode).__name__
         target_func = getattr(self, method_name, self.shallow_match_generic)
         return target_func(ins_node, std_node, check_meta)
+
+    @staticmethod
+    def metas_match(ins_node, std_node, check_meta=True):
+        return (check_meta and ins_node.field == std_node.field) or not check_meta or ins_node.field == "none"
 
     # TODO: Possibly add a feature for variable function names?
