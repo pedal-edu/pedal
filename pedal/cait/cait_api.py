@@ -128,7 +128,7 @@ def find_matches(ins_code, std_code=None, report=None):
     return matches
 
 
-def find_expr_sub_matches(ins_expr, std_expr, as_expr=True, is_mod=False):
+def find_expr_sub_matches(ins_expr, std_expr, as_expr=True, is_mod=False, cut=False):
     """Finds ins_expr in std_expr
     # TODO: Add code to make ins_expr accept EasyNodes
     # TODO: Make this function without so much meta knowledge
@@ -151,4 +151,4 @@ def find_expr_sub_matches(ins_expr, std_expr, as_expr=True, is_mod=False):
                 matcher.rootNode = new_root.value
             else:
                 matcher.rootNode = new_root
-    return matcher.find_matches(std_expr, check_meta=False)
+    return matcher.find_matches(std_expr, check_meta=False, cut=cut)

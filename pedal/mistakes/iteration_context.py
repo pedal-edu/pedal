@@ -83,7 +83,7 @@ def wrong_list_initialization_placement_8_3():
 def wrong_accumulator_initialization_placement_8_3():
     for_matches = find_matches("for ___ in ___:"
                                "    pass")
-    init_matches = find_matches("sum_length = ___")
+    init_matches = find_matches("sum_length = 0")
     if init_matches and for_matches:
         for for_match in for_matches:
             for_lineno = for_match.match_lineno
@@ -933,7 +933,7 @@ def wrong_filter_problem_atl1_10_5():
             _item_ = match.symbol_table.get("_item_")[0].astNode
             __cond__ = match.exp_table.get("__cond__")
             __expr__ = match.exp_table.get("__expr__")
-            matches02 = find_expr_sub_matches("_item_*0.62", __expr__)
+            matches02 = find_expr_sub_matches("_item_*0.62", __expr__, cut=True)
             if matches02:
                 for match02 in matches02:
                     _item_02 = match02.symbol_table.get("_item_")[0].astNode
@@ -957,7 +957,7 @@ def wrong_filter_problem_atl2_10_5():
             __cond__ = match.exp_table.get("__cond__")
             _item_ = match.symbol_table.get("_item_")[0].astNode
             _miles_ = match.symbol_table.get("_miles_")[0].astNode
-            matches02 = find_expr_sub_matches("_item_*0.62", __expr__)
+            matches02 = find_expr_sub_matches("_item_*0.62", __expr__, cut=True)
             if matches02:
                 for match02 in matches02:
                     _item_02 = match02.symbol_table.get("_item_")[0].astNode
@@ -981,7 +981,8 @@ def wrong_append_problem_atl1_10_5():
             __expr__ = match.exp_table.get("__expr__")
             if (__cond__.numeric_logic_check(0.1, "item > 16.1290322580645") and
                __cond__.has(_item_)):
-                matches02 = find_expr_sub_matches("{}*0.62".format(_item_.id), __expr__)
+                new_code = "{}*0.62".format(_item_.id)
+                matches02 = find_expr_sub_matches(new_code, __expr__, cut=True)
                 if not matches02:
                     explain('You are not appending the correct values.<br><br><i>(app_alt1_10.5)<i></br>')
                     return True
