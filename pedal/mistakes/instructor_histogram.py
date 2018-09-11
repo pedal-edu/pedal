@@ -88,13 +88,14 @@ def histogram_wrong_list():
     :return:
     """
     matches = find_matches("for ___ in ___:\n"
-                           "    _target_.append(___)\n"
+                           "    __expr__\n"
                            "plt.hist(_list_)")
     if matches:
         for match in matches:
-            _target_ = match.symbol_table.get("_target_")[0].astNode
             _list_ = match.symbol_table.get("_list_")[0].astNode
-            if _target_.id != _list_.id:
+            __expr__ = match.exp_table.get("__expr__")
+            submatches = find_expr_sub_matches("{}.append(___)".format(_list_.id), __expr__)
+            if not submatches:
                 explain(
                     "The list created in the iteration is not the list being used to create the histogram.<br><br><i>"
                     "(histo_wrong_list)<i></br>")
