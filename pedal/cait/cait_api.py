@@ -18,9 +18,9 @@ class Cait:
             self._initialize_report()
 
     def _initialize_report(self):
-        '''
+        """
         Initialize a successful report with possible set of issues.
-        '''
+        """
         if self.report["source"]["success"]:
             std_ast = self.report['source']['ast']
             self.report['cait'] = {}
@@ -98,33 +98,36 @@ def data_type(node, report=None):
     return data_state(node, report=report).type
 
 
-def find_match(ins_code, std_code=None, report=None):
+def find_match(ins_code, std_code=None, report=None, cut=False):
     """Apply Tree Inclusion and return first match
 
     :param ins_code: Instructor defined pattern
     :param std_code: Student code
+    :param report: The report associated with the find_match function
+    :param cut: set to true to trim root to first branch
     :return: First match of tree inclusion of instructor in student or None
     """
-    matches = find_matches(ins_code=ins_code, std_code=std_code, report=report)
+    matches = find_matches(ins_code=ins_code, std_code=std_code, report=report, cut=cut)
     if matches:
         return matches[0]
     else:
         return None
 
 
-def find_matches(ins_code, std_code=None, report=None):
+def find_matches(ins_code, std_code=None, report=None, cut=False):
     """Apply Tree Inclusion and return all matches
 
     :param ins_code: Instructor pattern
     :param std_code: Student Code
-    :param report:
+    :param report: the report to use for finding matches
+    :param cut: set to true to trim root to first branch
     :return: All matches of tree inclusion of instructor in student
     """
     cait_obj = Cait(std_code=std_code, report=report)
     std_code = cait_obj.report['cait']['std_ast']
     matcher = StretchyTreeMatcher(ins_code)
     cait_obj.report['cait']['matcher'] = matcher
-    matches = cait_obj.report['cait']['matcher'].find_matches(std_code)
+    matches = cait_obj.report['cait']['matcher'].find_matches(std_code, cut=cut)
     return matches
 
 
@@ -136,6 +139,7 @@ def find_expr_sub_matches(ins_expr, std_expr, as_expr=True, is_mod=False, cut=Fa
     :param std_expr: student subtree
     :param as_expr: whether it's an expression match or not, experimental
     :param is_mod: currently hack for multiline sub matches
+    :param cut: flag for cutting off root until a branch occurs
     :return: a list of matches or False if no matches found
     """
     if not isinstance(ins_expr, str):
@@ -148,7 +152,6 @@ def find_expr_sub_matches(ins_expr, std_expr, as_expr=True, is_mod=False, cut=Fa
             new_root = matcher.rootNode.children[0]
             if as_expr and new_root.ast_name != "Expr":
                 raise ValueError("ins_expr does not evaluate to an Expr node or singular statement")
-                matcher.rootNode = new_root.value
             else:
                 matcher.rootNode = new_root
     return matcher.find_matches(std_expr, check_meta=False, cut=cut)
