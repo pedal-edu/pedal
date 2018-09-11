@@ -167,7 +167,17 @@ class SpecificMistakeTest(MistakeTest):
         self.assertTrue(wrong_should_be_counting(), "false negative")
 
         self.to_source("for item in items:\n"
+                       "    if fun:\n"
+                       "        accu = accu + item")
+        self.assertTrue(wrong_should_be_counting(), "false negative")
+
+        self.to_source("for item in items:\n"
                        "    accu = accu + 1")
+        self.assertFalse(wrong_should_be_counting(), "false positive")
+
+        self.to_source("for item in items:\n"
+                       "    if fun:\n"
+                       "        accu = accu + 1")
         self.assertFalse(wrong_should_be_counting(), "false positive")
 
     def test_wrong_should_be_summing(self):
@@ -176,17 +186,39 @@ class SpecificMistakeTest(MistakeTest):
         self.assertFalse(wrong_should_be_summing(), "false positive")
 
         self.to_source("for item in items:\n"
+                       "    if fun:\n"
+                       "        accu = accu + item")
+        self.assertFalse(wrong_should_be_summing(), "false positive")
+
+        self.to_source("for item in items:\n"
                        "    accu = accu + 1")
+        self.assertTrue(wrong_should_be_summing(), "false negative")
+
+        self.to_source("for item in items:\n"
+                       "    if fun:\n"
+                       "        accu = accu + 1")
         self.assertTrue(wrong_should_be_summing(), "false negative")
 
     def test_missing_addition_slot_empty(self):
         self.to_source("dum + ___")
         self.assertTrue(missing_addition_slot_empty(), "false negative")
 
+        self.to_source("if fun:\n"
+                       "    dum + ___")
+        self.assertTrue(missing_addition_slot_empty(), "false negative")
+
         self.to_source("dum + fun")
         self.assertFalse(missing_addition_slot_empty(), "False positive with name")
 
+        self.to_source("if fun:\n"
+                       "    dum + fun")
+        self.assertFalse(missing_addition_slot_empty(), "False positive with name")
+
         self.to_source("dum + 0")
+        self.assertFalse(missing_addition_slot_empty(), "False positive with num")
+
+        self.to_source("if fun:\n"
+                       "    dum + 0")
         self.assertFalse(missing_addition_slot_empty(), "False positive with num")
 
     def test_wrong_cannot_sum_list(self):
@@ -195,7 +227,17 @@ class SpecificMistakeTest(MistakeTest):
         self.assertTrue(wrong_cannot_sum_list(), "false negative")
 
         self.to_source("for item in items:\n"
+                       "    if fun:\n"
+                       "        i_sum = i_sum + items")
+        self.assertTrue(wrong_cannot_sum_list(), "false negative")
+
+        self.to_source("for item in items:\n"
                        "    i_sum = i_sum + item")
+        self.assertFalse(wrong_cannot_sum_list(), "false positive")
+
+        self.to_source("for item in items:\n"
+                       "    if fun:\n"
+                       "        i_sum = i_sum + item")
         self.assertFalse(wrong_cannot_sum_list(), "false positive")
 
     def test_missing_no_print(self):
@@ -211,11 +253,26 @@ class SpecificMistakeTest(MistakeTest):
         self.assertFalse(missing_counting_list(), "false positive")
 
         self.to_source("for item in items:\n"
+                       "    if fun:\n"
+                       "        item_sum = item_sum + 1")
+        self.assertFalse(missing_counting_list(), "false positive")
+
+        self.to_source("for item in items:\n"
                        "    item_sum = item_sum + item")
         self.assertTrue(missing_counting_list(), "false negative")
 
         self.to_source("for item in items:\n"
+                       "    if fun:\n"
+                       "        item_sum = item_sum + item")
+        self.assertTrue(missing_counting_list(), "false negative")
+
+        self.to_source("for item in items:\n"
                        "    items.append(1)")
+        self.assertTrue(missing_counting_list(), "false negative")
+
+        self.to_source("for item in items:\n"
+                       "    if fun:\n"
+                       "        items.append(1)")
         self.assertTrue(missing_counting_list(), "false negative")
 
     def test_missing_summing_list(self):
@@ -229,6 +286,21 @@ class SpecificMistakeTest(MistakeTest):
 
         self.to_source("for item in items:\n"
                        "    items.append(1)")
+        self.assertTrue(missing_summing_list(), "false negative")
+
+        self.to_source("for item in items:\n"
+                       "    if fun:\n"
+                       "        item_sum = item_sum + 1")
+        self.assertTrue(missing_summing_list(), "false negative")
+
+        self.to_source("for item in items:\n"
+                       "    if fun:\n"
+                       "        item_sum = item_sum + item")
+        self.assertFalse(missing_summing_list(), "false positive")
+
+        self.to_source("for item in items:\n"
+                       "    if fun:\n"
+                       "        items.append(1)")
         self.assertTrue(missing_summing_list(), "false negative")
 
     def test_missing_zero_initialization(self):
@@ -250,13 +322,40 @@ class SpecificMistakeTest(MistakeTest):
                        "it_sum = 0\n")
         self.assertTrue(missing_zero_initialization(), "false negative")
 
+        self.to_source("it_sum = 0\n"
+                       "for item in items:\n"
+                       "    if fun:\n"
+                       "        it_sum = it_sum + 1")
+        self.assertFalse(missing_zero_initialization(), "false positive")
+
+        self.to_source("for item in items:\n"
+                       "    if fun:\n"
+                       "        it_sum = it_sum + 1")
+        self.assertTrue(missing_zero_initialization(), "false negative")
+
+        self.to_source("for item in items:\n"
+                       "    if fun:\n"
+                       "        it_sum = it_sum + 1\n"
+                       "it_sum = 0\n")
+        self.assertTrue(missing_zero_initialization(), "false negative")
+
     def test_wrong_printing_list(self):
         self.to_source("for item in items:\n"
                        "    print(item)")
         self.assertTrue(wrong_printing_list(), "false negative")
 
         self.to_source("for item in items:\n"
-                       "new_item_list.append(item)")
+                       "    new_item_list.append(item)")
+        self.assertFalse(wrong_printing_list(), "false positive")
+
+        self.to_source("for item in items:\n"
+                       "    if fun:\n"
+                       "        print(item)")
+        self.assertTrue(wrong_printing_list(), "false negative")
+
+        self.to_source("for item in items:\n"
+                       "    if fun:\n"
+                       "        new_item_list.append(item)")
         self.assertFalse(wrong_printing_list(), "false positive")
 
     def test_missing_average(self):
@@ -285,6 +384,13 @@ class SpecificMistakeTest(MistakeTest):
                        "    average = total/count\n")
         self.assertTrue(warning_average_in_iteration(), "false negative")
 
+        self.to_source("for item in items:\n"
+                       "    if fun:\n"
+                       "        total = total + item\n"
+                       "        count = count + 1\n"
+                       "        average = total/count\n")
+        self.assertTrue(warning_average_in_iteration(), "false negative")
+
     def test_wrong_average_denominator(self):
         self.to_source("for item in items:\n"
                        "    total = total + item\n"
@@ -298,6 +404,20 @@ class SpecificMistakeTest(MistakeTest):
                        "average = total/total\n")
         self.assertTrue(wrong_average_denominator(), "false negative")
 
+        self.to_source("for item in items:\n"
+                       "    if fun:\n"
+                       "        total = total + item\n"
+                       "        count = count + 1\n"
+                       "average = total/count")
+        self.assertFalse(wrong_average_denominator(), "false positive")
+
+        self.to_source("for item in items:\n"
+                       "    if fun:\n"
+                       "        total = total + item\n"
+                       "        count = count + 1\n"
+                       "average = total/total\n")
+        self.assertTrue(wrong_average_denominator(), "false negative")
+
     def test_wrong_average_numerator(self):
         self.to_source("for item in items:\n"
                        "    total = total + item\n"
@@ -308,6 +428,20 @@ class SpecificMistakeTest(MistakeTest):
         self.to_source("for item in items:\n"
                        "    total = total + item\n"
                        "    count = count + 1\n"
+                       "average = count/count\n")
+        self.assertTrue(wrong_average_numerator(), "false negative")
+
+        self.to_source("for item in items:\n"
+                       "    if fun:\n"
+                       "        total = total + item\n"
+                       "        count = count + 1\n"
+                       "average = total/count")
+        self.assertFalse(wrong_average_numerator(), "false positive")
+
+        self.to_source("for item in items:\n"
+                       "    if fun:\n"
+                       "        total = total + item\n"
+                       "        count = count + 1\n"
                        "average = count/count\n")
         self.assertTrue(wrong_average_numerator(), "false negative")
 
@@ -410,6 +544,14 @@ class SpecificMistakeTest(MistakeTest):
         self.assertTrue(wrong_accumulation_9_2(), "false negative")
 
         self.to_source("rainfall_count = rainfall_count + 1")
+        self.assertFalse(wrong_accumulation_9_2(), "false positive")
+
+        self.to_source("for item in item_list:\n"
+                       "    rainfall_count = _item_ + 1")
+        self.assertTrue(wrong_accumulation_9_2(), "false negative")
+
+        self.to_source("for item in item_list:\n"
+                       "    rainfall_count = rainfall_count + 1")
         self.assertFalse(wrong_accumulation_9_2(), "false positive")
 
     def test_wrong_list_initialization_placement_9_2(self):
@@ -704,6 +846,11 @@ class SpecificMistakeTest(MistakeTest):
                        "for item in items:\n"
                        "    pass")
         self.assertFalse(wrong_initialization_in_iteration(), "False positive")
+
+        self.to_source("for item in items:\n"
+                       "    if fun:\n"
+                       "        item = 0")
+        self.assertTrue(wrong_initialization_in_iteration(), "False negative")
 
     def test_wrong_duplicate_var_in_add(self):
         self.to_source("item3 = item + item2")

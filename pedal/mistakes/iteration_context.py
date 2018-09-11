@@ -216,12 +216,17 @@ def wrong_should_be_counting():
                             'the list.<br><br><i>(not_count)<i></br>')
     :return:
     """
-    match = find_match("for _item_ in ___:\n"
-                       "    ___ = ___ + _item_")
-    if match:
-        explain('This problem asks for the number of items in the list not the total of all the values in the list.'
-                '<br><br><i>(not_count)<i></br>')
-        return True
+    matches = find_matches("for _item_ in ___:\n"
+                           "    __expr__")
+    if matches:
+        for match in matches:
+            _item_ = match.symbol_table.get("_item_")[0]
+            __expr__ = match.exp_table.get("__expr__")
+            submatches = find_expr_sub_matches("___ = ___ + {}".format(_item_.id), __expr__, as_expr=False)
+            if submatches:
+                explain('This problem asks for the number of items in the list not the total of all the values in the list.'
+                        '<br><br><i>(not_count)<i></br>')
+                return True
     return False
 
 
@@ -238,12 +243,16 @@ def wrong_should_be_summing():
                     explain('This problem asks for the total of all the values in the list not the number of items in '
                             'the list.<br><br><i>(not_sum)<i></br>')
     """
-    match = find_match("for _item_ in ___:\n"
-                       "    ___ = ___ + 1")
-    if match:
-        explain('This problem asks for the total of all the values in the list not the number of items in '
-               'the list.<br><br><i>(not_sum)<i></br>')
-        return True
+    matches = find_matches("for _item_ in ___:\n"
+                           "    __expr__")
+    if matches:
+        for match in matches:
+            __expr__ = match.exp_table.get("__expr__")
+            submatches = find_expr_sub_matches("___ = 1 + ___", __expr__, as_expr=False)
+            if submatches:
+                explain('This problem asks for the total of all the values in the list not the number of '
+                        'items in the list.<br><br><i>(not_sum)<i></br>')
+                return True
     return False
 
 
@@ -291,17 +300,22 @@ def wrong_cannot_sum_list():
                             ' time.<br><br><i>(sum_list)<i></br>')
     :return:
     """
-    match = find_matches("for ___ in _list_ :\n"
-                         "    ___ = ___ + _list_")
-    if match:
-        explain('Addition can only be done with a single value at a time, not with an entire list at one'
-                ' time.<br><br><i>(sum_list)<i></br>')
-        return True
+    matches = find_matches("for ___ in _list_ :\n"
+                           "    __expr__")
+    if matches:
+        for match in matches:
+            _list_ = match.symbol_table.get("_list_")[0]
+            __expr__ = match.exp_table.get("__expr__")
+            submatches = find_expr_sub_matches("___ = ___ + {}".format(_list_.id), __expr__, as_expr=False)
+            if submatches:
+                explain('Addition can only be done with a single value at a time, not with an entire list at one'
+                        ' time.<br><br><i>(sum_list)<i></br>')
+                return True
     return False
 
 
 def missing_no_print():
-    prints = find_match('print(___)')
+    prints = find_match('print(___)', cut=True)
     if not prints:
         explain('Program does not output anything.<br><br><i>(no_print)<i></br>')
         return True
@@ -330,12 +344,17 @@ def missing_counting_list():
         explain('Count the total number of items in the list using iteration.<br><br><i>(miss_count_list)<i></br>')
     :return:
     """
-    match = find_matches("for ___ in ___:\n"
-                         "    _sum_ = _sum_ + 1")
-    if not match:
-        explain('Count the total number of items in the list using iteration.<br><br><i>(miss_count_list)<i></br>')
-        return True
-    return False
+    matches = find_matches("for _item_ in ___:\n"
+                           "    __expr__")
+    if matches:
+        for match in matches:
+            __expr__ = match.exp_table.get("__expr__")
+            submatches = find_expr_sub_matches("_sum_ = _sum_ + 1", __expr__, as_expr=False)
+            if submatches:
+                return False
+    explain(
+        'Count the total number of items in the list using iteration.<br><br><i>(miss_count_list)<i></br>')
+    return True
 
 
 def missing_summing_list():
@@ -361,12 +380,17 @@ def missing_summing_list():
         explain('Sum the total of all list elements using iteration.<br><br><i>(miss_sum_list)<i></br>')
     :return:
     """
-    match = find_matches("for _item_ in ___:\n"
-                         "    _sum_ = _sum_ + _item_")
-    if not match:
-        explain('Sum the total of all list elements using iteration.<br><br><i>(miss_sum_list)<i></br>')
-        return True
-    return False
+    matches = find_matches("for _item_ in ___:\n"
+                           "    __expr__")
+    if matches:
+        for match in matches:
+            _item_ = match.symbol_table.get("_item_")[0]
+            __expr__ = match.exp_table.get("__expr__")
+            submatches = find_expr_sub_matches("_sum_ = _sum_ + {}".format(_item_.id), __expr__, as_expr=False)
+            if submatches:
+                return False
+    explain('Sum the total of all list elements using iteration.<br><br><i>(miss_sum_list)<i></br>')
+    return True
 
 
 def missing_zero_initialization():
@@ -403,38 +427,37 @@ def missing_zero_initialization():
     return True
     :return:
     """
+
     matches01 = find_matches("for ___ in ___:\n"
-                             "    _sum_ = _sum_ + ___")
+                             "    __expr__")
     if matches01:
-        matches02 = find_matches("_sum_ = 0")
         for match01 in matches01:
-            _sum_ = match01.symbol_table.get("_sum_")[0]
-            if not matches02:
-                break
-            lineno_01 = match01.match_lineno
-            for match02 in matches02:
-                lineno_02 = match02.match_lineno
-                new_matching = match01.new_merged_map(match02)
-                valid = len(new_matching.conflict_keys) == 0
-                if not valid:
-                    continue
-                if lineno_02 > lineno_01:
-                    matches02 = False
-                    break
-        if not matches02:
-            explain('The addition on the first iteration step is not correct because either the variable '
-                    '<code>{0!s}</code> has not been initialized to an appropriate initial value or it has not been'
-                    ' placed in an appropriate location<br><br><i>(miss_zero_init)<i></br>'.format(_sum_.id))
-            return True
+            __expr__ = match01.exp_table.get("__expr__")
+            submatches01 = find_expr_sub_matches("_sum_ = _sum_ + ___", __expr__, as_expr=False)
+            if submatches01:
+                for submatch01 in submatches01:
+                    _sum_ = submatch01.symbol_table.get("_sum_")[0]
+                    matches02 = find_matches(("{} = 0\n"
+                                              "for ___ in ___:\n"
+                                              "    __expr__").format(_sum_.id))
+                    if not matches02:
+                        explain('The addition on the first iteration step is not correct because either the variable '
+                                '<code>{0!s}</code> has not been initialized to an appropriate initial value or it has '
+                                'not been placed in an appropriate location<br><br><i>'
+                                '(miss_zero_init)<i></br>'.format(_sum_.id))
+                        return True
     return False
 
 
 def wrong_printing_list():
-    match = find_match("for ___ in ___:\n"
-                       "    print(___)")
-    if match:
-        explain('You should be printing a single value.<br><br><i>(list_print)<i></br>')
-        return True
+    matches = find_matches("for ___ in ___:\n"
+                           "    __expr__")
+    if matches:
+        for match in matches:
+            __expr__ = match.exp_table.get("__expr__")
+            if find_expr_sub_matches("print(___)", __expr__):
+                explain('You should be printing a single value.<br><br><i>(list_print)<i></br>')
+                return True
     return False
 
 
@@ -460,45 +483,59 @@ def missing_average():
 
 def warning_average_in_iteration():
     matches = find_matches("for ___ in ___:\n"
-                           "    _average_ = _total_/_count_\n")
+                           "    __expr__\n")
     if matches:
         for match in matches:
-            _total_ = match.symbol_table.get("_total_")[0]
-            _count_ = match.symbol_table.get("_count_")[0]
-            _average_ = match.symbol_table.get("_average_")[0]
-            if _total_.id != _count_.id != _average_.id and _total_.id != _average_.id:
-                explain('An average value is best computed after the properties name <code>{0!s}</code>(total)'
-                        ' and <code>{1!s}</code> are completely known rather than recomputing the average on'
-                        ' each iteration.<br><br><i>(avg_in_iter)<i></br>'.format(_total_.id, _count_.id))
-                return True
+            __expr__ = match.exp_table.get("__expr__")
+            submatches = find_expr_sub_matches("_average_ = _total_/_count_",__expr__, as_expr=False)
+            if submatches:
+                for submatch in submatches:
+                    _total_ = submatch.symbol_table.get("_total_")[0]
+                    _count_ = submatch.symbol_table.get("_count_")[0]
+                    _average_ = submatch.symbol_table.get("_average_")[0]
+                    if _total_.id != _count_.id != _average_.id and _total_.id != _average_.id:
+                        explain('An average value is best computed after the properties name <code>{0!s}</code>(total)'
+                                ' and <code>{1!s}</code> are completely known rather than recomputing the average on'
+                                ' each iteration.<br><br><i>(avg_in_iter)<i></br>'.format(_total_.id, _count_.id))
+                        return True
+
     return False
 
 
 def wrong_average_denominator():
     matches = find_matches("for ___ in ___:\n"
-                           "    _count_ = _count_ + 1\n"
+                           "    __expr__\n"
                            "_average_ = _total_/_value_")
     if matches:
         for match in matches:
-            _count_ = match.symbol_table.get("_count_")[0]
+            __expr__ = match.exp_table.get("__expr__")
             _value_ = match.symbol_table.get("_value_")[0]
-            if _count_.id != _value_.id:
-                explain('The average is not calculated correctly.<br><br><i>(avg_denom)<i></br>')
-                return True
+            submatches = find_expr_sub_matches("_count_ = _count_ + 1", __expr__, as_expr=False)
+            if submatches:
+                for submatch in submatches:
+                    _count_ = submatch.symbol_table.get("_count_")[0]
+                    if _count_.id != _value_.id:
+                        explain('The average is not calculated correctly.<br><br><i>(avg_denom)<i></br>')
+                        return True
     return False
 
 
 def wrong_average_numerator():
     matches = find_matches("for _item_ in ___:\n"
-                           "    _total_ = _total_ + _item_\n"
+                           "    __expr__\n"
                            "_average_ = _value_/_count_")
     if matches:
         for match in matches:
-            _total_ = match.symbol_table.get("_total_")[0]
+            __expr__ = match.exp_table.get("__expr__")
             _value_ = match.symbol_table.get("_value_")[0]
-            if _total_.id != _value_.id:
-                explain('The average is not calculated correctly.<br><br><i>(avg_numer)<i></br>')
-                return True
+            _item_ = match.symbol_table.get("_item_")[0]
+            submatches = find_expr_sub_matches("_total_ = _total_ + {}".format(_item_.id), __expr__, as_expr=False)
+            if submatches:
+                for submatch in submatches:
+                    _total_ = submatch.symbol_table.get("_total_")[0]
+                    if _total_.id != _value_.id:
+                        explain('The average is not calculated correctly.<br><br><i>(avg_numer)<i></br>')
+                        return True
     return False
 
 
@@ -1058,16 +1095,21 @@ def wrong_debug_10_7():
 # ########################.....###############################
 def wrong_initialization_in_iteration():
     matches = find_matches("for ___ in ___:\n"
-                           "    _assign_ = __expr__")
+                           "    __expr__")
     if matches:
         for match in matches:
             __expr__ = match.exp_table.get("__expr__")
-            _assign_ = match.symbol_table.get("_assign_")[0].astNode
-            if len(__expr__.find_all("Name")) == 0:
-                explain(
-                    'You only need to initialize <code>{0!s}</code> once. Remember that statements in an iteration '
-                    'block happens multiple times<br><br><i>(wrong_init_in_iter)<i></br>'.format(_assign_.id))
-                return True
+            submatches = find_expr_sub_matches("_assign_ = __expr__", __expr__, as_expr=False)
+            if submatches:
+                for submatch in submatches:
+                    __expr__sub = submatch.exp_table.get("__expr__")
+                    _assign_ = submatch.symbol_table.get("_assign_")[0].astNode
+                    if len(__expr__sub.find_all("Name")) == 0:
+                        explain(
+                            'You only need to initialize <code>{0!s}</code> once. Remember that statements in an '
+                            'iteration block happens multiple times'
+                            '<br><br><i>(wrong_init_in_iter)<i></br>'.format(_assign_.id))
+                        return True
     return False
 
 
