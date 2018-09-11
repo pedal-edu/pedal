@@ -65,8 +65,8 @@ def list_all_zeros_8_2():
 
 # ################8.3 Start#######################
 def wrong_list_initialization_placement_8_3():
-    for_matches = find_matches("for ___ in ___:"
-                           "    pass")
+    for_matches = find_matches("for ___ in ___:\n"
+                               "    pass")
     init_matches = find_matches("episode_length_list = ___")
     if init_matches and for_matches:
         for for_match in for_matches:
