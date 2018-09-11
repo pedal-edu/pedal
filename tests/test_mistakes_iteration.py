@@ -117,5 +117,10 @@ class AppendMistakeTest(MistakeTest):
         self.assertTrue(wrong_target_reassigned(), "false negative")
 
         self.to_source("for item in items:\n"
+                       "    if stuff:\n"
+                       "        item = 12")
+        self.assertTrue(wrong_target_reassigned(), "false negative")
+
+        self.to_source("for item in items:\n"
                        "    pass")
         self.assertFalse(wrong_target_reassigned(), "false positive")
