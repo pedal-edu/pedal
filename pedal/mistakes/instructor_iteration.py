@@ -124,10 +124,10 @@ def wrong_target_reassigned():
     if matches:
         for match in matches:
             __expr__ = match.exp_table.get("__expr__")
-            submatches = find_expr_sub_matches("_item_ = ___", __expr__, as_expr=False)
+            _item_ = match.symbol_table.get("_item_")[0]
+            submatches = find_expr_sub_matches("{} = ___".format(_item_.id), __expr__, as_expr=False)
             if submatches:
                 for submatch in submatches:
-                    _item_ = submatch.symbol_table.get("_item_")[0].astNode
                     explain("The property <code>{0!s}</code> has been reassigned. "
                             "The iteration property shouldn't be reassigned"
                             "<br><br><i>(target_reassign)<i></br>".format(_item_.id))
