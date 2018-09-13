@@ -59,8 +59,8 @@ def wrong_not_append_to_list():
                 for submatch in submatches:
                     _target_ = submatch.symbol_table.get("_target_")[0].astNode
                     if not data_type(_target_).is_instance(list):
-                        explain("Values can only be appended to a list. The property <code>{0!s}</code> is either "
-                                "not initialized, not initialized correctly, or is confused with another property."
+                        explain("Values can only be appended to a list. The variable <code>{0!s}</code> is either "
+                                "not initialized, not initialized correctly, or is confused with another variable."
                                 "<br><br><i>(app_not_list)<i></br>".format(_target_.id))
                         return True
     return False
@@ -80,7 +80,7 @@ def missing_append_list_initialization():
                                              "for ___ in ___:\n"
                                              "    __expr__".format(_new_list_.id))
                     if not matches02:
-                        explain("The list property <code>{0!s}</code> must be initialized.<br><br><i>"
+                        explain("The list variable <code>{0!s}</code> must be initialized.<br><br><i>"
                                 "(no_app_list_init)<i></br>".format(_new_list_.id))
                         return True
     return False
@@ -99,8 +99,8 @@ def wrong_append_list_initialization():
             if submatch and (__expr1__.ast_name == "List" and
                len(__expr1__.elts) != 0 or
                __expr1__.ast_name != "List"):
-                explain("The list property <code>{0!s}</code> is either not initialized correctly or mistaken for"
-                        " another property. The list you append to should be initialized to an empty list.<br><br><i>"
+                explain("The list variable <code>{0!s}</code> is either not initialized correctly or mistaken for"
+                        " another variable. The list you append to should be initialized to an empty list.<br><br><i>"
                         "(app_list_init)<i></br>".format(_list_.id))
                 return True
     return False
