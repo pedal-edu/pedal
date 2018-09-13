@@ -24,6 +24,18 @@ class HistogramMistakeTests(MistakeTest):
         self.assertFalse(histogram_wrong_list(), "false positive")
 
         self.to_source("for item in items:\n"
+                       "    if fun:\n"
+                       "        target.append(item)\n"
+                       "plt.hist(target)")
+        self.assertFalse(histogram_wrong_list(), "false positive")
+
+        self.to_source("for item in items:\n"
                        "    target.append(item)\n"
+                       "plt.hist(item)")
+        self.assertTrue(histogram_wrong_list(), "false negative")
+
+        self.to_source("for item in items:\n"
+                       "    if fun:\n"
+                       "        target.append(item)\n"
                        "plt.hist(item)")
         self.assertTrue(histogram_wrong_list(), "false negative")

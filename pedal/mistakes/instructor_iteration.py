@@ -119,10 +119,17 @@ def missing_for_slot_empty():
 
 
 def wrong_target_reassigned():
-    match = find_match("for _item_ in ___:\n   _item_ = ___")
-    if match:
-        _item_ = match.symbol_table.get("_item_")[0].astNode
-        explain("The property <code>{0!s}</code> has been reassigned. The iteration property shouldn't be reassigned"
-                "<br><br><i>(target_reassign)<i></br>".format(_item_.id))
-        return True
+    matches = find_matches("for _item_ in ___:\n"
+                           "   __expr__")
+    if matches:
+        for match in matches:
+            __expr__ = match.exp_table.get("__expr__")
+            _item_ = match.symbol_table.get("_item_")[0]
+            submatches = find_expr_sub_matches("{} = ___".format(_item_.id), __expr__, as_expr=False)
+            if submatches:
+                for submatch in submatches:
+                    explain("The property <code>{0!s}</code> has been reassigned. "
+                            "The iteration property shouldn't be reassigned"
+                            "<br><br><i>(target_reassign)<i></br>".format(_item_.id))
+                    return True
     return False

@@ -14,6 +14,11 @@ class AppendMistakeTest(MistakeTest):
         self.assertFalse(missing_append_in_iteration(), "false positive")
 
         self.to_source("for item in items:\n"
+                       "    if fun:\n"
+                       "        new_list.append(item)")
+        self.assertFalse(missing_append_in_iteration(), "false positive")
+
+        self.to_source("for item in items:\n"
                        "    pass")
         self.assertTrue(missing_append_in_iteration(), "false negative")
 
@@ -22,9 +27,20 @@ class AppendMistakeTest(MistakeTest):
                        "    new_list.append(item)")
         self.assertTrue(wrong_not_append_to_list(), "false negative")
 
+        self.to_source("for item in items:\n"
+                       "    if fun:\n"
+                       "        new_list.append(item)")
+        self.assertTrue(wrong_not_append_to_list(), "false negative")
+
         self.to_source("new_list = []\n"
                        "for item in items:\n"
                        "    new_list.append(item)")
+        self.assertFalse(wrong_not_append_to_list(), "false positive")
+
+        self.to_source("new_list = []\n"
+                       "for item in items:\n"
+                       "    if fun:\n"
+                       "        new_list.append(item)")
         self.assertFalse(wrong_not_append_to_list(), "false positive")
 
     def test_missing_append_list_initialization(self):
@@ -32,9 +48,20 @@ class AppendMistakeTest(MistakeTest):
                        "    target.append(item)")
         self.assertTrue(missing_append_list_initialization(), "false negative")
 
+        self.to_source("for item in items:\n"
+                       "    if fun:\n"
+                       "        target.append(item)")
+        self.assertTrue(missing_append_list_initialization(), "false negative")
+
         self.to_source("target = []\n"
                        "for item in items:\n"
                        "    target.append(item)")
+        self.assertFalse(missing_append_list_initialization(), "false positive")
+
+        self.to_source("target = []\n"
+                       "for item in items:\n"
+                       "    if fun:\n"
+                       "        target.append(item)")
         self.assertFalse(missing_append_list_initialization(), "false positive")
 
     def test_wrong_append_list_initialization(self):
@@ -43,9 +70,21 @@ class AppendMistakeTest(MistakeTest):
                        "    new_list.append(item)")
         self.assertTrue(wrong_append_list_initialization(), "false negative")
 
+        self.to_source("new_list = 0\n"
+                       "for item in items:\n"
+                       "    if fun:\n"
+                       "        new_list.append(item)")
+        self.assertTrue(wrong_append_list_initialization(), "false negative")
+
         self.to_source("new_list = []\n"
                        "for item in items:\n"
                        "    new_list.append(item)")
+        self.assertFalse(wrong_append_list_initialization(), "false positive")
+
+        self.to_source("new_list = []\n"
+                       "for item in items:\n"
+                       "    if fun:\n"
+                       "        new_list.append(item)")
         self.assertFalse(wrong_append_list_initialization(), "false positive")
 
     def test_append_list_wrong_slot(self):
@@ -56,5 +95,17 @@ class AppendMistakeTest(MistakeTest):
 
         self.to_source("new_list = []\n"
                        "for item in items:\n"
+                       "    if fun:\n"
+                       "        item.append(new_list)")
+        self.assertTrue(append_list_wrong_slot(), "false negative")
+
+        self.to_source("new_list = []\n"
+                       "for item in items:\n"
                        "    new_list.append(item)")
+        self.assertFalse(append_list_wrong_slot(), "false positive")
+
+        self.to_source("new_list = []\n"
+                       "for item in items:\n"
+                       "    if fun:\n"
+                       "        new_list.append(item)")
         self.assertFalse(append_list_wrong_slot(), "false positive")

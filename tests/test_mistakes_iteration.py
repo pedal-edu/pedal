@@ -116,6 +116,18 @@ class AppendMistakeTest(MistakeTest):
                        "    item = 12")
         self.assertTrue(wrong_target_reassigned(), "false negative")
 
+        self.to_source("pages_count_list = [345, 414, 278, 510]\n"
+                       "sum_pages = 0\n"
+                       "for pages_count in pages_count_list:\n"
+                       "    sum_pages = sum_pages + pages_count\n"
+                       "print(sum_pages)\n")
+        self.assertFalse(wrong_target_reassigned(), "false positive")
+
+        self.to_source("for item in items:\n"
+                       "    if stuff:\n"
+                       "        item = 12")
+        self.assertTrue(wrong_target_reassigned(), "false negative")
+
         self.to_source("for item in items:\n"
                        "    pass")
         self.assertFalse(wrong_target_reassigned(), "false positive")
