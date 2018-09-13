@@ -42,7 +42,8 @@ Tools
 Source
 ------
 
-.. codeblock:: python
+.. code:: python
+
   from pedal.source import set_source
   STUDENT_CODE = "message='Hello World'\nprint(message)"
   set_source(STUDENT_CODE)
@@ -57,7 +58,8 @@ Tifa is a Type Inferencer and Flow Analyzer. Its goal is not to be a general pur
 CAIT
 ----
 
-.. codeblock:: python
+.. code:: python
+
   from pedal.cait import parse_program, find_matches
   parse_program()
   matches = find_matches("_var_ = __expr__")
