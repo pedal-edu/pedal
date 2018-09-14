@@ -6,7 +6,7 @@ A collection of tools to analyze student's work in a pipeline. Pedal not only pr
 Important Concepts
 ==================
 
-![Overview of Pedal Framework](docs/_static/pedal-overview.png)
+.. image:: docs/_static/pedal-overview.png
 
 * *Report*: A collection of Feedback and a namespace for the results of Tools, accessible by the Tool name. Reports can be generated imperatively (using the default Report, similar to MatPlotLib) or by explicitly creating and passing Report objects.
 * *Tool*: A system that can read and write to a Report, building on the work of previous Tools.
@@ -42,11 +42,11 @@ Tools
 Source
 ------
 
-```python
-from pedal.source import set_source
-STUDENT_CODE = "message='Hello World'\nprint(message)"
-set_source(STUDENT_CODE)
-```
+.. code:: python
+
+  from pedal.source import set_source
+  STUDENT_CODE = "message='Hello World'\nprint(message)"
+  set_source(STUDENT_CODE)
 
 One of the simplest tools, the Source tool provides a function for attaching source code to a Report. It is a requirement for any tool that wants to do code analysis. But notice that this tool is not required in general - you could find other ways to attach code (e.g., a History tool that attaches all previous code written) or other aspects of the students' performance (e.g., a Demographics tool to attach bio-data about the student).
 
@@ -58,11 +58,11 @@ Tifa is a Type Inferencer and Flow Analyzer. Its goal is not to be a general pur
 CAIT
 ----
 
-```python
-from pedal.cait import parse_program, find_matches
-parse_program()
-matches = find_matches("_var_ = __expr__")
-```
+.. code:: python
+
+  from pedal.cait import parse_program, find_matches
+  parse_program()
+  matches = find_matches("_var_ = __expr__")
 
 Capturer for AST Inclusion Trees. Its goal is to take a a desired AST and a target AST, and captures trees in the target ast that include the desired AST. A metaphor might be "Regular Expressions for source code".
 

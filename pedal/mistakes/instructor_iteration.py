@@ -31,7 +31,7 @@ def wrong_target_is_list():
     if match:
         _item_ = match.symbol_table.get("_item_")[0].astNode
         if data_state(_item_).was_type('list'):
-            explain('The property <code>{0!s}</code> is a list and should not be placed in the iteration property slot'
+            explain('The variable <code>{0!s}</code> is a list and should not be placed in the iteration variable slot'
                     ' of the "for" block<br><br><i>(target_is_list)<i></br>.'.format(_item_.id))
             return True
     return False
@@ -43,7 +43,7 @@ def wrong_list_repeated_in_for():
     if match:
         _item_ = match.symbol_table.get("_item_")[0].astNode
         if data_state(_item_).was_type('list'):
-            explain('The <code>{0!s}</code> property can only appear once in the "for" block <br><br><i>'
+            explain('The <code>{0!s}</code> variable can only appear once in the "for" block <br><br><i>'
                     '(list_repeat)<i></br>'.format(_item_.id))
             return True
     return False
@@ -58,7 +58,7 @@ def missing_iterator_initialization():
             explain("The slot to hold a list in the iteration is empty.<br><br><i>(no_iter_init-blank)<i></br>")
             return True
         elif not data_state(_list_).was_type('list'):
-            explain("The property <code>{0!s}</code> is in the list slot of the iteration but is not a list."
+            explain("The variable <code>{0!s}</code> is in the list slot of the iteration but is not a list."
                     "<br><br><i>(no_iter_init)<i></br>".format(_list_.id))
             return True
     return False
@@ -70,7 +70,7 @@ def wrong_iterator_not_list():
     if match:
         _item_ = match.symbol_table.get("_item_")[0].astNode
         if not data_state(_item_).was_type('list'):
-            explain("The property <code>{0!s}</code> has been set to something that is not a list but is placed in the "
+            explain("The variable <code>{0!s}</code> has been set to something that is not a list but is placed in the "
                     "iteration block that must be a list.<br><br><i>(iter_not_list)<i></br>".format(_item_.id))
             return True
     return False
@@ -128,8 +128,8 @@ def wrong_target_reassigned():
             submatches = find_expr_sub_matches("{} = ___".format(_item_.id), __expr__, as_expr=False)
             if submatches:
                 for submatch in submatches:
-                    explain("The property <code>{0!s}</code> has been reassigned. "
-                            "The iteration property shouldn't be reassigned"
+                    explain("The variable <code>{0!s}</code> has been reassigned. "
+                            "The iteration variable shouldn't be reassigned"
                             "<br><br><i>(target_reassign)<i></br>".format(_item_.id))
                     return True
     return False
