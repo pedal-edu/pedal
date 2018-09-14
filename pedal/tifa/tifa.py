@@ -9,10 +9,10 @@ from pedal.tifa.type_definitions import (UnknownType, RecursedType,
                                          ListType, StrType, FileType,
                                          DictType, ModuleType, SetType,
                                          GeneratorType, DayType, TimeType,
-                                         type_from_json, type_to_literal)
-from pedal.tifa.literal_definitions import (LiteralNum, LiteralBool,
-                                            LiteralNone, LiteralStr,
-                                            LiteralTuple)
+                                         type_from_json, type_to_literal,
+                                         LiteralNum, LiteralBool,
+                                         LiteralNone, LiteralStr,
+                                         LiteralTuple)
 from pedal.tifa.builtin_definitions import (get_builtin_module, get_builtin_function)
 from pedal.tifa.type_operations import (merge_types, are_types_equal,
                                         VALID_UNARYOP_TYPES, VALID_BINOP_TYPES,
@@ -536,18 +536,19 @@ class Tifa(ast.NodeVisitor):
         if not node.keys:
             type.empty = True
         else:
-            type.empty = True
+            type.empty = False
             all_literals = True
             keys, values, literals = [], [], []
             for key, value in zip(node.keys, node.values):
-                key, value = self.visit(key), self.visit(value)
                 literal = self.get_literal(key)
+                key, value = self.visit(key), self.visit(value)
                 values.append(value)
                 keys.append(key)
                 if literal is not None:
                     literals.append(literal)
                 else:
                     all_literals = False;
+            
             if all_literals:
                 type.literals = literals
                 type.values = values

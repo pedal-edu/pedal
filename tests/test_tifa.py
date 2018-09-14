@@ -7,7 +7,6 @@ from pprint import pprint
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import pedal.tifa
 import pedal.tifa.type_definitions as defs
-import pedal.tifa.literal_definitions as literal_defs
 
 unit_tests = {
     # Source Code, Shouldn't catch this, Should catch this
@@ -254,6 +253,10 @@ unit_tests = {
     'read_out_scope2':
         ["x = ''\ndef y():\n    return x\ny()", ['Unused Variable'], []],
     
+    'read_out_scope_double_branch':
+        ["def x():\n  if True:\n    y=0\n  else:\n    y=1\n  y\nx()", 
+        ['Unused Variable', 'Read out of scope'], []],
+    
     # Calling functions from within functions
     'call_function_within_function':
         ['def z():\n     return b\ndef y():\n    b = 0\n    z()\n    return b\ndef x():\n    y()\nx()', ['Unused Variable'], ['Read out of scope']],
@@ -281,6 +284,9 @@ unit_tests = {
     'prevent_empty_iteration_in_appended_list':
         ['eles = [1,2,3]\nx = []\nfor ele in eles:\n    x.append(ele)\nfor e2 in x:\n    e2+1', 
             ['Iterating over empty list'], []],
+            
+    'prevent_empty_iteration_dict':
+        ['x={"A":5}\nfor y in x:\n y', ['Iterating over empty list'], []],
     
     # Built-in modules
     'import_string_letters':
@@ -418,9 +424,9 @@ class TestVariables(unittest.TestCase):
         self.assertIsInstance(t, defs.DictType)
         self.assertIsInstance(t.literals, list)
         self.assertEqual(len(t.literals), 2)
-        self.assertIsInstance(t.literals[0], literal_defs.LiteralStr)
+        self.assertIsInstance(t.literals[0], defs.LiteralStr)
         self.assertEqual(t.literals[0].value, 'First')
-        self.assertIsInstance(t.literals[1], literal_defs.LiteralStr)
+        self.assertIsInstance(t.literals[1], defs.LiteralStr)
         self.assertEqual(t.literals[1].value, 'Second')
         self.assertIsInstance(t.values, list)
         self.assertEqual(len(t.values), 2)
