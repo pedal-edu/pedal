@@ -40,9 +40,11 @@ class TestCode(unittest.TestCase):
         self.assertEqual(message, 'You should always create unit tests.')
     
     def test_explain(self):
+        # Tifa < Explain
         with Execution('1+""') as e:
             explain("You cannot add those.")
         self.assertEqual(e.message, "You cannot add those.")
+        # Tifa > Gently
         with Execution('1+""') as e:
             gently("You cannot add those.")
         self.assertEqual(e.label, "Incompatible types")
@@ -171,6 +173,27 @@ class TestCode(unittest.TestCase):
         self.assertEqual(category, "Syntax")
         self.assertEqual(label, "Blank source")
         self.assertEqual(message, "Source code file is blank.")
+    
+    def test_gently_vs_runtime(self):
+        # Runtime > Gently
+        clear_report()
+        set_source('import json\njson.loads("0")+"1"')
+        tifa_analysis()
+        compatibility.run_student(raise_exceptions=True)
+        gently("I have a gentle opinion, but you don't want to hear it.")
+        (success, score, category, label, 
+         message, data, hide) = simple.resolve()
+        self.assertEqual(category, "Runtime")
+        
+        # Runtime < Explain
+        clear_report()
+        set_source('import json\njson.loads("0")+"1"')
+        tifa_analysis()
+        compatibility.run_student(raise_exceptions=True)
+        explain("LISTEN TO ME")
+        (success, score, category, label, 
+         message, data, hide) = simple.resolve()
+        self.assertEqual(category, "instructor")
         
 
 if __name__ == '__main__':
