@@ -2,18 +2,18 @@ from pedal.report import MAIN_REPORT
 
 DEFAULT_CATEGORY_PRIORITY = [
     'syntax',
-    'instructor',
     'mistakes',
+    'instructor',
     'analyzer',
-    'student',
     'runtime',
+    'student',
     'positive',
     'uncategorized',
 ]
 
 # For compatibility with the old feedback API
 LEGACY_CATEGORIZATIONS = {
-    'student': 'runtime',
+    #'student': 'runtime',
     'parser': 'syntax',
     'verifier': 'syntax',
     'instructor': 'instructor'
@@ -41,9 +41,9 @@ def by_priority(feedback):
         value = len(DEFAULT_CATEGORY_PRIORITY)
     offset = .5
     if priority == 'low':
-        offset = .3
-    elif priority == 'high':
         offset = .7
+    elif priority == 'high':
+        offset = .3
     elif priority not in ('low', 'medium', 'high'):
         if priority in DEFAULT_CATEGORY_PRIORITY:
             value = DEFAULT_CATEGORY_PRIORITY.index(priority)

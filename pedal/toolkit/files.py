@@ -1,5 +1,5 @@
 from pedal.cait.cait_api import parse_program
-from pedal.report.imperative import gently, explain
+from pedal.report.imperative import explain, explain
 from pedal.toolkit.utilities import ensure_literal
 
 def files_not_handled_correctly(*filenames):
@@ -21,7 +21,7 @@ def files_not_handled_correctly(*filenames):
         if a_call.func.ast_name == 'Name':
             if a_call.func.id == 'open':
                 if not a_call.args:
-                    gently("You have called the <code>open</code> function "
+                    explain("You have called the <code>open</code> function "
                            "without any arguments. It needs a filename.")
                     return True
                 called_open.append(a_call)
@@ -32,23 +32,23 @@ def files_not_handled_correctly(*filenames):
                 return True
         elif a_call.func.ast_name == 'Attribute':
             if a_call.func.attr == 'open':
-                gently("You have attempted to call <code>open</code> as a "
+                explain("You have attempted to call <code>open</code> as a "
                        "method, but it is actually a built-in function.")
                 return True
             elif a_call.func.attr == 'close':
                 closed.append(a_call)
     if len(called_open) < num_filenames:
-        gently("You have not opened all the files you were supposed to.")
+        explain("You have not opened all the files you were supposed to.")
         return True
     elif len(called_open) > num_filenames:
-        gently("You have opened more files than you were supposed to.")
+        explain("You have opened more files than you were supposed to.")
         return True
     withs = ast.find_all("With")
     if len(withs) + len(closed) < num_filenames:
-        gently("You have not closed all the files you were supposed to.")
+        explain("You have not closed all the files you were supposed to.")
         return True
     elif len(withs) + len(closed) > num_filenames:
-        gently("You have closed more files than you were supposed to.")
+        explain("You have closed more files than you were supposed to.")
         return True
     if actual_filenames:
         return ensure_literal(*filenames)

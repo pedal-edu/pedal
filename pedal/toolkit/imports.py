@@ -1,5 +1,5 @@
 from pedal.cait.cait_api import parse_program
-from pedal.report.imperative import gently
+from pedal.report.imperative import explain
 
 def ensure_imports(*modules):
     ast = parse_program()
@@ -7,7 +7,7 @@ def ensure_imports(*modules):
         imports= ast.find_all("Import")
         import_froms = ast.find_all("ImportFrom")
         if not imports and not import_froms:
-            gently("You need to import the <code>{}</code> module.".format(module))
+            explain("You need to import the <code>{}</code> module.".format(module))
             return True
         success = False
         if imports:
@@ -19,6 +19,6 @@ def ensure_imports(*modules):
             if any(i.module == module for i in import_froms):
                 success = True
         if not success:
-            gently("You need to import the <code>{}</code> module.".format(module))
+            explain("You need to import the <code>{}</code> module.".format(module))
             return True
     return False

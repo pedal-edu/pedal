@@ -2,8 +2,8 @@ from pedal.tifa.type_definitions import (UnknownType, RecursedType, FunctionType
                               ClassType, NumType, NoneType, BoolType,
                               TupleType, ListType, StrType,
                               FileType, DictType, ModuleType, 
-                              SetType, GeneratorType, DayType, TimeType)
-from pedal.tifa.literal_definitions import LiteralNum
+                              SetType, GeneratorType, DayType, TimeType,
+                              LiteralNum)
 
 def get_builtin_module(name):
     if name == 'matplotlib':
