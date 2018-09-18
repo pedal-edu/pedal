@@ -368,8 +368,22 @@ class SpecificMistakeTest(MistakeTest):
         self.to_source("for item in items:\n"
                        "    total = total + item\n"
                        "    count = count + 1\n"
+                       "print(total/count)")
+        self.assertFalse(missing_average(), "false positive")
+
+        self.to_source("for item in items:\n"
+                       "    total = total + item\n"
+                       "    count = count + 1\n"
                        "average = total/total")
         self.assertTrue(missing_average(), "false negative")
+        # TODO: Address this case, probably as a separate mistake
+        '''
+        self.to_source("for item in items:\n"
+                       "    total = total + item\n"
+                       "    count = count + 1\n"
+                       "total = count/total")
+        self.assertTrue(missing_average(), "false negative")
+        '''
 
     def test_warning_average_in_iteration(self):
         self.to_source("for item in items:\n"

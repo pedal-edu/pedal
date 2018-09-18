@@ -465,16 +465,18 @@ def wrong_printing_list():
 def missing_average():
     matches_missing = find_matches("for ___ in ___:\n"
                                    "    pass\n"
-                                   "_average_ = _total_/_count_")
+                                   "__expr__")
     matches = []
     if matches_missing:
         for match in matches_missing:
-            _total_ = match.symbol_table.get("_total_")[0]
-            _count_ = match.symbol_table.get("_count_")[0]
-            _average_ = match.symbol_table.get("_average_")[0]
-            if _total_.id != _count_.id != _average_.id and _total_.id != _average_.id:
-                matches.append(match)
-
+            __expr__ = match.exp_table.get("__expr__")
+            sub_matches = find_expr_sub_matches("_total_/_count_", __expr__, cut=True)
+            if sub_matches:
+                for sub_match in sub_matches:
+                    _total_ = sub_match.symbol_table.get("_total_")[0]
+                    _count_ = sub_match.symbol_table.get("_count_")[0]
+                    if _total_.id != _count_.id:
+                        matches.append(match)
     if not len(matches) > 0:
         explain('An average value is not computed.<br><br><i>(no_avg)<i></br>')
         return True
