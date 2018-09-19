@@ -506,38 +506,46 @@ def warning_average_in_iteration():
 
 def wrong_average_denominator():
     matches = find_matches("for ___ in ___:\n"
-                           "    __expr__\n"
-                           "_average_ = _total_/_value_")
+                           "    __expr__\n"  # where expr contains _count_ = _count_ + 1
+                           "__expr2__")  # where expr2 contains ___/_value_
+    # where _value_.id != _count_.id
     if matches:
         for match in matches:
             __expr__ = match.exp_table.get("__expr__")
-            _value_ = match.symbol_table.get("_value_")[0]
+            __expr2__ = match.exp_table.get("__expr2__")
+            # _value_ = match.symbol_table.get("_value_")[0]
             submatches = find_expr_sub_matches("_count_ = _count_ + 1", __expr__, as_expr=False)
-            if submatches:
+            submatches02 = find_expr_sub_matches("___/_value_", __expr2__, cut=True)
+            if submatches and submatches02:
                 for submatch in submatches:
-                    _count_ = submatch.symbol_table.get("_count_")[0]
-                    if _count_.id != _value_.id:
-                        explain('The average is not calculated correctly.<br><br><i>(avg_denom)<i></br>')
-                        return True
+                    for submatch02 in submatches02:
+                        _count_ = submatch.symbol_table.get("_count_")[0]
+                        _value_ = submatch02.symbol_table.get("_value_")[0]
+                        if _count_.id != _value_.id:
+                            explain('The average is not calculated correctly.<br><br><i>(avg_denom)<i></br>')
+                            return True
     return False
 
 
 def wrong_average_numerator():
     matches = find_matches("for _item_ in ___:\n"
-                           "    __expr__\n"
-                           "_average_ = _value_/_count_")
+                           "    __expr__\n"  # where expr contains _total_ = _total_ + 1
+                           "__expr2__")  # where expr2 contains _value_/___
     if matches:
         for match in matches:
             __expr__ = match.exp_table.get("__expr__")
-            _value_ = match.symbol_table.get("_value_")[0]
+            __expr2__ = match.exp_table.get("__expr2__")
             _item_ = match.symbol_table.get("_item_")[0]
-            submatches = find_expr_sub_matches("_total_ = _total_ + {}".format(_item_.id), __expr__, as_expr=False)
+            submatches = find_expr_sub_matches("_total_ = _total_ + {}".format(_item_.id), __expr__, as_expr=False, cut=True)
+            submatches02 = find_expr_sub_matches("_value_/___", __expr2__, cut=True)
             if submatches:
                 for submatch in submatches:
-                    _total_ = submatch.symbol_table.get("_total_")[0]
-                    if _total_.id != _value_.id:
-                        explain('The average is not calculated correctly.<br><br><i>(avg_numer)<i></br>')
-                        return True
+                    for submatch02 in submatches02:
+                        _value_ = submatch02.symbol_table.get("_value_")[0]
+                        _total_ = submatch.symbol_table.get("_total_")[0]
+                        if _total_.id != _value_.id:
+                            explain('The average is not calculated correctly.<br><br><i>(avg_numer)<i></br>')
+                            return True
     return False
 
 
@@ -891,7 +899,7 @@ def wrong_filter_condition_10_3():
     if matches:
         for match in matches:
             __expr__ = match.exp_table.get("__expr__")
-            if __expr__.numeric_logic_check(1, "var > 0"):
+            if __expr__.numeric_logic_check(1, "var > 0") or __expr__.numeric_logic_check(1, "var != 0"):
                 return False
         explain('The condition used to filter the year when artists died is not correct.<br><br><i>(filt_10.3)<i></br>')
         return True

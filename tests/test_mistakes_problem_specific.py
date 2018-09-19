@@ -432,6 +432,33 @@ class SpecificMistakeTest(MistakeTest):
                        "average = total/total\n")
         self.assertTrue(wrong_average_denominator(), "false negative")
 
+        # print examples
+        self.to_source("for item in items:\n"
+                       "    total = total + item\n"
+                       "    count = count + 1\n"
+                       "print(total/count)")
+        self.assertFalse(wrong_average_denominator(), "false positive")
+
+        self.to_source("for item in items:\n"
+                       "    total = total + item\n"
+                       "    count = count + 1\n"
+                       "print(total/total)\n")
+        self.assertTrue(wrong_average_denominator(), "false negative")
+
+        self.to_source("for item in items:\n"
+                       "    if fun:\n"
+                       "        total = total + item\n"
+                       "        count = count + 1\n"
+                       "print(total/count)")
+        self.assertFalse(wrong_average_denominator(), "false positive")
+
+        self.to_source("for item in items:\n"
+                       "    if fun:\n"
+                       "        total = total + item\n"
+                       "        count = count + 1\n"
+                       "print(total/total)\n")
+        self.assertTrue(wrong_average_denominator(), "false negative")
+
     def test_wrong_average_numerator(self):
         self.to_source("for item in items:\n"
                        "    total = total + item\n"
@@ -457,6 +484,33 @@ class SpecificMistakeTest(MistakeTest):
                        "        total = total + item\n"
                        "        count = count + 1\n"
                        "average = count/count\n")
+        self.assertTrue(wrong_average_numerator(), "false negative")
+
+        # print tests
+        self.to_source("for item in items:\n"
+                       "    total = total + item\n"
+                       "    count = count + 1\n"
+                       "print(total/countprint(")
+        self.assertFalse(wrong_average_numerator(), "false positive")
+
+        self.to_source("for item in items:\n"
+                       "    total = total + item\n"
+                       "    count = count + 1\n"
+                       "print(count/count)\n")
+        self.assertTrue(wrong_average_numerator(), "false negative")
+
+        self.to_source("for item in items:\n"
+                       "    if fun:\n"
+                       "        total = total + item\n"
+                       "        count = count + 1\n"
+                       "print(total/count)")
+        self.assertFalse(wrong_average_numerator(), "false positive")
+
+        self.to_source("for item in items:\n"
+                       "    if fun:\n"
+                       "        total = total + item\n"
+                       "        count = count + 1\n"
+                       "print(count/count)\n")
         self.assertTrue(wrong_average_numerator(), "false negative")
 
     def test_wrong_compare_list(self):
