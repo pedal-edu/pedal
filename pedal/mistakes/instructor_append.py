@@ -58,7 +58,7 @@ def wrong_not_append_to_list():
             if submatches:
                 for submatch in submatches:
                     _target_ = submatch.symbol_table.get("_target_")[0].astNode
-                    if not data_type(_target_).is_instance(list):
+                    if not data_state(_target_).was_type('list'):
                         explain("Values can only be appended to a list. The variable <code>{0!s}</code> is either "
                                 "not initialized, not initialized correctly, or is confused with another variable."
                                 "<br><br><i>(app_not_list)<i></br>".format(_target_.id))
@@ -112,7 +112,7 @@ def append_list_wrong_slot():
         for match in matches:
             _item_ = match.symbol_table.get("_item_")[0].astNode
             _target_ = match.symbol_table.get("_target_")[0].astNode
-            if data_type(_item_).was_type(list):
+            if data_state(_item_).was_type(list):
                 explain("You should not append a list (<code>{0!s}</code>) to <code>{1!s}</code>.<br><br><i>"
                         "(app_list_slot)<i></br>".format(_item_.id, _target_.id))
                 return True

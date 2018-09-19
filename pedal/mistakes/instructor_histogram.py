@@ -64,7 +64,7 @@ def histogram_argument_not_list():
     if matches:
         for match in matches:
             _argument_ = match.symbol_table.get("_argument_")[0].astNode
-            if not data_type(_argument_).is_instance(list):
+            if not data_state(_argument_).was_type('list'):
                 explain("Making a histogram requires a list; <code>{0!s}</code> is not a list.<br><br><i>"
                         "(hist_arg_not_list)<i></br>".format(_argument_.id))
                 return True
