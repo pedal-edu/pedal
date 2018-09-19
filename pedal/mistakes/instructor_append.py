@@ -112,9 +112,8 @@ def append_list_wrong_slot():
         for match in matches:
             _item_ = match.symbol_table.get("_item_")[0].astNode
             _target_ = match.symbol_table.get("_target_")[0].astNode
-            if data_type(_item_).is_instance(list):
+            if data_type(_item_).was_type(list):
                 explain("You should not append a list (<code>{0!s}</code>) to <code>{1!s}</code>.<br><br><i>"
                         "(app_list_slot)<i></br>".format(_item_.id, _target_.id))
                 return True
     return False
-
