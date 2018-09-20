@@ -1,7 +1,7 @@
 import re
 from pedal.source import get_program
 from pedal.sandbox.compatibility import get_output
-from pedal.report.imperative import gently
+from pedal.report.imperative import gently, explain
 
 
 # Feedback for author's name
@@ -38,3 +38,8 @@ def check_print_output(multiple_lines):
     for line in multiple_lines:
         if line not in get_output():
             gently("You are not doing the correct calculation")
+
+
+def find_in_code(regex):
+    code = get_program()
+    return re.search(regex, code)

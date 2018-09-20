@@ -433,6 +433,13 @@ class CaitTests(unittest.TestCase):
         self.assertTrue(type(matches) == list, "find_matches did not return a list")
         self.assertTrue(type(matches[0]) == AstMap, "find_matches does not contain an AstMap")
         self.assertTrue(len(matches) == 2, "find_matches does not return the correct number of matches")
+
+        set_source("for ___ in ___:"
+                   "if ___:\n"
+                   "    pass")
+        matches = find_matches("for 'fun' in ___:\n"
+                               "    pass")
+        self.assertFalse(matches, "find matches should have misparsed and returned False, but returned True instead")
     
     def test_invalid_code(self):
         set_source("float('0') + 1")

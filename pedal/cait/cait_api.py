@@ -125,11 +125,14 @@ def find_matches(ins_code, std_code=None, report=None, cut=False):
     """
     cait_obj = Cait(std_code=std_code, report=report)
     # TODO: Check to make sure the code actually parsed
-    std_code = cait_obj.report['cait']['std_ast']
-    matcher = StretchyTreeMatcher(ins_code)
-    cait_obj.report['cait']['matcher'] = matcher
-    matches = cait_obj.report['cait']['matcher'].find_matches(std_code, cut=cut)
-    return matches
+    try:
+        std_code = cait_obj.report['cait']['std_ast']
+        matcher = StretchyTreeMatcher(ins_code)
+        cait_obj.report['cait']['matcher'] = matcher
+        matches = cait_obj.report['cait']['matcher'].find_matches(std_code, cut=cut)
+        return matches
+    except KeyError:
+        return False
 
 
 def find_expr_sub_matches(ins_expr, std_expr, as_expr=True, is_mod=False, cut=False):
