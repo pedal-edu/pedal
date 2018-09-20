@@ -538,7 +538,7 @@ def wrong_average_numerator():
             _item_ = match.symbol_table.get("_item_")[0]
             submatches = find_expr_sub_matches("_total_ = _total_ + {}".format(_item_.id), __expr__, as_expr=False, cut=True)
             submatches02 = find_expr_sub_matches("_value_/___", __expr2__, cut=True)
-            if submatches:
+            if submatches and submatches02:
                 for submatch in submatches:
                     for submatch02 in submatches02:
                         _value_ = submatch02.symbol_table.get("_value_")[0]
