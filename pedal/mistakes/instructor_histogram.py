@@ -95,11 +95,12 @@ def histogram_wrong_list():
             _list_ = match.symbol_table.get("_list_")[0].astNode
             __expr__ = match.exp_table.get("__expr__")
             submatches = find_expr_sub_matches("{}.append(___)".format(_list_.id), __expr__)
-            if not submatches:
-                explain(
-                    "The list created in the iteration is not the list being used to create the histogram.<br><br><i>"
-                    "(histo_wrong_list)<i></br>")
-                return True
+            if submatches:
+                return False
+        explain(
+            "The list created in the iteration is not the list being used to create the histogram.<br><br><i>"
+            "(histo_wrong_list)<i></br>")
+        return True
     return False
 
 

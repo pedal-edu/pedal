@@ -35,6 +35,9 @@ class AppendMistakeTest(MistakeTest):
                        'plt.show()\n')
         self.assertFalse(missing_append_in_iteration(), "false negative")
 
+        self.to_source('depth = float(input("depth?"))\n')
+        self.assertFalse(missing_append_in_iteration(), "false negative")
+
     def test_wrong_not_append_to_list(self):
         self.to_source("for item in items:\n"
                        "    new_list.append(item)")

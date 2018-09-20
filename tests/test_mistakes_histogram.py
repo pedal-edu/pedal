@@ -39,3 +39,16 @@ class HistogramMistakeTests(MistakeTest):
                        "        target.append(item)\n"
                        "plt.hist(item)")
         self.assertTrue(histogram_wrong_list(), "false negative")
+
+        self.to_source('depth = float(input("depth?"))\n'
+                       'deep_quake = []\n'
+                       'for quake in quake_list:\n'
+                       '    quake = quake * 0.62\n'
+                       '    if quake > depth:\n'
+                       '        deep_quake.append(quake)\n'
+                       'plt.hist(deep_quake)\n'
+                       'plt.title("title")\n'
+                       'plt.xlabel("title")\n'
+                       'plt.ylabel("title")\n'
+                       'plt.show()\n')
+        self.assertFalse(histogram_wrong_list(), "false positive")

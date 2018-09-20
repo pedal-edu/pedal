@@ -43,9 +43,10 @@ def missing_append_in_iteration():
             submatch = find_expr_sub_matches("___.append(___)", __expr__, cut=True)
             if submatch:
                 return False
-    explain("You must construct a list by appending values one at a time to the list."
-            "<br><br><i>(app_in_iter)<i></br>")
-    return True
+        explain("You must construct a list by appending values one at a time to the list."
+                "<br><br><i>(app_in_iter)<i></br>")
+        return True
+    return False
 
 
 def wrong_not_append_to_list():
