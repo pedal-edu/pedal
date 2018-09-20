@@ -90,7 +90,7 @@ class TestCode(unittest.TestCase):
                          ["Give me a word", "Dogs!", 
                           "Give me a word", "Are!", 
                           "Give me a word", "Great!"])
-    
+
     def test_compatibility_exceptions(self):
         student_code = '1 + "Banana"'
         set_source(student_code)

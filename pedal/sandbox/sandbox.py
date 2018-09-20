@@ -261,7 +261,10 @@ class Sandbox:
         if _as_filename is None:
             _as_filename = self.filename
         if _inputs is None:
-            _inputs = self.inputs
+            if self.inputs is None:
+                _inputs = _make_inputs('', repeat='')
+            else:
+                _inputs = self.inputs
         else:
             _inputs = _make_inputs(*_inputs)
         # Execute

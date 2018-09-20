@@ -194,7 +194,11 @@ class TestCode(unittest.TestCase):
         (success, score, category, label, 
          message, data, hide) = simple.resolve()
         self.assertEqual(category, "instructor")
-        
+    
+    def test_input(self):
+        with Execution('input("Type something:")') as e:
+            pass
+        self.assertNotEqual(e.category, "Runtime")
 
 if __name__ == '__main__':
     unittest.main(buffer=False)
