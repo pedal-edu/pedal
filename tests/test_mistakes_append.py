@@ -22,6 +22,19 @@ class AppendMistakeTest(MistakeTest):
                        "    pass")
         self.assertTrue(missing_append_in_iteration(), "false negative")
 
+        self.to_source('depth = float(input("depth?"))\n'
+                       'deep_quake = []\n'
+                       'for quake in quake_list:\n'
+                       '    quake = quake * 0.62\n'
+                       '    if quake > depth:\n'
+                       '        deep_quake.append(quake)\n'
+                       'plt.hist(deep_quake)\n'
+                       'plt.title("title")\n'
+                       'plt.xlabel("title")\n'
+                       'plt.ylabel("title")\n'
+                       'plt.show()\n')
+        self.assertFalse(missing_append_in_iteration(), "false negative")
+
     def test_wrong_not_append_to_list(self):
         self.to_source("for item in items:\n"
                        "    new_list.append(item)")
