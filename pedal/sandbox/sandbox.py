@@ -262,7 +262,7 @@ class Sandbox:
             _as_filename = self.filename
         if _inputs is None:
             if self.inputs is None:
-                _inputs = _make_inputs('', repeat='')
+                _inputs = _make_inputs('0', repeat='0')
             else:
                 _inputs = self.inputs
         else:

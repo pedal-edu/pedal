@@ -200,6 +200,11 @@ class TestCode(unittest.TestCase):
             pass
         self.assertNotEqual(e.category, "Runtime")
         self.assertEqual(e.label, "No errors")
+        
+        with Execution('float(input("Type something:"))') as e:
+            pass
+        self.assertNotEqual(e.category, "Runtime")
+        self.assertEqual(e.label, "No errors")
 
 if __name__ == '__main__':
     unittest.main(buffer=False)
