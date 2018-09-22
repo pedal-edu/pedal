@@ -289,6 +289,9 @@ class Sandbox:
         
         if callable(self.pre_execution):
             self.pre_execution()
+            
+        if not hasattr(sys, 'modules'):
+            sys.modules = {}
         
         try:
             # Calling compile instead of just passing the string source to exec

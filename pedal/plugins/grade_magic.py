@@ -73,6 +73,7 @@ clear_report()
 from pedal.source import set_source
 set_source({student_code})
 from pedal.sandbox.compatibility import *
+queue_input({inputs})
 run_student()
 student = get_sandbox()
 from pedal.tifa import tifa_analysis
@@ -87,7 +88,7 @@ SUCCESS, SCORE, CATEGORY, LABEL, MESSAGE, DATA, HIDE = simple.resolve()
 '''
 
 
-def blockpy_grade(assignment_id, student_code):
+def blockpy_grade(assignment_id, student_code, inputs):
     """
     Helper function to capture the request from the server.
 
@@ -103,10 +104,10 @@ def blockpy_grade(assignment_id, student_code):
     # If it failed, let's display some information about why.
     if not successful_download:
         return on_run
-    return execute_on_run_code(on_run, student_code)
+    return execute_on_run_code(on_run, student_code, inputs)
 
 
-def execute_on_run_code(on_run, student_code):
+def execute_on_run_code(on_run, student_code, inputs):
     """
     Actually execute the on_run code for the given student code.
     """
@@ -114,10 +115,12 @@ def execute_on_run_code(on_run, student_code):
     # any weirdness from being in the instructor code.
     escaped_student_code = json.dumps(student_code)
     instructor_code = PEDAL_PIPELINE.format(on_run=on_run,
-                                            student_code=escaped_student_code)
+                                            student_code=escaped_student_code,
+                                            inputs=inputs)
     # Execute the instructor code in a new environment
     global_variables = {}
-    exec(instructor_code, global_variables)
+    compiled_code = compile(instructor_code, 'instructor_code.py', 'exec')
+    exec(compiled_code, global_variables)
     category = global_variables['CATEGORY']
     label = global_variables['LABEL']
     message = global_variables['MESSAGE']
@@ -173,20 +176,22 @@ ANIMATE_LAST_CELL = r"""
 var last = null;
 if (cells.length > 0) {
     last = cells[cells.length-1];
-    $(last.element).animate({"background-color": "#F6FAFF"}, 1000);
+    $(last.element).animate({"background-color": "#E0E6FF"}, 1000);
 }
 """
 
 # If the %grade magic is used, we run the code directly.
 LOCAL_GRADE = r'''
 on_run_code.push("from pedal.plugins.grade_magic import execute_on_run_code");
-on_run_code.push('print(execute_on_run_code({on_run_code}, student_code))');
+on_run_code.push('print(execute_on_run_code({on_run_code}, student_code, {inputs}))');
 '''
 
 # If the %grade_blockpy magic is used, we need to get the on_run from blockpy.
 BLOCKPY_GRADE = r'''
 on_run_code.push("from pedal.plugins.grade_magic import blockpy_grade");
-on_run_code.push("print(blockpy_grade({assignment}, student_code))");
+on_run_code.push('import json')
+on_run_code.push('inputs = json.dumps({inputs})')
+on_run_code.push("print(blockpy_grade({assignment}, student_code, inputs))");
 '''
 
 # This chunk actually performs the on_run code exeuction using the kernel.
@@ -276,17 +281,22 @@ class GradeMagic(Magics):
         # Concatenate the JS code and then execute it by displaying it
         code = EXTRACT_STUDENT_CODE
         code += ANIMATE_LAST_CELL
-        code += LOCAL_GRADE.format(on_run_code=json.dumps(cell))
+        code += LOCAL_GRADE.format(on_run_code=json.dumps(cell), inputs="''")
         code += EXECUTE_CODE
         # self.logging()
         return display(Javascript(code))
 
     @line_magic
     def grade_blockpy(self, line=""):
+        if ',' in line:
+            assignment, inputs = line.split(",", maxsplit=1)
+        else:
+            assignment, inputs = line, ""
         # Concatenate the JS code and then execute it by displaying it
         code = EXTRACT_STUDENT_CODE
         code += ANIMATE_LAST_CELL
-        code += BLOCKPY_GRADE.format(assignment=line)
+        code += BLOCKPY_GRADE.format(assignment=assignment, 
+                                     inputs=json.dumps(inputs))
         code += EXECUTE_CODE
         # self.logging()
         return display(Javascript(code))
