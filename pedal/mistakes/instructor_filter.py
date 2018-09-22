@@ -22,15 +22,11 @@ def missing_if_in_for():
     matches = find_matches("for _item_ in ___:\n"
                            "    if __expr__:\n"
                            "        pass")
-    if matches:
-        for match in matches:
-            _item_ = match.symbol_table.get("_item_")[0].astNode
-            __expr__ = match.exp_table.get("__expr__")
-            if __expr__.has(_item_):
-                return False
-    explain("The arrangement of decision and iteration is not correct for the filter pattern.<br><br><i>"
-            "(missing_if_in_for)<i></br>")
-    return True
+    if not matches:
+        explain("The arrangement of decision and iteration is not correct for the filter pattern.<br><br><i>"
+                "(missing_if_in_for)<i></br>")
+        return True
+    return False
 
 
 def append_not_in_if():

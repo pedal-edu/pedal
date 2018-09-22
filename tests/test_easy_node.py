@@ -90,9 +90,19 @@ class EasyNodeTest(unittest.TestCase):
         self.assertTrue(compare.numeric_logic_check(1, "24 < x < 35"))
         self.assertFalse(compare.numeric_logic_check(1, "23 < x < 35"))
 
+        program = EasyNode(ast.parse("if '24' < x < '35':\n"
+                                     "    pass"))
+        compare = program.linear_tree[2]
+        self.assertFalse(compare.numeric_logic_check(1, "23 < x < 35"))
+
         program = EasyNode(ast.parse("20 < x and x < 25 or 15 < x and 15 < x < 32"))
         compare = program.body[0].value
         self.assertTrue(compare.numeric_logic_check(1, "20 < x < 25 or 15 < x < 32"))
+
         program = EasyNode(ast.parse("12*2 < x*55 + 36 < 55"))
         compare = program.body[0].value
         self.assertTrue(compare.numeric_logic_check(1, "-12 < x*55 < 55"))
+
+        program = EasyNode(ast.parse("temperature >= 32 and temperature <= 50"))
+        compare = program.body[0].value
+        self.assertTrue(compare.numeric_logic_check(1, "32 <= temp <= 50"))

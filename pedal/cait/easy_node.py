@@ -155,37 +155,38 @@ class EasyNode:
                             new_result.append(result1 or result2)
                     results_c = new_result
             return results_c
+        try:
+            ins_expr = EasyNode(ast.parse(expr)).body[0].value
+            ins_nums = ins_expr.find_all("Num")
+            std_nums = self.find_all("Num")
+            test_nums = []
+            for num in ins_nums:
+                raw_num = num.n
+                test_nums.append(raw_num)
+                test_nums.append(raw_num + mag)
+                test_nums.append(raw_num - mag)
+            for num in std_nums:
+                raw_num = num.n
+                test_nums.append(raw_num)
+                test_nums.append(raw_num + mag)
+                test_nums.append(raw_num - mag)
 
-        ins_expr = EasyNode(ast.parse(expr)).body[0].value
-        ins_nums = ins_expr.find_all("Num")
-        std_nums = self.find_all("Num")
-        test_nums = []
-        for num in ins_nums:
-            raw_num = num.n
-            test_nums.append(raw_num)
-            test_nums.append(raw_num + mag)
-            test_nums.append(raw_num - mag)
-        for num in std_nums:
-            raw_num = num.n
-            test_nums.append(raw_num)
-            test_nums.append(raw_num + mag)
-            test_nums.append(raw_num - mag)
+            if self.ast_name == "Compare":
+                std_res = eval_bool_comp(test_nums, self)
+            elif self.ast_name == "BoolOp":
+                std_res = eval_boolop(test_nums, self)
+            else:
+                return False
 
-        if self.ast_name == "Compare":
-            std_res = eval_bool_comp(test_nums, self)
-        elif self.ast_name == "BoolOp":
-            std_res = eval_boolop(test_nums, self)
-        else:
+            if ins_expr.ast_name == "Compare":
+                ins_res = eval_bool_comp(test_nums, ins_expr)
+            elif ins_expr.ast_name == "BoolOp":
+                ins_res = eval_boolop(test_nums, ins_expr)
+            else:
+                raise TypeError
+            return ins_res == std_res
+        except:
             return False
-
-        if ins_expr.ast_name == "Compare":
-            ins_res = eval_bool_comp(test_nums, ins_expr)
-        elif ins_expr.ast_name == "BoolOp":
-            ins_res = eval_boolop(test_nums, ins_expr)
-        else:
-            raise TypeError
-
-        return ins_res == std_res
 
     def get_next_tree(self):
         """Gets the next tree in the AST
