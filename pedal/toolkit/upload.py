@@ -38,13 +38,15 @@ def check_output_on_header(expected_output):
 
 def check_problem_submission(prob_id):
     if prob_id not in get_program():
-        explain("{}<br><br><i>(wrong_problem)<i></br></br>".format(prob_id))
+        explain("Make sure that you are turning in {}<br><br><i>(wrong_problem)<i></br></br>".format(prob_id))
+        return True
 
 
 def check_print_output(multiple_lines):
     for line in multiple_lines:
         if line not in get_output():
             gently("You are not doing the correct calculation<br><br><i>(catch_all)<i></br></br>")
+            return True
 
 
 def find_in_code(regex):

@@ -1164,9 +1164,8 @@ def all_labels_present():  # TODO: make sure it's before the show, maybe check f
     match03 = find_match("plt.ylabel(___)\nplt.show()")
 
     if (not match) or (not match02) or (not match03):
-        explain('Make sure you supply labels to all your axes and provide a title and then call show<br><br><i>'
-                '(labels_present)<i></br>')
-        # explain('Make sure you supply labels to all your axes and provide a title<br><br><i>(labels_present)<i></br>')
+        gently('Make sure you supply labels to all your axes and provide a title and then call show'
+               '<br><br><i>(labels_present)<i></br>')
         return True
     return False
 
