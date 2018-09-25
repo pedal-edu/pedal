@@ -150,6 +150,15 @@ class TestCode(unittest.TestCase):
         exception = compatibility.run_student()
         plt2 = compatibility.get_plots()
         self.assertEqual(len(plt2), 2)
+    
+    def test_matplotlib_compatibility(self):
+        student_code = dedent('''
+            import os
+            os
+        ''')
+        set_source(student_code)
+        exception = compatibility.run_student()
+        self.assertIsNone(exception)
 
 if __name__ == '__main__':
     unittest.main(buffer=False)

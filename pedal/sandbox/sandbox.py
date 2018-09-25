@@ -99,6 +99,7 @@ import re
 import types
 import sys
 import io
+import os
 from unittest.mock import patch, mock_open, MagicMock
 import traceback
 
@@ -269,13 +270,15 @@ class Sandbox:
             _inputs = _make_inputs(*_inputs)
         # Execute
         mocked._override_builtins(self.data, {
-            'compile':  mocked._disabled_compile,
-            'eval':     mocked._disabled_eval,
-            'exec':     mocked._disabled_exec,
-            'globals':  mocked._disabled_globals,
-            'open':     mocked._restricted_open,
-            'input':    _inputs,
-            'raw_input':    _inputs,
+            'compile':   mocked._disabled_compile,
+            'eval':      mocked._disabled_eval,
+            'exec':      mocked._disabled_exec,
+            'globals':   mocked._disabled_globals,
+            'open':      mocked._restricted_open,
+            'input':     _inputs,
+            'raw_input': _inputs,
+            'sys':       sys,
+            'os':        os
         })
         # Redirect stdout/stdin as needed
         old_stdout = sys.stdout
@@ -289,15 +292,12 @@ class Sandbox:
         
         if callable(self.pre_execution):
             self.pre_execution()
-            
-        if not hasattr(sys, 'modules'):
-            sys.modules = {}
         
         try:
             # Calling compile instead of just passing the string source to exec
             # ensures that we get meaningul filenames in the traceback when
             # tests fail or have errors.
-            with patch.dict(sys.modules, self.mocked_modules, clear=True):
+            with patch.dict('sys.modules', self.mocked_modules):
                 compiled_code = compile(code, _as_filename, 'exec')
                 exec(compiled_code, self.data)
         except StopIteration:
@@ -313,6 +313,8 @@ class Sandbox:
             cl, exc, tb = sys.exc_info()
             line_number = traceback.extract_tb(tb)[-1][1]
             self.exception_position = {'line': line_number}
+            if str(e) == "module 'sys' has no attribute 'modules'":
+                old_stdout.write("\n".join(traceback.format_tb(tb))+"\n")
         finally:
             sys.stdout = old_stdout
             #sys.stdin = old_stdin

@@ -72,15 +72,12 @@ from pedal.report.imperative import *
 clear_report()
 from pedal.source import set_source
 set_source({student_code})
-from pedal.sandbox.compatibility import *
-queue_input({inputs})
-run_student()
-student = get_sandbox()
 from pedal.tifa import tifa_analysis
 tifa_analysis(True)
-from pedal.sandbox import compatibility
-student = compatibility.get_student_data()
-compatibility.run_student(True)
+from pedal.sandbox.compatibility import *
+queue_input({inputs})
+run_student(True)
+student = get_sandbox()
 from pedal.cait.cait_api import parse_program
 {on_run}
 from pedal.resolvers import simple
@@ -118,7 +115,7 @@ def execute_on_run_code(on_run, student_code, inputs):
                                             student_code=escaped_student_code,
                                             inputs=inputs)
     # Execute the instructor code in a new environment
-    global_variables = {}
+    global_variables = globals()
     compiled_code = compile(instructor_code, 'instructor_code.py', 'exec')
     exec(compiled_code, global_variables)
     category = global_variables['CATEGORY']
