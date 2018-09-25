@@ -19,7 +19,8 @@ def no_nested_function_definitions():
     for a_def in defs:
         if not is_top_level(a_def):
             gently("You have defined a function inside of another block. For instance, you may have placed it inside "
-                   "another function definition, or inside of a loop. Do not nest your function definition!")
+                   "another function definition, or inside of a loop. Do not nest your function definition!"
+                   "<br><br><i>(nest_func)<i></br></br>")
             return False
     return True
 
@@ -96,7 +97,7 @@ def prevent_unused_result():
                     pass
                 elif a_call.func.attr in ('replace', 'strip', 'lstrip', 'rstrip'):
                     gently("Remember! You cannot modify a string directly. Instead, you should assign the result back "
-                           "to the string variable.")
+                           "to the string variable.<br><br><i>(str_mutate)<i></br></br>")
 
 
 def prevent_builtin_usage(function_names):
@@ -106,7 +107,7 @@ def prevent_builtin_usage(function_names):
     for a_call in all_calls:
         if a_call.func.ast_name == 'Name':
             if a_call.func.id in function_names:
-                explain("You cannot use the builtin function <code>{}</code>.".format(a_call.func.id))
+                explain("You cannot use the builtin function <code>{}</code>.<br><br><i>(builtin_use)<i></br></br>".format(a_call.func.id))
                 return a_call.func.id
     return None
 
@@ -118,11 +119,13 @@ def prevent_literal(*literals):
     for literal in literals:
         if isinstance(literal, (int, float)):
             if literal in num_values:
-                explain("Do not use the literal value <code>{}</code> in your code.".format(repr(literal)))
+                explain("Do not use the literal value <code>{}</code> in your code."
+                        "<br><br><i>(hard_code)<i></br></br>".format(repr(literal)))
                 return literal
         elif isinstance(literal, str):
             if literal in str_values:
-                explain("Do not use the literal value <code>{}</code> in your code.".format(repr(literal)))
+                explain("Do not use the literal value <code>{}</code> in your code."
+                        "<br><br><i>(hard_code)<i></br></br>".format(repr(literal)))
                 return literal
     return False
 
@@ -134,11 +137,13 @@ def ensure_literal(*literals):
     for literal in literals:
         if isinstance(literal, (int, float)):
             if literal not in num_values:
-                explain("You need the literal value <code>{}</code> in your code.".format(repr(literal)))
+                explain("You need the literal value <code>{}</code> in your code."
+                        "<br><br><i>(missing_literal)<i></br></br>".format(repr(literal)))
                 return literal
         elif isinstance(literal, str):
             if literal not in str_values:
-                explain("You need the literal value <code>{}</code> in your code.".format(repr(literal)))
+                explain("You need the literal value <code>{}</code> in your code."
+                        "<br><br><i>(missing_literal)<i></br></br>".format(repr(literal)))
                 return literal
     return False
 
@@ -146,7 +151,8 @@ def ensure_literal(*literals):
 def prevent_advanced_iteration():
     ast = parse_program()
     if ast.find_all('While'):
-        explain("You should not use a <code>while</code> loop to solve this problem.")
+        explain("You should not use a <code>while</code> loop to solve this problem."
+                "<br><br><i>(while_usage)<i></br></br>")
     prevent_builtin_usage(['sum', 'map', 'filter', 'reduce', 'len', 'max', 'min',
                            'max', 'sorted', 'all', 'any', 'getattr', 'setattr',
                            'eval', 'exec', 'iter'])
@@ -193,7 +199,7 @@ def ensure_operation(op_name, root=None):
         root = parse_program()
     result = find_operation(op_name, root)
     if not result:
-        gently("You are not using the <code>{}</code> operator.".format(op_name))
+        gently("You are not using the <code>{}</code> operator.<br><br><i>(missing_op)<i></br></br>".format(op_name))
     return result
 
 
@@ -202,7 +208,7 @@ def prevent_operation(op_name, root=None):
         root = parse_program()
     result = find_operation(op_name, root)
     if result:
-        gently("You may not use the <code>{}</code> operator.".format(op_name))
+        gently("You may not use the <code>{}</code> operator.<br><br><i>(bad_op)<i></br></br>".format(op_name))
     return result
 
 

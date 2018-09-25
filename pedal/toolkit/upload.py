@@ -9,7 +9,8 @@ def check_author_name_on_header():
     code = get_program()
     m_author = re.search('Author: \\w+', code)
     if not m_author:
-        gently("You need to add your name to the author field at the top of the file.")
+        gently("You need to add your name to the author field at the top of the file."
+               "<br><br><i>(name_missing)<i></br></br>")
 
 
 def get_plots(output):
@@ -28,21 +29,22 @@ def check_output_on_header(expected_output):
     between_stars = code.split("*****")[2].strip()
     between_stars = "\\n".join([x.strip() for x in between_stars.split("\\n")])
     if 'REPLACE THIS TEXT WITH THE OUTPUT OF THIS PROGRAM' in between_stars:
-        gently("In your code, you need to 'REPLACE THIS TEXT WITH THE OUTPUT OF THIS PROGRAM'")
+        gently("In your code, you need to 'REPLACE THIS TEXT WITH THE OUTPUT OF THIS PROGRAM'"
+               "<br><br><i>(wrong_output_blank)<i></br></br>")
     elif expected_output not in between_stars:
         gently("The output you copied between the *****, seems to be incorrect. You may have copied it into the wrong "
-               "location, or it is incomplete.")
+               "location, or it is incomplete.<br><br><i>(wrong_output_fill)<i></br></br>")
 
 
 def check_problem_submission(prob_id):
     if prob_id not in get_program():
-        explain("{}<br><br><i>(wrong_problem)<i></br>".format(prob_id))
+        explain("{}<br><br><i>(wrong_problem)<i></br></br>".format(prob_id))
 
 
 def check_print_output(multiple_lines):
     for line in multiple_lines:
         if line not in get_output():
-            gently("You are not doing the correct calculation")
+            gently("You are not doing the correct calculation<br><br><i>(catch_all)<i></br></br>")
 
 
 def find_in_code(regex):
