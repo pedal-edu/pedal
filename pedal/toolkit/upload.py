@@ -29,9 +29,14 @@ def check_output_on_header(expected_output):
     between_stars = "\\n".join([x.strip() for x in between_stars.split("\\n")])
     if 'REPLACE THIS TEXT WITH THE OUTPUT OF THIS PROGRAM' in between_stars:
         gently("In your code, you need to 'REPLACE THIS TEXT WITH THE OUTPUT OF THIS PROGRAM'")
-    elif not expected_output in between_stars:
+    elif expected_output not in between_stars:
         gently("The output you copied between the *****, seems to be incorrect. You may have copied it into the wrong "
                "location, or it is incomplete.")
+
+
+def check_problem_submission(prob_id):
+    if prob_id not in get_program():
+        explain("{}<br><br><i>(wrong_problem)<i></br>".format(prob_id))
 
 
 def check_print_output(multiple_lines):
