@@ -8,7 +8,7 @@ from pedal.mistakes.instructor_iteration import *
 from pedal.report import MAIN_REPORT
 
 
-class AppendMistakeTest(MistakeTest):
+class IterationMistakes(MistakeTest):
     def test_wrong_target_is_list(self):
         self.to_source("items = [1, 2, 3]\n"
                        "for item in items:\n"
