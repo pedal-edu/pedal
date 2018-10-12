@@ -208,3 +208,17 @@ def find_operation(op_name, root):
             if unaryop.op_name == UNARY_OP_NAMES[op_name]:
                 return unaryop
     return False
+
+def ensure_recursion(function_name, root):
+    if root is None:
+        root = parse_program()
+    all_calls = root.find_all('Call')
+    calls = []
+    for a_call in all_calls:
+        if a_call.func.ast_name == 'Attribute':
+            if a_call.func.attr == name:
+                calls.append(a_call)
+        elif a_call.func.ast_name == 'Name':
+            if a_call.func.id == name:
+                calls.append(a_call)
+    return calls
