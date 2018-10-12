@@ -196,6 +196,7 @@ unit_tests = {
     'iterate_over_lod': ['ls=[{"a": 0, "b": True}, {"a": 1, "b": False}]\nfor x in ls:\n    x["a"]+0', ['Incompatible types'], []],
     # TODO: Add stronger assertion this one, it shouldn't be a good one
     'incorrect_dict_iteration': ['dict = {"T": "V"}\nfor key,value in dict:\n    print(key)', [], []],
+    'incorrect_dict_iteration2': ['dict = {"T": 0}\nfor i in dict:\n print(i, dict[i])', [], []],
     
     # While
         'while_until_input': ['user = input("Give a word.")\nwhile user:\n    print(user)\n    user = input("Give another word.")', ['Unused Variable'], []],
@@ -487,6 +488,11 @@ class TestVariables(unittest.TestCase):
         credit = tifa.report['tifa']['top_level_variables']['credit']
         self.assertFalse(credit.was_type(list))
         self.assertTrue(credit.was_type(int))
+    
+    def test_dict_iteration(self):
+        tifa = pedal.tifa.Tifa()
+        tifa.process_code('dict = {"T": 0}\nfor i in dict:\n    print(i, dict[i])')
+        self.assertTrue(tifa.report['tifa']['success'])
 
 if __name__ == '__main__':
     unittest.main(buffer=False)

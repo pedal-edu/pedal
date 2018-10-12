@@ -11,6 +11,8 @@ def are_literals_equal(first, second):
                 if not are_literals_equal(l, s):
                     return False
             return True
+        elif not isinstance(first, LiteralValue):
+            return True
         else:
             return first.value == second.value
 
