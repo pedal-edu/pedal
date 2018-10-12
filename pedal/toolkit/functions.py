@@ -5,12 +5,14 @@ from pedal.sandbox import compatibility
 
 DELTA = 0.001
 
+
 def get_arg_name(node):
     name = node.id
     if name is None:
         return node.arg
     else:
         return name
+
 
 def match_signature(name, length, *parameters):
     ast = parse_program()
@@ -19,25 +21,32 @@ def match_signature(name, length, *parameters):
         if a_def._name == name:
             found_length = len(a_def.args.args)
             if found_length < length:
-                gently("The function named <code>{}</code> has fewer parameters ({}) than expected ({}).".format(name, found_length, length))
+                gently("The function named <code>{}</code> has fewer parameters ({}) than expected ({})."
+                       "<br><br><i>(insuff_args)<i></br></br>".format(name, found_length, length))
             elif found_length > length:
-                gently("The function named <code>{}</code> has more parameters ({}) than expected ({}).".format(name, found_length, length))
+                gently("The function named <code>{}</code> has more parameters ({}) than expected ({})."
+                       "<br><br><i>(excess_args)<i></br></br>".format(name, found_length, length))
             elif parameters:
                 for parameter, arg in zip(parameters, a_def.args.args):
                     arg_name = get_arg_name(arg)
                     if arg_name != parameter:
-                        gently("Error in definition of <code>{}</code>. Expected a parameter named {}, instead found {}.".format(name, parameter, arg_name))
+                        gently("Error in definition of <code>{}</code>. Expected a parameter named {}, instead "
+                               "found {}.<br><br><i>(name_missing)<i></br></br>".format(name, parameter, arg_name))
                         return None
                 else:
                     return a_def
             else:
                 return a_def
     else:
-        gently("No function named <code>{}</code> was found.".format(name))
+        gently("No function named <code>{name}</code> was found."
+               "<br><br><i>(missing_func_{name})<i></br></br>".format(name=name))
     return None
-    
+
+
 GREEN_CHECK = "<td class='green-check-mark'>&#10004;</td>"
 RED_X = "<td>&#10060;</td>"
+
+
 def output_test(name, *tests):
     student = compatibility.get_student_data()
     if name in student.data:
@@ -98,21 +107,26 @@ def output_test(name, *tests):
             if success:
                 return the_function
             else:
-                result = "I ran your function <code>{}</code> on some new arguments, and it gave the wrong output {}/{} times.".format(name, len(tests)-success_count, len(tests))+result
+                result = ("I ran your function <code>{}</code> on some new arguments, and it gave the wrong output "
+                          "{}/{} times.".format(name, len(tests)-success_count, len(tests))+result)
                 gently(result+"</table>")
                 return None
         else:
-            gently("You defined {}, but did not define it as a function.".format(name))
+            gently("You defined {}, but did not define it as a function."
+                   "<br><br><i>(not_func_def)<i></br></br>".format(name))
             return None
     else:
-        gently("The function <code>{}</code> was not defined.".format(name))
+        gently("The function <code>{}</code> was not defined.<br><br><i>(no_func_def)<i></br></br>".format(name))
         return None
 
-    
-'''
-Show a table
-'''
+
 def unit_test(name, *tests):
+    """
+    Show a table
+    :param name:
+    :param tests:
+    :return:
+    """
     student = compatibility.get_student_data()
     if name in student.data:
         the_function = student.data[name]
@@ -133,13 +147,13 @@ def unit_test(name, *tests):
                 message = ("<td><code>{}</code></td>"*3)
                 test_out = the_function(*inp)
                 message = message.format(inputs, repr(test_out), repr(out))
-                if (isinstance(out, float) and 
-                    isinstance(test_out, (float, int)) and
-                    abs(out-test_out) < DELTA):
+                if (isinstance(out, float) and
+                        isinstance(test_out, (float, int)) and
+                        abs(out-test_out) < DELTA):
                     message = "<tr class=''>"+GREEN_CHECK+message+"</tr>"
                     success_count += 1
                 elif out != test_out:
-                    #gently(message)
+                    # gently(message)
                     message = "<tr class=''>"+RED_X+message+"</tr>"
                     if tip:
                         message += "<tr class='info'><td colspan=4>"+tip+"</td></tr>"
@@ -151,7 +165,8 @@ def unit_test(name, *tests):
             if success:
                 return the_function
             else:
-                result = "I ran your function <code>{}</code> on some new arguments, and it failed {}/{} tests.".format(name, len(tests)-success_count, len(tests))+result
+                result = "I ran your function <code>{}</code> on some new arguments, " \
+                         "and it failed {}/{} tests.".format(name, len(tests)-success_count, len(tests))+result
                 gently(result+"</table>")
                 return None
         else:
