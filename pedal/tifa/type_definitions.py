@@ -409,9 +409,9 @@ def type_from_json(val):
 
 def type_to_literal(type):
     if isinstance(type, NumType):
-        return LiteralNum
+        return LiteralNum(0)
     elif isinstance(type, StrType):
-        return LiteralStr
+        return LiteralStr("")
     else:
         # TODO: Finish the mapping
-        return LiteralStr
+        return LiteralStr("")
