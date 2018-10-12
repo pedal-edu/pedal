@@ -14,7 +14,7 @@ def prevent_incorrect_plt():
     if plts and def_use_error(plts[0]):
         explain("You have imported the <code>matplotlib.pyplot</code> module, "
                 "but you did not rename it to <code>plt</code> using "
-                "<code>import matplotlib.pyplot as plt</code>.<br><br><i>(plt_rename_err)<i></br></br>", 'verifier')
+                "<code>import matplotlib.pyplot as plt</code>.<br><br><i>(plt_rename_err)<i>", 'verifier')
         return True
     matplotlib_names = ['plot', 'hist', 'scatter',
                         'title', 'xlabel', 'ylabel', 'show']
@@ -28,7 +28,7 @@ def prevent_incorrect_plt():
                              "allow you to use the function directly. I "
                              "recommend you use <code>plt.{0}</code> instead, "
                              "after you use <code>import matplotlib.pyplot as "
-                             "plt</code>.<br><br><i>(plt_wrong_import)<i></br></br>").format(name), 'verifier')
+                             "plt</code>.<br><br><i>(plt_wrong_import)<i>").format(name), 'verifier')
                     return True
     return False
 
@@ -38,11 +38,11 @@ def ensure_correct_plot(function_name):
         if function_name == a_plot:
             if not function_is_called(function_name):
                 gently("You are not calling the <code>{func_name}</code> function."
-                       "<br><br><i>(no_{func_name}_call)<i></br></br>".format(func_name=function_name))
+                       "<br><br><i>(no_{func_name}_call)<i>".format(func_name=function_name))
                 return True
         elif function_is_called(a_plot):
             gently("You have called the <code>{}</code> function, which makes a {}."
-                   "<br><br><i>(wrong_plt)<i></br></br>".format(a_plot, label))
+                   "<br><br><i>(wrong_plt)<i>".format(a_plot, label))
             return True
     return False
 
@@ -50,7 +50,7 @@ def ensure_correct_plot(function_name):
 def ensure_show():
     if not function_is_called("show"):
         gently("You have not called <code>show</code> function, which "
-               "actually creates the graph.<br><br><i>(no_show)<i></br></br>")
+               "actually creates the graph.<br><br><i>(no_show)<i>")
         return True
     return False
 
@@ -117,13 +117,13 @@ def check_for_plot(plt_type, data):
     plt_type = GRAPH_TYPES.get(plt_type, plt_type)
     if type_found and data_found:
         return ("You have created a {}, but it does not have the right data. That data appears to have been plotted "
-                "in another graph.<br><br><i>(other_plt)<i></br></br>".format(plt_type))
+                "in another graph.<br><br><i>(other_plt)<i>".format(plt_type))
     elif type_found:
         return ("You have created a {}, but it does not have the right data."
-                "<br><br><i>(wrong_plt_data)<i></br></br>".format(plt_type))
+                "<br><br><i>(wrong_plt_data)<i>".format(plt_type))
     elif data_found:
         return ("You have plotted the right data, but you appear to have not plotted it as a {}."
-                "<br><br><i>(wrong_plt_type)<i></br></br>".format(plt_type))
+                "<br><br><i>(wrong_plt_type)<i>".format(plt_type))
     else:
         return ("You have not created a {} with the proper data."
-                "<br><br><i>(no_plt)<i></br></br>".format(plt_type))
+                "<br><br><i>(no_plt)<i>".format(plt_type))
