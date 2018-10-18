@@ -22,16 +22,16 @@ def match_signature(name, length, *parameters):
             found_length = len(a_def.args.args)
             if found_length < length:
                 gently("The function named <code>{}</code> has fewer parameters ({}) than expected ({})."
-                       "<br><br><i>(insuff_args)<i></br></br>".format(name, found_length, length))
+                       "<br><br><i>(insuff_args)<i>".format(name, found_length, length))
             elif found_length > length:
                 gently("The function named <code>{}</code> has more parameters ({}) than expected ({})."
-                       "<br><br><i>(excess_args)<i></br></br>".format(name, found_length, length))
+                       "<br><br><i>(excess_args)<i>".format(name, found_length, length))
             elif parameters:
                 for parameter, arg in zip(parameters, a_def.args.args):
                     arg_name = get_arg_name(arg)
                     if arg_name != parameter:
                         gently("Error in definition of <code>{}</code>. Expected a parameter named {}, instead "
-                               "found {}.<br><br><i>(name_missing)<i></br></br>".format(name, parameter, arg_name))
+                               "found {}.<br><br><i>(name_missing)<i>".format(name, parameter, arg_name))
                         return None
                 else:
                     return a_def
@@ -39,7 +39,7 @@ def match_signature(name, length, *parameters):
                 return a_def
     else:
         gently("No function named <code>{name}</code> was found."
-               "<br><br><i>(missing_func_{name})<i></br></br>".format(name=name))
+               "<br><br><i>(missing_func_{name})<i>".format(name=name))
     return None
 
 
@@ -113,10 +113,10 @@ def output_test(name, *tests):
                 return None
         else:
             gently("You defined {}, but did not define it as a function."
-                   "<br><br><i>(not_func_def)<i></br></br>".format(name))
+                   "<br><br><i>(not_func_def)<i>".format(name))
             return None
     else:
-        gently("The function <code>{}</code> was not defined.<br><br><i>(no_func_def)<i></br></br>".format(name))
+        gently("The function <code>{}</code> was not defined.<br><br><i>(no_func_def)<i>".format(name))
         return None
 
 

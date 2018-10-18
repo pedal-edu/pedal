@@ -79,7 +79,8 @@ class TestFiles(unittest.TestCase):
         with Execution('with open("A.txt") as out:\n  print(out.read())') as e:
             self.assertTrue(files_not_handled_correctly("X.txt"))
         self.assertEqual(e.message, "You need the literal value "
-                         "<code>'X.txt'</code> in your code.")
+                         "<code>'X.txt'</code> in your code."
+                         "<br><br><i>(missing_literal)<i>")
         
         with Execution('with open("A.txt") as out:\n  print(out.read())') as e:
             self.assertFalse(files_not_handled_correctly("A.txt"))
@@ -94,12 +95,14 @@ class TestFunctions(unittest.TestCase):
         with Execution('a = 0\na') as e:
             self.assertIsNone(match_signature('a', 0))
         self.assertEqual(e.message, "No function named <code>a</code> "
-                         "was found.")
+                         "was found."
+                         "<br><br><i>(missing_func_a)<i>")
         
         with Execution('def a():\n  pass\na') as e:
             self.assertIsNotNone(match_signature('a', 0))
         self.assertNotEqual(e.message, "No function named <code>a</code> "
-                            "was found.")
+                            "was found."
+                            "<br><br><i>(name_missing)<i>")
         
         with Execution('def a():\n  pass\na') as e:
             self.assertIsNone(match_signature('a', 1))
@@ -109,13 +112,15 @@ class TestFunctions(unittest.TestCase):
         with Execution('def a(x, y):\n  pass\na') as e:
             self.assertIsNone(match_signature('a', 1))
         self.assertNotEqual(e.message, "The function named <code>a</code> "
-                            "has fewer parameters (2) than expected (1)")
+                            "has fewer parameters (2) than expected (1)"
+                            "<br><br><i>(name_missing)<i>")
                             
         with Execution('def a(l, m):\n  pass\na') as e:
             self.assertIsNone(match_signature('a', 2, 'x', 'y'))
         self.assertEqual(e.message, "Error in definition of "
                          "<code>a</code>. Expected a parameter named "
-                         "x, instead found l.")
+                         "x, instead found l."
+                         "<br><br><i>(name_missing)<i>")
         
         with Execution('def a(x, y):\n  pass\na') as e:
             self.assertIsNotNone(match_signature('a', 2, 'x', 'y'))
@@ -199,7 +204,8 @@ class TestUtilities(unittest.TestCase):
         self.assertEqual(e.message, "You have defined a function inside of "
                          "another block. For instance, you may have placed it "
                          "inside another function definition, or inside of a "
-                         "loop. Do not nest your function definition!")
+                         "loop. Do not nest your function definition!"
+                         "<br><br><i>(nest_func)<i>")
         with Execution('if True:\n  pass\ndef x():\n  pass\nx()') as e:
             self.assertTrue(no_nested_function_definitions())
         self.assertEqual(e.message, "No errors reported.")
@@ -259,7 +265,8 @@ class TestUtilities(unittest.TestCase):
             prevent_unused_result()
         self.assertEqual(e.message, "Remember! You cannot modify a string "
                          "directly. Instead, you should assign the result "
-                         "back to the string variable.")
+                         "back to the string variable.<br><br><i>"
+                         "(str_mutate)<i>")
         
         with Execution('a="H  "\nb=a.strip()\nb') as e:
             prevent_unused_result()
@@ -273,7 +280,8 @@ class TestUtilities(unittest.TestCase):
         with Execution('sum([1,2,3])') as e:
             self.assertEqual(prevent_builtin_usage(['sum', 'min']), 'sum')
         self.assertEqual(e.message, "You cannot use the builtin function "
-                         "<code>sum</code>.")
+                         "<code>sum</code>."
+                         "<br><br><i>(builtin_use)<i>")
         
         with Execution('max([1,2,3])') as e:
             self.assertIsNone(prevent_builtin_usage(['sum', 'min']))
@@ -283,11 +291,13 @@ class TestUtilities(unittest.TestCase):
         with Execution('a = 5\na') as e:
             self.assertEqual(prevent_literal(3, 4, 5), 5)
         self.assertEqual(e.message, "Do not use the literal value "
-                         "<code>5</code> in your code.")
+                         "<code>5</code> in your code."
+                         "<br><br><i>(hard_code)<i>")
         with Execution('print("Hello")') as e:
             self.assertEqual(prevent_literal("Hello"), "Hello")
         self.assertEqual(e.message, "Do not use the literal value "
-                         "<code>'Hello'</code> in your code.")
+                         "<code>'Hello'</code> in your code."
+                         "<br><br><i>(hard_code)<i>")
         with Execution('print("Hello", 5)') as e:
             self.assertFalse(prevent_literal("Fire", 3, 4))
         self.assertEqual(e.message, "No errors reported.")
@@ -296,11 +306,13 @@ class TestUtilities(unittest.TestCase):
         with Execution('a = 5\na') as e:
             self.assertEqual(ensure_literal(3, 4, 5), 3)
         self.assertEqual(e.message, "You need the literal value "
-                         "<code>3</code> in your code.")
+                         "<code>3</code> in your code."
+                         "<br><br><i>(missing_literal)<i>")
         with Execution('print("Hell")') as e:
             self.assertEqual(ensure_literal("Hello"), "Hello")
         self.assertEqual(e.message, "You need the literal value "
-                         "<code>'Hello'</code> in your code.")
+                         "<code>'Hello'</code> in your code."
+                         "<br><br><i>(missing_literal)<i>")
         with Execution('print("Fire", 3, 4)') as e:
             self.assertFalse(ensure_literal("Fire", 3, 4))
         self.assertEqual(e.message, "No errors reported.")
@@ -309,17 +321,20 @@ class TestUtilities(unittest.TestCase):
         with Execution('while False:\n  pass') as e:
             prevent_advanced_iteration()
         self.assertEqual(e.message, "You should not use a <code>while</code> "
-                         "loop to solve this problem.")
+                         "loop to solve this problem."
+                         "<br><br><i>(while_usage)<i>")
         with Execution('sum([1,2,3])') as e:
             prevent_advanced_iteration()
         self.assertEqual(e.message, "You cannot use the builtin function "
-                         "<code>sum</code>.")
+                         "<code>sum</code>."
+                         "<br><br><i>(builtin_use)<i>")
     
     def test_ensure_operation(self):
         with Execution('print(1-1)') as e:
             self.assertFalse(ensure_operation("+"))
         self.assertEqual(e.message, "You are not using the <code>+</code> "
-                         "operator.")
+                         "operator."
+                         "<br><br><i>(missing_op)<i>")
         with Execution('print(1+1)') as e:
             self.assertNotEqual(ensure_operation("+"), False)
         self.assertEqual(e.message, "No errors reported.")
@@ -331,14 +346,14 @@ class TestUtilities(unittest.TestCase):
         with Execution('print(1+1)') as e:
             self.assertNotEqual(prevent_operation("+"), False)
         self.assertEqual(e.message, "You may not use the <code>+</code> "
-                         "operator.")
+                         "operator.<br><br><i>(bad_op)<i>")
         with Execution('print(1-1)') as e:
             self.assertFalse(prevent_operation("+"))
         self.assertEqual(e.message, "No errors reported.")
         with Execution('1 < 1') as e:
             self.assertNotEqual(prevent_operation("<"), False)
         self.assertEqual(e.message, "You may not use the <code><</code> "
-                         "operator.")
+                         "operator.<br><br><i>(bad_op)<i>")
     
     def test_find_operation(self):
         with Execution('1+1') as e:
@@ -381,18 +396,23 @@ class TestPrints(unittest.TestCase):
     def test_ensure_prints(self):
         with Execution('print(1)\nprint(2)') as e:
             self.assertFalse(ensure_prints(1))
-        self.assertEqual(e.message, "You are printing too many times!")
+        self.assertEqual(e.message, "You are printing too many times!"
+                                    "<br><br><i>(multiple_print)<i>")
         with Execution('print(1)\nprint(2)') as e:
             self.assertFalse(ensure_prints(3))
-        self.assertEqual(e.message, "You are not printing enough things!")
+        self.assertEqual(e.message, "You are not printing enough things!"
+                                    "<br><br><i>(too_few_print)<i>")
         with Execution('a = 0\na') as e:
             self.assertFalse(ensure_prints(1))
-        self.assertEqual(e.message, "You are not using the print function!")
+        self.assertEqual(e.message, "You are not using the print function!"
+                                    "<br><br><i>(no_print)<i>")
         with Execution('def x():\n  print(x)\nx()') as e:
             self.assertFalse(ensure_prints(1))
         self.assertEqual(e.message, "You have a print function that is not at "
                                     "the top level. That is incorrect for "
-                                    "this problem!")
+                                    "this problem!"
+                                    "<br><br><i>(not_top_level_print)<i>"
+                                    "")
         with Execution('print(1)\nprint(2)') as e:
             prints = ensure_prints(2)
             self.assertNotEqual(prints, False)
@@ -416,7 +436,8 @@ class TestPlots(unittest.TestCase):
         with Execution(student_code) as e:
             self.assertEqual(check_for_plot('hist', [1,2,3,4]),
                              "You have created a histogram, but it does not "
-                             "have the right data.")
+                             "have the right data."
+                             "<br><br><i>(wrong_plt_data)<i>")
         
         with Execution(student_code) as e:
             self.assertEqual(check_for_plot('line', [4,5,6]), False)
@@ -425,7 +446,8 @@ class TestPlots(unittest.TestCase):
         with Execution(student_code) as e:
             self.assertEqual(check_for_plot('line', [4,5,6,7]),
                              "You have created a line plot, but it does not "
-                             "have the right data.")
+                             "have the right data."
+                             "<br><br><i>(wrong_plt_data)<i>")
         
         student_code = dedent('''
             import matplotlib.pyplot as plt
@@ -436,7 +458,8 @@ class TestPlots(unittest.TestCase):
         with Execution(student_code) as e:
             self.assertEqual(check_for_plot('hist', [1, 2, 3]),
                              "You have plotted the right data, but you appear "
-                             "to have not plotted it as a histogram.")
+                             "to have not plotted it as a histogram."
+                             "<br><br><i>(wrong_plt_type)<i>")
                              
         student_code = dedent('''
             import matplotlib.pyplot as plt
@@ -451,7 +474,8 @@ class TestPlots(unittest.TestCase):
             self.assertEqual(check_for_plot('hist', [1, 2, 3]),
                              "You have created a histogram, but it does not "
                              "have the right data. That data appears to have "
-                             "been plotted in another graph.")
+                             "been plotted in another graph."
+                             "<br><br><i>(other_plt)<i>")
         
         student_code = dedent('''
             import matplotlib.pyplot as plt
@@ -462,7 +486,8 @@ class TestPlots(unittest.TestCase):
         with Execution(student_code) as e:
             self.assertEqual(check_for_plot('hist', [4, 5, 6]),
                              "You have not created a histogram with the "
-                             "proper data.")
+                             "proper data."
+                             "<br><br><i>(no_plt)<i>")
         
         student_code = dedent('''
             import matplotlib.pyplot as plt
@@ -495,7 +520,8 @@ class TestPlots(unittest.TestCase):
         self.assertEqual(e.message, "You have imported the "
                          "<code>matplotlib.pyplot</code> module, but you did "
                          "not rename it to <code>plt</code> using "
-                         "<code>import matplotlib.pyplot as plt</code>.")
+                         "<code>import matplotlib.pyplot as plt</code>."
+                         "<br><br><i>(plt_rename_err)<i>")
         
         student_code = dedent('''
             import matplotlib.pyplot as plt
@@ -511,7 +537,8 @@ class TestPlots(unittest.TestCase):
                          "allow you to use the function directly. I "
                          "recommend you use <code>plt.scatter</code> instead, "
                          "after you use <code>import matplotlib.pyplot as "
-                         "plt</code>.")
+                         "plt</code>."
+                         "<br><br><i>(plt_wrong_import)<i>")
         student_code = dedent('''
             import matplotlib.pyplot as plt
             plt.scatter([1,2,3], [4,5,6])
