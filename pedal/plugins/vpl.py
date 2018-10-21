@@ -5,6 +5,7 @@ import re
 from html.parser import HTMLParser
 
 from pedal.report import MAIN_REPORT, Feedback
+from pedal import source
 from pedal.resolvers import simple
 
 class VPLStyler(HTMLParser):
@@ -47,7 +48,7 @@ def find_file(filename, pattern='##### (.+)$', report=None):
     if report is None:
         report = MAIN_REPORT
     with open(filename, 'r') as student_file:
-        report['vpl']['contents'] = student_file.read()
+        source.set_source(student_file.read(), report=report)
 
 def set_maximum_score(number, cap=True, report=None):
     if report is None:

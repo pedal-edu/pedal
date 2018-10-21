@@ -16,7 +16,7 @@ CATEGORY = 'Syntax'
 
 __all__ = ['NAME', 'DESCRIPTION', 'SHORT_DESCRIPTION',
            'REQUIRES', 'OPTIONALS',
-           'set_source']
+           'set_source', 'verify_sections']
 
 
 def set_source(code, filename='__main__.py', sections=False, report=None):
@@ -83,11 +83,13 @@ def start_section(name, report=None):
     pass
 
 def next_section(name="", report=None):
+    if report is None:
+        report = MAIN_REPORT
     report['source']['section'] += 2
     section = report['source']['section']
     found = len(report['source']['sections'])
     if section < found:
-        report['source']['code'] = report['source']['sections']
+        report['source']['code'] = ''.join(report['source']['sections'][:section])
     else:
         report.attach('Verifier Error', category='verifier', tool=NAME,
                       mistakes=("Tried to advance to next section but the "
@@ -101,6 +103,8 @@ def verify_sections(count, report=None):
     prologue, before the first section. So if you have 3 sections in your code,
     you should pass in 3 and not 4.
     '''
+    if report is None:
+        report = MAIN_REPORT
     found = int((len(report['source']['sections'])-1)/2)
     if count != found:
         report.attach('Verifier Error', category='verifier', tool=NAME,
@@ -109,6 +113,8 @@ def verify_sections(count, report=None):
                                 ).format(count=count, found=found))
 
 def verify_section(report=None):
+    if report is None:
+        report = MAIN_REPORT
     section = report['source']['section']
     code = report['source']['sections'][section]
     try:

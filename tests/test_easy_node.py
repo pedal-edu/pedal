@@ -83,6 +83,7 @@ class EasyNodeTest(unittest.TestCase):
                         "Expected ast.cmpop, got {} instead".format(type(binops_funcs[0])))
         self.assertTrue(type(binops_names[0]) == str, "Expected ast.cmpop")
 
+    @unittest.skip("Not implemented yet")
     def test_numeric_logic_check(self):
         program = EasyNode(ast.parse("if 24 < x < 35:\n"
                                      "    pass"))
