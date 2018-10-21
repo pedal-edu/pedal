@@ -49,9 +49,33 @@ class TestCode(unittest.TestCase):
         ##### Part 3
         Runtime Error
         '''), sections=True)
-        verify_sections(3)
+        count_sections(3)
+        self.assertFalse(get_all_feedback())
+        next_section()
+        verify_section()
+        self.assertFalse(get_all_feedback())
+        next_section()
+        verify_section()
         feedback = get_all_feedback()
-        self.assertFalse(feedback)
+        self.assertTrue(feedback)
+        self.assertEqual(feedback[0].label, "Syntax error")
+        self.assertEqual(feedback[0].mistakes['position']['line'], 7)
+    
+    def test_damaged_sections(self):
+        clear_report()
+        set_source(dedent('''
+        NAMES = [____, ____]
+        ##### Part 1
+        a = 0
+        print(a)
+        ##### Part 2
+        Syntax Error!
+        #### Part 3
+        Runtime Error
+        '''), sections=True)
+        count_sections(3)
+        feedback = get_all_feedback()
+        self.assertTrue(feedback)
 
 if __name__ == '__main__':
     unittest.main(buffer=False)

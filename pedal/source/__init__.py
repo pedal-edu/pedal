@@ -16,8 +16,9 @@ CATEGORY = 'Syntax'
 
 __all__ = ['NAME', 'DESCRIPTION', 'SHORT_DESCRIPTION',
            'REQUIRES', 'OPTIONALS',
-           'set_source', 'verify_sections']
-
+           'set_source', 'count_sections', 'next_section',
+           'verify_section']
+DEFAULT_PATTERN = r'^(##### Part .+)$'
 
 def set_source(code, filename='__main__.py', sections=False, report=None):
     '''
@@ -47,7 +48,7 @@ def set_source(code, filename='__main__.py', sections=False, report=None):
         _check_issues(code, report)
     else:
         if sections == True:
-            pattern = r'^##### Part (\d+)$'
+            pattern = DEFAULT_PATTERN
         else:
             pattern = sections
         report['source']['section_pattern'] = pattern
@@ -89,7 +90,7 @@ def next_section(name="", report=None):
     section = report['source']['section']
     found = len(report['source']['sections'])
     if section < found:
-        report['source']['code'] = ''.join(report['source']['sections'][:section])
+        report['source']['code'] = ''.join(report['source']['sections'][:section+1])
     else:
         report.attach('Verifier Error', category='verifier', tool=NAME,
                       mistakes=("Tried to advance to next section but the "
@@ -97,7 +98,7 @@ def next_section(name="", report=None):
                                 "{count}, but there were only {found} sections."
                                 ).format(count=int(section/2), found=found))
     
-def verify_sections(count, report=None):
+def count_sections(count, report=None):
     '''
     Checks that the right number of sections exist. This is not counting the
     prologue, before the first section. So if you have 3 sections in your code,
@@ -115,8 +116,7 @@ def verify_sections(count, report=None):
 def verify_section(report=None):
     if report is None:
         report = MAIN_REPORT
-    section = report['source']['section']
-    code = report['source']['sections'][section]
+    code = report['source']['code']
     try:
         parsed = ast.parse(code)
         report['source']['ast'] = parsed
