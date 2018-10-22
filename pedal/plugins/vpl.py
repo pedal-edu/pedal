@@ -15,11 +15,10 @@ class VPLStyler(HTMLParser):
         super().__init__()
         self.reset()
         self.fed = []
+        self.inside_pre = False
     def convert(self, html):
         self.feed(html)
         return self.get_data()
-    def handle_data(self, data):
-        self.fed.append(data)
     @property
     def text(self):
         return ''.join(self.fed)
@@ -35,31 +34,43 @@ class VPLStyler(HTMLParser):
         elif tag in ("pre",):
             self.force_new_line()
             self.fed.append(">")
+            self.inside_pre = True
+    def handle_data(self, data):
+        if self.inside_pre:
+            # Need to prepend ">" to the start of new lines.
+            self.fed.append(data.replace("\n", "\n>"))
+        else:
+            self.fed.append(data)
     def handle_endtag(self, tag):
         if tag in self.HEADERS:
             self.fed.append("")
         elif tag in ("pre", ):
             self.fed.append("")
+            self.inside_pre = False
 
 def strip_tags(html):
     return VPLStyler().convert(html)
 
-def find_file(filename, pattern='##### (.+)$', report=None):
+def find_file(filename, sections=False, report=None):
     if report is None:
         report = MAIN_REPORT
     with open(filename, 'r') as student_file:
-        source.set_source(student_file.read(), report=report)
+        source.set_source(student_file.read(), filename=filename,
+                          sections=sections, report=report)
 
 def set_maximum_score(number, cap=True, report=None):
     if report is None:
         report = MAIN_REPORT
-    report['vpl']['score']['maximum'] = number
-    report['vpl']['score']['cap'] = cap
+    report['vpl']['score_maximum'] = number
+    report['vpl']['score_cap'] = cap
 
 def resolve(report=None):
     if report is None:
         report = MAIN_REPORT
-    print("< | -")
-    simple.resolve(report)
-    print("- | >")
-    print("Grade :=>>")
+    print("<|-")
+    (final_success, final_score, final_category, 
+     final_label, final_message, final_data,
+     final_hide_correctness) = simple.resolve(report)
+    print(strip_tags(final_message))
+    print("-|>")
+    print("Grade :=>>", final_score * report['vpl'].get('score_maximum', 1))

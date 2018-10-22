@@ -7,6 +7,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 
 from pedal.report import *
 from pedal.source import *
+from pedal.tifa import tifa_analysis
 from execution_helper import Execution
 
 class TestCode(unittest.TestCase):
@@ -37,7 +38,7 @@ class TestCode(unittest.TestCase):
         self.assertEqual(e.label, 'Syntax error')
         self.assertEqual(e.message, "Invalid syntax on line 2")
     
-    def test_sections(self):
+    def test_sections_syntax_errors(self):
         clear_report()
         set_source(dedent('''
         NAMES = [____, ____]
@@ -76,6 +77,33 @@ class TestCode(unittest.TestCase):
         count_sections(3)
         feedback = get_all_feedback()
         self.assertTrue(feedback)
+    
+    def test_sections_tifa(self):
+        clear_report()
+        set_source(dedent('''
+        ##### Part 1
+        a = 0
+        ##### Part 2
+        print(a)
+        ##### Part 3
+        print(b)
+        '''), sections=True)
+        # First section has an unused variable
+        next_section()
+        self.assertEqual(len(get_all_feedback()), 0)
+        tifa_analysis(True)
+        self.assertEqual(len(get_all_feedback()), 1)
+        # Second section uses said variable
+        next_section()
+        self.assertEqual(len(get_all_feedback()), 1)
+        tifa_analysis(True)
+        self.assertEqual(len(get_all_feedback()), 1)
+        # Third section has a new unused variables
+        next_section()
+        self.assertEqual(len(get_all_feedback()), 1)
+        tifa_analysis(True)
+        feedback = get_all_feedback()
+        self.assertEqual(len(get_all_feedback()), 2)
 
 if __name__ == '__main__':
     unittest.main(buffer=False)
