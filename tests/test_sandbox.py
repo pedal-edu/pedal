@@ -62,6 +62,18 @@ class TestCode(unittest.TestCase):
         self.assertIsNotNone(student.exception)
         self.assertIsInstance(student.exception, TypeError)
         self.assertEqual(student.exception_position, {'line': 1})
+        
+        self.assertEqual(student.format_exception(), 
+"""Traceback:
+  File "student.py", line 1
+TypeError: unsupported operand type(s) for +: 'int' and 'str'\n"""
+        )
+    
+    def test_call(self):
+        student_code = "def average(a,b):\n return (a+b)/2"
+        student = Sandbox()
+        student.run(student_code, _as_filename='student.py')
+        student.call('average', 10, 12)
     
     def test_compatibility_api(self):
         student_code = 'word = input("Give me a word")\nprint(word+"!")'
@@ -159,6 +171,7 @@ class TestCode(unittest.TestCase):
         set_source(student_code)
         exception = compatibility.run_student()
         self.assertIsNone(exception)
+    
 
 if __name__ == '__main__':
     unittest.main(buffer=False)

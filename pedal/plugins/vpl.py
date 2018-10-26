@@ -67,10 +67,10 @@ def set_maximum_score(number, cap=True, report=None):
 def resolve(report=None):
     if report is None:
         report = MAIN_REPORT
-    print("<|-")
+    print("<|--")
     (final_success, final_score, final_category, 
      final_label, final_message, final_data,
      final_hide_correctness) = simple.resolve(report)
     print(strip_tags(final_message))
-    print("-|>")
+    print("--|>")
     print("Grade :=>>", final_score * report['vpl'].get('score_maximum', 1))

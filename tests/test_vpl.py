@@ -43,7 +43,7 @@ class TestVPL(unittest.TestCase):
         with redirect_stdout(f):
             resolve()
         output = f.getvalue()
-        self.assertEqual(output, "<|-\nInvalid syntax on line 13\n-|>\nGrade :=>> 0\n")
+        self.assertEqual(output, "<|--\nInvalid syntax on line 13\n--|>\nGrade :=>> 0\n")
 
 if __name__ == '__main__':
     unittest.main(buffer=False)

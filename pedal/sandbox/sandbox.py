@@ -106,6 +106,7 @@ import traceback
 from pedal.report import MAIN_REPORT
 from pedal.sandbox import mocked
 from pedal.sandbox.timeout import timeout
+from pedal.sandbox.messages import EXTENDED_ERROR_EXPLANATION
     
 def _dict_extends(d1, d2):
     '''
@@ -145,7 +146,7 @@ class Sandbox:
     student.functions: dict (only callables)
     '''
     def __init__(self, data=None, raw_output=None, exception=None, 
-                 filename="__main__", modules=None):
+                 filename="__main__", modules=None, full_trace=False):
         # data
         if data is None:
             data = {}
@@ -164,6 +165,9 @@ class Sandbox:
         self.inputs = None
         # Modules
         self.setup_mocks(modules)
+        # Settings
+        self.full_trace = full_trace
+        self.MAXIMUM_VALUE_LENGTH = 120
         
     def setup_mocks(self, modules):
         self.mocked_modules = {}
@@ -237,7 +241,6 @@ class Sandbox:
         target = kwargs.pop('_target', '_')
         _modules = kwargs.pop('_modules', {})
         _inputs = kwargs.pop('_inputs', self.inputs)
-        _example = kwargs.pop('_example', None)
         _threaded = kwargs.pop('_threaded', False)
         # With all the special args done, the remainder are regular kwargs
         kwargs = _dict_extends(_arguments, kwargs)
@@ -248,7 +251,13 @@ class Sandbox:
                   for key, value in kwargs.items()]
         arguments = ", ".join(args+kwargs)
         call = "{} = {}({})".format(target, function, arguments)
-        self.run(call, _as_filename, _modules, _inputs, _example, _threaded)
+        if '_example' in kwargs:
+            _example = kwargs['_example']
+        else:
+            _example = '\nHappened when I ran:'
+            #_example = self._demonstrate_call(function, args+kwargs)
+        self.run(call, _as_filename, _modules, _inputs, 
+                 _example=_example, _threaded=_threaded)
         self._ = self.data[target]
         return self._
     
@@ -304,17 +313,20 @@ class Sandbox:
             input_failed = True
             result= None
         except Exception as e:
-            '''if example is None:
-                code = _demonstrate_call(a_function, parameters)
-            else:
-                code = example
-            _raise_improved_error(e, code)'''
+            if _example is not None:
+                _raise_improved_error(e, _example)
             self.exception = e
+            self.exc_info = sys.exc_info()
             cl, exc, tb = sys.exc_info()
             line_number = traceback.extract_tb(tb)[-1][1]
+            while tb and self._is_relevant_tb_level(tb):
+                tb = tb.tb_next
+            length = self._count_relevant_tb_levels(tb)
+            tb_e = traceback.TracebackException(cl, exc, tb, 
+                                                limit=length,
+                                                capture_locals=True)
+            msgLines = list(tb_e.format())
             self.exception_position = {'line': line_number}
-            if str(e) == "module 'sys' has no attribute 'modules'":
-                old_stdout.write("\n".join(traceback.format_tb(tb))+"\n")
         finally:
             sys.stdout = old_stdout
             #sys.stdin = old_stdin
@@ -336,6 +348,92 @@ class Sandbox:
     def get_values_by_type(self, type, exclude_builtins=True):
         names = self.get_names_by_type(type, exclude_builtins)
         return [self.data[name] for name in names]
+    
+    def format_exception(self):
+        cl, exc, tb = self.exc_info
+        line_number = traceback.extract_tb(tb)[-1][1]
+        while tb and self._is_relevant_tb_level(tb):
+            tb = tb.tb_next
+        length = self._count_relevant_tb_levels(tb)
+        tb_e = traceback.TracebackException(cl, exc, tb, 
+                                            limit=length,
+                                            capture_locals=False)
+        lines = [x.replace(', in <module>', '', 1) for x in list(tb_e.format())]
+        return "Traceback:\n"+''.join(lines[1:])
+        
+    def _count_relevant_tb_levels(self, tb):
+        length = 0
+        while tb and not self._is_relevant_tb_level(tb):
+            length += 1
+            tb = tb.tb_next
+        return length
+    
+    def _is_relevant_tb_level(self, tb):
+        '''
+        Determines if the give part of the traceback is relevant to the user.
+        
+        Returns:
+            boolean: True means it is NOT relevant
+        '''
+        # Are in verbose mode?
+        if self.full_trace:
+            return False
+        filename, _, _, _ = traceback.extract_tb(tb, limit=1)[0]
+        # Is the error in this test file?
+        if filename == __file__:
+            return True
+        # Is the error related to a file in the parent directory?
+        current_directory = os.path.dirname(os.path.realpath(__file__))
+        parent_directory = os.path.dirname(current_directory)
+        if filename.startswith(current_directory):
+            return False
+        # Is the error in a local file?
+        if filename.startswith('.'):
+            return False
+        # Is the error in an absolute path?
+        if not os.path.isabs(filename):
+            return False
+        # Okay, it's not a student related file
+        return True
+    
+    def _demonstrate_call(self, a_function, parameters):
+        if not isinstance(a_function, str):
+            a_function = a_function.__name__
+        defs = ""
+        for key, value in parameters.items():
+            value = pprint.pformat(value, indent=2, compact=True)
+            if len(value) >= MAXIMUM_VALUE_LENGTH:
+                value = value[:MAXIMUM_VALUE_LENGTH-3] + "..."
+            defs += "{} = {}\n".format(key, value)
+        arguments = ", ".join(parameters.keys())
+        code = "{defs}{name}({arguments})".format(name=a_function, defs=defs, 
+                                                  arguments=arguments)
+        code = code.replace("{", "{{").replace("}", "}}")
+        code = indent4(code)
+        code = ".\n\nThe error above occurred when I ran:\n"+code
+        return code
+        
+class _KeyError(KeyError):
+    def __str__(self):
+        return BaseException.__str__(self)
+        
+def _append_to_error(e, message):
+    e.args = (e.args[0]+message,)
+    return e
+        
+def _raise_improved_error(e, code):
+    if isinstance(e, KeyError):
+        raise _copy_key_error(e, code) from None
+    else:
+        raise _append_to_error(e, code)
+
+def _copy_key_error(e, code):
+    new_args = (repr(e.args[0])+code,)
+    new_except = _KeyError(*new_args)
+    new_except.__cause__ = e.__cause__
+    new_except.__traceback__ = e.__traceback__
+    new_except.__context__  = e.__context__ 
+    return new_except
 
 def _threaded_execution(code, filename, inputs=None):
     pass
