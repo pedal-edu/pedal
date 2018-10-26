@@ -221,7 +221,7 @@ class TestCode(unittest.TestCase):
         (success, score, hc, messages) = sectional.resolve()
         self.assertEqual(success, False)
         self.assertEqual(score, .2)
-        self.assertEqual(len(messages), 2)
+        self.assertEqual(len(messages), 1)
     
     def test_sectional_success(self):
         clear_report()

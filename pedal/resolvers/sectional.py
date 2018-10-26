@@ -21,7 +21,7 @@ def resolve(report=None, priority_key=None):
     # Process
     final_success = False
     final_score = 0
-    finals = {0: []}
+    finals = {}
     for feedback in feedbacks:
         section = feedback.section or 0
         category = feedback.category.lower()
@@ -36,7 +36,7 @@ def resolve(report=None, priority_key=None):
         if message is not None:
             if section not in finals:
                 finals[section] = []
-            finals[section].append({
+            finals[section].insert(0, {
                 'label': feedback.label,
                 'message': message,
                 'category': feedback.category,
@@ -44,10 +44,10 @@ def resolve(report=None, priority_key=None):
             })
     final_hide_correctness = suppressions.get('success', False)
     if not finals:
-        finals[0].append({
+        finals[0] = [{
             'label': 'No errors',
             'category': 'Instructor',
             'data': [],
             'message': "No errors reported."
-        })
+        }]
     return (final_success, final_score, final_hide_correctness, finals)

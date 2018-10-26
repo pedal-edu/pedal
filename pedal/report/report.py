@@ -43,6 +43,10 @@ class Report:
         misconception = {'message': message}
         if line is not None:
             misconception['line'] = line
+        if section is None:
+            #TODO: Hackish - requires knowledge of the source tool!
+            # But how does it know it's section otherwise?
+            section = self['source'].get('section', 0)
         self.feedback.append(Feedback('explain', priority=priority,
                                       category='instructor',
                                       section=section,

@@ -6,7 +6,7 @@ from html.parser import HTMLParser
 
 from pedal.report import MAIN_REPORT, Feedback
 from pedal import source
-from pedal.resolvers import simple
+from pedal.resolvers import sectional
 
 class VPLStyler(HTMLParser):
     HEADERS = ("h1", "h2", "h3", "h4", "h5")
@@ -68,9 +68,16 @@ def resolve(report=None):
     if report is None:
         report = MAIN_REPORT
     print("<|--")
-    (final_success, final_score, final_category, 
-     final_label, final_message, final_data,
-     final_hide_correctness) = simple.resolve(report)
-    print(strip_tags(final_message))
+    success, score, hc, messages_by_section = sectional.resolve(report)
+    last_section = 0
+    for section, messages in sorted(messages_by_section.items()):
+        if section != last_section:
+            for intermediate_section in range(last_section, section, 2):
+                print("-", report['source']['sections'][1+intermediate_section])
+        message = messages[0]
+        print(strip_tags(message['message']))
+        last_section = section
+    print("-Overall")
+    print("Incomplete" if success else "Complete! Great job!")
     print("--|>")
-    print("Grade :=>>", final_score * report['vpl'].get('score_maximum', 1))
+    print("Grade :=>>", score * report['vpl'].get('score_maximum', 1))
