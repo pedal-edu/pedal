@@ -22,6 +22,8 @@ class Feedback:
                         is "positive" - which indicates that this feedback is
                         positive, and the information is good to convey to the
                         student.
+        section (int): The section that generated this particular piece of
+                       feedback. Some resolvers want to group feedback.
         result (bool): Whether or not this feedback is associated with the
                        learner completing the task ("Success!").
         performance (float): A relative amount that this feedback contributes
@@ -49,7 +51,7 @@ class Feedback:
                                     a break?").
     '''
     def __init__(self, label, tool='instructor', 
-                 category='Instructor feedback', priority=None,
+                 category='Instructor feedback', priority=None, section=None,
                  result=None, performance=None, misconceptions=None,
                  mistakes=None, hints=None, constraints=None,
                  metacognitives=None):
@@ -58,6 +60,7 @@ class Feedback:
         self.tool = tool
         self.category = category
         self.priority = priority
+        self.section = section
         # Data
         self.result = result
         self.performance = performance

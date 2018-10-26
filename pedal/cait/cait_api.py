@@ -42,6 +42,7 @@ def parse_program():
             MAIN_REPORT['cait']['matcher'] = None
         else:
             MAIN_REPORT.attach("No source code found", tool='cait', 
+                               section=MAIN_REPORT['source']['section'],
                                category='analyzer')
             std_ast = ast.parse('')
         MAIN_REPORT['cait']['std_ast'] = EasyNode(std_ast)

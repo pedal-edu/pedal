@@ -26,24 +26,26 @@ class Report:
         self.suppressions = {}
         self._results = {}
 
-    def set_success(self):
+    def set_success(self, section=None):
         self.feedback.append(Feedback('set_success', priority='positive',
-                                      result=True))
+                                      result=True, section=section))
         
-    def give_partial(self, value, message=None):
+    def give_partial(self, value, message=None, section=None):
         self.feedback.append(Feedback('give_partial', performance=value,
                                       priority='positive',
+                                      section=section,
                                       mistakes=message))
         
     def hide_correctness(self):
         self.suppressions['success'] = []
         
-    def explain(self, message, priority='medium', line=None):
+    def explain(self, message, priority='medium', line=None, section=None):
         misconception = {'message': message}
         if line is not None:
             misconception['line'] = line
         self.feedback.append(Feedback('explain', priority=priority,
                                       category='instructor',
+                                      section=section,
                                       misconceptions=misconception))
 
     def gently(self, message, line=None):
