@@ -135,3 +135,4 @@ def verify_section(report=None):
         report['source']['success'] = False
         if 'ast' in report['source']:
             del report['source']['ast']
+    return report['source']['success']

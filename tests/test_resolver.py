@@ -5,9 +5,9 @@ import sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from pedal.report import *
-from pedal.source import set_source
+from pedal.source import set_source, next_section, verify_section
 from pedal.tifa import tifa_analysis
-from pedal.resolvers import simple
+from pedal.resolvers import simple, sectional
 import pedal.sandbox.compatibility as compatibility
 
 from execution_helper import Execution
@@ -205,6 +205,41 @@ class TestCode(unittest.TestCase):
             pass
         self.assertNotEqual(e.category, "Runtime")
         self.assertEqual(e.label, "No errors")
+    
+    def test_sectional_error(self):
+        clear_report()
+        set_source('a=0\n##### Part 1\nprint("A")\n##### Part 2\nsyntax error',
+                   sections=True)
+        next_section()
+        if verify_section():
+            compatibility.run_student(raise_exceptions=True)
+            give_partial(.2)
+        next_section()
+        if verify_section():
+            compatibility.run_student(raise_exceptions=True)
+            give_partial(.3)
+        (success, score, hc, messages) = sectional.resolve()
+        self.assertEqual(success, False)
+        self.assertEqual(score, .2)
+        self.assertEqual(len(messages), 2)
+    
+    def test_sectional_success(self):
+        clear_report()
+        set_source('a=0\n##### Part 1\nprint("A")\n##### Part 2\nprint("B")',
+                   sections=True)
+        next_section()
+        if verify_section():
+            compatibility.run_student(raise_exceptions=True)
+            give_partial(.2)
+        next_section()
+        if verify_section():
+            compatibility.run_student(raise_exceptions=True)
+            give_partial(.3)
+            set_success()
+        (success, score, hc, messages) = sectional.resolve()
+        self.assertEqual(success, True)
+        self.assertEqual(score, .5)
+        self.assertEqual(len(messages), 1)
 
 if __name__ == '__main__':
     unittest.main(buffer=False)

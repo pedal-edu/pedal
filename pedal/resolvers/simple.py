@@ -110,7 +110,7 @@ def resolve(report=None, priority_key=None):
         priority_key = by_priority
     # Prepare feedbacks
     feedbacks = report.feedback
-    feedbacks.sort(key=by_priority)
+    feedbacks.sort(key=priority_key)
     suppressions = report.suppressions
     # Process
     final_success = False
