@@ -142,3 +142,15 @@ class AstMap:
                 return self.exp_table.get(ins_id)
             except Exception:
                 return None
+    
+    def __getitem__(self, id):
+        if id.startswith('__'):
+            return self.exp_table[id]
+        else:
+            return self.symbol_table[id]
+    
+    def __contains__(self, id):
+        if id.startswith('__'):
+            return id in self.exp_table
+        else:
+            return id in self.symbol_table

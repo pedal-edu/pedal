@@ -10,3 +10,6 @@ A package for analyzing student code.
 #   cait
 #   resolver
 #   etc.
+
+from pedal.cait.cait_api import parse_program, find_match, find_matches
+from pedal.report.imperative import suppress, explain, compliment

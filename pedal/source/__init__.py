@@ -14,10 +14,8 @@ REQUIRES = []
 OPTIONALS = []
 CATEGORY = 'Syntax'
 
-__all__ = ['NAME', 'DESCRIPTION', 'SHORT_DESCRIPTION',
-           'REQUIRES', 'OPTIONALS',
-           'set_source', 'count_sections', 'next_section',
-           'verify_section']
+__all__ = ['NAME', 'DESCRIPTION', 'SHORT_DESCRIPTION', 'REQUIRES', 'OPTIONALS',
+           'set_source', 'count_sections', 'next_section', 'verify_section']
 DEFAULT_PATTERN = r'^(##### Part .+)$'
 
 def set_source(code, filename='__main__.py', sections=False, report=None):

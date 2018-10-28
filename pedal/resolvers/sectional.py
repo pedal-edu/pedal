@@ -45,6 +45,7 @@ def resolve(report=None, priority_key=None):
                 'label': feedback.label,
                 'message': message,
                 'category': feedback.category,
+                'priority': feedback.priority,
                 'data': data
             })
     final_hide_correctness = suppressions.get('success', False)
@@ -53,6 +54,7 @@ def resolve(report=None, priority_key=None):
             'label': 'No errors',
             'category': 'Instructor',
             'data': [],
+            'priority': 'medium',
             'message': "No errors reported."
         }]
     return (final_success, final_score, final_hide_correctness, finals)

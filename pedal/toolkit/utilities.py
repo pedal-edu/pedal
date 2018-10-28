@@ -236,7 +236,7 @@ def find_operation(op_name, root):
                 return unaryop
     return False
 
-def ensure_recursion(function_name, root):
+def ensure_recursion(function_name, root=None):
     if root is None:
         root = parse_program()
     all_calls = root.find_all('Call')
@@ -249,3 +249,35 @@ def ensure_recursion(function_name, root):
             if a_call.func.id == name:
                 calls.append(a_call)
     return calls
+
+def ensure_assignment(variable_name, type=None, value=None, root=None):
+    '''
+    Consumes a variable name
+    TODO: Implement the value parameter
+    
+    :param variable_name: The variable name the student is expected to define.
+    :type variable_name: str
+    :param type: The string type of the node on the right side of the
+                 assignment. Check GreenTreeSnakes (e.g., "Num", or "Str").
+    :type type: str
+    :return: False or str
+    '''
+    assert type is not None or value is not None
+    if root is None:
+        root = parse_program()
+    assignments = root.find_all("Assign")
+    for assign in assignments:
+        if assign.targets[0].id == variable_name:
+            if (type == 'Bool' and 
+                assign.value.ast_name == 'Name' and 
+                 assign.value.id in ('True', 'False')):
+                return assign
+            elif (type == 'Bool' and 
+                assign.value.ast_name == 'NameConstant' and 
+                 assign.value.value in (True, False)):
+                return assign
+            elif assign.value.ast_name == type:
+                return assign
+    explain("You have not assigned a {type} to the variable {variable}."
+            "".format(type=type, variable=variable_name))
+    return False

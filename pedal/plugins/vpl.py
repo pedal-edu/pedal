@@ -83,8 +83,13 @@ def resolve(report=None):
         if section != last_section:
             for intermediate_section in range(last_section, section, 2):
                 print("-"+report['source']['sections'][1+intermediate_section])
-        message = messages[0]
-        print(strip_tags(message['message']))
+        printed_first_bad = False
+        for message in messages:
+            if message['priority'] == 'positive':
+                print(strip_tags(message['message']))
+            elif not printed_first_bad:
+                print(strip_tags(message['message']))
+                printed_first_bad = True
         last_section = section
     print("-Overall")
     if success:
@@ -111,7 +116,6 @@ class SectionalAssignment:
         return True
     
     def resolve(self):
-        self.report.clear()
         checks = (  (self.pre_test() and 
                      getattr(self, attr)() and 
                      self.post_test())
