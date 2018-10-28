@@ -27,10 +27,18 @@ class Report:
         self._results = {}
 
     def set_success(self, section=None):
+        if section is None:
+            #TODO: Hackish - requires knowledge of the source tool!
+            # But how does it know it's section otherwise?
+            section = self['source'].get('section', 0)
         self.feedback.append(Feedback('set_success', priority='positive',
                                       result=True, section=section))
         
     def give_partial(self, value, message=None, section=None):
+        if section is None:
+            #TODO: Hackish - requires knowledge of the source tool!
+            # But how does it know it's section otherwise?
+            section = self['source'].get('section', 0)
         self.feedback.append(Feedback('give_partial', performance=value,
                                       priority='positive',
                                       section=section,

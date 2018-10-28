@@ -2,6 +2,7 @@
 Some kind of function to break up the sections
 '''
 import re
+import sys
 from html.parser import HTMLParser
 
 from pedal.report import MAIN_REPORT, Feedback
@@ -54,9 +55,17 @@ def strip_tags(html):
 def find_file(filename, sections=False, report=None):
     if report is None:
         report = MAIN_REPORT
-    with open(filename, 'r') as student_file:
-        source.set_source(student_file.read(), filename=filename,
-                          sections=sections, report=report)
+    try:
+        with open(filename, 'r') as student_file:
+            source.set_source(student_file.read(), filename=filename,
+                              sections=sections, report=report)
+    except IOError as e:
+        message = ("The given filename ('{filename}') was either not found"
+                   " or could not be opened. Please make sure the file is"
+                   " available.").format(filename=filename)
+        report.attach('Source File Not Found', category='Syntax', tool='VPL',
+                  section=0 if sections else None,
+                  mistakes={'message': message})
 
 def set_maximum_score(number, cap=True, report=None):
     if report is None:
@@ -73,11 +82,42 @@ def resolve(report=None):
     for section, messages in sorted(messages_by_section.items()):
         if section != last_section:
             for intermediate_section in range(last_section, section, 2):
-                print("-", report['source']['sections'][1+intermediate_section])
+                print("-"+report['source']['sections'][1+intermediate_section])
         message = messages[0]
         print(strip_tags(message['message']))
         last_section = section
     print("-Overall")
-    print("Incomplete" if success else "Complete! Great job!")
+    if success:
+        print("Complete! Great job!")
+    else:
+        print("Incomplete")
     print("--|>")
     print("Grade :=>>", score * report['vpl'].get('score_maximum', 1))
+
+class SectionalAssignment:
+    max_points = 1
+    def __init__(self, filename=None, max_points=None, report=None):
+        self.report = MAIN_REPORT if report is None else report
+        find_file(filename if filename else self.filename, 
+                  sections=True, report=report)
+        set_maximum_score(self.max_points 
+                          if max_points is None else max_points)
+    
+    def pre_test(self):
+        source.next_section()
+        return source.verify_section()
+    
+    def post_test(self):
+        return True
+    
+    def resolve(self):
+        self.report.clear()
+        checks = (  (self.pre_test() and 
+                     getattr(self, attr)() and 
+                     self.post_test())
+                  for attr in dir(self)
+                  if attr.startswith('test_') and 
+                     callable(getattr(self, attr)))
+        if all(checks):
+            self.report.set_success()
+        resolve(report=self.report)

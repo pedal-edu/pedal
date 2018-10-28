@@ -82,6 +82,8 @@ class Feedback:
             metadata += ", category="+self.category
         if self.priority is not None:
             metadata += ", priority="+self.priority
+        if self.section is not None:
+            metadata += ", section="+str(self.section)
         data = ""
         return "Feedback({}{}{})".format(self.label, metadata, data)
 

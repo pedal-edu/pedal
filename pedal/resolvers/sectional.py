@@ -22,6 +22,7 @@ def resolve(report=None, priority_key=None):
     final_success = False
     final_score = 0
     finals = {}
+    found_failure = False
     for feedback in feedbacks:
         section = feedback.section or 0
         category = feedback.category.lower()
@@ -34,6 +35,10 @@ def resolve(report=None, priority_key=None):
         final_success = success or final_success
         final_score += partial
         if message is not None:
+            if feedback.priority != 'positive':
+                if found_failure:
+                    continue
+                found_failure = True
             if section not in finals:
                 finals[section] = []
             finals[section].insert(0, {

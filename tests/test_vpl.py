@@ -11,7 +11,7 @@ sys.path.insert(0, pedal_library)
 from pedal.plugins.vpl import find_file, resolve, strip_tags
 from pedal.source import next_section, verify_section
 from pedal.report import MAIN_REPORT
-from pedal.report.imperative import compliment
+from pedal.report.imperative import compliment, clear_report
 
 class TestVPL(unittest.TestCase):
     def test_vpl(self):
@@ -33,17 +33,21 @@ class TestVPL(unittest.TestCase):
         '''))
     
     def test_resolve(self):
+        clear_report()
         find_file('tests/datafiles/student_example.py', sections=True)
         # Part 0
-        next_section()
         # Part 1
-        verify_section()
         next_section()
+        verify_section()
         # Part 2
+        next_section()
         verify_section()
         compliment('Hey, not a bad job!')
-        next_section()
         # Part 3
+        next_section()
+        verify_section()
+        # Part 4
+        next_section()
         verify_section()
         f = io.StringIO()
         with redirect_stdout(f):
@@ -51,10 +55,10 @@ class TestVPL(unittest.TestCase):
         output = f.getvalue()
         self.assertEqual(output, dedent('''
         <|--
-        - ##### Part 1
-        - ##### Part 2
+        -##### Part 1
+        -##### Part 2
         Hey, not a bad job!
-        - ##### Part 3
+        -##### Part 3
         Invalid syntax on line 13
         -Overall
         Incomplete
