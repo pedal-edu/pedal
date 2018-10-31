@@ -217,6 +217,7 @@ class Sandbox:
                 self.data[key] = self.backups[key]
             else:
                 del self.data[key]
+        self.temporaries = set()
     
     def make_temporary(self, category, name, value):
         key = '_temporary_{}_{}'.format(category, name)
@@ -237,7 +238,7 @@ class Sandbox:
             code = code_file.read() + '\n'
         self.run(code, _as_filename, _modules, _inputs, _example, _threaded)
     
-    def tests(self, function, test_runs, points):
+    def tests(self, function, test_runs, points, compliment, test_output=False):
         all_passed = True
         results = []
         for test in test_runs:
@@ -247,11 +248,13 @@ class Sandbox:
                     kwargs = {}
             else:
                 args, kwargs = test, {}
-            result = self.test('average_three', *args, **kwargs)
+            if test_output:
+                kwargs['_test_output'] = test_output
+            result = self.test(function, *args, **kwargs)
             all_passed = all_passed and result[0]
             results.append(result)
         if all_passed:
-            self.report.compliment("#2.1) You completed the average_three function.")
+            self.report.compliment(compliment)
             self.report.give_partial(points)
             return True
         else:
@@ -280,6 +283,8 @@ class Sandbox:
         _delta = kwargs.pop('_delta', 0.001)
         _exact_strings = kwargs.pop('_exact_strings', False)
         _hidden = kwargs.pop('_hidden', False)
+        _test_output = kwargs.pop('_test_output', False)
+        self.set_output(None)
         actual = self.call(function, *args, **kwargs,
                            _as_filename="instructor_tests.py")
         if self.exception is not None:
@@ -289,24 +294,40 @@ class Sandbox:
                                mistakes={'message': self.format_exception(), 
                                          'error': self.exception})
             return False, ""
+        if _test_output:
+            actual = self.output
+            actual_str = "\n".join(actual)
+            expected_str = str(expected)
+        else:
+            actual_str = repr(actual)
+            expected_str = repr(expected)
         message = None
-        if ((isinstance(expected, float) and
-             isinstance(actual, (float, int)) and
-             abs(actual-expected) < _delta) or
-            actual == expected or
-            (_exact_strings and isinstance(expected, str) and
-             isinstance(actual, str) and 
-             _normalize_string(actual) == _normalize_string(expected))):
+        if ( # Float comparison
+             (isinstance(expected, float) and
+              isinstance(actual, (float, int)) and
+              abs(actual-expected) < _delta) or
+             # Exact Comparison
+             actual == expected or
+             # Inexact string comparison
+             (_exact_strings and isinstance(expected, str) and
+              isinstance(actual, str) and 
+              _normalize_string(actual) == _normalize_string(expected)) or
+             # Inexact output comparison
+             (_test_output and
+              _normalize_string(expected) in [_normalize_string(line) 
+                                              for line in actual])
+              ):
             if not _hidden:
                 message = "Unit test passed:\n"
                 message += "<pre>>{example}</pre>\n".format(example=self.example)
-                message += "<pre>"+repr(actual)+"</pre>\n"
+                message += "<pre>"+actual_str+"</pre>\n"
             return True, message
         if not _hidden:
             message = "Instructor unit test failure!\n"
             message += "I ran:\n<pre>>{example}</pre>\n".format(example=self.example)
-            message += "I got:\n<pre>"+repr(actual)+"</pre>\n"
-            message += "But I expected:\n<pre>"+repr(expected)+"</pre>\n"
+            message += "I got:\n<pre>"+actual_str+"</pre>\n"
+            message += (("But I expected{p}:\n<pre>"+expected_str+"</pre>\n")
+                        .format(p=" it to print" if _test_output else ""))
         else:
             message = "Hidden instructor unit test failure!\n"
         return False, message
