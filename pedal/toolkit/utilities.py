@@ -262,13 +262,16 @@ def ensure_assignment(variable_name, type=None, value=None, root=None):
     :type type: str
     :return: False or str
     '''
-    assert type is not None or value is not None
     if root is None:
         root = parse_program()
     assignments = root.find_all("Assign")
     for assign in assignments:
+        if assign.targets[0].ast_name != "Name":
+            continue
         if assign.targets[0].id == variable_name:
-            if (type == 'Bool' and 
+            if type is None:
+                return assign
+            elif (type == 'Bool' and 
                 assign.value.ast_name == 'Name' and 
                  assign.value.id in ('True', 'False')):
                 return assign
@@ -278,6 +281,10 @@ def ensure_assignment(variable_name, type=None, value=None, root=None):
                 return assign
             elif assign.value.ast_name == type:
                 return assign
-    explain("You have not assigned a {type} to the variable {variable}."
-            "".format(type=type, variable=variable_name))
+    if type is None:
+        explain(("You have not properly assigned anything to the variable "
+            "{variable}.").format(variable=variable_name))
+    else:
+        explain(("You have not assigned a {type} to the variable {variable}."
+                "").format(type=type, variable=variable_name))
     return False

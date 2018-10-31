@@ -12,4 +12,6 @@ A package for analyzing student code.
 #   etc.
 
 from pedal.cait.cait_api import parse_program, find_match, find_matches
-from pedal.report.imperative import suppress, explain, compliment
+from pedal.report.imperative import (suppress, explain, compliment,
+                                     give_partial)
+from pedal.sandbox.sandbox import run, reset

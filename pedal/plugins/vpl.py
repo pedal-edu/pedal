@@ -97,16 +97,18 @@ def resolve(report=None):
     else:
         print("Incomplete")
     print("--|>")
-    print("Grade :=>>", score * report['vpl'].get('score_maximum', 1))
+    print("Grade :=>>", round(score * report['vpl'].get('score_maximum', 1)))
 
 class SectionalAssignment:
     max_points = 1
+    sections = None
     def __init__(self, filename=None, max_points=None, report=None):
         self.report = MAIN_REPORT if report is None else report
         find_file(filename if filename else self.filename, 
                   sections=True, report=report)
         set_maximum_score(self.max_points 
                           if max_points is None else max_points)
+        source.count_sections(self.sections)
     
     def pre_test(self):
         source.next_section()

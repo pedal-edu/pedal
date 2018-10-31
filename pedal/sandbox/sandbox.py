@@ -100,6 +100,7 @@ import types
 import sys
 import io
 import os
+import string
 from unittest.mock import patch, mock_open, MagicMock
 import traceback
 
@@ -146,7 +147,8 @@ class Sandbox:
     student.functions: dict (only callables)
     '''
     def __init__(self, data=None, raw_output=None, exception=None, 
-                 filename="__main__", modules=None, full_trace=False):
+                 filename="__main__", modules=None, full_trace=False,
+                 report=None):
         # data
         if data is None:
             data = {}
@@ -168,6 +170,9 @@ class Sandbox:
         # Settings
         self.full_trace = full_trace
         self.MAXIMUM_VALUE_LENGTH = 120
+        if report is None:
+            report = MAIN_REPORT
+        self.report = report
         
     def setup_mocks(self, modules):
         self.mocked_modules = {}
@@ -232,6 +237,80 @@ class Sandbox:
             code = code_file.read() + '\n'
         self.run(code, _as_filename, _modules, _inputs, _example, _threaded)
     
+    def tests(self, function, test_runs, points):
+        all_passed = True
+        results = []
+        for test in test_runs:
+            if isinstance(test, tuple):
+                args = test[0]
+                if len(test) > 1:
+                    kwargs = {}
+            else:
+                args, kwargs = test, {}
+            result = self.test('average_three', *args, **kwargs)
+            all_passed = all_passed and result[0]
+            results.append(result)
+        if all_passed:
+            self.report.compliment("#2.1) You completed the average_three function.")
+            self.report.give_partial(points)
+            return True
+        else:
+            for passed, message in results:
+                if passed:
+                    self.report.attach("Unit Test Passing", category='Runtime',
+                                       priority='positive', tool='Sandbox',
+                                       section=self.report['source']['section'],
+                                       mistakes={'message': message})
+                else:
+                    self.report.attach("Unit Test Failure", category='Runtime',
+                                       tool='Sandbox',
+                                       section=self.report['source']['section'],
+                                       mistakes={'message': message})
+            return False
+    
+    def test(self, function, expected, *args, **kwargs):
+        if function not in self.data:
+            message = "I could not find a top-level definition of {function}!\n"
+            message = message.format(function=function)
+            self.report.attach("Function not found", category='Runtime', 
+                               tool='Sandbox',
+                               section=self.report['source']['section'],
+                               mistakes={'message': message})
+            return False, message
+        _delta = kwargs.pop('_delta', 0.001)
+        _exact_strings = kwargs.pop('_exact_strings', False)
+        _hidden = kwargs.pop('_hidden', False)
+        actual = self.call(function, *args, **kwargs,
+                           _as_filename="instructor_tests.py")
+        if self.exception is not None:
+            name = str(self.exception.__class__)[8:-2]
+            self.report.attach(name, category='Runtime', tool='Sandbox',
+                               section=self.report['source']['section'],
+                               mistakes={'message': self.format_exception(), 
+                                         'error': self.exception})
+            return False, ""
+        message = None
+        if ((isinstance(expected, float) and
+             isinstance(actual, (float, int)) and
+             abs(actual-expected) < _delta) or
+            actual == expected or
+            (_exact_strings and isinstance(expected, str) and
+             isinstance(actual, str) and 
+             _normalize_string(actual) == _normalize_string(expected))):
+            if not _hidden:
+                message = "Unit test passed:\n"
+                message += "<pre>>{example}</pre>\n".format(example=self.example)
+                message += "<pre>"+repr(actual)+"</pre>\n"
+            return True, message
+        if not _hidden:
+            message = "Instructor unit test failure!\n"
+            message += "I ran:\n<pre>>{example}</pre>\n".format(example=self.example)
+            message += "I got:\n<pre>"+repr(actual)+"</pre>\n"
+            message += "But I expected:\n<pre>"+repr(expected)+"</pre>\n"
+        else:
+            message = "Hidden instructor unit test failure!\n"
+        return False, message
+        
     def call(self, function, *args, **kwargs):
         # Make sure it's a valid function in the namespace (TODO: but what?)
         if function not in self.functions:
@@ -242,24 +321,26 @@ class Sandbox:
         _modules = kwargs.pop('_modules', {})
         _inputs = kwargs.pop('_inputs', self.inputs)
         _threaded = kwargs.pop('_threaded', False)
+        _example = kwargs.pop('_example', None)
         # With all the special args done, the remainder are regular kwargs
         kwargs = _dict_extends(_arguments, kwargs)
         # Create the actual arguments and call
-        args = [self.make_temporary('arg', index, value)
+        str_args = [self.make_temporary('arg', index, value)
                 for index, value in enumerate(args)]
-        kwargs = ["{}={}".format(key, self.make_temporary('kwarg', key, value))
+        str_kwargs = ["{}={}".format(key, self.make_temporary('kwarg', key, value))
                   for key, value in kwargs.items()]
-        arguments = ", ".join(args+kwargs)
+        arguments = ", ".join(str_args+str_kwargs)
         call = "{} = {}({})".format(target, function, arguments)
-        if '_example' in kwargs:
-            _example = kwargs['_example']
-        else:
-            _example = '\nHappened when I ran:'
-            #_example = self._demonstrate_call(function, args+kwargs)
+        if _example is None:
+            _example = self.demonstrate_call(function, args, kwargs)
         self.run(call, _as_filename, _modules, _inputs, 
                  _example=_example, _threaded=_threaded)
-        self._ = self.data[target]
-        return self._
+        self.example = _example
+        if self.exception is None:
+            self._ = self.data[target]
+            return self._
+        else:
+            return None
     
     def run(self, code, _as_filename=None, _modules=None, _inputs=None, 
             _example=None, _threaded=False):
@@ -314,7 +395,7 @@ class Sandbox:
             result= None
         except Exception as e:
             if _example is not None:
-                _raise_improved_error(e, _example)
+                e = _raise_improved_error(e, "\n\nThe above occurred when I ran:\n<pre>"+_example+"</pre>")
             self.exception = e
             self.exc_info = sys.exc_info()
             cl, exc, tb = sys.exc_info()
@@ -396,22 +477,32 @@ class Sandbox:
         # Okay, it's not a student related file
         return True
     
-    def _demonstrate_call(self, a_function, parameters):
+    def demonstrate_call(self, a_function, args, kwargs):
         if not isinstance(a_function, str):
             a_function = a_function.__name__
-        defs = ""
-        for key, value in parameters.items():
-            value = pprint.pformat(value, indent=2, compact=True)
-            if len(value) >= MAXIMUM_VALUE_LENGTH:
-                value = value[:MAXIMUM_VALUE_LENGTH-3] + "..."
-            defs += "{} = {}\n".format(key, value)
-        arguments = ", ".join(parameters.keys())
-        code = "{defs}{name}({arguments})".format(name=a_function, defs=defs, 
-                                                  arguments=arguments)
-        code = code.replace("{", "{{").replace("}", "}}")
-        code = indent4(code)
-        code = ".\n\nThe error above occurred when I ran:\n"+code
+        args = ", ".join([repr(arg) for arg in args]+
+                         [key+"="+repr(val) for key,val in kwargs.items()])
+        code = "{name}({args})".format(name=a_function,args=args)
         return code
+        
+punctuation_table = str.maketrans(string.punctuation, ' '*len(string.punctuation))
+def _normalize_string(a_string, numeric_endings=False):
+    # Lower case
+    a_string = a_string.lower()
+    # Remove trailing decimals (TODO: How awful!)
+    if numeric_endings:
+        a_string = re.sub(r"(\s*[0-9]+)\.[0-9]+(\s*)", r"\1\2", a_string)
+    # Remove punctuation
+    a_string = a_string.translate(punctuation_table)
+    # Split lines
+    lines = a_string.split("\n")
+    normalized = [[piece
+                   for piece in line.split()]
+                  for line in lines]
+    normalized = [[piece for piece in line if piece]
+                  for line in normalized
+                  if line]
+    return sorted(normalized)
         
 class _KeyError(KeyError):
     def __str__(self):
@@ -423,9 +514,9 @@ def _append_to_error(e, message):
         
 def _raise_improved_error(e, code):
     if isinstance(e, KeyError):
-        raise _copy_key_error(e, code) from None
+        return _copy_key_error(e, code)
     else:
-        raise _append_to_error(e, code)
+        return _append_to_error(e, code)
 
 def _copy_key_error(e, code):
     new_args = (repr(e.args[0])+code,)
@@ -437,6 +528,27 @@ def _copy_key_error(e, code):
 
 def _threaded_execution(code, filename, inputs=None):
     pass
+
+def reset(report=None):
+    if report is None:
+        report = MAIN_REPORT
+    report['sandbox']['run'] = Sandbox()
+    
+def run(raise_exceptions=True, report=None):
+    if report is None:
+        report = MAIN_REPORT
+    if 'run' not in report['sandbox']:
+        report['sandbox']['run'] = Sandbox()
+    sandbox = report['sandbox']['run']
+    source_code = report['source']['code']
+    sandbox.run(source_code, _as_filename=report['source']['filename'])
+    if raise_exceptions and sandbox.exception is not None:
+        name = str(sandbox.exception.__class__)[8:-2]
+        report.attach(name, category='Runtime', tool='Sandbox',
+                      section=report['source']['section'],
+                      mistakes={'message': sandbox.format_exception(), 
+                                'error': sandbox.exception})
+    return sandbox
     
 def _make_inputs(*input_list, **kwargs):
     '''

@@ -41,13 +41,15 @@ def resolve(report=None, priority_key=None):
                 found_failure = True
             if section not in finals:
                 finals[section] = []
-            finals[section].insert(0, {
-                'label': feedback.label,
-                'message': message,
-                'category': feedback.category,
-                'priority': feedback.priority,
-                'data': data
-            })
+            entry = {'label': feedback.label,
+                     'message': message,
+                     'category': feedback.category,
+                     'priority': feedback.priority,
+                     'data': data}
+            if feedback.priority != 'positive':
+                finals[section].insert(0, entry)
+            else:
+                finals[section].append(entry)
     final_hide_correctness = suppressions.get('success', False)
     if not finals:
         finals[0] = [{
