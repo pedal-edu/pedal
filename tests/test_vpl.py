@@ -9,13 +9,21 @@ pedal_library = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.insert(0, pedal_library)
 
 from pedal.plugins.vpl import find_file, resolve, strip_tags
-from pedal.source import next_section, verify_section
+from pedal.source import next_section, verify_section, count_sections
 from pedal.report import MAIN_REPORT
 from pedal.report.imperative import compliment, clear_report
 
 class TestVPL(unittest.TestCase):
     def test_vpl(self):
         find_file('tests/datafiles/student_example.py', sections=True)
+    
+    def test_file_not_found(self):
+        find_file('tests/datafiles/banana_cream_pudding.py', sections=True)
+        count_sections(3)
+        f = io.StringIO()
+        with redirect_stdout(f):
+            resolve()
+        output = f.getvalue()
     
     def test_html_conversion(self):
         self.assertEqual(strip_tags(dedent('''

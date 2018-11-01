@@ -6,6 +6,17 @@ from pedal.sandbox import compatibility
 DELTA = 0.001
 
 
+def all_documented():
+    ast = parse_program()
+    defs = ast.find_all('FunctionDef')
+    for a_def in defs:
+        if (a_def.body and 
+            (a_def.body[0].ast_name != "Expr" or
+             a_def.body[0].value.ast_name != "Str")):
+            explain("You have an undocumented function: "+a_def.name)
+            return False
+    return True
+
 def get_arg_name(node):
     name = node.id
     if name is None:
@@ -14,7 +25,7 @@ def get_arg_name(node):
         return name
 
 
-def match_signature(name, length, *parameters):
+def match_signature(name, length, *parameters, report=None):
     ast = parse_program()
     defs = ast.find_all('FunctionDef')
     for a_def in defs:

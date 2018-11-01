@@ -49,6 +49,9 @@ def parse_program():
         std_easy = MAIN_REPORT['cait']['std_ast']
     return std_easy
 
+def expire_cait_cache():
+    if 'std_ast' in MAIN_REPORT['cait']:
+        del MAIN_REPORT['cait']['std_ast']
 
 def def_use_error(node, report=None):
     """Checks if node is a name and has a def_use_error

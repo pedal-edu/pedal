@@ -105,6 +105,8 @@ def count_sections(count, report=None):
     '''
     if report is None:
         report = MAIN_REPORT
+    if not report['source']['success'] or report['source']['sections'] is None:
+        return False
     found = int((len(report['source']['sections'])-1)/2)
     if count != found:
         report.attach('Verifier Error', category='verifier', tool=NAME,

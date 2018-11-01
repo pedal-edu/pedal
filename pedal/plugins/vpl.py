@@ -8,6 +8,7 @@ from html.parser import HTMLParser
 from pedal.report import MAIN_REPORT, Feedback
 from pedal import source
 from pedal.resolvers import sectional
+from pedal.cait.cait_api import expire_cait_cache
 
 class VPLStyler(HTMLParser):
     HEADERS = ("h1", "h2", "h3", "h4", "h5")
@@ -66,6 +67,7 @@ def find_file(filename, sections=False, report=None):
         report.attach('Source File Not Found', category='Syntax', tool='VPL',
                   section=0 if sections else None,
                   mistakes={'message': message})
+        report['source']['success'] = False
 
 def set_maximum_score(number, cap=True, report=None):
     if report is None:
@@ -112,7 +114,9 @@ class SectionalAssignment:
     
     def pre_test(self):
         source.next_section()
-        return source.verify_section()
+        verified = source.verify_section()
+        expire_cait_cache()
+        return verified
     
     def post_test(self):
         return True

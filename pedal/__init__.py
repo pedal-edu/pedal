@@ -11,7 +11,9 @@ A package for analyzing student code.
 #   resolver
 #   etc.
 
-from pedal.cait.cait_api import parse_program, find_match, find_matches
+from pedal.cait.cait_api import (parse_program, expire_cait_cache,
+                                 find_match, find_matches)
 from pedal.report.imperative import (suppress, explain, compliment,
                                      give_partial)
 from pedal.sandbox.sandbox import run, reset
+from pedal.tifa import tifa_analysis

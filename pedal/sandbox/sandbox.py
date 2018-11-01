@@ -297,7 +297,10 @@ class Sandbox:
         if _test_output:
             actual = self.output
             actual_str = "\n".join(actual)
-            expected_str = str(expected)
+            if isinstance(expected, list):
+                expected_str = "\n".join(expected)
+            else:
+                expected_str = str(expected)
         else:
             actual_str = repr(actual)
             expected_str = repr(expected)
@@ -313,9 +316,13 @@ class Sandbox:
               isinstance(actual, str) and 
               _normalize_string(actual) == _normalize_string(expected)) or
              # Inexact output comparison
-             (_test_output and
+             (_test_output and isinstance(expected, str) and
               _normalize_string(expected) in [_normalize_string(line) 
-                                              for line in actual])
+                                              for line in actual]) or
+             # Exact output comparison
+             (_test_output and isinstance(expected, list) and
+              [_normalize_string(line) for line in expected] == 
+              [_normalize_string(line) for line in actual])
               ):
             if not _hidden:
                 message = "Unit test passed:\n"
