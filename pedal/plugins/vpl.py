@@ -131,3 +131,15 @@ class SectionalAssignment:
         if all(checks):
             self.report.set_success()
         resolve(report=self.report)
+
+from pedal.plugins.vpl_unittest import UnitTestedAssignment
+
+def unittest_resolver(phases, report=None):
+    success = True
+    for title, phase in phases:
+        outcome = phase()._run_all_tests()
+        if not outcome:
+            break
+        success = success and outcome
+    resolve()
+    

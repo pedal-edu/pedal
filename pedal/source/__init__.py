@@ -87,6 +87,8 @@ def start_section(name, report=None):
 def next_section(name="", report=None):
     if report is None:
         report = MAIN_REPORT
+    if not report['source']['success']:
+        return False
     report['source']['section'] += 2
     section = report['source']['section']
     found = len(report['source']['sections'])
@@ -121,6 +123,8 @@ def count_sections(count, report=None):
 def verify_section(report=None):
     if report is None:
         report = MAIN_REPORT
+    if not report['source']['success']:
+        return False
     code = report['source']['code']
     try:
         parsed = ast.parse(code)

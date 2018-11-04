@@ -163,6 +163,7 @@ class Sandbox:
         # Exception
         self.exception = exception
         self.exception_position = None
+        self.raise_exceptions_mode = False
         # Input
         self.inputs = None
         # Modules
@@ -178,12 +179,12 @@ class Sandbox:
         self.mocked_modules = {}
         self.modules = {}
         # MatPlotLib's PyPlot
-        fake_module = types.ModuleType('matplotlib')
-        fake_module.pyplot = types.ModuleType('pyplot')
-        self.mocked_modules['matplotlib'] = fake_module
-        self.mocked_modules['matplotlib.pyplot'] = fake_module.pyplot
+        matplotlib = types.ModuleType('matplotlib')
+        matplotlib.pyplot = types.ModuleType('pyplot')
+        self.mocked_modules['matplotlib'] = matplotlib
+        self.mocked_modules['matplotlib.pyplot'] = matplotlib.pyplot
         mock_plt = mocked.MockPlt()
-        mock_plt._add_to_module(fake_module.pyplot)
+        mock_plt._add_to_module(matplotlib.pyplot)
         self.modules['matplotlib.pyplot'] = mock_plt
     
     @property
@@ -350,6 +351,7 @@ class Sandbox:
         _inputs = kwargs.pop('_inputs', self.inputs)
         _threaded = kwargs.pop('_threaded', False)
         _example = kwargs.pop('_example', None)
+        _raise_exceptions = kwargs.pop('_raise_exceptions', self.raise_exceptions_mode)
         # With all the special args done, the remainder are regular kwargs
         kwargs = _dict_extends(_arguments, kwargs)
         # Create the actual arguments and call
@@ -360,9 +362,10 @@ class Sandbox:
         arguments = ", ".join(str_args+str_kwargs)
         call = "{} = {}({})".format(target, function, arguments)
         if _example is None:
-            _example = self.demonstrate_call(function, args, kwargs)
+            _example = self.demonstrate_call(function, args, kwargs, target)
         self.run(call, _as_filename, _modules, _inputs, 
-                 _example=_example, _threaded=_threaded)
+                 _example=_example, _threaded=_threaded,
+                 _raise_exceptions=_raise_exceptions)
         self.example = _example
         if self.exception is None:
             self._ = self.data[target]
@@ -371,7 +374,7 @@ class Sandbox:
             return None
     
     def run(self, code, _as_filename=None, _modules=None, _inputs=None, 
-            _example=None, _threaded=False):
+            _example=None, _threaded=False, _raise_exceptions=False):
         '''
         _arguments=None, _as_filename=None, 
             _target = '_', _modules=None, _inputs=None, _example=None, 
@@ -411,11 +414,12 @@ class Sandbox:
         if callable(self.pre_execution):
             self.pre_execution()
         
+        # Patch in dangerous built-ins
+        time_sleep_patch = patch('time.sleep', return_value=None)
+        time_sleep_patch.start()
         try:
-            # Calling compile instead of just passing the string source to exec
-            # ensures that we get meaningul filenames in the traceback when
-            # tests fail or have errors.
             with patch.dict('sys.modules', self.mocked_modules):
+                # Compile and run student code
                 compiled_code = compile(code, _as_filename, 'exec')
                 exec(compiled_code, self.data)
         except StopIteration:
@@ -437,6 +441,7 @@ class Sandbox:
             msgLines = list(tb_e.format())
             self.exception_position = {'line': line_number}
         finally:
+            time_sleep_patch.stop()
             sys.stdout = old_stdout
             #sys.stdin = old_stdin
             if callable(self.post_execution):
@@ -444,6 +449,8 @@ class Sandbox:
         self.append_output(capture_stdout.getvalue())
         # Clean up
         self.purge_temporaries()
+        if _raise_exceptions:
+            self.raise_any_exceptions()
     
     def get_names_by_type(self, type, exclude_builtins=True):
         result = []
@@ -458,7 +465,17 @@ class Sandbox:
         names = self.get_names_by_type(type, exclude_builtins)
         return [self.data[name] for name in names]
     
+    def raise_any_exceptions(self):
+        if self.exception is not None:
+            name = str(self.exception.__class__)[8:-2]
+            self.report.attach(name, category='Runtime', tool='Sandbox',
+                               section=self.report['source']['section'],
+                               mistakes={'message': self.format_exception(), 
+                                         'error': self.exception})
+
     def format_exception(self):
+        if not self.exception:
+            return ""
         cl, exc, tb = self.exc_info
         line_number = traceback.extract_tb(tb)[-1][1]
         while tb and self._is_relevant_tb_level(tb):
@@ -505,12 +522,14 @@ class Sandbox:
         # Okay, it's not a student related file
         return True
     
-    def demonstrate_call(self, a_function, args, kwargs):
+    def demonstrate_call(self, a_function, args, kwargs, target):
         if not isinstance(a_function, str):
             a_function = a_function.__name__
         args = ", ".join([repr(arg) for arg in args]+
                          [key+"="+repr(val) for key,val in kwargs.items()])
         code = "{name}({args})".format(name=a_function,args=args)
+        if target != "_":
+            code = target + " = " + code
         return code
         
 punctuation_table = str.maketrans(string.punctuation, ' '*len(string.punctuation))
