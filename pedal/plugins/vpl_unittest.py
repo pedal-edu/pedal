@@ -1,5 +1,6 @@
 from unittest.util import safe_repr
 from pedal import explain
+from pedal.sandbox.sandbox import _normalize_string
 
 class UnitTestedAssignment:
     DELTA = .001
@@ -16,18 +17,19 @@ class UnitTestedAssignment:
         methods = [func for func in dir(self)
                         if callable(getattr(self, func)) and
                            func.startswith('test_')]
+        all_passed = True
         for method in methods:
             self.setUp()
             try:
                 getattr(self, method)()
             except UnitTestedAssignment.AssertionException as e:
                 explain(e.message)
-                return False
+                all_passed = False
             self.tearDown()
-        return True
+        return all_passed
     def assertSimilarStrings(self, first, second, msg):
         if _normalize_string(first) != _normalize_string(second):
-            return self.assertEqual(first, second, msg)
+            return self.assertEqual(first, second, msg, exact=True)
     def assertEqual(self, val1, val2, msg=None, exact=False):
         if val1 == val2:
             return
@@ -57,6 +59,14 @@ class UnitTestedAssignment:
     def assertSandbox(self, sandbox, msg=None):
         if sandbox.exception is not None:
             self.fail(msg, sandbox.format_exception())
+    
+    def assertIsInstance(self, value, parent, msg=None):
+        if not isinstance(value, parent):
+            self.fail(msg, "{} is not an instance of {}".format(safe_repr(value), safe_repr(parent)))
+    
+    def assertHasAttr(self, object, attr, msg=None):
+        if not hasattr(object, attr):
+            self.fail(msg, "{} does not have an attribute named {}".format(safe_repr(object), safe_repr(attr)))
 
     def fail(self, message, standardMsg):
         if message is None:
