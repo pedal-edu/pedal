@@ -8,7 +8,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 from pedal.report import *
 from pedal.source import *
 from pedal.tifa import tifa_analysis
-from execution_helper import Execution
+from tests.execution_helper import Execution
 
 class TestCode(unittest.TestCase):
 
