@@ -60,7 +60,7 @@ CAIT
 
 .. code:: python
 
-	from pedal.cait import parse_program, find_matches
+    from pedal.cait import parse_program, find_matches
     parse_program()
     matches = find_matches("_var_ = __expr__")
 
@@ -109,18 +109,18 @@ is a place holder for subtree expressions. An expression is denoted by a double 
     counter = 0
     running_avg = []
     for item in i_list:
-    	summer = summer + item
+        summer = summer + item
         counter = count + 1
         running_avg.append(summer/counter)
     # matcher 1
     matches = find_matches("for ___ in ___:\n"
-    					   "	__expr1__\n"
-                           "	__expr2__")
-	# match 1
+                           "    __expr1__\n"
+                           "    __expr2__")
+    # match 1
     for item in i_list:
-    	summer = summer + item
+        summer = summer + item
         counter = count + 1
-	# match 2
+    # match 2
     for item in i_list:
         counter = count + 1
         running_avg.append(summer/counter)
@@ -131,22 +131,22 @@ In this example, matches would return a list of two matches, as shown above (mat
 
     # matcher 1
     matches = find_matches("for ___ in ___:\n"
-    					   "	__expr1__\n"
-                           "	__expr1__")
+                           "    __expr1__\n"
+                           "    __expr1__")
 
 
 Retrieving variables and expressions is another operation supported in Cait
 
 ..code:: python
 
-	matches = find_matches("for _item_ in ___:\n"
-    					   "    __expr__\n"
-    					   "__expr2__")
-	if matches:
-		for match in matches:
-        	_item_ = match.symbol_table.get("_item_")[0]
-			__expr__ = match.exp_table.get("__expr__")
-			__expr2__ = match.exp_table.get("__expr2__")
+    matches = find_matches("for _item_ in ___:\n"
+                           "    __expr__\n"
+                           "__expr2__")
+    if matches:
+        for match in matches:
+            _item_ = match.symbol_table.get("_item_")[0]
+            __expr__ = match.exp_table.get("__expr__")
+            __expr2__ = match.exp_table.get("__expr2__")
 
 The code above shows how to retrieve expressions and variables. The expressions (`__expr__` and `__expr2__`) will return AST nodes with expanded functionality from the built in ast node class.
 
@@ -173,21 +173,21 @@ The `find_expr_sub_matches` function allows you to perform deep searches, such a
     # source 1
     summer = 0
     for item in i_list:
-    	summer = summer + item
+        summer = summer + item
 
-	# source 2
+    # source 2
     summer = 0
     for item in i_list:
-    	if True:
-        	if True:
-            	if True:
-    				summer = summer + item
+        if True:
+            if True:
+                if True:
+                    summer = summer + item
         
     # matcher 1
     matches = find_matches("for ___ in ___:\n"
-    					   "	__expr1__\n")
-	__expr1__ = match.exp_table.get("__expr1__")
-	submatch = find_expr_sub_matches("_var1_ = _var2_ + _var1_", __expr1__, cut=True)
+                           "    __expr1__\n")
+    __expr1__ = match.exp_table.get("__expr1__")
+    submatch = find_expr_sub_matches("_var1_ = _var2_ + _var1_", __expr1__, cut=True)
 
 In the example above, `__expr1__` will match to the inner body of the for loops in source 1 and source 2. The `submatch` variable would then in both cases, extract the `summer = summer + item` from both sources, returning the same type of list as `find_matches`.
 
