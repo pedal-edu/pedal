@@ -427,7 +427,6 @@ class CaitTests(unittest.TestCase):
         match = find_match("_var_ = __expr__")
         self.assertTrue(type(match) == AstMap, "Match not found")
 
-    @unittest.skip("Not implemented yet")
     def test_find_matches(self):
         set_source("fun = 1 + 1\nfun2 = 2 + 2")
         parse_program()
@@ -436,10 +435,10 @@ class CaitTests(unittest.TestCase):
         self.assertTrue(type(matches[0]) == AstMap, "find_matches does not contain an AstMap")
         self.assertTrue(len(matches) == 2, "find_matches does not return the correct number of matches")
 
-        set_source("for ___ in ___:"
+        set_source("for 'fun' in ___:"
                    "if ___:\n"
                    "    pass")
-        matches = find_matches("for 'fun' in ___:\n"
+        matches = find_matches("for ___ in ___:\n"
                                "    pass")
         self.assertFalse(matches, "find matches should have misparsed and returned False, but returned True instead")
     
@@ -501,7 +500,7 @@ class CaitTests(unittest.TestCase):
         matches = matcher1.find_matches(student_code)
         self.assertTrue(matches)
 
-        __expr__ = matches[0].exp_table.get("__expr__")
+        __expr__ = matches[0]["__expr__"]
         matches2 = find_expr_sub_matches("0.4*_item_", __expr__, as_expr=False)
         self.assertTrue(matches2)
 

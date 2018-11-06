@@ -10,7 +10,7 @@ def wrong_list_length_8_2():
     matches = find_matches("_list_ = __expr__")
     if matches:
         for match in matches:
-            __expr__ = match.exp_table.get("__expr__")
+            __expr__ = match["__expr__"]
             if __expr__.ast_name == "List" and len(__expr__.elts) < 3:
                 explain('You must have at least three pieces<br><br><i>(list length_8.2)<i></br>')
                 return True
@@ -21,7 +21,7 @@ def missing_list_initialization_8_2():
     matches = find_matches("shopping_cart = __expr__")
     if matches:
         for match in matches:
-            __expr__ = match.exp_table.get("__expr__")
+            __expr__ = match["__expr__"]
             if __expr__.ast_name == "List":
                 return False
     explain(
@@ -34,7 +34,7 @@ def wrong_list_is_constant_8_2():
     matches = find_matches("shopping_cart = __expr__")
     if matches:
         for match in matches:
-            __expr__ = match.exp_table.get("__expr__")
+            __expr__ = match["__expr__"]
             if __expr__.ast_name == "Num":
                 explain(
                     'You must set <code>shoppping_cart</code> to a list of values not to a single number.<br><br><i>'
@@ -125,7 +125,7 @@ def missing_target_slot_empty_8_4():
                        "    pass")
     if matches:
         for match in matches:
-            _item_ = match.symbol_table.get("_item_")[0]
+            _item_ = match["_item_"][0]
             if _item_.id == "___":
                 explain('You must fill in the empty slot in the iteration.<br><br><i>(target_empty_8.4)<i></br>')
                 return True
@@ -136,7 +136,7 @@ def missing_addition_slot_empty_8_4():
     matches = find_matches("sum_pages + _item_")
     if matches:
         for match in matches:
-            _item_ = match.symbol_table.get("_item_")[0]
+            _item_ = match["_item_"][0]
             if _item_.id == "___":
                 explain('You must fill in the empty slot in the addition.<br><br><i>(add_empty_8.4)<i></br>')
                 return True
@@ -149,8 +149,8 @@ def wrong_names_not_agree_8_4():
     if matches:
         for match in matches:
             # in theory, these will always be different? should test in test_cait
-            _item1_ = match.symbol_table.get("_item1_")[0]
-            _item2_ = match.symbol_table.get("_item2_")[0]
+            _item1_ = match["_item1_"][0]
+            _item2_ = match["_item2_"][0]
             if _item1_.id != _item2_.id:
                 explain('Each value of <code>{0!s}</code> must be added to <code>{1!s}</code>.<br><br><i>'
                         '(name_agree_8.4)<i></br>'.format(_item1_.id, _item2_.id))
@@ -220,8 +220,8 @@ def wrong_should_be_counting():
                            "    __expr__")
     if matches:
         for match in matches:
-            _item_ = match.symbol_table.get("_item_")[0]
-            __expr__ = match.exp_table.get("__expr__")
+            _item_ = match["_item_"][0]
+            __expr__ = match["__expr__"]
             submatches = find_expr_sub_matches("___ = ___ + {}".format(_item_.id), __expr__, as_expr=False)
             if submatches:
                 explain('This problem asks for the number of items in the list not the total of all the values in the list.'
@@ -247,7 +247,7 @@ def wrong_should_be_summing():
                            "    __expr__")
     if matches:
         for match in matches:
-            __expr__ = match.exp_table.get("__expr__")
+            __expr__ = match["__expr__"]
             submatches = find_expr_sub_matches("___ = 1 + ___", __expr__, as_expr=False)
             if submatches:
                 explain('This problem asks for the total of all the values in the list not the number of '
@@ -277,7 +277,7 @@ def missing_addition_slot_empty():
     matches = find_matches("___ + _item_")
     if matches:
         for match in matches:
-            _item_ = match.symbol_table.get("_item_")[0]
+            _item_ = match["_item_"][0]
             if _item_.id == "___":
                 explain('You must fill in the empty slot in the addition.<br><br><i>(add_empty)<i></br>')
                 return True
@@ -304,8 +304,8 @@ def wrong_cannot_sum_list():
                            "    __expr__")
     if matches:
         for match in matches:
-            _list_ = match.symbol_table.get("_list_")[0]
-            __expr__ = match.exp_table.get("__expr__")
+            _list_ = match["_list_"][0]
+            __expr__ = match["__expr__"]
             submatches = find_expr_sub_matches("___ = ___ + {}".format(_list_.id), __expr__, as_expr=False)
             if submatches:
                 explain('Addition can only be done with a single value at a time, not with an entire list at one'
@@ -348,7 +348,7 @@ def missing_counting_list():
                            "    __expr__")
     if matches:
         for match in matches:
-            __expr__ = match.exp_table.get("__expr__")
+            __expr__ = match["__expr__"]
             submatches = find_expr_sub_matches("_sum_ = _sum_ + 1", __expr__, as_expr=False)
             if submatches:
                 return False
@@ -384,8 +384,8 @@ def missing_summing_list():
                            "    __expr__")
     if matches:
         for match in matches:
-            _item_ = match.symbol_table.get("_item_")[0]
-            __expr__ = match.exp_table.get("__expr__")
+            _item_ = match["_item_"][0]
+            __expr__ = match["__expr__"]
             submatches = find_expr_sub_matches("_sum_ = _sum_ + {}".format(_item_.id), __expr__, as_expr=False)
             if submatches:
                 return False
@@ -432,11 +432,11 @@ def missing_zero_initialization():
                              "    __expr__")
     if matches01:
         for match01 in matches01:
-            __expr__ = match01.exp_table.get("__expr__")
+            __expr__ = match01["__expr__"]
             submatches01 = find_expr_sub_matches("_sum_ = _sum_ + ___", __expr__, as_expr=False)
             if submatches01:
                 for submatch01 in submatches01:
-                    _sum_ = submatch01.symbol_table.get("_sum_")[0]
+                    _sum_ = submatch01["_sum_"][0]
                     matches02 = find_matches(("{} = 0\n"
                                               "for ___ in ___:\n"
                                               "    __expr__").format(_sum_.id))
@@ -454,7 +454,7 @@ def wrong_printing_list():
                            "    __expr__")
     if matches:
         for match in matches:
-            __expr__ = match.exp_table.get("__expr__")
+            __expr__ = match["__expr__"]
             if find_expr_sub_matches("print(___)", __expr__):
                 explain('You should be printing a single value.<br><br><i>(list_print)<i></br>')
                 return True
@@ -469,12 +469,12 @@ def missing_average():
     matches = []
     if matches_missing:
         for match in matches_missing:
-            __expr__ = match.exp_table.get("__expr__")
+            __expr__ = match["__expr__"]
             sub_matches = find_expr_sub_matches("_total_/_count_", __expr__, cut=True)
             if sub_matches:
                 for sub_match in sub_matches:
-                    _total_ = sub_match.symbol_table.get("_total_")[0]
-                    _count_ = sub_match.symbol_table.get("_count_")[0]
+                    _total_ = sub_match["_total_"][0]
+                    _count_ = sub_match["_count_"][0]
                     if _total_.id != _count_.id:
                         matches.append(match)
     if not len(matches) > 0:
@@ -488,13 +488,13 @@ def warning_average_in_iteration():
                            "    __expr__\n")
     if matches:
         for match in matches:
-            __expr__ = match.exp_table.get("__expr__")
+            __expr__ = match["__expr__"]
             submatches = find_expr_sub_matches("_average_ = _total_/_count_",__expr__, as_expr=False)
             if submatches:
                 for submatch in submatches:
-                    _total_ = submatch.symbol_table.get("_total_")[0]
-                    _count_ = submatch.symbol_table.get("_count_")[0]
-                    _average_ = submatch.symbol_table.get("_average_")[0]
+                    _total_ = submatch["_total_"][0]
+                    _count_ = submatch["_count_"][0]
+                    _average_ = submatch["_average_"][0]
                     if _total_.id != _count_.id != _average_.id and _total_.id != _average_.id:
                         explain('An average value is best computed after the properties name <code>{0!s}</code>(total)'
                                 ' and <code>{1!s}</code> are completely known rather than recomputing the average on'
@@ -511,16 +511,16 @@ def wrong_average_denominator():
     # where _value_.id != _count_.id
     if matches:
         for match in matches:
-            __expr__ = match.exp_table.get("__expr__")
-            __expr2__ = match.exp_table.get("__expr2__")
-            # _value_ = match.symbol_table.get("_value_")[0]
+            __expr__ = match["__expr__"]
+            __expr2__ = match["__expr2__"]
+            # _value_ = match["_value_"][0]
             submatches = find_expr_sub_matches("_count_ = _count_ + 1", __expr__, as_expr=False)
             submatches02 = find_expr_sub_matches("___/_value_", __expr2__, cut=True)
             if submatches and submatches02:
                 for submatch in submatches:
                     for submatch02 in submatches02:
-                        _count_ = submatch.symbol_table.get("_count_")[0]
-                        _value_ = submatch02.symbol_table.get("_value_")[0]
+                        _count_ = submatch["_count_"][0]
+                        _value_ = submatch02["_value_"][0]
                         if _count_.id != _value_.id:
                             explain('The average is not calculated correctly.<br><br><i>(avg_denom)<i></br>')
                             return True
@@ -533,16 +533,16 @@ def wrong_average_numerator():
                            "__expr2__")  # where expr2 contains _value_/___
     if matches:
         for match in matches:
-            __expr__ = match.exp_table.get("__expr__")
-            __expr2__ = match.exp_table.get("__expr2__")
-            _item_ = match.symbol_table.get("_item_")[0]
+            __expr__ = match["__expr__"]
+            __expr2__ = match["__expr2__"]
+            _item_ = match["_item_"][0]
             submatches = find_expr_sub_matches("_total_ = _total_ + {}".format(_item_.id), __expr__, as_expr=False, cut=True)
             submatches02 = find_expr_sub_matches("_value_/___", __expr2__, cut=True)
             if submatches and submatches02:
                 for submatch in submatches:
                     for submatch02 in submatches02:
-                        _value_ = submatch02.symbol_table.get("_value_")[0]
-                        _total_ = submatch.symbol_table.get("_total_")[0]
+                        _value_ = submatch02["_value_"][0]
+                        _total_ = submatch["_total_"][0]
                         if _total_.id != _value_.id:
                             explain('The average is not calculated correctly.<br><br><i>(avg_numer)<i></br>')
                             return True
@@ -556,8 +556,8 @@ def wrong_compare_list():
                            "        pass")
     if matches:
         for match in matches:
-            _list_ = match.symbol_table.get("_list_")[0]
-            __expr__ = match.exp_table.get("__expr__")
+            _list_ = match["_list_"][0]
+            __expr__ = match["__expr__"]
             if __expr__.has(_list_.astNode):
                 explain('Each item in the list <code>{0!s}</code> must be compared one item at a time.<br><br><i>'
                         '(comp_list)<i></br>'.format(_list_.id))
@@ -614,7 +614,7 @@ def wrong_accumulation_9_1():
     matches = find_matches("rainfall_sum = _item_ + rainfall")
     if matches:
         for match in matches:
-            _item_ = match.symbol_table.get("_item_")[0]
+            _item_ = match["_item_"][0]
             if _item_.id != "rainfall_sum":
                 explain('The addition of each rainfall amount to <code>rainfall_sum</code> is not correct.'
                         '<br><br><i>(accu_9.1)<i></br>')
@@ -749,7 +749,7 @@ def wrong_accumulation_9_2():
     matches = find_matches("rainfall_count = _item_ + 1")
     if matches:
         for match in matches:
-            _item_ = match.symbol_table.get("_item_")[0]
+            _item_ = match["_item_"][0]
             if _item_.id != "rainfall_count":
                 explain(
                     'The adding of another day with rainfall to the total count of days with rainfall '
@@ -809,7 +809,7 @@ def wrong_iteration_body_9_2():
                            "        pass")
     if matches:
         for match in matches:
-            __expr__ = match.exp_table.get("__expr__")
+            __expr__ = match["__expr__"]
             if __expr__.numeric_logic_check(1, 'var > 0'):
                 return False
     explain('The test (if) to determine if a given amount of rainfall is greater than (>) zero is not in the '
@@ -822,7 +822,7 @@ def wrong_decision_body_9_2():
                            "    rainfall_count = rainfall_count + 1")
     if matches:
         for match in matches:
-            __expr__ = match.exp_table.get("__expr__")
+            __expr__ = match["__expr__"]
             if __expr__.numeric_logic_check(1, 'var > 0'):
                 return False
     explain('The increase by 1 in the number of days having rainfall (<code>rainfall_count</code>) is not in the '
@@ -849,7 +849,7 @@ def wrong_comparison_9_6():
                            "    pass")
     if matches:
         for match in matches:
-            __comp__ = match.exp_table.get("__comp__")
+            __comp__ = match["__comp__"]
             if not __comp__.numeric_logic_check(1, 'var > 80'):
                 explain(
                     'In this problem you should be finding temperatures above 80 degrees.<br><br><i>(comp_9.6)<i></br>')
@@ -876,12 +876,12 @@ def wrong_conversion_10_2():
     if matches:
         for match in matches:
             # code version 1 start
-            _target_ = match.symbol_table.get("_target_")[0]
-            __expr__ = match.exp_table.get("__expr__")
+            _target_ = match["_target_"][0]
+            __expr__ = match["__expr__"]
             matches02 = find_expr_sub_matches("_target_*0.04", __expr__)
             if matches02:
                 for match02 in matches02:
-                    _target_02 = match02.symbol_table.get("_target_")[0]
+                    _target_02 = match02["_target_"][0]
                     if _target_.id == _target_02.id:
                         return False
             # code version 1 end
@@ -898,7 +898,7 @@ def wrong_filter_condition_10_3():
                            "    pass")
     if matches:
         for match in matches:
-            __expr__ = match.exp_table.get("__expr__")
+            __expr__ = match["__expr__"]
             if __expr__.numeric_logic_check(1, "var > 0") or __expr__.numeric_logic_check(1, "var != 0"):
                 return False
         explain('The condition used to filter the year when artists died is not correct.<br><br><i>(filt_10.3)<i></br>')
@@ -914,8 +914,8 @@ def wrong_and_filter_condition_10_4():
                            "        pass")
     if matches:
         for match in matches:
-            _temp_ = match.symbol_table.get("_temp_")[0]
-            __expr__ = match.exp_table.get("__expr__")
+            _temp_ = match["_temp_"][0]
+            __expr__ = match["__expr__"]
             if (__expr__.has(_temp_.astNode) and
                     not __expr__.numeric_logic_check(1, "32 <= temp <= 50")):
                 explain(
@@ -932,9 +932,9 @@ def wrong_nested_filter_condition_10_4():
                            "            pass")
     if matches:
         for match in matches:
-            _temp_ = match.symbol_table.get("_temp_")[0].astNode
-            __cond1__ = match.exp_table.get("__cond1__")
-            __cond2__ = match.exp_table.get("__cond2__")
+            _temp_ = match["_temp_"][0].astNode
+            __cond1__ = match["__cond1__"]
+            __cond2__ = match["__cond2__"]
             if not (__cond1__.has(_temp_) and __cond2__.has(_temp_) and
                (__cond1__.numeric_logic_check(1, "32 <= temp") and __cond2__.numeric_logic_check(1, "temp <= 50") or
                __cond2__.numeric_logic_check(1, "32 <= temp") and __cond1__.numeric_logic_check(1, "temp <= 50"))):
@@ -952,12 +952,12 @@ def wrong_conversion_problem_10_5():
                            "    __expr__")
     if matches:
         for match in matches:
-            _item_ = match.symbol_table.get("_item_")[0]
-            __expr__ = match.exp_table.get("__expr__")
+            _item_ = match["_item_"][0]
+            __expr__ = match["__expr__"]
             matches02 = find_expr_sub_matches("_item_*0.62", __expr__)
             if matches02:
                 for match02 in matches02:
-                    _item_02 = match02.symbol_table.get("_item_")[0]
+                    _item_02 = match02["_item_"][0]
                     if _item_02.id == _item_.id:
                         return False
         explain('The conversion from kilometers to miles is not correct.<br><br><i>(conv_10.5)<i></br>')
@@ -977,13 +977,13 @@ def wrong_filter_problem_atl1_10_5():
                            "        _list_.append(__expr__)")
     if matches:
         for match in matches:
-            _item_ = match.symbol_table.get("_item_")[0].astNode
-            __cond__ = match.exp_table.get("__cond__")
-            __expr__ = match.exp_table.get("__expr__")
+            _item_ = match["_item_"][0].astNode
+            __cond__ = match["__cond__"]
+            __expr__ = match["__expr__"]
             matches02 = find_expr_sub_matches("_item_*0.62", __expr__, cut=True)
             if matches02:
                 for match02 in matches02:
-                    _item_02 = match02.symbol_table.get("_item_")[0].astNode
+                    _item_02 = match02["_item_"][0].astNode
                     if (_item_.id == _item_02.id and
                        __cond__.has(_item_) and
                        not __cond__.numeric_logic_check(0.1, "item > 16.1290322580645")):
@@ -1000,14 +1000,14 @@ def wrong_filter_problem_atl2_10_5():
                            "        _list_.append(_miles_)")
     if matches:
         for match in matches:
-            __expr__ = match.exp_table.get("__expr__")
-            __cond__ = match.exp_table.get("__cond__")
-            _item_ = match.symbol_table.get("_item_")[0].astNode
-            _miles_ = match.symbol_table.get("_miles_")[0].astNode
+            __expr__ = match["__expr__"]
+            __cond__ = match["__cond__"]
+            _item_ = match["_item_"][0].astNode
+            _miles_ = match["_miles_"][0].astNode
             matches02 = find_expr_sub_matches("_item_*0.62", __expr__, cut=True)
             if matches02:
                 for match02 in matches02:
-                    _item_02 = match02.symbol_table.get("_item_")[0].astNode
+                    _item_02 = match02["_item_"][0].astNode
                     if _item_.id == _item_02.id:
                         if not (__cond__.has(_miles_) and
                            __cond__.numeric_logic_check(1, "_item_ > 10")):
@@ -1023,9 +1023,9 @@ def wrong_append_problem_atl1_10_5():
                            "        _list_.append(__expr__)")
     if matches:
         for match in matches:
-            _item_ = match.symbol_table.get("_item_")[0].astNode
-            __cond__ = match.exp_table.get("__cond__")
-            __expr__ = match.exp_table.get("__expr__")
+            _item_ = match["_item_"][0].astNode
+            __cond__ = match["__cond__"]
+            __expr__ = match["__expr__"]
             if (__cond__.numeric_logic_check(0.1, "item > 16.1290322580645") and
                __cond__.has(_item_)):
                 new_code = "{}*0.62".format(_item_.id)
@@ -1043,9 +1043,9 @@ def wrong_append_problem_atl2_10_5():
                            "        _list_.append(_var_)")
     if matches:
         for match in matches:
-            __cond__ = match.exp_table.get("__cond__")
-            _miles_ = match.symbol_table.get("_miles_")[0].astNode
-            _var_ = match.symbol_table.get("_var_")[0].astNode
+            __cond__ = match["__cond__"]
+            _miles_ = match["_miles_"][0].astNode
+            _var_ = match["_var_"][0].astNode
             if __cond__.has(_miles_) and __cond__.numeric_logic_check(1, "_miles_ > 10"):
                 if _var_.id != _miles_.id:
                     explain('You are not appending the correct values<br><br><i>(app_alt2_10.5)<i></br>')
@@ -1073,8 +1073,8 @@ def wrong_debug_10_6():
                            'plt.show()')
     if matches:
         for match in matches:
-            _list1_ = match.symbol_table.get("_list1_")[0].astNode
-            _list2_ = match.symbol_table.get("_list2_")[0].astNode
+            _list1_ = match["_list1_"][0].astNode
+            _list2_ = match["_list2_"][0].astNode
             master_list = ["quake", "quakes", "quakes_in_miles"]
             if (_list1_.id in master_list and _list2_.id in master_list and
                _list1_.id != "quakes_in_miles" and _list2_.id != "quakes" and
@@ -1108,12 +1108,12 @@ def wrong_initialization_in_iteration():
                            "    __expr__")
     if matches:
         for match in matches:
-            __expr__ = match.exp_table.get("__expr__")
+            __expr__ = match["__expr__"]
             submatches = find_expr_sub_matches("_assign_ = __expr__", __expr__, as_expr=False)
             if submatches:
                 for submatch in submatches:
-                    __expr__sub = submatch.exp_table.get("__expr__")
-                    _assign_ = submatch.symbol_table.get("_assign_")[0].astNode
+                    __expr__sub = submatch["__expr__"]
+                    _assign_ = submatch["_assign_"][0].astNode
                     if len(__expr__sub.find_all("Name")) == 0:
                         explain(
                             'You only need to initialize <code>{0!s}</code> once. Remember that statements in an '
@@ -1175,7 +1175,7 @@ def hard_code_8_5():  # TODO: This one's weird
     match = find_matches("print(__num__)")
     if match:
         for m in match:
-            __num__ = m.exp_table.get("__num__")
+            __num__ = m["__num__"]
             if len(__num__.find_all("Num")) > 0:
                 explain("Use iteration to calculate the sum.<br><br><i>(hard_code_8.5)<i></br>")
                 return True
