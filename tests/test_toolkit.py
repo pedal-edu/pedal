@@ -17,7 +17,8 @@ from pedal.toolkit.utilities import (is_top_level, function_prints,
                                      prevent_unused_result, ensure_literal,
                                      prevent_builtin_usage, find_operation,
                                      prevent_advanced_iteration,
-                                     ensure_operation, prevent_operation)
+                                     ensure_operation, prevent_operation,
+                                     ensure_assignment)
 from pedal.toolkit.imports import ensure_imports
 from pedal.toolkit.printing import ensure_prints
 from pedal.toolkit.plotting import check_for_plot, prevent_incorrect_plt
@@ -374,6 +375,14 @@ class TestUtilities(unittest.TestCase):
         with Execution('1 in [1,2,3]') as e:
             ast = parse_program()
             self.assertNotEqual(find_operation("in", ast), False)
+    
+    def test_ensure_assignment(self):
+        with Execution('a=0') as e:
+            self.assertNotEqual(ensure_assignment("a", "Num"), False)
+        with Execution('a=""') as e:
+            self.assertNotEqual(ensure_assignment("a", "Str"), False)
+        with Execution('a=True') as e:
+            self.assertNotEqual(ensure_assignment("a", "Bool"), False)
 
 class TestImports(unittest.TestCase):
     def test_ensure_imports(self):

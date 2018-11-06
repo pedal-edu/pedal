@@ -75,6 +75,7 @@ def raise_exception(exception, position=None, report=None):
     # Skulpt compatible name lookup
     name = str(exception.__class__)[8:-2]
     report.attach(name, category='Runtime', tool='Sandbox',
+                  section=report['source']['section'],
                   mistakes={'message': message, 
                             'error': exception,
                             'position': position,

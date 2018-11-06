@@ -78,7 +78,7 @@ def timeout(duration, func, *args, **kwargs):
 
     if target_thread.isAlive():
         target_thread.terminate()
-        raise TimeoutError('Hint: Your code took too long to run '
+        raise TimeoutError('Your code took too long to run '
                            '(it was given {} seconds); '
                            'maybe you have an infinite loop?'.format(duration))
     else:
@@ -89,3 +89,55 @@ def timeout(duration, func, *args, **kwargs):
             e = ei[0](ei[1])
             e.__traceback__ = ei[2]
             raise e
+
+# =========================================================================
+class _TimeoutData:
+    """
+    Port of Craig Estep's AdaptiveTimeout JUnit rule from the VTCS student
+    library.
+    """
+  
+    # -------------------------------------------------------------
+    def __init__(self, ceiling):
+        self.ceiling = ceiling # sec
+        self.maximum = ceiling * 2 # sec
+        self.minimum = 0.25 # sec
+        self.threshold = 0.6
+        self.rampup = 1.4
+        self.rampdown = 0.5
+        self.start = self.end = 0
+        self.non_terminating_methods = 0
+
+  
+    # -------------------------------------------------------------
+    def before_test(self):
+        """
+        Call this before a test case runs in order to reset the timer.
+        """
+        self.start = time.time()
+    
+
+    # -------------------------------------------------------------
+    def after_test(self):
+        """
+        Call this after a test case runs. This will examine how long it took
+        the test to execute, and if it required an amount of time greater than
+        the current ceiling, it will adaptively adjust the allowed time for
+        the next test.
+        """
+        self.end = time.time()
+        diff = self.end - self.start
+
+        if diff > self.ceiling:
+            self.non_terminating_methods += 1
+    
+        if self.non_terminating_methods >= 2:
+            if self.ceiling * self.rampdown < self.minimum:
+                self.ceiling = self.minimum
+            else:
+                self.ceiling = (self.ceiling * self.rampdown)
+        elif diff > self.ceiling * self.threshold:
+            if self.ceiling * self.rampup > self.maximum:
+                self.ceiling = self.maximum
+            else:
+                self.ceiling = (self.ceiling * self.rampup)

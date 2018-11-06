@@ -2,11 +2,13 @@
 Some kind of function to break up the sections
 '''
 import re
+import sys
 from html.parser import HTMLParser
 
 from pedal.report import MAIN_REPORT, Feedback
 from pedal import source
-from pedal.resolvers import simple
+from pedal.resolvers import sectional
+from pedal.cait.cait_api import expire_cait_cache
 
 class VPLStyler(HTMLParser):
     HEADERS = ("h1", "h2", "h3", "h4", "h5")
@@ -54,9 +56,18 @@ def strip_tags(html):
 def find_file(filename, sections=False, report=None):
     if report is None:
         report = MAIN_REPORT
-    with open(filename, 'r') as student_file:
-        source.set_source(student_file.read(), filename=filename,
-                          sections=sections, report=report)
+    try:
+        with open(filename, 'r') as student_file:
+            source.set_source(student_file.read(), filename=filename,
+                              sections=sections, report=report)
+    except IOError as e:
+        message = ("The given filename ('{filename}') was either not found"
+                   " or could not be opened. Please make sure the file is"
+                   " available.").format(filename=filename)
+        report.attach('Source File Not Found', category='Syntax', tool='VPL',
+                  section=0 if sections else None,
+                  mistakes={'message': message})
+        report['source']['success'] = False
 
 def set_maximum_score(number, cap=True, report=None):
     if report is None:
@@ -67,10 +78,68 @@ def set_maximum_score(number, cap=True, report=None):
 def resolve(report=None):
     if report is None:
         report = MAIN_REPORT
-    print("<|-")
-    (final_success, final_score, final_category, 
-     final_label, final_message, final_data,
-     final_hide_correctness) = simple.resolve(report)
-    print(strip_tags(final_message))
-    print("-|>")
-    print("Grade :=>>", final_score * report['vpl'].get('score_maximum', 1))
+    print("<|--")
+    success, score, hc, messages_by_section = sectional.resolve(report)
+    last_section = 0
+    for section, messages in sorted(messages_by_section.items()):
+        if section != last_section:
+            for intermediate_section in range(last_section, section, 2):
+                print("-"+report['source']['sections'][1+intermediate_section])
+        printed_first_bad = False
+        for message in messages:
+            if message['priority'] == 'positive':
+                print(strip_tags(message['message']))
+            elif not printed_first_bad:
+                print(strip_tags(message['message']))
+                printed_first_bad = True
+        last_section = section
+    print("-Overall")
+    if success:
+        print("Complete! Great job!")
+    else:
+        print("Incomplete")
+    print("--|>")
+    print("Grade :=>>", round(score * report['vpl'].get('score_maximum', 1)))
+
+class SectionalAssignment:
+    max_points = 1
+    sections = None
+    def __init__(self, filename=None, max_points=None, report=None):
+        self.report = MAIN_REPORT if report is None else report
+        find_file(filename if filename else self.filename, 
+                  sections=True, report=report)
+        set_maximum_score(self.max_points 
+                          if max_points is None else max_points)
+        source.count_sections(self.sections)
+    
+    def pre_test(self):
+        source.next_section()
+        verified = source.verify_section()
+        expire_cait_cache()
+        return verified
+    
+    def post_test(self):
+        return True
+    
+    def resolve(self):
+        checks = (  (self.pre_test() and 
+                     getattr(self, attr)() and 
+                     self.post_test())
+                  for attr in dir(self)
+                  if attr.startswith('test_') and 
+                     callable(getattr(self, attr)))
+        if all(checks):
+            self.report.set_success()
+        resolve(report=self.report)
+
+from pedal.plugins.vpl_unittest import UnitTestedAssignment
+
+def unittest_resolver(phases, report=None):
+    success = True
+    for title, phase in phases:
+        outcome = phase()._run_all_tests()
+        if not outcome:
+            break
+        success = success and outcome
+    resolve()
+    

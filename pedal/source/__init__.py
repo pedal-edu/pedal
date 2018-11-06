@@ -14,10 +14,8 @@ REQUIRES = []
 OPTIONALS = []
 CATEGORY = 'Syntax'
 
-__all__ = ['NAME', 'DESCRIPTION', 'SHORT_DESCRIPTION',
-           'REQUIRES', 'OPTIONALS',
-           'set_source', 'count_sections', 'next_section',
-           'verify_section']
+__all__ = ['NAME', 'DESCRIPTION', 'SHORT_DESCRIPTION', 'REQUIRES', 'OPTIONALS',
+           'set_source', 'count_sections', 'next_section', 'verify_section']
 DEFAULT_PATTERN = r'^(##### Part .+)$'
 
 def set_source(code, filename='__main__.py', sections=False, report=None):
@@ -45,6 +43,7 @@ def set_source(code, filename='__main__.py', sections=False, report=None):
     report['source']['success'] = True
     if sections == False:
         report['source']['sections'] = None
+        report['source']['section'] = None
         _check_issues(code, report)
     else:
         if sections == True:
@@ -60,6 +59,7 @@ def set_source(code, filename='__main__.py', sections=False, report=None):
 def _check_issues(code, report):
     if code.strip() == '':
         report.attach('Blank source', category=CATEGORY, tool=NAME,
+                      section=report['source']['section'],
                       mistakes="Source code file is blank.")
         report['source']['success'] = False
     try:
@@ -67,6 +67,7 @@ def _check_issues(code, report):
         report['source']['ast'] = parsed
     except SyntaxError as e:
         report.attach('Syntax error', category=CATEGORY, tool=NAME,
+                      section=report['source']['section'],
                       mistakes={'message': "Invalid syntax on line "
                                            +str(e.lineno),
                                 'error': e,
@@ -86,6 +87,8 @@ def start_section(name, report=None):
 def next_section(name="", report=None):
     if report is None:
         report = MAIN_REPORT
+    if not report['source']['success']:
+        return False
     report['source']['section'] += 2
     section = report['source']['section']
     found = len(report['source']['sections'])
@@ -93,6 +96,7 @@ def next_section(name="", report=None):
         report['source']['code'] = ''.join(report['source']['sections'][:section+1])
     else:
         report.attach('Verifier Error', category='verifier', tool=NAME,
+                      section=report['source']['section'],
                       mistakes=("Tried to advance to next section but the "
                                 "section was not found. Tried to load section "
                                 "{count}, but there were only {found} sections."
@@ -106,9 +110,12 @@ def count_sections(count, report=None):
     '''
     if report is None:
         report = MAIN_REPORT
+    if not report['source']['success']:
+        return False
     found = int((len(report['source']['sections'])-1)/2)
     if count != found:
         report.attach('Verifier Error', category='verifier', tool=NAME,
+                      section=report['source']['section'],
                       mistakes=("Incorrect number of sections in your file. "
                                 "Expected {count}, but only found {found}"
                                 ).format(count=count, found=found))
@@ -116,12 +123,15 @@ def count_sections(count, report=None):
 def verify_section(report=None):
     if report is None:
         report = MAIN_REPORT
+    if not report['source']['success']:
+        return False
     code = report['source']['code']
     try:
         parsed = ast.parse(code)
         report['source']['ast'] = parsed
     except SyntaxError as e:
         report.attach('Syntax error', category=CATEGORY, tool=NAME,
+                      section=report['source']['section'],
                       mistakes={'message': "Invalid syntax on line "
                                            +str(e.lineno),
                                 'error': e,
@@ -129,3 +139,4 @@ def verify_section(report=None):
         report['source']['success'] = False
         if 'ast' in report['source']:
             del report['source']['ast']
+    return report['source']['success']

@@ -339,6 +339,11 @@ class EasyNode:
             return self.tree_id < other.tree_id and self.linear_tree == other.linear_tree
         except Exception:
             raise TypeError
+    
+    def is_ast(self, ast_name):
+        if not isinstance(ast_name, str):
+            ast_name = EasyNode.get_ast_name(ast_name.astNode)
+        return EasyNode.get_ast_name(self.astNode).lower() == ast_name.lower()
 
 
 AST_SINGLE_FUNCTIONS = ["ctx_name", "op_name"]

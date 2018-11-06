@@ -42,12 +42,16 @@ def parse_program():
             MAIN_REPORT['cait']['matcher'] = None
         else:
             MAIN_REPORT.attach("No source code found", tool='cait', 
+                               section=MAIN_REPORT['source']['section'],
                                category='analyzer')
             std_ast = ast.parse('')
         MAIN_REPORT['cait']['std_ast'] = EasyNode(std_ast)
         std_easy = MAIN_REPORT['cait']['std_ast']
     return std_easy
 
+def expire_cait_cache():
+    if 'std_ast' in MAIN_REPORT['cait']:
+        del MAIN_REPORT['cait']['std_ast']
 
 def def_use_error(node, report=None):
     """Checks if node is a name and has a def_use_error

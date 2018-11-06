@@ -13,3 +13,5 @@
 a syntax error in this section!
 
 ##### Part 4
+a = 0
+print(a)
