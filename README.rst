@@ -89,9 +89,9 @@ example:
     # source 2
     var1 = var2/var2
     # matcher 1
-    matches = find_matches("_var1_ = _var1_/_var_2")
+    match = find_match("_var1_ = _var1_/_var_2")
     # matcher 2
-    matches = find_matches("_var1_ = _var2_/_var_2")
+    match = find_match("_var1_ = _var2_/_var_2")
     
 In the example above, matcher 1 would find source 1 but wouldn't find source 2 because source variable `var2` is being mapped to both `_var1_` and `_var2_`. However, matcher 2 would find both source 1 and source 2 because while matcher 2's `_var2_` will map to both source 2's `var1` and `var2`, source 2's `var2` only maps to matcher 2's `_var2_` If a variable name is not surrounded by single underscores, Cait will try to match the exact variable name. Note: this only works for AST nodes that are Name nodes (so only variables, not function names). Note that the matcher will save these variables for later reference (discussed below)
 
@@ -137,24 +137,24 @@ In this example, matches would return a list of two matches, as shown above (mat
 
 Retrieving variables and expressions is another operation supported in Cait
 
-..code:: python
+.. code:: python
 
     matches = find_matches("for _item_ in ___:\n"
                            "    __expr__\n"
                            "__expr2__")
     if matches:
         for match in matches:
-            _item_ = match.symbol_table.get("_item_")[0]
-            __expr__ = match.exp_table.get("__expr__")
-            __expr2__ = match.exp_table.get("__expr2__")
+            _item_ = match["_item_"][0]
+            __expr__ = match["__expr__"]
+            __expr2__ = match["__expr2__"]
 
 The code above shows how to retrieve expressions and variables. The expressions (`__expr__` and `__expr2__`) will return AST nodes with expanded functionality from the built in ast node class.
 
-Retrieval of variables will return a list of AstSymbol objects. These AstSymbol objects will also have a reference to the specific Name AST node that the symbol matched to (details in ast_map.py).
+Retrieval of variables will return a list of AstSymbol objects. These AstSymbol objects will also have a reference to the specific Name AST node that the symbol matched to (details in ast_map.py). So there should be one for every time the variable ocurred in code.
 
 Finally, for subtree matching, you can use the `find_expr_sub_matches` function.
 
-..code:: python
+.. code:: python
 
     def find_expr_sub_matches(ins_expr, std_expr, as_expr=True, is_mod=False, cut=False):
         """Finds ins_expr in std_expr
@@ -186,7 +186,7 @@ The `find_expr_sub_matches` function allows you to perform deep searches, such a
     # matcher 1
     matches = find_matches("for ___ in ___:\n"
                            "    __expr1__\n")
-    __expr1__ = match.exp_table.get("__expr1__")
+    __expr1__ = match["__expr1__"]
     submatch = find_expr_sub_matches("_var1_ = _var2_ + _var1_", __expr1__, cut=True)
 
 In the example above, `__expr1__` will match to the inner body of the for loops in source 1 and source 2. The `submatch` variable would then in both cases, extract the `summer = summer + item` from both sources, returning the same type of list as `find_matches`.
