@@ -364,6 +364,30 @@ class StretchyTreeMatcher:
         mapping.add_node_pairing(ins_node, std_node)
         return [mapping]
 
+    # noinspection PyPep8Naming
+    def shallow_match_FunctionDef(self, ins_node, std_node, check_meta=True):
+        ins = ins_node.astNode
+        std = std_node.astNode
+        meta_matched = self.metas_match(ins_node, std_node, check_meta)
+        is_match = type(ins).__name__ == type(std).__name__ and meta_matched
+        mapping = self.shallow_match_main(ins_node, std_node, check_meta, ignores=['name'])
+        matched = False
+        if is_match and mapping:
+            name = ins.name
+            var_match = re.compile('^_[^_].*_$')  # /regex
+            wild_card = re.compile('^___$')  # /regex
+            if var_match.match(name) and meta_matched:  # variable
+                mapping[0].add_func_to_sym_table(ins_node, std_node)  # TODO: Capture result?
+                matched = True
+            elif wild_card.match(name) and meta_matched:
+                matched = True
+            elif name == std.name and meta_matched:
+                matched = True
+        if matched:
+            return mapping
+        else:
+            return False
+
     # noinspection PyMethodMayBeStatic
     def shallow_match_generic(self, ins_node, std_node, check_meta=True):
         """
@@ -373,6 +397,16 @@ class StretchyTreeMatcher:
         :param check_meta: flag to check whether the fields of the instructor node and the student node should match
         :return: a mapping between the isntructor and student root nodes, or False if such a mapping doesn't exist
         """
+        return self.shallow_match_main(ins_node, std_node, check_meta)
+
+    def shallow_match_main(self, ins_node, std_node, check_meta=True, ignores=[]):
+        """
+                Checks that all non astNode attributes are equal between ins_node and std_node
+                :param ins_node: Instructor ast root node
+                :param std_node: Student AST root node
+                :param check_meta: flag to check whether the fields of the instructor node and the student node should match
+                :return: a mapping between the isntructor and student root nodes, or False if such a mapping doesn't exist
+                """
         ins = ins_node.astNode
         std = std_node.astNode
         ins_field_list = list(ast.iter_fields(ins))
@@ -392,7 +426,9 @@ class StretchyTreeMatcher:
             if ins_value is None:
                 continue
 
-            is_match = ins_field == std_field
+            ignore_field = ins_field in ignores
+
+            is_match = (ins_field == std_field) or ignore_field
 
             if not isinstance(ins_value, list):
                 ins_value = [ins_value]
@@ -404,12 +440,13 @@ class StretchyTreeMatcher:
             # Reference ast_node_visitor.js for the original behavior and keep note of it for the purposes of handling
             # the children noting the special case when the nodes of the array are actually parameters of the node
             # (e.g. a load function) instead of a child node
-            for inssub_value, stdsub_value in zip(ins_value, std_value):
-                if not is_match:
-                    break
-                # TODO: make this a smarter comparison, maybe handle dictionaries, f-strings, tuples, etc.
-                if is_primitive(inssub_value):
-                    is_match = inssub_value == stdsub_value
+            if not ignore_field:
+                for inssub_value, stdsub_value in zip(ins_value, std_value):
+                    if not is_match:
+                        break
+                    # TODO: make this a smarter comparison, maybe handle dictionaries, f-strings, tuples, etc.
+                    if is_primitive(inssub_value):
+                        is_match = inssub_value == stdsub_value
         mapping = False
         if is_match:
             mapping = AstMap()  # return MAPPING

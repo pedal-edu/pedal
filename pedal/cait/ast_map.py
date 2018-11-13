@@ -19,9 +19,40 @@ class AstMap:
         self.mappings = CtMap()
         self.symbol_table = CtMap()
         self.exp_table = CtMap()
+        self.func_table = CtMap()
         self.conflict_keys = []
         self.match_root = None
         self.match_lineno = -1
+
+    def add_func_to_sym_table(self, ins_node, std_node):
+        """
+        Adds ins_node.name to the symbol table if it doesn't already exist, mapping it to a set of ins_node. Updates a
+        second dictionary that maps ins_node to an std_node, and overwrites the current std_node since there should only
+        be one mapping.
+        :param ins_node: instructor node or str representing a function name
+        :param std_node: student node representing function
+        :return: number of conflicts generated
+        """
+        if not isinstance(std_node, EasyNode):
+            raise TypeError
+        if isinstance(ins_node, str):
+            key = ins_node
+        else:
+            key = ins_node.astNode.name
+        value = AstSymbol(std_node.astNode.name, std_node)
+        if self.func_table.has(key):
+            new_list = self.func_table.get(key)
+            new_list.append(value)
+            if not (key in self.conflict_keys):
+                for other in new_list:
+                    if value.name != other.name:
+                        self.conflict_keys.append(key)
+                        break
+        else:
+            new_list = [value]
+
+        self.func_table.set(key, new_list)
+        return len(self.conflict_keys)
 
     def add_var_to_sym_table(self, ins_node, std_node):
         """
@@ -103,19 +134,28 @@ class AstMap:
         """
         if type(other) != type(self):
             raise TypeError
+
         # merge all mappings
         other_map = other.mappings
         for other_map_key, other_map_value in zip(other_map.keys, other_map.values):
             self.mappings.set(other_map_key, other_map_value)
+
         # merge all expressions
         other_exp = other.exp_table
         for other_expKey, other_expValue in zip(other_exp.keys, other_exp.values):
             self.exp_table.set(other_expKey, other_expValue)
+
         # merge all symbols
         other_sym = other.symbol_table
         for key, value in zip(other_sym.keys, other_sym.values):
             for sub_value in value:
                 self.add_var_to_sym_table(key, sub_value.astNode)
+
+        # merge all functions
+        other_func = other.func_table
+        for key, value in zip(other_func.keys, other_func.values):
+            for sub_value in value:
+                self.add_func_to_sym_table(key, sub_value.astNode)
 
     def get_std_name(self, ins_id):
         """Return student node associated with ins_id

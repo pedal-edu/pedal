@@ -116,6 +116,21 @@ class CaitTests(unittest.TestCase):
         self.assertTrue(matches01)
         self.assertTrue(matches02)
 
+    def test_function_save(self):
+        ins_code = ("def _my_func_():\n"
+                    "   pass")
+        std_code = ("def funky(forum):\n"
+                    "    pass")  # matches
+
+        matcher = StretchyTreeMatcher(ins_code)
+        matches = matcher.find_matches(std_code)
+
+        self.assertTrue(matches, "did not match")
+        table = matches[0].func_table
+        self.assertTrue(len(table.keys) == 1, "found {} keys, should have found 1".format(len(table.keys)))
+        self.assertTrue(table.keys[0] == '_my_func_',
+                        "expected function name to be '_my_func_', found {} instead".format(table.keys[0]))
+
     def test_wild_card_match(self):
         # tests whether Wild matches are stored correctly
         # print("TESTING WILD CARD MATCH")
