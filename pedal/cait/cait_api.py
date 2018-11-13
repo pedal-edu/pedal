@@ -139,7 +139,11 @@ def find_matches(ins_code, std_code=None, report=None, cut=False):
         return False
 
 
-def find_expr_sub_matches(ins_expr, std_expr, as_expr=True, is_mod=False, cut=False):
+def find_submatches(ins_expr, std_expr, as_expr=False, is_mod=False, cut=True):
+    return find_expr_sub_matches(ins_expr, std_expr, as_expr, is_mod, cut)
+
+
+def find_expr_sub_matches(ins_expr, std_expr, as_expr=False, is_mod=False, cut=True):
     """Finds ins_expr in std_expr
     # TODO: Add code to make ins_expr accept EasyNodes
     # TODO: Make this function without so much meta knowledge

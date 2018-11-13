@@ -222,7 +222,7 @@ def wrong_should_be_counting():
         for match in matches:
             _item_ = match["_item_"][0]
             __expr__ = match["__expr__"]
-            submatches = find_expr_sub_matches("___ = ___ + {}".format(_item_.id), __expr__, as_expr=False)
+            submatches = find_expr_sub_matches("___ = ___ + {}".format(_item_.id), __expr__)
             if submatches:
                 explain('This problem asks for the number of items in the list not the total of all the values in the list.'
                         '<br><br><i>(not_count)<i></br>')
@@ -248,7 +248,7 @@ def wrong_should_be_summing():
     if matches:
         for match in matches:
             __expr__ = match["__expr__"]
-            submatches = find_expr_sub_matches("___ = 1 + ___", __expr__, as_expr=False)
+            submatches = find_expr_sub_matches("___ = 1 + ___", __expr__)
             if submatches:
                 explain('This problem asks for the total of all the values in the list not the number of '
                         'items in the list.<br><br><i>(not_sum)<i></br>')
@@ -306,7 +306,7 @@ def wrong_cannot_sum_list():
         for match in matches:
             _list_ = match["_list_"][0]
             __expr__ = match["__expr__"]
-            submatches = find_expr_sub_matches("___ = ___ + {}".format(_list_.id), __expr__, as_expr=False)
+            submatches = find_expr_sub_matches("___ = ___ + {}".format(_list_.id), __expr__)
             if submatches:
                 explain('Addition can only be done with a single value at a time, not with an entire list at one'
                         ' time.<br><br><i>(sum_list)<i></br>')
@@ -349,7 +349,7 @@ def missing_counting_list():
     if matches:
         for match in matches:
             __expr__ = match["__expr__"]
-            submatches = find_expr_sub_matches("_sum_ = _sum_ + 1", __expr__, as_expr=False)
+            submatches = find_expr_sub_matches("_sum_ = _sum_ + 1", __expr__)
             if submatches:
                 return False
     explain(
@@ -386,7 +386,8 @@ def missing_summing_list():
         for match in matches:
             _item_ = match["_item_"][0]
             __expr__ = match["__expr__"]
-            submatches = find_expr_sub_matches("_sum_ = _sum_ + {}".format(_item_.id), __expr__, as_expr=False)
+            submatches = find_expr_sub_matches("_sum_ = _sum_ + {}"
+                                               .format(_item_.id), __expr__)
             if submatches:
                 return False
     explain('Sum the total of all list elements using iteration.<br><br><i>(miss_sum_list)<i></br>')
@@ -433,7 +434,7 @@ def missing_zero_initialization():
     if matches01:
         for match01 in matches01:
             __expr__ = match01["__expr__"]
-            submatches01 = find_expr_sub_matches("_sum_ = _sum_ + ___", __expr__, as_expr=False)
+            submatches01 = find_expr_sub_matches("_sum_ = _sum_ + ___", __expr__)
             if submatches01:
                 for submatch01 in submatches01:
                     _sum_ = submatch01["_sum_"][0]
@@ -470,7 +471,7 @@ def missing_average():
     if matches_missing:
         for match in matches_missing:
             __expr__ = match["__expr__"]
-            sub_matches = find_expr_sub_matches("_total_/_count_", __expr__, cut=True)
+            sub_matches = find_expr_sub_matches("_total_/_count_", __expr__)
             if sub_matches:
                 for sub_match in sub_matches:
                     _total_ = sub_match["_total_"][0]
@@ -489,7 +490,7 @@ def warning_average_in_iteration():
     if matches:
         for match in matches:
             __expr__ = match["__expr__"]
-            submatches = find_expr_sub_matches("_average_ = _total_/_count_",__expr__, as_expr=False)
+            submatches = find_expr_sub_matches("_average_ = _total_/_count_",__expr__)
             if submatches:
                 for submatch in submatches:
                     _total_ = submatch["_total_"][0]
@@ -514,8 +515,8 @@ def wrong_average_denominator():
             __expr__ = match["__expr__"]
             __expr2__ = match["__expr2__"]
             # _value_ = match["_value_"][0]
-            submatches = find_expr_sub_matches("_count_ = _count_ + 1", __expr__, as_expr=False)
-            submatches02 = find_expr_sub_matches("___/_value_", __expr2__, cut=True)
+            submatches = find_expr_sub_matches("_count_ = _count_ + 1", __expr__)
+            submatches02 = find_expr_sub_matches("___/_value_", __expr2__)
             if submatches and submatches02:
                 for submatch in submatches:
                     for submatch02 in submatches02:
@@ -536,8 +537,8 @@ def wrong_average_numerator():
             __expr__ = match["__expr__"]
             __expr2__ = match["__expr2__"]
             _item_ = match["_item_"][0]
-            submatches = find_expr_sub_matches("_total_ = _total_ + {}".format(_item_.id), __expr__, as_expr=False, cut=True)
-            submatches02 = find_expr_sub_matches("_value_/___", __expr2__, cut=True)
+            submatches = find_expr_sub_matches("_total_ = _total_ + {}".format(_item_.id), __expr__)
+            submatches02 = find_expr_sub_matches("_value_/___", __expr2__)
             if submatches and submatches02:
                 for submatch in submatches:
                     for submatch02 in submatches02:
@@ -980,7 +981,7 @@ def wrong_filter_problem_atl1_10_5():
             _item_ = match["_item_"][0].astNode
             __cond__ = match["__cond__"]
             __expr__ = match["__expr__"]
-            matches02 = find_expr_sub_matches("_item_*0.62", __expr__, cut=True)
+            matches02 = find_expr_sub_matches("_item_*0.62", __expr__)
             if matches02:
                 for match02 in matches02:
                     _item_02 = match02["_item_"][0].astNode
@@ -1004,7 +1005,7 @@ def wrong_filter_problem_atl2_10_5():
             __cond__ = match["__cond__"]
             _item_ = match["_item_"][0].astNode
             _miles_ = match["_miles_"][0].astNode
-            matches02 = find_expr_sub_matches("_item_*0.62", __expr__, cut=True)
+            matches02 = find_expr_sub_matches("_item_*0.62", __expr__)
             if matches02:
                 for match02 in matches02:
                     _item_02 = match02["_item_"][0].astNode
@@ -1029,7 +1030,7 @@ def wrong_append_problem_atl1_10_5():
             if (__cond__.numeric_logic_check(0.1, "item > 16.1290322580645") and
                __cond__.has(_item_)):
                 new_code = "{}*0.62".format(_item_.id)
-                matches02 = find_expr_sub_matches(new_code, __expr__, cut=True)
+                matches02 = find_expr_sub_matches(new_code, __expr__)
                 if not matches02:
                     explain('You are not appending the correct values.<br><br><i>(app_alt1_10.5)<i></br>')
                     return True
@@ -1109,7 +1110,7 @@ def wrong_initialization_in_iteration():
     if matches:
         for match in matches:
             __expr__ = match["__expr__"]
-            submatches = find_expr_sub_matches("_assign_ = __expr__", __expr__, as_expr=False)
+            submatches = find_expr_sub_matches("_assign_ = __expr__", __expr__)
             if submatches:
                 for submatch in submatches:
                     __expr__sub = submatch["__expr__"]
