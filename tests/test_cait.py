@@ -102,7 +102,6 @@ class CaitTests(unittest.TestCase):
         matches02 = matcher1.find_matches(student_code2)
         self.assertTrue(matches02, "Expression match doesn't match to subtree")
 
-    @unittest.skip("Not implemented yet")
     def test_function_diving(self):
         # TODO: Fix this bug
         student_code1 = "print(report['station'])"
@@ -516,8 +515,12 @@ class CaitTests(unittest.TestCase):
         self.assertTrue(matches)
 
         __expr__ = matches[0]["__expr__"]
-        matches2 = find_expr_sub_matches("0.4*_item_", __expr__, as_expr=False)
+        matches2 = find_expr_sub_matches("0.4*_item_", __expr__)
         self.assertTrue(matches2)
+
+        __expr__ = matches[0]["__expr__"]
+        matches3 = find_expr_sub_matches(__expr__, __expr__)
+        self.assertTrue(matches3)
 
     def test_symbol_mapping(self):
         student_code = ("item = 0\n"
@@ -544,8 +547,8 @@ class CaitTests(unittest.TestCase):
 
         student_parse = EasyNode(ast.parse(student_code1))
         matcher1 = StretchyTreeMatcher("'Blacksburg'")
-        res = find_expr_sub_matches("'Blacksburg'", student_parse, as_expr=False)
+        res = find_expr_sub_matches("'Blacksburg'", student_parse)
         self.assertTrue(res, "Cutting broke sub-matching")
 
-        matches01 = matcher1.find_matches(student_code1, cut=True)
+        matches01 = matcher1.find_matches(student_code1)
         self.assertTrue(matches01, "Cutting doesn't work")

@@ -133,37 +133,31 @@ def find_matches(ins_code, std_code=None, report=None, cut=False):
         std_code = cait_obj.report['cait']['std_ast']
         matcher = StretchyTreeMatcher(ins_code)
         cait_obj.report['cait']['matcher'] = matcher
-        matches = cait_obj.report['cait']['matcher'].find_matches(std_code, cut=cut)
+        matches = cait_obj.report['cait']['matcher'].find_matches(std_code)
         return matches
     except KeyError:
         return False
 
 
-def find_submatches(ins_expr, std_expr, as_expr=False, is_mod=False, cut=True):
-    return find_expr_sub_matches(ins_expr, std_expr, as_expr, is_mod, cut)
+def find_submatches(ins_expr, std_expr, is_mod=False):
+    return find_expr_sub_matches(ins_expr, std_expr, is_mod)
 
 
-def find_expr_sub_matches(ins_expr, std_expr, as_expr=False, is_mod=False, cut=True):
+def find_expr_sub_matches(ins_expr, std_expr, is_mod=False):
     """Finds ins_expr in std_expr
     # TODO: Add code to make ins_expr accept EasyNodes
     # TODO: Make this function without so much meta knowledge
-    :param ins_expr: the expression to find (str that MUST evaluate to a Module node with a single child)
+    :param ins_expr: the expression to find (str that MUST evaluate to a Module node with a single child or an AstNode)
     :param std_expr: student subtree
     :param as_expr: whether it's an expression match or not, experimental
     :param is_mod: currently hack for multiline sub matches
     :param cut: flag for cutting off root until a branch occurs
     :return: a list of matches or False if no matches found
     """
-    if not isinstance(ins_expr, str):
-        raise TypeError("ins_expr expected str, found {0}".format(type(ins_expr)))
+    is_node = isinstance(ins_expr, EasyNode)
+    if not isinstance(ins_expr, str) and not is_node:
+        raise TypeError("ins_expr expected str or EasyNode, found {0}".format(type(ins_expr)))
     matcher = StretchyTreeMatcher(ins_expr)
-    if not is_mod and len(matcher.rootNode.children) != 1:
+    if (not is_node and not is_mod) and len(matcher.rootNode.children) != 1:
         raise ValueError("ins_expr does not evaluate to a singular statement")
-    else:
-        if not is_mod:
-            new_root = matcher.rootNode.children[0]
-            if as_expr and new_root.ast_name != "Expr":
-                raise ValueError("ins_expr does not evaluate to an Expr node or singular statement")
-            else:
-                matcher.rootNode = new_root
-    return matcher.find_matches(std_expr, check_meta=False, cut=cut)
+    return matcher.find_matches(std_expr, check_meta=False)

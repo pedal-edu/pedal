@@ -21,8 +21,7 @@ class StretchyTreeMatcher:
         else:
             self.rootNode = EasyNode(ast_node, "none")
 
-    def find_matches(self, other, filename="__main__", check_meta=True, cut=False):
-        # TODO: check that both are ast nodes at the module level
+    def find_matches(self, other, filename="__main__", check_meta=True):
         if isinstance(other, str):
             other_tree = ast.parse(other, filename)
         else:
@@ -32,12 +31,12 @@ class StretchyTreeMatcher:
         else:
             easy_other = EasyNode(other_tree, "none")
         explore_root = self.rootNode
-        if cut and (self.rootNode is not None):
+        if self.rootNode is not None:
             while len(explore_root.children) == 1:
                 explore_root = explore_root.children[0]
                 explore_root.field = "none"
         # return self.any_node_match(self.rootNode, easy_other, check_meta=check_meta)
-        return self.any_node_match(explore_root, easy_other, check_meta=check_meta, cut=cut)
+        return self.any_node_match(explore_root, easy_other, check_meta=check_meta)
 
     '''
     Finds whether ins_node can be matched to some node in the tree std_node
@@ -144,7 +143,8 @@ class StretchyTreeMatcher:
                 new_map = base_mappings[0].new_merged_map(case_l)
                 for case_r in case_right:
                     both = new_map.new_merged_map(case_r)
-                    new_mappings.append(both)
+                    if not both.has_conflicts():
+                        new_mappings.append(both)
 
     def deep_find_match_binflex(self, ins_node, std_node, check_meta=False):
         base_mappings = self.shallow_match(ins_node, std_node, check_meta)

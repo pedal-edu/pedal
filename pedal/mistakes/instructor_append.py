@@ -40,7 +40,7 @@ def missing_append_in_iteration():
     if matches:
         for match in matches:
             __expr__ = match["__expr__"]
-            submatch = find_expr_sub_matches("___.append(___)", __expr__, cut=True)
+            submatch = find_expr_sub_matches("___.append(___)", __expr__)
             if submatch:
                 return False
         explain("You must construct a list by appending values one at a time to the list."
@@ -55,7 +55,7 @@ def wrong_not_append_to_list():
     if matches:
         for match in matches:
             __expr__ = match["__expr__"]
-            submatches = find_expr_sub_matches("_target_.append(___)", __expr__, cut=True)
+            submatches = find_expr_sub_matches("_target_.append(___)", __expr__)
             if submatches:
                 for submatch in submatches:
                     _target_ = submatch["_target_"][0].astNode
@@ -73,7 +73,7 @@ def missing_append_list_initialization():
     if matches:
         for match in matches:
             __expr__ = match["__expr__"]
-            submatches = find_expr_sub_matches("_new_list_.append(___)", __expr__, cut=True)
+            submatches = find_expr_sub_matches("_new_list_.append(___)", __expr__)
             if submatches:
                 for submatch in submatches:
                     _new_list_ = submatch["_new_list_"][0].astNode
@@ -96,7 +96,7 @@ def wrong_append_list_initialization():
             _list_ = match["_list_"][0].astNode
             __expr1__ = match["__expr1__"]
             __expr2__ = match["__expr2__"]
-            submatch = find_expr_sub_matches("{}.append(___)".format(_list_.id), __expr2__, cut=True)
+            submatch = find_expr_sub_matches("{}.append(___)".format(_list_.id), __expr2__)
             if submatch and (__expr1__.ast_name == "List" and
                len(__expr1__.elts) != 0 or
                __expr1__.ast_name != "List"):

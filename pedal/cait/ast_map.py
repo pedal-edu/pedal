@@ -107,7 +107,7 @@ class AstMap:
             raise TypeError
         self.mappings.set(ins_node, std_node)
 
-    def has_conflicts(self, ):
+    def has_conflicts(self):
         """
         :return: returns number of conflicts
         """
