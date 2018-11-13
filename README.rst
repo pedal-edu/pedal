@@ -93,7 +93,7 @@ example:
     # matcher 2
     match = find_match("_var1_ = _var2_/_var_2")
     
-In the example above, matcher 1 would find source 1 but wouldn't find source 2 because source variable `var2` is being mapped to both `_var1_` and `_var2_`. However, matcher 2 would find both source 1 and source 2 because while matcher 2's `_var2_` will map to both source 2's `var1` and `var2`, source 2's `var2` only maps to matcher 2's `_var2_` If a variable name is not surrounded by single underscores, Cait will try to match the exact variable name. Note: this only works for AST nodes that are Name nodes (so only variables, not function names). Note that the matcher will save these variables for later reference (discussed below)
+In the example above, matcher 1 would find source 1 but wouldn't find source 2 because source variable `var2` is being mapped to both `_var1_` and `_var2_`. However, matcher 2 would find both source 1 and source 2 because while matcher 2's `_var2_` will map to both source 2's `var1` and `var2`, source 2's `var2` only maps to matcher 2's `_var2_` If a variable name is not surrounded by single underscores, Cait will try to match the exact variable name. Note: this only works for AST nodes that are Name nodes and FuncDefinition nodes. Note that the matcher will save these variables/names for later reference (discussed below)
 
 .. code:: python
 
@@ -135,7 +135,7 @@ In this example, matches would return a list of two matches, as shown above (mat
                            "    __expr1__")
 
 
-Retrieving variables and expressions is another operation supported in Cait
+Retrieving variables, functions, and expressions is another operation supported in Cait
 
 .. code:: python
 
@@ -150,13 +150,13 @@ Retrieving variables and expressions is another operation supported in Cait
 
 The code above shows how to retrieve expressions and variables. The expressions (`__expr__` and `__expr2__`) will return AST nodes with expanded functionality from the built in ast node class.
 
-Retrieval of variables will return a list of AstSymbol objects. These AstSymbol objects will also have a reference to the specific Name AST node that the symbol matched to (details in ast_map.py). So there should be one for every time the variable ocurred in code.
+Retrieval of variables and functions will return a list of AstSymbol objects. These AstSymbol objects will also have a reference to the specific Name or FuncDefinition AST node that the symbol matched to (details in ast_map.py). So there should be one for every time the variable/function definition ocurred in code. Note that overlapping variable and function names in instructor will cause conflicts as they are considered to be the "same symbol" with respect to CAIT. This can allow checks such as detecting if students overwrite a function that they have written.
 
-Finally, for subtree matching, you can use the `find_expr_sub_matches` function.
+Finally, for subtree matching, you can use the `find_submatches` function.
 
 .. code:: python
 
-    def find_expr_sub_matches(ins_expr, std_expr, as_expr=True, is_mod=False, cut=False):
+    def find_submatches(ins_expr, std_expr, as_expr=True, is_mod=False, cut=False):
         """Finds ins_expr in std_expr
         :param ins_expr: the expression to find (str that MUST evaluate to a Module node with a single child)
         :param std_expr: source subtree
@@ -166,7 +166,7 @@ Finally, for subtree matching, you can use the `find_expr_sub_matches` function.
         :return: a list of matches or False if no matches found
         """
 
-The `find_expr_sub_matches` function allows you to perform deep searches, such as if you are looking for a specific expression in a subtree and you don't care where that expression is in that subtree. For example:
+The `find_submatches` function allows you to perform deep searches, such as if you are looking for a specific expression in a subtree and you don't care where that expression is in that subtree. For example:
 
 .. code:: python
 
