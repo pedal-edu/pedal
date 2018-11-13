@@ -32,7 +32,8 @@ class StretchyTreeMatcher:
             easy_other = EasyNode(other_tree, "none")
         explore_root = self.rootNode
         if self.rootNode is not None:
-            while len(explore_root.children) == 1:
+            while (len(explore_root.children) == 1 and
+                   explore_root.ast_name in ["Expr", "Module"]):
                 explore_root = explore_root.children[0]
                 explore_root.field = "none"
         # return self.any_node_match(self.rootNode, easy_other, check_meta=check_meta)

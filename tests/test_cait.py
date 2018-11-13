@@ -552,3 +552,16 @@ class CaitTests(unittest.TestCase):
 
         matches01 = matcher1.find_matches(student_code1)
         self.assertTrue(matches01, "Cutting doesn't work")
+
+        student_code2 = ("def my_func(funky):\n"
+                         "    print(funky)")
+        matcher2 = StretchyTreeMatcher("def _func_def_():\n"
+                                       "    pass")
+        matches02 = matcher2.find_matches(student_code2)
+        self.assertTrue(matches02, "Function reserved doesn't work with cutting")
+        self.assertTrue(len(matches02[0].func_table.keys) == 1, "Function node is ignored")
+
+        student_code3 = "x"
+        matcher3 = StretchyTreeMatcher("_x_")
+        matches03 = matcher3.find_matches(student_code3)
+        self.assertTrue(matches03, "Function reserved doesn't work with cutting")
