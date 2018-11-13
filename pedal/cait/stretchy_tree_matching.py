@@ -371,7 +371,7 @@ class StretchyTreeMatcher:
         std = std_node.astNode
         meta_matched = self.metas_match(ins_node, std_node, check_meta)
         is_match = type(ins).__name__ == type(std).__name__ and meta_matched
-        mapping = self.shallow_match_main(ins_node, std_node, check_meta, ignores=['name'])
+        mapping = self.shallow_match_main(ins_node, std_node, check_meta, ignores=['name', 'args'])
         matched = False
         if is_match and mapping:
             name = ins.name

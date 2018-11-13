@@ -187,10 +187,17 @@ class AstMap:
         if id.startswith('__'):
             return self.exp_table[id]
         else:
-            return self.symbol_table[id]
+            if id in self.symbol_table:
+                return self.symbol_table[id]
+            else:
+                return self.func_table[id]
     
     def __contains__(self, id):
         if id.startswith('__'):
             return id in self.exp_table
         else:
-            return id in self.symbol_table
+            exists = id in self.symbol_table
+            if exists:
+                return exists
+            else:
+                return id in self.func_table

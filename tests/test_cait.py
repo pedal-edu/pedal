@@ -565,3 +565,26 @@ class CaitTests(unittest.TestCase):
         matcher3 = StretchyTreeMatcher("_x_")
         matches03 = matcher3.find_matches(student_code3)
         self.assertTrue(matches03, "Function reserved doesn't work with cutting")
+
+    def test___getitem__(self):
+        student_code2 = ("def my_func(funky):\n"
+                         "    print(funky)")
+        matcher2 = StretchyTreeMatcher("def _func_def_():\n"
+                                       "    print(_funky_)")
+        matches02 = matcher2.find_matches(student_code2)
+        self.assertTrue(matches02, "match not found, aborting test")
+        self.assertTrue(len(matches02[0].func_table.keys) == 1, "improper number of keys, aborting test")
+        self.assertTrue(matches02[0]['_func_def_'], "Couldn't retrieve function name.")
+        self.assertTrue(matches02[0]['_funky_'], "Couldn't retrieve variable name.")
+
+    @unittest.skip("Not yet implemented")
+    def test_function_arg_matches(self):
+        student_code2 = ("def my_func(funky):\n"
+                         "    print(funky)")
+        matcher2 = StretchyTreeMatcher("def _func_def_(_funky_):\n"
+                                       "    pass")
+        matches02 = matcher2.find_matches(student_code2)
+        self.assertTrue(matches02, "match not found, aborting test")
+        self.assertTrue(len(matches02[0].func_table.keys) == 1, "improper number of keys, aborting test")
+        self.assertTrue(matches02[0]['_func_def_'], "Couldn't retrieve function name.")
+        self.assertTrue(matches02[0]['_funky_'], "Couldn't retrieve variable name.")
