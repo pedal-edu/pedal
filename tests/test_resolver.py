@@ -9,8 +9,8 @@ from pedal.source import set_source, next_section, verify_section
 from pedal.tifa import tifa_analysis
 from pedal.resolvers import simple, sectional
 import pedal.sandbox.compatibility as compatibility
+from tests.execution_helper import Execution
 
-from execution_helper import Execution
 
 class TestCode(unittest.TestCase):
 
@@ -121,8 +121,12 @@ class TestCode(unittest.TestCase):
         compatibility.raise_exception(ne)
         (success, score, category, label, 
          message, data, hide) = simple.resolve()
-        self.assertEqual(message, "<pre>name 'a' is not defined</pre>\n"+
-        "A name error almost always means that you have used a variable before it has a value.  Often this may be a simple typo, so check the spelling carefully.  <br><b>Suggestion: </b>Check the right hand side of assignment statements and your function calls, this is the most likely place for a NameError to be found. It really helps to step through your code, one line at a time, mentally keeping track of your variables.")
+        self.assertEqual(message, "<pre>name 'a' is not defined</pre>\n" +
+                         "A name error almost always means that you have used a variable before it has a value.  Often "
+                         "this may be a simple typo, so check the spelling carefully.  <br><b>Suggestion: </b>Check the"
+                         " right hand side of assignment statements and your function calls, this is the most likely "
+                         "place for a NameError to be found. It really helps to step through your code, one line at a "
+                         "time, mentally keeping track of your variables.")
     
     def test_suppress_premade(self):
         try:
@@ -240,6 +244,7 @@ class TestCode(unittest.TestCase):
         self.assertEqual(success, True)
         self.assertEqual(score, .5)
         self.assertEqual(len(messages), 1)
+
 
 if __name__ == '__main__':
     unittest.main(buffer=False)

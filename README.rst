@@ -60,7 +60,7 @@ CAIT
 
 .. code:: python
 
-	from pedal.cait import parse_program, find_matches
+    from pedal.cait import parse_program, find_matches
     parse_program()
     matches = find_matches("_var_ = __expr__")
 
@@ -89,11 +89,11 @@ example:
     # source 2
     var1 = var2/var2
     # matcher 1
-    matches = find_matches("_var1_ = _var1_/_var_2")
+    match = find_match("_var1_ = _var1_/_var_2")
     # matcher 2
-    matches = find_matches("_var1_ = _var2_/_var_2")
+    match = find_match("_var1_ = _var2_/_var_2")
     
-In the example above, matcher 1 would find source 1 but wouldn't find source 2 because source variable `var2` is being mapped to both `_var1_` and `_var2_`. However, matcher 2 would find both source 1 and source 2 because while matcher 2's `_var2_` will map to both source 2's `var1` and `var2`, source 2's `var2` only maps to matcher 2's `_var2_` If a variable name is not surrounded by single underscores, Cait will try to match the exact variable name. Note: this only works for AST nodes that are Name nodes (so only variables, not function names). Note that the matcher will save these variables for later reference (discussed below)
+In the example above, matcher 1 would find source 1 but wouldn't find source 2 because source variable `var2` is being mapped to both `_var1_` and `_var2_`. However, matcher 2 would find both source 1 and source 2 because while matcher 2's `_var2_` will map to both source 2's `var1` and `var2`, source 2's `var2` only maps to matcher 2's `_var2_` If a variable name is not surrounded by single underscores, Cait will try to match the exact variable name. Note: this only works for AST nodes that are Name nodes and FuncDefinition nodes. Note that the matcher will save these variables/names for later reference (discussed below)
 
 .. code:: python
 
@@ -109,18 +109,18 @@ is a place holder for subtree expressions. An expression is denoted by a double 
     counter = 0
     running_avg = []
     for item in i_list:
-    	summer = summer + item
+        summer = summer + item
         counter = count + 1
         running_avg.append(summer/counter)
     # matcher 1
     matches = find_matches("for ___ in ___:\n"
-    					   "	__expr1__\n"
-                           "	__expr2__")
-	# match 1
+                           "    __expr1__\n"
+                           "    __expr2__")
+    # match 1
     for item in i_list:
-    	summer = summer + item
+        summer = summer + item
         counter = count + 1
-	# match 2
+    # match 2
     for item in i_list:
         counter = count + 1
         running_avg.append(summer/counter)
@@ -131,32 +131,32 @@ In this example, matches would return a list of two matches, as shown above (mat
 
     # matcher 1
     matches = find_matches("for ___ in ___:\n"
-    					   "	__expr1__\n"
-                           "	__expr1__")
+                           "    __expr1__\n"
+                           "    __expr1__")
 
 
-Retrieving variables and expressions is another operation supported in Cait
+Retrieving variables, functions, and expressions is another operation supported in Cait
 
-..code:: python
+.. code:: python
 
-	matches = find_matches("for _item_ in ___:\n"
-    					   "    __expr__\n"
-    					   "__expr2__")
-	if matches:
-		for match in matches:
-        	_item_ = match.symbol_table.get("_item_")[0]
-			__expr__ = match.exp_table.get("__expr__")
-			__expr2__ = match.exp_table.get("__expr2__")
+    matches = find_matches("for _item_ in ___:\n"
+                           "    __expr__\n"
+                           "__expr2__")
+    if matches:
+        for match in matches:
+            _item_ = match["_item_"][0]
+            __expr__ = match["__expr__"]
+            __expr2__ = match["__expr2__"]
 
 The code above shows how to retrieve expressions and variables. The expressions (`__expr__` and `__expr2__`) will return AST nodes with expanded functionality from the built in ast node class.
 
-Retrieval of variables will return a list of AstSymbol objects. These AstSymbol objects will also have a reference to the specific Name AST node that the symbol matched to (details in ast_map.py).
+Retrieval of variables and functions will return a list of AstSymbol objects. These AstSymbol objects will also have a reference to the specific Name or FuncDefinition AST node that the symbol matched to (details in ast_map.py). So there should be one for every time the variable/function definition ocurred in code. Note that overlapping variable and function names in instructor will cause conflicts as they are considered to be the "same symbol" with respect to CAIT. This can allow checks such as detecting if students overwrite a function that they have written.
 
-Finally, for subtree matching, you can use the `find_expr_sub_matches` function.
+Finally, for subtree matching, you can use the `find_submatches` function.
 
-..code:: python
+.. code:: python
 
-    def find_expr_sub_matches(ins_expr, std_expr, as_expr=True, is_mod=False, cut=False):
+    def find_submatches(ins_expr, std_expr, as_expr=True, is_mod=False, cut=False):
         """Finds ins_expr in std_expr
         :param ins_expr: the expression to find (str that MUST evaluate to a Module node with a single child)
         :param std_expr: source subtree
@@ -166,28 +166,28 @@ Finally, for subtree matching, you can use the `find_expr_sub_matches` function.
         :return: a list of matches or False if no matches found
         """
 
-The `find_expr_sub_matches` function allows you to perform deep searches, such as if you are looking for a specific expression in a subtree and you don't care where that expression is in that subtree. For example:
+The `find_submatches` function allows you to perform deep searches, such as if you are looking for a specific expression in a subtree and you don't care where that expression is in that subtree. For example:
 
 .. code:: python
 
     # source 1
     summer = 0
     for item in i_list:
-    	summer = summer + item
+        summer = summer + item
 
-	# source 2
+    # source 2
     summer = 0
     for item in i_list:
-    	if True:
-        	if True:
-            	if True:
-    				summer = summer + item
+        if True:
+            if True:
+                if True:
+                    summer = summer + item
         
     # matcher 1
     matches = find_matches("for ___ in ___:\n"
-    					   "	__expr1__\n")
-	__expr1__ = match.exp_table.get("__expr1__")
-	submatch = find_expr_sub_matches("_var1_ = _var2_ + _var1_", __expr1__, cut=True)
+                           "    __expr1__\n")
+    __expr1__ = match["__expr1__"]
+    submatch = find_expr_sub_matches("_var1_ = _var2_ + _var1_", __expr1__, cut=True)
 
 In the example above, `__expr1__` will match to the inner body of the for loops in source 1 and source 2. The `submatch` variable would then in both cases, extract the `summer = summer + item` from both sources, returning the same type of list as `find_matches`.
 

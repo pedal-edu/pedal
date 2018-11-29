@@ -102,7 +102,6 @@ class CaitTests(unittest.TestCase):
         matches02 = matcher1.find_matches(student_code2)
         self.assertTrue(matches02, "Expression match doesn't match to subtree")
 
-    @unittest.skip("Not implemented yet")
     def test_function_diving(self):
         # TODO: Fix this bug
         student_code1 = "print(report['station'])"
@@ -115,6 +114,21 @@ class CaitTests(unittest.TestCase):
 
         self.assertTrue(matches01)
         self.assertTrue(matches02)
+
+    def test_function_save(self):
+        ins_code = ("def _my_func_():\n"
+                    "   pass")
+        std_code = ("def funky(forum):\n"
+                    "    pass")  # matches
+
+        matcher = StretchyTreeMatcher(ins_code)
+        matches = matcher.find_matches(std_code)
+
+        self.assertTrue(matches, "did not match")
+        table = matches[0].func_table
+        self.assertTrue(len(table.keys) == 1, "found {} keys, should have found 1".format(len(table.keys)))
+        self.assertTrue(table.keys[0] == '_my_func_',
+                        "expected function name to be '_my_func_', found {} instead".format(table.keys[0]))
 
     def test_wild_card_match(self):
         # tests whether Wild matches are stored correctly
@@ -427,7 +441,6 @@ class CaitTests(unittest.TestCase):
         match = find_match("_var_ = __expr__")
         self.assertTrue(type(match) == AstMap, "Match not found")
 
-    @unittest.skip("Not implemented yet")
     def test_find_matches(self):
         set_source("fun = 1 + 1\nfun2 = 2 + 2")
         parse_program()
@@ -436,10 +449,10 @@ class CaitTests(unittest.TestCase):
         self.assertTrue(type(matches[0]) == AstMap, "find_matches does not contain an AstMap")
         self.assertTrue(len(matches) == 2, "find_matches does not return the correct number of matches")
 
-        set_source("for ___ in ___:"
+        set_source("for 'fun' in ___:"
                    "if ___:\n"
                    "    pass")
-        matches = find_matches("for 'fun' in ___:\n"
+        matches = find_matches("for ___ in ___:\n"
                                "    pass")
         self.assertFalse(matches, "find matches should have misparsed and returned False, but returned True instead")
     
@@ -501,9 +514,13 @@ class CaitTests(unittest.TestCase):
         matches = matcher1.find_matches(student_code)
         self.assertTrue(matches)
 
-        __expr__ = matches[0].exp_table.get("__expr__")
-        matches2 = find_expr_sub_matches("0.4*_item_", __expr__, as_expr=False)
+        __expr__ = matches[0]["__expr__"]
+        matches2 = find_expr_sub_matches("0.4*_item_", __expr__)
         self.assertTrue(matches2)
+
+        __expr__ = matches[0]["__expr__"]
+        matches3 = find_expr_sub_matches(__expr__, __expr__)
+        self.assertTrue(matches3)
 
     def test_symbol_mapping(self):
         student_code = ("item = 0\n"
@@ -530,8 +547,44 @@ class CaitTests(unittest.TestCase):
 
         student_parse = EasyNode(ast.parse(student_code1))
         matcher1 = StretchyTreeMatcher("'Blacksburg'")
-        res = find_expr_sub_matches("'Blacksburg'", student_parse, as_expr=False)
+        res = find_expr_sub_matches("'Blacksburg'", student_parse)
         self.assertTrue(res, "Cutting broke sub-matching")
 
-        matches01 = matcher1.find_matches(student_code1, cut=True)
+        matches01 = matcher1.find_matches(student_code1)
         self.assertTrue(matches01, "Cutting doesn't work")
+
+        student_code2 = ("def my_func(funky):\n"
+                         "    print(funky)")
+        matcher2 = StretchyTreeMatcher("def _func_def_():\n"
+                                       "    pass")
+        matches02 = matcher2.find_matches(student_code2)
+        self.assertTrue(matches02, "Function reserved doesn't work with cutting")
+        self.assertTrue(len(matches02[0].func_table.keys) == 1, "Function node is ignored")
+
+        student_code3 = "x"
+        matcher3 = StretchyTreeMatcher("_x_")
+        matches03 = matcher3.find_matches(student_code3)
+        self.assertTrue(matches03, "Function reserved doesn't work with cutting")
+
+    def test___getitem__(self):
+        student_code2 = ("def my_func(funky):\n"
+                         "    print(funky)")
+        matcher2 = StretchyTreeMatcher("def _func_def_():\n"
+                                       "    print(_funky_)")
+        matches02 = matcher2.find_matches(student_code2)
+        self.assertTrue(matches02, "match not found, aborting test")
+        self.assertTrue(len(matches02[0].func_table.keys) == 1, "improper number of keys, aborting test")
+        self.assertTrue(matches02[0]['_func_def_'], "Couldn't retrieve function name.")
+        self.assertTrue(matches02[0]['_funky_'], "Couldn't retrieve variable name.")
+
+    @unittest.skip("Not yet implemented")
+    def test_function_arg_matches(self):
+        student_code2 = ("def my_func(funky):\n"
+                         "    print(funky)")
+        matcher2 = StretchyTreeMatcher("def _func_def_(_funky_):\n"
+                                       "    pass")
+        matches02 = matcher2.find_matches(student_code2)
+        self.assertTrue(matches02, "match not found, aborting test")
+        self.assertTrue(len(matches02[0].func_table.keys) == 1, "improper number of keys, aborting test")
+        self.assertTrue(matches02[0]['_func_def_'], "Couldn't retrieve function name.")
+        self.assertTrue(matches02[0]['_funky_'], "Couldn't retrieve variable name.")

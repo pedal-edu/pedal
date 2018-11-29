@@ -63,7 +63,7 @@ def histogram_argument_not_list():
     matches = find_matches("plt.hist(_argument_)")
     if matches:
         for match in matches:
-            _argument_ = match.symbol_table.get("_argument_")[0].astNode
+            _argument_ = match["_argument_"][0].astNode
             if not data_state(_argument_).was_type('list'):
                 explain("Making a histogram requires a list; <code>{0!s}</code> is not a list.<br><br><i>"
                         "(hist_arg_not_list)<i></br>".format(_argument_.id))
@@ -92,8 +92,8 @@ def histogram_wrong_list():
                            "plt.hist(_list_)")
     if matches:
         for match in matches:
-            _list_ = match.symbol_table.get("_list_")[0].astNode
-            __expr__ = match.exp_table.get("__expr__")
+            _list_ = match["_list_"][0].astNode
+            __expr__ = match["__expr__"]
             submatches = find_expr_sub_matches("{}.append(___)".format(_list_.id), __expr__)
             if submatches:
                 return False
