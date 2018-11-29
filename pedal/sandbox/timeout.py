@@ -3,6 +3,8 @@ A module that exposes a useful method (`timeout`) that can execute a
 function asynchronously and terminiate if it exceeds a given `duration`.
 '''
 
+import sys
+
 try:
     import threading
 except:

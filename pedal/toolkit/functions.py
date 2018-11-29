@@ -8,12 +8,17 @@ DELTA = 0.001
 
 def all_documented():
     ast = parse_program()
-    defs = ast.find_all('FunctionDef')
+    defs = ast.find_all('FunctionDef') + ast.find_all("ClassDef")
     for a_def in defs:
+        if a_def.name == "__init__":
+            continue
         if (a_def.body and 
             (a_def.body[0].ast_name != "Expr" or
              a_def.body[0].value.ast_name != "Str")):
-            explain("You have an undocumented function: "+a_def.name)
+            if a_def.ast_name == 'FunctionDef':
+                explain("You have an undocumented function: "+a_def.name)
+            else:
+                explain("You have an undocumented class: "+a_def.name)
             return False
     return True
 
@@ -25,8 +30,11 @@ def get_arg_name(node):
         return name
 
 
-def match_signature(name, length, *parameters, report=None):
-    ast = parse_program()
+def match_signature(name, length, *parameters, report=None, root=None):
+    if root == None:
+        ast = parse_program()
+    else:
+        ast = root
     defs = ast.find_all('FunctionDef')
     for a_def in defs:
         if a_def._name == name:

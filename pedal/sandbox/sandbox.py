@@ -139,6 +139,7 @@ class Sandbox:
     # be executed before and after execution (regardless of its success)
     pre_execution = None
     post_execution = None
+    instructor_filename = "instructor_tests.py"
 
     '''
     student.raw_output: string
@@ -148,6 +149,7 @@ class Sandbox:
     '''
     def __init__(self, data=None, raw_output=None, exception=None, 
                  filename="__main__", modules=None, full_trace=False,
+                 threaded=False,
                  report=None):
         # data
         if data is None:
@@ -174,6 +176,12 @@ class Sandbox:
         if report is None:
             report = MAIN_REPORT
         self.report = report
+        # Threading
+        self.threaded = threaded
+        self.allowed_time = 1
+        
+        self.record_coverage = False
+        self.coverage_report = None
         
     def setup_mocks(self, modules):
         self.mocked_modules = {}
@@ -190,6 +198,38 @@ class Sandbox:
     @property
     def functions(self):
         return {k:v for k,v in self.data.items() if callable(v)}
+    
+    def start_coverage(self, code=None, filename=None):
+        if code is None:
+            code = self.report['source']['code']
+        if filename is None:
+            filename = self.report['source']['filename']
+        import coverage
+        self.mocked_modules['coverage'] = coverage
+        original = coverage.python.get_python_source
+        self._coverage_code = code
+        dir_path = os.getcwd()
+        self._coverage_file = os.path.join(dir_path, filename)
+        def get_python_source(reading_filename):
+            if reading_filename == self._coverage_file:
+                return code
+            else:
+                return original(reading_filename)
+        coverage.python.get_python_source = get_python_source
+        self.mocked_modules['coverage.python'] = coverage.python
+        self.cov = coverage.Coverage()
+        self.cov.start()
+    
+    def stop_coverage(self):
+        self.cov.stop()
+        self.cov.save()
+        
+        #from pprint import pprint
+        #pprint(self.cov.data._lines[self._coverage_file])
+        #pprint(self.cov.data.line_counts(self._coverage_file))
+        
+        return self.cov.report()
+        #print(self.cov.report())
     
     def set_output(self, raw_output):
         if raw_output is None:
@@ -229,17 +269,33 @@ class Sandbox:
         return key
     
     def run_file(filename, _as_filename=None, _modules=None, _inputs=None, 
-             _example=None, _threaded=False):
+             _example=None, _threaded=None):
         '''
         Load the given filename.
         '''
+        if _threaded is None:
+            _threaded = self.threaded
         if _as_filename is None:
             _as_filename = filename
         with open(filename, 'r') as code_file:
             code = code_file.read() + '\n'
         self.run(code, _as_filename, _modules, _inputs, _example, _threaded)
     
-    def tests(self, function, test_runs, points, compliment, test_output=False):
+    def check_code(self, code):
+        self.run(code, _as_filename=self.instructor_filename)
+        if self.exception is not None:
+            name = str(self.exception.__class__)[8:-2]
+            self.report.attach(name, category='Runtime', tool='Sandbox',
+                               section=self.report['source']['section'],
+                               mistakes={'message': self.format_exception(), 
+                                         'error': self.exception})
+            return False, ""
+        self.report.attach("Unit Test Failure", category='Runtime',
+                           tool='Sandbox',
+                           section=self.report['source']['section'],
+                           mistakes={'message': defns+message})
+    
+    def tests(self, function, test_runs, points, compliment, test_output=False, defns=""):
         all_passed = True
         results = []
         for test in test_runs:
@@ -251,12 +307,15 @@ class Sandbox:
                 args, kwargs = test, {}
             if test_output:
                 kwargs['_test_output'] = test_output
+            if defns is not None:
+                kwargs['_pre'] = defns
             result = self.test(function, *args, **kwargs)
             all_passed = all_passed and result[0]
             results.append(result)
         if all_passed:
-            self.report.compliment(compliment)
-            self.report.give_partial(points)
+            if compliment is not None:
+                self.report.compliment(compliment)
+                self.report.give_partial(points)
             return True
         else:
             for passed, message in results:
@@ -273,7 +332,8 @@ class Sandbox:
             return False
     
     def test(self, function, expected, *args, **kwargs):
-        if function not in self.data:
+        if function not in self.data and '.' not in function:
+            # TODO: Hackish, allow methods through for now
             message = "I could not find a top-level definition of {function}!\n"
             message = message.format(function=function)
             self.report.attach("Function not found", category='Runtime', 
@@ -285,14 +345,15 @@ class Sandbox:
         _exact_strings = kwargs.pop('_exact_strings', False)
         _hidden = kwargs.pop('_hidden', False)
         _test_output = kwargs.pop('_test_output', False)
+        _pre = kwargs.pop('_pre', '')
         self.set_output(None)
         actual = self.call(function, *args, **kwargs,
-                           _as_filename="instructor_tests.py")
+                           _as_filename=self.instructor_filename)
         if self.exception is not None:
             name = str(self.exception.__class__)[8:-2]
             self.report.attach(name, category='Runtime', tool='Sandbox',
                                section=self.report['source']['section'],
-                               mistakes={'message': self.format_exception(), 
+                               mistakes={'message': self.format_exception(_pre), 
                                          'error': self.exception})
             return False, ""
         if _test_output:
@@ -306,32 +367,16 @@ class Sandbox:
             actual_str = repr(actual)
             expected_str = repr(expected)
         message = None
-        if ( # Float comparison
-             (isinstance(expected, float) and
-              isinstance(actual, (float, int)) and
-              abs(actual-expected) < _delta) or
-             # Exact Comparison
-             actual == expected or
-             # Inexact string comparison
-             (_exact_strings and isinstance(expected, str) and
-              isinstance(actual, str) and 
-              _normalize_string(actual) == _normalize_string(expected)) or
-             # Inexact output comparison
-             (_test_output and isinstance(expected, str) and
-              _normalize_string(expected) in [_normalize_string(line) 
-                                              for line in actual]) or
-             # Exact output comparison
-             (_test_output and isinstance(expected, list) and
-              [_normalize_string(line) for line in expected] == 
-              [_normalize_string(line) for line in actual])
-              ):
+        if equality_test(actual, expected, _exact_strings, _delta, _test_output):
             if not _hidden:
                 message = "Unit test passed:\n"
+                message += "<pre>{}</pre>\n".format(_pre) if _pre else ""
                 message += "<pre>>{example}</pre>\n".format(example=self.example)
                 message += "<pre>"+actual_str+"</pre>\n"
             return True, message
         if not _hidden:
             message = "Instructor unit test failure!\n"
+            message += "\nBefore anything else, I ran:<pre>>{}</pre>\n".format(_pre) if _pre else ""
             message += "I ran:\n<pre>>{example}</pre>\n".format(example=self.example)
             message += "I got:\n<pre>"+actual_str+"</pre>\n"
             message += (("But I expected{p}:\n<pre>"+expected_str+"</pre>\n")
@@ -341,16 +386,18 @@ class Sandbox:
         return False, message
         
     def call(self, function, *args, **kwargs):
+        #print("CALL", kwargs)
         # Make sure it's a valid function in the namespace (TODO: but what?)
         if function not in self.functions:
             pass
         _arguments = kwargs.pop('_arguments', {})
-        _as_filename = kwargs.pop('_as_filename', self.filename)
+        _as_filename = kwargs.pop('_as_filename', self.instructor_filename)
         target = kwargs.pop('_target', '_')
         _modules = kwargs.pop('_modules', {})
         _inputs = kwargs.pop('_inputs', self.inputs)
-        _threaded = kwargs.pop('_threaded', False)
+        _threaded = kwargs.pop('_threaded', self.threaded)
         _example = kwargs.pop('_example', None)
+        _context = kwargs.pop('_context', None)
         _raise_exceptions = kwargs.pop('_raise_exceptions', self.raise_exceptions_mode)
         # With all the special args done, the remainder are regular kwargs
         kwargs = _dict_extends(_arguments, kwargs)
@@ -361,10 +408,11 @@ class Sandbox:
                   for key, value in kwargs.items()]
         arguments = ", ".join(str_args+str_kwargs)
         call = "{} = {}({})".format(target, function, arguments)
-        if _example is None:
+        if _context is None and _example is None:
             _example = self.demonstrate_call(function, args, kwargs, target)
         self.run(call, _as_filename, _modules, _inputs, 
                  _example=_example, _threaded=_threaded,
+                 _context=_context,
                  _raise_exceptions=_raise_exceptions)
         self.example = _example
         if self.exception is None:
@@ -372,14 +420,30 @@ class Sandbox:
             return self._
         else:
             return None
-    
     def run(self, code, _as_filename=None, _modules=None, _inputs=None, 
-            _example=None, _threaded=False, _raise_exceptions=False):
+            _example=None, _threaded=None, _raise_exceptions=False,
+            _context=None):
         '''
-        _arguments=None, _as_filename=None, 
-            _target = '_', _modules=None, _inputs=None, _example=None, 
-            _threaded=False, 
+        Actually execute the code
         '''
+        # Redirect stdout/stdin as needed
+        old_stdout = sys.stdout
+        old_stdin = sys.stdin
+        if _threaded == None:
+            _threaded = self.threaded
+        if _threaded:
+            try:
+                return timeout(self.allowed_time, self.run, code, _as_filename, 
+                               _modules, _inputs, _example, False, 
+                               _raise_exceptions, _context)
+            except TimeoutError as e:
+                sys.stdout = old_stdout
+                self.exception = e
+                self.report.attach("Timeout Error", category='Runtime', tool='Sandbox',
+                               section=self.report['source']['section'],
+                               mistakes={'message': "Time out error while running: <pre>"+code+"</pre>", 
+                                         'error': e})
+                return False
         if _as_filename is None:
             _as_filename = self.filename
         if _inputs is None:
@@ -401,9 +465,6 @@ class Sandbox:
             'sys':       sys,
             'os':        os
         })
-        # Redirect stdout/stdin as needed
-        old_stdout = sys.stdout
-        old_stdin = sys.stdin
         capture_stdout = io.StringIO()
         #injectin = io.StringIO(inputs)
         sys.stdout = capture_stdout
@@ -417,6 +478,8 @@ class Sandbox:
         # Patch in dangerous built-ins
         time_sleep_patch = patch('time.sleep', return_value=None)
         time_sleep_patch.start()
+        if self.record_coverage:
+            self.start_coverage(code, _as_filename)
         try:
             with patch.dict('sys.modules', self.mocked_modules):
                 # Compile and run student code
@@ -428,9 +491,12 @@ class Sandbox:
         except Exception as e:
             if _example is not None:
                 e = _raise_improved_error(e, "\n\nThe above occurred when I ran:\n<pre>"+_example+"</pre>")
+                self.example = _example
+            elif _context is not None:
+                e = _raise_improved_error(e, "\n\n"+_context)
+                self.example = _context
             self.exception = e
-            self.exc_info = sys.exc_info()
-            cl, exc, tb = sys.exc_info()
+            cl, exc, tb = self.exc_info = sys.exc_info()
             line_number = traceback.extract_tb(tb)[-1][1]
             while tb and self._is_relevant_tb_level(tb):
                 tb = tb.tb_next
@@ -438,9 +504,11 @@ class Sandbox:
             tb_e = traceback.TracebackException(cl, exc, tb, 
                                                 limit=length,
                                                 capture_locals=True)
-            msgLines = list(tb_e.format())
+            msgLines = [x.replace(', in <module>', '', 1) for x in list(tb_e.format())]
             self.exception_position = {'line': line_number}
         finally:
+            if self.record_coverage:
+                self.coverage_report = self.stop_coverage()
             time_sleep_patch.stop()
             sys.stdout = old_stdout
             #sys.stdin = old_stdin
@@ -473,7 +541,7 @@ class Sandbox:
                                mistakes={'message': self.format_exception(), 
                                          'error': self.exception})
 
-    def format_exception(self):
+    def format_exception(self, _pre=""):
         if not self.exception:
             return ""
         cl, exc, tb = self.exc_info
@@ -485,7 +553,7 @@ class Sandbox:
                                             limit=length,
                                             capture_locals=False)
         lines = [x.replace(', in <module>', '', 1) for x in list(tb_e.format())]
-        return "Traceback:\n"+''.join(lines[1:])
+        return _pre+"\nTraceback:\n"+''.join(lines[1:])
         
     def _count_relevant_tb_levels(self, tb):
         length = 0
@@ -504,9 +572,12 @@ class Sandbox:
         # Are in verbose mode?
         if self.full_trace:
             return False
-        filename, _, _, _ = traceback.extract_tb(tb, limit=1)[0]
+        filename, a_, b_, _ = traceback.extract_tb(tb, limit=1)[0]
+        #print(filename, self.instructor_filename, __file__, a_, b_)
         # Is the error in this test file?
         if filename == __file__:
+            return True
+        if filename == self.instructor_filename:
             return True
         # Is the error related to a file in the parent directory?
         current_directory = os.path.dirname(os.path.realpath(__file__))
@@ -556,7 +627,8 @@ class _KeyError(KeyError):
         return BaseException.__str__(self)
         
 def _append_to_error(e, message):
-    e.args = (e.args[0]+message,)
+    if e.args:
+        e.args = (e.args[0]+message,)
     return e
         
 def _raise_improved_error(e, code):
@@ -579,16 +651,17 @@ def _threaded_execution(code, filename, inputs=None):
 def reset(report=None):
     if report is None:
         report = MAIN_REPORT
-    report['sandbox']['run'] = Sandbox()
+    report['sandbox']['run'] = Sandbox(filename=report['source']['filename'])
     
-def run(raise_exceptions=True, report=None):
+def run(raise_exceptions=True, report=None, coverage=False, threaded=False, inputs=None):
     if report is None:
         report = MAIN_REPORT
     if 'run' not in report['sandbox']:
-        report['sandbox']['run'] = Sandbox()
+        report['sandbox']['run'] = Sandbox(filename=report['source']['filename'], threaded=threaded)
     sandbox = report['sandbox']['run']
     source_code = report['source']['code']
-    sandbox.run(source_code, _as_filename=report['source']['filename'])
+    sandbox.record_coverage = coverage
+    sandbox.run(source_code, _as_filename=report['source']['filename'], _inputs=inputs)
     if raise_exceptions and sandbox.exception is not None:
         name = str(sandbox.exception.__class__)[8:-2]
         report.attach(name, category='Runtime', tool='Sandbox',
@@ -624,6 +697,27 @@ def _make_inputs(*input_list, **kwargs):
             else:
                 return repeat
     return mock_input
+    
+def equality_test(actual, expected, _exact_strings, _delta, _test_output):
+    return ( # Float comparison
+         (isinstance(expected, float) and
+          isinstance(actual, (float, int)) and
+          abs(actual-expected) < _delta) or
+         # Exact Comparison
+         actual == expected or
+         # Inexact string comparison
+         (_exact_strings and isinstance(expected, str) and
+          isinstance(actual, str) and 
+          _normalize_string(actual) == _normalize_string(expected)) or
+         # Inexact output comparison
+         (_test_output and isinstance(expected, str) and
+          _normalize_string(expected) in [_normalize_string(line) 
+                                          for line in actual]) or
+         # Exact output comparison
+         (_test_output and isinstance(expected, list) and
+          [_normalize_string(line) for line in expected] == 
+          [_normalize_string(line) for line in actual])
+          )
 
 if __name__ == "__main__":
     code = """

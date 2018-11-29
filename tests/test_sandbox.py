@@ -172,6 +172,42 @@ TypeError: unsupported operand type(s) for +: 'int' and 'str'\n"""
         exception = compatibility.run_student()
         self.assertIsNone(exception)
     
+    def test_coverage(self):
+        student_code = dedent('''
+            a = 0
+            if True:
+                print("Ran")
+            else:
+                print("Skipped")
+            def x():
+                b = 0
+                return b
+            print(a)
+        ''')
+        student = Sandbox()
+        student.record_coverage = True
+        student.run(student_code, _as_filename='student.py')
+        self.assertTrue(student.coverage_report)
+    
+    def test_multiline_statements(self):
+        student_code = dedent('''
+            class X:
+                def __init__(self, a, b):
+                    self.a = a
+                    self.b = b
+                def update(self):
+                    self.a += 10
+        ''')
+        # Need to be able to run several commands, any of which could fail
+        #       needs to send out a nice stack trace in that case
+        # We often want to assert the result of a call OR attribute OR other
+        # data (type of attribute)
+        # x = X(5, 10)
+        # x.a == 5
+        # x.b == 10
+        # x.update()
+        # x.a == 15
+        
 
 if __name__ == '__main__':
     unittest.main(buffer=False)

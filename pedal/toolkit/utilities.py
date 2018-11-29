@@ -37,9 +37,10 @@ def function_prints():
     return False
 
 
-def find_function_calls(name):
-    ast = parse_program()
-    all_calls = ast.find_all('Call')
+def find_function_calls(name, root=None):
+    if root is None:
+        root = parse_program()
+    all_calls = root.find_all('Call')
     calls = []
     for a_call in all_calls:
         if a_call.func.ast_name == 'Attribute':
@@ -265,10 +266,12 @@ def ensure_assignment(variable_name, type=None, value=None, root=None):
     if root is None:
         root = parse_program()
     assignments = root.find_all("Assign")
+    potentials = []
     for assign in assignments:
         if assign.targets[0].ast_name != "Name":
             continue
         if assign.targets[0].id == variable_name:
+            potentials.append(assign)
             if type is None:
                 return assign
             elif (type == 'Bool' and 
@@ -281,7 +284,10 @@ def ensure_assignment(variable_name, type=None, value=None, root=None):
                 return assign
             elif assign.value.ast_name == type:
                 return assign
-    if type is None:
+    if potentials and potentials[0].value.ast_name not in ("Str", "Bool", "Num", "List", "Tuple"):
+        explain(("You needed to assign a literal value to {variable}, but you "
+                 "created an expression instead.").format(variable=variable_name))
+    elif type is None:
         explain(("You have not properly assigned anything to the variable "
             "{variable}.").format(variable=variable_name))
     else:

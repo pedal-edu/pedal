@@ -1,5 +1,5 @@
 from unittest.util import safe_repr
-from pedal import explain
+from pedal import explain, gently
 from pedal.sandbox.sandbox import _normalize_string
 
 class UnitTestedAssignment:
@@ -23,13 +23,33 @@ class UnitTestedAssignment:
             try:
                 getattr(self, method)()
             except UnitTestedAssignment.AssertionException as e:
-                explain(e.message)
+                gently(e.message)
                 all_passed = False
             self.tearDown()
         return all_passed
     def assertSimilarStrings(self, first, second, msg):
         if _normalize_string(first) != _normalize_string(second):
             return self.assertEqual(first, second, msg, exact=True)
+    def assertNotSimilarStrings(self, first, second, msg):
+        if _normalize_string(first) == _normalize_string(second):
+            return self.assertEqual(first, second, msg, exact=True)
+    def assertLessEqual(self, val1, val2, msg=None):
+        if not (val1 <= val2):
+            self.fail(msg, "{} is not less than or equal to {}".format(safe_repr(val1), safe_repr(val2)))
+    def assertGreaterEqual(self, val1, val2, msg=None):
+        if not (val1 >= val2):
+            self.fail(msg, "{} is not greater than or equal to {}".format(safe_repr(val1), safe_repr(val2)))
+    def assertNotEqual(self, val1, val2, msg=None, exact=False):
+        if val1 != val2:
+            return
+        if not exact and isinstance(val1, str) and isinstance(val2, str):
+            self.assertNotSimilarStrings(val1, val2, msg)
+        elif (not exact and isinstance(val1, (int, float)) and 
+              isinstance(val2, (int, float))):
+            if abs(val2-val1) > UnitTestedAssignment.DELTA:
+                return
+        standardMsg = "{} == {}".format(safe_repr(val1), safe_repr(val2))
+        self.fail(msg, standardMsg)
     def assertEqual(self, val1, val2, msg=None, exact=False):
         if val1 == val2:
             return
@@ -46,6 +66,12 @@ class UnitTestedAssignment:
         if member not in container:
             standardMsg = "{} not found in {}".format(safe_repr(member),
                                                       safe_repr(container))
+            self.fail(msg, standardMsg)
+    
+    def assertNotIn(self, member, container, msg=None):
+        if member in container:
+            standardMsg = "{} found in {}".format(safe_repr(member),
+                                                  safe_repr(container))
             self.fail(msg, standardMsg)
     
     def assertTrue(self, value, msg=None):

@@ -75,7 +75,7 @@ def set_maximum_score(number, cap=True, report=None):
     report['vpl']['score_maximum'] = number
     report['vpl']['score_cap'] = cap
 
-def resolve(report=None):
+def resolve(report=None, custom_success_message=None):
     if report is None:
         report = MAIN_REPORT
     print("<|--")
@@ -95,11 +95,14 @@ def resolve(report=None):
         last_section = section
     print("-Overall")
     if success:
-        print("Complete! Great job!")
+        if custom_success_message is None:
+            print("Complete! Great job!")
+        else:
+            print(custom_success_message)
     else:
         print("Incomplete")
     print("--|>")
-    print("Grade :=>>", round(score * report['vpl'].get('score_maximum', 1)))
+    print("Grade :=>>", round(score))
 
 class SectionalAssignment:
     max_points = 1
@@ -134,12 +137,12 @@ class SectionalAssignment:
 
 from pedal.plugins.vpl_unittest import UnitTestedAssignment
 
-def unittest_resolver(phases, report=None):
+def unittest_resolver(phases, report=None, custom_success_message=None):
     success = True
     for title, phase in phases:
         outcome = phase()._run_all_tests()
         if not outcome:
             break
         success = success and outcome
-    resolve()
+    resolve(custom_success_message=custom_success_message)
     
