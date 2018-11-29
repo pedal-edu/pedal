@@ -64,7 +64,8 @@ class TestCode(unittest.TestCase):
         self.assertEqual(student.exception_position, {'line': 1})
         
         self.assertEqual(student.format_exception(), 
-"""Traceback:
+"""
+Traceback:
   File "student.py", line 1
 TypeError: unsupported operand type(s) for +: 'int' and 'str'\n"""
         )
