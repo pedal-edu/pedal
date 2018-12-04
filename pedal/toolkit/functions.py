@@ -29,6 +29,16 @@ def get_arg_name(node):
     else:
         return name
 
+def match_function(name, root=None):
+    if root == None:
+        ast = parse_program()
+    else:
+        ast = root
+    defs = ast.find_all('FunctionDef')
+    for a_def in defs:
+        if a_def._name == name:
+            return a_def
+    return None
 
 def match_signature(name, length, *parameters, report=None, root=None):
     if root == None:
