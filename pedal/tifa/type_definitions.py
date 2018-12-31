@@ -164,6 +164,27 @@ class ClassType(Type):
     singular_name = 'a class'
     def __init__(self, name):
         self.name = name
+        self.fields = {}
+        self.scope_id = None
+    def add_attr(self, name, type):
+        self.fields[name] = type
+    def get_constructor(self):
+        i = InstanceType(self)
+        return FunctionType(name='__init__', returns=i)
+    def clone(self):
+        return ClassType(self.name)
+            
+class InstanceType(Type):
+    def __init__(self, parent):
+        self.parent = parent
+        self.fields = parent.fields
+    def __str__(self):
+        return "InstanceTypeOf"+str(self.parent.name)
+    def clone(self):
+        return InstanceType(self.parent)
+    def add_attr(self, name, type):
+        # TODO: What if this is a type change?
+        self.parent.add_attr(name, type)
         
 class NumType(Type):
     singular_name = 'a number'
@@ -364,6 +385,7 @@ except:
 TYPE_LOOKUPS = {
     FunctionType: ('function', FunctionType, 'FunctionType'),
     ClassType: ('class', ClassType, 'ClassType'),
+    InstanceType: ('instance', InstanceType, 'InstanceType'),
     NumType: ('num', int, float, complex, NumType, Number, 'NumType'),
     BoolType: ('bool', bool, BoolType, 'BoolType'),
     NoneType: ('None', None, NoneType, 'NoneType'),

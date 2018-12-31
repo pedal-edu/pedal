@@ -190,6 +190,14 @@ TypeError: unsupported operand type(s) for +: 'int' and 'str'\n"""
         student.run(student_code, _as_filename='student.py')
         self.assertTrue(student.coverage_report)
     
+    def test_unittest(self):
+        student_code = dedent('''
+            x = 0
+        ''')
+        student = Sandbox()
+        student.call('x')
+        self.assertIsNotNone(student.exception)
+    
     def test_multiline_statements(self):
         student_code = dedent('''
             class X:

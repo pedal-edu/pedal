@@ -1,4 +1,4 @@
-from pedal.sandbox.sandbox import Sandbox
+from pedal.sandbox.sandbox import Sandbox, run
 
 # Compatibility API
 '''

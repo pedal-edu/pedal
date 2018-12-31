@@ -1,7 +1,7 @@
 import unittest
 import os
 import sys
-from textwrap import dedent
+from textwrap import dedent, indent
 from pprint import pprint
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -218,6 +218,45 @@ unit_tests = {
     # Classes
     'class_definition':
         ['class A:\n    y = 0\n    def __init__(self, x):\n        self.x = 0\n        self.test()\n    def test(self):\n        self.x = 5\nA()', [], []],
+    'instance_assignment':
+        ['class A:\n pass\na = A()\na.b = 0\nb', [], ['Initialization Problem']],
+    'instance_assignment':
+        ['class A:\n pass\na = A()\na.b = 0\na.b', ['Initialization Problem'], []],
+    'constructor_assignment':
+        ['class A:\n def __init__(self):\n  self.x=0\na=A()\na.x+""', [], ['Incompatible types']],
+    'parameterized_constructor_assignment':
+        [dedent("""
+                class A:
+                    def __init__(self, f):
+                        self.y = f
+                a = A(7)
+                a.y + ''"""), [], ['Incompatible types']],
+    'complex_destructuring':
+        [dedent("""
+                class Player:
+                    def __init__(self):
+                        self.health = 100
+                class World:
+                    def __init__(self):
+                        self.p = Player()
+                w = World()
+                w.p.health, w.p = (5, Player())
+                """), ['Incompatible types'], []],
+    'class_type_promotion':
+        [dedent("""
+                class Enemy:
+                    def __init__(self):
+                        self.health = 0
+                class Player:
+                    def __init__(self):
+                        self.enemies = []
+                class World:
+                    def __init__(self):
+                        self.p = Player()
+                w = World()
+                w.p.enemies.append(Enemy())
+                w.p.enemies[0].health + 100
+                """), ['Incompatible types'], []],
     
     # Mutable Types
     'mutable_list_in_function':
@@ -493,6 +532,35 @@ class TestVariables(unittest.TestCase):
         tifa = pedal.tifa.Tifa()
         tifa.process_code('dict = {"T": 0}\nfor i in dict:\n    print(i, dict[i])')
         self.assertTrue(tifa.report['tifa']['success'])
+    
+    def test_classes(self):
+        program = 'class A:\n def __init__(self):\n  self.x=0\na=A()\na.x+""'
+        #print(indent(program, '    '))
+        tifa = pedal.tifa.Tifa()
+        tifa.process_code(program)
+        #self.assertTrue(tifa.report['tifa']['success'])
+        #pprint(tifa.report['tifa'])
+        #print(tifa.report['tifa']['top_level_variables']['a'].type.parent.fields)
+        if 'error' in tifa.report['tifa']:
+            raise tifa.report['tifa']['error']
+        
+        program = dedent("""
+                class Enemy:
+                    def __init__(self):
+                        self.health = 0
+                class Player:
+                    def __init__(self):
+                        self.enemies = []
+                class World:
+                    def __init__(self):
+                        self.p = Player()
+                w = World()
+                w.p.enemies.append(Enemy())
+                w.p.enemies[0].health + 100
+                """)
+        tifa = pedal.tifa.Tifa()
+        tifa.process_code(program)
+        pprint(tifa.report['tifa'])
 
 if __name__ == '__main__':
     unittest.main(buffer=False)

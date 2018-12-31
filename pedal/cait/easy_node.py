@@ -345,6 +345,9 @@ class EasyNode:
             ast_name = EasyNode.get_ast_name(ast_name.astNode)
         return EasyNode.get_ast_name(self.astNode).lower() == ast_name.lower()
 
+    def is_method(self):
+        # Check if I'm a FunctionDef, and if any of my parents are ClassDef.
+        pass
 
 AST_SINGLE_FUNCTIONS = ["ctx_name", "op_name"]
 AST_ARRAYS_OF_FUNCTIONS = ["ops_names"]

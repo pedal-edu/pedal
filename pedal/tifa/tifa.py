@@ -4,8 +4,8 @@ from pprint import pprint
 from pedal.report import Report, Feedback, MAIN_REPORT
 
 from pedal.tifa.type_definitions import (UnknownType, RecursedType,
-                                         FunctionType, ClassType, NumType,
-                                         NoneType, BoolType, TupleType,
+                                         FunctionType, ClassType, InstanceType,
+                                         NumType, NoneType, BoolType, TupleType,
                                          ListType, StrType, FileType,
                                          DictType, ModuleType, SetType,
                                          GeneratorType, DayType, TimeType,
@@ -67,7 +67,7 @@ class Tifa(ast.NodeVisitor):
         self.report['tifa']['issues'][issue].append(data)
         if data['message'] != False:
             self.report.attach(issue, category='Analyzer', tool='TIFA',
-                               section=self.report['source']['section'],
+                               section=self.report['source'].get('section', 0),
                                mistakes=data)
         
     def locate(self, node=None):
@@ -108,7 +108,7 @@ class Tifa(ast.NodeVisitor):
             self.report['tifa']['success'] = False
             self.report['tifa']['error'] = error
             self.report.attach('tifa_error', category='Analyzer', tool='TIFA',
-                               section=self.report['source']['section'],
+                               section=self.report['source'].get('section', 0),
                                mistakes={
                                 'message': "Could not parse code",
                                 'error': error
@@ -120,7 +120,7 @@ class Tifa(ast.NodeVisitor):
             self.report['tifa']['success'] = False
             self.report['tifa']['error'] = error
             self.report.attach('tifa_error', category='Analyzer', tool='TIFA',
-                               section=self.report['source']['section'],
+                               section=self.report['source'].get('section', 0),
                                mistakes={
                                 'message': "Could not process code",
                                 'error': error
@@ -174,9 +174,9 @@ class Tifa(ast.NodeVisitor):
         self.ast_id = 0;
         
         # Human readable names
-        self.path_names = ['*Module'];
-        self.scope_names = ['*Module'];
-        self.node_chain = [];
+        self.path_names = ['*Module']
+        self.scope_names = ['*Module']
+        self.node_chain = []
         
         # Complete record of all Names
         self.scope_chain = [self.scope_id]
@@ -186,6 +186,7 @@ class Tifa(ast.NodeVisitor):
         self.definition_chain = []
         self.path_parents = {}
         self.final_node = None
+        self.class_scopes = {}
         
     def find_variable_scope(self, name):
         '''
@@ -346,9 +347,9 @@ class Tifa(ast.NodeVisitor):
             None
         '''
         # Handle value
-        value_type = self.visit(node.value);
+        value_type = self.visit(node.value)
         # Handle targets
-        self._visit_nodes(node.targets);
+        self._visit_nodes(node.targets)
         
         # TODO: Properly handle assignments with subscripts
         def action(target, type):
@@ -360,6 +361,11 @@ class Tifa(ast.NodeVisitor):
                     action(elt, eltType)
             elif isinstance(target, ast.Subscript):
                 pass
+            elif isinstance(target, ast.Attribute):
+                left_hand_type = self.visit(target.value)
+                if isinstance(left_hand_type, InstanceType):
+                    left_hand_type.add_attr(target.attr, type)
+                # TODO: Otherwise we attempted to assign to a non-instance
                 # TODO: Handle minor type changes (e.g., appending to an inner list)
         self.walk_targets(node.targets, value_type, action)
         
@@ -437,6 +443,7 @@ class Tifa(ast.NodeVisitor):
     def visit_Call(self, node):
         # Handle func part (Name or Attribute)
         function_type = self.visit(node.func)
+        # TODO: Need to grab the actual type in some situations
         callee = self.identify_caller(node)
         
         # Handle args
@@ -456,16 +463,32 @@ class Tifa(ast.NodeVisitor):
                 return result
             else:
                 self.report_issue("Recursive Call", {"name": callee})
+        elif isinstance(function_type, ClassType):
+            constructor = function_type.get_constructor().definition
+            self.definition_chain.append(constructor)
+            result = constructor(self, constructor, callee, arguments, self.locate())
+            self.definition_chain.pop()
+            if '__init__' in function_type.fields:
+                initializer = function_type.fields['__init__']
+                if isinstance(initializer, FunctionType):
+                    self.definition_chain.append(initializer)
+                    initializer.definition(self, initializer, result, [result]+arguments, self.locate())
+                    self.definition_chain.pop()
+            return result
         else:
             self.report_issue("Not a function", {"name": callee})
         return UnknownType()
         
     def visit_ClassDef(self, node):
         class_name = node.name
-        self.store_variable(class_name, ClassType)
+        new_class_type = ClassType(class_name)
+        self.store_variable(class_name, new_class_type)
         # TODO: Define a new scope definition that executes the body
         # TODO: find __init__, execute that
-        self.generic_visit(node)
+        definitions_scope = self.scope_chain[:]
+        class_scope = Tifa.NewScope(self, definitions_scope, class_type=new_class_type)
+        with class_scope:
+            self.generic_visit(node)
     
     def visit_Compare(self, node):
         # Handle left and right
@@ -945,6 +968,10 @@ class Tifa(ast.NodeVisitor):
                 new_state.set = 'yes'
                 new_state.read = 'no'
             self.name_map[current_path][full_name] = new_state
+        # If this is a class scope...
+        current_scope = self.scope_chain[0]
+        if current_scope in self.class_scopes:
+            self.class_scopes[current_scope].add_attr(name, new_state.type)
         return new_state
     
     def load_variable(self, name, position=None):
@@ -1175,9 +1202,10 @@ class Tifa(ast.NodeVisitor):
             definitions_scope_chain (list of int): The scope chain of the 
                                                    definition
         '''
-        def __init__(self, tifa, definitions_scope_chain):
+        def __init__(self, tifa, definitions_scope_chain, class_type=None):
             self.tifa = tifa
             self.definitions_scope_chain = definitions_scope_chain
+            self.class_type = class_type
         def __enter__(self):
             # Manage scope
             self.old_scope = self.tifa.scope_chain[:]
@@ -1186,6 +1214,11 @@ class Tifa(ast.NodeVisitor):
             # And then enter its body's new scope
             self.tifa.scope_id += 1
             self.tifa.scope_chain.insert(0, self.tifa.scope_id)
+            # Register as class potentially
+            if self.class_type is not None:
+                self.class_type.scope_id = self.tifa.scope_id
+                self.tifa.class_scopes[self.tifa.scope_id] = self.class_type
+        
         def __exit__(self, type, value, traceback):
             # Finish up the scope
             self.tifa._finish_scope()
