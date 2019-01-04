@@ -560,7 +560,7 @@ class TestVariables(unittest.TestCase):
                 """)
         tifa = pedal.tifa.Tifa()
         tifa.process_code(program)
-        pprint(tifa.report['tifa'])
+        #pprint(tifa.report['tifa'])
 
 if __name__ == '__main__':
     unittest.main(buffer=False)
