@@ -1,14 +1,18 @@
-from pedal.report import MAIN_REPORT
+from pedal.report import Report, MAIN_REPORT
+from pedal.source import set_source
 from pedal.tifa import tifa_analysis
 from pedal.cait.stretchy_tree_matching import *
 
 
 class Cait:
-    def __init__(self, student_code=None, report=None):
-        if report is None and student_code is None:
+    def __init__(self, std_code=None, report=None):
+        if report is None and std_code is None:
             self.report = MAIN_REPORT
-        elif report is not None and student_code is not None:
-            raise Exception("You cannot attach new code to a report through CAIT.")
+        elif report is not None and std_code is not None:
+            raise Exception("New code should generate new reports")
+        elif std_code is not None:
+            self.report = Report()
+            set_source(std_code, self.report)
 
         if 'cait' not in self.report:
             self._initialize_report()
