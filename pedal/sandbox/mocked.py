@@ -68,6 +68,35 @@ _original_builtins = {
     'compile': _default_builtins.get('compile', _disabled_compile),
 }
 
+
+def _make_inputs(*input_list, **kwargs):
+    '''
+    Helper function for creating mock user input.
+    
+    Params:
+        input_list (list of str): The list of inputs to be returned
+    Returns:
+        function (str=>str): The mock input function that is returned, which
+                             will return the next element of input_list each
+                             time it is called.
+    '''
+    if 'repeat' in kwargs:
+        repeat = kwargs['repeat']
+    else:
+        repeat = None
+    generator = iter(input_list)
+    def mock_input(prompt=''):
+        print(prompt)
+        try:
+            return next(generator)
+        except StopIteration as SI:
+            if repeat is None:
+                # TODO: Make this a custom exception
+                raise SI
+            else:
+                return repeat
+    return mock_input
+
 _sys_modules = {}
 
 def _override_builtins(namespace, custom_builtins):
@@ -83,6 +112,20 @@ def _override_builtins(namespace, custom_builtins):
     namespace["__builtins__"] = _default_builtins.copy()
     for name, function in custom_builtins.items():
         namespace["__builtins__"][name] = function
+        
+        
+def create_module(module_name):
+    submodule_names = module_name.split(".")
+    modules = {}
+    root = types.ModuleType(submodule_names[0])
+    modules[submodule_names[0]] = root
+    reconstructed_path = submodule_names[0]
+    for submodule_name in submodule_names[1:]:
+        reconstructed_path += "." + submodule_name
+        new_submodule = types.ModuleType(reconstructed_path)
+        setattr(root, submodule_name, new_submodule)
+        modules[reconstructed_path] = new_submodule
+    return root, modules
 
 class MockPlt:
     '''
@@ -157,3 +200,5 @@ class MockPlt:
                     tight_layout=dummy, xkcd=dummy,
                     xlim=dummy, ylim=dummy,
                     xscale=dummy, yscale=dummy)
+
+                    
