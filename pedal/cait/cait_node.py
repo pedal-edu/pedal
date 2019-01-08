@@ -61,6 +61,8 @@ class CaitNode:
     def __str__(self):
         return ''.join([self.field, "\n", ast_str.dump(self.astNode)])
     
+    def __repr__(self):
+        return "{}({})".format(self.astNode.__class__.__name__, id(self))
 
     def numeric_logic_check(self, mag, expr):
         """

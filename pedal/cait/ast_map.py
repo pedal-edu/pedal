@@ -1,4 +1,3 @@
-from pedal.cait.ct_map import *
 from pedal.cait.cait_node import *
 
 
@@ -16,13 +15,12 @@ class AstSymbol:
 
 class AstMap:
     def __init__(self):
-        self.mappings = CtMap()
-        self.symbol_table = CtMap()
-        self.exp_table = CtMap()
-        self.func_table = CtMap()
+        self.mappings = {}
+        self.symbol_table = {}
+        self.exp_table = {}
+        self.func_table = {}
         self.conflict_keys = []
         self.match_root = None
-        self.match_lineno = -1
 
     def add_func_to_sym_table(self, ins_node, std_node):
         """
@@ -40,8 +38,8 @@ class AstMap:
         else:
             key = ins_node.astNode.name
         value = AstSymbol(std_node.astNode.name, std_node)
-        if self.func_table.has(key):
-            new_list = self.func_table.get(key)
+        if key in self.func_table:
+            new_list = self.func_table[key]
             new_list.append(value)
             if not (key in self.conflict_keys):
                 for other in new_list:
@@ -51,7 +49,7 @@ class AstMap:
         else:
             new_list = [value]
 
-        self.func_table.set(key, new_list)
+        self.func_table[key] = new_list
         return len(self.conflict_keys)
 
     def add_var_to_sym_table(self, ins_node, std_node):
@@ -70,8 +68,8 @@ class AstMap:
         else:
             key = ins_node.astNode.id
         value = AstSymbol(std_node.astNode.id, std_node)
-        if self.symbol_table.has(key):
-            new_list = self.symbol_table.get(key)
+        if key in self.symbol_table:
+            new_list = self.symbol_table[key]
             new_list.append(value)
             if not (key in self.conflict_keys):
                 for other in new_list:
@@ -81,7 +79,7 @@ class AstMap:
         else:
             new_list = [value]
 
-        self.symbol_table.set(key, new_list)
+        self.symbol_table[key] = new_list
         return len(self.conflict_keys)
 
     def add_exp_to_sym_table(self, ins_node, std_node):
@@ -94,7 +92,7 @@ class AstMap:
         """
         if not isinstance(std_node, CaitNode):
             raise TypeError
-        self.exp_table.set(ins_node.astNode.id, std_node)
+        self.exp_table[ins_node.astNode.id] = std_node
 
     def add_node_pairing(self, ins_node, std_node):
         """
@@ -105,7 +103,7 @@ class AstMap:
         """
         if not isinstance(std_node, CaitNode):
             raise TypeError
-        self.mappings.set(ins_node, std_node)
+        self.mappings[ins_node] = std_node
 
     def has_conflicts(self):
         """
@@ -136,24 +134,18 @@ class AstMap:
             raise TypeError
 
         # merge all mappings
-        other_map = other.mappings
-        for other_map_key, other_map_value in zip(other_map.keys, other_map.values):
-            self.mappings.set(other_map_key, other_map_value)
+        self.mappings.update(other.mappings)
 
         # merge all expressions
-        other_exp = other.exp_table
-        for other_expKey, other_expValue in zip(other_exp.keys, other_exp.values):
-            self.exp_table.set(other_expKey, other_expValue)
+        self.exp_table.update(other.exp_table)
 
         # merge all symbols
-        other_sym = other.symbol_table
-        for key, value in zip(other_sym.keys, other_sym.values):
+        for key, value in other.symbol_table.items():
             for sub_value in value:
                 self.add_var_to_sym_table(key, sub_value.astNode)
 
         # merge all functions
-        other_func = other.func_table
-        for key, value in zip(other_func.keys, other_func.values):
+        for key, value in other.func_table.items():
             for sub_value in value:
                 self.add_func_to_sym_table(key, sub_value.astNode)
 
@@ -164,11 +156,7 @@ class AstMap:
         :return: the associated student name node
         """
         if isinstance(ins_id, str):
-            # noinspection PyBroadException
-            try:
-                return self.symbol_table.get(ins_id)
-            except Exception:
-                return None
+            return self.symbol_table.get(ins_id)
 
     def get_exp_name(self, ins_id):
         """Return student subtree associated with ins_id
@@ -177,11 +165,16 @@ class AstMap:
         :return: the associated student subtree node
         """
         if isinstance(ins_id, str):
-            # noinspection PyBroadException
-            try:
-                return self.exp_table.get(ins_id)
-            except Exception:
-                return None
+            return self.exp_table.get(ins_id)
+    
+    @property
+    def match_lineno(self):
+        values = [v.lineno for v in self.mappings.values()
+                  if v.lineno is not None]
+        if not values:
+            return -1
+        else:
+            return min(values)
     
     def __getitem__(self, id):
         if id.startswith('__'):

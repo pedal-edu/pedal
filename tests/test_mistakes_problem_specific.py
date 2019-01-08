@@ -952,3 +952,5 @@ class SpecificMistakeTest(MistakeTest):
         self.to_source("print(item)")
         self.assertFalse(hard_code_8_5(), "false positive")
 
+if __name__ == '__main__':
+    unittest.main(buffer=False)

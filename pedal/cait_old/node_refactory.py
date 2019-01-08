@@ -1,5 +1,5 @@
 import ast
-import pedal.cait.ast_helpers as ast_str
+import pedal.cait_old.ast_helpers as ast_str
 from types import MethodType
 
 

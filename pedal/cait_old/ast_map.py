@@ -1,5 +1,5 @@
-from pedal.cait.ct_map import *
-from pedal.cait.easy_node import *
+from pedal.cait_old.ct_map import *
+from pedal.cait_old.easy_node import *
 
 
 class AstSymbol:

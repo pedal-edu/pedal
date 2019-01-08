@@ -1,7 +1,7 @@
 import ast
 import re
-from pedal.cait.ast_map import *
-from pedal.cait.easy_node import *
+from pedal.cait_old.ast_map import *
+from pedal.cait_old.easy_node import *
 
 
 def is_primitive(item):

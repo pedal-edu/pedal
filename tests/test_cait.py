@@ -53,9 +53,9 @@ class CaitTests(unittest.TestCase):
 
         if mapping:
             mapping = mapping[0]
-            self.assertTrue(mapping.mappings.keys[0].astNode ==
+            self.assertTrue(list(mapping.mappings.keys())[0].astNode ==
                             ins_name_node.astNode, "ins node match not correct in _var_ case")
-            self.assertTrue(mapping.mappings.values[0].astNode ==
+            self.assertTrue(list(mapping.mappings.values())[0].astNode ==
                             std_name_node.astNode, "std node match not correct in _var_ case")
             debug_print = False  # TODO: debug flag
             if debug_print:
@@ -84,8 +84,10 @@ class CaitTests(unittest.TestCase):
         if mapping:
             mapping = mapping[0]
             if mapping:
-                self.assertTrue(mapping.exp_table.keys[0] == "__exp__", "symbol match not found")
-                self.assertTrue(mapping.exp_table.values[0].astNode == std_for_loop.astNode,
+                keys = list(mapping.exp_table.keys())
+                values = list(mapping.exp_table.values())
+                self.assertTrue(keys[0] == "__exp__", "symbol match not found")
+                self.assertTrue(values[0].astNode == std_for_loop.astNode,
                                 "did not match to correct ast node")
             debug_print = False  # TODO: debug flag
             if debug_print:
@@ -126,9 +128,10 @@ class CaitTests(unittest.TestCase):
 
         self.assertTrue(matches, "did not match")
         table = matches[0].func_table
-        self.assertTrue(len(table.keys) == 1, "found {} keys, should have found 1".format(len(table.keys)))
-        self.assertTrue(table.keys[0] == '_my_func_',
-                        "expected function name to be '_my_func_', found {} instead".format(table.keys[0]))
+        keys = list(table.keys())
+        self.assertTrue(len(keys) == 1, "found {} keys, should have found 1".format(len(keys)))
+        self.assertTrue(keys[0] == '_my_func_',
+                        "expected function name to be '_my_func_', found {} instead".format(keys[0]))
 
     def test_wild_card_match(self):
         # tests whether Wild matches are stored correctly
@@ -149,8 +152,8 @@ class CaitTests(unittest.TestCase):
         self.assertTrue(mapping, "match not found")
         if mapping:
             mapping = mapping[0]
-            self.assertTrue(mapping.mappings.keys[0].astNode == ins_name_node.astNode and
-                            mapping.mappings.values[0].astNode == std_for_loop.astNode, "wild card didn't match")
+            self.assertTrue(list(mapping.mappings.keys())[0].astNode == ins_name_node.astNode and
+                            list(mapping.mappings.values())[0].astNode == std_for_loop.astNode, "wild card didn't match")
             debug_print = False  # TODO: debug flag
             if debug_print:
                 print(test_tree)
@@ -175,9 +178,9 @@ class CaitTests(unittest.TestCase):
         if mapping:
             mapping = mapping[0]
             if mapping:
-                self.assertTrue(mapping.mappings.keys[0].astNode == ins_num_node.astNode,
+                self.assertTrue(list(mapping.mappings.keys())[0].astNode == ins_num_node.astNode,
                                 "ins node not matched correctly")
-                self.assertTrue(mapping.mappings.values[0].astNode == std_num_node.astNode,
+                self.assertTrue(list(mapping.mappings.values())[0].astNode == std_num_node.astNode,
                                 "student node not matched correctly")
             debug_print = False  # TODO: debug print
             if debug_print:
@@ -208,13 +211,14 @@ class CaitTests(unittest.TestCase):
         if mappings_array:
             mappings = mappings_array[0]
             self.assertTrue(
-                mappings.mappings.size() == len(ins_ast.linear_tree) - 1,  # -1 is because expression subsumes load
-                "incorrect number of mappings found {} instead of {}".format(mappings.mappings.size(),
+                len(mappings.mappings) == len(ins_ast.linear_tree) - 1,  # -1 is because expression subsumes load
+                "incorrect number of mappings found {} instead of {}".format(len(mappings.mappings),
                                                                              len(ins_ast.linear_tree) - 1))
-            self.assertTrue(mappings.symbol_table.size() == 3 and
-                            len(mappings.symbol_table.values[0]) == 4 and
-                            len(mappings.symbol_table.values[1]) == 2 and
-                            len(mappings.symbol_table.values[2]) == 2, "inconsistent symbol matching")
+            values = list(mappings.symbol_table.values())
+            self.assertTrue(len(mappings.symbol_table) == 3 and
+                            len(values[0]) == 4 and
+                            len(values[1]) == 2 and
+                            len(values[2]) == 2, "inconsistent symbol matching")
             debug_print = False  # TODO: debug print
             if debug_print:
                 print(mappings)
@@ -242,12 +246,12 @@ class CaitTests(unittest.TestCase):
             mappings = mappings[0]
             if mappings:
                 self.assertTrue(len(mappings.conflict_keys) == 0, "Conflicting keys when there shouldn't be")
-                self.assertTrue(
-                    mappings.symbol_table.size() == 4 and
-                    len(mappings.symbol_table.values[0]) == 3 and
-                    len(mappings.symbol_table.values[1]) == 2 and
-                    len(mappings.symbol_table.values[2]) == 2 and
-                    len(mappings.symbol_table.values[3]) == 1, "inconsistent symbol matching")
+                values = list(mappings.symbol_table.values())
+                self.assertEqual(len(mappings.symbol_table), 4, "inconsistent symbol matching")
+                self.assertEqual(len(values[0]), 3, "inconsistent symbol matching")
+                self.assertEqual(len(values[1]), 2, "inconsistent symbol matching")
+                self.assertEqual(len(values[2]), 2, "inconsistent symbol matching")
+                self.assertEqual(len(values[3]), 1, "inconsistent symbol matching")
             debug_print = False
             if debug_print:
                 print(ins_ast.astNode)
@@ -559,7 +563,7 @@ class CaitTests(unittest.TestCase):
                                        "    pass", report=MAIN_REPORT)
         matches02 = matcher2.find_matches(student_code2)
         self.assertTrue(matches02, "Function reserved doesn't work with cutting")
-        self.assertTrue(len(matches02[0].func_table.keys) == 1, "Function node is ignored")
+        self.assertTrue(len(matches02[0].func_table.keys()) == 1, "Function node is ignored")
 
         student_code3 = "x"
         matcher3 = StretchyTreeMatcher("_x_", report=MAIN_REPORT)
@@ -573,7 +577,7 @@ class CaitTests(unittest.TestCase):
                                        "    print(_funky_)", report=MAIN_REPORT)
         matches02 = matcher2.find_matches(student_code2)
         self.assertTrue(matches02, "match not found, aborting test")
-        self.assertTrue(len(matches02[0].func_table.keys) == 1, "improper number of keys, aborting test")
+        self.assertTrue(len(matches02[0].func_table.keys()) == 1, "improper number of keys, aborting test")
         self.assertTrue(matches02[0]['_func_def_'], "Couldn't retrieve function name.")
         self.assertTrue(matches02[0]['_funky_'], "Couldn't retrieve variable name.")
 
@@ -585,7 +589,7 @@ class CaitTests(unittest.TestCase):
                                        "    pass", report=MAIN_REPORT)
         matches02 = matcher2.find_matches(student_code2)
         self.assertTrue(matches02, "match not found, aborting test")
-        self.assertTrue(len(matches02[0].func_table.keys) == 1, "improper number of keys, aborting test")
+        self.assertTrue(len(matches02[0].func_table.keys()) == 1, "improper number of keys, aborting test")
         self.assertTrue(matches02[0]['_func_def_'], "Couldn't retrieve function name.")
         self.assertTrue(matches02[0]['_funky_'], "Couldn't retrieve variable name.")
         

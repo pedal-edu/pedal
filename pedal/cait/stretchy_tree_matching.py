@@ -41,7 +41,7 @@ class StretchyTreeMatcher:
         elif isinstance(ast_node, CaitNode):
             self.root_node = ast_node
         else:
-            self.root_node = CaitNode(ast_node, "root")
+            self.root_node = CaitNode(ast_node, "none")
 
     def find_matches(self, ast_or_code, filename="__main__", check_meta=True):
         '''
@@ -59,13 +59,14 @@ class StretchyTreeMatcher:
         elif isinstance(ast_or_code, CaitNode):
             other_tree = ast_or_code
         else:
-            other_tree = CaitNode(ast_or_code, "root")
+            other_tree = CaitNode(ast_or_code, "none")
         explore_root = self.root_node
         if self.root_node is not None:
             while (len(explore_root.children) == 1 and
                    explore_root.ast_name in ["Expr", "Module"]):
                 explore_root = explore_root.children[0]
                 explore_root.field = "none"
+        self.STOP = False
         return self.any_node_match(explore_root, other_tree, 
                                    check_meta=check_meta)
 
@@ -84,10 +85,6 @@ class StretchyTreeMatcher:
         if matching:
             for match in matching:
                 match.match_root = std_node
-                if len(match.mappings.values) > 1:
-                    match.match_lineno = match.mappings.values[1].lineno
-                else:
-                    match.match_lineno = match.mappings.values[0].lineno
         else:
             matching = []
         #    return matching  # return it
@@ -98,10 +95,6 @@ class StretchyTreeMatcher:
             if matching_c:
                 for match in matching_c:
                     match.match_root = std_child
-                    if len(match.mappings.values) > 1:
-                        match.match_lineno = match.mappings.values[1].lineno
-                    else:
-                        match.match_lineno = match.mappings.values[0].lineno
                 # return matching
                 matching = matching + matching_c
         if len(matching) > 0:
@@ -240,15 +233,19 @@ class StretchyTreeMatcher:
 
     def deep_find_match_generic(self, ins_node, std_node, check_meta=True):
         """
-        This first uses shallow match to find a base map (match) from which to build off. The algorithm then tracks
-        all the possible mappings that match a given child node in the instructor AST, keeping track of which siblings
-        have been visited.
+        This first uses shallow match to find a base map (match) from which to
+        build off. The algorithm then tracks all the possible mappings that
+        match a given child node in the instructor AST, keeping track of which
+        siblings have been visited.
 
-        For each instructor child, when all children of the student node have been iterated through recursively, a
-        helper function is called. This helper function determines which possible children validly can extend the base
-        match to create a set of new base maps through use of the indicies of the sibilings.
+        For each instructor child, when all children of the student node have
+        been iterated through recursively, a helper function is called. This
+        helper function determines which possible children validly can extend
+        the base match to create a set of new base maps through use of the
+        indicies of the sibilings.
 
-        The process repeats itself until no matches can be grown or until each instructor child node has been visited
+        The process repeats itself until no matches can be grown or until each
+        instructor child node has been visited
 
         :param ins_node: Instructor ast to find in the student ast
         :param std_node: Student AST to search for the instructor ast in

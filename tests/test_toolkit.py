@@ -200,10 +200,8 @@ class TestUtilities(unittest.TestCase):
         self.assertEqual(e.message, "No errors reported.")
     
     def test_no_nested_function_definitions(self):
-        print("<<")
         with Execution('if True:\n  def x():\n    pass\n  x()') as e:
             self.assertFalse(no_nested_function_definitions())
-        print(">>")
         self.assertEqual(e.message, "You have defined a function inside of "
                          "another block. For instance, you may have placed it "
                          "inside another function definition, or inside of a "

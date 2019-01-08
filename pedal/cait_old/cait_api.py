@@ -1,7 +1,7 @@
 from pedal.report import Report, MAIN_REPORT
 from pedal.source import set_source
 from pedal.tifa import tifa_analysis
-from pedal.cait.stretchy_tree_matching import *
+from pedal.cait_old.stretchy_tree_matching import *
 
 
 class Cait:
