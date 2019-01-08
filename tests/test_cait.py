@@ -422,7 +422,7 @@ class CaitTests(unittest.TestCase):
     def test_def_use_error(self):
         set_source("fun = fun + 1")
         parse_program()
-        name_node = MAIN_REPORT["source"]["ast"].body[0].easy_node.target
+        name_node = MAIN_REPORT["source"]["ast"].body[0].cait_node.target
         self.assertTrue(def_use_error(name_node), "def_use error should have been found but wasn't")
         self.assertTrue(def_use_error("fun"), "def_use error should have been found but wasn't")
         self.assertFalse(def_use_error("gitax"), "variable doesn't exist")
@@ -430,7 +430,7 @@ class CaitTests(unittest.TestCase):
     def test_data_type(self):
         set_source("fun = 1 + 1")
         parse_program()
-        name_node = MAIN_REPORT["source"]["ast"].body[0].easy_node.target
+        name_node = MAIN_REPORT["source"]["ast"].body[0].cait_node.target
         self.assertTrue(data_type(name_node).is_equal(int), "Data type not successfully found from name node")
         self.assertTrue(data_type("fun").is_equal(int), "Data type not successfully found from str name")'''
 

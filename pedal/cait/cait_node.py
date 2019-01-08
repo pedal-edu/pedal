@@ -30,7 +30,7 @@ class CaitNode:
             self.linear_tree = lin_tree
 
         # reference to the easy node wrapping the ast_node
-        setattr(ast_node, 'easy_node', self)
+        setattr(ast_node, 'cait_node', self)
 
         tid_count = tid
 
@@ -265,11 +265,11 @@ class CaitNode:
                     field = None
                 if node_name == "Assign" and item != key:
                     if item == "target":
-                        return field[0].easy_node  # Get's the relevant ast node
+                        return field[0].cait_node  # Get's the relevant ast node
                     elif item == "targets" and isinstance(field, list):
                         easy_array = []
                         for node in field:
-                            easy_array.append(node.easy_node)
+                            easy_array.append(node.cait_node)
                         return easy_array
                     else:
                         return field
@@ -281,10 +281,10 @@ class CaitNode:
                         str_ops_list.append(type(op).__name__)
                         return str_ops_list
                 elif isinstance(field, ast.AST):
-                    return field.easy_node
+                    return field.cait_node
                 elif isinstance(field, list):
                     try:
-                        return [f.easy_node for f in field]
+                        return [f.cait_node for f in field]
                     except AttributeError:
                         # This can only happen in NonLocals, which has a list
                         # of raw strings in the `names` property
@@ -296,7 +296,7 @@ class CaitNode:
         """Finds all nodes defined by string node_type
 
         :param node_type: the string representing the "type" of node to look for
-        :return: a list of Ast Nodes (easy_nodes) of self that are of the specified type (including self if self
+        :return: a list of Ast Nodes (cait_nodes) of self that are of the specified type (including self if self
                     meets that criteria)
         """
         items = []
@@ -306,7 +306,7 @@ class CaitNode:
         func_name = 'visit_' + node_type
 
         def main_visit(self, node):
-            self.items.append(node.easy_node)
+            self.items.append(node.cait_node)
             return self.generic_visit(node)
 
         func_ref = main_visit

@@ -10,12 +10,11 @@ CaitReport:
     A collection of information from the latest CAIT run.
     
     Attrs:
-        ast: The CaitNode tree
-        matcher: An instance of 
+        ast: The CaitNode tree that was most recently parsed out.
+        cache[str:CaitNode]: A dictionary mapping student code (str) to
+            parsed representations.
         success: Whether there have been any errors so far.
         error: The exception that occurred, or None if no exception so far.
-        dirty: Whether or not the cache has been modified since it was last
-            built. This is used to prevent rerunning of the parser.
 '''
     
 def _parse_source(code, cait_report):
@@ -107,21 +106,25 @@ def parse_program(student_code=None, report=None):
 
 def expire_cait_cache(report=None):
     '''
-    Deletes the most recent CAIT run.
+    Deletes the most recent CAIT run and any cached CAIT parses.
+    
+    Args:
+        report (Report): The report to attach data to. Defaults to MAIN_REPORT.
     '''
     if report is None:
         report = MAIN_REPORT
     report['cait']['ast'] = None
-    report['cait']['dirty'] = True
-    
-
+    report['cait']['cache'] = {}
 
 def def_use_error(node, report=None):
-    """Checks if node is a name and has a def_use_error
-
-    :param node: student AST name node
-    :param report: The report object being used for analysis
-    :return: True if the given name has a def_use_error
+    """
+    Checks if node is a name and has a def_use_error
+    
+    Args:
+        node (str or AstNode or CaitNode): The Name node to look up.
+        report (Report): The report to attach data to. Defaults to MAIN_REPORT.
+    Returns:
+        True if the given name has a def_use_error
     """
     if report is None:
         report = MAIN_REPORT
@@ -147,10 +150,13 @@ def def_use_error(node, report=None):
 # noinspection PyBroadException
 def data_state(node, report=None):
     """
-
-    :param node: CaitNode/ast node whose type to retrieve
-    :param report: The report object to retrieve the information from
-    :return: the type of the object (Tifa type) or None if a type doesn't exist
+    Determines the Tifa State of the given node.
+    
+    Args:
+        node (str or AstNode or CaitNode): The Name node to look up in TIFA.
+        report (Report): The report to attach data to. Defaults to MAIN_REPORT.
+    Returns:
+        The State of the object (Tifa State) or None if it doesn't exist
     """
     if report is None:
         report = MAIN_REPORT
@@ -160,11 +166,26 @@ def data_state(node, report=None):
         node_id = node
     else:
         node_id = node.id
-    return report['tifa']["top_level_variables"][node_id]
+    try:
+        return report['tifa']["top_level_variables"][node_id]
+    except KeyError:
+        return None
 
 
 def data_type(node, report=None):
-    return data_state(node, report=report).type
+    '''
+    Looks up the type of the node using Tifa's analysis.
+    
+    Args:
+        node (str or AstNode or CaitNode): The Name node to look up in TIFA.
+        report (Report): The report to attach data to. Defaults to MAIN_REPORT.
+    Returns:
+        The type of the object (Tifa type) or None if a type doesn't exist
+    '''
+    state = data_state(node, report=report)
+    if state is not None:
+        return state.type
+    return None
 
 
 def find_match(pattern, student_code=None, report=None, cut=False):
@@ -214,19 +235,26 @@ def find_matches(pattern, student_code=None, report=None, cut=False):
 
 
 def find_submatches(pattern, student_code, is_mod=False):
+    '''
+    Incomplete.
+    '''
     return find_expr_sub_matches(pattern, student_code, is_mod)
 
 
 def find_expr_sub_matches(pattern, student_code, is_mod=False, report=None):
-    """Finds pattern in student_code
+    """
+    Incomplete.
+    
+    Finds pattern in student_code
     # TODO: Add code to make pattern accept CaitNodes
     # TODO: Make this function without so much meta knowledge
-    :param pattern: the expression to find (str that MUST evaluate to a Module node with a single child or an AstNode)
-    :param student_code: student subtree
-    :param as_expr: whether it's an expression match or not, experimental
-    :param is_mod: currently hack for multiline sub matches
-    :param cut: flag for cutting off root until a branch occurs
-    :return: a list of matches or False if no matches found
+    Args:
+        pattern: the expression to find (str that MUST evaluate to a Module node with a single child or an AstNode)
+        student_code: student subtree
+        as_expr: whether it's an expression match or not, experimental
+        is_mod (bool): currently hack for multiline sub matches
+    Returns:
+        a list of matches or False if no matches found
     """
     if report is None:
         report = MAIN_REPORT
