@@ -40,7 +40,8 @@ def missing_append_in_iteration():
     if matches:
         for match in matches:
             __expr__ = match["__expr__"]
-            submatch = find_expr_sub_matches("___.append(___)", __expr__)
+            submatch = __expr__.find_matches("___.append(___)")
+            #submatch = find_expr_sub_matches("___.append(___)", __expr__)
             if submatch:
                 return False
         explain("You must construct a list by appending values one at a time to the list."
@@ -52,18 +53,17 @@ def missing_append_in_iteration():
 def wrong_not_append_to_list():
     matches = find_matches("for ___ in ___:\n"
                            "    __expr__")
-    if matches:
-        for match in matches:
-            __expr__ = match["__expr__"]
-            submatches = find_expr_sub_matches("_target_.append(___)", __expr__)
-            if submatches:
-                for submatch in submatches:
-                    _target_ = submatch["_target_"][0].astNode
-                    if not data_state(_target_).was_type('list'):
-                        explain("Values can only be appended to a list. The variable <code>{0!s}</code> is either "
-                                "not initialized, not initialized correctly, or is confused with another variable."
-                                "<br><br><i>(app_not_list)<i></br>".format(_target_.id))
-                        return True
+    for match in matches:
+        __expr__ = match["__expr__"]
+        submatches = __expr__.find_matches("_target_.append(___)")
+        #submatches = find_expr_sub_matches("_target_.append(___)", __expr__)
+        for submatch in submatches:
+            _target_ = submatch["_target_"][0]
+            if not data_state(_target_).was_type('list'):
+                explain("Values can only be appended to a list. The variable <code>{0!s}</code> is either "
+                        "not initialized, not initialized correctly, or is confused with another variable."
+                        "<br><br><i>(app_not_list)<i></br>".format(_target_))
+                return True
     return False
 
 

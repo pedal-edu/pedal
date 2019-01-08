@@ -243,8 +243,6 @@ def find_submatches(pattern, student_code, is_mod=False):
 
 def find_expr_sub_matches(pattern, student_code, is_mod=False, report=None):
     """
-    Incomplete.
-    
     Finds pattern in student_code
     # TODO: Add code to make pattern accept CaitNodes
     # TODO: Make this function without so much meta knowledge

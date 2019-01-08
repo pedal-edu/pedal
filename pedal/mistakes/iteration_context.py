@@ -1040,15 +1040,14 @@ def wrong_append_problem_atl2_10_5():
                            "    _miles_ = _item_ * 0.62\n"
                            "    if __cond__:\n"
                            "        _list_.append(_var_)")
-    if matches:
-        for match in matches:
-            __cond__ = match["__cond__"]
-            _miles_ = match["_miles_"][0].astNode
-            _var_ = match["_var_"][0].astNode
-            if __cond__.has(_miles_) and __cond__.numeric_logic_check(1, "_miles_ > 10"):
-                if _var_.id != _miles_.id:
-                    explain('You are not appending the correct values<br><br><i>(app_alt2_10.5)<i></br>')
-                    return True
+    for match in matches:
+        __cond__ = match["__cond__"]
+        _miles_ = match["_miles_"][0]
+        _var_ = match["_var_"][0]
+        if __cond__.has(_miles_) and __cond__.numeric_logic_check(1, "_miles_ > 10"):
+            if _var_.id != _miles_.id:
+                explain('You are not appending the correct values<br><br><i>(app_alt2_10.5)<i></br>')
+                return True
     return False
 
 
@@ -1070,15 +1069,14 @@ def wrong_debug_10_6():
                            'plt.ylabel("Number of Earthquakes")\n'
                            'plt.title("Distribution of Depth in Miles of Earthquakes")\n'
                            'plt.show()')
-    if matches:
-        for match in matches:
-            _list1_ = match["_list1_"][0].astNode
-            _list2_ = match["_list2_"][0].astNode
-            master_list = ["quake", "quakes", "quakes_in_miles"]
-            if (_list1_.id in master_list and _list2_.id in master_list and
-               _list1_.id != "quakes_in_miles" and _list2_.id != "quakes" and
-               (_list1_.id != "quake" or _list2_.id != "quake")):
-                return False
+    for match in matches:
+        name1 = match["_list1_"][0].ast_node.id
+        name2 = match["_list2_"][0].ast_node.id
+        master_list = ["quake", "quakes", "quakes_in_miles"]
+        if (name1 in master_list and name2 in master_list and
+            name1 != "quakes_in_miles" and name2 != "quakes" and
+            (name1 != "quake" or name2 != "quake")):
+            return False
     explain('This is not one of the two changes needed. Undo the change and try again.<br><br><i>(debug_10.6)<i></br>')
     return True
 

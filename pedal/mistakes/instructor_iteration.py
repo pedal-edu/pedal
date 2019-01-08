@@ -124,10 +124,10 @@ def wrong_target_reassigned():
     for match in matches:
         __expr__ = match["__expr__"]
         _item_ = match["_item_"][0]
-        submatches = find_expr_sub_matches("{} = ___".format(_item_.id), __expr__)
+        submatches = find_expr_sub_matches("{} = ___".format(_item_), __expr__)
         if submatches:
             explain("The variable <code>{0!s}</code> has been reassigned. "
                     "The iteration variable shouldn't be reassigned"
-                    "<br><br><i>(target_reassign)<i></br>".format(_item_.id))
+                    "<br><br><i>(target_reassign)<i></br>".format(_item_))
             return True
     return False

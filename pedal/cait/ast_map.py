@@ -5,9 +5,14 @@ class AstSymbol:
     def __init__(self, _id="", _node=None):
         self.id = _id
         self.astNode = _node
+        self.ast_node = _node
+    
+    def __getattr__(self, item):
+        return getattr(self.astNode, item)
 
     def __str__(self):
-        return ''.join(["id = ", self.id.__str__(), ", astNode = ", type(self.astNode).__name__])
+        #return ''.join(["id = ", self.id.__str__(), ", astNode = ", type(self.astNode).__name__])
+        return self.id
 
     def __repr__(self):
         return ''.join(["id = ", self.id.__str__(), ", astNode = ", type(self.astNode).__name__])

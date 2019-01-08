@@ -9,4 +9,10 @@ DESCRIPTION = '''
 REQUIRES = ['Source']
 OPTIONALS = ['TIFA']
 
-__all__ = ['NAME', 'SHORT_DESCRIPTION', 'DESCRIPTION', 'REQUIRES', 'OPTIONALS']
+#__all__ = ['NAME', 'SHORT_DESCRIPTION', 'DESCRIPTION', 'REQUIRES', 'OPTIONALS']
+
+from pedal.cait.cait_api import (find_match, find_matches,
+                                 parse_program,
+                                 find_submatches, find_expr_sub_matches,
+                                 def_use_error, data_state, data_type,
+                                 expire_cait_cache)

@@ -1,7 +1,9 @@
 import ast
-import pedal.cait.ast_helpers as ast_str
+#import pedal.cait.ast_helpers as ast_str
+from pedal.cait.ast_helpers import dump
 from types import MethodType
 from pedal.report import Report, Feedback, MAIN_REPORT
+#from pedal.cait.stretchy_tree_matching import StretchyTreeMatcher
 
 class CaitNode:
     """
@@ -68,7 +70,7 @@ class CaitNode:
                     tid_count = len(self.linear_tree) - 1
 
     def __str__(self):
-        return ''.join([self.field, "\n", ast_str.dump(self.astNode)])
+        return ''.join([self.field, "\n", dump(self.astNode)])
 
     def numeric_logic_check(self, mag, expr):
         """
@@ -299,6 +301,21 @@ class CaitNode:
                         return field
                 else:
                     return field
+    
+    def find_matches(self, pattern, is_mod=False):
+        '''
+        Retrieves any patterns that match against this CaitNode. Expected to be
+        used for subpattern matching.
+        '''
+        # Avoid circular import
+        import pedal.cait.stretchy_tree_matching as stm
+        is_node = isinstance(pattern, CaitNode)
+        if not isinstance(pattern, str) and not is_node:
+            raise TypeError("pattern expected str or CaitNode, found {0}".format(type(pattern)))
+        matcher = stm.StretchyTreeMatcher(pattern, report=self.report)
+        if (not is_node and not is_mod) and len(matcher.root_node.children) != 1:
+            raise ValueError("pattern does not evaluate to a singular statement")
+        return matcher.find_matches(self, check_meta=False)
 
     def find_all(self, node_type):
         """Finds all nodes defined by string node_type

@@ -11,8 +11,11 @@ A package for analyzing student code.
 #   resolver
 #   etc.
 
-from pedal.cait.cait_api import (parse_program, expire_cait_cache,
-                                 find_match, find_matches)
+from pedal.cait import (find_match, find_matches,
+                        parse_program,
+                        find_submatches, find_expr_sub_matches,
+                        def_use_error, data_state, data_type,
+                        expire_cait_cache)
 from pedal.report.imperative import (suppress, explain, compliment,
                                      give_partial, gently, set_success)
 from pedal.sandbox.sandbox import run, reset
