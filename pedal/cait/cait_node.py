@@ -350,7 +350,17 @@ class CaitNode:
 
     def is_method(self):
         # Check if I'm a FunctionDef, and if any of my parents are ClassDef.
-        pass
+        if self.ast_name != "FunctionDef":
+            return False
+        current = self.parent
+        while current is not None:
+            if current.ast_name == "ClassDef":
+                return True
+            # Don't treat closures as methods
+            elif current.ast_name == "FunctionDef":
+                return False
+            current = current.parent
+        return False
 
 AST_SINGLE_FUNCTIONS = ["ctx_name", "op_name"]
 AST_ARRAYS_OF_FUNCTIONS = ["ops_names"]

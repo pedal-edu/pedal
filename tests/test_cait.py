@@ -587,6 +587,18 @@ class CaitTests(unittest.TestCase):
         self.assertTrue(len(matches02[0].func_table.keys()) == 1, "improper number of keys, aborting test")
         self.assertTrue(matches02[0]['_func_def_'], "Couldn't retrieve function name.")
         self.assertTrue(matches02[0]['_funky_'], "Couldn't retrieve variable name.")
+    
+    def test_cait_node_is_method(self):
+        set_source("class Dog:\n def bark(self):\n  pass\ndef dogs_bark(alod):\n pass")
+        ast = parse_program()
+        functions = ast.find_all('FunctionDef')
+        self.assertTrue(functions[0].is_method())
+        self.assertFalse(functions[1].is_method())
+        classes = ast.find_all('ClassDef')
+        self.assertFalse(classes[0].is_method())
+        passes = ast.find_all('Pass')
+        self.assertFalse(passes[0].is_method())
+        self.assertFalse(passes[1].is_method())
         
 if __name__ == '__main__':
     unittest.main(buffer=False)
