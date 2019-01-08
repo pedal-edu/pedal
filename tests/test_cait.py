@@ -7,7 +7,7 @@ import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from pedal.cait.stretchy_tree_matching import *
-from pedal.cait.easy_node import *
+from pedal.cait.cait_node import *
 from pedal.source import set_source
 from pedal.tifa import tifa_analysis
 from pedal.report import MAIN_REPORT, clear_report
@@ -24,9 +24,9 @@ print(_accu_)
 
 def parse_code(student_code):
     """
-    parses code and returns a new EasyNode that is the root of the student
+    parses code and returns a new CaitNode that is the root of the student
     """
-    return EasyNode(ast.parse(student_code))
+    return CaitNode(ast.parse(student_code))
 
 
 class CaitTests(unittest.TestCase):
@@ -37,10 +37,10 @@ class CaitTests(unittest.TestCase):
     def test_var_match(self):
         # print("TESTING VAR MATCH")
         # tests whether variables are stored correctly
-        test_tree = StretchyTreeMatcher("_accu_ = 0")
+        test_tree = StretchyTreeMatcher("_accu_ = 0", report=MAIN_REPORT)
 
         # extracting instrutor name node
-        ins_ast = test_tree.rootNode
+        ins_ast = test_tree.root_node
         ins_name_node = ins_ast.children[0].children[0]
 
         # creating student code
@@ -67,10 +67,10 @@ class CaitTests(unittest.TestCase):
     def test_expression_match(self):
         # tests whether expressions are stored correctly
         # print("TESTING EXPRESSION MATCH")
-        test_tree = StretchyTreeMatcher("__exp__ = 0")
+        test_tree = StretchyTreeMatcher("__exp__ = 0", report=MAIN_REPORT)
 
         # extracting instructor name node
-        ins_ast = test_tree.rootNode
+        ins_ast = test_tree.root_node
         ins_name_node = ins_ast.children[0].children[0]
 
         # creating student code
@@ -98,7 +98,7 @@ class CaitTests(unittest.TestCase):
                          "    if item > 5:\n"
                          "        item_sum = item_sum + item")
         matcher1 = StretchyTreeMatcher("for ___ in ___:\n"
-                                       "    __expr__")
+                                       "    __expr__", report=MAIN_REPORT)
         matches02 = matcher1.find_matches(student_code2)
         self.assertTrue(matches02, "Expression match doesn't match to subtree")
 
@@ -107,7 +107,7 @@ class CaitTests(unittest.TestCase):
         student_code1 = "print(report['station'])"
         student_code2 = "print(report['station']['city'])"
 
-        matcher1 = StretchyTreeMatcher("___[__expr__]")
+        matcher1 = StretchyTreeMatcher("___[__expr__]", report=MAIN_REPORT)
 
         matches01 = matcher1.find_matches(student_code1)
         matches02 = matcher1.find_matches(student_code2)
@@ -121,7 +121,7 @@ class CaitTests(unittest.TestCase):
         std_code = ("def funky(forum):\n"
                     "    pass")  # matches
 
-        matcher = StretchyTreeMatcher(ins_code)
+        matcher = StretchyTreeMatcher(ins_code, report=MAIN_REPORT)
         matches = matcher.find_matches(std_code)
 
         self.assertTrue(matches, "did not match")
@@ -133,10 +133,10 @@ class CaitTests(unittest.TestCase):
     def test_wild_card_match(self):
         # tests whether Wild matches are stored correctly
         # print("TESTING WILD CARD MATCH")
-        test_tree = StretchyTreeMatcher("___ = 0")
+        test_tree = StretchyTreeMatcher("___ = 0", report=MAIN_REPORT)
 
         # extracting instrutor name node
-        ins_ast = test_tree.rootNode
+        ins_ast = test_tree.root_node
         ins_name_node = ins_ast.children[0].children[0]
 
         # creating student code
@@ -160,8 +160,8 @@ class CaitTests(unittest.TestCase):
 
     def test_match_all(self):
         # print("TESTING MATCH ALL")
-        test_tree = StretchyTreeMatcher("___ = 0")
-        ins_ast = test_tree.rootNode
+        test_tree = StretchyTreeMatcher("___ = 0", report=MAIN_REPORT)
+        ins_ast = test_tree.root_node
         ins_num_node = ins_ast.children[0].children[1]
 
         # creating student code
@@ -199,8 +199,8 @@ class CaitTests(unittest.TestCase):
                    'print(_accu_)'
         # var std_code = "_sum = 12 + 13"
         # var ins_code = "_accu_ = 12 + 11"
-        ins_tree = StretchyTreeMatcher(ins_code)
-        ins_ast = ins_tree.rootNode
+        ins_tree = StretchyTreeMatcher(ins_code, report=MAIN_REPORT)
+        ins_ast = ins_tree.root_node
         std_ast = parse_code(std_code)
 
         mappings_array = ins_tree.find_matches(std_ast.astNode)
@@ -232,8 +232,8 @@ class CaitTests(unittest.TestCase):
                    "for _item_ in _iList_:\n" \
                    "    _accu_ = _accu2_ + _item_\n" \
                    "print(_accu_)"
-        ins_tree = StretchyTreeMatcher(ins_code)
-        ins_ast = ins_tree.rootNode
+        ins_tree = StretchyTreeMatcher(ins_code, report=MAIN_REPORT)
+        ins_ast = ins_tree.root_node
         std_ast = parse_code(std_code)
 
         mappings = ins_tree.find_matches(std_ast.astNode)
@@ -268,8 +268,8 @@ class CaitTests(unittest.TestCase):
                    "for _item_ in _iList_:\n" \
                    "    _accu_ = _accu_ + _item_\n" \
                    "print(_accu_)"
-        ins_tree = StretchyTreeMatcher(ins_code)
-        ins_ast = ins_tree.rootNode
+        ins_tree = StretchyTreeMatcher(ins_code, report=MAIN_REPORT)
+        ins_ast = ins_tree.root_node
         std_ast = parse_code(std_code)
 
         mappings = ins_tree.find_matches(std_ast.astNode)
@@ -295,8 +295,8 @@ class CaitTests(unittest.TestCase):
                    "for _item_ in _iList_:\n" \
                    "    _accu_ = _accu_ + _item_\n" \
                    "print(_accu_)"
-        ins_tree = StretchyTreeMatcher(ins_code)
-        ins_ast = ins_tree.rootNode
+        ins_tree = StretchyTreeMatcher(ins_code, report=MAIN_REPORT)
+        ins_ast = ins_tree.root_node
         std_ast = parse_code(std_code)
         mappings = ins_tree.find_matches(std_ast.astNode)
         self.assertFalse(mappings, "found match when match shouldn't be found")
@@ -322,8 +322,8 @@ class CaitTests(unittest.TestCase):
                    "for _item_ in _iList_:\n" \
                    "    _accu_ = _accu_ + __exp__\n" \
                    "print(_accu_)"
-        ins_tree = StretchyTreeMatcher(ins_code)
-        ins_ast = ins_tree.rootNode
+        ins_tree = StretchyTreeMatcher(ins_code, report=MAIN_REPORT)
+        ins_ast = ins_tree.root_node
         std_ast = parse_code(std_code)
         mappings = ins_tree.find_matches(std_ast.astNode)
         self.assertFalse(len(mappings) > 1, "too many matches found")
@@ -347,8 +347,8 @@ class CaitTests(unittest.TestCase):
                    "_iList_ = __listInit__\n" \
                    "for _item_ in _iList_:\n" \
                    "    _accu_ = _accu_ + __exp__"
-        ins_tree = StretchyTreeMatcher(ins_code)
-        ins_ast = ins_tree.rootNode
+        ins_tree = StretchyTreeMatcher(ins_code, report=MAIN_REPORT)
+        ins_ast = ins_tree.root_node
         std_ast = parse_code(std_code)
         mappings = ins_tree.find_matches(std_ast.astNode)
         self.assertTrue(len(mappings) >= 2, "Not enough mappings found")
@@ -372,8 +372,8 @@ class CaitTests(unittest.TestCase):
                    'plt.show()'
         ins_code = "for _item_ in _item_:\n" \
                    "    pass"
-        ins_tree = StretchyTreeMatcher(ins_code)
-        ins_ast = ins_tree.rootNode
+        ins_tree = StretchyTreeMatcher(ins_code, report=MAIN_REPORT)
+        ins_ast = ins_tree.root_node
         std_ast = parse_code(std_code)
         mappings = ins_tree.find_matches(std_ast.astNode)
         self.assertTrue(mappings, "mapping should have been found")
@@ -393,8 +393,8 @@ class CaitTests(unittest.TestCase):
             '    steps = steps + 1'])
         ins_code = "for ___ in ___:\n" \
                    "    ___ = _sum_ + ___"
-        ins_tree = StretchyTreeMatcher(ins_code)
-        ins_ast = ins_tree.rootNode
+        ins_tree = StretchyTreeMatcher(ins_code, report=MAIN_REPORT)
+        ins_ast = ins_tree.root_node
         std_ast = parse_code(std_code)
         mappings = ins_tree.find_matches(std_ast.astNode)
         self.assertTrue(mappings, "mapping should have been found")
@@ -506,8 +506,8 @@ class CaitTests(unittest.TestCase):
 
     def test_matches_in_matches(self):
         matcher1 = StretchyTreeMatcher("if __expr__:\n"
-                                       "    pass")
-        matcher2 = StretchyTreeMatcher("0.4*_item_")
+                                       "    pass", report=MAIN_REPORT)
+        matcher2 = StretchyTreeMatcher("0.4*_item_", report=MAIN_REPORT)
         student_code = ("if 0.4*item < 40:\n"
                         "    pass")
         self.assertTrue(matcher2.find_matches(student_code, check_meta=False))
@@ -526,14 +526,14 @@ class CaitTests(unittest.TestCase):
         student_code = ("item = 0\n"
                         "item2 = 1")
         matcher1 = StretchyTreeMatcher("_item_ = 0\n"
-                                       "_item_ = 1")
+                                       "_item_ = 1", report=MAIN_REPORT)
         match = matcher1.find_matches(student_code)
         self.assertFalse(match, "One student variable is mapping to multiple instructor variables")
 
         student_code = ("item = 0\n"
                         "item = 1")
         matcher2 = StretchyTreeMatcher("_item_ = 0\n"
-                                       "_item2_ = 1")
+                                       "_item2_ = 1", report=MAIN_REPORT)
         match2 = matcher2.find_matches(student_code)
         self.assertTrue(match2, "One instructor variable should be able to map to multiple student variables, but isn't")
 
@@ -545,8 +545,8 @@ class CaitTests(unittest.TestCase):
                          '        maxtemp_list.append(report["Data"]["Temperature"]["Max Temp"])\n'
                          '        mintemp_list.append(report["Data"]["Temperature"]["Min Temp"])')
 
-        student_parse = EasyNode(ast.parse(student_code1))
-        matcher1 = StretchyTreeMatcher("'Blacksburg'")
+        student_parse = CaitNode(ast.parse(student_code1))
+        matcher1 = StretchyTreeMatcher("'Blacksburg'", report=MAIN_REPORT)
         res = find_expr_sub_matches("'Blacksburg'", student_parse)
         self.assertTrue(res, "Cutting broke sub-matching")
 
@@ -556,13 +556,13 @@ class CaitTests(unittest.TestCase):
         student_code2 = ("def my_func(funky):\n"
                          "    print(funky)")
         matcher2 = StretchyTreeMatcher("def _func_def_():\n"
-                                       "    pass")
+                                       "    pass", report=MAIN_REPORT)
         matches02 = matcher2.find_matches(student_code2)
         self.assertTrue(matches02, "Function reserved doesn't work with cutting")
         self.assertTrue(len(matches02[0].func_table.keys) == 1, "Function node is ignored")
 
         student_code3 = "x"
-        matcher3 = StretchyTreeMatcher("_x_")
+        matcher3 = StretchyTreeMatcher("_x_", report=MAIN_REPORT)
         matches03 = matcher3.find_matches(student_code3)
         self.assertTrue(matches03, "Function reserved doesn't work with cutting")
 
@@ -570,7 +570,7 @@ class CaitTests(unittest.TestCase):
         student_code2 = ("def my_func(funky):\n"
                          "    print(funky)")
         matcher2 = StretchyTreeMatcher("def _func_def_():\n"
-                                       "    print(_funky_)")
+                                       "    print(_funky_)", report=MAIN_REPORT)
         matches02 = matcher2.find_matches(student_code2)
         self.assertTrue(matches02, "match not found, aborting test")
         self.assertTrue(len(matches02[0].func_table.keys) == 1, "improper number of keys, aborting test")
@@ -582,9 +582,12 @@ class CaitTests(unittest.TestCase):
         student_code2 = ("def my_func(funky):\n"
                          "    print(funky)")
         matcher2 = StretchyTreeMatcher("def _func_def_(_funky_):\n"
-                                       "    pass")
+                                       "    pass", report=MAIN_REPORT)
         matches02 = matcher2.find_matches(student_code2)
         self.assertTrue(matches02, "match not found, aborting test")
         self.assertTrue(len(matches02[0].func_table.keys) == 1, "improper number of keys, aborting test")
         self.assertTrue(matches02[0]['_func_def_'], "Couldn't retrieve function name.")
         self.assertTrue(matches02[0]['_funky_'], "Couldn't retrieve variable name.")
+        
+if __name__ == '__main__':
+    unittest.main(buffer=False)

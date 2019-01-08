@@ -3,7 +3,7 @@ import pedal.cait.ast_helpers as ast_str
 from types import MethodType
 from pedal.report import Report, Feedback, MAIN_REPORT
 
-class EasyNode:
+class CaitNode:
     """
     A wrapper class for AST nodes. Linearizes access to the children of the ast
     node and saves the field this AST node
@@ -51,7 +51,7 @@ class EasyNode:
             # (e.g. a load function) instead of a child node
             for sub_value in value:
                 if isinstance(sub_value, ast.AST):
-                    new_child = EasyNode(sub_value, my_field=field, 
+                    new_child = CaitNode(sub_value, my_field=field, 
                                          tid=tid_count + 1, 
                                          lin_tree=self.linear_tree,
                                          ancestor=self)
@@ -60,6 +60,7 @@ class EasyNode:
 
     def __str__(self):
         return ''.join([self.field, "\n", ast_str.dump(self.astNode)])
+    
 
     def numeric_logic_check(self, mag, expr):
         """
@@ -156,7 +157,7 @@ class EasyNode:
                     results_c = new_result
             return results_c
         try:
-            ins_expr = EasyNode(ast.parse(expr)).body[0].value
+            ins_expr = CaitNode(ast.parse(expr)).body[0].value
             ins_nums = ins_expr.find_all("Num")
             std_nums = self.find_all("Num")
             test_nums = []
@@ -216,7 +217,7 @@ class EasyNode:
     def get_child(self, node):
         """
 
-        :param node: a non-EasyNode ast node
+        :param node: a non-CaitNode ast node
         :return: the corresponding easy node to the child
         """
         if isinstance(node, ast.AST):
@@ -236,7 +237,7 @@ class EasyNode:
         '''
         Non-ast node attributes based on ast_node attributes
         '''
-        node_name = EasyNode.get_ast_name(self.astNode)
+        node_name = CaitNode.get_ast_name(self.astNode)
         if node_name == "Assign" and key == "target":
             key = "targets"
         if item in AST_SINGLE_FUNCTIONS:
@@ -342,8 +343,8 @@ class EasyNode:
     
     def is_ast(self, ast_name):
         if not isinstance(ast_name, str):
-            ast_name = EasyNode.get_ast_name(ast_name.astNode)
-        return EasyNode.get_ast_name(self.astNode).lower() == ast_name.lower()
+            ast_name = CaitNode.get_ast_name(ast_name.astNode)
+        return CaitNode.get_ast_name(self.astNode).lower() == ast_name.lower()
 
     def is_method(self):
         # Check if I'm a FunctionDef, and if any of my parents are ClassDef.

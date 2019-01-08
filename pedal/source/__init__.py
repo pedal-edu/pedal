@@ -63,7 +63,7 @@ def _check_issues(code, report):
                       mistakes="Source code file is blank.")
         report['source']['success'] = False
     try:
-        parsed = ast.parse(code)
+        parsed = ast.parse(code, report['source']['filename'])
         report['source']['ast'] = parsed
     except SyntaxError as e:
         report.attach('Syntax error', category=CATEGORY, tool=NAME,
@@ -127,7 +127,7 @@ def verify_section(report=None):
         return False
     code = report['source']['code']
     try:
-        parsed = ast.parse(code)
+        parsed = ast.parse(code, report['source']['filename'])
         report['source']['ast'] = parsed
     except SyntaxError as e:
         report.attach('Syntax error', category=CATEGORY, tool=NAME,

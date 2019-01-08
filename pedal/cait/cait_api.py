@@ -1,53 +1,120 @@
 from pedal.report import MAIN_REPORT
-from pedal.tifa import tifa_analysis
 from pedal.cait.stretchy_tree_matching import *
+import ast
 
-
-class Cait:
-    def __init__(self, student_code=None, report=None):
-        if report is None and student_code is None:
-            self.report = MAIN_REPORT
-        elif report is not None and student_code is not None:
-            raise Exception("You cannot attach new code to a report through CAIT.")
-
-        if 'cait' not in self.report:
-            self._initialize_report()
-
-    def _initialize_report(self):
-        """
-        Initialize a successful report with possible set of issues.
-        """
-        if self.report["source"]["success"]:
-            std_ast = self.report['source']['ast']
-            self.report['cait'] = {}
-            self.report['cait']['std_ast'] = EasyNode(std_ast)
-            tifa_analysis(report=self.report)
+class CaitException(Exception):
+    pass
+    
+'''
+CaitReport:
+    A collection of information from the latest CAIT run.
+    
+    Attrs:
+        ast: The CaitNode tree
+        matcher: An instance of 
+        success: Whether there have been any errors so far.
+        error: The exception that occurred, or None if no exception so far.
+        dirty: Whether or not the cache has been modified since it was last
+            built. This is used to prevent rerunning of the parser.
+'''
+    
+def _parse_source(code, cait_report):
+    '''
+    Parses the given code and returns its Cait representation. If the parse was
+    unsuccessful, it attaches the error to the report.
+    
+    Args:
+        code (str): A string of Python code.
+        cait_report (dict): A Cait Report to store information in.
+    Returns:
+        AstNode: The parsed AST reprensetation, or None
+    '''
+    try:
+        parsed = ast.parse(code)
+    except SyntaxError as e:
+        cait_report['success'] = False
+        cait_report['error'] = e
+        return
+    return parsed
+    
+def _load_cait(student_code, report):
+    '''
+    Retrieves the current report for CAIT. If there is no CAIT report, it will
+    generate one. If source code is given, that will be used instead of the
+    report's source code.
+    
+    Args:
+        student_code (str): The code to parse into the a CaitNode tree. If
+            None, then it will use the code in the report's Source tool.
+        report (Report): The report to attach data to.
+        force_reparse (bool): Whether or not to use any Cait data in the cache.
+    
+    Returns:
+        dict: Returns the Cait Report
+    '''
+    if 'cait' not in report:
+        report['cait'] = {'success': True, 'error': None,
+                          'ast': None, 'cache': {}}
+    cait = report['cait']
+    if student_code is not None:
+        if student_code in cait['cache']:
+            cait['ast'] = cait['cache'][student_code]
+            return cait
+        else:
+            student_ast = _parse_source(student_code, cait)
+    elif report['source']['success']:
+        student_code = report['source']['code']
+        if student_code in cait['cache']:
+            cait['ast'] = cait['cache'][student_code]
+            return cait
+        else:
+            student_ast = report['source']['ast']
+    else:
+        report.attach("No source code found", tool='cait',
+                      section=report['source']['section'],
+                      category='analyzer')
+        cait['success'] = False
+        return cait
+    cait['ast'] = cait['cache'][student_code] = CaitNode(student_ast)
+    return cait
+    
+def require_tifa(self):
+    '''
+    Confirms that TIFA was run successfully, otherwise raises a
+    CaitException.
+    '''
+    if not self.report['tifa']['success']:
+        raise CaitException("TIFA was not run prior to CAIT.")
 
 
 # noinspection PyBroadException
-def parse_program():
-    """Parses student code (attempts to retrieve from TIFA?)
-
-    :return: student AST
+def parse_program(student_code=None, report=None):
     """
-    try:
-        std_easy = MAIN_REPORT['cait']['std_ast']
-    except KeyError:
-        if MAIN_REPORT["source"]["success"]:
-            std_ast = MAIN_REPORT['source']['ast']
-            MAIN_REPORT['cait']['matcher'] = None
-        else:
-            MAIN_REPORT.attach("No source code found", tool='cait', 
-                               section=MAIN_REPORT['source']['section'],
-                               category='analyzer')
-            std_ast = ast.parse('')
-        MAIN_REPORT['cait']['std_ast'] = EasyNode(std_ast)
-        std_easy = MAIN_REPORT['cait']['std_ast']
-    return std_easy
+    Parses student code and produces a CAIT representation.
+    
+    Args:
+        student_code (str): The student source code to parse. If None, defaults
+            to the code within the Source tool of the given Report.
+        report (Report): The report to attach data to. Defaults to MAIN_REPORT.
 
-def expire_cait_cache():
-    if 'std_ast' in MAIN_REPORT['cait']:
-        del MAIN_REPORT['cait']['std_ast']
+    Returns:
+        CaitNode: A CAIT-enhanced representation of the root Node.
+    """
+    if report is None:
+        report = MAIN_REPORT
+    cait_report = _load_cait(student_code, report)
+    return cait_report['ast']
+
+def expire_cait_cache(report=None):
+    '''
+    Deletes the most recent CAIT run.
+    '''
+    if report is None:
+        report = MAIN_REPORT
+    report['cait']['ast'] = None
+    report['cait']['dirty'] = True
+    
+
 
 def def_use_error(node, report=None):
     """Checks if node is a name and has a def_use_error
@@ -56,11 +123,12 @@ def def_use_error(node, report=None):
     :param report: The report object being used for analysis
     :return: True if the given name has a def_use_error
     """
-    cait_obj = Cait(report)
+    if report is None:
+        report = MAIN_REPORT
     if not isinstance(node, str) and node.ast_name != "Name":
         raise TypeError
     try:
-        def_use_vars = cait_obj.report['tifa']['issues']['Initialization Problem']
+        def_use_vars = report['tifa']['issues']['Initialization Problem']
     except KeyError:
         return False
     if not isinstance(node, str):
@@ -80,80 +148,92 @@ def def_use_error(node, report=None):
 def data_state(node, report=None):
     """
 
-    :param node: EasyNode/ast node whose type to retrieve
+    :param node: CaitNode/ast node whose type to retrieve
     :param report: The report object to retrieve the information from
     :return: the type of the object (Tifa type) or None if a type doesn't exist
     """
-    cait_obj = Cait(report)
+    if report is None:
+        report = MAIN_REPORT
     if not isinstance(node, str) and node.ast_name != "Name":
         raise TypeError
     if isinstance(node, str):
         node_id = node
     else:
         node_id = node.id
-    return cait_obj.report['tifa']["top_level_variables"][node_id]
+    return report['tifa']["top_level_variables"][node_id]
 
 
 def data_type(node, report=None):
     return data_state(node, report=report).type
 
 
-def find_match(ins_code, std_code=None, report=None, cut=False):
-    """Apply Tree Inclusion and return first match
-
-    :param ins_code: Instructor defined pattern
-    :param std_code: Student code
-    :param report: The report associated with the find_match function
-    :param cut: set to true to trim root to first branch
-    :return: First match of tree inclusion of instructor in student or None
+def find_match(pattern, student_code=None, report=None, cut=False):
     """
-    matches = find_matches(ins_code=ins_code, std_code=std_code, report=report, cut=cut)
+    Apply Tree Inclusion and return the first match of the `pattern` in the 
+    `student_code`.
+
+    Args:
+        pattern (str): The CaitExpression to match against.
+        student_code (str): The string of student code to check against. 
+            Defaults to the code of the Source tool in the Report.
+        report (Report): The report to attach data to.
+        cut (bool): Set to true to trim root to first branch
+    Returns:
+        CaitNode or None: The first matching node for the given pattern, or
+            None if nothing was found.
+    """
+    matches = find_matches(pattern=pattern, student_code=student_code, 
+                           report=report, cut=cut)
     if matches:
         return matches[0]
     else:
         return None
 
 
-def find_matches(ins_code, std_code=None, report=None, cut=False):
-    """Apply Tree Inclusion and return all matches
-
-    :param ins_code: Instructor pattern
-    :param std_code: Student Code
-    :param report: the report to use for finding matches
-    :param cut: set to true to trim root to first branch
-    :return: All matches of tree inclusion of instructor in student
+def find_matches(pattern, student_code=None, report=None, cut=False):
     """
-    cait_obj = Cait(std_code=std_code, report=report)
-    # TODO: Check to make sure the code actually parsed
-    try:
-        std_code = cait_obj.report['cait']['std_ast']
-        matcher = StretchyTreeMatcher(ins_code)
-        cait_obj.report['cait']['matcher'] = matcher
-        matches = cait_obj.report['cait']['matcher'].find_matches(std_code)
-        return matches
-    except KeyError:
-        return False
+    Apply Tree Inclusion and return all matches of the `pattern` in the 
+    `student_code`.
+
+    Args:
+        pattern (str): The CaitExpression to match against.
+        student_code (str): The string of student code to check against.
+        report (Report): The report to attach data to.
+        cut (bool): Set to true to trim root to first branch
+    Returns:
+        list[CaitNode]: All matching nodes for the given pattern.
+    """
+    if report is None:
+        report = MAIN_REPORT
+    cait_report = _load_cait(student_code, report)
+    if not cait_report['success']:
+        return []
+    student_ast = cait_report['ast']
+    matcher = StretchyTreeMatcher(pattern, report=report)
+    return matcher.find_matches(student_ast)
 
 
-def find_submatches(ins_expr, std_expr, is_mod=False):
-    return find_expr_sub_matches(ins_expr, std_expr, is_mod)
+def find_submatches(pattern, student_code, is_mod=False):
+    return find_expr_sub_matches(pattern, student_code, is_mod)
 
 
-def find_expr_sub_matches(ins_expr, std_expr, is_mod=False):
-    """Finds ins_expr in std_expr
-    # TODO: Add code to make ins_expr accept EasyNodes
+def find_expr_sub_matches(pattern, student_code, is_mod=False, report=None):
+    """Finds pattern in student_code
+    # TODO: Add code to make pattern accept CaitNodes
     # TODO: Make this function without so much meta knowledge
-    :param ins_expr: the expression to find (str that MUST evaluate to a Module node with a single child or an AstNode)
-    :param std_expr: student subtree
+    :param pattern: the expression to find (str that MUST evaluate to a Module node with a single child or an AstNode)
+    :param student_code: student subtree
     :param as_expr: whether it's an expression match or not, experimental
     :param is_mod: currently hack for multiline sub matches
     :param cut: flag for cutting off root until a branch occurs
     :return: a list of matches or False if no matches found
     """
-    is_node = isinstance(ins_expr, EasyNode)
-    if not isinstance(ins_expr, str) and not is_node:
-        raise TypeError("ins_expr expected str or EasyNode, found {0}".format(type(ins_expr)))
-    matcher = StretchyTreeMatcher(ins_expr)
-    if (not is_node and not is_mod) and len(matcher.rootNode.children) != 1:
-        raise ValueError("ins_expr does not evaluate to a singular statement")
-    return matcher.find_matches(std_expr, check_meta=False)
+    if report is None:
+        report = MAIN_REPORT
+    is_node = isinstance(pattern, CaitNode)
+    if not isinstance(pattern, str) and not is_node:
+        raise TypeError("pattern expected str or CaitNode, found {0}".format(type(pattern)))
+    matcher = StretchyTreeMatcher(pattern, report=report)
+    if (not is_node and not is_mod) and len(matcher.root_node.children) != 1:
+        raise ValueError("pattern does not evaluate to a singular statement")
+    return matcher.find_matches(student_code, check_meta=False)

@@ -4,13 +4,13 @@ import sys
 import os
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from pedal.cait.easy_node import *
+from pedal.cait.cait_node import *
 
 
-class EasyNodeTest(unittest.TestCase):
+class CaitNodeTest(unittest.TestCase):
     def test_init_(self):
         program = ast.parse("fun = 0 + 1\nfun01 =  2 + 3\nfun02 = 4 + 5")
-        program = EasyNode(program)
+        program = CaitNode(program)
         second_assign = program.children[1]
         third_assign = program.children[2]
         self.assertTrue(second_assign == program.linear_tree[second_assign.tree_id], "Nodes not being index properly")
@@ -18,7 +18,7 @@ class EasyNodeTest(unittest.TestCase):
 
     def test_get_next_tree(self):
         program = ast.parse("fun = 0 + 1\nfun01 =  2 + 3\nfun02 = 4 + 5")
-        program = EasyNode(program)
+        program = CaitNode(program)
         first_assign_c = program.children[0]
         second_assign_c = program.children[1]
         third_assign_c = program.children[2]
@@ -33,7 +33,7 @@ class EasyNodeTest(unittest.TestCase):
         program = ast.parse(
             "\nmy_list = [1, 2, 3]\nif True:\n\tmy_list.append(4)\nfor item in my_list:\n\tif item == 1:"
             "\n\t\titem += 1\n\tif item == 2:\n\t\titem += 4\n\tif item == 3:\n\t\titem += 6")
-        program = EasyNode(program)
+        program = CaitNode(program)
         if_set = program.find_all("If")
         self.assertTrue(len(if_set) == 4, "Found {} ifs, when 4 should be found".format(len(if_set)))
 
@@ -47,7 +47,7 @@ class EasyNodeTest(unittest.TestCase):
     
     def test_has(self):
         program = ast.parse("x\ny\nx = 0")
-        program = EasyNode(program)
+        program = CaitNode(program)
         x = program.body[0].value
         y = program.body[1].value
         line3 = program.body[2]
@@ -58,7 +58,7 @@ class EasyNodeTest(unittest.TestCase):
 
     def test___getattr__(self):
         program = ast.parse("x = 0")
-        program = EasyNode(program)
+        program = CaitNode(program)
         self.assertTrue(program.ast_name == "Module", "Expected ast_name of 'Module', not{}".format(program.ast_name))
 
         assign = program.children[0]
@@ -69,10 +69,10 @@ class EasyNodeTest(unittest.TestCase):
         self.assertTrue(type(assign_targets) == list, "expected list, got {} instead".format(list))
 
         assign_target = assign.target
-        self.assertTrue(type(assign_target) == EasyNode, "Expected EasyNode, got {} instead".format(assign_target))
+        self.assertTrue(type(assign_target) == CaitNode, "Expected CaitNode, got {} instead".format(assign_target))
 
         program1 = ast.parse("0 < x < 1")
-        program1 = EasyNode(program1)
+        program1 = CaitNode(program1)
         binops_node = program1.children[0].value
 
         binops_names = binops_node.ops_names
@@ -85,25 +85,25 @@ class EasyNodeTest(unittest.TestCase):
 
     @unittest.skip("Not implemented yet")
     def test_numeric_logic_check(self):
-        program = EasyNode(ast.parse("if 24 < x < 35:\n"
+        program = CaitNode(ast.parse("if 24 < x < 35:\n"
                                      "    pass"))
         compare = program.linear_tree[2]
         self.assertTrue(compare.numeric_logic_check(1, "24 < x < 35"))
         self.assertFalse(compare.numeric_logic_check(1, "23 < x < 35"))
 
-        program = EasyNode(ast.parse("if '24' < x < '35':\n"
+        program = CaitNode(ast.parse("if '24' < x < '35':\n"
                                      "    pass"))
         compare = program.linear_tree[2]
         self.assertFalse(compare.numeric_logic_check(1, "23 < x < 35"))
 
-        program = EasyNode(ast.parse("20 < x and x < 25 or 15 < x and 15 < x < 32"))
+        program = CaitNode(ast.parse("20 < x and x < 25 or 15 < x and 15 < x < 32"))
         compare = program.body[0].value
         self.assertTrue(compare.numeric_logic_check(1, "20 < x < 25 or 15 < x < 32"))
 
-        program = EasyNode(ast.parse("12*2 < x*55 + 36 < 55"))
+        program = CaitNode(ast.parse("12*2 < x*55 + 36 < 55"))
         compare = program.body[0].value
         self.assertTrue(compare.numeric_logic_check(1, "-12 < x*55 < 55"))
 
-        program = EasyNode(ast.parse("temperature >= 32 and temperature <= 50"))
+        program = CaitNode(ast.parse("temperature >= 32 and temperature <= 50"))
         compare = program.body[0].value
         self.assertTrue(compare.numeric_logic_check(1, "32 <= temp <= 50"))

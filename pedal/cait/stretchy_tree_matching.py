@@ -1,52 +1,82 @@
 import ast
 import re
 from pedal.cait.ast_map import *
-from pedal.cait.easy_node import *
+from pedal.cait.cait_node import CaitNode
 
 
 def is_primitive(item):
+    '''
+    Determines if the given item is a primitive value (either an int, float,
+    str, bool, or None).
+    
+    Args:
+        item (any): Any value
+    Returns:
+        bool: Whether the item is a primitive value.
+    '''
     return isinstance(item, (int, float, str, bool)) or item is None
 
 
 class StretchyTreeMatcher:
-    def __init__(self, code, filename="__main__"):
-        if isinstance(code, str):
-            ast_node = ast.parse(code, filename)
+    def __init__(self, ast_or_code, report, filename="__main__"):
+        '''
+        The StretchyTreeMatcher is used to compare a pattern against some
+        student code. It produces a set of potential mappings between them.
+        
+        Args:
+            code (str or AstNode): The students' code or a valid AstNode from
+                `ast.parse`. If the code has invalid syntax, a SyntaxError
+                will be raised.
+            filename (str): The filename to parse with - only used for error
+                reporting.
+            report (Report): A report to obtain data from.
+        '''
+        if isinstance(ast_or_code, str):
+            ast_node = ast.parse(ast_or_code, filename)
         else:
-            ast_node = code
+            ast_node = ast_or_code
+        # Build up root
         if ast_node is None:
-            self.rootNode = None
-        elif isinstance(ast_node, EasyNode):
-            self.rootNode = ast_node
+            self.root_node = None
+        elif isinstance(ast_node, CaitNode):
+            self.root_node = ast_node
         else:
-            self.rootNode = EasyNode(ast_node, "none")
+            self.root_node = CaitNode(ast_node, "root")
 
-    def find_matches(self, other, filename="__main__", check_meta=True):
-        if isinstance(other, str):
-            other_tree = ast.parse(other, filename)
+    def find_matches(self, ast_or_code, filename="__main__", check_meta=True):
+        '''
+        Args:
+            code (str or AstNode): The students' code or a valid AstNode from
+                `ast.parse`. If the code has invalid syntax, a SyntaxError
+                will be raised.
+            filename (str): The filename to parse with - only used for error
+                reporting.
+            check_meta (bool): Determine if the nodes came from the same AST
+                field.
+        '''
+        if isinstance(ast_or_code, str):
+            other_tree = CaitNode(ast.parse(ast_or_code, filename))
+        elif isinstance(ast_or_code, CaitNode):
+            other_tree = ast_or_code
         else:
-            other_tree = other
-        if isinstance(other_tree, EasyNode):
-            easy_other = other_tree
-        else:
-            easy_other = EasyNode(other_tree, "none")
-        explore_root = self.rootNode
-        if self.rootNode is not None:
+            other_tree = CaitNode(ast_or_code, "root")
+        explore_root = self.root_node
+        if self.root_node is not None:
             while (len(explore_root.children) == 1 and
                    explore_root.ast_name in ["Expr", "Module"]):
                 explore_root = explore_root.children[0]
                 explore_root.field = "none"
-        # return self.any_node_match(self.rootNode, easy_other, check_meta=check_meta)
-        return self.any_node_match(explore_root, easy_other, check_meta=check_meta)
-
-    '''
-    Finds whether ins_node can be matched to some node in the tree std_node
-    @return a mapping of nodes and a symbol table mapping ins_node to some node in the tree std_node or False if such a 
-    matching does not exist
-    '''
+        return self.any_node_match(explore_root, other_tree, 
+                                   check_meta=check_meta)
 
     def any_node_match(self, ins_node, std_node, check_meta=True, cut=False):
-        # @TODO: create a more public function that converts ins_node and std_node into EasyNodes
+        '''
+        Finds whether ins_node can be matched to some node in the tree std_node
+        @return a mapping of nodes and a symbol table mapping ins_node to 
+        some node in the tree std_node or False if such a matching does not 
+        exist
+        '''
+        # @TODO: create a more public function that converts ins_node and std_node into CaitNodes
         # TODO: Create exhaustive any_node_match
         # matching: an object representing the mapping and the symbol table
         matching = self.deep_find_match(ins_node, std_node, check_meta)

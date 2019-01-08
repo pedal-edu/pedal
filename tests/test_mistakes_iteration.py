@@ -131,3 +131,6 @@ class IterationMistakes(MistakeTest):
         self.to_source("for item in items:\n"
                        "    pass")
         self.assertFalse(wrong_target_reassigned(), "false positive")
+
+if __name__ == '__main__':
+    unittest.main(buffer=False)

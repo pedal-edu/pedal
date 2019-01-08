@@ -1,5 +1,5 @@
 from pedal.cait.ct_map import *
-from pedal.cait.easy_node import *
+from pedal.cait.cait_node import *
 
 
 class AstSymbol:
@@ -33,7 +33,7 @@ class AstMap:
         :param std_node: student node representing function
         :return: number of conflicts generated
         """
-        if not isinstance(std_node, EasyNode):
+        if not isinstance(std_node, CaitNode):
             raise TypeError
         if isinstance(ins_node, str):
             key = ins_node
@@ -63,7 +63,7 @@ class AstMap:
         :param std_node: student node representing variable
         :return: number of conflicts generated
         """
-        if not isinstance(std_node, EasyNode):
+        if not isinstance(std_node, CaitNode):
             raise TypeError
         if isinstance(ins_node, str):
             key = ins_node
@@ -92,7 +92,7 @@ class AstMap:
         :param std_node: student ast subtree corresponding to the symbol
         :return: nothing
         """
-        if not isinstance(std_node, EasyNode):
+        if not isinstance(std_node, CaitNode):
             raise TypeError
         self.exp_table.set(ins_node.astNode.id, std_node)
 
@@ -103,7 +103,7 @@ class AstMap:
         :param std_node: student ast node
         :return: nothing
         """
-        if not isinstance(std_node, EasyNode):
+        if not isinstance(std_node, CaitNode):
             raise TypeError
         self.mappings.set(ins_node, std_node)
 
