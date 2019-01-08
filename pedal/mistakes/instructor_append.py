@@ -70,20 +70,18 @@ def wrong_not_append_to_list():
 def missing_append_list_initialization():
     matches = find_matches("for ___ in ___:\n"
                            "    __expr__")
-    if matches:
-        for match in matches:
-            __expr__ = match["__expr__"]
-            submatches = find_expr_sub_matches("_new_list_.append(___)", __expr__)
-            if submatches:
-                for submatch in submatches:
-                    _new_list_ = submatch["_new_list_"][0].astNode
-                    matches02 = find_matches("{} = []\n"
-                                             "for ___ in ___:\n"
-                                             "    __expr__".format(_new_list_.id))
-                    if not matches02:
-                        explain("The list variable <code>{0!s}</code> must be initialized.<br><br><i>"
-                                "(no_app_list_init)<i></br>".format(_new_list_.id))
-                        return True
+    for match in matches:
+        __expr__ = match["__expr__"]
+        submatches = find_expr_sub_matches("_new_list_.append(___)", __expr__)
+        for submatch in submatches:
+            _new_list_ = submatch["_new_list_"][0].astNode
+            matches02 = find_matches("{} = []\n"
+                                     "for ___ in ___:\n"
+                                     "    __expr__".format(_new_list_.id))
+            if not matches02:
+                explain("The list variable <code>{0!s}</code> must be initialized.<br><br><i>"
+                        "(no_app_list_init)<i></br>".format(_new_list_.id))
+                return True
     return False
 
 
@@ -91,19 +89,20 @@ def wrong_append_list_initialization():
     matches = find_matches("_list_ = __expr1__\n"
                            "for ___ in ___:\n"
                            "    __expr2__")
-    if matches:
-        for match in matches:
-            _list_ = match["_list_"][0].astNode
-            __expr1__ = match["__expr1__"]
-            __expr2__ = match["__expr2__"]
-            submatch = find_expr_sub_matches("{}.append(___)".format(_list_.id), __expr2__)
-            if submatch and (__expr1__.ast_name == "List" and
-               len(__expr1__.elts) != 0 or
-               __expr1__.ast_name != "List"):
-                explain("The list variable <code>{0!s}</code> is either not initialized correctly or mistaken for"
-                        " another variable. The list you append to should be initialized to an empty list.<br><br><i>"
-                        "(app_list_init)<i></br>".format(_list_.id))
-                return True
+    for match in matches:
+        _list_ = match["_list_"][0].astNode
+        __expr1__ = match["__expr1__"]
+        __expr2__ = match["__expr2__"]
+        submatch = find_expr_sub_matches("{}.append(___)".format(_list_.id), __expr2__)
+        if submatch and (__expr1__.ast_name == "List" and
+                         len(__expr1__.elts) != 0 or
+                         __expr1__.ast_name != "List"):
+            explain("The list variable <code>{0!s}</code> is either not "
+                    "initialized correctly or mistaken for"
+                    " another variable. The list you append to should be "
+                    "initialized to an empty list.<br><br><i>"
+                    "(app_list_init)<i></br>".format(_list_.id))
+            return True
     return False
 
 

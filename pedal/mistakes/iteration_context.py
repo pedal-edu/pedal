@@ -19,11 +19,10 @@ def wrong_list_length_8_2():
 
 def missing_list_initialization_8_2():
     matches = find_matches("shopping_cart = __expr__")
-    if matches:
-        for match in matches:
-            __expr__ = match["__expr__"]
-            if __expr__.ast_name == "List":
-                return False
+    for match in matches:
+        __expr__ = match["__expr__"]
+        if __expr__.ast_name == "List":
+            return False
     explain(
         'You must set the variable <code>shopping_cart</code> to a list containing the prices of items in the'
         ' shopping cart.<br><br><i>(missing_list_init_8.2)<i></br>')
@@ -32,14 +31,13 @@ def missing_list_initialization_8_2():
 
 def wrong_list_is_constant_8_2():
     matches = find_matches("shopping_cart = __expr__")
-    if matches:
-        for match in matches:
-            __expr__ = match["__expr__"]
-            if __expr__.ast_name == "Num":
-                explain(
-                    'You must set <code>shoppping_cart</code> to a list of values not to a single number.<br><br><i>'
-                    '(list_is_const_8.2)<i></br>')
-                return True
+    for match in matches:
+        __expr__ = match["__expr__"]
+        if __expr__.ast_name == "Num":
+            explain(
+                'You must set <code>shoppping_cart</code> to a list of values not to a single number.<br><br><i>'
+                '(list_is_const_8.2)<i></br>')
+            return True
     return False
 
 

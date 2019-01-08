@@ -438,15 +438,15 @@ class CaitTests(unittest.TestCase):
         set_source("fun = 1 + 1")
         parse_program()
         match = find_match("_var_ = __expr__")
-        self.assertTrue(type(match) == AstMap, "Match not found")
+        self.assertIsInstance(match, AstMap, "Match not found")
 
     def test_find_matches(self):
         set_source("fun = 1 + 1\nfun2 = 2 + 2")
         parse_program()
         matches = find_matches("_var_ = __expr__")
-        self.assertTrue(type(matches) == list, "find_matches did not return a list")
-        self.assertTrue(type(matches[0]) == AstMap, "find_matches does not contain an AstMap")
-        self.assertTrue(len(matches) == 2, "find_matches does not return the correct number of matches")
+        self.assertIsInstance(matches, list, "find_matches did not return a list")
+        self.assertIsInstance(matches[0], AstMap, "find_matches does not contain an AstMap")
+        self.assertEqual(len(matches), 2, "find_matches does not return the correct number of matches")
 
         set_source("for 'fun' in ___:"
                    "if ___:\n"

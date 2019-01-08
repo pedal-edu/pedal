@@ -54,6 +54,8 @@ class StretchyTreeMatcher:
                 reporting.
             check_meta (bool): Determine if the nodes came from the same AST
                 field.
+        Returns:
+            list[AstMap]: A list of AstMaps that are suitable matches.
         '''
         if isinstance(ast_or_code, str):
             other_tree = CaitNode(ast.parse(ast_or_code, filename), report=self.report)

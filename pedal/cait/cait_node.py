@@ -8,6 +8,10 @@ class CaitNode:
     A wrapper class for AST nodes. Linearizes access to the children of the ast
     node and saves the field this AST node
     originated from.
+    
+    Attrs:
+        ast_name (str): The name of the original AstNode (e.g., "Name" or
+            "FunctionDef")
 
     TODO: May want to just add fields and methods to the existing AST nodes and
     use a production pattern instead.
@@ -258,6 +262,8 @@ class CaitNode:
             return node_name
         elif key == '_name':
             return self.astNode.name
+        elif key == 'ast_node':
+            return self.astNode
         else:  # ast node attributes or derivative attributes
             if hasattr(self.astNode, key):
                 # noinspection PyBroadException
