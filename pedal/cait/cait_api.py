@@ -74,7 +74,7 @@ def _load_cait(student_code, report):
                       category='analyzer')
         cait['success'] = False
         return cait
-    cait['ast'] = cait['cache'][student_code] = CaitNode(student_ast)
+    cait['ast'] = cait['cache'][student_code] = CaitNode(student_ast, report=report)
     return cait
     
 def require_tifa(self):

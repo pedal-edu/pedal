@@ -13,11 +13,15 @@ class CaitNode:
     use a production pattern instead.
     """
 
-    def __init__(self, ast_node, my_field='', tid=0, lin_tree=None, ancestor=None):
+    def __init__(self, ast_node, my_field='', tid=0, lin_tree=None, 
+                 ancestor=None, report=None):
         """
         :param ast_node: The AST node to be wrapped
         :param my_field: the field of the parent node that produced this child.
         """
+        if report is None:
+            report = MAIN_REPORT
+        self.report = report
         self.children = []
         self.astNode = ast_node
         self.field = my_field
@@ -54,15 +58,13 @@ class CaitNode:
                     new_child = CaitNode(sub_value, my_field=field, 
                                          tid=tid_count + 1, 
                                          lin_tree=self.linear_tree,
-                                         ancestor=self)
+                                         ancestor=self,
+                                         report=self.report)
                     self.children.append(new_child)
                     tid_count = len(self.linear_tree) - 1
 
     def __str__(self):
         return ''.join([self.field, "\n", ast_str.dump(self.astNode)])
-    
-    def __repr__(self):
-        return "{}({})".format(self.astNode.__class__.__name__, id(self))
 
     def numeric_logic_check(self, mag, expr):
         """
@@ -159,7 +161,7 @@ class CaitNode:
                     results_c = new_result
             return results_c
         try:
-            ins_expr = CaitNode(ast.parse(expr)).body[0].value
+            ins_expr = CaitNode(ast.parse(expr), report=self.report).body[0].value
             ins_nums = ins_expr.find_all("Num")
             std_nums = self.find_all("Num")
             test_nums = []
@@ -315,6 +317,9 @@ class CaitNode:
         return visitor.items
     
     def has(self, node):
+        '''
+        Determine if this node has the given `node`.
+        '''
         if isinstance(node, (int, float)):
             visitor = ast.NodeVisitor()
             has_num = []
@@ -361,6 +366,21 @@ class CaitNode:
                 return False
             current = current.parent
         return False
+    
+    def get_data_state(self):
+        if self.ast_name != "Name":
+            return None
+        try:
+            return self.report['tifa']["top_level_variables"][self.id]
+        except KeyError:
+            return None
+    
+    def get_data_type(self):
+        state = self.get_data_state()
+        if state is None:
+            return None
+        else:
+            return state.type
 
 AST_SINGLE_FUNCTIONS = ["ctx_name", "op_name"]
 AST_ARRAYS_OF_FUNCTIONS = ["ops_names"]

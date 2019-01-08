@@ -31,6 +31,7 @@ class StretchyTreeMatcher:
                 reporting.
             report (Report): A report to obtain data from.
         '''
+        self.report = report
         if isinstance(ast_or_code, str):
             ast_node = ast.parse(ast_or_code, filename)
         else:
@@ -41,7 +42,7 @@ class StretchyTreeMatcher:
         elif isinstance(ast_node, CaitNode):
             self.root_node = ast_node
         else:
-            self.root_node = CaitNode(ast_node, "none")
+            self.root_node = CaitNode(ast_node, "none", report=self.report)
 
     def find_matches(self, ast_or_code, filename="__main__", check_meta=True):
         '''
@@ -55,18 +56,17 @@ class StretchyTreeMatcher:
                 field.
         '''
         if isinstance(ast_or_code, str):
-            other_tree = CaitNode(ast.parse(ast_or_code, filename))
+            other_tree = CaitNode(ast.parse(ast_or_code, filename), report=self.report)
         elif isinstance(ast_or_code, CaitNode):
             other_tree = ast_or_code
         else:
-            other_tree = CaitNode(ast_or_code, "none")
+            other_tree = CaitNode(ast_or_code, "none", report=self.report)
         explore_root = self.root_node
         if self.root_node is not None:
             while (len(explore_root.children) == 1 and
                    explore_root.ast_name in ["Expr", "Module"]):
                 explore_root = explore_root.children[0]
                 explore_root.field = "none"
-        self.STOP = False
         return self.any_node_match(explore_root, other_tree, 
                                    check_meta=check_meta)
 
@@ -99,7 +99,7 @@ class StretchyTreeMatcher:
                 matching = matching + matching_c
         if len(matching) > 0:
             return matching
-        return False
+        return []
 
     def deep_find_match(self, ins_node, std_node, check_meta=True):
         """
@@ -173,10 +173,10 @@ class StretchyTreeMatcher:
     def deep_find_match_binflex(self, ins_node, std_node, check_meta=False):
         base_mappings = self.shallow_match(ins_node, std_node, check_meta)
         if not base_mappings:
-            return False
+            return []
         op_mappings = self.shallow_match(ins_node.children[1], std_node.children[1], check_meta=True)
         if not op_mappings:
-            return False
+            return []
         base_mappings = [base_mappings[0].new_merged_map(op_mappings[0])]
 
         if base_mappings:
@@ -194,9 +194,9 @@ class StretchyTreeMatcher:
             case_right = self.deep_find_match(ins_right, std_left, False)
             self.binflex_helper(case_left, case_right, new_mappings, base_mappings)
             if len(new_mappings) == 0:
-                return False
+                return []
             return new_mappings
-        return False
+        return []
 
     def deep_find_match_Expr(self, ins_node, std_node, check_meta=True):
         """
@@ -209,7 +209,7 @@ class StretchyTreeMatcher:
         """
         # if check_meta and ins_node.field != std_node.field:
         if not self.metas_match(ins_node, std_node, check_meta):
-            return False
+            return []
         mapping = AstMap()
         value = ins_node.value
         ast_type = type(value.astNode).__name__
@@ -272,12 +272,12 @@ class StretchyTreeMatcher:
                         running_sibs.append(j)
                 map_update = self.map_merge(base_mappings, base_sibs, running_maps, running_sibs)
                 if map_update is None:
-                    return False
+                    return []
                 base_mappings = map_update['new_maps']
                 base_sibs = map_update['new_sibs']
                 youngest_sib = map_update['youngest_sib'] + 1
             return base_mappings
-        return False
+        return []
 
     # noinspection PyMethodMayBeStatic
     def map_merge(self, base_maps, base_sibs, run_maps, run_sibs):
@@ -306,12 +306,13 @@ class StretchyTreeMatcher:
                             new_maps.append(new_map)
                             new_sibs.append(runSib)
         map_update = None
-        if len(new_maps) != 0:
-            map_update = dict()
-            map_update['new_maps'] = new_maps
-            map_update['new_sibs'] = new_sibs
-            map_update['youngest_sib'] = youngest_sib
-        return map_update
+        if len(new_maps) == 0:
+            return None
+        return {
+            'new_maps': new_maps,
+            'new_sibs': new_sibs,
+            'youngest_sib': youngest_sib
+        }
 
     # noinspection PyMethodMayBeStatic,PyPep8Naming,PyUnusedLocal
     def shallow_match_Module(self, ins_node, std_node, check_meta=True):
@@ -323,7 +324,7 @@ class StretchyTreeMatcher:
             mapping = AstMap()
             mapping.add_node_pairing(ins_node, std_node)
             return [mapping]
-        return False
+        return []
 
     # noinspection PyPep8Naming
     def shallow_match_Name(self, ins_node, std_node, check_meta=True):
@@ -370,7 +371,7 @@ class StretchyTreeMatcher:
         """
         # if check_meta and ins_node.field != std_node.field:
         if not self.metas_match(ins_node, std_node, check_meta):
-            return False
+            return []
         mapping = AstMap()
         mapping.add_node_pairing(ins_node, std_node)
         return [mapping]
@@ -387,7 +388,7 @@ class StretchyTreeMatcher:
         """
         # if check_meta and ins_node.field != std_node.field:
         if not self.metas_match(ins_node, std_node, check_meta):
-            return False
+            return []
         mapping = AstMap()
         mapping.add_node_pairing(ins_node, std_node)
         return [mapping]
@@ -414,7 +415,7 @@ class StretchyTreeMatcher:
         if matched:
             return mapping
         else:
-            return False
+            return []
 
     # noinspection PyMethodMayBeStatic
     def shallow_match_generic(self, ins_node, std_node, check_meta=True):
@@ -429,12 +430,12 @@ class StretchyTreeMatcher:
 
     def shallow_match_main(self, ins_node, std_node, check_meta=True, ignores=[]):
         """
-                Checks that all non astNode attributes are equal between ins_node and std_node
-                :param ins_node: Instructor ast root node
-                :param std_node: Student AST root node
-                :param check_meta: flag to check whether the fields of the instructor node and the student node should match
-                :return: a mapping between the isntructor and student root nodes, or False if such a mapping doesn't exist
-                """
+        Checks that all non astNode attributes are equal between ins_node and std_node
+        :param ins_node: Instructor ast root node
+        :param std_node: Student AST root node
+        :param check_meta: flag to check whether the fields of the instructor node and the student node should match
+        :return: a mapping between the isntructor and student root nodes, or False if such a mapping doesn't exist
+        """
         ins = ins_node.astNode
         std = std_node.astNode
         ins_field_list = list(ast.iter_fields(ins))
@@ -475,12 +476,12 @@ class StretchyTreeMatcher:
                     # TODO: make this a smarter comparison, maybe handle dictionaries, f-strings, tuples, etc.
                     if is_primitive(inssub_value):
                         is_match = inssub_value == stdsub_value
-        mapping = False
         if is_match:
             mapping = AstMap()  # return MAPPING
             mapping.add_node_pairing(ins_node, std_node)
-            mapping = [mapping]
-        return mapping
+            return [mapping]
+        else:
+            return []
 
     # filter function for various types of nodes
     def shallow_match(self, ins_node, std_node, check_meta=True):
