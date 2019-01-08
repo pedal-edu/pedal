@@ -214,11 +214,9 @@ class CaitTests(unittest.TestCase):
                 len(mappings.mappings) == len(ins_ast.linear_tree) - 1,  # -1 is because expression subsumes load
                 "incorrect number of mappings found {} instead of {}".format(len(mappings.mappings),
                                                                              len(ins_ast.linear_tree) - 1))
-            values = list(mappings.symbol_table.values())
-            self.assertTrue(len(mappings.symbol_table) == 3 and
-                            len(values[0]) == 4 and
-                            len(values[1]) == 2 and
-                            len(values[2]) == 2, "inconsistent symbol matching")
+            self.assertEqual(len(mappings.symbol_table), 3, "inconsistent symbol matching")
+            lengths = sorted([len(v) for v in mappings.symbol_table.values()])
+            self.assertEqual(lengths, [2, 2, 4], "inconsistent symbol matching")
             debug_print = False  # TODO: debug print
             if debug_print:
                 print(mappings)
@@ -246,12 +244,9 @@ class CaitTests(unittest.TestCase):
             mappings = mappings[0]
             if mappings:
                 self.assertTrue(len(mappings.conflict_keys) == 0, "Conflicting keys when there shouldn't be")
-                values = list(mappings.symbol_table.values())
                 self.assertEqual(len(mappings.symbol_table), 4, "inconsistent symbol matching")
-                self.assertEqual(len(values[0]), 3, "inconsistent symbol matching")
-                self.assertEqual(len(values[1]), 2, "inconsistent symbol matching")
-                self.assertEqual(len(values[2]), 2, "inconsistent symbol matching")
-                self.assertEqual(len(values[3]), 1, "inconsistent symbol matching")
+                lengths = sorted([len(v) for v in mappings.symbol_table.values()])
+                self.assertEqual(lengths, [1, 2, 2, 3], "inconsistent symbol matching")
             debug_print = False
             if debug_print:
                 print(ins_ast.astNode)
