@@ -599,6 +599,14 @@ class CaitTests(unittest.TestCase):
         passes = ast.find_all('Pass')
         self.assertFalse(passes[0].is_method())
         self.assertFalse(passes[1].is_method())
-        
+
+    def test_ast_map_symbols(self):
+        set_source("fun = 0\nfun = 1")
+        parse_program()
+        my_match = find_match("_fun_ = ___")
+        self.assertTrue(my_match["_fun_"].id == "fun")
+        self.assertTrue(my_match["_fun_"][0].id == "fun")
+
+
 if __name__ == '__main__':
     unittest.main(buffer=False)

@@ -2,9 +2,11 @@ from pedal.report import MAIN_REPORT
 from pedal.cait.stretchy_tree_matching import *
 import ast
 
+
 class CaitException(Exception):
     pass
-    
+
+
 '''
 CaitReport:
     A collection of information from the latest CAIT run.
@@ -16,9 +18,10 @@ CaitReport:
         success: Whether there have been any errors so far.
         error: The exception that occurred, or None if no exception so far.
 '''
-    
+
+
 def _parse_source(code, cait_report):
-    '''
+    """
     Parses the given code and returns its Cait representation. If the parse was
     unsuccessful, it attaches the error to the report.
     
@@ -27,7 +30,7 @@ def _parse_source(code, cait_report):
         cait_report (dict): A Cait Report to store information in.
     Returns:
         AstNode: The parsed AST reprensetation, or None
-    '''
+    """
     try:
         parsed = ast.parse(code)
     except SyntaxError as e:
@@ -35,9 +38,10 @@ def _parse_source(code, cait_report):
         cait_report['error'] = e
         return
     return parsed
-    
+
+
 def _load_cait(student_code, report):
-    '''
+    """
     Retrieves the current report for CAIT. If there is no CAIT report, it will
     generate one. If source code is given, that will be used instead of the
     report's source code.
@@ -50,7 +54,7 @@ def _load_cait(student_code, report):
     
     Returns:
         dict: Returns the Cait Report
-    '''
+    """
     if 'cait' not in report:
         report['cait'] = {'success': True, 'error': None,
                           'ast': None, 'cache': {}}
@@ -76,12 +80,13 @@ def _load_cait(student_code, report):
         return cait
     cait['ast'] = cait['cache'][student_code] = CaitNode(student_ast, report=report)
     return cait
-    
+
+
 def require_tifa(self):
-    '''
+    """
     Confirms that TIFA was run successfully, otherwise raises a
     CaitException.
-    '''
+    """
     if not self.report['tifa']['success']:
         raise CaitException("TIFA was not run prior to CAIT.")
 
@@ -104,17 +109,19 @@ def parse_program(student_code=None, report=None):
     cait_report = _load_cait(student_code, report)
     return cait_report['ast']
 
+
 def expire_cait_cache(report=None):
-    '''
+    """
     Deletes the most recent CAIT run and any cached CAIT parses.
     
     Args:
         report (Report): The report to attach data to. Defaults to MAIN_REPORT.
-    '''
+    """
     if report is None:
         report = MAIN_REPORT
     report['cait']['ast'] = None
     report['cait']['cache'] = {}
+
 
 def def_use_error(node, report=None):
     """
@@ -173,7 +180,7 @@ def data_state(node, report=None):
 
 
 def data_type(node, report=None):
-    '''
+    """
     Looks up the type of the node using Tifa's analysis.
     
     Args:
@@ -181,7 +188,7 @@ def data_type(node, report=None):
         report (Report): The report to attach data to. Defaults to MAIN_REPORT.
     Returns:
         The type of the object (Tifa type) or None if a type doesn't exist
-    '''
+    """
     state = data_state(node, report=report)
     if state is not None:
         return state.type
@@ -235,9 +242,9 @@ def find_matches(pattern, student_code=None, report=None, cut=False):
 
 
 def find_submatches(pattern, student_code, is_mod=False):
-    '''
+    """
     Incomplete.
-    '''
+    """
     return find_expr_sub_matches(pattern, student_code, is_mod)
 
 
