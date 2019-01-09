@@ -19,6 +19,9 @@ class Report:
     '''
     
     def __init__(self):
+        '''
+        Creates a new Report instance.
+        '''
         self.clear()
     
     def clear(self):
@@ -27,6 +30,10 @@ class Report:
         self._results = {}
 
     def set_success(self, section=None):
+        '''
+        Creates Successful feedback for the user, indicating that the entire
+        assignment is done.
+        '''
         if section is None:
             #TODO: Hackish - requires knowledge of the source tool!
             # But how does it know it's section otherwise?
