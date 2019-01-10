@@ -29,7 +29,7 @@ class Feedback:
         performance (float): A relative amount that this feedback contributes
                              to the students' performance (think in terms of
                              partial credit, like "Triggering this feedback
-                             is worth 20%").
+                             is worth 20% (.2)").
         misconceptions (Component): A description of the misconception that
                                     is believed to be in the student's mind,
                                     or perhaps the relevant concept from the
@@ -40,7 +40,7 @@ class Feedback:
                               student has created ("NameError on line 5: sum
                               has not been defined").
         hints (Component): A suggestion for what the student can do
-                           ("Initialize the sum variable one line 2").
+                           ("Initialize the sum variable on line 2").
         constraints (Component): A description of the task requirements or
                                  task type that the student has violated
                                  ("You used a for loop, but this question
