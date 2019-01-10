@@ -9,7 +9,7 @@ class AstSymbol:
         self.ast_node = _node
 
     def __getattr__(self, attr):
-        return self.__dict__[attr]
+        return getattr(self.astNode, attr)
 
     def __str__(self):
         # return ''.join(["id = ", self.id.__str__(), ", astNode = ", type(self.astNode).__name__])

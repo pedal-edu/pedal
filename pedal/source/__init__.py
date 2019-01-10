@@ -59,7 +59,7 @@ def set_source(code, filename='__main__.py', sections=False, report=None):
 
 def _check_issues(code, report):
     if code.strip() == '':
-        report.attach('Blank source', category=CATEGORY, tool=NAME,
+        report.attach('Blank source', category='Syntax', tool=NAME,
                       section=report['source']['section'],
                       mistakes="Source code file is blank.")
         report['source']['success'] = False
@@ -67,7 +67,7 @@ def _check_issues(code, report):
         parsed = ast.parse(code, report['source']['filename'])
         report['source']['ast'] = parsed
     except SyntaxError as e:
-        report.attach('Verifier Error', category='verifier', tool='Source',
+        report.attach('Syntax error', category='Syntax', tool='Source',
                       section=report['source']['section'],
                       mistakes={'message': "Invalid syntax on line "
                                            +str(e.lineno),
