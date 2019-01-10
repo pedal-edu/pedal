@@ -1,4 +1,5 @@
 from pedal.cait.cait_node import *
+from functools import reduce
 
 
 class AstSymbol:
@@ -6,16 +7,36 @@ class AstSymbol:
         self.id = _id
         self.astNode = _node
         self.ast_node = _node
-    
-    def __getattr__(self, item):
-        return getattr(self.astNode, item)
+
+    def __getattr__(self, attr):
+        return self.__dict__[attr]
 
     def __str__(self):
-        #return ''.join(["id = ", self.id.__str__(), ", astNode = ", type(self.astNode).__name__])
+        # return ''.join(["id = ", self.id.__str__(), ", astNode = ", type(self.astNode).__name__])
         return self.id
 
     def __repr__(self):
         return ''.join(["id = ", self.id.__str__(), ", astNode = ", type(self.astNode).__name__])
+
+
+class AstSymbolList:
+    def __init__(self):
+        self.my_list = []
+
+    def __getitem__(self, item):
+        return self.my_list.__getitem__(item)
+
+    def append(self, item):
+        self.my_list.append(item)
+
+    def __getattr__(self, attr):
+        try:
+            return getattr(self.my_list[0], attr)
+        except RecursionError:
+            return reduce(getattr, attr.split('.'), self.my_list)
+
+    def __len__(self):
+        return self.my_list.__len__()
 
 
 class AstMap:
@@ -52,7 +73,8 @@ class AstMap:
                         self.conflict_keys.append(key)
                         break
         else:
-            new_list = [value]
+            new_list = AstSymbolList()
+            new_list.append(value)
 
         self.func_table[key] = new_list
         return len(self.conflict_keys)
@@ -82,7 +104,8 @@ class AstMap:
                         self.conflict_keys.append(key)
                         break
         else:
-            new_list = [value]
+            new_list = AstSymbolList()
+            new_list.append(value)
 
         self.symbol_table[key] = new_list
         return len(self.conflict_keys)
@@ -171,7 +194,7 @@ class AstMap:
         """
         if isinstance(ins_id, str):
             return self.exp_table.get(ins_id)
-    
+
     @property
     def match_lineno(self):
         values = [v.lineno for v in self.mappings.values()
@@ -180,7 +203,7 @@ class AstMap:
             return -1
         else:
             return min(values)
-    
+
     def __getitem__(self, id):
         if id.startswith('__'):
             return self.exp_table[id]
@@ -189,7 +212,7 @@ class AstMap:
                 return self.symbol_table[id]
             else:
                 return self.func_table[id]
-    
+
     def __contains__(self, id):
         if id.startswith('__'):
             return id in self.exp_table
