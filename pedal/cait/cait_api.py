@@ -7,7 +7,7 @@ class CaitException(Exception):
     pass
 
 
-'''
+"""
 CaitReport:
     A collection of information from the latest CAIT run.
     
@@ -17,7 +17,7 @@ CaitReport:
             parsed representations.
         success: Whether there have been any errors so far.
         error: The exception that occurred, or None if no exception so far.
-'''
+"""
 
 
 def _parse_source(code, cait_report):
@@ -50,8 +50,7 @@ def _load_cait(student_code, report):
         student_code (str): The code to parse into the a CaitNode tree. If
             None, then it will use the code in the report's Source tool.
         report (Report): The report to attach data to.
-        force_reparse (bool): Whether or not to use any Cait data in the cache.
-    
+
     Returns:
         dict: Returns the Cait Report
     """
@@ -210,7 +209,7 @@ def find_match(pattern, student_code=None, report=None, cut=False):
         CaitNode or None: The first matching node for the given pattern, or
             None if nothing was found.
     """
-    matches = find_matches(pattern=pattern, student_code=student_code, 
+    matches = find_matches(pattern=pattern, student_code=student_code,
                            report=report, cut=cut)
     if matches:
         return matches[0]
@@ -256,8 +255,8 @@ def find_expr_sub_matches(pattern, student_code, is_mod=False, report=None):
     Args:
         pattern: the expression to find (str that MUST evaluate to a Module node with a single child or an AstNode)
         student_code: student subtree
-        as_expr: whether it's an expression match or not, experimental
         is_mod (bool): currently hack for multiline sub matches
+        report: defaults to MAIN_REPORT unless another one exists
     Returns:
         a list of matches or False if no matches found
     """

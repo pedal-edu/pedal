@@ -22,7 +22,7 @@ from pedal.toolkit.utilities import (is_top_level, function_prints,
 from pedal.toolkit.imports import ensure_imports
 from pedal.toolkit.printing import ensure_prints
 from pedal.toolkit.plotting import check_for_plot, prevent_incorrect_plt
-from execution_helper import Execution
+from tests.execution_helper import Execution
 
 class TestFiles(unittest.TestCase):
 
