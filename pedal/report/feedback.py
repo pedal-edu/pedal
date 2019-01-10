@@ -50,11 +50,13 @@ class Feedback:
                                     5 hours, perhaps it is time to take
                                     a break?").
     '''
+    MESSAGE_TYPES = ['hint', 'mistake', 'misconception', 
+                     'constraint', 'metacognitive']
     def __init__(self, label, tool='instructor', 
                  category='Instructor feedback', priority=None, section=None,
-                 result=None, performance=None, misconceptions=None,
-                 mistakes=None, hints=None, constraints=None,
-                 metacognitives=None):
+                 result=None, performance=None, misconception=None,
+                 mistake=None, hint=None, constraint=None,
+                 metacognitive=None):
         # Metadata
         self.label = label
         self.tool = tool
@@ -64,11 +66,11 @@ class Feedback:
         # Data
         self.result = result
         self.performance = performance
-        self.misconceptions = misconceptions
-        self.mistakes = mistakes
-        self.hints = hints
-        self.constraints = constraints
-        self.metacognitives = metacognitives
+        self.misconception = misconception
+        self.mistake = mistake
+        self.hint = hint
+        self.constraint = constraint
+        self.metacognitive = metacognitive
     
     def __str__(self):
         return "<Feedback ({})>".format(self.label)
@@ -95,6 +97,5 @@ A Component is one of:
             html_message: An HTML message instead of a plaintext message.
             line: The line number to highlight
             error: The error message to render
-    List of Component
 '''
 

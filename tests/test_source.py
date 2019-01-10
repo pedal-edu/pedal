@@ -60,7 +60,7 @@ class TestCode(unittest.TestCase):
         feedback = get_all_feedback()
         self.assertTrue(feedback)
         self.assertEqual(feedback[0].label, "Syntax error")
-        self.assertEqual(feedback[0].mistakes['position']['line'], 7)
+        self.assertEqual(feedback[0].mistake['position']['line'], 7)
     
     def test_damaged_sections(self):
         clear_report()

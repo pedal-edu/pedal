@@ -61,7 +61,7 @@ def _check_issues(code, report):
     if code.strip() == '':
         report.attach('Blank source', category='Syntax', tool=NAME,
                       section=report['source']['section'],
-                      mistakes="Source code file is blank.")
+                      mistake="Source code file is blank.")
         report['source']['success'] = False
     try:
         parsed = ast.parse(code, report['source']['filename'])
@@ -69,10 +69,10 @@ def _check_issues(code, report):
     except SyntaxError as e:
         report.attach('Syntax error', category='Syntax', tool='Source',
                       section=report['source']['section'],
-                      mistakes={'message': "Invalid syntax on line "
-                                           +str(e.lineno),
-                                'error': e,
-                                'position': {"line": e.lineno}})
+                      mistake={'message': "Invalid syntax on line "
+                                          +str(e.lineno),
+                               'error': e,
+                               'position': {"line": e.lineno}})
         report['source']['success'] = False
         if 'ast' in report['source']:
             del report['source']['ast']

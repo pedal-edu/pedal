@@ -76,10 +76,10 @@ def raise_exception(exception, position=None, report=None):
     name = str(exception.__class__)[8:-2]
     report.attach(name, category='Runtime', tool='Sandbox',
                   section=report['source']['section'],
-                  mistakes={'message': message, 
-                            'error': exception,
-                            'position': position,
-                            'traceback': None})
+                  mistake={'message': message, 
+                           'error': exception,
+                           'position': position,
+                           'traceback': None})
     sandbox.exception = exception
     
 def get_student_data(report=None):

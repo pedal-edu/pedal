@@ -1,4 +1,4 @@
-from pedal.report import MAIN_REPORT
+from pedal.report import MAIN_REPORT, Feedback
 
 DEFAULT_CATEGORY_PRIORITY = [
     'syntax',
@@ -73,8 +73,6 @@ def parse_data(component):
     elif isinstance(component, dict):
         return [component]
 
-MESSAGE_TYPES = ['hints', 'mistakes', 'misconceptions', 
-                 'constraints', 'metacognitives']
 def parse_feedback(feedback):
     # Default returns
     success = False
@@ -82,7 +80,7 @@ def parse_feedback(feedback):
     message = None
     data = []
     # Actual processing
-    for feedback_type in MESSAGE_TYPES:
+    for feedback_type in Feedback.MESSAGE_TYPES:
         feedback_value = getattr(feedback, feedback_type)
         if feedback_value is not None:
             data.extend(parse_data(feedback_value))

@@ -18,10 +18,10 @@ def next_section(name="", report=None):
     else:
         report.attach('Syntax error', category='Syntax', tool='Source',
                       section=report['source']['section'],
-                      mistakes=("Tried to advance to next section but the "
-                                "section was not found. Tried to load section "
-                                "{count}, but there were only {found} sections."
-                                ).format(count=int(section/2), found=found))
+                      mistake=("Tried to advance to next section but the "
+                               "section was not found. Tried to load section "
+                               "{count}, but there were only {found} sections."
+                               ).format(count=int(section/2), found=found))
     
 def count_sections(count, report=None):
     '''
@@ -37,9 +37,9 @@ def count_sections(count, report=None):
     if count != found:
         report.attach('Syntax error', category='Syntax', tool='Source',
                       section=report['source']['section'],
-                      mistakes=("Incorrect number of sections in your file. "
-                                "Expected {count}, but only found {found}"
-                                ).format(count=count, found=found))
+                      mistake=("Incorrect number of sections in your file. "
+                               "Expected {count}, but only found {found}"
+                               ).format(count=count, found=found))
 
 def verify_section(report=None):
     if report is None:
@@ -53,10 +53,10 @@ def verify_section(report=None):
     except SyntaxError as e:
         report.attach('Syntax error', category='Syntax', tool='Source',
                       section=report['source']['section'],
-                      mistakes={'message': "Invalid syntax on line "
-                                           +str(e.lineno),
-                                'error': e,
-                                'position': {"line": e.lineno}})
+                      mistake={'message': "Invalid syntax on line "
+                                          +str(e.lineno),
+                               'error': e,
+                               'position': {"line": e.lineno}})
         report['source']['success'] = False
         if 'ast' in report['source']:
             del report['source']['ast']

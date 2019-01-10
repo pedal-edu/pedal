@@ -66,7 +66,7 @@ def find_file(filename, sections=False, report=None):
                    " available.").format(filename=filename)
         report.attach('Source File Not Found', category='Syntax', tool='VPL',
                   section=0 if sections else None,
-                  mistakes={'message': message})
+                  mistake={'message': message})
         report['source']['success'] = False
 
 def set_maximum_score(number, cap=True, report=None):

@@ -49,7 +49,7 @@ class Report:
         self.feedback.append(Feedback('give_partial', performance=value,
                                       priority='positive',
                                       section=section,
-                                      mistakes=message))
+                                      mistake=message))
         
     def hide_correctness(self):
         self.suppressions['success'] = []
@@ -65,7 +65,7 @@ class Report:
         self.feedback.append(Feedback('explain', priority=priority,
                                       category='instructor',
                                       section=section,
-                                      misconceptions=misconception))
+                                      misconception=misconception))
 
     def gently(self, message, line=None):
         self.explain(message, priority='student', line=line)

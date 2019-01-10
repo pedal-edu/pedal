@@ -68,7 +68,7 @@ class Tifa(ast.NodeVisitor):
         if data['message'] != False:
             self.report.attach(issue, category='Analyzer', tool='TIFA',
                                section=self.report['source'].get('section', 0),
-                               mistakes=data)
+                               mistake=data)
         
     def locate(self, node=None):
         '''
@@ -109,7 +109,7 @@ class Tifa(ast.NodeVisitor):
             self.report['tifa']['error'] = error
             self.report.attach('tifa_error', category='Analyzer', tool='TIFA',
                                section=self.report['source'].get('section', 0),
-                               mistakes={
+                               mistake={
                                 'message': "Could not parse code",
                                 'error': error
                                })
@@ -121,7 +121,7 @@ class Tifa(ast.NodeVisitor):
             self.report['tifa']['error'] = error
             self.report.attach('tifa_error', category='Analyzer', tool='TIFA',
                                section=self.report['source'].get('section', 0),
-                               mistakes={
+                               mistake={
                                 'message': "Could not process code",
                                 'error': error
                                })
