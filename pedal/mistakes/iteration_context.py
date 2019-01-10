@@ -172,7 +172,7 @@ def wrong_modifying_list_8_5():
         return True
     return  False
 
-    :return:
+    Returns:
     """
     match = find_match("[20473, 27630, 17849, 19032, 16378]")
     if not match:
@@ -190,7 +190,7 @@ def wrong_modifying_list_8_6():
         true_sum = value.n + true_sum
     if true_sum != sum([2.9, 1.5, 2.3, 6.1]):
         explain('Don\'t modify the list<br><br><i>(mod_list_8.6)<i></br>')
-    :return:
+    Returns:
     """
     match = find_match("_list_ = [2.9, 1.5, 2.3, 6.1]")
     if not match:
@@ -212,7 +212,7 @@ def wrong_should_be_counting():
                 if binop.has(iter_prop) and binop.op == 'Add':
                     explain('This problem asks for the number of items in the list not the total of all the values in '
                             'the list.<br><br><i>(not_count)<i></br>')
-    :return:
+    Returns:
     """
     matches = find_matches("for _item_ in ___:\n"
                            "    __expr__")
@@ -220,7 +220,7 @@ def wrong_should_be_counting():
         for match in matches:
             _item_ = match["_item_"][0]
             __expr__ = match["__expr__"]
-            submatches = find_expr_sub_matches("___ = ___ + {}".format(_item_.id), __expr__)
+            submatches = __expr__.find_matches("___ = ___ + {}".format(_item_.id), )
             if submatches:
                 explain('This problem asks for the number of items in the list not the total of all the values in the list.'
                         '<br><br><i>(not_count)<i></br>')
@@ -246,7 +246,7 @@ def wrong_should_be_summing():
     if matches:
         for match in matches:
             __expr__ = match["__expr__"]
-            submatches = find_expr_sub_matches("___ = 1 + ___", __expr__)
+            submatches = __expr__.find_matches("___ = 1 + ___", )
             if submatches:
                 explain('This problem asks for the total of all the values in the list not the number of '
                         'items in the list.<br><br><i>(not_sum)<i></br>')
@@ -270,7 +270,7 @@ def missing_addition_slot_empty():
                         explain('You must fill in the empty slot in the addition.<br><br><i>(add_empty)<i></br>')
                         return True
     return False
-    :return:
+    Returns:
     """
     matches = find_matches("___ + _item_")
     if matches:
@@ -296,7 +296,7 @@ def wrong_cannot_sum_list():
                 if binop.has(list_prop) and binop.op == 'Add':
                     explain('Addition can only be done with a single value at a time, not with an entire list at one'
                             ' time.<br><br><i>(sum_list)<i></br>')
-    :return:
+    Returns:
     """
     matches = find_matches("for ___ in _list_ :\n"
                            "    __expr__")
@@ -304,7 +304,7 @@ def wrong_cannot_sum_list():
         for match in matches:
             _list_ = match["_list_"][0]
             __expr__ = match["__expr__"]
-            submatches = find_expr_sub_matches("___ = ___ + {}".format(_list_.id), __expr__)
+            submatches = __expr__.find_matches("___ = ___ + {}".format(_list_.id), )
             if submatches:
                 explain('Addition can only be done with a single value at a time, not with an entire list at one'
                         ' time.<br><br><i>(sum_list)<i></br>')
@@ -340,14 +340,14 @@ def missing_counting_list():
                         has_count = True
     if not has_count:
         explain('Count the total number of items in the list using iteration.<br><br><i>(miss_count_list)<i></br>')
-    :return:
+    Returns:
     """
     matches = find_matches("for _item_ in ___:\n"
                            "    __expr__")
     if matches:
         for match in matches:
             __expr__ = match["__expr__"]
-            submatches = find_expr_sub_matches("_sum_ = _sum_ + 1", __expr__)
+            submatches = __expr__.find_matches("_sum_ = _sum_ + 1", )
             if submatches:
                 return False
     explain(
@@ -376,7 +376,7 @@ def missing_summing_list():
                         has_total = True
     if not has_total:
         explain('Sum the total of all list elements using iteration.<br><br><i>(miss_sum_list)<i></br>')
-    :return:
+    Returns:
     """
     matches = find_matches("for _item_ in ___:\n"
                            "    __expr__")
@@ -424,7 +424,7 @@ def missing_zero_initialization():
                 ' in an appropriate location<br><br><i>(miss_zero_init)<i></br>'.format(accumulator.id))
         return False
     return True
-    :return:
+    Returns:
     """
 
     matches01 = find_matches("for ___ in ___:\n"
@@ -432,7 +432,7 @@ def missing_zero_initialization():
     if matches01:
         for match01 in matches01:
             __expr__ = match01["__expr__"]
-            submatches01 = find_expr_sub_matches("_sum_ = _sum_ + ___", __expr__)
+            submatches01 = __expr__.find_matches("_sum_ = _sum_ + ___", )
             if submatches01:
                 for submatch01 in submatches01:
                     _sum_ = submatch01["_sum_"][0]
@@ -454,7 +454,7 @@ def wrong_printing_list():
     if matches:
         for match in matches:
             __expr__ = match["__expr__"]
-            if find_expr_sub_matches("print(___)", __expr__):
+            if __expr__.find_matches("print(___)", ):
                 explain('You should be printing a single value.<br><br><i>(list_print)<i></br>')
                 return True
     return False
@@ -469,7 +469,7 @@ def missing_average():
     if matches_missing:
         for match in matches_missing:
             __expr__ = match["__expr__"]
-            sub_matches = find_expr_sub_matches("_total_/_count_", __expr__)
+            sub_matches = __expr__.find_matches("_total_/_count_", )
             if sub_matches:
                 for sub_match in sub_matches:
                     _total_ = sub_match["_total_"][0]
@@ -488,7 +488,7 @@ def warning_average_in_iteration():
     if matches:
         for match in matches:
             __expr__ = match["__expr__"]
-            submatches = find_expr_sub_matches("_average_ = _total_/_count_",__expr__)
+            submatches = __expr__.find_matches("_average_ = _total_/_count_",)
             if submatches:
                 for submatch in submatches:
                     _total_ = submatch["_total_"][0]
@@ -513,7 +513,7 @@ def wrong_average_denominator():
             __expr__ = match["__expr__"]
             __expr2__ = match["__expr2__"]
             # _value_ = match["_value_"][0]
-            submatches = find_expr_sub_matches("_count_ = _count_ + 1", __expr__)
+            submatches = __expr__.find_matches("_count_ = _count_ + 1", )
             submatches02 = find_expr_sub_matches("___/_value_", __expr2__)
             if submatches and submatches02:
                 for submatch in submatches:
@@ -535,7 +535,7 @@ def wrong_average_numerator():
             __expr__ = match["__expr__"]
             __expr2__ = match["__expr2__"]
             _item_ = match["_item_"][0]
-            submatches = find_expr_sub_matches("_total_ = _total_ + {}".format(_item_.id), __expr__)
+            submatches = __expr__.find_matches("_total_ = _total_ + {}".format(_item_.id), )
             submatches02 = find_expr_sub_matches("_value_/___", __expr2__)
             if submatches and submatches02:
                 for submatch in submatches:
@@ -694,7 +694,7 @@ def wrong_print_9_1():
     if wrong_print_placement:
         explain('The output of the total rainfall amount is not in the correct place. The total rainfall should be '
                 'output only once after the total rainfall has been computed.<br><br><i>(print_9.1)<i></br>')
-    :return:
+    Returns:
     """
     match = find_match("for _item_ in _list_:\n"
                        "    pass\n"
@@ -868,7 +868,7 @@ def wrong_conversion_10_2():
             return False
     # code version 2 end
     '''
-    :return:
+    Returns:
     """
     matches = find_matches("for _target_ in ___:\n"
                            "    __expr__")
@@ -877,7 +877,7 @@ def wrong_conversion_10_2():
             # code version 1 start
             _target_ = match["_target_"][0]
             __expr__ = match["__expr__"]
-            matches02 = find_expr_sub_matches("_target_*0.04", __expr__)
+            matches02 = __expr__.find_matches("_target_*0.04", )
             if matches02:
                 for match02 in matches02:
                     _target_02 = match02["_target_"][0]
@@ -953,7 +953,7 @@ def wrong_conversion_problem_10_5():
         for match in matches:
             _item_ = match["_item_"][0]
             __expr__ = match["__expr__"]
-            matches02 = find_expr_sub_matches("_item_*0.62", __expr__)
+            matches02 = __expr__.find_matches("_item_*0.62", )
             if matches02:
                 for match02 in matches02:
                     _item_02 = match02["_item_"][0]
@@ -968,7 +968,7 @@ def wrong_filter_problem_atl1_10_5():
     """
     find pattern where expression is equal to _item_*0.62 and
     where the condition is not equivalent to _expr_ > 10
-    :return:
+    Returns:
     """
 
     matches = find_matches("for _item_ in ___:\n"
@@ -979,7 +979,7 @@ def wrong_filter_problem_atl1_10_5():
             _item_ = match["_item_"][0].astNode
             __cond__ = match["__cond__"]
             __expr__ = match["__expr__"]
-            matches02 = find_expr_sub_matches("_item_*0.62", __expr__)
+            matches02 = __expr__.find_matches("_item_*0.62", )
             if matches02:
                 for match02 in matches02:
                     _item_02 = match02["_item_"][0].astNode
@@ -1003,7 +1003,7 @@ def wrong_filter_problem_atl2_10_5():
             __cond__ = match["__cond__"]
             _item_ = match["_item_"][0].astNode
             _miles_ = match["_miles_"][0].astNode
-            matches02 = find_expr_sub_matches("_item_*0.62", __expr__)
+            matches02 = __expr__.find_matches("_item_*0.62", )
             if matches02:
                 for match02 in matches02:
                     _item_02 = match02["_item_"][0].astNode
@@ -1028,7 +1028,7 @@ def wrong_append_problem_atl1_10_5():
             if (__cond__.numeric_logic_check(0.1, "item > 16.1290322580645") and
                __cond__.has(_item_)):
                 new_code = "{}*0.62".format(_item_.id)
-                matches02 = find_expr_sub_matches(new_code, __expr__)
+                matches02 = __expr__.find_matches(new_code, )
                 if not matches02:
                     explain('You are not appending the correct values.<br><br><i>(app_alt1_10.5)<i></br>')
                     return True
@@ -1058,7 +1058,7 @@ def wrong_debug_10_6():
 
 
 
-    :return:
+    Returns:
     '''
     matches = find_matches('quakes = earthquakes.get("depth","(None)","")\n'
                            'quakes_in_miles = []\n'
@@ -1106,7 +1106,7 @@ def wrong_initialization_in_iteration():
     if matches:
         for match in matches:
             __expr__ = match["__expr__"]
-            submatches = find_expr_sub_matches("_assign_ = __expr__", __expr__)
+            submatches = __expr__.find_matches("_assign_ = __expr__", )
             if submatches:
                 for submatch in submatches:
                     __expr__sub = submatch["__expr__"]
@@ -1153,7 +1153,7 @@ def all_labels_present():  # TODO: make sure it's before the show, maybe check f
     plt.xlabel("Number of Sentences")
     plt.ylabel("Number of Long Books")
     plt.show()
-    :return:
+    Returns:
     """
 
     match = find_match("plt.title(___)\nplt.show()")

@@ -296,7 +296,7 @@ class GradeMagic(Magics):
         # Concatenate the JS code and then execute it by displaying it
         code = EXTRACT_STUDENT_CODE
         code += ANIMATE_LAST_CELL
-        code += BLOCKPY_GRADE.format(assignment=assignment, 
+        code += BLOCKPY_GRADE.format(assignment=assignment,
                                      inputs=json.dumps(inputs))
         code += EXECUTE_CODE
         # self.logging()

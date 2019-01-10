@@ -27,6 +27,7 @@ OPERATION_DESCRIPTION = {
     ast.NotIn: "an not in",
 }
 
+
 def _format_message(issue, data):
     if issue == 'Action after return':
         # A path had a statement after a return.
@@ -60,8 +61,8 @@ def _format_message(issue, data):
                 "for the iteration variable. Usually, the iteration variable "
                 "is the singular form of the iteration list (e.g., "
                 "<code>for a_dog in dogs:</code>).").format(
-                    line=data['position']['line'],
-                    name=data['name'])
+            line=data['position']['line'],
+            name=data['name'])
     elif issue == 'Initialization Problem':
         # A variable was read before it was defined
         return ("The variable <code>{name}</code> was used on line {line}, "
@@ -115,7 +116,7 @@ def _format_message(issue, data):
                 "{line}. You should only iterate over non-empty lists."
                 ).format(line=data['position']['line'], expression=expression)
     elif issue == 'Incompatible types':
-        op = OPERATION_DESCRIPTION.get(data['operation'].__class__, 
+        op = OPERATION_DESCRIPTION.get(data['operation'].__class__,
                                        str(data['operation']))
         left = data['left'].singular_name
         right = data['right'].singular_name
@@ -130,6 +131,7 @@ def _format_message(issue, data):
                 "function they were declared in."
                 ).format(line=data['position']['line'])
     return False
+
 
 '''
 TODO: Finish these checks

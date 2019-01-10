@@ -1,7 +1,7 @@
 from pedal.cait.cait_api import parse_program
 from pedal.report.imperative import gently, explain
 
-'''
+"""
 Verify indentation
 
 Format:
@@ -35,16 +35,18 @@ Type validation:
         tuple[X:Y]
     Custom classes
         Person
-'''
+"""
 
-SPECIAL_PARAMETERS = ["_returns", "yields", "prints", "_raises", 
+SPECIAL_PARAMETERS = ["_returns", "yields", "prints", "_raises",
                       "_report", "_root"]
+
+
 def function_signature(function_name, returns=None, yields=None,
                        prints=None, raises=None, report=None, root=None,
                        **kwargs):
-    '''
-    
-    '''
+    """
+
+    """
     if root is None:
         root = parse_program()
     # If you encounter any special parameters with a "_", then fix their
@@ -55,15 +57,26 @@ def function_signature(function_name, returns=None, yields=None,
     # Go get the actual docstring, parse it
     # Try to match each element in turn.
 
-def class_signature(class_name, **attributes, report=None, root=None):
-    '''
-    '''
+
+def class_signature(class_name, report=None, root=None, **attributes):
+    """
+
+    Args:
+        class_name:
+        **attributes:
+        report:
+        root:
+
+    Returns:
+
+    """
     if root is None:
         root = parse_program()
 
-'''
+
+"""
 def find_string(needle, haystack):
-    """
+    '''
     Finds the given needle in the haystack.
     
     Args:
@@ -71,7 +84,7 @@ def find_string(needle, haystack):
         needle (str): The given string to be searching for.
     Returns:
         bool: Whether the string is in the list.
-    """
+    '''
 
 document_function("find_string", needle="str", haystack="list[str]", returns="bool")
-'''
+"""

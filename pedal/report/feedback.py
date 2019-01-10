@@ -1,11 +1,12 @@
-'''
+"""
 Simple data classes for storing feedback to present to learners.
-'''
+"""
 
 __all__ = ['Feedback']
 
+
 class Feedback:
-    '''
+    """
     A class for storing raw feedback.
     
     Attributes:
@@ -49,8 +50,9 @@ class Feedback:
                                     strategies ("You have been working for
                                     5 hours, perhaps it is time to take
                                     a break?").
-    '''
-    def __init__(self, label, tool='instructor', 
+    """
+
+    def __init__(self, label, tool='instructor',
                  category='Instructor feedback', priority=None, section=None,
                  result=None, performance=None, misconceptions=None,
                  mistakes=None, hints=None, constraints=None,
@@ -69,23 +71,23 @@ class Feedback:
         self.hints = hints
         self.constraints = constraints
         self.metacognitives = metacognitives
-    
+
     def __str__(self):
         return "<Feedback ({})>".format(self.label)
-    
-    
+
     def __repr__(self):
         metadata = ""
         if self.tool is not None:
-            metadata += ", tool="+self.tool
+            metadata += ", tool=" + self.tool
         if self.category is not None:
-            metadata += ", category="+self.category
+            metadata += ", category=" + self.category
         if self.priority is not None:
-            metadata += ", priority="+self.priority
+            metadata += ", priority=" + self.priority
         if self.section is not None:
-            metadata += ", section="+str(self.section)
+            metadata += ", section=" + str(self.section)
         data = ""
         return "Feedback({}{}{})".format(self.label, metadata, data)
+
 
 '''
 A Component is one of:
@@ -97,4 +99,3 @@ A Component is one of:
             error: The error message to render
     List of Component
 '''
-

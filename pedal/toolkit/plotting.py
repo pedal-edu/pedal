@@ -2,9 +2,8 @@ from pedal.toolkit.utilities import *
 from pedal.cait.cait_api import *
 from pedal.sandbox import compatibility
 
-
-PLOT_LABEL = {'plot': 'line plot', 
-              'hist': 'histogram', 
+PLOT_LABEL = {'plot': 'line plot',
+              'hist': 'histogram',
               'scatter': 'scatter plot'}
 
 
@@ -82,7 +81,7 @@ def compare_data(plt_type, correct, given):
         # Assume it is a singular list
         correct_xs = list(range(len(correct)))
         correct_ys = correct
-    
+
     if given['type'] == 'hist':
         return correct_ys == given['values']
     elif plt_type == 'hist':

@@ -80,12 +80,12 @@ VALID_UNARYOP_TYPES = {
 
 
 def are_types_equal(left, right):
-    '''
+    """
     Determine if two types are equal.
 
     This could be more Polymorphic - move the code for each type into
     its respective class instead.
-    '''
+    """
     if left is None or right is None:
         return False
     elif isinstance(left, UnknownType) or isinstance(right, UnknownType):

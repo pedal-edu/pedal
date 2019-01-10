@@ -6,7 +6,7 @@ def check_trace(state):
         return past_types
 
 class State:
-    '''
+    """
     A representation of a variable at a particular point in time of the program.
     
     Attributes:
@@ -30,8 +30,8 @@ class State:
         over_position (dict): A Position indicating where the State was
                               previously set versus when it was overwritten.
         
-    '''
-    def __init__(self, name, trace, type, method, position, 
+    """
+    def __init__(self, name, trace, type, method, position,
                  read='maybe', set='maybe', over='maybe', over_position=None):
         self.name = name
         self.trace = trace
@@ -42,18 +42,18 @@ class State:
         self.read = read
         self.set = set
         self.over = over
-    
+
     def copy(self, method, position):
-        '''
+        """
         Make a copy of this State, copying this state into the new State's trace
-        '''
+        """
         return State(self.name, [self], self.type, method, position,
                      self.read, self.set, self.over, self.over_position)
 
     def __str__(self):
-        '''
+        """
         Create a string representation of this State.
-        '''
+        """
         return "{method}(r:{read},s:{set},o:{over},{type})".format(
             method=self.method,
             read=self.read[0],
@@ -62,16 +62,15 @@ class State:
             type=self.type.__class__.__name__
         )
     def __repr__(self):
-        '''
+        """
         Create a string representation of this State.
-        '''
+        """
         return str(self)
-    
+
     def was_type(self, a_type):
-        '''
+        """
         Retrieve all the types that this variable took on over its entire
         trace.
-        '''
+        """
         past_types = check_trace(self)
         return any(past_type.is_equal(a_type) for past_type in past_types)
-    
