@@ -160,15 +160,15 @@ def prevent_advanced_iteration():
 
 
 COMPARE_OP_NAMES = {
-    "==": "Eq", 
-    "<": "Lt", 
-    "<=": "Lte", 
-    ">=": "Gte", 
-    ">": "Gt", 
-    "!=": "NotEq", 
-    "is": "Is", 
-    "is not": "IsNot", 
-    "in": "In", 
+    "==": "Eq",
+    "<": "Lt",
+    "<=": "Lte",
+    ">=": "Gte",
+    ">": "Gt",
+    "!=": "NotEq",
+    "is": "Is",
+    "is not": "IsNot",
+    "in": "In",
     "not in": "NotIn"}
 BOOL_OP_NAMES = {
     "and": "And",
@@ -237,6 +237,7 @@ def find_operation(op_name, root):
                 return unaryop
     return False
 
+
 def ensure_recursion(function_name, root=None):
     if root is None:
         root = parse_program()
@@ -244,18 +245,19 @@ def ensure_recursion(function_name, root=None):
     calls = []
     for a_call in all_calls:
         if a_call.func.ast_name == 'Attribute':
-            if a_call.func.attr == name:
+            if a_call.func.attr == function_name:
                 calls.append(a_call)
         elif a_call.func.ast_name == 'Name':
-            if a_call.func.id == name:
+            if a_call.func.id == function_name:
                 calls.append(a_call)
     return calls
+
 
 def ensure_assignment(variable_name, type=None, value=None, root=None):
     '''
     Consumes a variable name
     TODO: Implement the value parameter
-    
+
     :param variable_name: The variable name the student is expected to define.
     :type variable_name: str
     :param type: The string type of the node on the right side of the
@@ -274,13 +276,13 @@ def ensure_assignment(variable_name, type=None, value=None, root=None):
             potentials.append(assign)
             if type is None:
                 return assign
-            elif (type == 'Bool' and 
-                assign.value.ast_name == 'Name' and 
-                 assign.value.id in ('True', 'False')):
+            elif (type == 'Bool' and
+                  assign.value.ast_name == 'Name' and
+                  assign.value.id in ('True', 'False')):
                 return assign
-            elif (type == 'Bool' and 
-                assign.value.ast_name == 'NameConstant' and 
-                 assign.value.value in (True, False)):
+            elif (type == 'Bool' and
+                  assign.value.ast_name == 'NameConstant' and
+                  assign.value.value in (True, False)):
                 return assign
             elif assign.value.ast_name == type:
                 return assign
@@ -289,8 +291,8 @@ def ensure_assignment(variable_name, type=None, value=None, root=None):
                  "created an expression instead.").format(variable=variable_name))
     elif type is None:
         explain(("You have not properly assigned anything to the variable "
-            "{variable}.").format(variable=variable_name))
+                 "{variable}.").format(variable=variable_name))
     else:
         explain(("You have not assigned a {type} to the variable {variable}."
-                "").format(type=type, variable=variable_name))
+                 "").format(type=type, variable=variable_name))
     return False

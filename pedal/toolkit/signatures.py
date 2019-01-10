@@ -16,7 +16,7 @@ If line is "Args:" or "Returns:"
 
 "Note:"
     Any level of indentation indicates
-    
+
 Type validation:
     Caps does not matter
     Primitives:
@@ -37,13 +37,15 @@ Type validation:
         Person
 '''
 
-SPECIAL_PARAMETERS = ["_returns", "yields", "prints", "_raises", 
+SPECIAL_PARAMETERS = ["_returns", "yields", "prints", "_raises",
                       "_report", "_root"]
+
+
 def function_signature(function_name, returns=None, yields=None,
                        prints=None, raises=None, report=None, root=None,
                        **kwargs):
     '''
-    
+
     '''
     if root is None:
         root = parse_program()
@@ -55,17 +57,19 @@ def function_signature(function_name, returns=None, yields=None,
     # Go get the actual docstring, parse it
     # Try to match each element in turn.
 
-def class_signature(class_name, **attributes, report=None, root=None):
+
+def class_signature(class_name, report=None, root=None, **attributes):
     '''
     '''
     if root is None:
         root = parse_program()
 
+
 '''
 def find_string(needle, haystack):
     """
     Finds the given needle in the haystack.
-    
+
     Args:
         haystack (list[str]): The list of strings to look within.
         needle (str): The given string to be searching for.

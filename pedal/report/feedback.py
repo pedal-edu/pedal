@@ -27,25 +27,25 @@ class Feedback:
         result (bool): Whether or not this feedback is associated with the
                        learner completing the task ("Success!").
         performance (float): A relative amount that this feedback contributes
-                             to the students' performance (think in terms of
-                             partial credit, like "Triggering this feedback
-                             is worth 20% (.2)").
-        misconceptions (Component): A description of the misconception that
-                                    is believed to be in the student's mind,
-                                    or perhaps the relevant concept from the
-                                    material that should be associated with
-                                    this. ("Variables must be initialized
-                                    before they are used").
-        mistakes (Component): A description of the error or bug that the
+             to the students' performance (think in terms of
+             partial credit, like "Triggering this feedback
+             is worth 20% (.2)").
+        misconceptions (Message): A description of the misconception that
+            is believed to be in the student's mind,
+            or perhaps the relevant concept from the
+            material that should be associated with
+            this. ("Variables must be initialized
+            before they are used").
+        mistakes (Message): A description of the error or bug that the
                               student has created ("NameError on line 5: sum
                               has not been defined").
-        hints (Component): A suggestion for what the student can do
+        hints (Message): A suggestion for what the student can do
                            ("Initialize the sum variable on line 2").
-        constraints (Component): A description of the task requirements or
+        constraints (Message): A description of the task requirements or
                                  task type that the student has violated
                                  ("You used a for loop, but this question
                                  expected you to use recursion.").
-        metacognitives (Component): A suggestion for more regulative
+        metacognitives (Message): A suggestion for more regulative
                                     strategies ("You have been working for
                                     5 hours, perhaps it is time to take
                                     a break?").
@@ -90,12 +90,11 @@ class Feedback:
         return "Feedback({}{}{})".format(self.label, metadata, data)
 
 '''
-A Component is one of:
-    message (str)
-    Dict with a `message` field and any other suitable fields
-        Example fields could include:
-            html_message: An HTML message instead of a plaintext message.
-            line: The line number to highlight
-            error: The error message to render
+A Message is one of:
+    str
+    Dict with a `message` field and any other suitable fields, such as:
+        html_message: An HTML message instead of a plaintext message.
+        line: The line number to highlight
+        error: The error message to render
 '''
 
