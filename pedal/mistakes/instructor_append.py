@@ -1,5 +1,5 @@
-from pedal.cait.cait_api import *
-from pedal.report.imperative import *
+from pedal.cait.cait_api import find_matches, find_expr_sub_matches, data_state
+from pedal.report.imperative import explain
 
 
 def append_group_on_change():
@@ -22,6 +22,7 @@ def find_append_in(node):
             append_list.append(node)
     return append_list
 
+
 '''
 def missing_append_in_iteration():
     std_ast = parse_program()
@@ -41,7 +42,6 @@ def missing_append_in_iteration():
         for match in matches:
             __expr__ = match["__expr__"]
             submatch = __expr__.find_matches("___.append(___)")
-            #submatch = find_expr_sub_matches("___.append(___)", __expr__)
             if submatch:
                 return False
         explain("You must construct a list by appending values one at a time to the list."
@@ -56,7 +56,6 @@ def wrong_not_append_to_list():
     for match in matches:
         __expr__ = match["__expr__"]
         submatches = __expr__.find_matches("_target_.append(___)")
-        #submatches = find_expr_sub_matches("_target_.append(___)", __expr__)
         for submatch in submatches:
             _target_ = submatch["_target_"][0]
             if not data_state(_target_).was_type('list'):

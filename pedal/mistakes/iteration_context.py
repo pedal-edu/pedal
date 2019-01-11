@@ -1,8 +1,10 @@
-from pedal.cait.cait_api import *
-from pedal.report.imperative import *
+from pedal.cait.cait_api import (parse_program,
+                                 find_matches, find_match,
+                                 find_expr_sub_matches)
+from pedal.report.imperative import explain, gently
 import pedal.mistakes.instructor_append as append_api
 from pedal.toolkit.utilities import *
-from pedal.sandbox.compatibility import *
+from pedal.sandbox.compatibility import get_output
 
 
 # ################8.2 Start#######################
@@ -120,7 +122,7 @@ def wrong_print_8_3():
 # ################8.4 Start#######################
 def missing_target_slot_empty_8_4():
     matches = find_matches("for _item_ in pages_count_list:\n"
-                       "    pass")
+                           "    pass")
     if matches:
         for match in matches:
             _item_ = match["_item_"][0]
@@ -222,8 +224,9 @@ def wrong_should_be_counting():
             __expr__ = match["__expr__"]
             submatches = find_expr_sub_matches("___ = ___ + {}".format(_item_.id), __expr__)
             if submatches:
-                explain('This problem asks for the number of items in the list not the total of all the values in the list.'
-                        '<br><br><i>(not_count)<i></br>')
+                explain(
+                    'This problem asks for the number of items in the list not the total of all the values in the list.'
+                    '<br><br><i>(not_count)<i></br>')
                 return True
     return False
 
@@ -488,7 +491,7 @@ def warning_average_in_iteration():
     if matches:
         for match in matches:
             __expr__ = match["__expr__"]
-            submatches = find_expr_sub_matches("_average_ = _total_/_count_",__expr__)
+            submatches = find_expr_sub_matches("_average_ = _total_/_count_", __expr__)
             if submatches:
                 for submatch in submatches:
                     _total_ = submatch["_total_"][0]
@@ -934,9 +937,17 @@ def wrong_nested_filter_condition_10_4():
             _temp_ = match["_temp_"][0].astNode
             __cond1__ = match["__cond1__"]
             __cond2__ = match["__cond2__"]
-            if not (__cond1__.has(_temp_) and __cond2__.has(_temp_) and
-               (__cond1__.numeric_logic_check(1, "32 <= temp") and __cond2__.numeric_logic_check(1, "temp <= 50") or
-               __cond2__.numeric_logic_check(1, "32 <= temp") and __cond1__.numeric_logic_check(1, "temp <= 50"))):
+            if not (
+                __cond1__.has(_temp_) and __cond2__.has(_temp_) and (
+                    __cond1__.numeric_logic_check(
+                        1,
+                        "32 <= temp") and __cond2__.numeric_logic_check(
+                        1,
+                        "temp <= 50") or __cond2__.numeric_logic_check(
+                    1,
+                    "32 <= temp") and __cond1__.numeric_logic_check(
+                        1,
+                        "temp <= 50"))):
                 explain(
                     'The decisions used to filter the temperatures into the specified range of temperatures is not '
                     'correct.<br><br><i>(nest_filt_10.4)<i></br>')
@@ -984,8 +995,8 @@ def wrong_filter_problem_atl1_10_5():
                 for match02 in matches02:
                     _item_02 = match02["_item_"][0].astNode
                     if (_item_.id == _item_02.id and
-                       __cond__.has(_item_) and
-                       not __cond__.numeric_logic_check(0.1, "item > 16.1290322580645")):
+                        __cond__.has(_item_) and
+                            not __cond__.numeric_logic_check(0.1, "item > 16.1290322580645")):
                         explain('You are not correctly filtering out values from the list.<br><br><i>'
                                 '(filt_alt1_10.5)<i></br>')
                         return True
@@ -1009,7 +1020,7 @@ def wrong_filter_problem_atl2_10_5():
                     _item_02 = match02["_item_"][0].astNode
                     if _item_.id == _item_02.id:
                         if not (__cond__.has(_miles_) and
-                           __cond__.numeric_logic_check(1, "_item_ > 10")):
+                                __cond__.numeric_logic_check(1, "_item_ > 10")):
                             explain('You are not correctly filtering out values from the list.<br><br><i>'
                                     '(filt_alt2_10.5)<i></br>')
                             return True
@@ -1026,7 +1037,7 @@ def wrong_append_problem_atl1_10_5():
             __cond__ = match["__cond__"]
             __expr__ = match["__expr__"]
             if (__cond__.numeric_logic_check(0.1, "item > 16.1290322580645") and
-               __cond__.has(_item_)):
+                    __cond__.has(_item_)):
                 new_code = "{}*0.62".format(_item_.id)
                 matches02 = find_expr_sub_matches(new_code, __expr__)
                 if not matches02:
@@ -1075,7 +1086,7 @@ def wrong_debug_10_6():
         master_list = ["quake", "quakes", "quakes_in_miles"]
         if (name1 in master_list and name2 in master_list and
             name1 != "quakes_in_miles" and name2 != "quakes" and
-            (name1 != "quake" or name2 != "quake")):
+                (name1 != "quake" or name2 != "quake")):
             return False
     explain('This is not one of the two changes needed. Undo the change and try again.<br><br><i>(debug_10.6)<i></br>')
     return True

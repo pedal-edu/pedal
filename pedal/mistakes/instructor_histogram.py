@@ -1,5 +1,5 @@
-from pedal.cait.cait_api import *
-from pedal.report.imperative import *
+from pedal.cait.cait_api import find_match, find_matches, data_state
+from pedal.report.imperative import explain
 
 
 def histogram_group():
@@ -94,7 +94,7 @@ def histogram_wrong_list():
         for match in matches:
             _list_ = match["_list_"][0].astNode
             __expr__ = match["__expr__"]
-            submatches = find_expr_sub_matches("{}.append(___)".format(_list_.id), __expr__)
+            submatches = __expr__.find_matches("{}.append(___)".format(_list_.id))
             if submatches:
                 return False
         explain(
