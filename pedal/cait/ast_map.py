@@ -1,4 +1,4 @@
-from pedal.cait.cait_node import *
+from pedal.cait.cait_node import CaitNode
 from functools import reduce
 
 
@@ -158,7 +158,7 @@ class AstMap:
         :param other: (type AstMap) the other AstMap to be merged with
         :return: self modified by adding the contents of other
         """
-        if type(other) != type(self):
+        if not isinstance(other, type(self)):
             raise TypeError
 
         # merge all mappings

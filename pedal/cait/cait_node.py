@@ -1,16 +1,15 @@
 import ast
-#import pedal.cait.ast_helpers as ast_str
 from pedal.cait.ast_helpers import dump
 from types import MethodType
-from pedal.report import Report, Feedback, MAIN_REPORT
-#from pedal.cait.stretchy_tree_matching import StretchyTreeMatcher
+from pedal.report import MAIN_REPORT
+
 
 class CaitNode:
     """
     A wrapper class for AST nodes. Linearizes access to the children of the ast
     node and saves the field this AST node
     originated from.
-    
+
     Attrs:
         ast_name (str): The name of the original AstNode (e.g., "Name" or
             "FunctionDef")
@@ -19,7 +18,7 @@ class CaitNode:
     use a production pattern instead.
     """
 
-    def __init__(self, ast_node, my_field='', tid=0, lin_tree=None, 
+    def __init__(self, ast_node, my_field='', tid=0, lin_tree=None,
                  ancestor=None, report=None):
         """
         :param ast_node: The AST node to be wrapped
@@ -61,8 +60,8 @@ class CaitNode:
             # (e.g. a load function) instead of a child node
             for sub_value in value:
                 if isinstance(sub_value, ast.AST):
-                    new_child = CaitNode(sub_value, my_field=field, 
-                                         tid=tid_count + 1, 
+                    new_child = CaitNode(sub_value, my_field=field,
+                                         tid=tid_count + 1,
                                          lin_tree=self.linear_tree,
                                          ancestor=self,
                                          report=self.report)
@@ -102,7 +101,7 @@ class CaitNode:
                 "Add": left + right,
                 "Sub": left - right,
                 "Mult": left * right,
-                "Div": left/right}[op]
+                "Div": left / right}[op]
 
         def eval_selector(op_num, op_expr):
             op_expr = op_num if op_expr.ast_name == "Name" else op_expr
@@ -196,7 +195,7 @@ class CaitNode:
             else:
                 raise TypeError
             return ins_res == std_res
-        except:
+        except BaseException:
             return False
 
     def get_next_tree(self):
@@ -301,7 +300,7 @@ class CaitNode:
                         return field
                 else:
                     return field
-    
+
     def find_matches(self, pattern, is_mod=False):
         '''
         Retrieves any patterns that match against this CaitNode. Expected to be
@@ -338,7 +337,7 @@ class CaitNode:
         setattr(visitor, func_name, MethodType(func_ref, visitor))
         visitor.visit(self.astNode)
         return visitor.items
-    
+
     def has(self, node):
         '''
         Determine if this node has the given `node`.
@@ -370,7 +369,7 @@ class CaitNode:
             return self.tree_id < other.tree_id and self.linear_tree == other.linear_tree
         except Exception:
             raise TypeError
-    
+
     def is_ast(self, ast_name):
         if not isinstance(ast_name, str):
             ast_name = CaitNode.get_ast_name(ast_name.astNode)
@@ -389,7 +388,7 @@ class CaitNode:
                 return False
             current = current.parent
         return False
-    
+
     def get_data_state(self):
         if self.ast_name != "Name":
             return None
@@ -397,13 +396,14 @@ class CaitNode:
             return self.report['tifa']["top_level_variables"][self.id]
         except KeyError:
             return None
-    
+
     def get_data_type(self):
         state = self.get_data_state()
         if state is None:
             return None
         else:
             return state.type
+
 
 AST_SINGLE_FUNCTIONS = ["ctx_name", "op_name"]
 AST_ARRAYS_OF_FUNCTIONS = ["ops_names"]

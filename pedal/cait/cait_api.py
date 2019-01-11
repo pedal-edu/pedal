@@ -1,5 +1,6 @@
 from pedal.report import MAIN_REPORT
-from pedal.cait.stretchy_tree_matching import *
+from pedal.cait.stretchy_tree_matching import StretchyTreeMatcher
+from pedal.cait.cait_node import CaitNode
 import ast
 
 
@@ -10,7 +11,7 @@ class CaitException(Exception):
 '''
 CaitReport:
     A collection of information from the latest CAIT run.
-    
+
     Attrs:
         ast: The CaitNode tree that was most recently parsed out.
         cache[str:CaitNode]: A dictionary mapping student code (str) to
@@ -24,7 +25,7 @@ def _parse_source(code, cait_report):
     """
     Parses the given code and returns its Cait representation. If the parse was
     unsuccessful, it attaches the error to the report.
-    
+
     Args:
         code (str): A string of Python code.
         cait_report (dict): A Cait Report to store information in.
@@ -45,13 +46,13 @@ def _load_cait(student_code, report):
     Retrieves the current report for CAIT. If there is no CAIT report, it will
     generate one. If source code is given, that will be used instead of the
     report's source code.
-    
+
     Args:
         student_code (str): The code to parse into the a CaitNode tree. If
             None, then it will use the code in the report's Source tool.
         report (Report): The report to attach data to.
         force_reparse (bool): Whether or not to use any Cait data in the cache.
-    
+
     Returns:
         dict: Returns the Cait Report
     """
@@ -95,7 +96,7 @@ def require_tifa(self):
 def parse_program(student_code=None, report=None):
     """
     Parses student code and produces a CAIT representation.
-    
+
     Args:
         student_code (str): The student source code to parse. If None, defaults
             to the code within the Source tool of the given Report.
@@ -113,7 +114,7 @@ def parse_program(student_code=None, report=None):
 def expire_cait_cache(report=None):
     """
     Deletes the most recent CAIT run and any cached CAIT parses.
-    
+
     Args:
         report (Report): The report to attach data to. Defaults to MAIN_REPORT.
     """
@@ -126,7 +127,7 @@ def expire_cait_cache(report=None):
 def def_use_error(node, report=None):
     """
     Checks if node is a name and has a def_use_error
-    
+
     Args:
         node (str or AstNode or CaitNode): The Name node to look up.
         report (Report): The report to attach data to. Defaults to MAIN_REPORT.
@@ -158,7 +159,7 @@ def def_use_error(node, report=None):
 def data_state(node, report=None):
     """
     Determines the Tifa State of the given node.
-    
+
     Args:
         node (str or AstNode or CaitNode): The Name node to look up in TIFA.
         report (Report): The report to attach data to. Defaults to MAIN_REPORT.
@@ -182,7 +183,7 @@ def data_state(node, report=None):
 def data_type(node, report=None):
     """
     Looks up the type of the node using Tifa's analysis.
-    
+
     Args:
         node (str or AstNode or CaitNode): The Name node to look up in TIFA.
         report (Report): The report to attach data to. Defaults to MAIN_REPORT.
@@ -197,12 +198,12 @@ def data_type(node, report=None):
 
 def find_match(pattern, student_code=None, report=None, cut=False):
     """
-    Apply Tree Inclusion and return the first match of the `pattern` in the 
+    Apply Tree Inclusion and return the first match of the `pattern` in the
     `student_code`.
 
     Args:
         pattern (str): The CaitExpression to match against.
-        student_code (str): The string of student code to check against. 
+        student_code (str): The string of student code to check against.
             Defaults to the code of the Source tool in the Report.
         report (Report): The report to attach data to.
         cut (bool): Set to true to trim root to first branch
@@ -210,7 +211,7 @@ def find_match(pattern, student_code=None, report=None, cut=False):
         CaitNode or None: The first matching node for the given pattern, or
             None if nothing was found.
     """
-    matches = find_matches(pattern=pattern, student_code=student_code, 
+    matches = find_matches(pattern=pattern, student_code=student_code,
                            report=report, cut=cut)
     if matches:
         return matches[0]
@@ -220,7 +221,7 @@ def find_match(pattern, student_code=None, report=None, cut=False):
 
 def find_matches(pattern, student_code=None, report=None, cut=False):
     """
-    Apply Tree Inclusion and return all matches of the `pattern` in the 
+    Apply Tree Inclusion and return all matches of the `pattern` in the
     `student_code`.
 
     Args:

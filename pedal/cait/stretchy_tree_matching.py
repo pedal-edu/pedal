@@ -1,6 +1,6 @@
 import ast
 import re
-from pedal.cait.ast_map import *
+from pedal.cait.ast_map import AstMap
 from pedal.cait.cait_node import CaitNode
 
 
@@ -8,7 +8,7 @@ def is_primitive(item):
     '''
     Determines if the given item is a primitive value (either an int, float,
     str, bool, or None).
-    
+
     Args:
         item (any): Any value
     Returns:
@@ -22,7 +22,7 @@ class StretchyTreeMatcher:
         '''
         The StretchyTreeMatcher is used to compare a pattern against some
         student code. It produces a set of potential mappings between them.
-        
+
         Args:
             code (str or AstNode): The students' code or a valid AstNode from
                 `ast.parse`. If the code has invalid syntax, a SyntaxError
@@ -69,14 +69,14 @@ class StretchyTreeMatcher:
                    explore_root.ast_name in ["Expr", "Module"]):
                 explore_root = explore_root.children[0]
                 explore_root.field = "none"
-        return self.any_node_match(explore_root, other_tree, 
+        return self.any_node_match(explore_root, other_tree,
                                    check_meta=check_meta)
 
     def any_node_match(self, ins_node, std_node, check_meta=True, cut=False):
         '''
         Finds whether ins_node can be matched to some node in the tree std_node
-        @return a mapping of nodes and a symbol table mapping ins_node to 
-        some node in the tree std_node or False if such a matching does not 
+        @return a mapping of nodes and a symbol table mapping ins_node to
+        some node in the tree std_node or False if such a matching does not
         exist
         '''
         # @TODO: create a more public function that converts ins_node and std_node into CaitNodes
@@ -307,7 +307,6 @@ class StretchyTreeMatcher:
                         if not new_map.has_conflicts():  # if it's a valid mapping
                             new_maps.append(new_map)
                             new_sibs.append(runSib)
-        map_update = None
         if len(new_maps) == 0:
             return None
         return {
