@@ -1,3 +1,5 @@
+
+'''
 def default_pipeline(tifa=False, cait=True, sandbox=True):
     next_section()
     results = []
@@ -8,3 +10,4 @@ def default_pipeline(tifa=False, cait=True, sandbox=True):
     if sandbox:
         results.append(execute())
     return tuple(results)
+'''

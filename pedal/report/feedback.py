@@ -4,10 +4,11 @@ Simple data classes for storing feedback to present to learners.
 
 __all__ = ['Feedback']
 
+
 class Feedback:
     '''
     A class for storing raw feedback.
-    
+
     Attributes:
         label (str): An internal name for this specific piece of feedback.
         tool (str): An internal name for indicating the tool that created
@@ -50,9 +51,10 @@ class Feedback:
                                     5 hours, perhaps it is time to take
                                     a break?").
     '''
-    MESSAGE_TYPES = ['hint', 'mistake', 'misconception', 
+    MESSAGE_TYPES = ['hint', 'mistake', 'misconception',
                      'constraint', 'metacognitive']
-    def __init__(self, label, tool='instructor', 
+
+    def __init__(self, label, tool='instructor',
                  category='Instructor feedback', priority=None, section=None,
                  result=None, performance=None, misconception=None,
                  mistake=None, hint=None, constraint=None,
@@ -71,23 +73,23 @@ class Feedback:
         self.hint = hint
         self.constraint = constraint
         self.metacognitive = metacognitive
-    
+
     def __str__(self):
         return "<Feedback ({})>".format(self.label)
-    
-    
+
     def __repr__(self):
         metadata = ""
         if self.tool is not None:
-            metadata += ", tool="+self.tool
+            metadata += ", tool=" + self.tool
         if self.category is not None:
-            metadata += ", category="+self.category
+            metadata += ", category=" + self.category
         if self.priority is not None:
-            metadata += ", priority="+self.priority
+            metadata += ", priority=" + self.priority
         if self.section is not None:
-            metadata += ", section="+str(self.section)
+            metadata += ", section=" + str(self.section)
         data = ""
         return "Feedback({}{}{})".format(self.label, metadata, data)
+
 
 '''
 A Message is one of:
@@ -97,4 +99,3 @@ A Message is one of:
         line: The line number to highlight
         error: The error message to render
 '''
-

@@ -8,13 +8,13 @@ __all__ = ['set_success', 'compliment', 'give_partial', 'explain',
            'clear_report', 'get_all_feedback', 'MAIN_REPORT']
 
 from pedal.report.report import Report
-from pedal.report.feedback import Feedback
 
 #: The global Report object. Meant to be used as a default singleton
 #: for any tool, so that instructors do not have to create their own Report.
 #: Of course, all APIs are expected to work with a given Report, and only
 #: default to this Report when no others are given.
 MAIN_REPORT = Report()
+
 
 def set_success():
     '''
@@ -28,7 +28,7 @@ def compliment(message, line=None):
     '''
     Create a positive feedback for the user, potentially on a specific line of
     code.
-    
+
     Args:
         message (str): The message to display to the user.
         line (int): The relevant line of code to reference.
@@ -40,7 +40,7 @@ def give_partial(value, message=None):
     '''
     Increases the user's current score by the `value`. Optionally display
     a positive message too.
-    
+
     Args:
         value (number): The number to increase the user's score by.
         message (str): The message to display to the user.
@@ -55,14 +55,14 @@ def explain(message, priority='medium', line=None):
 def gently(message, line=None):
     MAIN_REPORT.gently(message, line)
 
-    
+
 def hide_correctness():
     MAIN_REPORT.hide_correctness()
 
 
 def suppress(category, label=True):
     MAIN_REPORT.suppress(category, label)
-    
+
 
 def log(message):
     MAIN_REPORT.log(message)
