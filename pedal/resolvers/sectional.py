@@ -17,7 +17,7 @@ def resolve(report=None, priority_key=None):
         priority_key = simple.by_priority
     # Prepare feedbacks
     feedbacks = report.feedback
-    feedbacks.sort(key=lambda f: (f.section or 0, priority_key(f)))
+    feedbacks.sort(key=lambda f: (f.group or 0, priority_key(f)))
     suppressions = report.suppressions
     # Process
     final_success = False
@@ -25,7 +25,7 @@ def resolve(report=None, priority_key=None):
     finals = {}
     found_failure = False
     for feedback in feedbacks:
-        section = feedback.section or 0
+        group = feedback.group or 0
         category = feedback.category.lower()
         if category in suppressions:
             if True in suppressions[category]:
@@ -40,17 +40,17 @@ def resolve(report=None, priority_key=None):
                 if found_failure:
                     continue
                 found_failure = True
-            if section not in finals:
-                finals[section] = []
+            if group not in finals:
+                finals[group] = []
             entry = {'label': feedback.label,
                      'message': message,
                      'category': feedback.category,
                      'priority': feedback.priority,
                      'data': data}
             if feedback.priority != 'positive':
-                finals[section].insert(0, entry)
+                finals[group].insert(0, entry)
             else:
-                finals[section].append(entry)
+                finals[group].append(entry)
     final_hide_correctness = suppressions.get('success', False)
     if not finals:
         finals[0] = [{

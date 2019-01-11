@@ -74,7 +74,7 @@ def find_file(filename, sections=False, report=None):
                    " or could not be opened. Please make sure the file is"
                    " available.").format(filename=filename)
         report.attach('Source File Not Found', category='Syntax', tool='VPL',
-                      section=0 if sections else None,
+                      group=0 if sections else None,
                       mistake={'message': message})
         report['source']['success'] = False
 
@@ -90,11 +90,11 @@ def resolve(report=None, custom_success_message=None):
     if report is None:
         report = MAIN_REPORT
     print("<|--")
-    success, score, hc, messages_by_section = sectional.resolve(report)
-    last_section = 0
-    for section, messages in sorted(messages_by_section.items()):
-        if section != last_section:
-            for intermediate_section in range(last_section, section, 2):
+    success, score, hc, messages_by_group = sectional.resolve(report)
+    last_group = 0
+    for group, messages in sorted(messages_by_group.items()):
+        if group != last_group:
+            for intermediate_section in range(last_group, group, 2):
                 print("-" + report['source']['sections'][1 + intermediate_section])
         printed_first_bad = False
         for message in messages:
@@ -103,7 +103,7 @@ def resolve(report=None, custom_success_message=None):
             elif not printed_first_bad:
                 print(strip_tags(message['message']))
                 printed_first_bad = True
-        last_section = section
+        last_group = group
     print("-Overall")
     if success:
         if custom_success_message is None:

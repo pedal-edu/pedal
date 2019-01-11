@@ -53,6 +53,7 @@ def set_source(code, filename='__main__.py', sections=False, report=None):
             pattern = DEFAULT_PATTERN
         else:
             pattern = sections
+        report.group = 0
         report['source']['section_pattern'] = pattern
         report['source']['section'] = 0
         report['source']['sections'] = re.split(pattern, code,
@@ -63,7 +64,7 @@ def set_source(code, filename='__main__.py', sections=False, report=None):
 def _check_issues(code, report):
     if code.strip() == '':
         report.attach('Blank source', category='Syntax', tool=NAME,
-                      section=report['source']['section'],
+                      group=report['source']['section'],
                       mistake="Source code file is blank.")
         report['source']['success'] = False
     try:
@@ -71,7 +72,7 @@ def _check_issues(code, report):
         report['source']['ast'] = parsed
     except SyntaxError as e:
         report.attach('Syntax error', category='Syntax', tool='Source',
-                      section=report['source']['section'],
+                      group=report['source']['section'],
                       mistake={'message': "Invalid syntax on line "
                                           + str(e.lineno),
                                'error': e,

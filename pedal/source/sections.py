@@ -16,9 +16,9 @@ def next_section(name="", report=None):
     found = len(report['source']['sections'])
     if section < found:
         report['source']['code'] = ''.join(report['source']['sections'][:section + 1])
+        report.group = report['source']['section']
     else:
         report.attach('Syntax error', category='Syntax', tool='Source',
-                      section=report['source']['section'],
                       mistake=("Tried to advance to next section but the "
                                "section was not found. Tried to load section "
                                "{count}, but there were only {found} sections."
@@ -38,7 +38,7 @@ def count_sections(count, report=None):
     found = int((len(report['source']['sections']) - 1) / 2)
     if count != found:
         report.attach('Syntax error', category='Syntax', tool='Source',
-                      section=report['source']['section'],
+                      group=report['source']['section'],
                       mistake=("Incorrect number of sections in your file. "
                                "Expected {count}, but only found {found}"
                                ).format(count=count, found=found))
@@ -55,7 +55,7 @@ def verify_section(report=None):
         report['source']['ast'] = parsed
     except SyntaxError as e:
         report.attach('Syntax error', category='Syntax', tool='Source',
-                      section=report['source']['section'],
+                      group=report['source']['section'],
                       mistake={'message': "Invalid syntax on line "
                                           + str(e.lineno),
                                'error': e,

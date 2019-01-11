@@ -75,7 +75,6 @@ def _load_cait(student_code, report):
             student_ast = report['source']['ast']
     else:
         report.attach("No source code found", tool='cait',
-                      section=report['source']['section'],
                       category='analyzer')
         cait['success'] = False
         return cait

@@ -23,8 +23,9 @@ class Feedback:
                         is "positive" - which indicates that this feedback is
                         positive, and the information is good to convey to the
                         student.
-        section (int): The section that generated this particular piece of
-                       feedback. Some resolvers want to group feedback.
+        group (int or str): The group that this piece of feedback should be
+            associated with. Some resolvers want to group feedback using this
+            identifier.
         result (bool): Whether or not this feedback is associated with the
                        learner completing the task ("Success!").
         performance (float): A relative amount that this feedback contributes
@@ -55,7 +56,7 @@ class Feedback:
                      'constraint', 'metacognitive']
 
     def __init__(self, label, tool='instructor',
-                 category='Instructor feedback', priority=None, section=None,
+                 category='Instructor feedback', priority=None, group=None,
                  result=None, performance=None, misconception=None,
                  mistake=None, hint=None, constraint=None,
                  metacognitive=None):
@@ -64,7 +65,7 @@ class Feedback:
         self.tool = tool
         self.category = category
         self.priority = priority
-        self.section = section
+        self.group = group
         # Data
         self.result = result
         self.performance = performance
@@ -85,8 +86,8 @@ class Feedback:
             metadata += ", category=" + self.category
         if self.priority is not None:
             metadata += ", priority=" + self.priority
-        if self.section is not None:
-            metadata += ", section=" + str(self.section)
+        if self.group is not None:
+            metadata += ", group=" + str(self.group)
         data = ""
         return "Feedback({}{}{})".format(self.label, metadata, data)
 
