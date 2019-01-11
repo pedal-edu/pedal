@@ -90,7 +90,7 @@ def are_types_equal(left, right):
         return False
     elif isinstance(left, UnknownType) or isinstance(right, UnknownType):
         return False
-    elif type(left) is not type(right):
+    elif not isinstance(left, type(right)):
         return False
     elif isinstance(left, (GeneratorType, ListType)):
         if left.empty or right.empty:

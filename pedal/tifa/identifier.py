@@ -2,7 +2,7 @@ class Identifier:
     '''
     A representation of an Identifier, encapsulating its current level of
     existence, scope and State.
-    
+
     Attributes:
         exists (bool): Whether or not the variable actually is defined anywhere.
                        It is possible that a variable was retrieved that does
@@ -16,6 +16,7 @@ class Identifier:
                            its scope chain.
         state (State): The current state of the variable.
     '''
+
     def __init__(self, exists, in_scope=False, scoped_name="UNKNOWN", state=""):
         self.exists = exists
         self.in_scope = in_scope

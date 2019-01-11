@@ -27,6 +27,7 @@ OPERATION_DESCRIPTION = {
     ast.NotIn: "an not in",
 }
 
+
 def _format_message(issue, data):
     if issue == 'Action after return':
         # A path had a statement after a return.
@@ -115,7 +116,7 @@ def _format_message(issue, data):
                 "{line}. You should only iterate over non-empty lists."
                 ).format(line=data['position']['line'], expression=expression)
     elif issue == 'Incompatible types':
-        op = OPERATION_DESCRIPTION.get(data['operation'].__class__, 
+        op = OPERATION_DESCRIPTION.get(data['operation'].__class__,
                                        str(data['operation']))
         left = data['left'].singular_name
         right = data['right'].singular_name
@@ -131,20 +132,21 @@ def _format_message(issue, data):
                 ).format(line=data['position']['line'])
     return False
 
+
 '''
 TODO: Finish these checks
 "Empty Body": [], # Any use of pass on its own
 "Malformed Conditional": [], # An if/else with empty else or if
 "Unnecessary Pass": [], # Any use of pass
 "Append to non-list": [], # Attempted to use the append method on a non-list
-"Used iteration list": [], # 
-"Unused iteration variable": [], # 
-"Type changes": [], # 
-"Unknown functions": [], # 
+"Used iteration list": [], #
+"Unused iteration variable": [], #
+"Type changes": [], #
+"Unknown functions": [], #
 "Not a function": [], # Attempt to call non-function as function
 "Recursive Call": [],
 "Incorrect Arity": [],
-"Aliased built-in": [], # 
+"Aliased built-in": [], #
 "Method not in Type": [], # A method was used that didn't exist for that type
 "Submodule not found": [],
 "Module not found": [],
