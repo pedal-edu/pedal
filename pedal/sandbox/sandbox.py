@@ -36,10 +36,10 @@ Run a file with student's code
 run(filename)
     run('canvas_analyzer.py') -> execute main function
     load('canvas_analyzer'.py) -> Do not execute main function
-    
+
     *args: positional arguments
     **kwargs: named arguments
-    
+
     _parameters or _arguments ?: {str : ANY}
     _modules: {str : ANY}
     _inputs: [str] or generator
@@ -64,7 +64,7 @@ Run with the given stdin, parameters, or global variables
     run(code, _inputs=special_input_function)
     run(code, parameters={'first_argument': 5})
     run(code, first_argument=5)
-    
+
     run(code, _globals={})
     Default stdin is a special generator that just keeps returning values
 
@@ -76,14 +76,14 @@ Provide alternative implementation for certain modules
     time.sleep becomes pass
 
 Handle the output, variables, exceptions, or global state
-    output vs. raw_output: get formatted lines or 
-    
-    
+    output vs. raw_output: get formatted lines or
+
+
 
 Give an explanation of the run:
     Have a default explanation based on the values given, but allow a symbolic
     explanation too.
-    
+
 Ensure student has the right version of a file based on hashes, and ensure
     that student has not modified the files
 Minimum python version
@@ -108,19 +108,20 @@ from pedal.report import MAIN_REPORT
 from pedal.sandbox import mocked
 from pedal.sandbox.timeout import timeout
 from pedal.sandbox.messages import EXTENDED_ERROR_EXPLANATION
-    
+
+
 def _dict_extends(d1, d2):
     '''
     Helper function to create a new dictionary with the contents of the two
     given dictionaries. Does not modify either dictionary, and the values are
     copied shallowly. If there are repeates, the second dictionary wins ties.
-    
+
     The function is written to ensure Skulpt compatibility.
-    
+
     Args:
         d1 (dict): The first dictionary
         d2 (dict): The second dictionary
-    
+
     '''
     d3 = {}
     for key, value in d1.items():
@@ -129,12 +130,14 @@ def _dict_extends(d1, d2):
         d3[key] = value
     return d3
 
+
 _REJECT_TRACEBACK_FILE_PATTERN = re.compile(r'[./]')
-    
+
+
 class Sandbox:
     '''
     '''
-    
+
     # Hooks for pre/post execution. If set to be callable functions, they will
     # be executed before and after execution (regardless of its success)
     pre_execution = None
@@ -147,7 +150,8 @@ class Sandbox:
     student.variables: dict
     student.functions: dict (only callables)
     '''
-    def __init__(self, data=None, raw_output=None, exception=None, 
+
+    def __init__(self, data=None, raw_output=None, exception=None,
                  filename="__main__", modules=None, full_trace=False,
                  threaded=False,
                  report=None):
@@ -179,10 +183,10 @@ class Sandbox:
         # Threading
         self.threaded = threaded
         self.allowed_time = 1
-        
+
         self.record_coverage = False
         self.coverage_report = None
-        
+
     def setup_mocks(self, modules):
         self.mocked_modules = {}
         self.modules = {}
@@ -194,11 +198,11 @@ class Sandbox:
         mock_plt = mocked.MockPlt()
         mock_plt._add_to_module(matplotlib.pyplot)
         self.modules['matplotlib.pyplot'] = mock_plt
-    
+
     @property
     def functions(self):
-        return {k:v for k,v in self.data.items() if callable(v)}
-    
+        return {k: v for k, v in self.data.items() if callable(v)}
+
     def start_coverage(self, code=None, filename=None):
         if code is None:
             code = self.report['source']['code']
@@ -210,6 +214,7 @@ class Sandbox:
         self._coverage_code = code
         dir_path = os.getcwd()
         self._coverage_file = os.path.join(dir_path, filename)
+
         def get_python_source(reading_filename):
             if reading_filename == self._coverage_file:
                 return code
@@ -219,18 +224,18 @@ class Sandbox:
         self.mocked_modules['coverage.python'] = coverage.python
         self.cov = coverage.Coverage()
         self.cov.start()
-    
+
     def stop_coverage(self):
         self.cov.stop()
         self.cov.save()
-        
+
         #from pprint import pprint
-        #pprint(self.cov.data._lines[self._coverage_file])
-        #pprint(self.cov.data.line_counts(self._coverage_file))
-        
+        # pprint(self.cov.data._lines[self._coverage_file])
+        # pprint(self.cov.data.line_counts(self._coverage_file))
+
         return self.cov.report()
-        #print(self.cov.report())
-    
+        # print(self.cov.report())
+
     def set_output(self, raw_output):
         if raw_output is None:
             self.raw_output = ""
@@ -239,18 +244,18 @@ class Sandbox:
             self.raw_output = raw_output
             lines = raw_output.rstrip().split("\n")
             self.output = [line.rstrip() for line in lines]
-    
+
     def append_output(self, raw_output):
         self.raw_output += raw_output
         lines = raw_output.rstrip().split("\n")
         self.output += [line.rstrip() for line in lines]
-    
+
     def set_input(self, inputs):
         if isinstance(inputs, tuple):
             self.inputs = _make_inputs(*inputs)
         else:
             self.inputs = inputs
-        
+
     def purge_temporaries(self):
         ''' delete any data that have been made as temporaries '''
         for key in self.temporaries:
@@ -259,7 +264,7 @@ class Sandbox:
             else:
                 del self.data[key]
         self.temporaries = set()
-    
+
     def make_temporary(self, category, name, value):
         key = '_temporary_{}_{}'.format(category, name)
         if key in self.data:
@@ -267,9 +272,9 @@ class Sandbox:
         self.temporaries.add(key)
         self.data[key] = value
         return key
-    
-    def run_file(filename, _as_filename=None, _modules=None, _inputs=None, 
-             _example=None, _threaded=None):
+
+    def run_file(filename, _as_filename=None, _modules=None, _inputs=None,
+                 _example=None, _threaded=None):
         '''
         Load the given filename.
         '''
@@ -280,21 +285,21 @@ class Sandbox:
         with open(filename, 'r') as code_file:
             code = code_file.read() + '\n'
         self.run(code, _as_filename, _modules, _inputs, _example, _threaded)
-    
+
     def check_code(self, code):
         self.run(code, _as_filename=self.instructor_filename)
         if self.exception is not None:
             name = str(self.exception.__class__)[8:-2]
             self.report.attach(name, category='Runtime', tool='Sandbox',
                                section=self.report['source']['section'],
-                               mistakes={'message': self.format_exception(), 
+                               mistakes={'message': self.format_exception(),
                                          'error': self.exception})
             return False, ""
         self.report.attach("Unit Test Failure", category='Runtime',
                            tool='Sandbox',
                            section=self.report['source']['section'],
-                           mistakes={'message': defns+message})
-    
+                           mistakes={'message': defns + message})
+
     def tests(self, function, test_runs, points, compliment, test_output=False, defns=""):
         all_passed = True
         results = []
@@ -330,13 +335,13 @@ class Sandbox:
                                        section=self.report['source']['section'],
                                        mistakes={'message': message})
             return False
-    
+
     def test(self, function, expected, *args, **kwargs):
         if function not in self.data and '.' not in function:
             # TODO: Hackish, allow methods through for now
             message = "I could not find a top-level definition of {function}!\n"
             message = message.format(function=function)
-            self.report.attach("Function not found", category='Runtime', 
+            self.report.attach("Function not found", category='Runtime',
                                tool='Sandbox',
                                section=self.report['source']['section'],
                                mistakes={'message': message})
@@ -353,7 +358,7 @@ class Sandbox:
             name = str(self.exception.__class__)[8:-2]
             self.report.attach(name, category='Runtime', tool='Sandbox',
                                section=self.report['source']['section'],
-                               mistakes={'message': self.format_exception(_pre), 
+                               mistakes={'message': self.format_exception(_pre),
                                          'error': self.exception})
             return False, ""
         if _test_output:
@@ -372,19 +377,19 @@ class Sandbox:
                 message = "Unit test passed:\n"
                 message += "<pre>{}</pre>\n".format(_pre) if _pre else ""
                 message += "<pre>>{example}</pre>\n".format(example=self.example)
-                message += "<pre>"+actual_str+"</pre>\n"
+                message += "<pre>" + actual_str + "</pre>\n"
             return True, message
         if not _hidden:
             message = "Instructor unit test failure!\n"
             message += "\nBefore anything else, I ran:<pre>>{}</pre>\n".format(_pre) if _pre else ""
             message += "I ran:\n<pre>>{example}</pre>\n".format(example=self.example)
-            message += "I got:\n<pre>"+actual_str+"</pre>\n"
-            message += (("But I expected{p}:\n<pre>"+expected_str+"</pre>\n")
+            message += "I got:\n<pre>" + actual_str + "</pre>\n"
+            message += (("But I expected{p}:\n<pre>" + expected_str + "</pre>\n")
                         .format(p=" it to print" if _test_output else ""))
         else:
             message = "Hidden instructor unit test failure!\n"
         return False, message
-        
+
     def call(self, function, *args, **kwargs):
         #print("CALL", kwargs)
         # Make sure it's a valid function in the namespace (TODO: but what?)
@@ -403,14 +408,14 @@ class Sandbox:
         kwargs = _dict_extends(_arguments, kwargs)
         # Create the actual arguments and call
         str_args = [self.make_temporary('arg', index, value)
-                for index, value in enumerate(args)]
+                    for index, value in enumerate(args)]
         str_kwargs = ["{}={}".format(key, self.make_temporary('kwarg', key, value))
-                  for key, value in kwargs.items()]
-        arguments = ", ".join(str_args+str_kwargs)
+                      for key, value in kwargs.items()]
+        arguments = ", ".join(str_args + str_kwargs)
         call = "{} = {}({})".format(target, function, arguments)
         if _context is None and _example is None:
             _example = self.demonstrate_call(function, args, kwargs, target)
-        self.run(call, _as_filename, _modules, _inputs, 
+        self.run(call, _as_filename, _modules, _inputs,
                  _example=_example, _threaded=_threaded,
                  _context=_context,
                  _raise_exceptions=_raise_exceptions)
@@ -420,7 +425,8 @@ class Sandbox:
             return self._
         else:
             return None
-    def run(self, code, _as_filename=None, _modules=None, _inputs=None, 
+
+    def run(self, code, _as_filename=None, _modules=None, _inputs=None,
             _example=None, _threaded=None, _raise_exceptions=False,
             _context=None):
         '''
@@ -429,20 +435,20 @@ class Sandbox:
         # Redirect stdout/stdin as needed
         old_stdout = sys.stdout
         old_stdin = sys.stdin
-        if _threaded == None:
+        if _threaded is None:
             _threaded = self.threaded
         if _threaded:
             try:
-                return timeout(self.allowed_time, self.run, code, _as_filename, 
-                               _modules, _inputs, _example, False, 
+                return timeout(self.allowed_time, self.run, code, _as_filename,
+                               _modules, _inputs, _example, False,
                                _raise_exceptions, _context)
             except TimeoutError as e:
                 sys.stdout = old_stdout
                 self.exception = e
                 self.report.attach("Timeout Error", category='Runtime', tool='Sandbox',
-                               section=self.report['source']['section'],
-                               mistakes={'message': "Time out error while running: <pre>"+code+"</pre>", 
-                                         'error': e})
+                                   section=self.report['source']['section'],
+                                   mistakes={'message': "Time out error while running: <pre>" + code + "</pre>",
+                                             'error': e})
                 return False
         if _as_filename is None:
             _as_filename = self.filename
@@ -455,15 +461,15 @@ class Sandbox:
             _inputs = _make_inputs(*_inputs)
         # Execute
         mocked._override_builtins(self.data, {
-            'compile':   mocked._disabled_compile,
-            'eval':      mocked._disabled_eval,
-            'exec':      mocked._disabled_exec,
-            'globals':   mocked._disabled_globals,
-            'open':      mocked._restricted_open,
-            'input':     _inputs,
+            'compile': mocked._disabled_compile,
+            'eval': mocked._disabled_eval,
+            'exec': mocked._disabled_exec,
+            'globals': mocked._disabled_globals,
+            'open': mocked._restricted_open,
+            'input': _inputs,
             'raw_input': _inputs,
-            'sys':       sys,
-            'os':        os
+            'sys': sys,
+            'os': os
         })
         capture_stdout = io.StringIO()
         #injectin = io.StringIO(inputs)
@@ -471,10 +477,10 @@ class Sandbox:
         #sys.stdin = injectin
         self.exception = None
         self.exception_position = None
-        
+
         if callable(self.pre_execution):
             self.pre_execution()
-        
+
         # Patch in dangerous built-ins
         time_sleep_patch = patch('time.sleep', return_value=None)
         time_sleep_patch.start()
@@ -487,13 +493,13 @@ class Sandbox:
                 exec(compiled_code, self.data)
         except StopIteration:
             input_failed = True
-            result= None
+            result = None
         except Exception as e:
             if _example is not None:
-                e = _raise_improved_error(e, "\n\nThe above occurred when I ran:\n<pre>"+_example+"</pre>")
+                e = _raise_improved_error(e, "\n\nThe above occurred when I ran:\n<pre>" + _example + "</pre>")
                 self.example = _example
             elif _context is not None:
-                e = _raise_improved_error(e, "\n\n"+_context)
+                e = _raise_improved_error(e, "\n\n" + _context)
                 self.example = _context
             self.exception = e
             cl, exc, tb = self.exc_info = sys.exc_info()
@@ -501,7 +507,7 @@ class Sandbox:
             while tb and self._is_relevant_tb_level(tb):
                 tb = tb.tb_next
             length = self._count_relevant_tb_levels(tb)
-            tb_e = traceback.TracebackException(cl, exc, tb, 
+            tb_e = traceback.TracebackException(cl, exc, tb,
                                                 limit=length,
                                                 capture_locals=True)
             msgLines = [x.replace(', in <module>', '', 1) for x in list(tb_e.format())]
@@ -519,7 +525,7 @@ class Sandbox:
         self.purge_temporaries()
         if _raise_exceptions:
             self.raise_any_exceptions()
-    
+
     def get_names_by_type(self, type, exclude_builtins=True):
         result = []
         for name, value in self.data.items():
@@ -528,17 +534,17 @@ class Sandbox:
                     continue
                 result.append(name)
         return result
-    
+
     def get_values_by_type(self, type, exclude_builtins=True):
         names = self.get_names_by_type(type, exclude_builtins)
         return [self.data[name] for name in names]
-    
+
     def raise_any_exceptions(self):
         if self.exception is not None:
             name = str(self.exception.__class__)[8:-2]
             self.report.attach(name, category='Runtime', tool='Sandbox',
                                section=self.report['source']['section'],
-                               mistakes={'message': self.format_exception(), 
+                               mistakes={'message': self.format_exception(),
                                          'error': self.exception})
 
     def format_exception(self, _pre=""):
@@ -549,23 +555,23 @@ class Sandbox:
         while tb and self._is_relevant_tb_level(tb):
             tb = tb.tb_next
         length = self._count_relevant_tb_levels(tb)
-        tb_e = traceback.TracebackException(cl, exc, tb, 
+        tb_e = traceback.TracebackException(cl, exc, tb,
                                             limit=length,
                                             capture_locals=False)
         lines = [x.replace(', in <module>', '', 1) for x in list(tb_e.format())]
-        return _pre+"\nTraceback:\n"+''.join(lines[1:])
-        
+        return _pre + "\nTraceback:\n" + ''.join(lines[1:])
+
     def _count_relevant_tb_levels(self, tb):
         length = 0
         while tb and not self._is_relevant_tb_level(tb):
             length += 1
             tb = tb.tb_next
         return length
-    
+
     def _is_relevant_tb_level(self, tb):
         '''
         Determines if the give part of the traceback is relevant to the user.
-        
+
         Returns:
             boolean: True means it is NOT relevant
         '''
@@ -592,18 +598,21 @@ class Sandbox:
             return False
         # Okay, it's not a student related file
         return True
-    
+
     def demonstrate_call(self, a_function, args, kwargs, target):
         if not isinstance(a_function, str):
             a_function = a_function.__name__
-        args = ", ".join([repr(arg) for arg in args]+
-                         [key+"="+repr(val) for key,val in kwargs.items()])
-        code = "{name}({args})".format(name=a_function,args=args)
+        args = ", ".join([repr(arg) for arg in args] +
+                         [key + "=" + repr(val) for key, val in kwargs.items()])
+        code = "{name}({args})".format(name=a_function, args=args)
         if target != "_":
             code = target + " = " + code
         return code
-        
-punctuation_table = str.maketrans(string.punctuation, ' '*len(string.punctuation))
+
+
+punctuation_table = str.maketrans(string.punctuation, ' ' * len(string.punctuation))
+
+
 def _normalize_string(a_string, numeric_endings=False):
     # Lower case
     a_string = a_string.lower()
@@ -621,38 +630,45 @@ def _normalize_string(a_string, numeric_endings=False):
                   for line in normalized
                   if line]
     return sorted(normalized)
-        
+
+
 class _KeyError(KeyError):
     def __str__(self):
         return BaseException.__str__(self)
-        
+
+
 def _append_to_error(e, message):
     if e.args:
-        e.args = (e.args[0]+message,)
+        e.args = (e.args[0] + message,)
     return e
-        
+
+
 def _raise_improved_error(e, code):
     if isinstance(e, KeyError):
         return _copy_key_error(e, code)
     else:
         return _append_to_error(e, code)
 
+
 def _copy_key_error(e, code):
-    new_args = (repr(e.args[0])+code,)
+    new_args = (repr(e.args[0]) + code,)
     new_except = _KeyError(*new_args)
     new_except.__cause__ = e.__cause__
     new_except.__traceback__ = e.__traceback__
-    new_except.__context__  = e.__context__ 
+    new_except.__context__ = e.__context__
     return new_except
+
 
 def _threaded_execution(code, filename, inputs=None):
     pass
+
 
 def reset(report=None):
     if report is None:
         report = MAIN_REPORT
     report['sandbox']['run'] = Sandbox(filename=report['source']['filename'])
-    
+
+
 def run(raise_exceptions=True, report=None, coverage=False, threaded=False, inputs=None):
     if report is None:
         report = MAIN_REPORT
@@ -666,14 +682,15 @@ def run(raise_exceptions=True, report=None, coverage=False, threaded=False, inpu
         name = str(sandbox.exception.__class__)[8:-2]
         report.attach(name, category='Runtime', tool='Sandbox',
                       section=report['source']['section'],
-                      mistakes={'message': sandbox.format_exception(), 
+                      mistakes={'message': sandbox.format_exception(),
                                 'error': sandbox.exception})
     return sandbox
-    
+
+
 def _make_inputs(*input_list, **kwargs):
     '''
     Helper function for creating mock user input.
-    
+
     Params:
         input_list (list of str): The list of inputs to be returned
     Returns:
@@ -686,6 +703,7 @@ def _make_inputs(*input_list, **kwargs):
     else:
         repeat = None
     generator = iter(input_list)
+
     def mock_input(prompt=''):
         print(prompt)
         try:
@@ -697,27 +715,29 @@ def _make_inputs(*input_list, **kwargs):
             else:
                 return repeat
     return mock_input
-    
+
+
 def equality_test(actual, expected, _exact_strings, _delta, _test_output):
-    return ( # Float comparison
-         (isinstance(expected, float) and
-          isinstance(actual, (float, int)) and
-          abs(actual-expected) < _delta) or
-         # Exact Comparison
-         actual == expected or
-         # Inexact string comparison
-         (_exact_strings and isinstance(expected, str) and
-          isinstance(actual, str) and 
-          _normalize_string(actual) == _normalize_string(expected)) or
-         # Inexact output comparison
-         (_test_output and isinstance(expected, str) and
-          _normalize_string(expected) in [_normalize_string(line) 
-                                          for line in actual]) or
-         # Exact output comparison
-         (_test_output and isinstance(expected, list) and
-          [_normalize_string(line) for line in expected] == 
-          [_normalize_string(line) for line in actual])
-          )
+    return (  # Float comparison
+        (isinstance(expected, float) and
+         isinstance(actual, (float, int)) and
+         abs(actual - expected) < _delta) or
+        # Exact Comparison
+        actual == expected or
+        # Inexact string comparison
+        (_exact_strings and isinstance(expected, str) and
+         isinstance(actual, str) and
+         _normalize_string(actual) == _normalize_string(expected)) or
+        # Inexact output comparison
+        (_test_output and isinstance(expected, str) and
+         _normalize_string(expected) in [_normalize_string(line)
+                                         for line in actual]) or
+        # Exact output comparison
+        (_test_output and isinstance(expected, list) and
+         [_normalize_string(line) for line in expected] ==
+         [_normalize_string(line) for line in actual])
+    )
+
 
 if __name__ == "__main__":
     code = """
@@ -730,4 +750,3 @@ print(plt.secret)
             print(name, ":", "Many things:", len(value))
         else:
             print(name, ":", value)
-    

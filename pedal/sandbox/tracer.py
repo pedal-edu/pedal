@@ -1,8 +1,10 @@
 from bdb import Bdb
 import sys
 
+
 class RecursionDetected(Exception):
     pass
+
 
 class RecursionDetector(Bdb):
     def do_clear(self, arg):
@@ -23,6 +25,7 @@ class RecursionDetector(Bdb):
         if frame.f_code in self.stack:
             self.stack.remove(frame.f_code)
 
+
 def test_recursion(code):
     detector = RecursionDetector()
     detector.set_trace()
@@ -34,6 +37,7 @@ def test_recursion(code):
         return False
     finally:
         sys.settrace(None)
+
 
 recursive_solution = """
 def x(num):

@@ -12,7 +12,7 @@ Sectional
 
 Full
     Report all feedback, grouped by tool/category/priority/time.
-    
+
 Full Summary
     Report all feedback but divided into frequencies of labels grouped by tool/category/priority/time.
 

@@ -5,10 +5,12 @@ from pedal.sandbox.messages import EXTENDED_ERROR_EXPLANATION
 
 from pedal.report import MAIN_REPORT, Feedback
 
+
 def _check_sandbox(report):
     if 'run' not in report['sandbox']:
         report['sandbox']['run'] = Sandbox()
     return report['sandbox']['run']
+
 
 def run_student(raise_exceptions=False, report=None):
     if report is None:
@@ -17,9 +19,10 @@ def run_student(raise_exceptions=False, report=None):
     source_code = report['source']['code']
     sandbox.run(source_code)
     if raise_exceptions:
-        raise_exception(sandbox.exception, sandbox.exception_position, 
+        raise_exception(sandbox.exception, sandbox.exception_position,
                         report=report)
     return sandbox.exception
+
 
 def queue_input(*inputs, **kwargs):
     if 'report' not in kwargs:
@@ -29,11 +32,13 @@ def queue_input(*inputs, **kwargs):
     sandbox = _check_sandbox(report)
     sandbox.set_input(inputs)
 
+
 def reset_output(report=None):
     if report is None:
         report = MAIN_REPORT
     sandbox = _check_sandbox(report)
     sandbox.set_output(None)
+
 
 def get_output(report=None):
     if report is None:
@@ -41,12 +46,14 @@ def get_output(report=None):
     sandbox = _check_sandbox(report)
     return sandbox.output
 
+
 def get_plots(report=None):
     if report is None:
         report = MAIN_REPORT
     sandbox = _check_sandbox(report)
     mock_plt = sandbox.modules['matplotlib.pyplot']
     return mock_plt.plots
+
 
 def capture_output(function, *args, **kwargs):
     if 'report' in kwargs:
@@ -58,11 +65,13 @@ def capture_output(function, *args, **kwargs):
     sandbox.call(function.__name__, *args)
     return sandbox.output
 
+
 def get_sandbox(report=None):
     if report is None:
         report = MAIN_REPORT
     sandbox = _check_sandbox(report)
     return sandbox
+
 
 def raise_exception(exception, position=None, report=None):
     if report is None:
@@ -76,12 +85,13 @@ def raise_exception(exception, position=None, report=None):
     name = str(exception.__class__)[8:-2]
     report.attach(name, category='Runtime', tool='Sandbox',
                   section=report['source']['section'],
-                  mistake={'message': message, 
+                  mistake={'message': message,
                            'error': exception,
                            'position': position,
                            'traceback': None})
     sandbox.exception = exception
-    
+
+
 def get_student_data(report=None):
     if report is None:
         report = MAIN_REPORT

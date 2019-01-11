@@ -9,11 +9,13 @@ reset_output
 get_output
 '''
 
+
 def reset(report=None):
     if report is None:
         report = MAIN_REPORT
     report['sandbox']['run'] = Sandbox(filename=report['source']['filename'])
-    
+
+
 def run(raise_exceptions=True, report=None, coverage=False, threaded=False, inputs=None):
     if report is None:
         report = MAIN_REPORT
@@ -27,6 +29,6 @@ def run(raise_exceptions=True, report=None, coverage=False, threaded=False, inpu
         name = str(sandbox.exception.__class__)[8:-2]
         report.attach(name, category='Runtime', tool='Sandbox',
                       section=report['source']['section'],
-                      mistakes={'message': sandbox.format_exception(), 
+                      mistakes={'message': sandbox.format_exception(),
                                 'error': sandbox.exception})
     return sandbox
