@@ -18,19 +18,19 @@ def are_literals_equal(first, second):
 
 
 class LiteralValue:
-    '''
+    """
     A special literal representation of a value, used to represent access on
     certain container types.
-    '''
+    """
 
     def __init__(self, value):
         self.value = value
 
 
 class LiteralNum(LiteralValue):
-    '''
+    """
     Used to capture indexes of containers.
-    '''
+    """
 
     def type(self):
         return NumType()
@@ -66,7 +66,7 @@ def literal_from_json(val):
 
 
 def _dict_extends(d1, d2):
-    '''
+    """
     Helper function to create a new dictionary with the contents of the two
     given dictionaries. Does not modify either dictionary, and the values are
     copied shallowly. If there are repeates, the second dictionary wins ties.
@@ -76,8 +76,7 @@ def _dict_extends(d1, d2):
     Args:
         d1 (dict): The first dictionary
         d2 (dict): The second dictionary
-
-    '''
+    """
     d3 = {}
     for key, value in d1.items():
         d3[key] = value
@@ -87,12 +86,12 @@ def _dict_extends(d1, d2):
 
 
 class Type:
-    '''
+    """
     Parent class for all other types, used to provide a common interface.
 
     TODO: Handle more complicated object-oriented types and custom types
     (classes).
-    '''
+    """
     fields = {}
     immutable = False
     singular_name = 'a type'
@@ -137,27 +136,29 @@ class Type:
 
 
 class UnknownType(Type):
-    '''
+    """
     A special type used to indicate an unknowable type.
-    '''
+    """
+
 
 
 class RecursedType(Type):
-    '''
+    """
     A special type used as a placeholder for the result of a
     recursive call that we have already process. This type will
     be dominated by any actual types, but will not cause an issue.
-    '''
+    """
+
 
 
 class FunctionType(Type):
-    '''
-
+    """
+    
     Special values for `returns`:
         identity: Returns the first argument's type
         element: Returns the first argument's first element's type
         void: Returns the NoneType
-    '''
+    """
     singular_name = 'a function'
 
     def __init__(self, definition=None, name="*Anonymous", returns=None):
@@ -236,8 +237,8 @@ class BoolType(Type):
 
 
 class TupleType(Type):
-    '''
-    '''
+    """
+    """
     singular_name = 'a tuple'
 
     def __init__(self, subtypes=None):
@@ -253,6 +254,7 @@ class TupleType(Type):
 
     def clone(self):
         return TupleType([t.clone() for t in self.subtypes])
+
     immutable = True
 
 
@@ -281,6 +283,7 @@ class ListType(Type):
                         tifa.append_variable(callee, cloned_type, position)
                     self.empty = False
                     self.subtype = args[0]
+
             return FunctionType(_append, 'append')
         return Type.load_attr(self, attr, tifa, callee, callee_position)
 
@@ -299,6 +302,7 @@ class StrType(Type):
 
     def is_empty(self):
         return self.empty
+
     fields = _dict_extends(Type.fields, {})
     immutable = True
 
@@ -349,6 +353,7 @@ class FileType(Type):
 
     def index(self, i):
         return StrType()
+
     fields = _dict_extends(Type.fields, {
         'close': FunctionType(name='close', returns='void'),
         'read': FunctionType(name='read', returns=StrType()),
@@ -395,6 +400,7 @@ class DictType(Type):
                     return ListType(TupleType([self.literals[0].type(),
                                                self.values[0]]),
                                     empty=False)
+
             return FunctionType(_items, 'items')
         elif attr == 'keys':
             def _keys(tifa, function_type, callee, args, position):
@@ -402,6 +408,7 @@ class DictType(Type):
                     return ListType(self.keys, empty=False)
                 else:
                     return ListType(self.literals[0].type(), empty=False)
+
             return FunctionType(_keys, 'keys')
         elif attr == 'values':
             def _values(tifa, function_type, callee, args, position):
@@ -409,6 +416,7 @@ class DictType(Type):
                     return ListType(self.values, empty=False)
                 else:
                     return ListType(self.values[0], empty=False)
+
             return FunctionType(_values, 'values')
         return Type.load_attr(self, attr, tifa, callee, callee_position)
 
@@ -434,7 +442,6 @@ class GeneratorType(ListType):
     singular_name = 'a generator'
 
 # Custom parking class in blockpy
-
 
 class TimeType(Type):
     singular_name = 'a time of day'

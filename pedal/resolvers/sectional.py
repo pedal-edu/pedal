@@ -3,14 +3,14 @@ from pedal.report import MAIN_REPORT
 
 
 def resolve(report=None, priority_key=None):
-    '''
+    """
     Args:
         report (Report): The report object to resolve down. Defaults to the
                          global MAIN_REPORT
 
     Returns
         str: A string of HTML feedback to be delivered
-    '''
+    """
     if report is None:
         report = MAIN_REPORT
     if priority_key is None:

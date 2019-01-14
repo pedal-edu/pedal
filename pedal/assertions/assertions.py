@@ -46,7 +46,6 @@ def equality_test(actual, expected, _exact_strings, _delta, _test_output):
 
 # Unittest Asserts
 
-
 def assertEqual(left, right, score=None, message=None):
     pass
 
@@ -156,7 +155,7 @@ def assertPrints(sandbox, strings):
     pass
 
 
-def assertHasFunction(object, function, args=None, returns=None):
+def assertHasFunction(obj, function, args=None, returns=None):
     # If object is a sandbox, will check the .data[variable] attribute
     # Otherwise, check it directly
     pass
@@ -166,7 +165,7 @@ def assertHasClass(sandbox, class_name, attrs=None):
     pass
 
 
-def assertHas(object, variable, types=None, value=None):
+def assertHas(obj, variable, types=None, value=None):
     # If object is a sandbox, will check the .data[variable] attribute
     # Otherwise, check it directly
     pass

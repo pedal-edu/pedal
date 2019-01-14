@@ -108,7 +108,8 @@ def prevent_builtin_usage(function_names):
     for a_call in all_calls:
         if a_call.func.ast_name == 'Name':
             if a_call.func.id in function_names:
-                explain("You cannot use the builtin function <code>{}</code>.<br><br><i>(builtin_use)<i>".format(a_call.func.id))
+                explain("You cannot use the builtin function <code>{}</code>.<br><br><i>(builtin_use)<i>".format(
+                    a_call.func.id))
                 return a_call.func.id
     return None
 
@@ -254,7 +255,7 @@ def ensure_recursion(function_name, root=None):
 
 
 def ensure_assignment(variable_name, type=None, value=None, root=None):
-    '''
+    """
     Consumes a variable name
     TODO: Implement the value parameter
 
@@ -264,7 +265,7 @@ def ensure_assignment(variable_name, type=None, value=None, root=None):
                  assignment. Check GreenTreeSnakes (e.g., "Num", or "Str").
     :type type: str
     :return: False or str
-    '''
+    """
     if root is None:
         root = parse_program()
     assignments = root.find_all("Assign")

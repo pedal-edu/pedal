@@ -153,7 +153,8 @@ class CaitTests(unittest.TestCase):
         if mapping:
             mapping = mapping[0]
             self.assertTrue(list(mapping.mappings.keys())[0].astNode == ins_name_node.astNode and
-                            list(mapping.mappings.values())[0].astNode == std_for_loop.astNode, "wild card didn't match")
+                            list(mapping.mappings.values())[0].astNode == std_for_loop.astNode,
+                            "wild card didn't match")
             debug_print = False  # TODO: debug flag
             if debug_print:
                 print(test_tree)
@@ -417,8 +418,8 @@ class CaitTests(unittest.TestCase):
         set_source("fun = 1 + 0")
         parse_program()
         self.assertTrue('cait' in MAIN_REPORT, "No parsing happened")
-    
-    '''
+
+    """
     def test_def_use_error(self):
         set_source("fun = fun + 1")
         parse_program()
@@ -432,7 +433,7 @@ class CaitTests(unittest.TestCase):
         parse_program()
         name_node = MAIN_REPORT["source"]["ast"].body[0].cait_node.target
         self.assertTrue(data_type(name_node).is_equal(int), "Data type not successfully found from name node")
-        self.assertTrue(data_type("fun").is_equal(int), "Data type not successfully found from str name")'''
+        self.assertTrue(data_type("fun").is_equal(int), "Data type not successfully found from str name")"""
 
     def test_find_match(self):
         set_source("fun = 1 + 1")
@@ -454,7 +455,7 @@ class CaitTests(unittest.TestCase):
         matches = find_matches("for ___ in ___:\n"
                                "    pass")
         self.assertFalse(matches, "find matches should have misparsed and returned False, but returned True instead")
-    
+
     def test_invalid_code(self):
         set_source("float('0') + 1")
         parse_program()
@@ -469,26 +470,26 @@ class CaitTests(unittest.TestCase):
         self.assertEqual(calls[0].func.ast_name, 'Name')
         self.assertEqual(calls[0].func.id, 'open')
         self.assertEqual(len(calls[0].args), 1)
-        
+
         clear_report()
         set_source("def a():\n  pass\na()")
         std_ast = parse_program()
         defs = std_ast.find_all("FunctionDef")
         self.assertEqual(len(defs), 1)
-        
+
         clear_report()
         set_source("1 < 1")
         std_ast = parse_program()
         compares = std_ast.find_all("Compare")
         self.assertEqual(len(compares), 1)
-        
+
         clear_report()
         set_source("for x in y:\n  x")
         std_ast = parse_program()
         loops = std_ast.find_all("For")
         self.assertEqual(len(loops), 1)
         self.assertEqual(loops[0].target.ast_name, "Name")
-        
+
         # Multiple assignment
         clear_report()
         set_source("a, b = 0, 1")
@@ -498,7 +499,7 @@ class CaitTests(unittest.TestCase):
         self.assertEqual(len(assigns[0].targets), 1)
         self.assertEqual(assigns[0].targets[0].ast_name, 'Tuple')
         self.assertEqual(assigns[0].targets[0].elts[0].id, 'a')
-        
+
         clear_report()
         set_source('from pprint import *')
         parse_program()
@@ -514,11 +515,11 @@ class CaitTests(unittest.TestCase):
         self.assertTrue(matches)
 
         __expr__ = matches[0]["__expr__"]
-        matches2 = find_expr_sub_matches("0.4*_item_", __expr__)
+        matches2 = __expr__.find_matches("0.4*_item_", )
         self.assertTrue(matches2)
 
         __expr__ = matches[0]["__expr__"]
-        matches3 = find_expr_sub_matches(__expr__, __expr__)
+        matches3 = __expr__.find_matches(__expr__, )
         self.assertTrue(matches3)
 
     def test_symbol_mapping(self):
@@ -534,7 +535,8 @@ class CaitTests(unittest.TestCase):
         matcher2 = StretchyTreeMatcher("_item_ = 0\n"
                                        "_item2_ = 1", report=MAIN_REPORT)
         match2 = matcher2.find_matches(student_code)
-        self.assertTrue(match2, "One instructor variable should be able to map to multiple student variables, but isn't")
+        self.assertTrue(match2,
+                        "One instructor variable should be able to map to multiple student variables, but isn't")
 
     def test_tree_cutting(self):
         student_code1 = ('maxtemp_list = []\n'
@@ -587,7 +589,7 @@ class CaitTests(unittest.TestCase):
         self.assertTrue(len(matches02[0].func_table.keys()) == 1, "improper number of keys, aborting test")
         self.assertTrue(matches02[0]['_func_def_'], "Couldn't retrieve function name.")
         self.assertTrue(matches02[0]['_funky_'], "Couldn't retrieve variable name.")
-    
+
     def test_cait_node_is_method(self):
         set_source("class Dog:\n def bark(self):\n  pass\ndef dogs_bark(alod):\n pass")
         ast = parse_program()

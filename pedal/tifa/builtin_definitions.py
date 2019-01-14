@@ -115,13 +115,14 @@ def get_builtin_module(name):
 
 
 def _builtin_sequence_constructor(sequence_type):
-    '''
+    """
     Helper function for creating constructors for the Set and List types.
     These constructors use the subtype of the arguments.
 
     Args:
         sequence_type (Type): A function for creating new sequence types.
-    '''
+    """
+
     def sequence_call(tifa, function_type, callee, args, position):
         # TODO: Should inherit the emptiness too
         return_type = sequence_type(empty=True)
@@ -129,15 +130,16 @@ def _builtin_sequence_constructor(sequence_type):
             return_type.subtype = args[0].index(LiteralNum(0))
             return_type.empty = False
         return return_type
+
     return sequence_call
 
 
 def _builtin_zip(tifa, function_type, callee, args, position):
-    '''
+    """
     Definition of the built-in zip function, which consumes a series of
     sequences and returns a list of tuples, with each tuple composed of the
     elements of the sequence paired (or rather, tupled) together.
-    '''
+    """
     if args:
         tupled_types = TupleType(subtypes=[])
         for arg in args:

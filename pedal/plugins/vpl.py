@@ -1,7 +1,9 @@
 from pedal.plugins.vpl_unittest import UnitTestedAssignment
-'''
+"""
 Some kind of function to break up the sections
-'''
+"""
+import re
+import sys
 from html.parser import HTMLParser
 
 from pedal.report import MAIN_REPORT
@@ -53,7 +55,7 @@ class VPLStyler(HTMLParser):
     def handle_endtag(self, tag):
         if tag in self.HEADERS:
             self.fed.append("")
-        elif tag in ("pre", ):
+        elif tag in ("pre",):
             self.fed.append("")
             self.inside_pre = False
 
@@ -148,6 +150,7 @@ class SectionalAssignment:
             self.report.set_success()
         resolve(report=self.report)
 
+from pedal.plugins.vpl_unittest import UnitTestedAssignment
 
 def unittest_resolver(phases, report=None, custom_success_message=None):
     success = True

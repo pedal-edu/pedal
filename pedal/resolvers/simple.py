@@ -22,14 +22,14 @@ LEGACY_CATEGORIZATIONS = {
 
 
 def by_priority(feedback):
-    '''
+    """
     Converts a feedback into a numeric representation for sorting.
 
     Args:
         feedback (Feedback): The feedback object to convert
     Returns:
         float: A decimal number representing the feedback's relative priority.
-    '''
+    """
     category = 'uncategorized'
     if feedback.category is not None:
         category = feedback.category.lower()
@@ -100,14 +100,14 @@ def parse_feedback(feedback):
 
 @make_resolver
 def resolve(report=None, priority_key=None):
-    '''
+    """
     Args:
         report (Report): The report object to resolve down. Defaults to the
                          global MAIN_REPORT
 
     Returns
         str: A string of HTML feedback to be delivered
-    '''
+    """
     if report is None:
         report = MAIN_REPORT
     if priority_key is None:
@@ -135,7 +135,7 @@ def resolve(report=None, priority_key=None):
         final_score += partial
         if (message is not None and
             final_message is None and
-                feedback.priority != 'positive'):
+            feedback.priority != 'positive'):
             final_message = message
             final_category = feedback.category
             final_label = feedback.label
@@ -144,7 +144,7 @@ def resolve(report=None, priority_key=None):
         final_message = "No errors reported."
     final_hide_correctness = suppressions.get('success', False)
     if (not final_hide_correctness and final_success and
-        final_label == 'No errors' and
+            final_label == 'No errors' and
             final_category == 'Instructor'):
         final_category = 'Complete'
         final_label = 'Complete'

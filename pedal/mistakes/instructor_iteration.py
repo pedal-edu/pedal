@@ -31,7 +31,7 @@ def all_for_loops():
 def wrong_target_is_list():
     match = find_match("for _item_ in ___:\n    pass")
     if match:
-        _item_ = match["_item_"][0].astNode
+        _item_ = match["_item_"].astNode
         if data_state(_item_).was_type('list'):
             explain('The variable <code>{0!s}</code> is a list and should not be placed in the iteration variable slot'
                     ' of the "for" block<br><br><i>(target_is_list)<i></br>.'.format(_item_.id))
@@ -43,7 +43,7 @@ def wrong_target_is_list():
 def wrong_list_repeated_in_for():
     match = find_match("for _item_ in _item_:\n    pass")
     if match:
-        _item_ = match["_item_"][0].astNode
+        _item_ = match["_item_"].astNode
         if data_state(_item_).was_type('list'):
             explain('The <code>{0!s}</code> variable can only appear once in the "for" block <br><br><i>'
                     '(list_repeat)<i></br>'.format(_item_.id))
@@ -55,7 +55,7 @@ def wrong_list_repeated_in_for():
 def missing_iterator_initialization():
     match = find_match("for ___ in _list_:\n    pass")
     if match:
-        _list_ = match["_list_"][0].astNode
+        _list_ = match["_list_"].astNode
         if _list_.id == "___":
             explain("The slot to hold a list in the iteration is empty.<br><br><i>(no_iter_init-blank)<i></br>")
             return True
@@ -70,7 +70,7 @@ def missing_iterator_initialization():
 def wrong_iterator_not_list():
     match = find_match("for ___ in _item_:\n    pass")
     if match:
-        _item_ = match["_item_"][0].astNode
+        _item_ = match["_item_"].astNode
         if not data_state(_item_).was_type('list'):
             explain("The variable <code>{0!s}</code> has been set to something that is not a list but is placed in the "
                     "iteration block that must be a list.<br><br><i>(iter_not_list)<i></br>".format(_item_.id))
@@ -81,7 +81,7 @@ def wrong_iterator_not_list():
 def missing_target_slot_empty():
     match = find_match("for _item_ in ___:\n    pass")
     if match:
-        _item_ = match["_item_"][0].astNode
+        _item_ = match["_item_"].astNode
         if _item_.id == "___":
             explain("You must fill in the empty slot in the iteration.<br><br><i>(target_empty)<i></br>")
             return True
@@ -126,7 +126,7 @@ def wrong_target_reassigned():
     for match in matches:
         __expr__ = match["__expr__"]
         _item_ = match["_item_"][0]
-        submatches = find_expr_sub_matches("{} = ___".format(_item_), __expr__)
+        submatches = __expr__.find_matches("{} = ___".format(_item_), )
         if submatches:
             explain("The variable <code>{0!s}</code> has been reassigned. "
                     "The iteration variable shouldn't be reassigned"

@@ -1,12 +1,12 @@
-'''
+"""
 Simple data classes for storing feedback to present to learners.
-'''
+"""
 
 __all__ = ['Feedback']
 
 
 class Feedback:
-    '''
+    """
     A class for storing raw feedback.
 
     Attributes:
@@ -51,7 +51,7 @@ class Feedback:
                                     strategies ("You have been working for
                                     5 hours, perhaps it is time to take
                                     a break?").
-    '''
+    """
     MESSAGE_TYPES = ['hint', 'mistake', 'misconception',
                      'constraint', 'metacognitive']
 

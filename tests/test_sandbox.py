@@ -10,10 +10,11 @@ from pedal.sandbox import Sandbox
 import pedal.sandbox.compatibility as compatibility
 from pedal.source import set_source
 
+
 class TestCode(unittest.TestCase):
     def setUp(self):
         pass
-        
+
     def test_normal_run(self):
         student = Sandbox()
         student.run('a=0\nprint(a)')
@@ -21,14 +22,14 @@ class TestCode(unittest.TestCase):
         self.assertEqual(student.data['a'], 0)
         self.assertEqual(len(student.output), 1)
         self.assertIn('0', student.output[0])
-    
+
     def test_input(self):
         student = Sandbox()
         student.run('b = input("Give me something:")\nprint(b)',
                     inputs=['Hello World!'])
         self.assertIn('b', student.data)
         self.assertEqual(student.data['b'], 'Hello World!')
-                     
+
     def test_oo(self):
         # Load the "bank.py" code
         student_code = dedent('''
@@ -55,7 +56,7 @@ class TestCode(unittest.TestCase):
         student.data['bank'].balance += 100
         student.call('bank.take', 100)
         self.assertTrue(student._)
-    
+
     def test_improved_exceptions(self):
         TEST_FILENAME = 'tests/_sandbox_test_student.py'
         with open(TEST_FILENAME) as student_file:
@@ -72,39 +73,39 @@ class TestCode(unittest.TestCase):
             1+'0'
         TypeError: unsupported operand type(s) for +: 'int' and 'str'
         """).strip()+"\n")
-    
+
     def test_call(self):
         student_code = "def average(a,b):\n return (a+b)/2"
         student = Sandbox()
         student.run(student_code, as_filename='student.py')
         student.call('average', 10, 12)
-    
+
     def test_compatibility_api(self):
         student_code = 'word = input("Give me a word")\nprint(word+"!")'
         set_source(student_code)
         self.assertFalse(compatibility.get_output())
         compatibility.queue_input("Hello")
         self.assertIsNone(compatibility.run_student())
-        self.assertEqual(compatibility.get_output(), 
+        self.assertEqual(compatibility.get_output(),
                          ["Give me a word", "Hello!"])
         compatibility.queue_input("World", "Again")
         self.assertIsNone(compatibility.run_student())
-        self.assertEqual(compatibility.get_output(), 
-                         ["Give me a word", "Hello!", 
+        self.assertEqual(compatibility.get_output(),
+                         ["Give me a word", "Hello!",
                           "Give me a word", "World!"])
         self.assertIsNone(compatibility.run_student())
         self.assertEqual(compatibility.get_output(),
-                         ["Give me a word", "Hello!", 
-                          "Give me a word", "World!", 
+                         ["Give me a word", "Hello!",
+                          "Give me a word", "World!",
                           "Give me a word", "Again!"])
         compatibility.reset_output()
         compatibility.queue_input("Dogs", "Are", "Great")
         self.assertIsNone(compatibility.run_student())
         self.assertIsNone(compatibility.run_student())
         self.assertIsNone(compatibility.run_student())
-        self.assertEqual(compatibility.get_output(), 
-                         ["Give me a word", "Dogs!", 
-                          "Give me a word", "Are!", 
+        self.assertEqual(compatibility.get_output(),
+                         ["Give me a word", "Dogs!",
+                          "Give me a word", "Are!",
                           "Give me a word", "Great!"])
 
     def test_compatibility_exceptions(self):
@@ -112,7 +113,7 @@ class TestCode(unittest.TestCase):
         set_source(student_code)
         exception = compatibility.run_student()
         self.assertIsNotNone(exception)
-    
+
     def test_get_by_types(self):
         student_code = dedent('''
             my_int = 0
@@ -139,7 +140,7 @@ class TestCode(unittest.TestCase):
         self.assertEqual(len(strs), 2)
         self.assertIn('Hello there!', strs)
         self.assertIn('General Kenobi!', strs)
-    
+
     def test_matplotlib(self):
         student_code = dedent('''
             import matplotlib.pyplot as plt
@@ -152,7 +153,7 @@ class TestCode(unittest.TestCase):
         self.assertIn('matplotlib.pyplot', student.modules)
         plt = student.modules['matplotlib.pyplot']
         self.assertEqual(len(plt.plots), 1)
-        
+
     def test_matplotlib_compatibility(self):
         student_code = dedent('''
             import matplotlib.pyplot as plt
@@ -166,7 +167,7 @@ class TestCode(unittest.TestCase):
         exception = compatibility.run_student()
         plt2 = compatibility.get_plots()
         self.assertEqual(len(plt2), 2)
-        
+    def test_matplotlib_compatibility(self):
         student_code = dedent('''
             import os
             os
@@ -174,7 +175,7 @@ class TestCode(unittest.TestCase):
         set_source(student_code)
         exception = compatibility.run_student()
         self.assertIsNone(exception)
-    
+
     def test_coverage(self):
         TEST_FILENAME = 'tests/_sandbox_test_coverage.py'
         with open(TEST_FILENAME) as student_file:
@@ -204,7 +205,7 @@ class TestCode(unittest.TestCase):
         #student.run(student_code)
         student.call('x')
         self.assertIsNotNone(student.exception)
-    
+
     def test_multiline_statements(self):
         student_code = dedent('''
             class X:
@@ -223,7 +224,7 @@ class TestCode(unittest.TestCase):
         # x.b == 10
         # x.update()
         # x.a == 15
-        
+
 
 if __name__ == '__main__':
     unittest.main(buffer=False)

@@ -13,10 +13,11 @@ from pedal.source import next_section, verify_section, count_sections
 from pedal.report import MAIN_REPORT
 from pedal.report.imperative import compliment, clear_report
 
+
 class TestVPL(unittest.TestCase):
     def test_vpl(self):
         find_file('tests/datafiles/student_example.py', sections=True)
-    
+
     def test_file_not_found(self):
         find_file('tests/datafiles/banana_cream_pudding.py', sections=True)
         count_sections(3)
@@ -24,7 +25,7 @@ class TestVPL(unittest.TestCase):
         with redirect_stdout(f):
             resolve()
         output = f.getvalue()
-    
+
     def test_html_conversion(self):
         self.assertEqual(strip_tags(dedent('''
         <h1>Section 1</h1>
@@ -39,7 +40,7 @@ class TestVPL(unittest.TestCase):
         >None
         Here we go.
         '''))
-    
+
     def test_resolve(self):
         clear_report()
         find_file('tests/datafiles/student_example.py', sections=True)
@@ -73,6 +74,7 @@ class TestVPL(unittest.TestCase):
         --|>
         Grade :=>> 0
         '''[1:]))
+
 
 if __name__ == '__main__':
     unittest.main(buffer=False)

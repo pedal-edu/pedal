@@ -25,7 +25,7 @@ __all__ = ['Tifa']
 
 
 class Tifa(ast.NodeVisitor):
-    '''
+    """
     TIFA Class for traversing an AST and finding common issues.
 
     Args:
@@ -33,7 +33,7 @@ class Tifa(ast.NodeVisitor):
                          the modified AST that Skulpt uses.
         report (Report): The report object to store data and feedback in. If
                          left None, defaults to the global MAIN_REPORT.
-    '''
+    """
 
     def __init__(self, python_3=True, report=None):
         if report is None:
@@ -43,9 +43,9 @@ class Tifa(ast.NodeVisitor):
         self.PYTHON_3 = python_3
 
     def _initialize_report(self):
-        '''
+        """
         Initialize a successful report with possible set of issues.
-        '''
+        """
         self.report['tifa'] = {
             'success': True,
             'variables': {},
@@ -54,10 +54,10 @@ class Tifa(ast.NodeVisitor):
         }
 
     def report_issue(self, issue, data=None):
-        '''
+        """
         Report the given issue with associated metadata, including the position
         if not explicitly included.
-        '''
+        """
         if data is None:
             data = {}
         if 'position' not in data:
@@ -71,14 +71,14 @@ class Tifa(ast.NodeVisitor):
                                mistake=data)
 
     def locate(self, node=None):
-        '''
+        """
         Return a dictionary representing the current location within the
         AST.
 
         Returns:
             Position dict: A dictionary with the fields 'column' and 'line',
                            indicating the current position in the source code.
-        '''
+        """
         if node is None:
             if self.node_chain:
                 node = self.node_chain[-1]
@@ -87,7 +87,7 @@ class Tifa(ast.NodeVisitor):
         return {'column': node.col_offset, 'line': node.lineno}
 
     def process_code(self, code, filename="__main__"):
-        '''
+        """
         Processes the AST of the given source code to generate a report.
 
         Args:
@@ -95,7 +95,7 @@ class Tifa(ast.NodeVisitor):
             filename (str): The filename of the source code (defaults to __main__)
         Returns:
             Report: The successful or successful report object
-        '''
+        """
         # Code
         self.source = code.split("\n") if code else []
         filename = filename
@@ -125,15 +125,15 @@ class Tifa(ast.NodeVisitor):
             return self.report['tifa']
 
     def process_ast(self, ast_tree):
-        '''
-        Given an AST, actually performs the type and flow analyses to return a
+        """
+        Given an AST, actually performs the type and flow analyses to return a 
         report.
 
         Args:
             ast (Ast): The AST object
         Returns:
             Report: The final report object created (also available as a field).
-        '''
+        """
         self._reset()
         # Traverse every node
         self.visit(ast_tree)
@@ -149,10 +149,10 @@ class Tifa(ast.NodeVisitor):
         return self.report['tifa']
 
     def _collect_top_level_variables(self):
-        '''
+        """
         Walk through the variables and add any at the top level to the
         top_level_variables field of the report.
-        '''
+        """
         top_level_variables = self.report['tifa']['top_level_variables']
         main_path_vars = self.name_map[self.path_chain[0]]
         for full_name in main_path_vars:
@@ -162,9 +162,9 @@ class Tifa(ast.NodeVisitor):
                 top_level_variables[name] = main_path_vars[full_name]
 
     def _reset(self):
-        '''
+        """
         Reinitialize fields for maintaining the system
-        '''
+        """
         # Unique Global IDs
         self.path_id = 0
         self.scope_id = 0
@@ -186,7 +186,7 @@ class Tifa(ast.NodeVisitor):
         self.class_scopes = {}
 
     def find_variable_scope(self, name):
-        '''
+        """
         Walk through this scope and all enclosing scopes, finding the relevant
         identifier given by `name`.
 
@@ -195,7 +195,7 @@ class Tifa(ast.NodeVisitor):
         Returns:
             Identifier: An Identifier for the variable, which could potentially
                         not exist.
-        '''
+        """
         for scope_level, scope in enumerate(self.scope_chain):
             for path_id in self.path_chain:
                 path = self.name_map[path_id]
@@ -208,7 +208,7 @@ class Tifa(ast.NodeVisitor):
         return Identifier(False)
 
     def find_variable_out_of_scope(self, name):
-        '''
+        """
         Walk through every scope and determine if this variable can be found
         elsewhere (which would be an issue).
 
@@ -217,7 +217,7 @@ class Tifa(ast.NodeVisitor):
         Returns:
             Identifier: An Identifier for the variable, which could potentially
                         not exist.
-        '''
+        """
         for path in self.name_map.values():
             for full_name in path:
                 unscoped_name = full_name.split("/")[-1]
@@ -236,10 +236,10 @@ class Tifa(ast.NodeVisitor):
                 return self.find_path_parent(path_parent, name)
 
     def _finish_scope(self):
-        '''
+        """
         Walk through all the variables present in this scope and ensure that
         they have been read and not overwritten.
-        '''
+        """
         path_id = self.path_chain[0]
         for name in self.name_map[path_id]:
             if Tifa.in_scope(name, self.scope_chain):
@@ -253,14 +253,14 @@ class Tifa(ast.NodeVisitor):
                                       {'name': state.name, 'type': state.type})
 
     def visit(self, node):
-        '''
+        """
         Process this node by calling its appropriate visit_*
 
         Args:
             node (AST): The node to visit
         Returns:
             Type: The type calculated during the visit.
-        '''
+        """
         # Start processing the node
         self.node_chain.append(node)
         self.ast_id += 1
@@ -287,19 +287,19 @@ class Tifa(ast.NodeVisitor):
             return result
 
     def _visit_nodes(self, nodes):
-        '''
+        """
         Visit all the nodes in the given list.
 
         Args:
             nodes (list): A list of values, of which any AST nodes will be
                           visited.
-        '''
+        """
         for node in nodes:
             if isinstance(node, ast.AST):
                 self.visit(node)
 
     def walk_targets(self, targets, type, walker):
-        '''
+        """
         Iterate through the targets and call the given function on each one.
 
         Args:
@@ -309,18 +309,18 @@ class Tifa(ast.NodeVisitor):
                          targets.
             walker (Ast Node, Type -> None): A function that will process
                                              each target and unravel the type.
-        '''
+        """
         for target in targets:
             walker(target, type)
 
     def _walk_target(self, target, type):
-        '''
+        """
         Recursively apply the type to the target
 
         Args:
             target (Ast): The current AST node to process
             type (Type): The type to apply to this node
-        '''
+        """
         if isinstance(target, ast.Name):
             self.store_iter_variable(target.id, type, self.locate(target))
             return target.id
@@ -334,7 +334,7 @@ class Tifa(ast.NodeVisitor):
             return result
 
     def visit_Assign(self, node):
-        '''
+        """
         Simple assignment statement:
         __targets__ = __value__
 
@@ -342,7 +342,7 @@ class Tifa(ast.NodeVisitor):
             node (AST): An Assign node
         Returns:
             None
-        '''
+        """
         # Handle value
         value_type = self.visit(node.value)
         # Handle targets
@@ -364,6 +364,7 @@ class Tifa(ast.NodeVisitor):
                     left_hand_type.add_attr(target.attr, type)
                 # TODO: Otherwise we attempted to assign to a non-instance
                 # TODO: Handle minor type changes (e.g., appending to an inner list)
+
         self.walk_targets(node.targets, value_type, action)
 
     def visit_AugAssign(self, node):
@@ -548,12 +549,12 @@ class Tifa(ast.NodeVisitor):
         self.visit_statements(node.ifs)
 
     def visit_Dict(self, node):
-        '''
+        """
         Three types of dictionaries
         - empty
         - uniform type
         - record
-        '''
+        """
         type = DictType()
         if not node.keys:
             type.empty = True
@@ -623,6 +624,7 @@ class Tifa(ast.NodeVisitor):
                     return_state = self.load_variable("*return", call_position)
                     return_value = return_state.type
             return return_value
+
         function = FunctionType(definition=definition, name=function_name)
         self.store_variable(function_name, function)
         return function
@@ -718,6 +720,7 @@ class Tifa(ast.NodeVisitor):
                         self.store_variable(name, UnknownType(), position)
                 return_value = self.visit(node.body)
             return return_value
+
         return FunctionType(definition=definition)
 
     def visit_List(self, node):
@@ -873,20 +876,20 @@ class Tifa(ast.NodeVisitor):
         self.visit_statements(node.body)
 
     def _scope_chain_str(self, name=None):
-        '''
-        Convert the current scope chain to a string representation (divided
+        """
+        Convert the current scope chain to a string representation (divided 
         by "/").
 
         Returns:
             str: String representation of the scope chain.
-        '''
+        """
         if name:
             return "/".join(map(str, self.scope_chain)) + "/" + name
         else:
             return "/".join(map(str, self.scope_chain))
 
     def identify_caller(self, node):
-        '''
+        """
         Figures out the variable that was used to kick off this call,
         which is almost always the relevant Name to track as being updated.
         If the origin wasn't a Name, nothing will need to be updated so None
@@ -899,7 +902,7 @@ class Tifa(ast.NodeVisitor):
         Returns:
             str or None: The name of the variable or None if no origin could
                          be found.
-        '''
+        """
         if isinstance(node, ast.Name):
             return node.id
         elif isinstance(node, ast.Call):
@@ -909,10 +912,10 @@ class Tifa(ast.NodeVisitor):
         return None
 
     def iterate_variable(self, name, position=None):
-        '''
+        """
         Update the variable by iterating through it - this doesn't do anything
         fancy yet.
-        '''
+        """
         return self.load_variable(name, position)
 
     def store_iter_variable(self, name, type, position=None):
@@ -927,7 +930,7 @@ class Tifa(ast.NodeVisitor):
         return self.store_variable(name, type, position)
 
     def store_variable(self, name, type, position=None):
-        '''
+        """
         Update the variable with the given name to now have the new type.
 
         Args:
@@ -936,7 +939,7 @@ class Tifa(ast.NodeVisitor):
             type (Type): The new type of this variable.
         Returns:
             State: The new state of the variable.
-        '''
+        """
         if position is None:
             position = self.locate()
         full_name = self._scope_chain_str(name)
@@ -972,7 +975,7 @@ class Tifa(ast.NodeVisitor):
         return new_state
 
     def load_variable(self, name, position=None):
-        '''
+        """
         Retrieve the variable with the given name.
 
         Args:
@@ -982,7 +985,7 @@ class Tifa(ast.NodeVisitor):
                         of scope.
         Returns:
             State: The current state of the variable.
-        '''
+        """
         full_name = self._scope_chain_str(name)
         current_path = self.path_chain[0]
         variable = self.find_variable_scope(name)
@@ -1012,7 +1015,7 @@ class Tifa(ast.NodeVisitor):
         return new_state
 
     def load_module(self, chain):
-        '''
+        """
         Finds the module in the set of available modules.
 
         Args:
@@ -1020,7 +1023,7 @@ class Tifa(ast.NodeVisitor):
         Returns:
             ModuleType: The specific module with its members, or an empty
                         module type.
-        '''
+        """
         module_names = chain.split('.')
         potential_module = get_builtin_module(module_names[0])
         if potential_module is not None:
@@ -1065,7 +1068,7 @@ class Tifa(ast.NodeVisitor):
         return state
 
     def merge_paths(self, parent_path_id, left_path_id, right_path_id):
-        '''
+        """
         Combines any variables on the left and right path into the parent
         name space.
 
@@ -1073,7 +1076,7 @@ class Tifa(ast.NodeVisitor):
             parent_path_id (int): The parent path of the left and right branches
             left_path_id (int): One of the two paths
             right_path_id (int): The other of the two paths.
-        '''
+        """
         # Combine two paths into one
         # Check for any names that are on the IF path
         for left_name in self.name_map[left_path_id]:
@@ -1097,7 +1100,7 @@ class Tifa(ast.NodeVisitor):
                 self.name_map[parent_path_id][right_name] = combined
 
     def trace_state(self, state, method, position):
-        '''
+        """
         Makes a copy of the given state with the given method type.
 
         Args:
@@ -1105,12 +1108,12 @@ class Tifa(ast.NodeVisitor):
             method (str): The operation being applied to the state.
         Returns:
             State: The new State
-        '''
+        """
         return state.copy(method, position)
 
     @staticmethod
     def in_scope(full_name, scope_chain):
-        '''
+        """
         Determine if the fully qualified variable name is in the given scope
         chain.
 
@@ -1119,7 +1122,7 @@ class Tifa(ast.NodeVisitor):
             scope_chain (list): A representation of a scope chain.
         Returns:
             bool: Whether the variable lives in this scope
-        '''
+        """
         # Get this entity's full scope chain
         name_scopes = full_name.split("/")[:-1]
         # against the reverse scope chain
@@ -1157,7 +1160,7 @@ class Tifa(ast.NodeVisitor):
         return None
 
     class NewPath:
-        '''
+        """
         Context manager for entering and leaving execution paths (e.g., if
         statements).)
 
@@ -1170,7 +1173,7 @@ class Tifa(ast.NodeVisitor):
 
         Fields:
             id (int): The path ID of this path
-        '''
+        """
 
         def __init__(self, tifa, origin_path, name):
             self.tifa = tifa
@@ -1191,7 +1194,7 @@ class Tifa(ast.NodeVisitor):
             self.tifa.path_chain.pop(0)
 
     class NewScope:
-        '''
+        """
         Context manager for entering and leaving scopes (e.g., inside of
         function calls).
 
@@ -1200,7 +1203,7 @@ class Tifa(ast.NodeVisitor):
                          properties that track variables and paths.
             definitions_scope_chain (list of int): The scope chain of the
                                                    definition
-        '''
+        """
 
         def __init__(self, tifa, definitions_scope_chain, class_type=None):
             self.tifa = tifa

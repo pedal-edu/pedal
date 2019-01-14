@@ -19,6 +19,7 @@ with open(GRADER_PATH, 'r') as grader_file:
 PEDAL_DIR = r"C:/Users/acbart/projects/pedal/"
 sys.path.insert(0, PEDAL_DIR)
 
+
 # Load reference solutions
 
 
@@ -39,6 +40,7 @@ def add_test(class_, name, python_file, expected_output):
                 exec(grader_code, globals())
         actual_output = captured_output.getvalue()
         self.assertEqual(actual_output, expected_output)
+
     setattr(class_, 'test_' + name, _inner_test)
 
 

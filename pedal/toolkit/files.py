@@ -4,10 +4,10 @@ from pedal.toolkit.utilities import ensure_literal
 
 
 def files_not_handled_correctly(*filenames):
-    '''
+    """
     Statically detect if files have been opened and closed correctly.
     This is only useful in the case of very simplistic file handling.
-    '''
+    """
     if filenames and isinstance(filenames[0], int):
         num_filenames = filenames[0]
         actual_filenames = False

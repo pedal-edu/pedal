@@ -61,8 +61,8 @@ def _format_message(issue, data):
                 "for the iteration variable. Usually, the iteration variable "
                 "is the singular form of the iteration list (e.g., "
                 "<code>for a_dog in dogs:</code>).").format(
-                    line=data['position']['line'],
-                    name=data['name'])
+            line=data['position']['line'],
+            name=data['name'])
     elif issue == 'Initialization Problem':
         # A variable was read before it was defined
         return ("The variable <code>{name}</code> was used on line {line}, "
