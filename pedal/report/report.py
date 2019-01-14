@@ -20,15 +20,20 @@ class Report:
         group_names (dict[group:str]): A printable, student-facing name for the
             group. When a group needs to be rendered out to the user, this
             will override whatever label was going to be presented instead.
-        _results (dict of str => any): Maps tool names to their data. The
-                                       namespace for a tool can be used to
-                                       store whatever they want, but will
-                                       probably be in a dictionary itself.
         group_order (sequence or callable or None): The mechanism to use to
             order groups. If a sequence, the order will be inferred based on
             the order of elements in the sequence. If a callable, the callable
             will be used as a key function for `sort`. If `None`, then defaults
             to the natural ordering of the groups. Defaults to `None`.
+        hooks (dict[str: list[callable]): A dictionary mapping events to
+            a list of callable functions. Tools can register functions on
+            hooks to have them executed when the event is triggered by another
+            tool. For example, the Assertions tool has hooks on the Source tool
+            to trigger assertion resolutions before advancing to next sections.
+        _results (dict of str => any): Maps tool names to their data. The
+                                       namespace for a tool can be used to
+                                       store whatever they want, but will
+                                       probably be in a dictionary itself.
     '''
     group_order = None
 
@@ -44,6 +49,7 @@ class Report:
         self._results = {}
         self.group = None
         self.group_names = {}
+        self.hooks = {}
 
     def set_success(self, group=None):
         '''
@@ -86,6 +92,12 @@ class Report:
 
     def attach(self, label, **kwargs):
         self.feedback.append(Feedback(label, **kwargs))
+    
+    def log(self, message):
+        pass
+
+    def debug(self, message):
+        pass
 
     def suppress(self, category, label=True, where=True):
         '''
@@ -103,12 +115,31 @@ class Report:
         if category not in self.suppressions:
             self.suppressions[category] = []
         self.suppressions[category].append(label)
+    
+    def add_hook(self, event, function):
+        '''
+        Register the `function` to be executed when the given `event` is
+        triggered.
+        
+        Args:
+            event (str): An event name. Multiple functions can be triggered for
+                the same `event`. The format is as follows:
+                    "pedal.module.function.extra"
 
-    def log(self, message):
-        pass
-
-    def debug(self, message):
-        pass
+                The `".extra"` component is optional to add further nuance, but
+                the general idea is that you are referring to functions that,
+                when called, should trigger other functions to be called first.
+            function (callable): A callable function. This function should
+                accept a keyword parameter named `report`, which will 
+        '''
+        if event not in self.hooks:
+            self.hooks[event] = []
+        self.hooks[event].append(function)
+    
+    def execute_hooks(self, event):
+        if event in self.hooks:
+            for function in self.hooks[event]:
+                function(report=self)
 
     def __getitem__(self, key):
         if key not in self._results:

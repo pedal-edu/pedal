@@ -5,6 +5,7 @@ behavior.
 import re
 import types
 
+from pedal.sandbox.exceptions import SandboxNoMoreInputsException
 
 def _disabled_compile(source, filename, mode, flags=0, dont_inherit=False):
     '''
@@ -103,7 +104,7 @@ def _make_inputs(*input_list, **kwargs):
         except StopIteration as SI:
             if repeat is None:
                 # TODO: Make this a custom exception
-                raise SI
+                raise SandboxNoMoreInputsException("User had no more input to give.")
             else:
                 return repeat
     return mock_input

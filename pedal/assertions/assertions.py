@@ -44,14 +44,6 @@ def equality_test(actual, expected, _exact_strings, _delta, _test_output):
          [_normalize_string(line) for line in actual])
     )
 
-
-def contextualize_calls():
-    pass
-
-
-def try_all():
-    pass
-
 # Unittest Asserts
 
 

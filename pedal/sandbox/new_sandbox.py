@@ -4,16 +4,21 @@ import re
 import sys
 import io
 import os
-import bdb
 import string
 from unittest.mock import patch, mock_open, MagicMock
 import traceback
 
 from pedal.report import MAIN_REPORT
 from pedal.sandbox import mocked
+from pedal.sandbox.exceptions import (SandboxTraceback, SandboxHasNoFunction,
+                                      SandboxHasNoVariable, KeyError,
+                                      SandboxPreventModule,
+                                      SandboxNoMoreInputsException)
 from pedal.sandbox.timeout import timeout
 from pedal.sandbox.messages import EXTENDED_ERROR_EXPLANATION
-
+from pedal.sandbox.result import SandboxResult
+from pedal.sandbox.tracer import (SandboxCallTracer, SandboxCoverageTracer,
+                                  SandboxBasicTracer)
 
 def _dict_extends(d1, d2):
     '''
@@ -37,95 +42,14 @@ def _dict_extends(d1, d2):
     return d3
 
 
-class SandboxException(Exception):
-    pass
-
-
-class SandboxPreventModule(Exception):
-    pass
-
-
-class SandboxHasNoFunction(SandboxException):
-    pass
-
-
-class SandboxHasNoVariable(SandboxException):
-    pass
-
-
-class SandboxTracer(bdb.Bdb):
-    def __init__(self, filename):
-        super().__init__()
-        self.calls = {}
-        self.set_break(filename, 1)
-
-
-class SandboxTraceback:
-    def format_exception(self, _pre=""):
-        if not self.exception:
-            return ""
-        cl, exc, tb = self.exc_info
-        line_number = traceback.extract_tb(tb)[-1][1]
-        while tb and self._is_relevant_tb_level(tb):
-            tb = tb.tb_next
-        length = self._count_relevant_tb_levels(tb)
-        tb_e = traceback.TracebackException(cl, exc, tb,
-                                            limit=length,
-                                            capture_locals=False)
-        lines = [x.replace(', in <module>', '', 1) for x in list(tb_e.format())]
-        return _pre + "\nTraceback:\n" + ''.join(lines[1:])
-
-    def _count_relevant_tb_levels(self, tb):
-        length = 0
-        while tb and not self._is_relevant_tb_level(tb):
-            length += 1
-            tb = tb.tb_next
-        return length
-
-    def _is_relevant_tb_level(self, tb):
-        '''
-        Determines if the give part of the traceback is relevant to the user.
-
-        Returns:
-            boolean: True means it is NOT relevant
-        '''
-        # Are in verbose mode?
-        if self.full_trace:
-            return False
-        filename, a_, b_, _ = traceback.extract_tb(tb, limit=1)[0]
-        #print(filename, self.instructor_filename, __file__, a_, b_)
-        # Is the error in this test file?
-        if filename == __file__:
-            return True
-        if filename == self.instructor_filename:
-            return True
-        # Is the error related to a file in the parent directory?
-        current_directory = os.path.dirname(os.path.realpath(__file__))
-        parent_directory = os.path.dirname(current_directory)
-        if filename.startswith(current_directory):
-            return False
-        # Is the error in a local file?
-        if filename.startswith('.'):
-            return False
-        # Is the error in an absolute path?
-        if not os.path.isabs(filename):
-            return False
-        # Okay, it's not a student related file
-        return True
-
-
-class SandboxResult:
-    def __init__(self, value):
-        self.value = value
-
-
 class DataSandbox:
     '''
-    Simplistic class that contains the functions for accessing a self-contained
-    student data namespace.
+    Simplistic Mixin class that contains the functions for accessing a
+    self-contained student data namespace.
     '''
 
     def __init__(self):
+        super().__init__(self)
         self.data = {}
 
     def get_names_by_type(self, type, exclude_builtins=True):
@@ -171,19 +95,25 @@ class Sandbox(DataSandbox):
         output (list of str): The current lines of output, broken up by
             distinct print calls (not "\n" characters). Note that this will
             not have any "\n" characters unless you explicitly printed them.
+        called_output (dict[str:list[str]]): The output for each call context.
+        call_id (int): The current call_id of the most recent call. Is
+            initially 0, indicating the original sandbox creation.
         modules: A dictionary of the mocked modules (accessible by their
             imported names).
         context: A list of strings representing the code previously run through
             this sandbox.
         contextualize (bool): Whether or not to contextualize stack frames.
     '''
+    
+    CONTEXT_AFTER = "{}<br>\nThe error above occurred when I ran:<br>\n"
 
     def __init__(self, initial_data=None,
                  initial_raw_output=None,
                  initial_exception=None,
-                 modules=None, full_trace=False, trace_execution=True,
+                 modules=None, full_traceback=False,
+                 tracer_style=None,
                  threaded=False, report=None,
-                 contextualize=False,
+                 contextualize=False, result_proxy=SandboxResult,
                  instructor_filename="instructor_tests.py"):
         '''
         Args:
@@ -205,6 +135,7 @@ class Sandbox(DataSandbox):
                 when executing student code in instructor tests. Although you
                 can specify something else, defaults to "instructor_tests.py".
         '''
+        super().__init__(self)
         if initial_data is None:
             initial_data = {}
         self.data = initial_data
@@ -227,9 +158,17 @@ class Sandbox(DataSandbox):
         self.modules = {}
         self.add_mocks(modules)
         # Settings
-        self.full_trace = full_trace
-        self.trace_execution = trace_execution
+        self.full_traceback = full_traceback
         self.MAXIMUM_VALUE_LENGTH = 120
+        # Tracer Styles
+        if tracer_style.lower() == 'coverage':
+            self.trace = SandboxCoverageTracer(True)
+        elif tracer_style.lower() == 'calls':
+            self.trace = SandboxCallTracer(True)
+        else:
+            self.trace = SandboxBasicTracer(True)
+        # Proxying results
+        self.result_proxy = result_proxy
         # report
         if report is None:
             report = MAIN_REPORT
@@ -238,13 +177,8 @@ class Sandbox(DataSandbox):
         self.threaded = threaded
         self.allowed_time = 1
         # Context
-        self.context = []
-        # Coverage
-        self.record_coverage = False
-        self.coverage_report = None
-        # Hooks
-        self.pre_execution = None
-        self.post_execution = None
+        self.call_id = 0
+        self.context = {}
 
     def add_mocks(self, **modules):
         '''
@@ -283,10 +217,12 @@ class Sandbox(DataSandbox):
             #:
             self.raw_output = ""
             self.output = []
+            self.called_output = {}
         else:
             self.raw_output = raw_output
             lines = raw_output.rstrip().split("\n")
             self.output = [line.rstrip() for line in lines]
+            self.called_output[self.call_id] = self.output
 
     def append_output(self, raw_output):
         '''
@@ -301,7 +237,9 @@ class Sandbox(DataSandbox):
         '''
         self.raw_output += raw_output
         lines = raw_output.rstrip().split("\n")
-        self.output += [line.rstrip() for line in lines]
+        lines = [line.rstrip() for line in lines]
+        self.output += lines
+        self.called_output[self.call_id].extend(lines)
 
     def set_input(self, inputs):
         '''
@@ -399,18 +337,45 @@ class Sandbox(DataSandbox):
         # With all the special args done, the remainder are regular kwargs
         kwargs = _dict_extends(_arguments, kwargs)
         # Create the actual arguments and call
+        self.call_id += 1
+        self.called_output[self.call_id] = []
         actual_call, student_call = self._construct_call(function, args, kwargs)
         if contextualize:
-            self.context.append(student_call)
+            self.context[self.call_id].append(student_call)
         self.run(actual_call, as_filename, modules, inputs,
                  example=example, threaded=threaded,
                  contextualize=contextualize,
                  raise_exceptions=raise_exceptions)
+        self.purge_temporaries()
         if self.exception is None:
             self._ = self.data[target]
-            return SandboxResult(self._)
+            if self.result_proxy is not None:
+                self._ = self.result_proxy(self._, call_id=self.call_id, 
+                                           sandbox=self)
+            return self._
         else:
             return self.exception
+    
+    def make_safe_variable(self, name):
+        '''
+        Tries to construct a safe variable name in the current namespace, based
+        off the given one. This is accomplished by appending a "_" and a number
+        of increasing value until no comparable name exists in the namespace.
+        This is particularly useful when you want to create a variable name to
+        assign to, but you are concerned that the user might have a variable
+        with that name already, which their code relies on.
+        
+        Args:
+            name (str): A desired target name.
+        Returns:
+            str: A safe target name, based off the given one.
+        '''
+        current_addition = ""
+        attempt_index = 2
+        while name+current_addition in self.data:
+            current_addition = "_{}".format(attempt_index)
+            attempt_index += 1
+        return name+current_addition
 
     def _construct_call(self, function, args, kwargs):
         str_args = [self.make_temporary('arg', index, value)
@@ -425,15 +390,58 @@ class Sandbox(DataSandbox):
             actual = "{} = {}".format(target, call)
         student_call = call if target is "_" else actual
         return actual, student_call
+    
+    def _start_patches(self, *patches):
+        self._current_patches.append(patches)
+        for patch in patches:
+            patch.start()
+    
+    def _stop_patches(self):
+        patches = self._current_patches.pop()
+        for patch in patches:
+            patch.stop()
+    
+    def _capture_exception(self, exception, exc_info, raise_exceptions):
+        self.exception = exception
+        if _example is not None:
+            self.exception = _raise_improved_error(self.exception,
+                                                   self.CONTEXT_AFTER.format(_example) + _example + "</pre>")
+            self.example = _example
+        traceback = SandboxTraceback(exception, exc_info)
+        traceback.format_exception()
+        self.exception_position = {'line': line_number}
+        if raise_exceptions is False or not self.raise_exceptions_mode:
+            return True
+        name = str(self.exception.__class__)[8:-2]
+        self.report.attach(name, category='Runtime', tool='Sandbox',
+                           mistakes={'message': self.format_exception(),
+                                     'error': self.exception})
+        return False
 
     def run(self, code, as_filename=None, modules=None, inputs=None,
-            example=None, threaded=None, raise_exceptions=False,
-            context=None):
+            threaded=None, raise_exceptions=True, context=None):
         '''
-        Actually execute the code
+        Execute the given string of code in this sandbox.
+        
+        Args:
+            code (str): The string of code to be executed.
+            as_filename (str): The filename to use when executing the code -
+                this is cosmetic, technically speaking, it has no relation
+                to anything on disk. It will be present in tracebacks.
+                Defaults to :attribute:`Sandbox.filename`.
+            modules (dict[str:Module]): Modules to mock.
+            inputs (list[str]): The inputs to give from STDIN, as a list of
+                strings. You can also give a function that emulates the
+                input function; e.g., consuming a prompt (str) and producing
+                strings. This could be used to make a more interactive input
+                system.
+            context (str): The context to give any exceptions.
+                If None, then the recorded context will be used. If a string,
+                this call will be performed with the given context.
+            threaded (bool): whether or not to run this code in a separate
+                thread. Defaults to :attribute:`Sandbox.threaded`.
+            raise_exceptions (bool): Whether or not to capture exceptions.
         '''
-        # Redirect stdout/stdin as needed
-        old_stdout = sys.stdout
         # Handle any threading if necessary
         if threaded is None:
             threaded = self.threaded
@@ -442,26 +450,19 @@ class Sandbox(DataSandbox):
                 return timeout(self.allowed_time, self.run, code, _as_filename,
                                _modules, _inputs, _example, False,
                                _raise_exceptions, _context)
-            except TimeoutError as xxx_todo_changeme:
-                self.exception = xxx_todo_changeme
-                sys.stdout = old_stdout
-                error_message = ("Time out error while running: <pre>{}</pre>"
-                                 .format(code=code))
-                self.report.attach("Timeout Error",
-                                   tool='Sandbox', category='Runtime',
-                                   section=self.report['source']['section'],
-                                   mistakes={'message': error_message,
-                                             'error': self.exception})
-                return self.exception
-        if _as_filename is None:
-            _as_filename = self.filename
-        if _inputs is None:
+            except TimeoutError as timeout_exception:
+                self._capture_exception(timeout_exception, sys.exc_info(),
+                                        raise_exceptions)
+                return self
+        if as_filename is None:
+            as_filename = self.report['source']['filename']
+        if inputs is None:
             if self.inputs is None:
-                _inputs = mocked._make_inputs('0', repeat='0')
+                inputs = mocked._make_inputs('0', repeat='0')
             else:
-                _inputs = self.inputs
-        else:
-            _inputs = mocked._make_inputs(*_inputs)
+                inputs = self.inputs
+        elif isinstance(inputs, (tuple, list)):
+            inputs = mocked._make_inputs(*inputs)
         # Override builtins and mock stuff out
         mocked._override_builtins(self.data, {
             'compile': mocked._disabled_compile,
@@ -469,68 +470,32 @@ class Sandbox(DataSandbox):
             'exec': mocked._disabled_exec,
             'globals': mocked._disabled_globals,
             'open': mocked._restricted_open,
-            'input': _inputs,
-            'raw_input': _inputs,
+            'input': inputs,
+            'raw_input': inputs,
             'sys': sys,
             'os': os
         })
-        capture_stdout = io.StringIO()
-        sys.stdout = capture_stdout
+        
         self.exception = None
         self.exception_position = None
 
-        if callable(self.pre_execution):
-            self.pre_execution()
-
         # Patch in dangerous built-ins
-        pedal_patch = patch('pedal', side_effect=SandboxPreventModule)
-        pedal_patch.start()
-        time_sleep_patch = patch('time.sleep', return_value=None)
-        time_sleep_patch.start()
-        if self.record_coverage:
-            self.start_coverage(code, _as_filename)
+        capture_stdout = io.StringIO()
+        self._start_patches(
+            patch('sys.stdout', capture_stdout),
+            patch('pedal', side_effect=SandboxPreventModule),
+            patch('time.sleep', return_value=None),
+            patch.dict('sys.modules', self.mocked_modules)
+        )
+        # Compile and run student code
         try:
-            with patch.dict('sys.modules', self.mocked_modules):
-                # Compile and run student code
-                compiled_code = compile(code, _as_filename, 'exec')
-                if self.trace_execution:
-                    self.trace = SandboxTracer(_as_filename)
-                    db.run(compiled_code, self.data)
-                else:
-                    exec(compiled_code, self.data)
-        except StopIteration:
-            input_failed = True
-            result = None
-        except Exception as xxx_todo_changeme1:
-            self.exception = xxx_todo_changeme1
-            if _example is not None:
-                self.exception = _raise_improved_error(self.exception,
-                                                       "\n\nThe above occurred when I ran:\n<pre>" + _example + "</pre>")
-                self.example = _example
-            elif _context is not None:
-                self.exception = _raise_improved_error(self.exception, "\n\n" + _context)
-                self.example = _context
-            cl, exc, tb = self.exc_info = sys.exc_info()
-            line_number = traceback.extract_tb(tb)[-1][1]
-            while tb and self._is_relevant_tb_level(tb):
-                tb = tb.tb_next
-            length = self._count_relevant_tb_levels(tb)
-            tb_e = traceback.TracebackException(cl, exc, tb,
-                                                limit=length,
-                                                capture_locals=True)
-            msgLines = [x.replace(', in <module>', '', 1) for x in list(tb_e.format())]
-            self.exception_position = {'line': line_number}
+            compiled_code = compile(code, _as_filename, 'exec')
+            with self.trace._as_filename(as_filename):
+                exec(compiled_code, self.data)
+        except Exception as user_exception:
+            self._capture_exception(user_exception, sys.exc_info(),
+                                    raise_exceptions)
         finally:
-            if self.record_coverage:
-                self.coverage_report = self.stop_coverage()
-            time_sleep_patch.stop()
-            pedal_patch.stop()
-            sys.stdout = old_stdout
-            #sys.stdin = old_stdin
-            if callable(self.post_execution):
-                self.post_execution()
-        self.append_output(capture_stdout.getvalue())
-        # Clean up
-        self.purge_temporaries()
-        if _raise_exceptions:
-            self.raise_any_exceptions()
+            self._stop_patches()
+            self.append_output(capture_stdout.getvalue())
+        return self

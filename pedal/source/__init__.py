@@ -16,8 +16,7 @@ OPTIONALS = []
 CATEGORY = 'Syntax'
 
 __all__ = ['NAME', 'DESCRIPTION', 'SHORT_DESCRIPTION', 'REQUIRES', 'OPTIONALS',
-           'set_source', 'count_sections', 'next_section', 'verify_section',
-           'precondition', 'postcondition', 'finish_section', 'section']
+           'set_source', 'count_sections', 'next_section', 'verify_section']
 DEFAULT_PATTERN = r'^(##### Part .+)$'
 
 

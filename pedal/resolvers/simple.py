@@ -1,4 +1,5 @@
 from pedal.report import MAIN_REPORT, Feedback
+from pedal.resolvers.core import make_resolver
 
 DEFAULT_CATEGORY_PRIORITY = [
     'syntax',
@@ -97,7 +98,7 @@ def parse_feedback(feedback):
         performance = feedback.performance
     return success, performance, message, data
 
-
+@make_resolver
 def resolve(report=None, priority_key=None):
     '''
     Args:
