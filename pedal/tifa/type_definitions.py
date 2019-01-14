@@ -453,7 +453,7 @@ class DayType(Type):
 
 try:
     from numbers import Number
-except BaseException:
+except Exception:
     Number = int
 
 TYPE_LOOKUPS = {

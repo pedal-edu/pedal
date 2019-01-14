@@ -91,7 +91,11 @@ class _finish_section:
         # return wrapped_f
 
 
-def finish_section(number, *functions, next_section=False):
+def finish_section(number, *functions, **kwargs):
+    if 'next_section' in kwargs:
+        next_section = kwargs['next_section']
+    else:
+        next_section = False
     if len(functions) == 0:
         x = _finish_section(number, *functions)
         x()
