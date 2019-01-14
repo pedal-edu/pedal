@@ -469,7 +469,7 @@ class Sandbox(DataSandbox):
             as_filename (str): The filename to use when executing the code -
                 this is cosmetic, technically speaking, it has no relation
                 to anything on disk. It will be present in tracebacks.
-                Defaults to :attribute:`Sandbox.filename`.
+                Defaults to Source's filename.
             modules (dict[str:Module]): Modules to mock.
             inputs (list[str]): The inputs to give from STDIN, as a list of
                 strings. You can also give a function that emulates the

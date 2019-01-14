@@ -184,6 +184,18 @@ class TestCode(unittest.TestCase):
         self.assertIsNone(student.exception)
         self.assertEqual(student.trace.pc_covered, 80.0)
     
+    def test_calls(self):
+        student_code = dedent('''
+            def x(n):
+                if n > 0:
+                    return x(n-1)
+                return 0
+            x(5)
+        ''')
+        student = Sandbox(tracer_style='calls')
+        student.run(student_code, as_filename='student.py')
+        self.assertEqual(len(student.trace.calls['x']))
+    
     def test_unittest(self):
         student_code = dedent('''
             x = 0
