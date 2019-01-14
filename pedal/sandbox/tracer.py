@@ -32,7 +32,7 @@ class SandboxBasicTracer:
     def __exit__(self, exc_type, exc_val, traceback):
         pass
 
-class SandboxCoverageTracer:
+class SandboxCoverageTracer(SandboxBasicTracer):
     def __init__(self):
         super().__init__()
         if coverage is None:
@@ -43,13 +43,14 @@ class SandboxCoverageTracer:
     
     def __enter__(self):
         # Force coverage to accept the code
-        original = coverage.python.get_python_source
+        self.original = coverage.python.get_python_source
         def _get_source_correctly(reading_filename):
+            print(reading_filename, file=self.s)
             if reading_filename == self.filename:
                 return self.code
             else:
-                return original(reading_filename)
-        coverage.python.get_python_source = get_python_source
+                return self.original(reading_filename)
+        coverage.python.get_python_source = _get_source_correctly
         self.coverage = coverage.Coverage()
         self.coverage.start()
     
@@ -57,14 +58,15 @@ class SandboxCoverageTracer:
         self.coverage.stop()
         self.coverage.save()
         # Restore the get_python_source reader
-        coverage.python.get_python_source = original
+        coverage.python.get_python_source = self.original
+        self.original = None
         # Actually analyze the data, attach some data
         numbers = self.coverage._analyze(self.filename).numbers
         self.n_missing = numbers.n_missing
         self.n_statements = numbers.n_statements
         self.pc_covered = numbers.pc_covered
 
-class SandboxCallTracer(Bdb):
+class SandboxCallTracer(Bdb, SandboxBasicTracer):
     def __init__(self):
         super().__init__()
         self.calls = {}

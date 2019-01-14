@@ -1,6 +1,6 @@
 from unittest.util import safe_repr
 from pedal import gently
-from pedal.sandbox.sandbox import _normalize_string
+from pedal.assertions.assertions import _normalize_string
 
 
 class UnitTestedAssignment:

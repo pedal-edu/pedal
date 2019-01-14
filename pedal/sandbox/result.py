@@ -46,7 +46,7 @@ class SandboxResult:
             return object.__getattribute__(self, "__class__")
         elif name == "_actual_value":
             return v
-        elif name in ASSIGNABLE_ATTRS:
+        elif name in SandboxResult.ASSIGNABLE_ATTRS:
             return object.__getattribute__(self, name)
         elif name == "value" and not hasattr(v, "value"):
             return v

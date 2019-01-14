@@ -5,6 +5,7 @@ import os
 import sys
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from pedal.report.imperative import MAIN_REPORT
 from pedal.sandbox import Sandbox
 import pedal.sandbox.compatibility as compatibility
 from pedal.source import set_source
@@ -24,7 +25,7 @@ class TestCode(unittest.TestCase):
     def test_input(self):
         student = Sandbox()
         student.run('b = input("Give me something:")\nprint(b)',
-                    _inputs=['Hello World!'])
+                    inputs=['Hello World!'])
         self.assertIn('b', student.data)
         self.assertEqual(student.data['b'], 'Hello World!')
                      
@@ -41,11 +42,11 @@ class TestCode(unittest.TestCase):
                     self.balance -= amount
                     return self.balance > 0''')
         student = Sandbox()
-        student.run(student_code, _as_filename='bank.py')
+        student.run(student_code, as_filename='bank.py')
         # Check that we created the class
         self.assertIn('Bank', student.data)
         # Now let's try making an instance
-        student.call('Bank', 50, _target='bank')
+        student.call('Bank', 50, target='bank')
         self.assertIsInstance(student.data['bank'], student.data['Bank'])
         # Can we save money?
         student.call('bank.save', 32)
@@ -56,24 +57,26 @@ class TestCode(unittest.TestCase):
         self.assertTrue(student._)
     
     def test_improved_exceptions(self):
-        student_code = '0+"1"'
+        TEST_FILENAME = 'tests/_sandbox_test_student.py'
+        with open(TEST_FILENAME) as student_file:
+            student_code = student_file.read()
         student = Sandbox()
-        student.run(student_code, _as_filename='student.py')
+        student.run(student_code, as_filename=TEST_FILENAME)
         self.assertIsNotNone(student.exception)
         self.assertIsInstance(student.exception, TypeError)
         self.assertEqual(student.exception_position, {'line': 1})
-        
-        self.assertEqual(student.format_exception(), 
-"""
-Traceback:
-  File "student.py", line 1
-TypeError: unsupported operand type(s) for +: 'int' and 'str'\n"""
-        )
+        self.assertEqual(student.exception_formatted, dedent(
+        """
+        Traceback:
+          File "tests/_sandbox_test_student.py", line 1
+            1+'0'
+        TypeError: unsupported operand type(s) for +: 'int' and 'str'
+        """).strip()+"\n")
     
     def test_call(self):
         student_code = "def average(a,b):\n return (a+b)/2"
         student = Sandbox()
-        student.run(student_code, _as_filename='student.py')
+        student.run(student_code, as_filename='student.py')
         student.call('average', 10, 12)
     
     def test_compatibility_api(self):
@@ -120,7 +123,7 @@ TypeError: unsupported operand type(s) for +: 'int' and 'str'\n"""
             another_list = [4,5,6]
         ''')
         student = Sandbox()
-        student.run(student_code, _as_filename='student.py')
+        student.run(student_code, as_filename='student.py')
         # ints
         ints = student.get_names_by_type(int)
         self.assertEqual(len(ints), 2)
@@ -145,7 +148,7 @@ TypeError: unsupported operand type(s) for +: 'int' and 'str'\n"""
             plt.show()
         ''')
         student = Sandbox()
-        student.run(student_code, _as_filename='student.py')
+        student.run(student_code, as_filename='student.py')
         self.assertIn('matplotlib.pyplot', student.modules)
         plt = student.modules['matplotlib.pyplot']
         self.assertEqual(len(plt.plots), 1)
@@ -163,8 +166,7 @@ TypeError: unsupported operand type(s) for +: 'int' and 'str'\n"""
         exception = compatibility.run_student()
         plt2 = compatibility.get_plots()
         self.assertEqual(len(plt2), 2)
-    
-    def test_matplotlib_compatibility(self):
+        
         student_code = dedent('''
             import os
             os
@@ -174,27 +176,20 @@ TypeError: unsupported operand type(s) for +: 'int' and 'str'\n"""
         self.assertIsNone(exception)
     
     def test_coverage(self):
-        student_code = dedent('''
-            a = 0
-            if True:
-                print("Ran")
-            else:
-                print("Skipped")
-            def x():
-                b = 0
-                return b
-            print(a)
-        ''')
-        student = Sandbox()
-        student.record_coverage = True
-        student.run(student_code, _as_filename='student.py')
-        self.assertTrue(student.coverage_report)
+        TEST_FILENAME = 'tests/_sandbox_test_coverage.py'
+        with open(TEST_FILENAME) as student_file:
+            student_code = student_file.read()
+        student = Sandbox(tracer_style='coverage')
+        student.run(student_code, as_filename=TEST_FILENAME)
+        self.assertIsNone(student.exception)
+        self.assertEqual(student.trace.pc_covered, 80.0)
     
     def test_unittest(self):
         student_code = dedent('''
             x = 0
         ''')
         student = Sandbox()
+        #student.run(student_code)
         student.call('x')
         self.assertIsNotNone(student.exception)
     

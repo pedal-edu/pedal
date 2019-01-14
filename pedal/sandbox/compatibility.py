@@ -17,7 +17,7 @@ def run_student(raise_exceptions=False, report=None):
         report = MAIN_REPORT
     sandbox = _check_sandbox(report)
     source_code = report['source']['code']
-    sandbox.run(source_code)
+    sandbox.run(source_code, report_exceptions=not raise_exceptions)
     if raise_exceptions:
         raise_exception(sandbox.exception, sandbox.exception_position,
                         report=report)

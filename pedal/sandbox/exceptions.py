@@ -1,3 +1,6 @@
+import traceback
+import os
+
 class SandboxException(Exception):
     '''
     Generic base exception for sandbox errors.
@@ -55,6 +58,9 @@ def _add_context_to_error(e, message):
     if isinstance(e, BuiltinKeyError):
         new_args = repr(e.args[0]) + message
         e = KeyError(e, new_args)
+    if isinstance(e, OSError):
+        # TODO: Can't seem to modify the OSError, since they have so many args.
+        return e
     elif e.args:
         e.args = tuple([e.args[0] + message])
     return e
@@ -117,17 +123,16 @@ class SandboxTraceback:
         if self.full_traceback:
             return False
         filename, a_, b_, _ = traceback.extract_tb(tb, limit=1)[0]
-        #print(filename, self.instructor_filename, __file__, a_, b_)
-        # Is the error in this test file?
-        if filename == __file__:
-            return True
+        # Is the error in the instructor file?
         if filename == self.instructor_filename:
             return True
-        # Is the error related to a file in the parent directory?
+        # Is the error in this test directory?
         current_directory = os.path.dirname(os.path.realpath(__file__))
-        parent_directory = os.path.dirname(current_directory)
         if filename.startswith(current_directory):
-            return False
+            return True
+        # Is the error related to a file in the parent directory?
+        parent_directory = os.path.dirname(current_directory)
+        # Currently we don't refer to this?
         # Is the error in a local file?
         if filename.startswith('.'):
             return False

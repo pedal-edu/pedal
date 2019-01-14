@@ -5,7 +5,8 @@ behavior.
 import re
 import types
 
-from pedal.sandbox.exceptions import SandboxNoMoreInputsException
+from pedal.sandbox.exceptions import (SandboxNoMoreInputsException,
+                                      SandboxPreventModule)
 
 def _disabled_compile(source, filename, mode, flags=0, dont_inherit=False):
     '''
@@ -140,9 +141,30 @@ def create_module(module_name):
         setattr(root, submodule_name, new_submodule)
         modules[reconstructed_path] = new_submodule
     return root, modules
+    
+class MockModule:
+    def _generate_patches(self):
+        return {k: v for k, v in vars(self).items()
+                if not k.startswith('_')}
+    
+    def _add_to_module(self, module):
+        for name, value in self._generate_patches().items():
+            setattr(module, name, value)
+            
+class BlockedModule(MockModule):
+    MODULE_NAME = "this module"
+    def _generate_patches(self):
+        return { '__getattr__': self.prevent_module }
+    
+    def prevent_module(self, **kwargs):
+        raise SandboxPreventModule("You cannot import {module_name} from student code.".format(
+            module_name = self.MODULE_NAME
+        ))
 
+class MockPedal(BlockedModule):
+    MODULE_NAME = "pedal"
 
-class MockPlt:
+class MockPlt(MockModule):
     '''
     Mock MatPlotLib library that can be used to capture plot data.
 
@@ -151,6 +173,7 @@ class MockPlt:
     '''
 
     def __init__(self):
+        super().__init__()
         self._reset_plots()
 
     def show(self, **kwargs):
@@ -209,10 +232,6 @@ class MockPlt:
 
     def legend(self, **kwargs):
         self.active_plot['legend'] = True
-
-    def _add_to_module(self, module):
-        for name, value in self._generate_patches().items():
-            setattr(module, name, value)
 
     def _generate_patches(self):
         def dummy(**kwargs):
