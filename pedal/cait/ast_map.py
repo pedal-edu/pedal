@@ -1,6 +1,4 @@
 from pedal.cait.cait_node import CaitNode
-from functools import reduce
-
 
 
 class AstSymbol:
@@ -46,10 +44,7 @@ class AstSymbolList:
         self.my_list.append(item)
 
     def __getattr__(self, attr):
-        try:
-            return getattr(self.my_list[0], attr)
-        except RecursionError:
-            return getattr(self.my_list, attr)
+        return getattr(self.my_list[0], attr)
 
     def __len__(self):
         return self.my_list.__len__()
