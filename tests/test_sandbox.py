@@ -194,7 +194,7 @@ class TestCode(unittest.TestCase):
         ''')
         student = Sandbox(tracer_style='calls')
         student.run(student_code, as_filename='student.py')
-        self.assertEqual(len(student.trace.calls['x']))
+        self.assertEqual(len(student.trace.calls['x']), 6)
     
     def test_unittest(self):
         student_code = dedent('''

@@ -16,6 +16,7 @@ except ImportError:
 
 class SandboxBasicTracer:
     def __init__(self):
+        super().__init__()
         self.filename = "student.py"
     
     def _as_filename(self, filename, code):
@@ -66,11 +67,10 @@ class SandboxCoverageTracer(SandboxBasicTracer):
         self.n_statements = numbers.n_statements
         self.pc_covered = numbers.pc_covered
 
-class SandboxCallTracer(Bdb, SandboxBasicTracer):
+class SandboxCallTracer(SandboxBasicTracer, Bdb):
     def __init__(self):
         super().__init__()
         self.calls = {}
-        self.set_continue()
 
     def user_call(self, frame, argument_list):
         code = frame.f_code
