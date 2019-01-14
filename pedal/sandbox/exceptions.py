@@ -60,23 +60,44 @@ def _add_context_to_error(e, message):
     return e
 
 class SandboxTraceback:
-    def __init__(self, exception, exc_info):
+    '''
+    Class for reformatting tracebacks to have more pertinent information.
+    '''
+    def __init__(self, exception, exc_info, full_traceback, 
+                 instructor_filename):
+        '''
+        Args:
+            exception (Exception): The exception that was raised.
+            exc_info (ExcInfo): The result of sys.exc_info() when the exception
+                was raised.
+            full_traceback (bool): Whether or not to provide the full traceback
+                or just the parts relevant to students.
+            instructor_filename (str): The name of the instructor file, which
+                can be used to avoid reporting instructor code in the
+                traceback.
+        '''
         self.exception = exception
         self.exc_info = exc_info
+        self.full_traceback = full_traceback
+        self.instructor_filename = instructor_filename
+        self.line_number = traceback.extract_tb(exc_info[2])[-1][1]
     
-    def format_exception(self, _pre=""):
+    def _clean_traceback_line(self, line):
+        return line.replace(', in <module>', '', 1)
+    
+    def format_exception(self, preamble=""):
         if not self.exception:
             return ""
         cl, exc, tb = self.exc_info
-        line_number = traceback.extract_tb(tb)[-1][1]
         while tb and self._is_relevant_tb_level(tb):
             tb = tb.tb_next
         length = self._count_relevant_tb_levels(tb)
-        tb_e = traceback.TracebackException(cl, exc, tb,
-                                            limit=length,
+        tb_e = traceback.TracebackException(cl, exc, tb, limit=length,
                                             capture_locals=False)
-        lines = [x.replace(', in <module>', '', 1) for x in list(tb_e.format())]
-        return _pre + "\nTraceback:\n" + ''.join(lines[1:])
+        lines = [self._clean_traceback_line(line)
+                 for line in tb_e.format()]
+        lines[0] = "Traceback:\n"
+        return preamble + ''.join(lines)
 
     def _count_relevant_tb_levels(self, tb):
         length = 0
