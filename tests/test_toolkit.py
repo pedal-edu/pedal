@@ -6,9 +6,15 @@ from textwrap import dedent
 pedal_library = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.insert(0, pedal_library)
 
+from pedal.report import *
+from pedal.source import set_source
+
 from pedal.cait.cait_api import parse_program
+from pedal.sandbox.sandbox import Sandbox
 from pedal.toolkit.files import files_not_handled_correctly
-from pedal.toolkit.functions import match_signature, output_test, unit_test
+from pedal.toolkit.functions import (match_signature, output_test, unit_test,
+                                     check_coverage)
+from pedal.toolkit.signatures import (function_signature)
 from pedal.toolkit.utilities import (is_top_level, function_prints,
                                      no_nested_function_definitions,
                                      find_function_calls, function_is_called,
@@ -180,6 +186,21 @@ class TestFunctions(unittest.TestCase):
         with Execution('def a(x):\n  print(x+1)\n  print(x+2)\na(1)') as e:
             self.assertIsNotNone(output_test('a', (4, ["5", "6"])))
         self.assertEqual(e.message, "No errors reported.")
+    
+    def test_check_coverage(self):
+        test_files = [
+            ('tests/sandbox_coverage/bad_non_recursive.py', {4}),
+            ('tests/sandbox_coverage/good_recursive.py', False),
+            ('tests/sandbox_coverage/complex.py', {7, 9, 10, 11, 12, 13, 14, 15}),
+        ]
+        for TEST_FILENAME, missing_lines in test_files:
+            with open(TEST_FILENAME) as student_file:
+                student_code = student_file.read()
+            set_source(student_code, report=MAIN_REPORT)
+            student = Sandbox(tracer_style='coverage')
+            MAIN_REPORT['sandbox']['run'] = student
+            student.run(student_code, as_filename=TEST_FILENAME)
+            self.assertEqual(check_coverage(), missing_lines)
 
 
 class TestUtilities(unittest.TestCase):
@@ -557,7 +578,29 @@ class TestPlots(unittest.TestCase):
         ''')
         with Execution(student_code) as e:
             self.assertEqual(prevent_incorrect_plt(), False)
+            
+class TestSignatures(unittest.TestCase):
+    def test_function_signature(self):
+        student_code = dedent("""
+        def find_string(needle, haystack):
+            '''
+            Finds the given needle in the haystack.
 
+            Args:
+                haystack(list[str]): The list of strings to look within.
+                needle(str): The given string to be searching for.
+                garbage(list[int, tuple[str, bool], or bool], dict[pair[int, int], str], or bool or int): Woah what the heck.
+            Returns:
+                bool: Whether the string is in the list.
+            '''
+        """)
+        with Execution(student_code) as e:
+            self.assertEqual(function_signature(
+                "find_string",
+                needle="str", haystack="list[str]",
+                garbage="dict[pair[int, int], str], list[int, tuple[str, bool], or bool], or bool or int",
+                returns="bool"
+            ), [])
 
 if __name__ == '__main__':
     unittest.main(buffer=False)

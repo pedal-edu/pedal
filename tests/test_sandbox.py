@@ -184,6 +184,8 @@ class TestCode(unittest.TestCase):
         student.run(student_code, as_filename=TEST_FILENAME)
         self.assertIsNone(student.exception)
         self.assertEqual(student.trace.pc_covered, 80.0)
+        self.assertEqual(student.trace.lines, {1, 2, 4, 7, 10, 11, 12, 13})
+    
     
     def test_calls(self):
         student_code = dedent('''
@@ -196,7 +198,7 @@ class TestCode(unittest.TestCase):
         student = Sandbox(tracer_style='calls')
         student.run(student_code, as_filename='student.py')
         self.assertEqual(len(student.trace.calls['x']), 6)
-    
+        
     def test_unittest(self):
         student_code = dedent('''
             x = 0
@@ -205,6 +207,46 @@ class TestCode(unittest.TestCase):
         #student.run(student_code)
         student.call('x')
         self.assertIsNotNone(student.exception)
+        
+        student_code = dedent('''
+        class Fruit:
+            def __init__(self, name, weight=0):
+                self.name = name
+                self.weight = weight
+        def do_math(a, b):
+            return a + b - 5
+        def weigh_fruits(fruits):
+            return sum(fruit.weight for fruit in fruits)    
+        ''')
+        student = Sandbox()
+        student.run(student_code, as_filename='student.py')
+        result = student.call('do_math', 15, 20)
+        self.assertEqual(result, 30)
+        self.assertEqual(student.call_contexts[result._actual_call_id],
+                         ['do_math(15, 20)'])
+        banana = student.call('Fruit', "Banana")
+        self.assertIsInstance(banana, student.data['Fruit'])
+        self.assertEqual(student.call_contexts[banana._actual_call_id],
+                         ["Fruit('Banana')"])
+        orange = student.call("Fruit", "Orange", 30, target="orange")
+        pineapple = student.call("Fruit", "Pineapple", 60, target="pineapple")
+        fruits = [orange, pineapple]
+        student.run('fruits = [orange, pineapple]', context=None)
+        total_weight = student.call('weigh_fruits', fruits=fruits,
+                                    context='weigh_fruits(fruits)')
+        self.assertEqual(total_weight, 90)
+        self.assertEqual([call
+                          for calls in student.call_contexts.values()
+                          for call in calls],
+                         ["do_math(15, 20)",
+                          "Fruit('Banana')",
+                          "orange = Fruit('Orange', 30)",
+                          "pineapple = Fruit('Pineapple', 60)",
+                          "fruits = [orange, pineapple]",
+                          "weigh_fruits(fruits)"])
+        #print(student.call('weigh_fruits', student.var['fruits']))
+        #from pprint import pprint
+        #pprint(student.call_contexts)
 
     def test_multiline_statements(self):
         student_code = dedent('''

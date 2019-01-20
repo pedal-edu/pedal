@@ -107,3 +107,12 @@ def set_sandbox(sandbox, report=None):
         report = MAIN_REPORT
     report['sandbox']['run'] = sandbox
     return sandbox
+
+def trace_lines(report=None):
+    if report is None:
+        report = MAIN_REPORT
+    sandbox = _check_sandbox(report)
+    if sandbox.tracer_style == 'coverage':
+        return sandbox.trace.lines - sandbox.trace.missing
+    else:
+        return []

@@ -41,6 +41,9 @@ class SandboxCoverageTracer(SandboxBasicTracer):
         self.n_missing = None
         self.n_statements = None
         self.pc_covered = None
+        self.missing = set()
+        self.lines = set()
+        #self.s = sys.stdout
     
     def __enter__(self):
         # Force coverage to accept the code
@@ -62,10 +65,13 @@ class SandboxCoverageTracer(SandboxBasicTracer):
         coverage.python.get_python_source = self.original
         self.original = None
         # Actually analyze the data, attach some data
-        numbers = self.coverage._analyze(self.filename).numbers
-        self.n_missing = numbers.n_missing
-        self.n_statements = numbers.n_statements
-        self.pc_covered = numbers.pc_covered
+        analysis = self.coverage._analyze(self.filename)
+        #print(vars(self.coverage._analyze(self.filename)), file=self.s)
+        self.n_missing = analysis.numbers.n_missing
+        self.n_statements = analysis.numbers.n_statements
+        self.pc_covered = analysis.numbers.pc_covered
+        self.missing = analysis.missing
+        self.lines = analysis.statements - analysis.missing
 
 class SandboxCallTracer(SandboxBasicTracer, Bdb):
     def __init__(self):
@@ -85,7 +91,7 @@ class SandboxCallTracer(SandboxBasicTracer, Bdb):
         sys.settrace(self.trace_dispatch)
     
     def __exit__(self, exc_type, exc_val, traceback):
-        self.quitting = True
         sys.settrace(self._old_trace)
+        self.quitting = True
         # Return true to suppress exception (if it is a BdbQuit)
         return isinstance(exc_type, BdbQuit)
