@@ -600,7 +600,7 @@ class TestSignatures(unittest.TestCase):
                 needle="str", haystack="list[str]",
                 garbage="dict[pair[int, int], str], list[int, tuple[str, bool], or bool], or bool or int",
                 returns="bool"
-            ), [])
+            ), ([], True))
 
 if __name__ == '__main__':
     unittest.main(buffer=False)

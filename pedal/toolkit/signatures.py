@@ -247,10 +247,13 @@ def function_signature(function_name, returns=None, yields=None,
         if name in kwargs:
             if not type_check(type, kwargs[name]):
                 failing_parameters.append(name)
-    if returns is not None:
-        return failing_parameters, type_check(docstring.parsed_returns, returns)
-    else:
+    if returns is None and not docstring.parsed_returns:
         return failing_parameters, True
+    elif returns is not None and docstring.parsed_returns:
+        _, return_type, _ = docstring.parsed_returns[0]
+        return failing_parameters, type_check(return_type, returns)
+    else:
+        return failing_parameters, False
 
 def class_signature(class_name, report=None, root=None, **attributes):
     """
