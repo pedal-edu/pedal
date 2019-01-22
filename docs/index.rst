@@ -9,16 +9,14 @@ Welcome to Pedal's documentation!
 .. toctree::
     :maxdepth: 2
     :caption: Contents:
-
-.. automodule:: pedal
-
-Tifa
-----
-
-.. automodule:: pedal.tifa
-
-.. autoclass:: pedal.tifa.Tifa
-    :members:
+    
+    usage/installation
+    usage/quickstart
+    usage/tutorial
+    
+    instructor_reference
+    
+    api
 
 
 Indices and tables

@@ -180,7 +180,7 @@ texinfo_documents = [
 ]
 
 
-
+add_module_names = False
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {'https://docs.python.org/': None}

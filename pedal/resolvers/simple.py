@@ -1,4 +1,5 @@
-from pedal.report import MAIN_REPORT
+from pedal.report import MAIN_REPORT, Feedback
+from pedal.resolvers.core import make_resolver
 
 DEFAULT_CATEGORY_PRIORITY = [
     'syntax',
@@ -13,21 +14,22 @@ DEFAULT_CATEGORY_PRIORITY = [
 
 # For compatibility with the old feedback API
 LEGACY_CATEGORIZATIONS = {
-    #'student': 'runtime',
+    # 'student': 'runtime',
     'parser': 'syntax',
     'verifier': 'syntax',
     'instructor': 'instructor'
 }
 
+
 def by_priority(feedback):
-    '''
+    """
     Converts a feedback into a numeric representation for sorting.
-    
+
     Args:
         feedback (Feedback): The feedback object to convert
     Returns:
         float: A decimal number representing the feedback's relative priority.
-    '''
+    """
     category = 'uncategorized'
     if feedback.category is not None:
         category = feedback.category.lower()
@@ -50,20 +52,22 @@ def by_priority(feedback):
             offset = .1
     return value + offset
 
+
 def parse_message(component):
     if isinstance(component, str):
         return component
     elif isinstance(component, list):
-        return '<br>\n'.join(parse_component(c) for c in component)
+        return '<br>\n'.join(parse_message(c) for c in component)
     elif isinstance(component, dict):
         if "html" in component:
             return component["html"]
         elif "message" in component:
             return component["message"]
         else:
-            raise ValueError("Component has no message field: "+str(component))
+            raise ValueError("Component has no message field: " + str(component))
     else:
-        raise ValueError("Invalid component type: "+str(type(component)))
+        raise ValueError("Invalid component type: " + str(type(component)))
+
 
 def parse_data(component):
     if isinstance(component, str):
@@ -73,8 +77,7 @@ def parse_data(component):
     elif isinstance(component, dict):
         return [component]
 
-MESSAGE_TYPES = ['hints', 'mistakes', 'misconceptions', 
-                 'constraints', 'metacognitives']
+
 def parse_feedback(feedback):
     # Default returns
     success = False
@@ -82,7 +85,7 @@ def parse_feedback(feedback):
     message = None
     data = []
     # Actual processing
-    for feedback_type in MESSAGE_TYPES:
+    for feedback_type in Feedback.MESSAGE_TYPES:
         feedback_value = getattr(feedback, feedback_type)
         if feedback_value is not None:
             data.extend(parse_data(feedback_value))
@@ -95,15 +98,16 @@ def parse_feedback(feedback):
         performance = feedback.performance
     return success, performance, message, data
 
+@make_resolver
 def resolve(report=None, priority_key=None):
-    '''
+    """
     Args:
         report (Report): The report object to resolve down. Defaults to the
                          global MAIN_REPORT
-    
+
     Returns
         str: A string of HTML feedback to be delivered
-    '''
+    """
     if report is None:
         report = MAIN_REPORT
     if priority_key is None:
@@ -129,7 +133,7 @@ def resolve(report=None, priority_key=None):
         success, partial, message, data = parse_feedback(feedback)
         final_success = success or final_success
         final_score += partial
-        if (message is not None and 
+        if (message is not None and
             final_message is None and
             feedback.priority != 'positive'):
             final_message = message
@@ -140,11 +144,11 @@ def resolve(report=None, priority_key=None):
         final_message = "No errors reported."
     final_hide_correctness = suppressions.get('success', False)
     if (not final_hide_correctness and final_success and
-        final_label == 'No errors' and
-        final_category == 'Instructor'):
+            final_label == 'No errors' and
+            final_category == 'Instructor'):
         final_category = 'Complete'
         final_label = 'Complete'
         final_message = "Great work!"
-    return (final_success, final_score, final_category, 
+    return (final_success, final_score, final_category,
             final_label, final_message, final_data,
             final_hide_correctness)

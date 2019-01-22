@@ -1,36 +1,36 @@
 import ast
 import re
-from pedal.cait.ast_map import *
+from pedal.cait.ast_map import AstMap
 from pedal.cait.cait_node import CaitNode
 
 
 def is_primitive(item):
-    '''
+    """
     Determines if the given item is a primitive value (either an int, float,
     str, bool, or None).
-    
+
     Args:
         item (any): Any value
     Returns:
         bool: Whether the item is a primitive value.
-    '''
+    """
     return isinstance(item, (int, float, str, bool)) or item is None
 
 
 class StretchyTreeMatcher:
     def __init__(self, ast_or_code, report, filename="__main__"):
-        '''
+        """
         The StretchyTreeMatcher is used to compare a pattern against some
         student code. It produces a set of potential mappings between them.
-        
+
         Args:
-            code (str or AstNode): The students' code or a valid AstNode from
+            ast_or_code (str or AstNode): The students' code or a valid AstNode from
                 `ast.parse`. If the code has invalid syntax, a SyntaxError
                 will be raised.
             filename (str): The filename to parse with - only used for error
                 reporting.
             report (Report): A report to obtain data from.
-        '''
+        """
         self.report = report
         if isinstance(ast_or_code, str):
             ast_node = ast.parse(ast_or_code, filename)
@@ -45,9 +45,9 @@ class StretchyTreeMatcher:
             self.root_node = CaitNode(ast_node, "none", report=self.report)
 
     def find_matches(self, ast_or_code, filename="__main__", check_meta=True):
-        '''
+        """
         Args:
-            code (str or AstNode): The students' code or a valid AstNode from
+            ast_or_code (str or AstNode): The students' code or a valid AstNode from
                 `ast.parse`. If the code has invalid syntax, a SyntaxError
                 will be raised.
             filename (str): The filename to parse with - only used for error
@@ -56,7 +56,7 @@ class StretchyTreeMatcher:
                 field.
         Returns:
             list[AstMap]: A list of AstMaps that are suitable matches.
-        '''
+        """
         if isinstance(ast_or_code, str):
             other_tree = CaitNode(ast.parse(ast_or_code, filename), report=self.report)
         elif isinstance(ast_or_code, CaitNode):
@@ -69,16 +69,24 @@ class StretchyTreeMatcher:
                    explore_root.ast_name in ["Expr", "Module"]):
                 explore_root = explore_root.children[0]
                 explore_root.field = "none"
-        return self.any_node_match(explore_root, other_tree, 
+        return self.any_node_match(explore_root, other_tree,
                                    check_meta=check_meta)
 
     def any_node_match(self, ins_node, std_node, check_meta=True, cut=False):
-        '''
+        """
         Finds whether ins_node can be matched to some node in the tree std_node
-        @return a mapping of nodes and a symbol table mapping ins_node to 
-        some node in the tree std_node or False if such a matching does not 
-        exist
-        '''
+
+        Args:
+            ins_node:
+            std_node:
+            check_meta:
+            cut:
+
+        Returns:
+            list of AstMaps: a mapping of nodes and a symbol table mapping ins_node to
+                some node in the tree std_node or False if such a matching does not
+                exist
+        """
         # @TODO: create a more public function that converts ins_node and std_node into CaitNodes
         # TODO: Create exhaustive any_node_match
         # matching: an object representing the mapping and the symbol table
@@ -107,10 +115,13 @@ class StretchyTreeMatcher:
         """
         Finds whether ins_node and matches std_node and whether ins_node's children flexibly match std_node's children
         in order
-        :param ins_node: The instructor ast that should be included in the student AST
-        :param std_node: The student AST that we are searching for the included tree
-        :param check_meta: Flag, if True, check whether the two nodes originated from the same ast field
-        :return: a mapping of nodes and a symbol table mapping ins_node to std_node, or False if no mapping was found
+        Args:
+            ins_node: The instructor ast that should be included in the student AST
+            std_node: The student AST that we are searching for the included tree
+            check_meta: Flag, if True, check whether the two nodes originated from the same ast field
+
+        Returns:
+            a mapping of nodes and a symbol table mapping ins_node to std_node, or [] if no mapping was found
         """
         method_name = "deep_find_match_" + type(ins_node.astNode).__name__
         target_func = getattr(self, method_name, self.deep_find_match_generic)
@@ -159,10 +170,14 @@ class StretchyTreeMatcher:
         """
         adds to new_mappings (return/modify by argument) the mappings for both the left and right subtrees as denoted by
         case_left and case_right
-        :param case_left: The mappings for the left opperand
-        :param case_right: The mappings for the right opperand
-        :param new_mappings: The new set of mappings to generate
-        :param base_mappings: The original mappings of the binop node
+        Args:
+            case_left: The mappings for the left opperand
+            case_right: The mappings for the right opperand
+            new_mappings: The new set of mappings to generate
+            base_mappings: The original mappings of the binop node
+
+        Returns:
+            None
         """
         if case_left and case_right:
             for case_l in case_left:
@@ -204,10 +219,13 @@ class StretchyTreeMatcher:
         """
         An Expression node (not to be confused with expressions denoted by the instructor nodes in Name ast nodes)
         checks whether it should be generic, or not
-        :param ins_node: Instructor ast to find in the student ast
-        :param std_node: Student AST to search for the instructor ast in
-        :param check_meta: flag to check whether the fields of the instructor node and the student node should match
-        :return: a mapping between the instructor and student asts, or False if such a mapping doesn't exist
+        Args:
+            ins_node: Instructor ast to find in the student ast
+            std_node: Student AST to search for the instructor ast in
+            check_meta: flag to check whether the fields of the instructor node and the student node should match
+
+        Returns:
+            AstMap: a mapping between the instructor and student asts, or False if such a mapping doesn't exist
         """
         # if check_meta and ins_node.field != std_node.field:
         if not self.metas_match(ins_node, std_node, check_meta):
@@ -249,10 +267,13 @@ class StretchyTreeMatcher:
         The process repeats itself until no matches can be grown or until each
         instructor child node has been visited
 
-        :param ins_node: Instructor ast to find in the student ast
-        :param std_node: Student AST to search for the instructor ast in
-        :param check_meta: flag to check whether the fields of the instructor node and the student node should match
-        :return: a mapping between the isntructor and student asts, or False if such a mapping doesn't exist
+        Args:
+            ins_node: Instructor ast to find in the student ast
+            std_node: Student AST to search for the instructor ast in
+            check_meta: flag to check whether the fields of the instructor node and the student node should match
+
+        Returns:
+            a mapping between the isntructor and student asts, or [] if such a mapping doesn't exist
         """
         base_mappings = self.shallow_match(ins_node, std_node, check_meta)
         if base_mappings:
@@ -287,11 +308,14 @@ class StretchyTreeMatcher:
         Merges base_maps with the current possible maps. Helper method to deep_find_match_generic. checks whether each
         mapping in run_maps can extend the match to any possible mapping in base_maps.
 
-        :param base_maps: The original mappings
-        :param base_sibs: The corresponding siblings for each mapping in base_maps
-        :param run_maps: The set of maps to merge into the current base_maps
-        :param run_sibs: The corresponding siblings for each mapping in run_maps
-        :return: A new set of maps for all valid extensions of base_maps with running maps
+        Args:
+            base_maps: The original mappings
+            base_sibs: The corresponding siblings for each mapping in base_maps
+            run_maps: The set of maps to merge into the current base_maps
+            run_sibs: The corresponding siblings for each mapping in run_maps
+
+        Returns:
+            A new set of maps for all valid extensions of base_maps with running maps
         """
         # no matching nodes were found
         if len(run_maps) == 0:
@@ -307,7 +331,6 @@ class StretchyTreeMatcher:
                         if not new_map.has_conflicts():  # if it's a valid mapping
                             new_maps.append(new_map)
                             new_sibs.append(runSib)
-        map_update = None
         if len(new_maps) == 0:
             return None
         return {
@@ -320,7 +343,13 @@ class StretchyTreeMatcher:
     def shallow_match_Module(self, ins_node, std_node, check_meta=True):
         """
         Flexibly matches a module node to a module or a body
-        :return: a mapping of ins_node to std_node, or False if doesn't match
+        Args:
+            ins_node:
+            std_node:
+            check_meta:
+
+        Returns:
+            a mapping of ins_node to std_node, or False if doesn't match
         """
         if type(std_node.astNode).__name__ == "Module" or std_node.field == "body":
             mapping = AstMap()
@@ -336,7 +365,13 @@ class StretchyTreeMatcher:
             case 2: __exp__ matches to any subtree and automatically returns a mapping and symbol table
             case 3: ___ matches to any subtree and automatically returns a mapping
             case 4: matches only if the exact names are the same (falls through to shallow_match_generic)
-        @return a mapping of ins_node to std_node and possibly a symbol_table, or False if it doesn't match
+        Args:
+            ins_node:
+            std_node:
+            check_meta:
+
+        Returns:
+            list of AstMap: a mapping of ins_node to std_node and possibly a symbol_table, or False if it doesn't match
         """
         name_id = ins_node.astNode.id
         var_match = re.compile('^_[^_].*_$')  # /regex
@@ -366,10 +401,13 @@ class StretchyTreeMatcher:
     def shallow_match_Pass(self, ins_node, std_node, check_meta=True):
         """
         An empty body should match to anything
-        :param ins_node: Instructor ast to find in the student ast
-        :param std_node: Student AST to search for the instructor ast in
-        :param check_meta: flag to check whether the fields of the instructor node and the student node should match
-        :return: a mapping between the isntructor and student asts, or False if such a mapping doesn't exist
+        Args:
+            ins_node: Instructor ast to find in the student ast
+            std_node: Student AST to search for the instructor ast in
+            check_meta: flag to check whether the fields of the instructor node and the student node should match
+
+        Returns:
+            list of AstMap: a mapping between the isntructor and student asts, or False if such a mapping doesn't exist
         """
         # if check_meta and ins_node.field != std_node.field:
         if not self.metas_match(ins_node, std_node, check_meta):
@@ -383,10 +421,13 @@ class StretchyTreeMatcher:
         """
         An Expression node (not to be confused with expressions denoted by the instructor nodes in Name ast nodes)
         should match to anything
-        :param ins_node: Instructor ast to find in the student ast
-        :param std_node: Student AST to search for the instructor ast in
-        :param check_meta: flag to check whether the fields of the instructor node and the student node should match
-        :return: a mapping between the instructor and student asts, or False if such a mapping doesn't exist
+        Args:
+            ins_node: Instructor ast to find in the student ast
+            std_node: Instructor ast to find in the student ast
+            check_meta: flag to check whether the fields of the instructor node and the student node should match
+
+        Returns:
+            a mapping between the instructor and student asts, or False if such a mapping doesn't exist
         """
         # if check_meta and ins_node.field != std_node.field:
         if not self.metas_match(ins_node, std_node, check_meta):
@@ -423,21 +464,30 @@ class StretchyTreeMatcher:
     def shallow_match_generic(self, ins_node, std_node, check_meta=True):
         """
         Checks that all non astNode attributes are equal between ins_node and std_node
-        :param ins_node: Instructor ast root node
-        :param std_node: Student AST root node
-        :param check_meta: flag to check whether the fields of the instructor node and the student node should match
-        :return: a mapping between the isntructor and student root nodes, or False if such a mapping doesn't exist
+        Args:
+            ins_node: Instructor ast root node
+            std_node: Student AST root node
+            check_meta: flag to check whether the fields of the instructor node and the student node should match
+
+        Returns:
+            list of AstMap: a mapping between the instructor and student root nodes (potentially empty)
         """
         return self.shallow_match_main(ins_node, std_node, check_meta)
 
-    def shallow_match_main(self, ins_node, std_node, check_meta=True, ignores=[]):
+    def shallow_match_main(self, ins_node, std_node, check_meta=True, ignores=None):
         """
         Checks that all non astNode attributes are equal between ins_node and std_node
-        :param ins_node: Instructor ast root node
-        :param std_node: Student AST root node
-        :param check_meta: flag to check whether the fields of the instructor node and the student node should match
-        :return: a mapping between the isntructor and student root nodes, or False if such a mapping doesn't exist
+        Args:
+            ins_node: Instructor ast root node
+            std_node: Student AST root node
+            check_meta: flag to check whether the fields of the instructor node and the student node should match
+            ignores: a mapping between the instructor and student root nodes, or False if such a mapping doesn't exist
+
+        Returns:
+
         """
+        if ignores is None:
+            ignores = []
         ins = ins_node.astNode
         std = std_node.astNode
         ins_field_list = list(ast.iter_fields(ins))

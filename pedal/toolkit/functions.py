@@ -1,7 +1,7 @@
 from pedal.cait.cait_api import parse_program
-from pedal.report.imperative import gently, explain
-from pedal.toolkit.utilities import ensure_literal
+from pedal.report.imperative import gently, explain, MAIN_REPORT
 from pedal.sandbox import compatibility
+import ast
 
 DELTA = 0.001
 
@@ -12,15 +12,16 @@ def all_documented():
     for a_def in defs:
         if a_def.name == "__init__":
             continue
-        if (a_def.body and 
+        if (a_def.body and
             (a_def.body[0].ast_name != "Expr" or
              a_def.body[0].value.ast_name != "Str")):
             if a_def.ast_name == 'FunctionDef':
-                explain("You have an undocumented function: "+a_def.name)
+                explain("You have an undocumented function: " + a_def.name)
             else:
-                explain("You have an undocumented class: "+a_def.name)
+                explain("You have an undocumented class: " + a_def.name)
             return False
     return True
+
 
 def get_arg_name(node):
     name = node.id
@@ -29,8 +30,9 @@ def get_arg_name(node):
     else:
         return name
 
+
 def match_function(name, root=None):
-    if root == None:
+    if root is None:
         ast = parse_program()
     else:
         ast = root
@@ -40,8 +42,9 @@ def match_function(name, root=None):
             return a_def
     return None
 
+
 def match_signature(name, length, *parameters, report=None, root=None):
-    if root == None:
+    if root is None:
         ast = parse_program()
     else:
         ast = root
@@ -94,51 +97,51 @@ def output_test(name, *tests):
                 if isinstance(out, tuple):
                     tip = out[1]
                     out = out[0]
-                message = "<td><code>{}</code></td>"+("<td><pre>{}</pre></td>"*2)
+                message = "<td><code>{}</code></td>" + ("<td><pre>{}</pre></td>" * 2)
                 test_out = compatibility.capture_output(the_function, *inp)
                 if isinstance(out, str):
                     if len(test_out) < 1:
                         message = message.format(inputs, repr(out), "<i>No output</i>", tip)
-                        message = "<tr class=''>"+RED_X+message+"</tr>"
+                        message = "<tr class=''>" + RED_X + message + "</tr>"
                         if tip:
-                            message += "<tr class='info'><td colspan=4>"+tip+"</td></tr>"
+                            message += "<tr class='info'><td colspan=4>" + tip + "</td></tr>"
                         success = False
                     elif len(test_out) > 1:
                         message = message.format(inputs, repr(out), "<i>Too many outputs</i>", tip)
-                        message = "<tr class=''>"+RED_X+message+"</tr>"
+                        message = "<tr class=''>" + RED_X + message + "</tr>"
                         if tip:
-                            message += "<tr class='info'><td colspan=4>"+tip+"</td></tr>"
+                            message += "<tr class='info'><td colspan=4>" + tip + "</td></tr>"
                         success = False
                     elif out not in test_out:
                         message = message.format(inputs, repr(out), repr(test_out[0]), tip)
-                        message = "<tr class=''>"+RED_X+message+"</tr>"
+                        message = "<tr class=''>" + RED_X + message + "</tr>"
                         if tip:
-                            message += "<tr class='info'><td colspan=4>"+tip+"</td></tr>"
+                            message += "<tr class='info'><td colspan=4>" + tip + "</td></tr>"
                         success = False
                     else:
                         message = message.format(inputs, repr(out), repr(test_out[0]), tip)
-                        message = "<tr class=''>"+GREEN_CHECK+message+"</tr>"
+                        message = "<tr class=''>" + GREEN_CHECK + message + "</tr>"
                         success_count += 1
                 elif out != test_out:
                     if len(test_out) < 1:
                         message = message.format(inputs, repr(out), "<i>No output</i>", tip)
                     else:
                         message = message.format(inputs, repr(out), repr(test_out[0]), tip)
-                    message = "<tr class=''>"+RED_X+message+"</tr>"
+                    message = "<tr class=''>" + RED_X + message + "</tr>"
                     if tip:
-                        message += "<tr class='info'><td colspan=4>"+tip+"</td></tr>"
+                        message += "<tr class='info'><td colspan=4>" + tip + "</td></tr>"
                     success = False
                 else:
                     message = message.format(inputs, repr(out), repr(test_out[0]), tip)
-                    message = "<tr class=''>"+GREEN_CHECK+message+"</tr>"
+                    message = "<tr class=''>" + GREEN_CHECK + message + "</tr>"
                     success_count += 1
                 result += message
             if success:
                 return the_function
             else:
                 result = ("I ran your function <code>{}</code> on some new arguments, and it gave the wrong output "
-                          "{}/{} times.".format(name, len(tests)-success_count, len(tests))+result)
-                gently(result+"</table>")
+                          "{}/{} times.".format(name, len(tests) - success_count, len(tests)) + result)
+                gently(result + "</table>")
                 return None
         else:
             gently("You defined {}, but did not define it as a function."
@@ -173,30 +176,30 @@ def unit_test(name, *tests):
                 if isinstance(out, tuple):
                     tip = out[1]
                     out = out[0]
-                message = ("<td><code>{}</code></td>"*3)
+                message = ("<td><code>{}</code></td>" * 3)
                 test_out = the_function(*inp)
                 message = message.format(inputs, repr(test_out), repr(out))
                 if (isinstance(out, float) and
                         isinstance(test_out, (float, int)) and
-                        abs(out-test_out) < DELTA):
-                    message = "<tr class=''>"+GREEN_CHECK+message+"</tr>"
+                        abs(out - test_out) < DELTA):
+                    message = "<tr class=''>" + GREEN_CHECK + message + "</tr>"
                     success_count += 1
                 elif out != test_out:
                     # gently(message)
-                    message = "<tr class=''>"+RED_X+message+"</tr>"
+                    message = "<tr class=''>" + RED_X + message + "</tr>"
                     if tip:
-                        message += "<tr class='info'><td colspan=4>"+tip+"</td></tr>"
+                        message += "<tr class='info'><td colspan=4>" + tip + "</td></tr>"
                     success = False
                 else:
-                    message = "<tr class=''>"+GREEN_CHECK+message+"</tr>"
+                    message = "<tr class=''>" + GREEN_CHECK + message + "</tr>"
                     success_count += 1
                 result += message
             if success:
                 return the_function
             else:
                 result = "I ran your function <code>{}</code> on some new arguments, " \
-                         "and it failed {}/{} tests.".format(name, len(tests)-success_count, len(tests))+result
-                gently(result+"</table>")
+                         "and it failed {}/{} tests.".format(name, len(tests) - success_count, len(tests)) + result
+                gently(result + "</table>")
                 return None
         else:
             gently("You defined {}, but did not define it as a function.".format(name))
@@ -204,3 +207,79 @@ def unit_test(name, *tests):
     else:
         gently("The function <code>{}</code> was not defined.".format(name))
         return None
+        
+class _LineVisitor(ast.NodeVisitor):
+    '''
+    NodeVisitor subclass that visits every statement of a program and tracks
+    their line numbers in a list.
+    
+    Attributes:
+        lines (list[int]): The list of lines that were visited.
+    '''
+
+    def __init__(self):
+        self.lines = []
+    
+    def _track_lines(self, node):
+        self.lines.append(node.lineno)
+        self.generic_visit(node)
+    
+    visit_FunctionDef = _track_lines
+    visit_AsyncFunctionDef = _track_lines
+    visit_ClassDef = _track_lines
+    visit_Return = _track_lines
+    visit_Delete = _track_lines
+    visit_Assign = _track_lines
+    visit_AugAssign = _track_lines
+    visit_AnnAssign = _track_lines
+    visit_For = _track_lines
+    visit_AsyncFor = _track_lines
+    visit_While = _track_lines
+    visit_If = _track_lines
+    visit_With = _track_lines
+    visit_AsyncWith = _track_lines
+    visit_Raise = _track_lines
+    visit_Try = _track_lines
+    visit_Assert = _track_lines
+    visit_Import = _track_lines
+    visit_ImportFrom = _track_lines
+    visit_Global = _track_lines
+    visit_Nonlocal = _track_lines
+    visit_Expr = _track_lines
+    visit_Pass  = _track_lines
+    visit_Continue  = _track_lines
+    visit_Break  = _track_lines
+    
+def check_coverage(report=None):
+    '''
+    Checks that all the statements in the program have been executed.
+    This function only works when a tracer_style has been set in the sandbox,
+    or you are using an environment that automatically traces calls (e.g.,
+    BlockPy).
+    
+    TODO: Make compatible with tracer_style='coverage'
+    
+    Args:
+        report (Report): The Report to draw source code from; if not given,
+            defaults to MAIN_REPORT.
+    Returns:
+        bool or set[int]: If the source file was not parsed, None is returned.
+            If there were fewer lines traced in execution than are found in
+            the AST, then the set of unexecuted lines are returned. Otherwise,
+            False is returned.
+    '''
+    if report is None:
+        report = MAIN_REPORT
+    if not report['source']['success']:
+        return None
+    lines_executed = set(compatibility.trace_lines())
+    if -1 in lines_executed:
+        lines_executed.remove(-1)
+    student_ast = report['source']['ast']
+    visitor = _LineVisitor()
+    visitor.visit(student_ast)
+    lines_in_code = set(visitor.lines)
+    if lines_executed < lines_in_code:
+        return lines_in_code - lines_executed
+    else:
+        return False

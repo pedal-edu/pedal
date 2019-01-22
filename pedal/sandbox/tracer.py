@@ -1,50 +1,97 @@
-from bdb import Bdb
 import sys
+import os
 
-class RecursionDetected(Exception):
-    pass
+try:
+    import coverage
+except ImportError:
+    coverage = None
 
-class RecursionDetector(Bdb):
-    def do_clear(self, arg):
+try:
+    from bdb import Bdb, BdbQuit
+except ImportError:
+    class Bdb:
+        pass
+    class BdbQuit:
         pass
 
-    def __init__(self, *args):
-        Bdb.__init__(self, *args)
-        self.stack = set()
+class SandboxBasicTracer:
+    def __init__(self):
+        super().__init__()
+        self.filename = "student.py"
+    
+    def _as_filename(self, filename, code):
+        if os.path.isabs(filename):
+            self.filename = filename
+        else:
+            self.filename = os.path.abspath(filename)
+        self.code = code
+        return self
+    
+    def __enter__(self):
+        pass
+    
+    def __exit__(self, exc_type, exc_val, traceback):
+        pass
+
+class SandboxCoverageTracer(SandboxBasicTracer):
+    def __init__(self):
+        super().__init__()
+        if coverage is None:
+            raise ImportError("The coverage package is not available.")
+        self.n_missing = None
+        self.n_statements = None
+        self.pc_covered = None
+        self.missing = set()
+        self.lines = set()
+        #self.s = sys.stdout
+    
+    def __enter__(self):
+        # Force coverage to accept the code
+        self.original = coverage.python.get_python_source
+        def _get_source_correctly(reading_filename):
+            print(reading_filename, file=self.s)
+            if reading_filename == self.filename:
+                return self.code
+            else:
+                return self.original(reading_filename)
+        coverage.python.get_python_source = _get_source_correctly
+        self.coverage = coverage.Coverage()
+        self.coverage.start()
+    
+    def __exit__(self, exc_type, exc_val, traceback):
+        self.coverage.stop()
+        self.coverage.save()
+        # Restore the get_python_source reader
+        coverage.python.get_python_source = self.original
+        self.original = None
+        # Actually analyze the data, attach some data
+        analysis = self.coverage._analyze(self.filename)
+        #print(vars(self.coverage._analyze(self.filename)), file=self.s)
+        self.n_missing = analysis.numbers.n_missing
+        self.n_statements = analysis.numbers.n_statements
+        self.pc_covered = analysis.numbers.pc_covered
+        self.missing = analysis.missing
+        self.lines = analysis.statements - analysis.missing
+
+class SandboxCallTracer(SandboxBasicTracer, Bdb):
+    def __init__(self):
+        super().__init__()
+        self.calls = {}
 
     def user_call(self, frame, argument_list):
         code = frame.f_code
-        if code in self.stack:
-            raise RecursionDetected
-        self.stack.add(code)
-        print(len(self.stack))
-
-    def user_return(self, frame, return_value):
-        if frame.f_code in self.stack:
-            self.stack.remove(frame.f_code)
-
-def test_recursion(code):
-    detector = RecursionDetector()
-    detector.set_trace()
-    try:
-        detector.run(code)
-    except RecursionDetected:
-        return True
-    else:
-        return False
-    finally:
-        sys.settrace(None)
-
-recursive_solution = """
-def x(num):
-    if x:
-        return x(num-1)
-    return "Done"
-"""
-nonrecursive_solution = """
-def y(num):
-    return "Done"
-"""
-
-assert test_recursion(recursive_solution)
-assert not test_recursion(nonrecursive_solution)
+        name = code.co_name
+        if name not in self.calls:
+            self.calls[name] = []
+        self.calls[name].append(code)
+    
+    def __enter__(self):
+        self.reset()
+        self._old_trace = sys.gettrace()
+        sys.settrace(self.trace_dispatch)
+    
+    def __exit__(self, exc_type, exc_val, traceback):
+        sys.settrace(self._old_trace)
+        self.quitting = True
+        # Return true to suppress exception (if it is a BdbQuit)
+        return isinstance(exc_type, BdbQuit)

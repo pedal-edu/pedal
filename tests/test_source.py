@@ -10,6 +10,7 @@ from pedal.source import *
 from pedal.tifa import tifa_analysis
 from tests.execution_helper import Execution
 
+
 class TestCode(unittest.TestCase):
 
     def test_catches_blank_files(self):
@@ -18,7 +19,7 @@ class TestCode(unittest.TestCase):
         feedback = get_all_feedback()
         self.assertTrue(feedback)
         self.assertEqual(feedback[0].label, 'Blank source')
-        
+
         clear_report()
         set_source('                  \n\n\n \n\n\n      ')
         feedback = get_all_feedback()
@@ -31,13 +32,13 @@ class TestCode(unittest.TestCase):
         feedback = get_all_feedback()
         self.assertTrue(feedback)
         self.assertEqual(feedback[0].label, 'Syntax error')
-        
+
         with Execution('a=0\nb b b\nc = 0') as e:
             pass
         self.assertFalse(e.success)
         self.assertEqual(e.label, 'Syntax error')
         self.assertEqual(e.message, "Invalid syntax on line 2")
-    
+
     def test_sections_syntax_errors(self):
         clear_report()
         set_source(dedent('''
@@ -60,8 +61,8 @@ class TestCode(unittest.TestCase):
         feedback = get_all_feedback()
         self.assertTrue(feedback)
         self.assertEqual(feedback[0].label, "Syntax error")
-        self.assertEqual(feedback[0].mistakes['position']['line'], 7)
-    
+        self.assertEqual(feedback[0].mistake['position']['line'], 7)
+
     def test_damaged_sections(self):
         clear_report()
         set_source(dedent('''
@@ -77,7 +78,7 @@ class TestCode(unittest.TestCase):
         count_sections(3)
         feedback = get_all_feedback()
         self.assertTrue(feedback)
-    
+
     def test_sections_tifa(self):
         clear_report()
         set_source(dedent('''
@@ -104,6 +105,7 @@ class TestCode(unittest.TestCase):
         tifa_analysis(True)
         feedback = get_all_feedback()
         self.assertEqual(len(get_all_feedback()), 2)
+
 
 if __name__ == '__main__':
     unittest.main(buffer=False)

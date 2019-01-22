@@ -1,5 +1,5 @@
-from pedal.cait.cait_api import *
-from pedal.report.imperative import *
+from pedal.cait.cait_api import find_match, find_matches, data_state
+from pedal.report.imperative import explain
 
 
 def histogram_group():
@@ -19,7 +19,7 @@ def histogram_missing():
 
     Feedback: The program should display a histogram.
 
-    :return:
+    Returns:
     """
     match = find_match("plt.hist(___)")
     if not match:
@@ -37,7 +37,7 @@ def plot_show_missing():
 
     Feedback: The plot must be explicitly shown to appear in the Printer area.
 
-    :return:
+    Returns:
     """
     match = find_match("plt.show()")
     if not match:
@@ -58,12 +58,12 @@ def histogram_argument_not_list():
     Feedback: Making a histogram requires a list; <argument> is not a list.
 
 
-    :return:
+    Returns:
     """
     matches = find_matches("plt.hist(_argument_)")
     if matches:
         for match in matches:
-            _argument_ = match["_argument_"][0].astNode
+            _argument_ = match["_argument_"].astNode
             if not data_state(_argument_).was_type('list'):
                 explain("Making a histogram requires a list; <code>{0!s}</code> is not a list.<br><br><i>"
                         "(hist_arg_not_list)<i></br>".format(_argument_.id))
@@ -85,16 +85,16 @@ def histogram_wrong_list():
 
     Feedback: The list created in the iteration is not the list being used to create the histogram.
 
-    :return:
+    Returns:
     """
     matches = find_matches("for ___ in ___:\n"
                            "    __expr__\n"
                            "plt.hist(_list_)")
     if matches:
         for match in matches:
-            _list_ = match["_list_"][0].astNode
+            _list_ = match["_list_"].astNode
             __expr__ = match["__expr__"]
-            submatches = find_expr_sub_matches("{}.append(___)".format(_list_.id), __expr__)
+            submatches = __expr__.find_matches("{}.append(___)".format(_list_.id))
             if submatches:
                 return False
         explain(

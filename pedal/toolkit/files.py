@@ -1,12 +1,13 @@
 from pedal.cait.cait_api import parse_program
-from pedal.report.imperative import explain, explain
+from pedal.report.imperative import explain
 from pedal.toolkit.utilities import ensure_literal
 
+
 def files_not_handled_correctly(*filenames):
-    '''
+    """
     Statically detect if files have been opened and closed correctly.
     This is only useful in the case of very simplistic file handling.
-    '''
+    """
     if filenames and isinstance(filenames[0], int):
         num_filenames = filenames[0]
         actual_filenames = False
@@ -22,7 +23,7 @@ def files_not_handled_correctly(*filenames):
             if a_call.func.id == 'open':
                 if not a_call.args:
                     explain("You have called the <code>open</code> function "
-                           "without any arguments. It needs a filename.")
+                            "without any arguments. It needs a filename.")
                     return True
                 called_open.append(a_call)
             elif a_call.func.id == 'close':
@@ -33,7 +34,7 @@ def files_not_handled_correctly(*filenames):
         elif a_call.func.ast_name == 'Attribute':
             if a_call.func.attr == 'open':
                 explain("You have attempted to call <code>open</code> as a "
-                       "method, but it is actually a built-in function.")
+                        "method, but it is actually a built-in function.")
                 return True
             elif a_call.func.attr == 'close':
                 closed.append(a_call)

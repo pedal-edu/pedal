@@ -1,13 +1,14 @@
-'''
+"""
 Simple data classes for storing feedback to present to learners.
-'''
+"""
 
 __all__ = ['Feedback']
 
+
 class Feedback:
-    '''
+    """
     A class for storing raw feedback.
-    
+
     Attributes:
         label (str): An internal name for this specific piece of feedback.
         tool (str): An internal name for indicating the tool that created
@@ -22,79 +23,80 @@ class Feedback:
                         is "positive" - which indicates that this feedback is
                         positive, and the information is good to convey to the
                         student.
-        section (int): The section that generated this particular piece of
-                       feedback. Some resolvers want to group feedback.
+        group (int or str): The group that this piece of feedback should be
+            associated with. Some resolvers want to group feedback using this
+            identifier.
         result (bool): Whether or not this feedback is associated with the
                        learner completing the task ("Success!").
         performance (float): A relative amount that this feedback contributes
-                             to the students' performance (think in terms of
-                             partial credit, like "Triggering this feedback
-                             is worth 20%").
-        misconceptions (Component): A description of the misconception that
-                                    is believed to be in the student's mind,
-                                    or perhaps the relevant concept from the
-                                    material that should be associated with
-                                    this. ("Variables must be initialized
-                                    before they are used").
-        mistakes (Component): A description of the error or bug that the
+             to the students' performance (think in terms of
+             partial credit, like "Triggering this feedback
+             is worth 20% (.2)").
+        misconceptions (Message): A description of the misconception that
+            is believed to be in the student's mind,
+            or perhaps the relevant concept from the
+            material that should be associated with
+            this. ("Variables must be initialized
+            before they are used").
+        mistakes (Message): A description of the error or bug that the
                               student has created ("NameError on line 5: sum
                               has not been defined").
-        hints (Component): A suggestion for what the student can do
-                           ("Initialize the sum variable one line 2").
-        constraints (Component): A description of the task requirements or
+        hints (Message): A suggestion for what the student can do
+                           ("Initialize the sum variable on line 2").
+        constraints (Message): A description of the task requirements or
                                  task type that the student has violated
                                  ("You used a for loop, but this question
                                  expected you to use recursion.").
-        metacognitives (Component): A suggestion for more regulative
+        metacognitives (Message): A suggestion for more regulative
                                     strategies ("You have been working for
                                     5 hours, perhaps it is time to take
                                     a break?").
-    '''
-    def __init__(self, label, tool='instructor', 
-                 category='Instructor feedback', priority=None, section=None,
-                 result=None, performance=None, misconceptions=None,
-                 mistakes=None, hints=None, constraints=None,
-                 metacognitives=None):
+    """
+    MESSAGE_TYPES = ['hint', 'mistake', 'misconception',
+                     'constraint', 'metacognitive']
+
+    def __init__(self, label, tool='instructor',
+                 category='Instructor feedback', priority=None, group=None,
+                 result=None, performance=None, misconception=None,
+                 mistake=None, hint=None, constraint=None,
+                 metacognitive=None):
         # Metadata
         self.label = label
         self.tool = tool
         self.category = category
         self.priority = priority
-        self.section = section
+        self.group = group
         # Data
         self.result = result
         self.performance = performance
-        self.misconceptions = misconceptions
-        self.mistakes = mistakes
-        self.hints = hints
-        self.constraints = constraints
-        self.metacognitives = metacognitives
-    
+        self.misconception = misconception
+        self.mistake = mistake
+        self.hint = hint
+        self.constraint = constraint
+        self.metacognitive = metacognitive
+
     def __str__(self):
         return "<Feedback ({})>".format(self.label)
-    
-    
+
     def __repr__(self):
         metadata = ""
         if self.tool is not None:
-            metadata += ", tool="+self.tool
+            metadata += ", tool=" + self.tool
         if self.category is not None:
-            metadata += ", category="+self.category
+            metadata += ", category=" + self.category
         if self.priority is not None:
-            metadata += ", priority="+self.priority
-        if self.section is not None:
-            metadata += ", section="+str(self.section)
+            metadata += ", priority=" + self.priority
+        if self.group is not None:
+            metadata += ", group=" + str(self.group)
         data = ""
         return "Feedback({}{}{})".format(self.label, metadata, data)
 
-'''
-A Component is one of:
-    message (str)
-    Dict with a `message` field and any other suitable fields
-        Example fields could include:
-            html_message: An HTML message instead of a plaintext message.
-            line: The line number to highlight
-            error: The error message to render
-    List of Component
-'''
 
+'''
+A Message is one of:
+    str
+    Dict with a `message` field and any other suitable fields, such as:
+        html_message: An HTML message instead of a plaintext message.
+        line: The line number to highlight
+        error: The error message to render
+'''

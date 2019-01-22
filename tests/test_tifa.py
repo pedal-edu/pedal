@@ -20,35 +20,39 @@ unit_tests = {
     # Unconnected blocks
     'unconnected_assign': ['a = ___', [], ['Unconnected blocks']],
     'unconnected_print': ['print(___)', [], ['Unconnected blocks']],
-    
+
     'literal_in_call': ['print("dog" in input("test"))', [], []],
     'wrong_method_for_type': ['[].replace(",","")', [], []],
-    
+
     # Double call
     'double_call': ['def x(a):\n    return a\nx(5)\nx(3)', ['Read out of scope'], []],
-    
+
     # Chained functions
-    'chained_functions': ['def x():\n    return 0\ndef y():\n    x()\ny()', ['Read out of scope', 'Initialization Problem'], []],
-    
+    'chained_functions': ['def x():\n    return 0\ndef y():\n    x()\ny()',
+                          ['Read out of scope', 'Initialization Problem'], []],
+
     # String indexing and slicing
     'string_indexing_slicing': ['("a"[0] + ""[:])[:][0]', ['Incompatible types'], []],
     # List indexing and slicing
     'list_indexing_slicing': ['([0][0] + [1,2,3][:][2])', ['Incompatible types'], []],
-    
-    'returned_string': 
-        ['def pluralize(a_word):\n    return a_word+"s"\nnoun = pluralize("Dog")\nprint(noun + " can pet other " + noun)', ['Incompatible types'], []],
-    'update_without_read': 
+
+    'returned_string':
+        [
+            'def pluralize(a_word):\n    return a_word+"s"\nnoun = pluralize("Dog")\nprint(noun + " can pet other " + noun)',
+            ['Incompatible types'], []],
+    'update_without_read':
         ['a = 0\na+= 1', ['Initialization Problem'], ['Unused Variable']],
-    'update_and_read': 
+    'update_and_read':
         ['a = 0\na+= 1\nprint(a)', ['Initialization Problem', 'Unused Variable'], []],
-    'iterate_through_non_existing_list': 
+    'iterate_through_non_existing_list':
         ['for x in y:\n\tpass', ['Unused Variable'], ['Initialization Problem']],
     'iterate_through_list':
         ['y = [1,2,3]\nfor x in y:\n\tpass', ['Unused Variable', 'Initialization Problem'], []],
     'iterate_through_empty_list':
         ['y = []\nfor x in y:\n\tpass', ['Unused Variable', 'Initialization Problem'], ['Iterating over empty list']],
     'double_iterate_through_strings':
-        ['ss = ["Testing", "Here"]\nfor a in ss:\n    print(a)\nfor b in a:\n    print(b)', ['Iterating over non-list', 'Iterating over empty list'], []],
+        ['ss = ["Testing", "Here"]\nfor a in ss:\n    print(a)\nfor b in a:\n    print(b)',
+         ['Iterating over non-list', 'Iterating over empty list'], []],
     'iterate_through_number':
         ['y = 5\nfor x in y:\n\tpass', ['Unused Variable', 'Initialization Problem'], ['Iterating over non-list']],
     'iterate_over_iteration_variable':
@@ -70,7 +74,8 @@ unit_tests = {
     'defined_within_both_if_branches_but_not_others':
         ['if True:\n\tif False:\n\t\ta=0\n\telse:\n\t\ta = 0\nprint(a)', [], ['Possible Initialization Problem']],
     'defined_in_all_branches':
-        ['if True:\n\tif False:\n\t\ta=0\n\telse:\n\t\ta = 0\nelse:\n\ta=3\nprint(a)', ['Possible Initialization Problem'], []],
+        ['if True:\n\tif False:\n\t\ta=0\n\telse:\n\t\ta = 0\nelse:\n\ta=3\nprint(a)',
+         ['Possible Initialization Problem'], []],
     'read_in_if_branch_but_unset':
         ['if True:\n\tprint(a)', [], ['Initialization Problem']],
     'read_in_else_branch_but_unset':
@@ -86,8 +91,9 @@ unit_tests = {
     'overwritten_in_all_branch':
         ['a = 0\nif True:\n\tif False:\n\t\ta = 0\n\telse:\n\t\ta = 2\nelse:\n\ta = 1', [], ['Overwritten Variable']],
     'overwritten_in_all_branches2':
-        ['a = 0\nif True:\n\tprint(a)\n\tif False:\n\t\ta = 0\n\telse:\n\t\ta = 2\nelse:\n\ta = 1', ['Overwritten Variable'], []],
-    
+        ['a = 0\nif True:\n\tprint(a)\n\tif False:\n\t\ta = 0\n\telse:\n\t\ta = 2\nelse:\n\ta = 1',
+         ['Overwritten Variable'], []],
+
     # Iterating over the result of a builtin
     'print_range':
         ['x = range(100)\nprint(x)', ['Iterating over non-list'], []],
@@ -99,7 +105,7 @@ unit_tests = {
         ['for x in "a,b,c".split(","):\n  x+""', ['Iterating over non-list', 'Iterating over empty list'], []],
     'iterate_over_string_upper':
         ['for l in "abc".upper():\n  l+""', ['Iterating over non-list', 'Iterating over empty list'], []],
-    
+
     # Incompatible types
     'add_int_str':
         ['a = 5 + "ERROR"', [], ['Incompatible types']],
@@ -108,18 +114,20 @@ unit_tests = {
     'unary_and_sub_int_int':
         ['-(5)+0', ['Incompatible types'], []],
     'iadd_int_int':
-        ['a=0\na+=5\na', ['Incompatible types', 'Unused Variable', 'Initialization Problem', 'Overwritten Variable'], []],
+        ['a=0\na+=5\na', ['Incompatible types', 'Unused Variable', 'Initialization Problem', 'Overwritten Variable'],
+         []],
     'iadd_str_int':
-        ['a=""\na+=5\na', ['Unused Variable', 'Initialization Problem', 'Overwritten Variable'], ['Incompatible types']],
+        ['a=""\na+=5\na', ['Unused Variable', 'Initialization Problem', 'Overwritten Variable'],
+         ['Incompatible types']],
     'iadd_undefined':
         ['a+=5\na', ['Unused Variable', 'Overwritten Variable'], ['Initialization Problem']],
     'iadd_unread':
         ['a=0\na+=5', ['Initialization Problem', 'Overwritten Variable'], ['Unused Variable']],
-    
+
     # Lambda
     'lambda_add':
         ['a = lambda: 0\nb=a()\nb+5', ['Incompatible types'], []],
-    
+
     # Handle function definitions
     'uncalled_function':
         ['def named(x):\n\tprint(x)\n', ['Initialization Problem'], ['Unused Variable']],
@@ -131,24 +139,29 @@ unit_tests = {
     'return_after_return':
         ['def x():\n    return 5\n    return 4\nx()', [], ['Action after return']],
     'action_after_return_on_both_branches':
-        ['def x():\n  if True:\n    return 4\n  else:\n    return 3\n  a = 0\n  print(a)\nx()', [], ['Action after return']],
+        ['def x():\n  if True:\n    return 4\n  else:\n    return 3\n  a = 0\n  print(a)\nx()', [],
+         ['Action after return']],
     # Function with subtypes
     'function_with_subtypes_add_int_list_int':
-        ['def add_first(a_list):\n    for element in a_list:\n        return element + 5\nprint(add_first([1]))', ['Incompatible types'], []],
+        ['def add_first(a_list):\n    for element in a_list:\n        return element + 5\nprint(add_first([1]))',
+         ['Incompatible types'], []],
     'function_with_subtypes_add_int_list_str':
-        ['def add_first(a_list):\n    for element in a_list:\n        return element + 5\nprint(add_first(["1"]))', [], ['Incompatible types']],
+        ['def add_first(a_list):\n    for element in a_list:\n        return element + 5\nprint(add_first(["1"]))', [],
+         ['Incompatible types']],
     'function_with_subtypes_add_int_primitive_int':
-        ['def add_first(a_list):\n    for element in a_list:\n        return element + 5\nprint(add_first(1))', [], ['Iterating over non-list']],
+        ['def add_first(a_list):\n    for element in a_list:\n        return element + 5\nprint(add_first(1))', [],
+         ['Iterating over non-list']],
     'function_with_subtypes_add_int_primitive_str':
-        ['def add_first(a_list):\n    for element in a_list:\n        return element + 5\nprint(add_first("1"))', [], ['Incompatible types']],
+        ['def add_first(a_list):\n    for element in a_list:\n        return element + 5\nprint(add_first("1"))', [],
+         ['Incompatible types']],
     # Out of scope
-    'read_out_of_scope': 
+    'read_out_of_scope':
         ['def x(parameter):\n    return parameter\nx(0)\nparameter', [], ['Read out of scope']],
-    'read_inside_of_scope': 
+    'read_inside_of_scope':
         ['def x(parameter):\n    return parameter\nx(0)', ['Read out of scope'], []],
     'read_not_out_of_scope':
         ['def x():\n    if 1:\n        y=0\n    else:\n        y=1\n    y\nx()\nx()', ['Read out of scope'], []],
-    
+
     'append_to_empty_list':
         ['a = []\na.append(1)\nprint(a)', ['Initialization Problem', 'Unused Variable'], []],
     'append_to_non_empty_list':
@@ -159,65 +172,73 @@ unit_tests = {
         ['a=[]\na.append(1)', ['Initialization Problem'], ['Unused Variable']],
     'append_to_number':
         ['a=1\na.append(1)\nprint(a)', [], ['Append to non-list']],
-    
+
     'append_and_index':
         ['x=[]\nx.append(1)\nx[0]+1', ['Incompatible types'], []],
     'indexing_used':
-        ['mag1 = 0\nmercalli = [0]\nmag1 = mercalli[mag1]\nmag1', ['Initialization Problem', 'Unused Variable', 'Overwritten Variable'], []],
-    
+        ['mag1 = 0\nmercalli = [0]\nmag1 = mercalli[mag1]\nmag1',
+         ['Initialization Problem', 'Unused Variable', 'Overwritten Variable'], []],
+
     'created_list_but_unread':
         ['old = [1,2,3]\nnew=[]\nfor x in old:\n\tnew.append(x)', [], ['Unused Variable']],
     'created_list_but_undefined':
         ['old = [1,2,3]\nfor x in old:\n\tnew.append(x)\nprint(new)', [], ['Initialization Problem']],
-    
-    'builtin_float_converter': 
+
+    'builtin_float_converter':
         ['a = float(5)\nb = "test"\nprint(a+b)', [], ['Incompatible types']],
-    
+
     # Double iteration
     'iterate_over_list_of_tuples':
         ['for x,y in [(1,2), (3,4)]:\n    x, y', ['Initialization Problem'], []],
     'iterate_over_items':
         ['record = {"A": 5, "B": 6}\nfor x,y in record.items():\n    x, y', ['Initialization Problem'], []],
     'iterate_over_items_add':
-        ['record = {"A": 5, "B": 6}\nfor x,y in record.items():\n    x+"", y+0', ['Initialization Problem', "Incompatible types"], []],
-    
+        ['record = {"A": 5, "B": 6}\nfor x,y in record.items():\n    x+"", y+0',
+         ['Initialization Problem', "Incompatible types"], []],
+
     # Tuple, Multiple Assignment
     'multiple_assignment': ['a,b = 1,2\n1+a\nb', ['Incompatible types'], []],
     'tuple_index': ['tuple_box = (6, 8, 4)\nprint(tuple_box[0])', [], []],
-    
+
     # Sets
     'set_creation': ['a = set([1,2,3])\nprint(a)', ['Initialization Problem'], []],
-    
+
     # Dictionaries
     'set_key_in_dict': ['a = {}\na[1] = 0', [], []],
     'use_key_in_dict': ['a = {"x": 5, "y": "T"}\na["x"]+5', ['Incompatible types'], []],
     'use_key_in_lod': ['x=[{"a": 0, "b": True}, {"a": 1, "b": False}]\ny=x[0]\nz=y["a"]+0', ['Incompatible types'], []],
-    'use_chained_key_in_lod': ['x=[{"a": 0, "b": True}, {"a": 1, "b": False}]\nnot x[1]["b"]', ['Incompatible types'], []],
-    'iterate_over_lod': ['ls=[{"a": 0, "b": True}, {"a": 1, "b": False}]\nfor x in ls:\n    x["a"]+0', ['Incompatible types'], []],
+    'use_chained_key_in_lod': ['x=[{"a": 0, "b": True}, {"a": 1, "b": False}]\nnot x[1]["b"]', ['Incompatible types'],
+                               []],
+    'iterate_over_lod': ['ls=[{"a": 0, "b": True}, {"a": 1, "b": False}]\nfor x in ls:\n    x["a"]+0',
+                         ['Incompatible types'], []],
     # TODO: Add stronger assertion this one, it shouldn't be a good one
     'incorrect_dict_iteration': ['dict = {"T": "V"}\nfor key,value in dict:\n    print(key)', [], []],
     'incorrect_dict_iteration2': ['dict = {"T": 0}\nfor i in dict:\n print(i, dict[i])', [], []],
-    
+
     # While
-        'while_until_input': ['user = input("Give a word.")\nwhile user:\n    print(user)\n    user = input("Give another word.")', ['Unused Variable'], []],
-     
+    'while_until_input': [
+        'user = input("Give a word.")\nwhile user:\n    print(user)\n    user = input("Give another word.")',
+        ['Unused Variable'], []],
+
     # With
     'with_open':
         ['with open("A") as a:\n    print(a)', ['Initialization Problem'], []],
-    
+
     # List comprehensions
     'list_comprehension':
         ['a = [5 for x in range(100)]\nfor i in a:\n    5+i', ['Iterating over non-list', 'Incompatible types'], []],
-    
+
     # Return outside function
     'no_return_outside_function':
         ['def x():\n    return 5\nx()', ['Return outside function'], []],
     'return_outside_function':
         ['def x():\n    pass\nreturn 5\nx()', [], ['Return outside function']],
-    
+
     # Classes
     'class_definition':
-        ['class A:\n    y = 0\n    def __init__(self, x):\n        self.x = 0\n        self.test()\n    def test(self):\n        self.x = 5\nA()', [], []],
+        [
+            'class A:\n    y = 0\n    def __init__(self, x):\n        self.x = 0\n        self.test()\n    def test(self):\n        self.x = 5\nA()',
+            [], []],
     'instance_assignment':
         ['class A:\n pass\na = A()\na.b = 0\nb', [], ['Initialization Problem']],
     'instance_assignment':
@@ -257,7 +278,7 @@ unit_tests = {
                 w.p.enemies.append(Enemy())
                 w.p.enemies[0].health + 100
                 """), ['Incompatible types'], []],
-    
+
     # Mutable Types
     'mutable_list_in_function':
         ['def t():\n    x = []\n    x.append(1)\n    return x\nfor x in t():\n    x + 1', ['Incompatible types'], []],
@@ -266,11 +287,15 @@ unit_tests = {
         ['import matplotlib.pyplot as plt\nplt.hist([1,2,3])\nplt.show()', ['Initialization Problem'], []],
     'import_random':
         ['from random import randint\na=randint(1,2)\n1+a', ['Initialization Problem', 'Incompatible types'], []],
-    
+
     'import_state_demographics':
-        ["import state_demographics\n\n\nincome_list = state_demographics.get(\"Per Capita Income\",\"(None)\",'')\nfilter_income = []\nfor income in income_list:\n    if income > 28000:\n        income_list.append(filter_income)\nprint(filter_income)\n", [], []],
+        [
+            "import state_demographics\n\n\nincome_list = state_demographics.get(\"Per Capita Income\",\"(None)\",'')\nfilter_income = []\nfor income in income_list:\n    if income > 28000:\n        income_list.append(filter_income)\nprint(filter_income)\n",
+            [], []],
     'import_state_demographics2':
-        ["import state_demographics\n\n\nincome_list = state_demographics.get(\"Per Capita Income\",\"(None)\",'')\nnew_income_list = 0\nfor income in income_list:\n    if income > 28000:\n        new_income_list = new_income_list + 1\nprint(new_income_list)\n", [], []],
+        [
+            "import state_demographics\n\n\nincome_list = state_demographics.get(\"Per Capita Income\",\"(None)\",'')\nnew_income_list = 0\nfor income in income_list:\n    if income > 28000:\n        new_income_list = new_income_list + 1\nprint(new_income_list)\n",
+            [], []],
     'filter_pattern':
         ['l = []\nfor x in l:\n    if x > 0:\n        x', [], []],
     'append_iter_var_to_list':
@@ -292,15 +317,16 @@ unit_tests = {
         ["t = 0\nfor x in []:\n    if x:\n        t = t + 1\nprint(t)", ['Possible Initialization Problem'], []],
     'read_out_scope2':
         ["x = ''\ndef y():\n    return x\ny()", ['Unused Variable'], []],
-    
+
     'read_out_scope_double_branch':
-        ["def x():\n  if True:\n    y=0\n  else:\n    y=1\n  y\nx()", 
-        ['Unused Variable', 'Read out of scope'], []],
-    
+        ["def x():\n  if True:\n    y=0\n  else:\n    y=1\n  y\nx()",
+         ['Unused Variable', 'Read out of scope'], []],
+
     # Calling functions from within functions
     'call_function_within_function':
-        ['def z():\n     return b\ndef y():\n    b = 0\n    z()\n    return b\ndef x():\n    y()\nx()', ['Unused Variable'], ['Read out of scope']],
-    
+        ['def z():\n     return b\ndef y():\n    b = 0\n    z()\n    return b\ndef x():\n    y()\nx()',
+         ['Unused Variable'], ['Read out of scope']],
+
     # While loop with possibly unused body
     'while_body_and_conditional_uses_variable':
         ['a = 10\nwhile a:\n    a -= 1', ['Unused Variable'], []],
@@ -310,7 +336,7 @@ unit_tests = {
         ['while True:\n    a=0\na', [], ['Possible Initialization Problem']],
     'while_body_defined_variable':
         ['a=0\nwhile True:\n    a=0\na', ['Possible Initialization Problem'], []],
-    
+
     # Generators
     'add_list_to_list_comprehension':
         ['[1]+[a for a in [1,2,3]]', ['Unused Variable', "Incompatible types"], []],
@@ -320,23 +346,26 @@ unit_tests = {
         ['3 in {a:a for a in [1,2,3]}', ['Unused Variable', "Incompatible types"], []],
     'int_membership_in_comprehension':
         ['4 in (a for a in [1,2,3])', ['Unused Variable', "Incompatible types"], []],
-    
+
     'prevent_empty_iteration_in_appended_list':
-        ['eles = [1,2,3]\nx = []\nfor ele in eles:\n    x.append(ele)\nfor e2 in x:\n    e2+1', 
-            ['Iterating over empty list'], []],
-            
+        ['eles = [1,2,3]\nx = []\nfor ele in eles:\n    x.append(ele)\nfor e2 in x:\n    e2+1',
+         ['Iterating over empty list'], []],
+
     'prevent_empty_iteration_dict':
         ['x={"A":5}\nfor y in x:\n y', ['Iterating over empty list'], []],
-    
+
     # Built-in modules
     'import_string_letters':
         ['import string\nstring.letters+""', ['Incompatible types'], []],
 }
 
+
 class TestCode(unittest.TestCase):
     pass
 
-SILENCE_EXCEPT = None #'read_not_out_of_scope'
+
+SILENCE_EXCEPT = None  # 'read_not_out_of_scope'
+
 
 def make_tester(code, nones, somes):
     def test_code(self):
@@ -345,18 +374,21 @@ def make_tester(code, nones, somes):
             tifa.process_code(code)
         except Exception as e:
             raise type(e)(str(e) +
-                      ' in code:\n%s' % code)
+                          ' in code:\n%s' % code)
         if not tifa.report['tifa']['success']:
-            self.fail("Error message in\n"+code+"\n"+str(tifa.report['tifa']['error']))
+            self.fail("Error message in\n" + code + "\n" + str(tifa.report['tifa']['error']))
         for none in nones:
             if tifa.report['tifa']['issues'].get(none, []):
                 print("")
                 pprint(tifa.report['tifa']['variables'])
-                self.fail("Incorrectly detected "+none+"\n"+code+"\n")
+                self.fail("Incorrectly detected " + none + "\n" + code + "\n")
         for some in somes:
             if not tifa.report['tifa']['issues'].get(some, []):
-                self.fail("Failed to detect "+some+"\n"+code+"\n")
+                self.fail("Failed to detect " + some + "\n" + code + "\n")
+
     return test_code
+
+
 for name, (code, nones, somes) in unit_tests.items():
     if SILENCE_EXCEPT is None or SILENCE_EXCEPT == name:
         setattr(TestCode, 'test_code_{}'.format(name), make_tester(code, nones, somes))
@@ -390,7 +422,7 @@ class TestVariables(unittest.TestCase):
         self.assertTrue(my_list.subtype.is_equal('num'))
         self.assertTrue(my_list.subtype.is_equal(float))
         self.assertTrue(my_list.subtype.is_equal('NumType'))
-        
+
     def test_variable_def_use(self):
         tifa = pedal.tifa.Tifa()
         tifa.process_code('a=0\nb=0\nb\nc')
@@ -407,20 +439,20 @@ class TestVariables(unittest.TestCase):
         self.assertNotIn('a', unset_variables)
         self.assertNotIn('b', unset_variables)
         self.assertIn('c', unset_variables)
-    
+
     def test_weirdness(self):
         tifa = pedal.tifa.Tifa()
         tifa.process_code('def a(x):\n    return x\na(1)')
         issues = tifa.report['tifa']['issues']
         self.assertTrue(tifa.report['tifa']['success'])
-        
+
         tifa = pedal.tifa.Tifa()
         tifa.process_code('def a(x):\n    return x\n')
         issues = tifa.report['tifa']['issues']
-        self.assertEqual(issues['Unused Variable'][0]['message'], 
+        self.assertEqual(issues['Unused Variable'][0]['message'],
                          "The function <code>a</code> was given a definition, "
                          "but was never used after that.")
-        
+
         tifa = pedal.tifa.Tifa()
         tifa.process_code(dedent('''
         import tate
@@ -433,15 +465,14 @@ class TestVariables(unittest.TestCase):
         plt.show()'''))
         issues = tifa.report['tifa']['issues']
         self.assertTrue(tifa.report['tifa']['success'])
-        
-    
+
     '''
     def test_tifa_graceful_errors(self):
         student_code = '1 + "Banana"'
         set_source(student_code)
         exception = compatibility.run_student()
         self.assertIsNotNone(exception)'''
-    
+
     def test_json_types(self):
         t = defs.type_from_json({'type': 'NumType'})
         self.assertIsInstance(t, defs.NumType)
@@ -451,16 +482,16 @@ class TestVariables(unittest.TestCase):
         self.assertIsInstance(t, defs.BoolType)
         t = defs.type_from_json({'type': 'NoneType'})
         self.assertIsInstance(t, defs.NoneType)
-        t = defs.type_from_json({'type': 'ListType', 
+        t = defs.type_from_json({'type': 'ListType',
                                  'subtype': {'type': 'NumType'}})
         self.assertIsInstance(t, defs.ListType)
         self.assertIsInstance(t.subtype, defs.NumType)
-        
+
         l1 = {'type': 'LiteralStr', 'value': 'First'}
         l2 = {'type': 'LiteralStr', 'value': 'Second'}
         v1, v2 = {'type': 'StrType'}, {'type': 'NumType'}
         t = defs.type_from_json({'type': 'DictType', 'literals': [l1, l2],
-                                'values': [v1, v2]})
+                                 'values': [v1, v2]})
         self.assertIsInstance(t, defs.DictType)
         self.assertIsInstance(t.literals, list)
         self.assertEqual(len(t.literals), 2)
@@ -472,44 +503,61 @@ class TestVariables(unittest.TestCase):
         self.assertEqual(len(t.values), 2)
         self.assertIsInstance(t.values[0], defs.StrType)
         self.assertIsInstance(t.values[1], defs.NumType)
-        
+
         # Try to parse the Broadway type definition
         complex_type = {"type": "ModuleType",
-                "fields": {
-                    'get': {"type": "ListType", "empty": False, 
-                            "subtype": {"type": "NumType"}},
-                
-                    'get_shows': 
-		{"type": "ListType", "subtype": 
-			{"type": "DictType", "literals": [{"type": "LiteralStr", "value": 'Statistics'}, {"type": "LiteralStr", "value": 'Show'}, {"type": "LiteralStr", "value": 'Date'}], "values": [
-				{"type": "DictType", "literals": [{"type": "LiteralStr", "value": 'Capacity'}, {"type": "LiteralStr", "value": 'Attendance'}, {"type": "LiteralStr", "value": 'Performances'}, {"type": "LiteralStr", "value": 'Gross'}, {"type": "LiteralStr", "value": 'Gross Potential'}], "values": [
-					{"type": "NumType"}, 
-					{"type": "NumType"}, 
-					{"type": "NumType"}, 
-					{"type": "NumType"}, 
-					{"type": "NumType"}]}, 
-				{"type": "DictType", "literals": [{"type": "LiteralStr", "value": 'Type'}, {"type": "LiteralStr", "value": 'Theatre'}, {"type": "LiteralStr", "value": 'Name'}], "values": [
-					{"type": "StrType"}, 
-					{"type": "StrType"}, 
-					{"type": "StrType"}]}, 
-				{"type": "DictType", "literals": [{"type": "LiteralStr", "value": 'Day'}, {"type": "LiteralStr", "value": 'Month'}, {"type": "LiteralStr", "value": 'Year'}, {"type": "LiteralStr", "value": 'Full'}], "values": [
-					{"type": "NumType"}, 
-					{"type": "NumType"}, 
-					{"type": "NumType"}, 
-					{"type": "StrType"}]}]}},
-                
-                }}
+                        "fields": {
+                            'get': {"type": "ListType", "empty": False,
+                                    "subtype": {"type": "NumType"}},
+
+                            'get_shows':
+                                {"type": "ListType", "subtype":
+                                    {"type": "DictType", "literals": [{"type": "LiteralStr", "value": 'Statistics'},
+                                                                      {"type": "LiteralStr", "value": 'Show'},
+                                                                      {"type": "LiteralStr", "value": 'Date'}],
+                                     "values": [
+                                         {"type": "DictType", "literals": [{"type": "LiteralStr", "value": 'Capacity'},
+                                                                           {"type": "LiteralStr",
+                                                                            "value": 'Attendance'},
+                                                                           {"type": "LiteralStr",
+                                                                            "value": 'Performances'},
+                                                                           {"type": "LiteralStr", "value": 'Gross'},
+                                                                           {"type": "LiteralStr",
+                                                                            "value": 'Gross Potential'}], "values": [
+                                             {"type": "NumType"},
+                                             {"type": "NumType"},
+                                             {"type": "NumType"},
+                                             {"type": "NumType"},
+                                             {"type": "NumType"}]},
+                                         {"type": "DictType", "literals": [{"type": "LiteralStr", "value": 'Type'},
+                                                                           {"type": "LiteralStr", "value": 'Theatre'},
+                                                                           {"type": "LiteralStr", "value": 'Name'}],
+                                          "values": [
+                                              {"type": "StrType"},
+                                              {"type": "StrType"},
+                                              {"type": "StrType"}]},
+                                         {"type": "DictType", "literals": [{"type": "LiteralStr", "value": 'Day'},
+                                                                           {"type": "LiteralStr", "value": 'Month'},
+                                                                           {"type": "LiteralStr", "value": 'Year'},
+                                                                           {"type": "LiteralStr", "value": 'Full'}],
+                                          "values": [
+                                              {"type": "NumType"},
+                                              {"type": "NumType"},
+                                              {"type": "NumType"},
+                                              {"type": "StrType"}]}]}},
+
+                        }}
         defs.type_from_json(complex_type)
-    
+
     def test_custom_module_import(self):
         tifa = pedal.tifa.Tifa()
-        tifa.process_code('import weather\n'+
-                          'rs = weather.get_weather()\n'+
-                          'for r in rs:\n'+
+        tifa.process_code('import weather\n' +
+                          'rs = weather.get_weather()\n' +
+                          'for r in rs:\n' +
                           '  0+r["Data"]["Precipitation"]')
         issues = tifa.report['tifa']['issues']
         self.assertTrue(tifa.report['tifa']['success'])
-    
+
     def test_get_types(self):
         tifa = pedal.tifa.Tifa()
         tifa.process_code('a=0\na="Hello"\na=[1,2,3]\na=1')
@@ -521,29 +569,29 @@ class TestVariables(unittest.TestCase):
         self.assertFalse(a.was_type(bool))
         self.assertFalse(a.was_type(defs.DictType))
         self.assertTrue(a.was_type('ListType'))
-        
+
         tifa = pedal.tifa.Tifa()
         tifa.process_code('credits=[1,2,3,4]\nfor credit in credits:\n  print(credit)')
         credit = tifa.report['tifa']['top_level_variables']['credit']
         self.assertFalse(credit.was_type(list))
         self.assertTrue(credit.was_type(int))
-    
+
     def test_dict_iteration(self):
         tifa = pedal.tifa.Tifa()
         tifa.process_code('dict = {"T": 0}\nfor i in dict:\n    print(i, dict[i])')
         self.assertTrue(tifa.report['tifa']['success'])
-    
+
     def test_classes(self):
         program = 'class A:\n def __init__(self):\n  self.x=0\na=A()\na.x+""'
-        #print(indent(program, '    '))
+        # print(indent(program, '    '))
         tifa = pedal.tifa.Tifa()
         tifa.process_code(program)
-        #self.assertTrue(tifa.report['tifa']['success'])
-        #pprint(tifa.report['tifa'])
-        #print(tifa.report['tifa']['top_level_variables']['a'].type.parent.fields)
+        # self.assertTrue(tifa.report['tifa']['success'])
+        # pprint(tifa.report['tifa'])
+        # print(tifa.report['tifa']['top_level_variables']['a'].type.parent.fields)
         if 'error' in tifa.report['tifa']:
             raise tifa.report['tifa']['error']
-        
+
         program = dedent("""
                 class Enemy:
                     def __init__(self):
@@ -560,7 +608,8 @@ class TestVariables(unittest.TestCase):
                 """)
         tifa = pedal.tifa.Tifa()
         tifa.process_code(program)
-        #pprint(tifa.report['tifa'])
+        # pprint(tifa.report['tifa'])
+
 
 if __name__ == '__main__':
     unittest.main(buffer=False)

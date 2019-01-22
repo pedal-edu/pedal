@@ -1,10 +1,11 @@
 from pedal.cait.cait_api import parse_program
 from pedal.report.imperative import explain
 
+
 def ensure_imports(*modules):
     ast = parse_program()
     for module in modules:
-        imports= ast.find_all("Import")
+        imports = ast.find_all("Import")
         import_froms = ast.find_all("ImportFrom")
         if not imports and not import_froms:
             explain("You need to import the <code>{}</code> module.".format(module))
@@ -12,8 +13,8 @@ def ensure_imports(*modules):
         success = False
         if imports:
             if any(alias._name == module
-                       for i in imports
-                       for alias in i.names):
+                   for i in imports
+                   for alias in i.names):
                 success = True
         if import_froms:
             if any(i.module == module for i in import_froms):

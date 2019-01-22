@@ -1,10 +1,11 @@
-from pedal.toolkit.utilities import *
-from pedal.cait.cait_api import *
+from pedal.toolkit.utilities import function_is_called
+from pedal.cait.cait_api import parse_program, def_use_error
+from pedal.report.imperative import explain, gently
 from pedal.sandbox import compatibility
 
 
-PLOT_LABEL = {'plot': 'line plot', 
-              'hist': 'histogram', 
+PLOT_LABEL = {'plot': 'line plot',
+              'hist': 'histogram',
               'scatter': 'scatter plot'}
 
 
@@ -60,7 +61,7 @@ def compare_data(plt_type, correct, given):
     Determines whether the given data matches any of the data found in the
     correct data. This handles plots of different types: if a histogram
     was plotted with the expected data for a line plot, it will return True.
-    
+
     Args:
         plt_type (str): The expected type of this plot
         correct (List of Int or List of List of Int): The expected data.
@@ -82,7 +83,7 @@ def compare_data(plt_type, correct, given):
         # Assume it is a singular list
         correct_xs = list(range(len(correct)))
         correct_ys = correct
-    
+
     if given['type'] == 'hist':
         return correct_ys == given['values']
     elif plt_type == 'hist':

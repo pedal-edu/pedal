@@ -44,7 +44,7 @@ class CaitNodeTest(unittest.TestCase):
         if0_node = program.children[1]
         if_set_if0 = if0_node.find_all("If")
         self.assertTrue(len(if_set_if0) == 1, "Found {} ifs, when 1 should be found".format(len(if_set_if0)))
-    
+
     def test_has(self):
         program = ast.parse("x\ny\nx = 0")
         program = CaitNode(program)

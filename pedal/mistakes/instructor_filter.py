@@ -1,5 +1,5 @@
-from pedal.cait.cait_api import *
-from pedal.report.imperative import *
+from pedal.cait.cait_api import find_match, find_matches
+from pedal.report.imperative import explain
 
 
 def filter_group():
@@ -16,8 +16,8 @@ def missing_if_in_for():
         if ...<item> ... :
 
     Feedback: The arrangement of decision and iteration is not correct for the filter pattern.
+    Returns:
 
-    :return:
     """
     matches = find_matches("for _item_ in ___:\n"
                            "    if __expr__:\n"
@@ -39,7 +39,7 @@ def append_not_in_if():
 
     Feedback: Only items satisfying some condition should be appended to the list.
 
-    :return:
+    Returns:
     """
     match = find_match("if ___:\n"
                        "    ___.append(___)")
