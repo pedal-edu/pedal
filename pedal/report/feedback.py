@@ -92,11 +92,11 @@ class Feedback:
         return "Feedback({}{}{})".format(self.label, metadata, data)
 
 
-'''
+"""
 A Message is one of:
     str
     Dict with a `message` field and any other suitable fields, such as:
         html_message: An HTML message instead of a plaintext message.
         line: The line number to highlight
         error: The error message to render
-'''
+"""

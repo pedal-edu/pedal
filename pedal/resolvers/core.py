@@ -1,5 +1,6 @@
 from pedal.report.imperative import MAIN_REPORT
 
+
 def make_resolver(func, report=None):
     '''
     Decorates the given function as a Resolver. This means that when the
@@ -13,7 +14,9 @@ def make_resolver(func, report=None):
     '''
     if report is None:
         report = MAIN_REPORT
+
     def resolver_wrapper():
         report.execute_hooks("pedal.resolvers.resolve")
         return func()
+
     return resolver_wrapper

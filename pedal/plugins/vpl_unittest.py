@@ -3,7 +3,6 @@ from pedal import gently
 from pedal.assertions.assertions import _normalize_string
 
 
-
 class UnitTestedAssignment:
     DELTA = .001
 

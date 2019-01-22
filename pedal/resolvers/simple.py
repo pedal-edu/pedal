@@ -98,6 +98,7 @@ def parse_feedback(feedback):
         performance = feedback.performance
     return success, performance, message, data
 
+
 @make_resolver
 def resolve(report=None, priority_key=None):
     """
@@ -134,8 +135,8 @@ def resolve(report=None, priority_key=None):
         final_success = success or final_success
         final_score += partial
         if (message is not None and
-            final_message is None and
-            feedback.priority != 'positive'):
+                final_message is None and
+                feedback.priority != 'positive'):
             final_message = message
             final_category = feedback.category
             final_label = feedback.label

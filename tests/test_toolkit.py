@@ -186,7 +186,7 @@ class TestFunctions(unittest.TestCase):
         with Execution('def a(x):\n  print(x+1)\n  print(x+2)\na(1)') as e:
             self.assertIsNotNone(output_test('a', (4, ["5", "6"])))
         self.assertEqual(e.message, "No errors reported.")
-    
+
     def test_check_coverage(self):
         test_files = [
             ('tests/sandbox_coverage/bad_non_recursive.py', {4}),
@@ -578,7 +578,8 @@ class TestPlots(unittest.TestCase):
         ''')
         with Execution(student_code) as e:
             self.assertEqual(prevent_incorrect_plt(), False)
-            
+
+
 class TestSignatures(unittest.TestCase):
     def test_function_signature(self):
         student_code = dedent("""
@@ -601,6 +602,7 @@ class TestSignatures(unittest.TestCase):
                 garbage="dict[pair[int, int], str], list[int, tuple[str, bool], or bool], or bool or int",
                 returns="bool"
             ), ([], True))
+
 
 if __name__ == '__main__':
     unittest.main(buffer=False)

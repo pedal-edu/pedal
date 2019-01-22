@@ -16,6 +16,7 @@ class Identifier:
                            its scope chain.
         state (State): The current state of the variable.
     """
+
     def __init__(self, exists, in_scope=False, scoped_name="UNKNOWN", state=""):
         self.exists = exists
         self.in_scope = in_scope

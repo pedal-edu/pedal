@@ -33,24 +33,25 @@ def _normalize_string(a_string, numeric_endings=False):
 
 def equality_test(actual, expected, _exact_strings, _delta, _test_output):
     return (  # Float comparison
-        (isinstance(expected, float) and
-         isinstance(actual, (float, int)) and
-         abs(actual - expected) < _delta) or
-        # Exact Comparison
-        actual == expected or
-        # Inexact string comparison
-        (_exact_strings and isinstance(expected, str) and
-         isinstance(actual, str) and
-         _normalize_string(actual) == _normalize_string(expected)) or
-        # Inexact output comparison
-        (_test_output and isinstance(expected, str) and
-         _normalize_string(expected) in [_normalize_string(line)
-                                         for line in actual]) or
-        # Exact output comparison
-        (_test_output and isinstance(expected, list) and
-         [_normalize_string(line) for line in expected] ==
-         [_normalize_string(line) for line in actual])
+            (isinstance(expected, float) and
+             isinstance(actual, (float, int)) and
+             abs(actual - expected) < _delta) or
+            # Exact Comparison
+            actual == expected or
+            # Inexact string comparison
+            (_exact_strings and isinstance(expected, str) and
+             isinstance(actual, str) and
+             _normalize_string(actual) == _normalize_string(expected)) or
+            # Inexact output comparison
+            (_test_output and isinstance(expected, str) and
+             _normalize_string(expected) in [_normalize_string(line)
+                                             for line in actual]) or
+            # Exact output comparison
+            (_test_output and isinstance(expected, list) and
+             [_normalize_string(line) for line in expected] ==
+             [_normalize_string(line) for line in actual])
     )
+
 
 # Unittest Asserts
 

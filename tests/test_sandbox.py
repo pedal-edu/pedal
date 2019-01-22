@@ -67,12 +67,12 @@ class TestCode(unittest.TestCase):
         self.assertIsInstance(student.exception, TypeError)
         self.assertEqual(student.exception_position, {'line': 1})
         self.assertEqual(student.exception_formatted, dedent(
-        """
-        Traceback:
-          File "tests/_sandbox_test_student.py", line 1
-            1+'0'
-        TypeError: unsupported operand type(s) for +: 'int' and 'str'
-        """).strip()+"\n")
+            """
+            Traceback:
+              File "tests/_sandbox_test_student.py", line 1
+                1+'0'
+            TypeError: unsupported operand type(s) for +: 'int' and 'str'
+            """).strip() + "\n")
 
     def test_call(self):
         student_code = "def average(a,b):\n return (a+b)/2"
@@ -167,6 +167,7 @@ class TestCode(unittest.TestCase):
         exception = compatibility.run_student()
         plt2 = compatibility.get_plots()
         self.assertEqual(len(plt2), 2)
+
     def test_matplotlib_compatibility(self):
         student_code = dedent('''
             import os
@@ -185,8 +186,7 @@ class TestCode(unittest.TestCase):
         self.assertIsNone(student.exception)
         self.assertEqual(student.trace.pc_covered, 80.0)
         self.assertEqual(student.trace.lines, {1, 2, 4, 7, 10, 11, 12, 13})
-    
-    
+
     def test_calls(self):
         student_code = dedent('''
             def x(n):
@@ -198,16 +198,16 @@ class TestCode(unittest.TestCase):
         student = Sandbox(tracer_style='calls')
         student.run(student_code, as_filename='student.py')
         self.assertEqual(len(student.trace.calls['x']), 6)
-        
+
     def test_unittest(self):
         student_code = dedent('''
             x = 0
         ''')
         student = Sandbox()
-        #student.run(student_code)
+        # student.run(student_code)
         student.call('x')
         self.assertIsNotNone(student.exception)
-        
+
         student_code = dedent('''
         class Fruit:
             def __init__(self, name, weight=0):
@@ -244,9 +244,9 @@ class TestCode(unittest.TestCase):
                           "pineapple = Fruit('Pineapple', 60)",
                           "fruits = [orange, pineapple]",
                           "weigh_fruits(fruits)"])
-        #print(student.call('weigh_fruits', student.var['fruits']))
-        #from pprint import pprint
-        #pprint(student.call_contexts)
+        # print(student.call('weigh_fruits', student.var['fruits']))
+        # from pprint import pprint
+        # pprint(student.call_contexts)
 
     def test_multiline_statements(self):
         student_code = dedent('''

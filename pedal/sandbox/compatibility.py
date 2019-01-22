@@ -99,14 +99,15 @@ def get_student_data(report=None):
 
 
 def set_sandbox(sandbox, report=None):
-    '''
+    """
     Update the sandbox to hold the new sandbox instance. Particularly useful
     for Skulpt, which needs to set the sandbox in an unusual way.
-    '''
+    """
     if report is None:
         report = MAIN_REPORT
     report['sandbox']['run'] = sandbox
     return sandbox
+
 
 def trace_lines(report=None):
     if report is None:

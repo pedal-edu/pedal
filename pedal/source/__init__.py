@@ -1,6 +1,6 @@
-'''
+"""
 A package for verifying source code.
-'''
+"""
 
 from pedal.source.sections import *
 from pedal.report import MAIN_REPORT
@@ -21,7 +21,7 @@ DEFAULT_PATTERN = r'^(##### Part .+)$'
 
 
 def set_source(code, filename='__main__.py', sections=False, report=None):
-    '''
+    """
     Sets the contents of the Source to be the given code. Can also be
     optionally given a filename.
 
@@ -37,7 +37,7 @@ def set_source(code, filename='__main__.py', sections=False, report=None):
                                 will be used: '^##### Part (\\d+)$'
         report (Report): The report object to store data and feedback in. If
                          left None, defaults to the global MAIN_REPORT.
-    '''
+    """
     if report is None:
         report = MAIN_REPORT
     report['source']['code'] = code

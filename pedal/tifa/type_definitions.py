@@ -141,14 +141,12 @@ class UnknownType(Type):
     """
 
 
-
 class RecursedType(Type):
     """
     A special type used as a placeholder for the result of a
     recursive call that we have already process. This type will
     be dominated by any actual types, but will not cause an issue.
     """
-
 
 
 class FunctionType(Type):
@@ -440,6 +438,7 @@ class SetType(ListType):
 
 class GeneratorType(ListType):
     singular_name = 'a generator'
+
 
 # Custom parking class in blockpy
 

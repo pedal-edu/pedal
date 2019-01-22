@@ -1,7 +1,7 @@
-'''
+"""
 A module that exposes a useful method (`timeout`) that can execute a
 function asynchronously and terminiate if it exceeds a given `duration`.
-'''
+"""
 
 import sys
 import time
@@ -95,6 +95,7 @@ def timeout(duration, func, *args, **kwargs):
             e = ei[0](ei[1])
             e.__traceback__ = ei[2]
             raise e
+
 
 # =========================================================================
 

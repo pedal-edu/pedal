@@ -52,10 +52,10 @@ class Report:
         self.hooks = {}
 
     def set_success(self, group=None):
-        '''
+        """
         Creates Successful feedback for the user, indicating that the entire
         assignment is done.
-        '''
+        """
         if group is None:
             group = self.group
         self.feedback.append(Feedback('set_success', priority='positive',
@@ -92,7 +92,7 @@ class Report:
 
     def attach(self, label, **kwargs):
         self.feedback.append(Feedback(label, **kwargs))
-    
+
     def log(self, message):
         pass
 
@@ -100,7 +100,7 @@ class Report:
         pass
 
     def suppress(self, category, label=True, where=True):
-        '''
+        """
         Args:
             category (str): The category of feedback to suppress.
             label (str): A specific label to match against and suppress.
@@ -108,16 +108,16 @@ class Report:
                 suppression to. If instead `True` is passed, the suppression
                 occurs in every group globally.
                 TODO: Currently, only global suppression is supported.
-        '''
+        """
         category = category.lower()
         if isinstance(label, str):
             label = label.lower()
         if category not in self.suppressions:
             self.suppressions[category] = []
         self.suppressions[category].append(label)
-    
+
     def add_hook(self, event, function):
-        '''
+        """
         Register the `function` to be executed when the given `event` is
         triggered.
         
@@ -131,11 +131,11 @@ class Report:
                 when called, should trigger other functions to be called first.
             function (callable): A callable function. This function should
                 accept a keyword parameter named `report`, which will 
-        '''
+        """
         if event not in self.hooks:
             self.hooks[event] = []
         self.hooks[event].append(function)
-    
+
     def execute_hooks(self, event):
         if event in self.hooks:
             for function in self.hooks[event]:

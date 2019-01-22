@@ -1,46 +1,49 @@
-'''
+"""
 Mocked functions that can be used to prevent malicious or accidental `eval`
 behavior.
-'''
+"""
 import re
 import types
 
 from pedal.sandbox.exceptions import (SandboxNoMoreInputsException,
                                       SandboxPreventModule)
 
+
 def _disabled_compile(source, filename, mode, flags=0, dont_inherit=False):
-    '''
+    """
     A version of the built-in `compile` method that fails with a runtime
     error.
-    '''
+    """
     raise RuntimeError("You are not allowed to call 'compile'.")
 
 
 def _disabled_eval(object, globals=globals(), locals=locals()):
-    '''
+    """
     A version of the built-in `eval` method that fails with a runtime
     error.
-    '''
+    """
     raise RuntimeError("You are not allowed to call 'eval'.")
+
 
 # -------------------------------------------------------------
 
 
 def _disabled_exec(object, globals=globals(), locals=locals()):
-    '''
+    """
     A version of the built-in `exec` method that fails with a runtime
     error.
-    '''
+    """
     raise RuntimeError("You are not allowed to call 'exec'.")
+
 
 # -------------------------------------------------------------
 
 
 def _disabled_globals():
-    '''
+    """
     A version of the built-in `globals` method that fails with a runtime
     error.
-    '''
+    """
     raise RuntimeError("You are not allowed to call 'globals'.")
 
 
@@ -82,7 +85,7 @@ _original_builtins = {
 
 
 def _make_inputs(*input_list, **kwargs):
-    '''
+    """
     Helper function for creating mock user input.
 
     Params:
@@ -91,7 +94,7 @@ def _make_inputs(*input_list, **kwargs):
         function (str=>str): The mock input function that is returned, which
                              will return the next element of input_list each
                              time it is called.
-    '''
+    """
     if 'repeat' in kwargs:
         repeat = kwargs['repeat']
     else:
@@ -108,6 +111,7 @@ def _make_inputs(*input_list, **kwargs):
                 raise SandboxNoMoreInputsException("User had no more input to give.")
             else:
                 return repeat
+
     return mock_input
 
 
@@ -115,10 +119,10 @@ _sys_modules = {}
 
 
 def _override_builtins(namespace, custom_builtins):
-    '''
+    """
     Add the custom builtins to the `namespace` (and the original `__builtins__`)
     suitable for `exec`.
-    '''
+    """
     # Obtain the dictionary of built-in methods, which might not exist in
     # some python versions (e.g., Skulpt)
 
@@ -141,36 +145,41 @@ def create_module(module_name):
         setattr(root, submodule_name, new_submodule)
         modules[reconstructed_path] = new_submodule
     return root, modules
-    
+
+
 class MockModule:
     def _generate_patches(self):
         return {k: v for k, v in vars(self).items()
                 if not k.startswith('_')}
-    
+
     def _add_to_module(self, module):
         for name, value in self._generate_patches().items():
             setattr(module, name, value)
-            
+
+
 class BlockedModule(MockModule):
     MODULE_NAME = "this module"
+
     def _generate_patches(self):
-        return { '__getattr__': self.prevent_module }
-    
+        return {'__getattr__': self.prevent_module}
+
     def prevent_module(self, **kwargs):
         raise SandboxPreventModule("You cannot import {module_name} from student code.".format(
-            module_name = self.MODULE_NAME
+            module_name=self.MODULE_NAME
         ))
+
 
 class MockPedal(BlockedModule):
     MODULE_NAME = "pedal"
 
+
 class MockPlt(MockModule):
-    '''
+    """
     Mock MatPlotLib library that can be used to capture plot data.
 
     Attributes:
         plots (list of dict): The internal list of plot dictionaries.
-    '''
+    """
 
     def __init__(self):
         super().__init__()
@@ -236,6 +245,7 @@ class MockPlt(MockModule):
     def _generate_patches(self):
         def dummy(**kwargs):
             pass
+
         return dict(hist=self.hist, plot=self.plot,
                     scatter=self.scatter, show=self.show,
                     xlabel=self.xlabel, ylabel=self.ylabel,

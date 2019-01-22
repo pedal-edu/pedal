@@ -249,10 +249,6 @@ class GradeMagic(Magics):
     @line_magic
     def grade_logstop(self, line=""):
         self.shell.logger.logstop()
-        self.shell.run_code("print = __builtins__.print")
-        self.shell.run_code("input = __builtins__.input")
-        self.shell.run_code("sum = __builtins__.sum")
-        # self.shell.reset(new_session=False)
 
     def logging(self):
         # ######Logging
