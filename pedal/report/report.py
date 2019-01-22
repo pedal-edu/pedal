@@ -92,7 +92,7 @@ class Report:
 
     def attach(self, label, **kwargs):
         self.feedback.append(Feedback(label, **kwargs))
-    
+
     def log(self, message):
         pass
 
@@ -115,7 +115,7 @@ class Report:
         if category not in self.suppressions:
             self.suppressions[category] = []
         self.suppressions[category].append(label)
-    
+
     def add_hook(self, event, function):
         """
         Register the `function` to be executed when the given `event` is
@@ -135,7 +135,7 @@ class Report:
         if event not in self.hooks:
             self.hooks[event] = []
         self.hooks[event].append(function)
-    
+
     def execute_hooks(self, event):
         if event in self.hooks:
             for function in self.hooks[event]:

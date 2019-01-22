@@ -1,4 +1,3 @@
-
 def check_trace(state):
     past_types = [state.type]
     for past_state in state.trace:
@@ -31,6 +30,7 @@ class State:
         over_position (dict): A Position indicating where the State was
                               previously set versus when it was overwritten.
     """
+
     def __init__(self, name, trace, type, method, position,
                  read='maybe', set='maybe', over='maybe', over_position=None):
         self.name = name

@@ -116,6 +116,8 @@ def wrong_print_8_3():
                 ' output only once after the total length of time has been computed.<br><br><i>(print_8.3)<i></br>')
         return True
     return False
+
+
 # ################8.3 End#######################
 
 
@@ -491,7 +493,7 @@ def warning_average_in_iteration():
     if matches:
         for match in matches:
             __expr__ = match["__expr__"]
-            submatches = __expr__.find_matches("_average_ = _total_/_count_",)
+            submatches = __expr__.find_matches("_average_ = _total_/_count_", )
             if submatches:
                 for submatch in submatches:
                     _total_ = submatch["_total_"][0]
@@ -707,6 +709,8 @@ def wrong_print_9_1():
                 'output only once after the total rainfall has been computed.<br><br><i>(print_9.1)<i></br>')
         return True
     return False
+
+
 # ##########################9.1 END############################
 
 
@@ -842,6 +846,8 @@ def wrong_print_9_2():
                 '(print_9.2)<i></br>')
         return True
     return False
+
+
 # ##########################9.2 END############################
 
 
@@ -857,6 +863,8 @@ def wrong_comparison_9_6():
                     'In this problem you should be finding temperatures above 80 degrees.<br><br><i>(comp_9.6)<i></br>')
                 return True
     return False
+
+
 # ##########################9.6 END############################
 
 
@@ -891,6 +899,8 @@ def wrong_conversion_10_2():
                 '(conv_10.2)<i></br>'.format(_target_.id))
         return True
     return False
+
+
 # ##########################10.2 END############################
 
 
@@ -906,6 +916,8 @@ def wrong_filter_condition_10_3():
         explain('The condition used to filter the year when artists died is not correct.<br><br><i>(filt_10.3)<i></br>')
         return True
     return False
+
+
 # ##########################10.3 END############################
 
 
@@ -938,21 +950,23 @@ def wrong_nested_filter_condition_10_4():
             __cond1__ = match["__cond1__"]
             __cond2__ = match["__cond2__"]
             if not (
-                __cond1__.has(_temp_) and __cond2__.has(_temp_) and (
+                    __cond1__.has(_temp_) and __cond2__.has(_temp_) and (
                     __cond1__.numeric_logic_check(
                         1,
                         "32 <= temp") and __cond2__.numeric_logic_check(
-                        1,
-                        "temp <= 50") or __cond2__.numeric_logic_check(
-                    1,
-                    "32 <= temp") and __cond1__.numeric_logic_check(
-                        1,
-                        "temp <= 50"))):
+                1,
+                "temp <= 50") or __cond2__.numeric_logic_check(
+                1,
+                "32 <= temp") and __cond1__.numeric_logic_check(
+                1,
+                "temp <= 50"))):
                 explain(
                     'The decisions used to filter the temperatures into the specified range of temperatures is not '
                     'correct.<br><br><i>(nest_filt_10.4)<i></br>')
                 return True
     return False
+
+
 # ##########################10.4 END############################
 
 
@@ -995,7 +1009,7 @@ def wrong_filter_problem_atl1_10_5():
                 for match02 in matches02:
                     _item_02 = match02["_item_"][0].astNode
                     if (_item_.id == _item_02.id and
-                        __cond__.has(_item_) and
+                            __cond__.has(_item_) and
                             not __cond__.numeric_logic_check(0.1, "item > 16.1290322580645")):
                         explain('You are not correctly filtering out values from the list.<br><br><i>'
                                 '(filt_alt1_10.5)<i></br>')
@@ -1085,7 +1099,7 @@ def wrong_debug_10_6():
         name2 = match["_list2_"][0].ast_node.id
         master_list = ["quake", "quakes", "quakes_in_miles"]
         if (name1 in master_list and name2 in master_list and
-            name1 != "quakes_in_miles" and name2 != "quakes" and
+                name1 != "quakes_in_miles" and name2 != "quakes" and
                 (name1 != "quake" or name2 != "quake")):
             return False
     explain('This is not one of the two changes needed. Undo the change and try again.<br><br><i>(debug_10.6)<i></br>')

@@ -1,4 +1,5 @@
 from pedal.plugins.vpl_unittest import UnitTestedAssignment
+
 """
 Some kind of function to break up the sections
 """
@@ -150,7 +151,9 @@ class SectionalAssignment:
             self.report.set_success()
         resolve(report=self.report)
 
+
 from pedal.plugins.vpl_unittest import UnitTestedAssignment
+
 
 def unittest_resolver(phases, report=None, custom_success_message=None):
     success = True

@@ -1,40 +1,44 @@
 import traceback
 import os
 
+
 class SandboxException(Exception):
-    '''
+    """
     Generic base exception for sandbox errors.
-    '''
+    """
 
 
 class SandboxPreventModule(Exception):
-    '''
+    """
     Caused by student attempting to load a module that they shouldn't.
-    '''
+    """
 
 
 class SandboxHasNoFunction(SandboxException):
-    '''
+    """
     Caused by attempting to access a function that the student hasn't created.
-    '''
+    """
 
 
 class SandboxHasNoVariable(SandboxException):
-    '''
+    """
     Caused by attempting to access a variable that the student hasn't created.
-    '''
+    """
 
 
 class SandboxNoMoreInputsException(Exception):
-    '''
+    """
     Caused by the student calling `input` when the instructor hasn't provided
     enough inputs. Typically, the student has an infinite loop around their
     `input` function.
-    '''
-    
+    """
+
+
 BuiltinKeyError = KeyError
+
+
 class KeyError(BuiltinKeyError):
-    '''
+    """
     A version of KeyError that replaces the built-in with one small
     modification: when printing an explanatory message, the message is not
     rendered as a tuple. Because that's stupid and the fact that it made it
@@ -42,14 +46,15 @@ class KeyError(BuiltinKeyError):
     
     See Also:
         https://github.com/python/cpython/blob/master/Objects/exceptions.c#L1556
-    '''
+    """
     __module__ = "builtins"
+
     def __init__(self, original, message):
         self.__cause__ = original.__cause__
         self.__traceback__ = original.__traceback__
         self.__context__ = original.__context__
         self.message = message
-    
+
     def __str__(self):
         return self.message
 
@@ -65,13 +70,15 @@ def _add_context_to_error(e, message):
         e.args = tuple([e.args[0] + message])
     return e
 
+
 class SandboxTraceback:
-    '''
+    """
     Class for reformatting tracebacks to have more pertinent information.
-    '''
-    def __init__(self, exception, exc_info, full_traceback, 
+    """
+
+    def __init__(self, exception, exc_info, full_traceback,
                  instructor_filename):
-        '''
+        """
         Args:
             exception (Exception): The exception that was raised.
             exc_info (ExcInfo): The result of sys.exc_info() when the exception
@@ -81,16 +88,16 @@ class SandboxTraceback:
             instructor_filename (str): The name of the instructor file, which
                 can be used to avoid reporting instructor code in the
                 traceback.
-        '''
+        """
         self.exception = exception
         self.exc_info = exc_info
         self.full_traceback = full_traceback
         self.instructor_filename = instructor_filename
         self.line_number = traceback.extract_tb(exc_info[2])[-1][1]
-    
+
     def _clean_traceback_line(self, line):
         return line.replace(', in <module>', '', 1)
-    
+
     def format_exception(self, preamble=""):
         if not self.exception:
             return ""
@@ -113,12 +120,12 @@ class SandboxTraceback:
         return length
 
     def _is_relevant_tb_level(self, tb):
-        '''
+        """
         Determines if the give part of the traceback is relevant to the user.
 
         Returns:
             boolean: True means it is NOT relevant
-        '''
+        """
         # Are in verbose mode?
         if self.full_traceback:
             return False

@@ -3,7 +3,6 @@ from pedal.cait.cait_api import parse_program, def_use_error
 from pedal.report.imperative import explain, gently
 from pedal.sandbox import compatibility
 
-
 PLOT_LABEL = {'plot': 'line plot',
               'hist': 'histogram',
               'scatter': 'scatter plot'}

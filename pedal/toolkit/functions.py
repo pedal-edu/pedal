@@ -13,8 +13,8 @@ def all_documented():
         if a_def.name == "__init__":
             continue
         if (a_def.body and
-            (a_def.body[0].ast_name != "Expr" or
-             a_def.body[0].value.ast_name != "Str")):
+                (a_def.body[0].ast_name != "Expr" or
+                 a_def.body[0].value.ast_name != "Str")):
             if a_def.ast_name == 'FunctionDef':
                 explain("You have an undocumented function: " + a_def.name)
             else:
@@ -207,7 +207,8 @@ def unit_test(name, *tests):
     else:
         gently("The function <code>{}</code> was not defined.".format(name))
         return None
-        
+
+
 class _LineVisitor(ast.NodeVisitor):
     """
     NodeVisitor subclass that visits every statement of a program and tracks
@@ -219,11 +220,11 @@ class _LineVisitor(ast.NodeVisitor):
 
     def __init__(self):
         self.lines = []
-    
+
     def _track_lines(self, node):
         self.lines.append(node.lineno)
         self.generic_visit(node)
-    
+
     visit_FunctionDef = _track_lines
     visit_AsyncFunctionDef = _track_lines
     visit_ClassDef = _track_lines
@@ -246,10 +247,11 @@ class _LineVisitor(ast.NodeVisitor):
     visit_Global = _track_lines
     visit_Nonlocal = _track_lines
     visit_Expr = _track_lines
-    visit_Pass  = _track_lines
-    visit_Continue  = _track_lines
-    visit_Break  = _track_lines
-    
+    visit_Pass = _track_lines
+    visit_Continue = _track_lines
+    visit_Break = _track_lines
+
+
 def check_coverage(report=None):
     """
     Checks that all the statements in the program have been executed.

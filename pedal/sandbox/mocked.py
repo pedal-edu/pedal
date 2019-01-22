@@ -1,12 +1,13 @@
-'''
+"""
 Mocked functions that can be used to prevent malicious or accidental `eval`
 behavior.
-'''
+"""
 import re
 import types
 
 from pedal.sandbox.exceptions import (SandboxNoMoreInputsException,
                                       SandboxPreventModule)
+
 
 def _disabled_compile(source, filename, mode, flags=0, dont_inherit=False):
     """
@@ -23,6 +24,7 @@ def _disabled_eval(object, globals=globals(), locals=locals()):
     """
     raise RuntimeError("You are not allowed to call 'eval'.")
 
+
 # -------------------------------------------------------------
 
 
@@ -32,6 +34,7 @@ def _disabled_exec(object, globals=globals(), locals=locals()):
     error.
     """
     raise RuntimeError("You are not allowed to call 'exec'.")
+
 
 # -------------------------------------------------------------
 
@@ -108,6 +111,7 @@ def _make_inputs(*input_list, **kwargs):
                 raise SandboxNoMoreInputsException("User had no more input to give.")
             else:
                 return repeat
+
     return mock_input
 
 
@@ -141,28 +145,33 @@ def create_module(module_name):
         setattr(root, submodule_name, new_submodule)
         modules[reconstructed_path] = new_submodule
     return root, modules
-    
+
+
 class MockModule:
     def _generate_patches(self):
         return {k: v for k, v in vars(self).items()
                 if not k.startswith('_')}
-    
+
     def _add_to_module(self, module):
         for name, value in self._generate_patches().items():
             setattr(module, name, value)
-            
+
+
 class BlockedModule(MockModule):
     MODULE_NAME = "this module"
+
     def _generate_patches(self):
-        return { '__getattr__': self.prevent_module }
-    
+        return {'__getattr__': self.prevent_module}
+
     def prevent_module(self, **kwargs):
         raise SandboxPreventModule("You cannot import {module_name} from student code.".format(
-            module_name = self.MODULE_NAME
+            module_name=self.MODULE_NAME
         ))
+
 
 class MockPedal(BlockedModule):
     MODULE_NAME = "pedal"
+
 
 class MockPlt(MockModule):
     """
@@ -236,6 +245,7 @@ class MockPlt(MockModule):
     def _generate_patches(self):
         def dummy(**kwargs):
             pass
+
         return dict(hist=self.hist, plot=self.plot,
                     scatter=self.scatter, show=self.show,
                     xlabel=self.xlabel, ylabel=self.ylabel,

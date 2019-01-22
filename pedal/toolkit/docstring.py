@@ -23,6 +23,7 @@ from pockets import modify_iter, UnicodeMixin
 _whitespace_only_re = re.compile('^[ \t]+$', re.MULTILINE)
 _leading_whitespace_re = re.compile('(^[ \t]*)(?:[^ \t\n])', re.MULTILINE)
 
+
 def dedent(text):
     """Remove any common leading whitespace from every line in `text`.
     This can be used to make triple-quoted strings line up with the left
@@ -65,11 +66,12 @@ def dedent(text):
     if 0 and margin:
         for line in text.split("\n"):
             assert not line or line.startswith(margin), \
-                   "line = %r, margin = %r" % (line, margin)
+                "line = %r, margin = %r" % (line, margin)
 
     if margin:
         text = re.sub(r'(?m)^' + margin, '', text)
     return text
+
 
 def _(message, *args):
     """
@@ -77,12 +79,12 @@ def _(message, *args):
     """
     return message
 
+
 if False:
     # For type annotation
     from typing import Any, Dict, List, Tuple, Type, Union  # NOQA
     from sphinx.application import Sphinx  # NOQA
     from sphinx.config import Config as SphinxConfig  # NOQA
-
 
 _directive_regex = re.compile(r'\.\. \S+::')
 _google_section_regex = re.compile(r'^(\s|\w)+:\s*$')
@@ -231,7 +233,7 @@ class GoogleDocstring(UnicodeMixin):
             }  # type: Dict[unicode, Callable]
 
         self._load_custom_sections()
-        
+
         self._initialize_parsed_values()
 
         self._parse()
@@ -247,7 +249,7 @@ class GoogleDocstring(UnicodeMixin):
 
         """
         return u('\n').join(self.lines())
-    
+
     def _initialize_parsed_values(self):
         self.parsed_parameters = []
 
@@ -267,8 +269,8 @@ class GoogleDocstring(UnicodeMixin):
         # type: (int) -> List[unicode]
         lines = []
         line = self._line_iter.peek()
-        while(not self._is_section_break() and
-              (not line or self._is_indented(line, indent))):
+        while (not self._is_section_break() and
+               (not line or self._is_indented(line, indent))):
             lines.append(next(self._line_iter))
             line = self._line_iter.peek()
         return lines
@@ -595,8 +597,8 @@ class GoogleDocstring(UnicodeMixin):
         return (not self._line_iter.has_next() or
                 self._is_section_header() or
                 (self._is_in_section and
-                    line and
-                    not self._is_indented(line, self._section_indent)))
+                 line and
+                 not self._is_indented(line, self._section_indent)))
 
     def _load_custom_sections(self):
         # type: () -> None
@@ -878,7 +880,8 @@ class GoogleDocstring(UnicodeMixin):
             if start > 0 or end + 1 < len(lines):
                 lines = lines[start:end + 1]
         return lines
-        
+
+
 '''
 Taken from:
 https://github.com/sphinx-contrib/napoleon

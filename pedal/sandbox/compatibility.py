@@ -108,6 +108,7 @@ def set_sandbox(sandbox, report=None):
     report['sandbox']['run'] = sandbox
     return sandbox
 
+
 def trace_lines(report=None):
     if report is None:
         report = MAIN_REPORT

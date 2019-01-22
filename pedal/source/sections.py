@@ -24,6 +24,7 @@ def next_section(name="", report=None):
                                "{count}, but there were only {found} sections."
                                ).format(count=int(section / 2), found=found))
 
+
 def count_sections(count, report=None):
     """
     Checks that the right number of sections exist. This is not counting the
@@ -41,7 +42,6 @@ def count_sections(count, report=None):
                       mistake=("Incorrect number of sections in your file. "
                                "Expected {count}, but only found {found}"
                                ).format(count=count, found=found))
-
 
 
 def verify_section(report=None):

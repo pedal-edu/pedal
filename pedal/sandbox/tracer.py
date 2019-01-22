@@ -11,14 +11,17 @@ try:
 except ImportError:
     class Bdb:
         pass
+
+
     class BdbQuit:
         pass
+
 
 class SandboxBasicTracer:
     def __init__(self):
         super().__init__()
         self.filename = "student.py"
-    
+
     def _as_filename(self, filename, code):
         if os.path.isabs(filename):
             self.filename = filename
@@ -26,12 +29,13 @@ class SandboxBasicTracer:
             self.filename = os.path.abspath(filename)
         self.code = code
         return self
-    
+
     def __enter__(self):
         pass
-    
+
     def __exit__(self, exc_type, exc_val, traceback):
         pass
+
 
 class SandboxCoverageTracer(SandboxBasicTracer):
     def __init__(self):
@@ -43,21 +47,23 @@ class SandboxCoverageTracer(SandboxBasicTracer):
         self.pc_covered = None
         self.missing = set()
         self.lines = set()
-        #self.s = sys.stdout
-    
+        # self.s = sys.stdout
+
     def __enter__(self):
         # Force coverage to accept the code
         self.original = coverage.python.get_python_source
+
         def _get_source_correctly(reading_filename):
             print(reading_filename, file=self.s)
             if reading_filename == self.filename:
                 return self.code
             else:
                 return self.original(reading_filename)
+
         coverage.python.get_python_source = _get_source_correctly
         self.coverage = coverage.Coverage()
         self.coverage.start()
-    
+
     def __exit__(self, exc_type, exc_val, traceback):
         self.coverage.stop()
         self.coverage.save()
@@ -66,12 +72,13 @@ class SandboxCoverageTracer(SandboxBasicTracer):
         self.original = None
         # Actually analyze the data, attach some data
         analysis = self.coverage._analyze(self.filename)
-        #print(vars(self.coverage._analyze(self.filename)), file=self.s)
+        # print(vars(self.coverage._analyze(self.filename)), file=self.s)
         self.n_missing = analysis.numbers.n_missing
         self.n_statements = analysis.numbers.n_statements
         self.pc_covered = analysis.numbers.pc_covered
         self.missing = analysis.missing
         self.lines = analysis.statements - analysis.missing
+
 
 class SandboxCallTracer(SandboxBasicTracer, Bdb):
     def __init__(self):
@@ -84,12 +91,12 @@ class SandboxCallTracer(SandboxBasicTracer, Bdb):
         if name not in self.calls:
             self.calls[name] = []
         self.calls[name].append(code)
-    
+
     def __enter__(self):
         self.reset()
         self._old_trace = sys.gettrace()
         sys.settrace(self.trace_dispatch)
-    
+
     def __exit__(self, exc_type, exc_val, traceback):
         sys.settrace(self._old_trace)
         self.quitting = True
