@@ -9,38 +9,38 @@ from pedal.sandbox.exceptions import (SandboxNoMoreInputsException,
                                       SandboxPreventModule)
 
 def _disabled_compile(source, filename, mode, flags=0, dont_inherit=False):
-    '''
+    """
     A version of the built-in `compile` method that fails with a runtime
     error.
-    '''
+    """
     raise RuntimeError("You are not allowed to call 'compile'.")
 
 
 def _disabled_eval(object, globals=globals(), locals=locals()):
-    '''
+    """
     A version of the built-in `eval` method that fails with a runtime
     error.
-    '''
+    """
     raise RuntimeError("You are not allowed to call 'eval'.")
 
 # -------------------------------------------------------------
 
 
 def _disabled_exec(object, globals=globals(), locals=locals()):
-    '''
+    """
     A version of the built-in `exec` method that fails with a runtime
     error.
-    '''
+    """
     raise RuntimeError("You are not allowed to call 'exec'.")
 
 # -------------------------------------------------------------
 
 
 def _disabled_globals():
-    '''
+    """
     A version of the built-in `globals` method that fails with a runtime
     error.
-    '''
+    """
     raise RuntimeError("You are not allowed to call 'globals'.")
 
 
@@ -82,7 +82,7 @@ _original_builtins = {
 
 
 def _make_inputs(*input_list, **kwargs):
-    '''
+    """
     Helper function for creating mock user input.
 
     Params:
@@ -91,7 +91,7 @@ def _make_inputs(*input_list, **kwargs):
         function (str=>str): The mock input function that is returned, which
                              will return the next element of input_list each
                              time it is called.
-    '''
+    """
     if 'repeat' in kwargs:
         repeat = kwargs['repeat']
     else:
@@ -115,10 +115,10 @@ _sys_modules = {}
 
 
 def _override_builtins(namespace, custom_builtins):
-    '''
+    """
     Add the custom builtins to the `namespace` (and the original `__builtins__`)
     suitable for `exec`.
-    '''
+    """
     # Obtain the dictionary of built-in methods, which might not exist in
     # some python versions (e.g., Skulpt)
 
@@ -165,12 +165,12 @@ class MockPedal(BlockedModule):
     MODULE_NAME = "pedal"
 
 class MockPlt(MockModule):
-    '''
+    """
     Mock MatPlotLib library that can be used to capture plot data.
 
     Attributes:
         plots (list of dict): The internal list of plot dictionaries.
-    '''
+    """
 
     def __init__(self):
         super().__init__()

@@ -1,4 +1,4 @@
-'''
+"""
 Python Type Inferencer and Flow Analyzer (TIFA)
 
 TIFA uses a number of simplifications of the Python language.
@@ -67,7 +67,7 @@ Important concepts:
 
     Name Map
         (Path x Fully Qualified Names) => States
-'''
+"""
 
 from pedal.tifa.tifa import Tifa
 from pedal.report import MAIN_REPORT
@@ -83,7 +83,7 @@ OPTIONALS = []
 
 
 def tifa_analysis(python_3=True, report=None):
-    '''
+    """
     Perform the TIFA analysis and attach the results to the Report.
 
     Args:
@@ -91,7 +91,7 @@ def tifa_analysis(python_3=True, report=None):
             2. This has slight nuance on certain AST elements.
         report (:class:`Report`): The Report object to attach results to.
             Defaults to :data:`MAIN_REPORT`.
-    '''
+    """
     if report is None:
         report = MAIN_REPORT
     t = Tifa(python_3=python_3, report=report)

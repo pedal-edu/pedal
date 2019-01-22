@@ -23,7 +23,7 @@ def find_append_in(node):
     return append_list
 
 
-'''
+"""
 def missing_append_in_iteration():
     std_ast = parse_program()
     for_loops = std_ast.find_all("For")
@@ -32,7 +32,7 @@ def missing_append_in_iteration():
             return False
     explain("You must construct a list by appending values one at a time to the list.<br><br><i>(app_in_iter)<i></br>")
     return True
-'''
+"""
 
 
 def missing_append_in_iteration():

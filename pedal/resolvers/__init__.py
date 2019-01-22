@@ -1,4 +1,4 @@
-'''
+"""
 
 Resolver Types
 
@@ -16,4 +16,4 @@ Full
 Full Summary
     Report all feedback but divided into frequencies of labels grouped by tool/category/priority/time.
 
-'''
+"""

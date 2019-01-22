@@ -1064,13 +1064,13 @@ def wrong_append_problem_atl2_10_5():
 
 # ########################10.5 END###############################
 def wrong_debug_10_6():
-    '''
+    """
 
 
 
 
     Returns:
-    '''
+    """
     matches = find_matches('quakes = earthquakes.get("depth","(None)","")\n'
                            'quakes_in_miles = []\n'
                            'for quake in _list1_:\n'

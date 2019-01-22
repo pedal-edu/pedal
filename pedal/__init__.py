@@ -1,6 +1,6 @@
-'''
+"""
 A package for analyzing student code.
-'''
+"""
 
 # Probably want to import useful stuff from:
 #   report

@@ -209,13 +209,13 @@ def unit_test(name, *tests):
         return None
         
 class _LineVisitor(ast.NodeVisitor):
-    '''
+    """
     NodeVisitor subclass that visits every statement of a program and tracks
     their line numbers in a list.
     
     Attributes:
         lines (list[int]): The list of lines that were visited.
-    '''
+    """
 
     def __init__(self):
         self.lines = []
@@ -251,7 +251,7 @@ class _LineVisitor(ast.NodeVisitor):
     visit_Break  = _track_lines
     
 def check_coverage(report=None):
-    '''
+    """
     Checks that all the statements in the program have been executed.
     This function only works when a tracer_style has been set in the sandbox,
     or you are using an environment that automatically traces calls (e.g.,
@@ -267,7 +267,7 @@ def check_coverage(report=None):
             If there were fewer lines traced in execution than are found in
             the AST, then the set of unexecuted lines are returned. Otherwise,
             False is returned.
-    '''
+    """
     if report is None:
         report = MAIN_REPORT
     if not report['source']['success']:

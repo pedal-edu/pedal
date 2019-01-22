@@ -13,6 +13,7 @@ class AstSymbol:
         id (str): the name of the variable place holder used by the instructor
         ast_node (cait_node): the ast node of the variable
     """
+
     def __init__(self, _id="", _node=None):
         self.id = _id
         self.astNode = _node
@@ -34,6 +35,7 @@ class AstSymbolList:
     This class is a wrapper for a list of AstSymbols for ease of access
     If accessed as a list, manipulable as a list, otherwise, acts as the first AstSymbol in the list
     """
+
     def __init__(self):
         self.my_list = []
 

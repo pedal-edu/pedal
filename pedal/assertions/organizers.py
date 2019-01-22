@@ -1,10 +1,10 @@
-
 def contextualize_calls():
     pass
 
 
 def try_all():
     pass
+
 
 class _finish_section:
     def __init__(self, number, *functions):
@@ -40,6 +40,7 @@ def finish_section(number, *functions, next_section=False):
         if next_section:
             print("\tNEXT SECTION")
         return result
+
 
 def section(number):
     '''
