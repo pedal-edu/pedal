@@ -72,6 +72,10 @@ class SandboxCoverageTracer(SandboxBasicTracer):
         self.pc_covered = analysis.numbers.pc_covered
         self.missing = analysis.missing
         self.lines = analysis.statements - analysis.missing
+    
+    @property
+    def percent_covered(self):
+        return self.pc_covered
 
 class SandboxCallTracer(SandboxBasicTracer, Bdb):
     def __init__(self):

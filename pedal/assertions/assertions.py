@@ -1,8 +1,16 @@
+from pedal.report.imperative import MAIN_REPORT
 import string
 import re
 
 punctuation_table = str.maketrans(string.punctuation, ' ' * len(string.punctuation))
 
+def _setup_assertions(report=None):
+    if report is None:
+        report = MAIN_REPORT
+    if 'assertions' not in report:
+        report['assertions'] = {
+            'mode': 'stop'
+        }
 
 def _normalize_string(a_string, numeric_endings=False):
     # Lower case

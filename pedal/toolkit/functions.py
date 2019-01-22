@@ -283,3 +283,17 @@ def check_coverage(report=None):
         return lines_in_code - lines_executed
     else:
         return False
+
+def ensure_coverage(percentage, destructive=False, report=None):
+    '''
+    Note that this avoids destroying the current sandbox instance stored on the
+    report, if there is one present.
+    
+    Args:
+        destructive (bool): Whether or not to remove the sandbox.
+    '''
+    if report is None:
+        report = MAIN_REPORT
+    student = run(tracer_style='coverage')
+    if student.trace.percent_covered <= .5:
+        explain("Your code coverage is not adequate. You must cover at least half your code to receive feedback.")
