@@ -102,6 +102,19 @@ class TestAssertions(unittest.TestCase):
         with Execution(dedent('''
             def make_colors():
                 return ["purple", "orange", "muave"]
+        ''')) as e:
+            @section(1)
+            def part1():
+                assertNotIn('purple', e.student.call('make_colors'))
+        self.assertEqual(e.feedback, dedent("""
+        Instructor Test<br>Student code failed instructor test.<br>
+        I ran:<pre>make_colors()</pre>
+        The result was:<pre>['purple', 'orange', 'muave']</pre>
+        But I expected the result to not contain:<pre>'purple'</pre>""").lstrip())
+        
+        with Execution(dedent('''
+            def make_colors():
+                return ["purple", "orange", "muave"]
             def make_color():
                 return 'blue'
         ''')) as e:
@@ -118,6 +131,24 @@ class TestAssertions(unittest.TestCase):
         But I expected <code>color</code> to be in <code>colors</code>""").lstrip())
         
         with Execution(dedent('''
+            def make_colors():
+                return ["purple", "orange", "muave"]
+            def make_color():
+                return 'blue'
+        ''')) as e:
+            @section(1)
+            def part1():
+                assertIn(e.student.call('make_color'),
+                         e.student.call('make_colors'))
+        self.assertEqual(e.feedback, dedent("""
+        Instructor Test<br>Student code failed instructor test.<br>
+        I ran:<pre>make_color()
+        make_colors()</pre>
+        The first result was:<pre>'blue'</pre>
+        The second result was:<pre>['purple', 'orange', 'muave']</pre>
+        But I expected the first result to be in the second result""").lstrip())
+        
+        with Execution(dedent('''
             def make_color():
                 return 0
         ''')) as e:
@@ -130,24 +161,21 @@ class TestAssertions(unittest.TestCase):
         The result was false:<pre>0</pre>
         But I expected the result to be true""").lstrip())
         
-    @unittest.skip
-    # TODO: Make this work
-    def test_sandbox_assertions_flipped(self):
         with Execution(dedent('''
-            def add(a, b, c):
-                return a + b - c
+            def add_from_input(val2):
+                val1 = input("Give me a number:")
+                return int(val1) - val2
+            add_from_input
         ''')) as e:
             @section(1)
             def part1():
-                assertEqual(10, e.student.call('add', 1, 6, 3))
+                assertEqual(e.student.call('add_from_input', 4, inputs="6"), 10)
         self.assertEqual(e.feedback, dedent("""
         Instructor Test<br>Student code failed instructor test.<br>
-        I ran:<br>
-        <pre>add(1, 6, 3)</pre>
-        The result was equal to:
-        <pre>4</pre>
-        But I expected the result to be equal to:
-        <pre>10</pre>""").lstrip())
+        I ran:<pre>add_from_input(4)</pre>
+        I entered as input:<pre>6</pre>
+        The result was:<pre>2</pre>
+        But I expected the result to be equal to:<pre>10</pre>""").lstrip())
         
         # Test {} in output or context
 

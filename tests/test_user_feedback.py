@@ -23,7 +23,7 @@ class TestFeedback(unittest.TestCase):
         self.assertEqual(e.feedback, "Complete<br>Great work!")
 
     def test_runtime(self):
-        with Execution('0+"A"') as e:
+        with Execution('0+"A"', old_style_messages=True) as e:
             suppress("analyzer")
         self.assertEqual(e.feedback, "TypeError<br><pre>unsupported operand "
                                      "type(s) for +: 'int' and 'str'</pre>\n"

@@ -12,7 +12,7 @@ def _check_sandbox(report):
     return report['sandbox']['run']
 
 
-def run_student(raise_exceptions=False, report=None):
+def run_student(raise_exceptions=False, report=None, old_style_messages=False):
     if report is None:
         report = MAIN_REPORT
     sandbox = _check_sandbox(report)
@@ -20,7 +20,8 @@ def run_student(raise_exceptions=False, report=None):
     sandbox.run(source_code, report_exceptions=not raise_exceptions)
     if raise_exceptions:
         raise_exception(sandbox.exception, sandbox.exception_position,
-                        report=report)
+                        report=report, message=None if old_style_messages else 
+                                               sandbox.exception_formatted)
     return sandbox.exception
 
 
@@ -73,14 +74,15 @@ def get_sandbox(report=None):
     return sandbox
 
 
-def raise_exception(exception, position=None, report=None):
+def raise_exception(exception, position=None, report=None, message=None):
     if report is None:
         report = MAIN_REPORT
     sandbox = _check_sandbox(report)
     if exception is None:
         return
     extended = EXTENDED_ERROR_EXPLANATION.get(exception.__class__, "")
-    message = "<pre>{}</pre>\n{}".format(str(exception), extended)
+    if message is None:
+        message = "<pre>{}</pre>\n{}".format(exception, extended)
     # Skulpt compatible name lookup
     name = str(exception.__class__)[8:-2]
     report.attach(name, category='Runtime', tool='Sandbox',

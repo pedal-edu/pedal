@@ -69,7 +69,7 @@ def _add_context_to_error(e, message):
     elif e.args:
         e.args = tuple([e.args[0] + message])
     return e
-
+x=sys.stdout
 class SandboxTraceback:
     """
     Class for reformatting tracebacks to have more pertinent information.

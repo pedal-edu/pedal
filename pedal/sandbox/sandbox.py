@@ -179,6 +179,7 @@ class Sandbox(DataSandbox):
         # Exception
         self.exception = initial_exception
         self.exception_position = None
+        self.exception_formatted = None
         self.report_exceptions_mode = False
         # Input
         self.inputs = None
@@ -442,6 +443,8 @@ class Sandbox(DataSandbox):
                                            sandbox=self)
             return self._
         else:
+            # TODO: Might need to wrap this in case the student was supposed
+            # to return an exception - weird circumstance though
             return self.exception
 
     def make_safe_variable(self, name):
@@ -567,6 +570,8 @@ class Sandbox(DataSandbox):
                 inputs = self.inputs
         elif isinstance(inputs, (tuple, list)):
             inputs = mocked._make_inputs(*inputs)
+        elif isinstance(inputs, str):
+            inputs = mocked._make_inputs(inputs)
         inputs = self._track_inputs(inputs)
         # Override builtins and mock stuff out
         mocked._override_builtins(self.data, {
@@ -583,6 +588,7 @@ class Sandbox(DataSandbox):
 
         self.exception = None
         self.exception_position = None
+        self.exception_formatted = None
 
         # Patch in dangerous built-ins
         capture_stdout = io.StringIO()

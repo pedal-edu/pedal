@@ -1,5 +1,6 @@
 from pedal.report.imperative import MAIN_REPORT
 from pedal.sandbox.result import SandboxResult
+from pedal.sandbox.exceptions import SandboxException
 import string
 import re
 
@@ -154,6 +155,10 @@ def _basic_assertion(left, right, operator, code_comparison_message,
     # TODO: Handle right-side sandbox result
     #if is_sandbox_result(right):
     #    right = right._actual_value
+    if isinstance(left, Exception):
+        return False
+    if isinstance(right, Exception):
+        return False
     if not operator(left, right):
         failure = _fail(code_comparison_message, hc_message, hc_message_past,
                         show_expected_value, left, right)
@@ -232,8 +237,17 @@ def assertIn(needle, haystack, score=None, message=None, report=None,
                             message, report, contextualize)
 
 
-def assertNotIn(needle, haystack):
-    pass
+def assertNotIn(needle, haystack, score=None, message=None, report=None,
+                contextualize=True):
+    expected_message = "to not be in"
+    if not is_sandbox_result(needle) and is_sandbox_result(haystack):
+        expected_message = "to not contain"
+    return _basic_assertion(needle, haystack,
+                            lambda n, h: n not in h,
+                            "{} in {}",
+                            "was"+PRE_VAL,
+                            expected_message,
+                            message, report, contextualize)
 
 
 def assertIsInstance(value, types):
