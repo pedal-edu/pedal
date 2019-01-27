@@ -602,6 +602,30 @@ class TestSignatures(unittest.TestCase):
                 garbage="dict[pair[int, int], str], list[int, tuple[str, bool], or bool], or bool or int",
                 returns="bool"
             ), ([], True))
+        bad_code = dedent("""
+            def haha_what(something, another):
+                '''
+                I don't even know man.
+                
+                It's got some stuff in it.
+                
+                OH NO I INDENTED.
+                
+                arguments:
+                    something (int or str): This was a things
+                        and now it's also indented.
+                    another (banana): A cephalopod
+                return:
+                    int: Something
+                    bool: Or else
+                '''
+        """)
+        with Execution(bad_code) as e:
+            self.assertEqual(function_signature(
+                "haha_what",
+                something="int or str", another="banana",
+                returns="bool or int"
+            ), ([], True))
 
 
 if __name__ == '__main__':

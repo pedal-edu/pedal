@@ -135,52 +135,40 @@ def _parse_tokens(tokens):
     tokens = list(reversed(list(tokens)))
     while tokens:
         current = tokens.pop()
-        # print("\tCurrently:", result_stack)
-        # print("\tChecking:", current, end="")
-        # Ending a square bracket, better stop here.
         # Ending a parenthetical, better stop here.
         if current == ")":
             subexpression = result_stack.pop()
             result_stack[-1].append(subexpression)
-            # print("- Ending a )")
+        # Ending a square bracket, better stop here.
         elif current == "]":
             subexpression = result_stack.pop()
             result_stack[-1].append(subexpression)
-            # print("- Ending a ]")
         # We've reached the last token!
         elif not tokens:
             # And had no tokens before this one
             # Return the set of tokens
             result_stack[-1].append(_normalize_identifier(current))
-            # print("- End of the line!")
         # Starting a parentheized expression
         elif current == "(":
             result_stack.append(Stack())
-            # print("- Starting a (")
         # Nullary function
         elif current == "->":
             result_stack[-1].append(Stack("callable"))
-            # print("- Nullary expression")
-        elif current in ("or", ","):
-            pass  # print("- Lonely or")
+        elif current in ("or", ",", ":"):
+            pass
         else:
             next = tokens.pop()
             # X or ...
-            # print("^^", current, next, "^^")
             if current == "," and next == "or":
                 tokens.append(next)
-                # print("- Double Operator:", next)
-            if next in ("or", ",", "->"):
+            if next in ("or", ",", "->", ":"):
                 result_stack[-1].append(_normalize_identifier(current))
-                # print("- Operator:", next, _normalize_identifier(current))
             # X [ ...
             elif next == "[":
                 result_stack.append(Stack(_normalize_identifier(current)))
-                # print("- Starting:", next, _normalize_identifier(current))
             else:
                 tokens.append(next)
                 result_stack[-1].append(_normalize_identifier(current))
-                # print("- Just", _normalize_identifier(current))
     return result_stack.pop()
 
 
@@ -223,7 +211,72 @@ def type_check(left, right):
     left = normalize_type(left)
     right = normalize_type(right)
     return check_piece(left, right)
-
+    
+def find_colon(str):
+    parens_stack = []
+    for i, character in enumerate(str):
+        if character in '[(':
+            parens_stack.append(character)
+        elif character in '])':
+            parens_stack.pop()
+        elif character == ':' and not parens_stack:
+            return i
+    return 0
+    
+ARGS = ('args:', 'arg:', 'argument:', 'arguments:',
+        'parameters:', 'params:', 'parameter:', 'param:')
+ARG_PATTERN = r'(.+)\s*\((.+)\)\s*:(.+)'
+RETURNS = ('returns:', 'return:')
+def parse_docstring(doc):
+    # First line's indentation may be different from rest - trust first
+    # non empty line after the first one.
+    # Remove taht number of spaces from subsequent lines
+    # If Line is "Args:" or other special...
+    # 
+    lines = doc.split("\n")
+    body = [lines[0]]
+    args = {}
+    current_arg = None
+    returns = []
+    current_component = 'body'
+    indentation = None
+    inner_indentation = None
+    for line in lines[1:]:
+        # Blank line, not interesting!
+        if not line.strip():
+            continue
+        # Get the actual text
+        if indentation is None:
+            indentation = len(line) - len(line.lstrip())
+        line = line[indentation:]
+        potential_command = line.lower().strip()
+        # New command region?
+        if potential_command in ARGS:
+            current_component = 'args'
+            inner_indentation = None
+            continue
+        elif potential_command in RETURNS:
+            current_component = 'returns'
+            inner_indentation = None
+            continue
+        # Okay, it's content - let's process it
+        if current_component == 'body':
+            body.append(line)
+        else:
+            if inner_indentation is None:
+                inner_indentation = len(line) - len(line.lstrip())
+            line = line[inner_indentation:]
+            # Skip indented lines
+            if not re.match(r'\s', line):
+                if current_component == 'args':
+                    match = re.search(ARG_PATTERN, line)
+                    current_arg, type_str, comment = match.group(0, 1, 2)
+                    args[current_arg] = type_str
+                elif current_component == 'returns':
+                    position = find_colon(line)
+                    return_type, comment = line[:position], line[position:]
+                    returns.append(return_type)
+    return body, args, ' or '.join(returns)
 
 def function_signature(function_name, returns=None, yields=None,
                        prints=None, raises=None, report=None, root=None,
@@ -252,6 +305,7 @@ def function_signature(function_name, returns=None, yields=None,
     if docstring is None:
         return False
 
+    '''
     class Config:
         napoleon_use_param = True
         napoleon_use_rtype = True
@@ -259,16 +313,20 @@ def function_signature(function_name, returns=None, yields=None,
 
     docstring = dedent(docstring)
     docstring = GoogleDocstring(docstring, Config(), what='function', name=function_name)
+    '''
+    try:
+        body, args, parsed_returns = parse_docstring(docstring)
+    except Exception as e:
+        return [e], False
     failing_parameters = []
-    for name, type, description in docstring.parsed_parameters:
+    for name, type in args.items():
         if name in kwargs:
             if not type_check(type, kwargs[name]):
                 failing_parameters.append(name)
-    if returns is None and not docstring.parsed_returns:
+    if returns is None and not returns:
         return failing_parameters, True
-    elif returns is not None and docstring.parsed_returns:
-        _, return_type, _ = docstring.parsed_returns[0]
-        return failing_parameters, type_check(return_type, returns)
+    elif returns is not None and returns:
+        return failing_parameters, type_check(parsed_returns, returns)
     else:
         return failing_parameters, False
 
