@@ -3,8 +3,6 @@ import re
 from pedal.cait.cait_api import parse_program
 from pedal.report.imperative import gently, explain
 
-from pedal.toolkit.docstring import GoogleDocstring, dedent
-
 """
 Verify indentation
 
