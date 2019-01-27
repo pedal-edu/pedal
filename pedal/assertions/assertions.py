@@ -71,37 +71,72 @@ class AssertionException(Exception):
 
 # Unittest Asserts
 DELTA = .001
-def _fail(code_message, hc_message, hc_message_past, *values):
-    contextualized_values = []
+def _fail(code_message, actual_message, expected_message, show_expected_value,
+          *values):
+    normal_values = []
+    sandboxed_values = []
+    sandboxed_results = []
     for value in values:
         if is_sandbox_result(value):
-            value, code_message = _build_context(value, hc_message, hc_message_past)
+            sandboxed_results.append(value)
+            value = value._actual_value
+            sandboxed_values.append(safe_repr(value))
         else:
-            value = safe_repr(value)
-        contextualized_values.append(value)
-    return AssertionException(code_message.format(*values))
+            normal_values.append(safe_repr(value))
+    if sandboxed_results:
+        code_message = _build_context(sandboxed_results, actual_message, expected_message,
+                                      show_expected_value)
+    return AssertionException(code_message.format(*sandboxed_values, *normal_values))
+
+def _build_result_from_target(target, index, quantity):
+    if target == "_":
+        if quantity == 1:
+            return "the result"
+        elif index == 0:
+            return "the first result"
+        else:
+            return "the second result"
+    return "<code>"+target+"</code>"
     
-def _build_context(result, hc_message, hc_message_past):
-    left = result._actual_value
-    left_call_id = result._actual_call_id
-    left_sandbox = result._actual_sandbox
-    outputs = left_sandbox.output_contexts[left_call_id]
-    calls = left_sandbox.call_contexts[left_call_id]
-    inputs = left_sandbox.input_contexts[left_call_id]
-    context = ""
+def _build_context(sandboxed_results, actual_message, expected_message,
+                   show_expected_value):
+    context = []
+    calls = []
+    inputs = []
+    outputs = []
+    targets = []
+    for result in sandboxed_results:
+        # Look up info
+        call_id = result._actual_call_id
+        sandbox = result._actual_sandbox
+        outputs.extend(sandbox.output_contexts[call_id])
+        calls.extend(sandbox.call_contexts[call_id])
+        inputs.extend(sandbox.input_contexts[call_id])
+        targets.append(sandbox.target_contexts[call_id])
+    # Actual rendering of text
     if calls:
-        context += "I ran:<br>\n"
-        context += '<br>\n'.join('<pre>{}</pre>'.format(call) for call in calls)
-        context += "\n"
+        context.append("I ran:<pre>"+ "\n".join(map(str, calls))+ "</pre>")
     if inputs:
-        context += "I entered as input:<br>\n"
-        context += '<br>\n'.join('<pre>{}</pre>'.format(i) for i in inputs)
-        context += "\n"
-    context += "The result "+hc_message_past+":\n"
-    context += "<pre>{}</pre>\n"
-    context += "But I expected the result "+hc_message+":\n"
-    context += "<pre>{}</pre>"
-    return left, context
+        context.append("I entered as input:<pre>"+ "\n".join(map(str, inputs))+ "</pre>")
+    actual_message += ":<pre>{}</pre>"
+    for i, target in enumerate(targets):
+        named_target = _build_result_from_target(target, i, len(targets))
+        if target == '_':
+            context.append(named_target.capitalize() + " "+actual_message)
+        else:
+            context.append("The value of "+named_target+" "+actual_message)
+    expected_context = "But I expected "
+    if len(targets) == 2:
+        expected_context += _build_result_from_target(targets[0], 0, 2)
+        expected_context += " " +expected_message + " "
+        expected_context += _build_result_from_target(targets[1], 1, 2)
+    else:
+        expected_context += _build_result_from_target(targets[0], 0, 1)
+        expected_context += " " + expected_message
+        if show_expected_value:
+            expected_context += ":<pre>{}</pre>"
+    context.append(expected_context)
+    return "\n".join(context)
 
 def is_sandbox_result(value):
     if hasattr(value, "__actual_class__"):
@@ -110,7 +145,8 @@ def is_sandbox_result(value):
     return False
     
 def _basic_assertion(left, right, operator, code_comparison_message,
-                     hc_message, hc_message_past, message, report, contextualize):
+                     hc_message, hc_message_past, message, report, contextualize,
+                     show_expected_value=True):
     if report is None:
         report = MAIN_REPORT
     _setup_assertions(report)
@@ -119,7 +155,8 @@ def _basic_assertion(left, right, operator, code_comparison_message,
     #if is_sandbox_result(right):
     #    right = right._actual_value
     if not operator(left, right):
-        failure = _fail(code_comparison_message, hc_message, hc_message_past, left, right)
+        failure = _fail(code_comparison_message, hc_message, hc_message_past,
+                        show_expected_value, left, right)
         report['assertions']['collected'].append(failure)
         report.attach('Instructor Test', category='Instructor', tool='Assertions',
                       mistake={'message': "Student code failed instructor test.<br>\n"+
@@ -129,14 +166,16 @@ def _basic_assertion(left, right, operator, code_comparison_message,
         else:
             return False
     return True
+    
+PRE_VAL = ""
 
 def assertEqual(left, right, score=None, message=None, report=None,
                 contextualize=True):
     return _basic_assertion(left, right,
                             lambda l, r: equality_test(l, r, True, DELTA, False),
                             "{} != {}",
+                            "was"+PRE_VAL,
                             "to be equal to",
-                            "was equal to",
                             message, report, contextualize)
     
     
@@ -146,16 +185,18 @@ assert_equal = assertEqual
 
 
 def assertNotEqual(left, right, score=None, message=None):
-    if isinstance(left, SandboxResult):
-        left = left._actual_value
-    if isinstance(right, SandboxResult):
-        right = right._actual_value
-    if not equality_test(left, right, True, DELTA, False):
-        _fail("{} == {}", left, right)
-
-
-def assertTrue(something, score=None, message=None):
     pass
+
+
+def assertTrue(something, score=None, message=None, report=None,
+                contextualize=True):
+    return _basic_assertion(something, True,
+                            lambda l, r: bool(l),
+                            "{} is true",
+                            "was false"+PRE_VAL,
+                            "to be true",
+                            message, report, contextualize,
+                            show_expected_value=False)
 
 
 def assertFalse(something, score=None, message=None):
@@ -178,8 +219,17 @@ def assertIsNotNone(something):
     pass
 
 
-def assertIn(needle, haystack):
-    pass
+def assertIn(needle, haystack, score=None, message=None, report=None,
+                contextualize=True):
+    expected_message = "to be in"
+    if not is_sandbox_result(needle) and is_sandbox_result(haystack):
+        expected_message = "to contain"
+    return _basic_assertion(needle, haystack,
+                            lambda n, h: n in h,
+                            "{} not in {}",
+                            "was"+PRE_VAL,
+                            expected_message,
+                            message, report, contextualize)
 
 
 def assertNotIn(needle, haystack):

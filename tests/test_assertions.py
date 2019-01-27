@@ -38,13 +38,100 @@ class TestAssertions(unittest.TestCase):
                 assertEqual(e.student.call('add', 1, 6, 3), 10)
         self.assertEqual(e.feedback, dedent("""
         Instructor Test<br>Student code failed instructor test.<br>
-        I ran:<br>
-        <pre>add(1, 6, 3)</pre>
-        The result was equal to:
-        <pre>4</pre>
-        But I expected the result to be equal to:
-        <pre>10</pre>""").lstrip())
+        I ran:<pre>add(1, 6, 3)</pre>
+        The result was:<pre>4</pre>
+        But I expected the result to be equal to:<pre>10</pre>""").lstrip())
         
+        with Execution(dedent('''
+            def add(a, b, c):
+                return a + b - c
+        ''')) as e:
+            @section(1)
+            def part2():
+                assertEqual(10, e.student.call('add', 1, 6, 3))
+        self.assertEqual(e.feedback, dedent("""
+        Instructor Test<br>Student code failed instructor test.<br>
+        I ran:<pre>add(1, 6, 3)</pre>
+        The result was:<pre>4</pre>
+        But I expected the result to be equal to:<pre>10</pre>""").lstrip())
+        
+        with Execution(dedent('''
+            def add(a, b, c):
+                return a + b - c
+            def expected_answer():
+                return 10
+        ''')) as e:
+            @section(1)
+            def part3():
+                assertEqual(e.student.call('expected_answer', target='expect'),
+                            e.student.call('add', 1, 6, 3, target='actual'))
+        self.assertEqual(e.feedback, dedent("""
+        Instructor Test<br>Student code failed instructor test.<br>
+        I ran:<pre>expect = expected_answer()
+        actual = add(1, 6, 3)</pre>
+        The value of <code>expect</code> was:<pre>10</pre>
+        The value of <code>actual</code> was:<pre>4</pre>
+        But I expected <code>expect</code> to be equal to <code>actual</code>""").lstrip())
+        
+        with Execution(dedent('''
+            def make_color():
+                return "purple"
+        ''')) as e:
+            @section(1)
+            def part4():
+                assertIn(e.student.call('make_color'), ('red', 'blue', 'green'))
+        self.assertEqual(e.feedback, dedent("""
+        Instructor Test<br>Student code failed instructor test.<br>
+        I ran:<pre>make_color()</pre>
+        The result was:<pre>'purple'</pre>
+        But I expected the result to be in:<pre>('red', 'blue', 'green')</pre>""").lstrip())
+        
+        with Execution(dedent('''
+            def make_colors():
+                return ["purple", "orange", "muave"]
+        ''')) as e:
+            @section(1)
+            def part1():
+                assertIn('blue', e.student.call('make_colors'))
+        self.assertEqual(e.feedback, dedent("""
+        Instructor Test<br>Student code failed instructor test.<br>
+        I ran:<pre>make_colors()</pre>
+        The result was:<pre>['purple', 'orange', 'muave']</pre>
+        But I expected the result to contain:<pre>'blue'</pre>""").lstrip())
+        
+        with Execution(dedent('''
+            def make_colors():
+                return ["purple", "orange", "muave"]
+            def make_color():
+                return 'blue'
+        ''')) as e:
+            @section(1)
+            def part1():
+                assertIn(e.student.call('make_color', target="color"),
+                         e.student.call('make_colors', target="colors"))
+        self.assertEqual(e.feedback, dedent("""
+        Instructor Test<br>Student code failed instructor test.<br>
+        I ran:<pre>color = make_color()
+        colors = make_colors()</pre>
+        The value of <code>color</code> was:<pre>'blue'</pre>
+        The value of <code>colors</code> was:<pre>['purple', 'orange', 'muave']</pre>
+        But I expected <code>color</code> to be in <code>colors</code>""").lstrip())
+        
+        with Execution(dedent('''
+            def make_color():
+                return 0
+        ''')) as e:
+            @section(1)
+            def part1():
+                assertTrue(e.student.call('make_color'))
+        self.assertEqual(e.feedback, dedent("""
+        Instructor Test<br>Student code failed instructor test.<br>
+        I ran:<pre>make_color()</pre>
+        The result was false:<pre>0</pre>
+        But I expected the result to be true""").lstrip())
+        
+    @unittest.skip
+    # TODO: Make this work
     def test_sandbox_assertions_flipped(self):
         with Execution(dedent('''
             def add(a, b, c):

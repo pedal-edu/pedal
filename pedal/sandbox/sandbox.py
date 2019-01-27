@@ -165,6 +165,7 @@ class Sandbox(DataSandbox):
 
         # Context
         self.call_id = 0
+        self.target_contexts = {self.call_id: []}
         self.call_contexts = {self.call_id: []}
         self.input_contexts = {self.call_id: []}
         self.context = context
@@ -418,6 +419,7 @@ class Sandbox(DataSandbox):
         report_exceptions = kwargs.pop('report_exceptions', self.report_exceptions_mode)
         # Create the actual arguments and call
         self.call_id += 1
+        self.target_contexts[self.call_id] = target
         self.output_contexts[self.call_id] = []
         self.call_contexts[self.call_id] = []
         self.input_contexts[self.call_id] = []
