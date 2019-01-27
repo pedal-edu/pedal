@@ -1,16 +1,22 @@
 from pedal.report.imperative import MAIN_REPORT
+from pedal.sandbox.result import SandboxResult
 import string
 import re
 
-punctuation_table = str.maketrans(string.punctuation, ' ' * len(string.punctuation))
+from pedal.assertions.setup import _setup_assertions
 
-def _setup_assertions(report=None):
-    if report is None:
-        report = MAIN_REPORT
-    if 'assertions' not in report:
-        report['assertions'] = {
-            'mode': 'stop'
-        }
+_MAX_LENGTH = 80
+
+def safe_repr(obj, short=False):
+    try:
+        result = repr(obj)
+    except Exception:
+        result = object.__repr__(obj)
+    if not short or len(result) < _MAX_LENGTH:
+        return result
+    return result[:_MAX_LENGTH] + ' [truncated]...'
+
+punctuation_table = str.maketrans(string.punctuation, ' ' * len(string.punctuation))
 
 def _normalize_string(a_string, numeric_endings=False):
     # Lower case
@@ -52,15 +58,45 @@ def equality_test(actual, expected, _exact_strings, _delta, _test_output):
              [_normalize_string(line) for line in actual])
     )
 
+class AssertionException(Exception):
+    pass
 
 # Unittest Asserts
+DELTA = .001
+def _fail(message, *parameters):
+    parameters = [safe_repr(p) for p in parameters]
+    return AssertionException(message.format(*parameters))
 
-def assertEqual(left, right, score=None, message=None):
-    pass
+def assertEqual(left, right, score=None, message=None, report=None):
+    if report is None:
+        report = MAIN_REPORT
+    _setup_assertions(report)
+    if isinstance(left, SandboxResult):
+        left = left._actual_value
+    if isinstance(right, SandboxResult):
+        right = right._actual_value
+    if not equality_test(left, right, True, DELTA, False):
+        failure = _fail("{} != {}", left, right)
+        report['assertions']['collected'].append(failure)
+        report.attach('Instructor Test', category='Instructor', tool='Assertions',
+                      mistake={'message': str(failure)})
+        if report['assertions']['exceptions']:
+            raise failure
+        else:
+            return False
+    return True
+
+    
+assert_equal = assertEqual
 
 
 def assertNotEqual(left, right, score=None, message=None):
-    pass
+    if isinstance(left, SandboxResult):
+        left = left._actual_value
+    if isinstance(right, SandboxResult):
+        right = right._actual_value
+    if not equality_test(left, right, True, DELTA, False):
+        _fail("{} == {}", left, right)
 
 
 def assertTrue(something, score=None, message=None):
