@@ -175,9 +175,9 @@ def _basic_assertion(left, right, operator, code_comparison_message,
 PRE_VAL = ""
 
 def assertEqual(left, right, score=None, message=None, report=None,
-                contextualize=True):
+                contextualize=True, exact=False):
     return _basic_assertion(left, right,
-                            lambda l, r: equality_test(l, r, True, DELTA, False),
+                            lambda l, r: equality_test(l, r, False, DELTA, False),
                             "{} != {}",
                             "was"+PRE_VAL,
                             "to be equal to",

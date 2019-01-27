@@ -57,6 +57,22 @@ class TestAssertions(unittest.TestCase):
         
         with Execution(dedent('''
             def add(a, b, c):
+                if a < 0:
+                    return -1
+                return a + b + c
+        ''')) as e:
+            @section(1)
+            def part2():
+                assertEqual(10, e.student.call('add', 1, 6, 3))
+                assertEqual(8, e.student.call('add', -1, 6, 3))
+        self.assertEqual(e.feedback, dedent("""
+        Instructor Test<br>Student code failed instructor test.<br>
+        I ran:<pre>add(-1, 6, 3)</pre>
+        The result was:<pre>-1</pre>
+        But I expected the result to be equal to:<pre>8</pre>""").lstrip())
+        
+        with Execution(dedent('''
+            def add(a, b, c):
                 return a + b - c
             def expected_answer():
                 return 10
@@ -176,6 +192,22 @@ class TestAssertions(unittest.TestCase):
         I entered as input:<pre>6</pre>
         The result was:<pre>2</pre>
         But I expected the result to be equal to:<pre>10</pre>""").lstrip())
+        
+        with Execution(dedent('''
+            def make_brackets():
+                return "{}"
+        ''')) as e:
+            @section(1)
+            def part1():
+                assertEqual(e.student.call('make_brackets'), "[]",
+                            exact=True)
+        self.assertEqual(e.feedback, dedent("""
+        Instructor Test<br>Student code failed instructor test.<br>
+        I ran:<pre>make_brackets()</pre>
+        The result was:<pre>'{}'</pre>
+        But I expected the result to be equal to:<pre>'[]'</pre>""").lstrip())
+        
+        
         
         # Test {} in output or context
 
