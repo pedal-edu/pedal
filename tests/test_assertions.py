@@ -45,6 +45,23 @@ class TestAssertions(unittest.TestCase):
         But I expected the result to be equal to:
         <pre>10</pre>""").lstrip())
         
+    def test_sandbox_assertions_flipped(self):
+        with Execution(dedent('''
+            def add(a, b, c):
+                return a + b - c
+        ''')) as e:
+            @section(1)
+            def part1():
+                assertEqual(10, e.student.call('add', 1, 6, 3))
+        self.assertEqual(e.feedback, dedent("""
+        Instructor Test<br>Student code failed instructor test.<br>
+        I ran:<br>
+        <pre>add(1, 6, 3)</pre>
+        The result was equal to:
+        <pre>4</pre>
+        But I expected the result to be equal to:
+        <pre>10</pre>""").lstrip())
+        
         # Test {} in output or context
 
 if __name__ == '__main__':
