@@ -15,7 +15,7 @@ class Execution:
         clear_report()
         set_source(self.code)
         tifa_analysis()
-        compatibility._check_sandbox(MAIN_REPORT)
+        self.student = compatibility._check_sandbox(MAIN_REPORT)
         MAIN_REPORT['sandbox']['run'].tracer_style = self.tracer_style
         compatibility.run_student(raise_exceptions=True)
         return self

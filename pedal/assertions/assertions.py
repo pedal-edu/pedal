@@ -38,53 +38,108 @@ def _normalize_string(a_string, numeric_endings=False):
 
 
 def equality_test(actual, expected, _exact_strings, _delta, _test_output):
-    return (  # Float comparison
-            (isinstance(expected, float) and
-             isinstance(actual, (float, int)) and
-             abs(actual - expected) < _delta) or
-            # Exact Comparison
-            actual == expected or
-            # Inexact string comparison
-            (_exact_strings and isinstance(expected, str) and
-             isinstance(actual, str) and
-             _normalize_string(actual) == _normalize_string(expected)) or
-            # Inexact output comparison
-            (_test_output and isinstance(expected, str) and
-             _normalize_string(expected) in [_normalize_string(line)
-                                             for line in actual]) or
-            # Exact output comparison
-            (_test_output and isinstance(expected, list) and
-             [_normalize_string(line) for line in expected] ==
-             [_normalize_string(line) for line in actual])
-    )
+    # Float comparison
+    if (isinstance(expected, float) and
+        isinstance(actual, (float, int)) and
+        abs(actual - expected) < _delta):
+        return True
+    # Exact Comparison
+    if actual == expected:
+        return True
+    # Inexact string comparison
+    if (_exact_strings and isinstance(expected, str) and
+        isinstance(actual, str) and
+        _normalize_string(actual) == _normalize_string(expected)):
+        return True
+    # Output comparison
+    if _test_output:
+        # Inexact output comparison
+        normalized_actual = [_normalize_string(line) for line in actual]
+        if (isinstance(expected, str) and
+            _normalize_string(expected) in normalized_actual):
+            return True
+        # Exact output comparison
+        normalized_expected = [_normalize_string(line) for line in expected]
+        if (isinstance(expected, list) and
+            normalized_expected == normalized_actual):
+            return True
+    # Else
+    return False
 
 class AssertionException(Exception):
     pass
 
 # Unittest Asserts
 DELTA = .001
-def _fail(message, *parameters):
-    parameters = [safe_repr(p) for p in parameters]
-    return AssertionException(message.format(*parameters))
+def _fail(code_message, hc_message, hc_message_past, *values):
+    contextualized_values = []
+    for value in values:
+        if is_sandbox_result(value):
+            value, code_message = _build_context(value, hc_message, hc_message_past)
+        else:
+            value = safe_repr(value)
+        contextualized_values.append(value)
+    return AssertionException(code_message.format(*values))
+    
+def _build_context(result, hc_message, hc_message_past):
+    left = result._actual_value
+    left_call_id = result._actual_call_id
+    left_sandbox = result._actual_sandbox
+    outputs = left_sandbox.output_contexts[left_call_id]
+    calls = left_sandbox.call_contexts[left_call_id]
+    inputs = left_sandbox.input_contexts[left_call_id]
+    context = ""
+    if calls:
+        context += "I ran:<br>\n"
+        context += '<br>\n'.join('<pre>{}</pre>'.format(call) for call in calls)
+        context += "\n"
+    if inputs:
+        context += "I entered as input:<br>\n"
+        context += '<br>\n'.join('<pre>{}</pre>'.format(i) for i in inputs)
+        context += "\n"
+    context += "The result "+hc_message_past+":\n"
+    context += "<pre>{}</pre>\n"
+    context += "But I expected the result "+hc_message+":\n"
+    context += "<pre>{}</pre>"
+    return left, context
 
-def assertEqual(left, right, score=None, message=None, report=None):
+def is_sandbox_result(value):
+    if hasattr(value, "__actual_class__"):
+        if value.__actual_class__ == SandboxResult:
+            return True
+    return False
+    
+def _basic_assertion(left, right, operator, code_comparison_message,
+                     hc_message, hc_message_past, message, report, contextualize):
     if report is None:
         report = MAIN_REPORT
     _setup_assertions(report)
-    if isinstance(left, SandboxResult):
-        left = left._actual_value
-    if isinstance(right, SandboxResult):
-        right = right._actual_value
-    if not equality_test(left, right, True, DELTA, False):
-        failure = _fail("{} != {}", left, right)
+    context = ""
+    # TODO: Handle right-side sandbox result
+    #if is_sandbox_result(right):
+    #    right = right._actual_value
+    if not operator(left, right):
+        failure = _fail(code_comparison_message, hc_message, hc_message_past, left, right)
         report['assertions']['collected'].append(failure)
         report.attach('Instructor Test', category='Instructor', tool='Assertions',
-                      mistake={'message': str(failure)})
+                      mistake={'message': "Student code failed instructor test.<br>\n"+
+                                          context+str(failure)})
         if report['assertions']['exceptions']:
             raise failure
         else:
             return False
     return True
+
+def assertEqual(left, right, score=None, message=None, report=None,
+                contextualize=True):
+    return _basic_assertion(left, right,
+                            lambda l, r: equality_test(l, r, True, DELTA, False),
+                            "{} != {}",
+                            "to be equal to",
+                            "was equal to",
+                            message, report, contextualize)
+    
+    
 
     
 assert_equal = assertEqual

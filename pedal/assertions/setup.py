@@ -12,7 +12,10 @@ def _setup_assertions(report):
         report['assertions'] = {
             'functions': [],
             'exceptions': False,
-            'collected': []
+            'collected': [],
+            # Should we batch up multiple assertion failures?
+            #   The grouping mechanism is try_all
+            'tabular_output': False,
         }
         report.add_hook('source.next_section.before', resolve_all)
         report.add_hook('pedal.resolvers.resolve', resolve_all)

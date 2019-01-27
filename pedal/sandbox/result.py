@@ -104,7 +104,7 @@ class SandboxResult:
         return bytes(self.value)
 
     def __format__(self, format_spec):
-        return self.value.format(format_spec)
+        return format(self.value, format_spec)
 
     def __call__(self, *args):
         """
