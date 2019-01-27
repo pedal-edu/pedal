@@ -107,6 +107,7 @@ class SandboxTraceback:
         length = self._count_relevant_tb_levels(tb)
         tb_e = traceback.TracebackException(cl, exc, tb, limit=length,
                                             capture_locals=False)
+        print(list(tb_e))
         lines = [self._clean_traceback_line(line)
                  for line in tb_e.format()]
         lines[0] = "Traceback:\n"
