@@ -333,6 +333,12 @@ class CaitNode:
             raise ValueError("pattern does not evaluate to a singular statement")
         return matcher.find_matches(self, check_meta=False)
 
+    def find_match(self, pattern, is_mod=False):
+        matches = self.find_matches(pattern, is_mod)
+        if len(matches) != 0:
+            return matches[0]
+        return None
+
     def find_all(self, node_type):
         """Finds all nodes defined by string node_type
 
