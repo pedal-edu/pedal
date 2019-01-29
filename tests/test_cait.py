@@ -609,6 +609,29 @@ class CaitTests(unittest.TestCase):
         self.assertTrue(my_match["_fun_"].id == "fun")
         self.assertTrue(my_match["_fun_"][0].id == "fun")
 
+    def test_function_Names(self):
+        set_source("import weather\n"
+                   "weather_reports = get_weather('Data')\n"
+                   "weather_reports = weather.get_weather('Data')\n"
+                   "total = 0\n"
+                   "for weather in weather_reports:\n"
+                   "    total = total + weather\n"
+                   "print(total)")
+        parse_program()
+        my_match = find_matches("_get_weather_(__expr__)")
+        #  TODO: add to func table instead of symbol table?
+        self.assertTrue(my_match[0]['_get_weather_'].id == "get_weather", "Function wasn't properly retrieved")
+        self.assertTrue(my_match[1]['_get_weather_'].id == "print")
+
+        my_match2 = find_matches("_var_._method_()")
+        self.assertTrue(len(my_match2) == 1, "couldn't find attr func access")
+
+        my_match3 = find_matches("weather._method_()")
+        self.assertTrue(len(my_match3) == 1, "couldn't find attr func access")
+
+        my_match4 = find_matches("_var_.get_weather()")
+        self.assertTrue(len(my_match4) == 1, "couldn't find attr func access")
+
 
 if __name__ == '__main__':
     unittest.main(buffer=False)
