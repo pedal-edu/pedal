@@ -1,3 +1,7 @@
+from pedal.report.imperative import MAIN_REPORT
+from pedal.assertions.setup import _setup_assertions
+
+
 def contextualize_calls():
     pass
 
@@ -41,11 +45,21 @@ def finish_section(number, *functions, next_section=False):
             print("\tNEXT SECTION")
         return result
 
-
-def section(number):
+def section(*args):
     '''
     '''
-    pass
+    _setup_assertions(MAIN_REPORT)
+    def wrap(f):
+        MAIN_REPORT['assertions']['functions'].append(f)
+        return f
+    section_number = -1
+    if len(args) >= 1 and callable(args[0]):
+        if len(args) >= 2:
+            section_number = args[1]
+        return wrap(args[0])
+    elif len(args) >= 1:
+        section_number = args[0]
+    return wrap
 
 
 def precondition(function):

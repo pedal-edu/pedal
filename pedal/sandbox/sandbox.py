@@ -103,7 +103,7 @@ class Sandbox(DataSandbox):
         output (list of str): The current lines of output, broken up by
             distinct print calls (not "\n" characters). Note that this will
             not have any "\n" characters unless you explicitly printed them.
-        called_output (dict[str:list[str]]): The output for each call context.
+        output_contexts (dict[str:list[str]]): The output for each call context.
         call_id (int): The current call_id of the most recent call. Is
             initially 0, indicating the original sandbox creation.
         modules: A dictionary of the mocked modules (accessible by their
@@ -165,6 +165,7 @@ class Sandbox(DataSandbox):
 
         # Context
         self.call_id = 0
+        self.target_contexts = {self.call_id: []}
         self.call_contexts = {self.call_id: []}
         self.input_contexts = {self.call_id: []}
         self.context = context
@@ -178,6 +179,7 @@ class Sandbox(DataSandbox):
         # Exception
         self.exception = initial_exception
         self.exception_position = None
+        self.exception_formatted = None
         self.report_exceptions_mode = False
         # Input
         self.inputs = None
@@ -256,12 +258,12 @@ class Sandbox(DataSandbox):
             #:
             self.raw_output = ""
             self.output = []
-            self.called_output = {self.call_id: self.output}
+            self.output_contexts = {self.call_id: self.output}
         else:
             self.raw_output = raw_output
             lines = raw_output.rstrip().split("\n")
             self.output = [line.rstrip() for line in lines]
-            self.called_output[self.call_id] = self.output
+            self.output_contexts[self.call_id] = self.output
 
     def append_output(self, raw_output):
         """
@@ -418,7 +420,8 @@ class Sandbox(DataSandbox):
         report_exceptions = kwargs.pop('report_exceptions', self.report_exceptions_mode)
         # Create the actual arguments and call
         self.call_id += 1
-        self.called_output[self.call_id] = []
+        self.target_contexts[self.call_id] = target
+        self.output_contexts[self.call_id] = []
         self.call_contexts[self.call_id] = []
         self.input_contexts[self.call_id] = []
         actual, student = self._construct_call(function, args, kwargs, target,
@@ -440,6 +443,8 @@ class Sandbox(DataSandbox):
                                            sandbox=self)
             return self._
         else:
+            # TODO: Might need to wrap this in case the student was supposed
+            # to return an exception - weird circumstance though
             return self.exception
 
     def make_safe_variable(self, name):
@@ -499,9 +504,12 @@ class Sandbox(DataSandbox):
                 context = '\n'.join(contexts[1:])
             context = self.CONTEXT_MESSAGE.format(context=context)
             self.exception = _add_context_to_error(self.exception, context)
+        line_offset = self.report['source'].get('line_offset', 0)
+        student_filename = self.report['source']['filename']
         traceback = SandboxTraceback(self.exception, exc_info,
                                      self.full_traceback,
-                                     self.instructor_filename)
+                                     self.instructor_filename,
+                                     line_offset, student_filename)
         self.exception_position = {'line': traceback.line_number}
         self.exception_formatted = traceback.format_exception()
         self.exception_name = str(self.exception.__class__)[8:-2]
@@ -562,6 +570,8 @@ class Sandbox(DataSandbox):
                 inputs = self.inputs
         elif isinstance(inputs, (tuple, list)):
             inputs = mocked._make_inputs(*inputs)
+        elif isinstance(inputs, str):
+            inputs = mocked._make_inputs(inputs)
         inputs = self._track_inputs(inputs)
         # Override builtins and mock stuff out
         mocked._override_builtins(self.data, {
@@ -578,6 +588,7 @@ class Sandbox(DataSandbox):
 
         self.exception = None
         self.exception_position = None
+        self.exception_formatted = None
 
         # Patch in dangerous built-ins
         capture_stdout = io.StringIO()

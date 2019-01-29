@@ -14,6 +14,7 @@ coverage:
 	coverage html -i
 	coverage report
 	echo "HTML version available at ./htmlcov/index.html"
+	CMD /C start ./htmlcov/index.html
 
 style:
 	flake8 pedal/

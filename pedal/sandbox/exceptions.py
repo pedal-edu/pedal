@@ -1,6 +1,6 @@
 import traceback
 import os
-
+import sys
 
 class SandboxException(Exception):
     """
@@ -69,15 +69,14 @@ def _add_context_to_error(e, message):
     elif e.args:
         e.args = tuple([e.args[0] + message])
     return e
-
-
+x=sys.stdout
 class SandboxTraceback:
     """
     Class for reformatting tracebacks to have more pertinent information.
     """
 
     def __init__(self, exception, exc_info, full_traceback,
-                 instructor_filename):
+                 instructor_filename, line_offset, student_filename):
         """
         Args:
             exception (Exception): The exception that was raised.
@@ -89,10 +88,12 @@ class SandboxTraceback:
                 can be used to avoid reporting instructor code in the
                 traceback.
         """
+        self.line_offset = line_offset
         self.exception = exception
         self.exc_info = exc_info
         self.full_traceback = full_traceback
         self.instructor_filename = instructor_filename
+        self.student_filename = student_filename
         self.line_number = traceback.extract_tb(exc_info[2])[-1][1]
 
     def _clean_traceback_line(self, line):
@@ -107,6 +108,11 @@ class SandboxTraceback:
         length = self._count_relevant_tb_levels(tb)
         tb_e = traceback.TracebackException(cl, exc, tb, limit=length,
                                             capture_locals=False)
+        #print(list(), file=x)
+        for frame in tb_e.stack:
+            #print(frame, file=x)
+            if frame.filename == self.student_filename:
+                frame.lineno += self.line_number
         lines = [self._clean_traceback_line(line)
                  for line in tb_e.format()]
         lines[0] = "Traceback:\n"

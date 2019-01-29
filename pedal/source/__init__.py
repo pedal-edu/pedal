@@ -55,6 +55,7 @@ def set_source(code, filename='__main__.py', sections=False, report=None):
         report.group = 0
         report['source']['section_pattern'] = pattern
         report['source']['section'] = 0
+        report['source']['line_offset'] = 0
         report['source']['sections'] = re.split(pattern, code,
                                                 flags=re.MULTILINE)
         report['source']['code'] = report['source']['sections'][0]
