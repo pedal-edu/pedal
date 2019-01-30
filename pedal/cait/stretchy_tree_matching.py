@@ -397,7 +397,10 @@ class StretchyTreeMatcher:
             if type(std_node.astNode).__name__ == "Name" or id_val == "attr":
                 if id_val == "attr":
                     std_node.astNode.id = std_node.astNode.attr
-                mapping.add_var_to_sym_table(ins_node, std_node)  # TODO: Capture result?
+                if std_node.field == "func":
+                    mapping.add_func_to_sym_table(ins_node, std_node)
+                else:
+                    mapping.add_var_to_sym_table(ins_node, std_node)  # TODO: Capture result?
                 matched = True
         # could else return False, but shallow_match_generic should do this as well
         elif match[_EXP] and meta_matched:  # expression TODO: In theory this won't run?
@@ -484,7 +487,10 @@ class StretchyTreeMatcher:
 
     def shallow_match_Call(self, ins_node, std_node, check_meta=True):
         return self.shallow_match_main(ins_node, std_node, check_meta, ignores=None)
-        # self.shallow_match_main(ins_node, std_node, check_meta, ignores=["func"])
+        # matches = self.shallow_match_main(ins_node, std_node, check_meta, ignores=["func"])
+        # if matches:
+        #    pass
+        # return None
         # TODO: Make this handle Calls more intelligently
 
     # noinspection PyPep8Naming
