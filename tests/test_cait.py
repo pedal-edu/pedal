@@ -119,9 +119,15 @@ class CaitTests(unittest.TestCase):
 
     def test_function_save(self):
         ins_code = ("def _my_func_():\n"
-                    "   pass")
+                    "   pass\n"
+                    "_my_func_()")
         std_code = ("def funky(forum):\n"
-                    "    pass")  # matches
+                    "    pass\n"
+                    "funky(1200)")  # matches
+
+        std_code2 = ("def funky(forum):\n"
+                     "    pass\n"
+                     "dunk(1200)")  # matches
 
         matcher = StretchyTreeMatcher(ins_code, report=MAIN_REPORT)
         matches = matcher.find_matches(std_code)
@@ -132,6 +138,10 @@ class CaitTests(unittest.TestCase):
         self.assertTrue(len(keys) == 1, "found {} keys, should have found 1".format(len(keys)))
         self.assertTrue(keys[0] == '_my_func_',
                         "expected function name to be '_my_func_', found {} instead".format(keys[0]))
+        self.assertTrue(len(table['_my_func_']) == 2, "function call and definition not counted as separate instances")
+
+        matches2 = matcher.find_matches(std_code2)
+        self.assertTrue(len(matches2) == 0, "Function calls and names aren't correlating")
 
     def test_wild_card_match(self):
         # tests whether Wild matches are stored correctly
