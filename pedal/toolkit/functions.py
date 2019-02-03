@@ -43,11 +43,8 @@ def match_function(name, root=None):
     return None
 
 
-def match_signature(name, length, *parameters, report=None, root=None):
-    if root is None:
-        ast = parse_program()
-    else:
-        ast = root
+def match_signature(name, length, *parameters):
+    ast = parse_program()
     defs = ast.find_all('FunctionDef')
     for a_def in defs:
         if a_def._name == name:
@@ -273,7 +270,7 @@ def check_coverage(report=None):
     if report is None:
         report = MAIN_REPORT
     if not report['source']['success']:
-        return None
+        return None, 0
     lines_executed = set(compatibility.trace_lines())
     if -1 in lines_executed:
         lines_executed.remove(-1)
@@ -282,11 +279,11 @@ def check_coverage(report=None):
     visitor.visit(student_ast)
     lines_in_code = set(visitor.lines)
     if lines_executed < lines_in_code:
-        return lines_in_code - lines_executed
+        return lines_in_code - lines_executed, len(lines_executed)/len(lines_in_code)
     else:
-        return False
+        return False, 1
 
-def ensure_coverage(percentage, destructive=False, report=None):
+def ensure_coverage(percentage=.5, destructive=False, report=None):
     '''
     Note that this avoids destroying the current sandbox instance stored on the
     report, if there is one present.
@@ -296,6 +293,8 @@ def ensure_coverage(percentage, destructive=False, report=None):
     '''
     if report is None:
         report = MAIN_REPORT
-    student = run(tracer_style='coverage')
-    if student.trace.percent_covered <= .5:
-        explain("Your code coverage is not adequate. You must cover at least half your code to receive feedback.")
+    student_code = report['source']['code']
+    unexecuted_lines, percent_covered = check_coverage(report)
+    if unexecuted_lines:
+        if percent_covered <= percentage:
+            explain("Your code coverage is not adequate. You must cover at least half your code to receive feedback.")
