@@ -51,7 +51,7 @@ class TestCode(unittest.TestCase):
         ##### Part 3
         Runtime Error
         '''), sections=True)
-        count_sections(3)
+        check_section_exists(3)
         self.assertFalse(get_all_feedback())
         next_section()
         verify_section()
@@ -75,7 +75,7 @@ class TestCode(unittest.TestCase):
         #### Part 3
         Runtime Error
         '''), sections=True)
-        count_sections(3)
+        check_section_exists(3)
         feedback = get_all_feedback()
         self.assertTrue(feedback)
 

@@ -112,7 +112,8 @@ class SandboxTraceback:
         for frame in tb_e.stack:
             #print(frame, file=x)
             if frame.filename == self.student_filename:
-                frame.lineno += self.line_number
+                #frame.lineno += self.line_number
+                frame.lineno += self.line_offset
         lines = [self._clean_traceback_line(line)
                  for line in tb_e.format()]
         lines[0] = "Traceback:\n"

@@ -619,7 +619,7 @@ class Sandbox(DataSandbox):
 
 def run(initial_data=None, initial_raw_output=None, initial_exception=None,
         modules=None, inputs=None, report_exceptions=True, context=None,
-        full_traceback=False, tracer_style=None, threaded=False,
+        full_traceback=False, tracer_style='none', threaded=False,
         result_proxy=SandboxResult,
         instructor_filename="instructor_tests.py",
         code=None, as_filename=None, report=None):

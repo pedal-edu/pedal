@@ -294,7 +294,7 @@ def function_signature(function_name, returns=None, yields=None,
     # Go get the actual docstring, parse it
     docstring = None
     for function_def in root.find_all("FunctionDef"):
-        if function_def.name == function_name:
+        if function_def._name == function_name:
             if function_def.body:
                 if (function_def.body[0].ast_name == "Expr" and
                         function_def.body[0].value.ast_name == "Str"):
