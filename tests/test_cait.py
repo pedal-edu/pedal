@@ -119,9 +119,15 @@ class CaitTests(unittest.TestCase):
 
     def test_function_save(self):
         ins_code = ("def _my_func_():\n"
-                    "   pass")
+                    "   pass\n"
+                    "_my_func_()")
         std_code = ("def funky(forum):\n"
-                    "    pass")  # matches
+                    "    pass\n"
+                    "funky(1200)")  # matches
+
+        std_code2 = ("def funky(forum):\n"
+                     "    pass\n"
+                     "dunk(1200)")  # matches
 
         matcher = StretchyTreeMatcher(ins_code, report=MAIN_REPORT)
         matches = matcher.find_matches(std_code)
@@ -132,6 +138,10 @@ class CaitTests(unittest.TestCase):
         self.assertTrue(len(keys) == 1, "found {} keys, should have found 1".format(len(keys)))
         self.assertTrue(keys[0] == '_my_func_',
                         "expected function name to be '_my_func_', found {} instead".format(keys[0]))
+        self.assertTrue(len(table['_my_func_']) == 2, "function call and definition not counted as separate instances")
+
+        matches2 = matcher.find_matches(std_code2)
+        self.assertTrue(len(matches2) == 0, "Function calls and names aren't correlating")
 
     def test_wild_card_match(self):
         # tests whether Wild matches are stored correctly
@@ -608,6 +618,29 @@ class CaitTests(unittest.TestCase):
         my_match = find_match("_fun_ = ___")
         self.assertTrue(my_match["_fun_"].id == "fun")
         self.assertTrue(my_match["_fun_"][0].id == "fun")
+
+    def test_function_Names(self):
+        set_source("import weather\n"
+                   "weather_reports = get_weather('Data')\n"
+                   "weather_reports = weather.get_weather('Data')\n"
+                   "total = 0\n"
+                   "for weather in weather_reports:\n"
+                   "    total = total + weather\n"
+                   "print(total)")
+        parse_program()
+        my_match = find_matches("_get_weather_(__expr__)")
+        #  TODO: add to func table instead of symbol table?
+        self.assertTrue(my_match[0]['_get_weather_'].id == "get_weather", "Function wasn't properly retrieved")
+        self.assertTrue(my_match[1]['_get_weather_'].id == "print")
+
+        my_match2 = find_matches("_var_._method_()")
+        self.assertTrue(len(my_match2) == 1, "couldn't find attr func access")
+
+        my_match3 = find_matches("weather._method_()")
+        self.assertTrue(len(my_match3) == 1, "couldn't find attr func access")
+
+        my_match4 = find_matches("_var_.get_weather()")
+        self.assertTrue(len(my_match4) == 1, "couldn't find attr func access")
 
 
 if __name__ == '__main__':

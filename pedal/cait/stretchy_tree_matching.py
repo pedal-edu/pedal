@@ -1,7 +1,14 @@
+from typing import Pattern
+
 import ast
 import re
 from pedal.cait.ast_map import AstMap
 from pedal.cait.cait_node import CaitNode
+
+# "Enums" for _name_regex
+_VAR = "var"
+_EXP = "exp"
+_WILD = "wild"
 
 
 def is_primitive(item):
@@ -15,6 +22,15 @@ def is_primitive(item):
         bool: Whether the item is a primitive value.
     """
     return isinstance(item, (int, float, str, bool)) or item is None
+
+
+def _name_regex(name_id):
+    var_match = re.compile('^_[^_].*_$')  # /regex
+    exp_match = re.compile('^__.*__$')  # /regex
+    wild_card = re.compile('^___$')  # /regex
+    return {_VAR: var_match.match(name_id),
+            _EXP: exp_match.match(name_id),
+            _WILD: wild_card.match(name_id)}
 
 
 class StretchyTreeMatcher:
@@ -130,22 +146,20 @@ class StretchyTreeMatcher:
     # noinspection PyPep8Naming
     def deep_find_match_Name(self, ins_node, std_node, check_meta=True):
         name_id = ins_node.astNode.id
-        var_match = re.compile('^_[^_].*_$')  # /regex
-        exp_match = re.compile('^__.*__$')  # /regex
-        wild_card = re.compile('^___$')  # /regex
+        match = _name_regex(name_id)
         mapping = AstMap()
         matched = False
         meta_matched = self.metas_match(ins_node, std_node, check_meta)
-        if var_match.match(name_id) and meta_matched:  # if variable
+        if match[_VAR] and meta_matched:  # if variable
             # This if body is probably unnecessary.
             if type(std_node.astNode).__name__ == "Name":
                 return self.deep_find_match_generic(ins_node, std_node, check_meta)
         # could else return False, but shallow_match_generic should do this as well
-        elif exp_match.match(name_id):  # and meta_matched:  # if expression
+        elif match[_EXP]:  # and meta_matched:  # if expression
             # terminate recursion, the whole subtree should match since expression nodes match to anything
             mapping.add_exp_to_sym_table(ins_node, std_node)
             matched = True
-        elif wild_card.match(name_id) and meta_matched:  # if wild card, don't care
+        elif match[_WILD] and meta_matched:  # if wild card, don't care
             # terminate the recursion, the whole subtree should match since wild cards match to anything
             matched = True
 
@@ -357,9 +371,9 @@ class StretchyTreeMatcher:
             return [mapping]
         return []
 
-    # noinspection PyPep8Naming
-    def shallow_match_Name(self, ins_node, std_node, check_meta=True):
+    def shallow_symbol_handler(self, ins_node, std_node, id_val, check_meta=True):
         """
+        TODO: Make this handle the func field to handle functions
         Matches ins_node to std_node for different cases of encountering a name node in ins_node
             case 1: _var_ matches if std_node is a name node and automatically returns a mapping and symbol table
             case 2: __exp__ matches to any subtree and automatically returns a mapping and symbol table
@@ -373,22 +387,26 @@ class StretchyTreeMatcher:
         Returns:
             list of AstMap: a mapping of ins_node to std_node and possibly a symbol_table, or False if it doesn't match
         """
-        name_id = ins_node.astNode.id
-        var_match = re.compile('^_[^_].*_$')  # /regex
-        exp_match = re.compile('^__.*__$')  # /regex
-        wild_card = re.compile('^___$')  # /regex
+        name_id = ins_node.astNode.__getattribute__(id_val)
+        match = _name_regex(name_id)
         mapping = AstMap()
         matched = False
+        # TODO: add functionality to add function references to func_table?
         meta_matched = self.metas_match(ins_node, std_node, check_meta)
-        if var_match.match(name_id) and meta_matched:  # variable
-            if type(std_node.astNode).__name__ == "Name":
-                mapping.add_var_to_sym_table(ins_node, std_node)  # TODO: Capture result?
+        if match[_VAR] and meta_matched:  # variable
+            if type(std_node.astNode).__name__ == "Name" or id_val == "attr":
+                if id_val == "attr":
+                    std_node.astNode.id = std_node.astNode.attr
+                if std_node.field == "func":
+                    mapping.add_func_to_sym_table(ins_node, std_node)
+                else:
+                    mapping.add_var_to_sym_table(ins_node, std_node)  # TODO: Capture result?
                 matched = True
         # could else return False, but shallow_match_generic should do this as well
-        elif exp_match.match(name_id) and meta_matched:  # expression TODO: In theory this won't run?
+        elif match[_EXP] and meta_matched:  # expression TODO: In theory this won't run?
             mapping.add_exp_to_sym_table(ins_node, std_node)
             matched = True
-        elif wild_card.match(name_id) and meta_matched:  # don't care TODO: In theory this won't run?
+        elif match[_WILD] and meta_matched:  # don't care TODO: In theory this won't run?
             matched = True
 
         if matched:
@@ -396,6 +414,37 @@ class StretchyTreeMatcher:
             return [mapping]
         # else
         return self.shallow_match_generic(ins_node, std_node, check_meta)
+
+    # noinspection PyPep8Naming,PyMethodMayBeStatic
+    def shallow_func_handle(self, ins_node, std_node, check_meta=True):
+        if ins_node.field == "func" and std_node.field == "func":
+            ins_node.astNode.id = ins_node.astNode.attr
+            return self.shallow_symbol_handler(ins_node, std_node, "attr", check_meta)
+        return self.shallow_match_generic(ins_node, std_node, check_meta)
+
+    def shallow_match_Attribute(self, ins_node, std_node, check_meta=True):
+        if ins_node.field == "func" and type(std_node.astNode).__name__ == "Attribute":
+            return self.shallow_func_handle(ins_node, std_node, check_meta)
+        return self.shallow_match_generic(ins_node, std_node, check_meta)
+
+    # noinspection PyPep8Naming
+    def shallow_match_Name(self, ins_node, std_node, check_meta=True):
+        """
+        TODO: Make this handle the func field to handle functions
+        Matches ins_node to std_node for different cases of encountering a name node in ins_node
+            case 1: _var_ matches if std_node is a name node and automatically returns a mapping and symbol table
+            case 2: __exp__ matches to any subtree and automatically returns a mapping and symbol table
+            case 3: ___ matches to any subtree and automatically returns a mapping
+            case 4: matches only if the exact names are the same (falls through to shallow_match_generic)
+        Args:
+            ins_node:
+            std_node:
+            check_meta:
+
+        Returns:
+            list of AstMap: a mapping of ins_node to std_node and possibly a symbol_table, or False if it doesn't match
+        """
+        return self.shallow_symbol_handler(ins_node, std_node, "id", check_meta)
 
     # noinspection PyPep8Naming,PyMethodMayBeStatic
     def shallow_match_Pass(self, ins_node, std_node, check_meta=True):
@@ -436,6 +485,14 @@ class StretchyTreeMatcher:
         mapping.add_node_pairing(ins_node, std_node)
         return [mapping]
 
+    def shallow_match_Call(self, ins_node, std_node, check_meta=True):
+        return self.shallow_match_main(ins_node, std_node, check_meta, ignores=None)
+        # matches = self.shallow_match_main(ins_node, std_node, check_meta, ignores=["func"])
+        # if matches:
+        #    pass
+        # return None
+        # TODO: Make this handle Calls more intelligently
+
     # noinspection PyPep8Naming
     def shallow_match_FunctionDef(self, ins_node, std_node, check_meta=True):
         ins = ins_node.astNode
@@ -446,12 +503,11 @@ class StretchyTreeMatcher:
         matched = False
         if is_match and mapping:
             name = ins.name
-            var_match = re.compile('^_[^_].*_$')  # /regex
-            wild_card = re.compile('^___$')  # /regex
-            if var_match.match(name) and meta_matched:  # variable
+            match = _name_regex(name)
+            if match[_VAR] and meta_matched:  # variable
                 mapping[0].add_func_to_sym_table(ins_node, std_node)  # TODO: Capture result?
                 matched = True
-            elif wild_card.match(name) and meta_matched:
+            elif match[_WILD] and meta_matched:
                 matched = True
             elif name == std.name and meta_matched:
                 matched = True
@@ -544,5 +600,3 @@ class StretchyTreeMatcher:
     @staticmethod
     def metas_match(ins_node, std_node, check_meta=True):
         return (check_meta and ins_node.field == std_node.field) or not check_meta or ins_node.field == "none"
-
-    # TODO: Possibly add a feature for variable function names?

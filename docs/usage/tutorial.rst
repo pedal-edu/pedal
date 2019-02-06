@@ -66,6 +66,8 @@ CAIT
 .. code:: python
 
     from pedal.cait import parse_program, find_matches
+    from pedal.tifa import tifa_analysis # optional
+    tifa_analysis() # optional, use for flow/data analysis
     parse_program()
     matches = find_matches("_var_ = __expr__")
 
@@ -183,9 +185,9 @@ Finally, for subtree matching, you can use the `find_matches` function of the ex
     matches = find_matches("for ___ in ___:\n"
                            "    __expr1__\n")
     __expr1__ = match["__expr1__"]
-    submatch = __expr1__.find_matches("_var1_ = _var2_ + _var1_")
+    submatches = __expr1__.find_matches("_var1_ = _var2_ + _var1_")
 
-In the example above, `__expr1__` will match to the inner body of the for loops in source 1 and source 2. The `submatch` variable would then in both cases, extract the `summer = summer + item` from both sources, returning the same type of list as `find_matches`.
+In the example above, `__expr1__` will match to the inner body of the for loops in source 1 and source 2. The `submatches` variable would then in both cases, extract the `summer = summer + item` from both sources, returning the same type of list as `find_matches`.
 
 A final note for that example, note that some operations are expected to be commutative. Currently only addition and multiplication are supported as commutative operators. This commutativity currently unintelligently allows either ordering for the subtrees of the addition or multiplication ast nodes, and in the case as above, would return two matches, one for `_var1_ = _var2_ + _var1_` and one for `_var1 = _var1_ + _var2_`. If they are not commutative (e.g. because of a function call that changes state), Cait currently doesn't detect such cases
 
