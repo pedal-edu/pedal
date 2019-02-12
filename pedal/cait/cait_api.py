@@ -178,6 +178,21 @@ def data_state(node, report=None):
         return None
 
 
+def get_property(node, report=None):
+    if report is None:
+        report = MAIN_REPORT
+    if not isinstance(node, str) and node.ast_name != "Name":
+        raise TypeError
+    if isinstance(node, str):
+        node_id = node
+    else:
+        node_id = node.id
+    try:
+        return report['tifa']["top_level_variables"][node_id]
+    except KeyError:
+        return None
+
+
 def data_type(node, report=None):
     """
     Looks up the type of the node using Tifa's analysis.

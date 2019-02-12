@@ -170,6 +170,11 @@ class StretchyTreeMatcher:
         return self.deep_find_match_generic(ins_node, std_node, check_meta)
 
     # noinspection PyPep8Naming
+    def deep_find_match_Compare(self, ins_node, std_node, check_meta=True):
+        # TODO: Make "==" commutative...
+        return self.deep_find_match_generic(ins_node, std_node, check_meta)
+
+    # noinspection PyPep8Naming
     def deep_find_match_BinOp(self, ins_node, std_node, check_meta=True):
         op = ins_node.astNode.op
         op = type(op).__name__
