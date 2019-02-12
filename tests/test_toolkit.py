@@ -200,7 +200,8 @@ class TestFunctions(unittest.TestCase):
             student = Sandbox(tracer_style='coverage')
             MAIN_REPORT['sandbox']['run'] = student
             student.run(student_code, as_filename=TEST_FILENAME)
-            self.assertEqual(check_coverage(), missing_lines)
+            uncovered, percentage = check_coverage()
+            self.assertEqual(uncovered, missing_lines)
 
 
 class TestUtilities(unittest.TestCase):
