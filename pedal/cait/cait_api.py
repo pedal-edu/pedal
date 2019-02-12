@@ -81,12 +81,12 @@ def _load_cait(student_code, report):
     return cait
 
 
-def require_tifa(self):
+def require_tifa(report):
     """
     Confirms that TIFA was run successfully, otherwise raises a
     CaitException.
     """
-    if not self.report['tifa']['success']:
+    if not report['tifa']['success']:
         raise CaitException("TIFA was not run prior to CAIT.")
 
 
@@ -134,6 +134,7 @@ def def_use_error(node, report=None):
     """
     if report is None:
         report = MAIN_REPORT
+    require_tifa(report)
     if not isinstance(node, str) and node.ast_name != "Name":
         raise TypeError
     try:
@@ -166,6 +167,7 @@ def data_state(node, report=None):
     """
     if report is None:
         report = MAIN_REPORT
+    require_tifa(report)
     if not isinstance(node, str) and node.ast_name != "Name":
         raise TypeError
     if isinstance(node, str):
@@ -181,6 +183,7 @@ def data_state(node, report=None):
 def get_property(node, report=None):
     if report is None:
         report = MAIN_REPORT
+    require_tifa(report)
     if not isinstance(node, str) and node.ast_name != "Name":
         raise TypeError
     if isinstance(node, str):
