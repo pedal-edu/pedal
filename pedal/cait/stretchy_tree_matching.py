@@ -1,5 +1,3 @@
-from typing import Pattern
-
 import ast
 import re
 from pedal.cait.ast_map import AstMap
