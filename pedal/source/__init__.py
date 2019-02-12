@@ -16,11 +16,12 @@ OPTIONALS = []
 CATEGORY = 'Syntax'
 
 __all__ = ['NAME', 'DESCRIPTION', 'SHORT_DESCRIPTION', 'REQUIRES', 'OPTIONALS',
-           'set_source', 'count_sections', 'next_section', 'verify_section']
+           'set_source', 'check_section_exists', 'next_section', 'verify_section']
 DEFAULT_PATTERN = r'^(##### Part .+)$'
 
 
-def set_source(code, filename='__main__.py', sections=False, report=None):
+def set_source(code, filename='__main__.py', sections=False, independent=False,
+               report=None):
     """
     Sets the contents of the Source to be the given code. Can also be
     optionally given a filename.
@@ -42,6 +43,7 @@ def set_source(code, filename='__main__.py', sections=False, report=None):
         report = MAIN_REPORT
     report['source']['code'] = code
     report['source']['filename'] = filename
+    report['source']['independent'] = independent
     report['source']['success'] = True
     if not sections:
         report['source']['sections'] = None

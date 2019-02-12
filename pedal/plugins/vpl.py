@@ -65,13 +65,14 @@ def strip_tags(html):
     return VPLStyler().convert(html)
 
 
-def find_file(filename, sections=False, report=None):
+def find_file(filename, sections=False, independent=False, report=None):
     if report is None:
         report = MAIN_REPORT
     try:
         with open(filename, 'r') as student_file:
             source.set_source(student_file.read(), filename=filename,
-                              sections=sections, report=report)
+                              sections=sections, independent=independent,
+                              report=report)
     except IOError:
         message = ("The given filename ('{filename}') was either not found"
                    " or could not be opened. Please make sure the file is"
@@ -129,7 +130,7 @@ class SectionalAssignment:
                   sections=True, report=report)
         set_maximum_score(self.max_points
                           if max_points is None else max_points)
-        source.count_sections(self.sections)
+        source.check_section_exists(self.sections)
 
     def pre_test(self):
         source.next_section()
