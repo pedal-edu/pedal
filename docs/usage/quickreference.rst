@@ -22,6 +22,7 @@ Also note that many of these items return a CaitNode; CaitNodes should mirror th
 List of Pedal Data Types
 ========================
 - BoolType
+- DictType
 - FunctionType
 - LiteralBool
 - LiteralNone

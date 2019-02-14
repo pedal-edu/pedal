@@ -228,7 +228,7 @@ def find_matches(pattern, student_code=None, report=None, cut=False):
         report (Report): The report to attach data to.
         cut (bool): Set to true to trim root to first branch
     Returns:
-        list[CaitNode]: All matching nodes for the given pattern.
+        List[CaitNode]: All matching nodes for the given pattern.
     """
     if report is None:
         report = MAIN_REPORT

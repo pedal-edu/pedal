@@ -471,6 +471,18 @@ class CaitNode:
         else:
             return state.type
 
+    def was_type(self, tp):
+        """
+
+         Returns:
+             type of the variable associated with this node if it's a name node, otherwise None.
+         """
+        state = self.get_data_state()
+        if state is None:
+            return None
+        else:
+            return state.was_type(tp)
+
     def get_value(self):
         """"
         Returns:
