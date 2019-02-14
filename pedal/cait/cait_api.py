@@ -37,7 +37,7 @@ def _parse_source(code, cait_report):
     except SyntaxError as e:
         cait_report['success'] = False
         cait_report['error'] = e
-        return
+        return ast.parse("")
     return parsed
 
 
@@ -76,6 +76,7 @@ def _load_cait(student_code, report):
         report.attach("No source code found", tool='cait',
                       category='analyzer')
         cait['success'] = False
+        cait['ast'] = CaitNode(ast.parse(""), report=report)
         return cait
     cait['ast'] = cait['cache'][student_code] = CaitNode(student_ast, report=report)
     return cait
