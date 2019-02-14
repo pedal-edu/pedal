@@ -642,6 +642,10 @@ class CaitTests(unittest.TestCase):
         my_match4 = find_matches("_var_.get_weather()")
         self.assertTrue(len(my_match4) == 1, "couldn't find attr func access")
 
+    def test_broken_traversal(self):
+        set_source("user entered gobblydegook")
+        ast = parse_program()
+        self.assertFalse(ast.find_all('For'))
 
 if __name__ == '__main__':
     unittest.main(buffer=False)

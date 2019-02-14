@@ -80,8 +80,7 @@ def _check_issues(code, report):
                                'error': e,
                                'position': {"line": e.lineno}})
         report['source']['success'] = False
-        if 'ast' in report['source']:
-            del report['source']['ast']
+        report['source']['ast'] = ast.parse("")
 
 
 def get_program(report=None):
