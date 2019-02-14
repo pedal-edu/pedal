@@ -82,7 +82,7 @@ def raise_exception(exception, position=None, report=None, message=None):
         return
     extended = EXTENDED_ERROR_EXPLANATION.get(exception.__class__, "")
     if message is None:
-        message = "<pre>{}</pre>\n{}".format(exception, extended)
+        message = "<pre>{}</pre>\n{}".format(str(exception), extended)
     # Skulpt compatible name lookup
     name = str(exception.__class__)[8:-2]
     report.attach(name, category='Runtime', tool='Sandbox',
