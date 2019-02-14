@@ -136,3 +136,12 @@ class CaitNodeTest(unittest.TestCase):
                         ("get_value didn't function as intended "
                          "returned {} instead of {x_val}").format(
                             str_node.value, x_val=x_val_s))
+
+        x_val = False
+        program = ast.parse("x = {x_val}".format(x_val=x_val))
+        program = CaitNode(program)
+        num_node = program.linear_tree[4]
+        self.assertTrue(num_node.value == x_val,
+                        ("get_value didn't function as intended "
+                         "returned {} instead of {x_val}").format(
+                            num_node.value, x_val=x_val))
