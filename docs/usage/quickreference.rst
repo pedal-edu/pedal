@@ -19,6 +19,21 @@ more often than not, you'll want to use `find_matches` as opposed to the `find_m
 
 Also note that many of these items return a CaitNode; CaitNodes should mirror the built-in ast_node class except with added fields or functionality. In general it should be easier to work with CaitNodes as many additional operations and matching functionality are supported with CaitNodes.
 
+List of Pedal Data Types
+========================
+- BoolType
+- FunctionType
+- LiteralBool
+- LiteralNone
+- LiteralNum
+- LiteralStr
+- NoneType
+- NumType
+- StrType
+- TupleType
+- UnknownType
+
+
 Save and reference variable
 ===========================
 .. code:: python

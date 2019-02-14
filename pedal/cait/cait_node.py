@@ -258,6 +258,10 @@ class CaitNode:
     def get_ast_name(node):
         return type(node).__name__
 
+    def get_clashing_attr(self, key):
+        if key == "value":
+            return self.get_value()
+
     def __getattr__(self, item):
         key = item
         """
@@ -317,6 +321,8 @@ class CaitNode:
                         return field
                 else:
                     return field
+            else:  # get added field that may have existed for different node types
+                return self.get_clashing_attr(key)
 
     def find_matches(self, pattern, is_mod=False):
         """
@@ -464,6 +470,20 @@ class CaitNode:
             return None
         else:
             return state.type
+
+    def get_value(self):
+        """"
+        Returns:
+            Value of node if Num or Str, and get_data_state if Name
+        """
+        value = None
+        if self.ast_name == "Num":
+            value = self.n
+        elif self.ast_name == "Str":
+            value = self.s
+        elif self.ast_name == "Name":
+            value = self.get_data_state()
+        return value
 
 
 AST_SINGLE_FUNCTIONS = ["ctx_name", "op_name"]

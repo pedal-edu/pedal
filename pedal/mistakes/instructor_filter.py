@@ -24,7 +24,7 @@ def missing_if_in_for():
                            "        pass")
     if not matches:
         explain("The arrangement of decision and iteration is not correct for the filter pattern.<br><br><i>"
-                "(missing_if_in_for)<i></br>")
+                "(missing_if_in_for)<i></br></br>")
         return True
     return False
 
