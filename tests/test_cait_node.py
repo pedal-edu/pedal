@@ -107,3 +107,32 @@ class CaitNodeTest(unittest.TestCase):
         program = CaitNode(ast.parse("temperature >= 32 and temperature <= 50"))
         compare = program.body[0].value
         self.assertTrue(compare.numeric_logic_check(1, "32 <= temp <= 50"))
+
+    def test_get_value(self):
+        x_val = 0
+        program = ast.parse("x = {x_val}".format(x_val=x_val))
+        program = CaitNode(program)
+        num_node = program.linear_tree[4]
+        self.assertTrue(num_node.value == x_val,
+                        ("get_value didn't function as intended "
+                         "returned {} instead of {x_val}").format(
+                            num_node.value, x_val=x_val))
+
+        x_val = 1.7
+        program = ast.parse("x = {x_val}".format(x_val=x_val))
+        program = CaitNode(program)
+        num_node = program.linear_tree[4]
+        self.assertTrue(num_node.value == x_val,
+                        ("get_value didn't function as intended "
+                         "returned {} instead of {x_val}").format(
+                            num_node.value, x_val=x_val))
+
+        x_val = "'fun'"
+        x_val_s = 'fun'
+        program = ast.parse("x = {x_val}".format(x_val=x_val))
+        program = CaitNode(program)
+        str_node = program.linear_tree[4]
+        self.assertTrue(str_node.value == x_val_s,
+                        ("get_value didn't function as intended "
+                         "returned {} instead of {x_val}").format(
+                            str_node.value, x_val=x_val_s))
