@@ -489,11 +489,11 @@ class CaitNode:
             Value of node if Num or Str, and get_data_state if Name
         """
         value = None
-        if self.ast_name == "Num":
+        if self.is_ast("Num"):
             value = self.n
-        elif self.ast_name == "Str":
+        elif self.is_ast("Str"):
             value = self.s
-        elif self.ast_name == "Name":
+        elif self.is_ast("Name"):
             value = self.get_data_state()
         return value
 
