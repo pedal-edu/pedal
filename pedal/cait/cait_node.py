@@ -494,7 +494,8 @@ class CaitNode:
         elif self.is_ast("Str"):
             value = self.s
         elif self.is_ast("Name"):
-            value = self.get_data_state()
+            # TODO: Decide on what this should return...
+            value = self.id
         return value
 
 

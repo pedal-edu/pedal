@@ -380,6 +380,7 @@ class StretchyTreeMatcher:
         Args:
             ins_node:
             std_node:
+            id_val:
             check_meta:
 
         Returns:
@@ -423,7 +424,12 @@ class StretchyTreeMatcher:
     def shallow_match_Attribute(self, ins_node, std_node, check_meta=True):
         if ins_node.field == "func" and type(std_node.astNode).__name__ == "Attribute":
             return self.shallow_func_handle(ins_node, std_node, check_meta)
-        return self.shallow_match_generic(ins_node, std_node, check_meta)
+        elif std_node.ast_name == "Attribute":
+            ins_node.astNode.id = ins_node.attr  # TODO: Fix this hack more gracefully
+            # add_var_to_sym_table in ast_map needs the id attribute to make the map
+            return self.shallow_symbol_handler(ins_node, std_node, "attr", check_meta)
+        else:
+            return self.shallow_match_generic(ins_node, std_node, check_meta)
 
     # noinspection PyPep8Naming
     def shallow_match_Name(self, ins_node, std_node, check_meta=True):
