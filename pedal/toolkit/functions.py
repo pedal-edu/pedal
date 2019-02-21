@@ -16,9 +16,9 @@ def all_documented():
                 (a_def.body[0].ast_name != "Expr" or
                  a_def.body[0].value.ast_name != "Str")):
             if a_def.ast_name == 'FunctionDef':
-                explain("You have an undocumented function: " + a_def.name)
+                gently("You have an undocumented function: " + a_def.name)
             else:
-                explain("You have an undocumented class: " + a_def.name)
+                gently("You have an undocumented class: " + a_def.name)
             return False
     return True
 
@@ -297,4 +297,4 @@ def ensure_coverage(percentage=.5, destructive=False, report=None):
     unexecuted_lines, percent_covered = check_coverage(report)
     if unexecuted_lines:
         if percent_covered <= percentage:
-            explain("Your code coverage is not adequate. You must cover at least half your code to receive feedback.")
+            gently("Your code coverage is not adequate. You must cover at least half your code to receive feedback.")

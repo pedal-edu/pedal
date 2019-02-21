@@ -48,12 +48,12 @@ def give_partial(value, message=None):
     MAIN_REPORT.give_partial(value, message)
 
 
-def explain(message, priority='medium', line=None):
-    MAIN_REPORT.explain(message, priority, line)
+def explain(message, priority='medium', line=None, label='explain'):
+    MAIN_REPORT.explain(message, priority, line, label=label)
 
 
-def gently(message, line=None):
-    MAIN_REPORT.gently(message, line)
+def gently(message, line=None, label='explain'):
+    MAIN_REPORT.gently(message, line, label=label)
 
 
 def hide_correctness():
