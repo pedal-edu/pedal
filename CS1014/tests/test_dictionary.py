@@ -207,14 +207,14 @@ class DictionaryMistakeTest(MistakeTest):
                        'for precipitation in precipitation_list:\n'
                        '    precipitation_total=precipitation_total + precipitation\n'
                        'print(precipitation_total)\n')
-        ret = dict_acc_as_lis_var(keys)
+        ret = list_str_as_list_var(keys)
         self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
 
         self.to_source('total_precipitation = 0\n'
                        'for precip in weather_reports:\n'
                        '    total_precipitation = total_precipitation + precip\n'
                        'print(total_precipitation)\n')
-        ret = dict_acc_as_lis_var(keys)
+        ret = list_str_as_list_var(keys)
         self.assertFalse(ret, "Expected False, got {} instead".format(ret))
 
     def test_append_and_sum(self):
@@ -287,4 +287,559 @@ class DictionaryMistakeTest(MistakeTest):
                        '    total_precipitation = total_precipitation + precip["Data"]["Precipitation"]\n'
                        'print(total_precipitation)\n')
         ret = missing_key(keys)
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
+    def test_dict_parens_brack(self):
+        # TODO: Check output string
+        self.to_source('import weather\n'
+                       'weather_reports = weather.get_weather()\n'
+                       'sum = 0\n'
+                       'for rain in weather_reports:\n'
+                       '    sum = sum + weather_reports(["Data"]["Precipitation"])\n'
+                       'print(sum)\n')
+        ret = dict_parens_brack()
+        self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
+
+        self.to_source('total_precipitation = 0\n'
+                       'for precip in weather_reports:\n'
+                       '    total_precipitation = total_precipitation + precip["Data"]["Precipitation"]\n'
+                       'print(total_precipitation)\n')
+        ret = dict_parens_brack()
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
+    def test_comma_dict_acc(self):
+        # TODO: Check output string
+        self.to_source("import weather\n"
+                       "weather_reports = weather.get_weather()\n"
+                       "total = 0\n"
+                       "for report in weather_reports:\n"
+                       "    total = total + report['Data'],['Precipitation']\n"
+                       "print(total)\n")
+        ret = comma_dict_acc()
+        self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
+
+        self.to_source('total_precipitation = 0\n'
+                       'for precip in weather_reports:\n'
+                       '    total_precipitation = total_precipitation + precip["Data"]["Precipitation"]\n'
+                       'print(total_precipitation)\n')
+        ret = comma_dict_acc()
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
+    def test_no_dict_in_loop(self):
+        # TODO: Check output values
+        self.to_source("import weather\n"
+                       "weather_reports = weather.get_weather()\n"
+                       "total = 0\n"
+                       "for precip in weather_reports:\n"
+                       "    total = total + precip\n"
+                       "print(total)\n")
+        ret = no_dict_in_loop()
+        self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
+
+        self.to_source('total_precipitation = 0\n'
+                       'for precip in weather_reports:\n'
+                       '    total_precipitation = total_precipitation + precip["Data"]["Precipitation"]\n'
+                       'print(total_precipitation)\n')
+        ret = no_dict_in_loop()
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
+    def func_filter(self):
+        keys = ["Precipitation", "Data"]
+        self.to_source('import weather\n'
+                       'weather_reports = weather.get_weather()\n'
+                       'total_precipitation = 0\n'
+                       'for report in weather_reports:\n'
+                       '    total_pecipitation = total_precipitation + weather.get_weather("Data")\n'
+                       'print(total_precipitation)\n')
+        ret = func_filter(keys)
+        self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
+
+        self.to_source('import weather\n'
+                       'precipitation_total=0\n'
+                       'weather_reports = weather.get_weather("Precipitation")\n'
+                       'for report in weather_reports:\n'
+                       '    precipitation_total = precipitation_total + 1\n')
+        ret = func_filter(keys)
+        self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
+
+        self.to_source('total_precipitation = 0\n'
+                       'for precip in weather_reports:\n'
+                       '    total_precipitation = total_precipitation + precip["Data"]["Precipitation"]\n'
+                       'print(total_precipitation)\n')
+        ret = func_filter()
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
+    def test_str_list(self):
+        # TODO: check output values
+        keys = ["Precipitation", "Data"]
+        self.to_source('import weather\n'
+                       'weather_reports = weather.get_weather()\n'
+                       'totalPrecip = 0\n'
+                       'for weather in weather_reports:\n'
+                       '    totalPrecip = totalPrecip + ["Precipitation"]\n'
+                       'print(totalPrecip)\n')
+        ret = str_list(keys)
+        self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
+
+        self.to_source('total_precipitation = 0\n'
+                       'for precip in weather_reports:\n'
+                       '    total_precipitation = total_precipitation + precip["Data"]["Precipitation"]\n'
+                       'print(total_precipitation)\n')
+        ret = str_list(keys)
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
+    def test_list_var_dict_acc(self):
+        # TODO: Check output values
+        self.to_source('import weather\n'
+                       'weather_reports = weather.get_weather()\n'
+                       'pt = 0\n'
+                       'for precipitation in weather_reports["Precipitation"]:\n'
+                       '    pt = pt + precipiation\n'
+                       'print(pt)\n')
+        ret = list_var_dict_acc()
+        self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
+
+        self.to_source('total_precipitation = 0\n'
+                       'for precip in weather_reports:\n'
+                       '    total_precipitation = total_precipitation + precip["Data"]["Precipitation"]\n'
+                       'print(total_precipitation)\n')
+        ret = list_var_dict_acc()
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
+    def test_key_comp(self):
+        # TODO: Check output values
+        keys = ["Data", "Precipitation", "City", "Station"]
+        self.to_source('import weather\n'
+                       'weather_reports = weather.get_weather()\n'
+                       'sum = 0\n'
+                       'for weather_instance in weather_reports:\n'
+                       '    if weather_instance["Data"] == "Precipitation":\n'
+                       '        sum = sum + weather_instance["Data"]\n'
+                       'print(sum)\n')
+        ret = key_comp(keys)
+        self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
+
+        self.to_source('import weather\n'
+                       'weather_reports = weather.get_weather()\n'
+                       'sum = 0\n'
+                       'for weather_instance in weather_reports:\n'
+                       '    if weather_instance["Station"]["City"] == "Chicago":\n'
+                       '        sum = sum + weather_instance["Data"]["Precipitation"]\n'
+                       'print(sum)\n')
+        ret = key_comp(keys)
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
+    def test_col_dict(self):
+        self.to_source('import weather\n'
+                       'weather_reports = weather.get_weather()\n'
+                       'precipitation = 0\n'
+                       'for weather in weather_reports:\n'
+                       '    preciptation = precipitaion + weather["Data":"Precipitation"]\n'
+                       'print(precipitation)\n')
+        ret = col_dict()
+        self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
+
+        self.to_source('import weather\n'
+                       'weather_reports = weather.get_weather()\n'
+                       'sum = 0\n'
+                       'for weather_instance in weather_reports:\n'
+                       '    if weather_instance["Station"]["City"] == "Chicago":\n'
+                       '        sum = sum + weather_instance["Data"]["Precipitation"]\n'
+                       'print(sum)\n')
+        ret = col_dict()
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
+    def test_var_key(self):
+        # TODO: Check output value
+        keys = ["Station", "City", "Precipitation"]
+        self.to_source("import weather\n"
+                       "weather_reports = weather.get_weather()\n"
+                       "sum = 0\n"
+                       "for rain in weather_reports:\n"
+                       "    if rain[Station][City] == Chicago:\n"
+                       "        sum = sum + rain[Data][Precipitation]\n"
+                       "print(sum)\n")
+        ret = var_key(keys)
+        self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
+
+        self.to_source('import weather\n'
+                       'weather_reports = weather.get_weather()\n'
+                       'sum = 0\n'
+                       'for weather_instance in weather_reports:\n'
+                       '    if weather_instance["Station"]["City"] == "Chicago":\n'
+                       '        sum = sum + weather_instance["Data"]["Precipitation"]\n'
+                       'print(sum)\n')
+        ret = var_key(keys)
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
+    def test_key_order(self):
+        keys1 = ["Station", "City"]
+        keys2 = ["Data", "Precipitation"]
+        self.to_source('import weather\n'
+                       'weather_reports = weather.get_weather()\n'
+                       'sum = 0\n'
+                       'for weather in weather_reports:\n'
+                       '    if weather["Station"]["City"] == "Chicago":\n'
+                       '        sum = sum + weather_instance["Chicago"]["Precipitation"]\n'
+                       'print(sum)\n')
+        ret = key_order(keys1)
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+        ret = key_order(keys2)
+        self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
+
+        self.to_source('import weather\n'
+                       'weather_reports = weather.get_weather()\n'
+                       'sum = 0\n'
+                       'for weather_instance in weather_reports:\n'
+                       '    if weather_instance["Station"]["City"] == "Chicago":\n'
+                       '        sum = sum + weather_instance["Data"]["Precipitation"]\n'
+                       'print(sum)\n')
+        ret = key_order(keys1)
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+        ret = key_order(keys2)
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
+        self.to_source('import weather\n'
+                       'weather_reports = weather.get_weather()\n'
+                       'sum = 0\n'
+                       'for weather_instance in weather_reports:\n'
+                       '    station = weather_instance["Station"]\n'
+                       '    city = station["City"]\n'
+                       '    if city == "Chicago":\n'
+                       '        data = weather_instance["Data"]\n'
+                       '        precipitation = data["Precipitation"]\n'
+                       '        sum = sum + precipitation\n'
+                       'print(sum)\n')
+        ret = key_order(keys1)
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+        ret = key_order(keys2)
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
+    def test_key_order_unchained(self):
+        keys1 = ["Station", "City"]
+        keys2 = ["Data", "Precipitation"]
+        self.to_source('import weather\n'
+                       'weather_reports = weather.get_weather()\n'
+                       'sum = 0\n'
+                       'for weather_instance in weather_reports:\n'
+                       '    station = weather_instance["City"]\n'
+                       '    city = station["Station"]\n'
+                       '    if city == "Chicago":\n'
+                       '        data = weather_instance["Precipitation"]\n'
+                       '        precipitation = data["Data"]\n'
+                       '        sum = sum + precipitation\n'
+                       'print(sum)\n')
+        ret = key_order_unchained(keys1)
+        self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
+        ret = key_order_unchained(keys2)
+        self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
+
+        self.to_source('import weather\n'
+                       'weather_reports = weather.get_weather()\n'
+                       'sum = 0\n'
+                       'for weather_instance in weather_reports:\n'
+                       '    station = weather_instance["Station"]\n'
+                       '    city = station["City"]\n'
+                       '    if city == "Chicago":\n'
+                       '        data = weather_instance["Data"]\n'
+                       '        precipitation = data["Precipitation"]\n'
+                       '        sum = sum + precipitation\n'
+                       'print(sum)\n')
+        ret = key_order_unchained(keys1)
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+        ret = key_order_unchained(keys2)
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
+        self.to_source('import weather\n'
+                       'weather_reports = weather.get_weather()\n'
+                       'sum = 0\n'
+                       'for weather_instance in weather_reports:\n'
+                       '    if weather_instance["Station"]["City"] == "Chicago":\n'
+                       '        sum = sum + weather_instance["Data"]["Precipitation"]\n'
+                       'print(sum)\n')
+        ret = key_order_unchained(keys1)
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+        ret = key_order_unchained(keys2)
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
+    def test_filt_key(self):
+        # TODO: Check output values
+        c_value = "Chicago"
+        num_slices = 3
+        self.to_source('import weather\n'
+                       'weather_reports = weather.get_weather()\n'
+                       'total_precipitation_Chicago = 0\n'
+                       'total_precipitation_Chicago\n'
+                       'for report in weather_reports:\n'
+                       '    total_precipitation = total_precipitation + report["Data"]["Precipitation"]["Chicago"]\n'
+                       'print (total_precipitation)\n')
+        ret = filt_key(c_value, num_slices)
+        self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
+
+        self.to_source('import weather\n'
+                       'weather_reports = weather.get_weather()\n'
+                       'total_precipitation_Chicago = 0\n'
+                       'for report in weather_reports:\n'
+                       '    precip = report["Data"]["Precipitation"]\n'
+                       '    chicago_precip = precip["Chicago"]\n'
+                       '    total_precipitation = total_precipitation + chicago_recip\n'
+                       'print (total_precipitation)\n')
+        ret = filt_key(c_value, num_slices)
+        self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
+
+        self.to_source('import weather\n'
+                       'weather_reports = weather.get_weather()\n'
+                       'sum = 0\n'
+                       'for weather_instance in weather_reports:\n'
+                       '    if weather_instance["Station"]["City"] == "Chicago":\n'
+                       '        sum = sum + weather_instance["Data"]["Precipitation"]\n'
+                       'print(sum)\n')
+        ret = filt_key(c_value, num_slices)
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
+    def test_miss_dict_acc(self):
+        self.to_source('import weather\n'
+                       'weather_reports = weather.get_weather()\n'
+                       'sum = 0\n'
+                       'for weather_instance in weather_reports:\n'
+                       '    if City == "Chicago":\n'
+                       '        sum = sum + "Precipitation"\n'
+                       'print(sum)\n')
+        ret = miss_dict_acc()
+        self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
+
+        self.to_source('import weather\n'
+                       'weather_reports = weather.get_weather()\n'
+                       'total_precipitation_Chicago = 0\n'
+                       'total_precipitation_Chicago\n'
+                       'for report in weather_reports:\n'
+                       '    precip = report["Data"]["Precipitation"]\n'
+                       '    chicago_precip = precip["Chicago"]\n'
+                       '    total_precipitation = total_precipitation + chicago_recip\n'
+                       'print (total_precipitation)\n')
+        ret = miss_dict_acc()
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
+    def test_compare_key(self):
+        c_value = "Chicago"
+        self.to_source('import weather\n'
+                       'weather_reports = weather.get_weather()\n'
+                       'sum = 0\n'
+                       'for weather_instance in weather_reports:\n'
+                       '    if weather_instance["Station"]["City"] == ["Chicago"]:\n'
+                       '        sum = sum + weather_instance["Data"]["Precipitation"]\n'
+                       'print(sum)\n')
+        ret = compare_key(c_value)
+        self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
+
+        self.to_source('import weather\n'
+                       'weather_reports = weather.get_weather()\n'
+                       'total_precipitation_Chicago = 0\n'
+                       'total_precipitation_Chicago\n'
+                       'for report in weather_reports:\n'
+                       '    precip = report["Data"]["Precipitation"]\n'
+                       '    chicago_precip = precip["Chicago"]\n'
+                       '    total_precipitation = total_precipitation + chicago_recip\n'
+                       'print (total_precipitation)\n')
+        ret = compare_key(c_value)
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
+    def test_str_equality(self):
+        self.to_source('import weather\n'
+                       'weather_reports = weather.get_weather()\n'
+                       'sum = 0\n'
+                       'for weather in weather_reports:\n'
+                       '    if("City" == "Chichago"):\n'
+                       '        sum = sum + weather["Data"]["Precipitation"]\n'
+                       'print(sum)\n')
+        ret = str_equality()
+        self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
+
+        self.to_source('import weather\n'
+                       'weather_reports = weather.get_weather()\n'
+                       'total_precipitation = 0\n'
+                       'for report in weather_reports:\n'
+                       '    if report["Station"]["City" == "Chicago"]:\n'
+                       '        total_precipitation = total_precipitation + report["Data"]["Precipitation"]\n'
+                       'print(total_precipitation)\n')
+        ret = str_equality()
+        self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
+
+        self.to_source('import weather\n'
+                       'weather_reports = weather.get_weather()\n'
+                       'total_precipitation_Chicago = 0\n'
+                       'total_precipitation_Chicago\n'
+                       'for report in weather_reports:\n'
+                       '    precip = report["Data"]["Precipitation"]\n'
+                       '    chicago_precip = precip["Chicago"]\n'
+                       '    total_precipitation = total_precipitation + chicago_recip\n'
+                       'print (total_precipitation)\n')
+        ret = str_equality()
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
+    def test_unnecessary_cast(self):
+        cast_list = ["float"]
+        self.to_source('import weather\n'
+                       'weather_reports = weather.get_weather()\n'
+                       'total_precipitation_Chicago = 0\n'
+                       'total_precipitation_Chicago\n'
+                       'for report in weather_reports:\n'
+                       '    precip = report["Data"]["Precipitation"]\n'
+                       '    chicago_precip = int(precip["Chicago"])\n'
+                       '    total_precipitation = total_precipitation + chicago_recip\n'
+                       'print (total_precipitation)\n')
+        ret = unnecessary_cast(cast_list)
+        self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
+
+        self.to_source('import weather\n'
+                       'weather_reports = weather.get_weather()\n'
+                       'total_precipitation_Chicago = 0\n'
+                       'total_precipitation_Chicago\n'
+                       'for report in weather_reports:\n'
+                       '    precip = report["Data"]["Precipitation"]\n'
+                       '    chicago_precip = precip["Chicago"]\n'
+                       '    total_precipitation = total_precipitation + chicago_recip\n'
+                       'print (total_precipitation)\n')
+        ret = unnecessary_cast(cast_list)
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
+    def test_fetch_acc_dict(self):
+        keys = ["Data", "Precipitation", "Station", "Chicago"]
+        self.to_source('import weather\n'
+                       'precipitation = 0\n'
+                       'weather_reports = weather.get_weather("Chicago")\n'
+                       'where = weather.get_weather["Chicago"]\n'
+                       'for weather in weather_reports:\n'
+                       '    precipitation = precipitation + weather["Data"]["Precipitation"]\n'
+                       'print(precipitation)\n')
+        ret = fetch_acc_dict(keys)
+        self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
+
+        self.to_source('import weather\n'
+                       'weather_reports = weather.get_weather()\n'
+                       'total_precipitation_Chicago = 0\n'
+                       'total_precipitation_Chicago\n'
+                       'for report in weather_reports:\n'
+                       '    precip = report["Data"]["Precipitation"]\n'
+                       '    chicago_precip = precip["Chicago"]\n'
+                       '    total_precipitation = total_precipitation + chicago_recip\n'
+                       'print (total_precipitation)\n')
+        ret = fetch_acc_dict(keys)
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
+    def test_app_assign(self):
+        self.to_source('import weather\n'
+                       'import matplotlib.pyplot as plt\n'
+                       'weather_reports = weather.get_weather()\n'
+                       'sum = []\n'
+                       'for rain in weather_reports:\n'
+                       '    if rain["Station"]["City"] == "Chicago":\n'
+                       '        sum = sum.append(rain["Data"]["Precipitation"])\n'
+                       'plt.plot(sum)\n'
+                       'plt.xlabel("Years")\n'
+                       'plt.ylabel("Precipitation")\n'
+                       'plt.title("Chicago Rain")\n'
+                       'plt.show(sum)\n')
+        ret = app_assign()
+        self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
+
+        self.to_source('import weather\n'
+                       'weather_reports = weather.get_weather()\n'
+                       'total_precipitation_Chicago = 0\n'
+                       'total_precipitation_Chicago\n'
+                       'for report in weather_reports:\n'
+                       '    precip = report["Data"]["Precipitation"]\n'
+                       '    chicago_precip = precip["Chicago"]\n'
+                       '    total_precipitation = total_precipitation + chicago_recip\n'
+                       'print (total_precipitation)\n')
+        ret = app_assign()
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
+    def test_show_args(self):
+        self.to_source('import weather\n'
+                       'import matplotlib.pyplot as plt\n'
+                       'weather_reports = weather.get_weather()\n'
+                       'sum = []\n'
+                       'for rain in weather_reports:\n'
+                       '    if rain["Station"]["City"] == "Chicago":\n'
+                       '        sum.append(rain["Data"]["Precipitation"])\n'
+                       'plt.plot(sum)\n'
+                       'plt.xlabel("Years")\n'
+                       'plt.ylabel("Precipitation")\n'
+                       'plt.title("Chicago Rain")\n'
+                       'plt.show(sum)\n')
+        ret = show_args()
+        self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
+
+        self.to_source('import weather\n'
+                       'import matplotlib.pyplot as plt\n'
+                       'weather_reports = weather.get_weather()\n'
+                       'sum = []\n'
+                       'for rain in weather_reports:\n'
+                       '    if rain["Station"]["City"] == "Chicago":\n'
+                       '        sum.append(rain["Data"]["Precipitation"])\n'
+                       'plt.plot(sum)\n'
+                       'plt.xlabel("Years")\n'
+                       'plt.ylabel("Precipitation")\n'
+                       'plt.title("Chicago Rain")\n'
+                       'plt.show()\n')
+        ret = show_args()
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
+    def test_dict_plot(self):
+        self.to_source('import weather\n'
+                       'import matplotlib.pyplot as plt\n'
+                       'weather_reports = {}\n'
+                       'sum = []\n'
+                       'for rain in weather_reports:\n'
+                       '    if rain["Station"]["City"] == "Chicago":\n'
+                       '        sum.append(rain["Data"]["Precipitation"])\n'
+                       'plt.plot(weather_reports)\n'
+                       'plt.xlabel("Years")\n'
+                       'plt.ylabel("Precipitation")\n'
+                       'plt.title("Chicago Rain")\n'
+                       'plt.show()\n'.format(self._dict_str))
+        ret = dict_plot()
+        self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
+
+        self.to_source('import weather\n'
+                       'import matplotlib.pyplot as plt\n'
+                       'weather_reports = weather.get_weather()\n'
+                       'sum = []\n'
+                       'for rain in weather_reports:\n'
+                       '    if rain["Station"]["City"] == "Chicago":\n'
+                       '        sum.append(rain["Data"]["Precipitation"])\n'
+                       'plt.plot(sum)\n'
+                       'plt.xlabel("Years")\n'
+                       'plt.ylabel("Precipitation")\n'
+                       'plt.title("Chicago Rain")\n'
+                       'plt.show()\n')
+        ret = dict_plot()
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
+    def test_comp_in_dict_acc(self):
+        self.to_source('import weather\n'
+                       'weather_reports = weather.get_weather()\n'
+                       'total_precipitation_Chicago = 0\n'
+                       'for report in weather_reports:\n'
+                       '    if report["Station"]["City" == "Chicago"]:\n'
+                       '        total_precipitation_Chicago = total_precipitation_Chicago + '
+                       'report["Data"]["Precipitation"]\n'
+                       'print(total_precipitation_Chicago)\n')
+        ret = comp_in_dict_acc()
+        self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
+
+        self.to_source('import weather\n'
+                       'import matplotlib.pyplot as plt\n'
+                       'weather_reports = weather.get_weather()\n'
+                       'sum = []\n'
+                       'for rain in weather_reports:\n'
+                       '    if rain["Station"]["City"] == "Chicago":\n'
+                       '        sum.append(rain["Data"]["Precipitation"])\n'
+                       'plt.plot(sum)\n'
+                       'plt.xlabel("Years")\n'
+                       'plt.ylabel("Precipitation")\n'
+                       'plt.title("Chicago Rain")\n'
+                       'plt.show()\n')
+        ret = dict_plot()
         self.assertFalse(ret, "Expected False, got {} instead".format(ret))
