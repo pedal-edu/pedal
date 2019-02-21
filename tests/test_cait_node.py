@@ -145,3 +145,5 @@ class CaitNodeTest(unittest.TestCase):
                         ("get_value didn't function as intended "
                          "returned {} instead of {x_val}").format(
                             num_node.value, x_val=x_val))
+
+        # TODO: Test .value for Name nodes

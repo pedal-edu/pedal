@@ -642,10 +642,28 @@ class CaitTests(unittest.TestCase):
         my_match4 = find_matches("_var_.get_weather()")
         self.assertTrue(len(my_match4) == 1, "couldn't find attr func access")
 
+    def test_attribute_names(self):
+        set_source("import weather\n"
+                   "weather_reports = get_weather('Data')\n"
+                   "weather_reports = weather.get_weather['Data']\n"
+                   "total = 0\n"
+                   "for weather in weather_reports:\n"
+                   "    total = total + weather\n"
+                   "print(total)")
+
+        my_match1 = find_matches("_var_._attr_[__str__]")
+        self.assertTrue(len(my_match1) == 1, "couldn't find attr func access")
+
+        self.assertTrue(my_match1[0]['_attr_'].id == "get_weather", "'{}' instead of 'get_weather'".format(my_match1[0]['_attr_'].id))
+
+        my_match2 = find_matches("_var_.___[__str__]")
+        self.assertTrue(len(my_match2) == 1, "couldn't wild card attribute access")
+
     def test_broken_traversal(self):
         set_source("user entered gobblydegook")
         ast = parse_program()
         self.assertFalse(ast.find_all('For'))
+
 
 if __name__ == '__main__':
     unittest.main(buffer=False)
