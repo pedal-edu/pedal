@@ -4,17 +4,13 @@ from pedal.toolkit.utilities import *
 from pedal.sandbox.compatibility import get_output
 
 
-def gently_r(message, code, line=None, tldr=""):
-    if tldr != "":
-        tldr = "<p><b>{}</b></p>".format(tldr)
-    gently(tldr + message + "<br><br><i>({})<i></br></br>".format(code), line)
+def gently_r(message, code, line=None, tldr="explain"):
+    gently(message + "<br><br><i>({})<i></br></br>".format(code), line, label=tldr)
     return message
 
 
-def explain_r(message, code, priority='medium', line=None, tldr=""):
-    if tldr != "":
-        tldr = "<p><b>{}</b></p>".format(tldr)
-    explain(tldr + message + "<br><br><i>({})<i></br></br>".format(code), priority, line)
+def explain_r(message, code, priority='medium', line=None, tldr="explain"):
+    explain(message + "<br><br><i>({})<i></br></br>".format(code), priority, line, label=tldr)
     return message
 
 
@@ -507,7 +503,8 @@ def unnecessary_cast(cast_list):
 
 
 def fetch_acc_dict(values):
-    message = "The code to fetch the dictionary, <code>{}.{}</code> cannot be used to select data."
+    message = ("The code to fetch the list of dictionaries, <code>{}.{}</code>, cannot be used to select data. "
+               "Selection of data should be done with an if statement")
     code = "fetch_acc"
 
     matches = find_matches("_var_._func_[__str__]")
