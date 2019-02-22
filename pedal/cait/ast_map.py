@@ -224,7 +224,7 @@ class AstMap:
         # merge all functions
         for key, value in other.func_table.items():
             for sub_value in value:
-                self.add_func_to_sym_table(key, sub_value.astNode)
+                self.add_func_to_sym_table(str(key), sub_value.astNode)
 
     @property
     def match_lineno(self):
