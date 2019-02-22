@@ -396,7 +396,9 @@ class StretchyTreeMatcher:
             if type(std_node.astNode).__name__ == "Name" or id_val == "attr":
                 if id_val == "attr":
                     std_node.astNode.id = std_node.astNode.attr
-                if std_node.field == "func":
+                if std_node.field == "func" and ins_node.field != "none":
+                    # TODO: This 'ins_node.field != "None"' code is for an obscure edge case where the instructor code
+                    # is only _var_
                     mapping.add_func_to_sym_table(ins_node, std_node)
                 else:
                     mapping.add_var_to_sym_table(ins_node, std_node)  # TODO: Capture result?
@@ -422,7 +424,7 @@ class StretchyTreeMatcher:
         return self.shallow_match_generic(ins_node, std_node, check_meta)
 
     def shallow_match_Attribute(self, ins_node, std_node, check_meta=True):
-        if ins_node.field == "func" and type(std_node.astNode).__name__ == "Attribute":
+        if ins_node.field == "func" and std_node.ast_name == "Attribute":
             return self.shallow_func_handle(ins_node, std_node, check_meta)
         elif std_node.ast_name == "Attribute":
             ins_node.astNode.id = ins_node.attr  # TODO: Fix this hack more gracefully

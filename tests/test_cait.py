@@ -642,6 +642,12 @@ class CaitTests(unittest.TestCase):
         my_match4 = find_matches("_var_.get_weather()")
         self.assertTrue(len(my_match4) == 1, "couldn't find attr func access")
 
+        set_source('print("fun")')
+        parse_program()
+        matches = find_matches("_var_")
+        var = matches[0]["_var_"]
+        self.assertTrue(var.ast_name == "Name", "is: '{}' instead of Name".format(var.ast_name))
+
     def test_attribute_names(self):
         set_source("import weather\n"
                    "weather_reports = get_weather('Data')\n"
