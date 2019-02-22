@@ -1,5 +1,5 @@
 from pedal.cait.cait_api import find_matches, find_expr_sub_matches, data_state
-from pedal.report.imperative import explain
+from cs1014.feedback_mod import *
 
 
 def append_group_on_change():
@@ -12,6 +12,8 @@ def append_group():
     wrong_append_list_initialization()
     wrong_not_append_to_list()
     append_list_wrong_slot()
+    # TODO: add app_assign on next iteration of experiment!
+    # app_assign()
 
 
 def find_append_in(node):
@@ -115,4 +117,15 @@ def append_list_wrong_slot():
                 explain("You should not append a list (<code>{0!s}</code>) to <code>{1!s}</code>.<br><br><i>"
                         "(app_list_slot)<i></br>".format(_item_.id, _target_.id))
                 return True
+    return False
+
+
+def app_assign():
+    message = ("Appending modifies the list, so unlike addition,"
+               " an assignment statement is not needed when using append.")
+    code = "app_asgn"
+
+    matches = find_matches("_sum_ = _sum_.append(__exp__)")
+    if matches:
+        return explain_r(message, code)
     return False
