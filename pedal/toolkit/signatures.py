@@ -268,12 +268,12 @@ def parse_docstring(doc):
             if not re.match(r'\s', line):
                 if current_component == 'args':
                     match = re.search(ARG_PATTERN, line)
-                    current_arg, type_str, comment = match.group(0, 1, 2)
-                    args[current_arg] = type_str
+                    current_arg, type_str, comment = match.group(1, 2, 3)
+                    args[current_arg.strip()] = type_str.strip()
                 elif current_component == 'returns':
                     position = find_colon(line)
                     return_type, comment = line[:position], line[position:]
-                    returns.append(return_type)
+                    returns.append(return_type.strip())
     return body, args, ' or '.join(returns)
 
 def function_signature(function_name, returns=None, yields=None,
@@ -317,10 +317,12 @@ def function_signature(function_name, returns=None, yields=None,
     except Exception as e:
         return [e], False
     failing_parameters = []
-    for name, type in args.items():
-        if name in kwargs:
-            if not type_check(type, kwargs[name]):
+    for name, type in kwargs.items():
+        if name in args:
+            if not type_check(type, args[name]):
                 failing_parameters.append(name)
+        else:
+            failing_parameters.append(name)
     if returns is None and not returns:
         return failing_parameters, True
     elif returns is not None and returns:
