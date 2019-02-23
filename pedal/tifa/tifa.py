@@ -250,7 +250,8 @@ class Tifa(ast.NodeVisitor):
                                       {'name': state.name, 'position': position})
                 if state.read == 'no':
                     self.report_issue('Unused Variable',
-                                      {'name': state.name, 'type': state.type})
+                                      {'name': state.name, 'type': state.type,
+                                       'position': state.position})
 
     def visit(self, node):
         """

@@ -609,6 +609,20 @@ class TestVariables(unittest.TestCase):
         tifa = pedal.tifa.Tifa()
         tifa.process_code(program)
         # pprint(tifa.report['tifa'])
+    
+    def test_locations(self):
+        program = dedent("""
+                a = 0
+                "Ignore"
+                "This"
+                "Line"
+                def unnecessary():
+                    pass
+                unnecessary
+                """)
+        tifa = pedal.tifa.Tifa()
+        tifa.process_code(program)
+        self.assertEqual(tifa.report['tifa']['issues']['Unused Variable'][0]['position']['line'], 2)
 
 
 if __name__ == '__main__':
