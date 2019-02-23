@@ -1,23 +1,74 @@
-from pedal.report.imperative import explain, gently
+from cs1014.feedback_mod import *
 from pedal.cait.cait_api import *
 from pedal.toolkit.utilities import *
 from pedal.sandbox.compatibility import get_output
+from pedal.mistakes.instructor_append import app_assign
 
 
-def gently_r(message, code, line=None, tldr=""):
-    if tldr != "":
-        tldr = "<p><b>{}</b></p>".format(tldr)
-    gently(tldr + message + "<br><br><i>({})<i></br></br>".format(code), line)
-    return message
+# dict_acc_group
+def dict_acc_group(all_keys, unused_keys, used_keys):
+    var_instead_of_key(all_keys)
+    parens_in_dict(all_keys)
+    missing_key(used_keys)
+    dict_parens_brack()
+    comma_dict_acc()
+    str_list(all_keys)
+    var_key(all_keys)
+    miss_dict_acc()
+    comp_in_dict_acc()
+    key_comp(all_keys)
+    col_dict()
+    print_dict_key(all_keys)
+    wrong_keys(unused_keys)
 
 
-def explain_r(message, code, priority='medium', line=None, tldr=""):
-    if tldr != "":
-        tldr = "<p><b>{}</b></p>".format(tldr)
-    explain(tldr + message + "<br><br><i>({})<i></br></br>".format(code), priority, line)
-    return message
+# dict_list_group
+def dict_list_group(all_keys):
+    list_str_dict(all_keys)
+    list_var_dict_acc()
+    list_str_as_list_var(all_keys)
+    fetch_acc_dict(all_keys)
+    list_as_dict()
+    iter_as_key(all_keys)
+    iter_prop_dict_acc()
+
+    append_and_sum()
+
+    dict_out_of_loop(all_keys)
+    dict_access_not_in_loop()
+    no_dict_in_loop()
+    app_assign()
 
 
+# dict_decision
+def dict_decision_group(all_keys, c_value, num_slices):
+    func_filter(all_keys)
+    filt_key(c_value, num_slices)
+    compare_key(c_value)
+    str_equality()
+    fetch_acc_dict([c_value])
+
+
+# dict_plot
+def dict_plot_group():
+    show_args()
+    dict_plot()
+
+
+# dict_chain
+def dict_chain_group(key_sets):
+    for key_set in key_sets:
+        key_order(key_set)
+        key_order_unchained(key_set)
+
+
+# dict_hard_codes
+def dict_hard_codes_group(print_vals, list_vals):
+    hard_coding(print_vals)
+    hard_coded_list(list_vals)
+
+
+# dict_hard_codes
 def hard_coding(val_list):
     message = ("Please show code that makes the computer extract "
                "the value from the dictionary.")
@@ -46,6 +97,7 @@ def hard_coding(val_list):
     return False
 
 
+# dict_acc_group
 def print_dict_key(keys):
     message = "You've printed the dictionary key <code>{}</code> instead of using an extracted value and printing it"
     code = "dict_k_print"
@@ -60,6 +112,7 @@ def print_dict_key(keys):
     return False
 
 
+# dict_acc_group
 def var_instead_of_key(keys):
     message = ("It looks like you are trying to use <code>{}</code>) as a dictionary key. "
                "Use the dictionary access syntax to get values from a dictionary")
@@ -76,6 +129,7 @@ def var_instead_of_key(keys):
     return False
 
 
+# dict_acc_group
 def parens_in_dict(keys):
     message = ("It seems like you ar having trouble with dictionary syntax. The dictionary key <code>{}"
                "</code>should use brackets.")
@@ -89,6 +143,7 @@ def parens_in_dict(keys):
     return False
 
 
+# dict_list_group
 def list_as_dict():
     message = ("A list of Dictionaries like <code>{}</code> is not itself a dictionary. "
                "To access key-value pairs of the dictionaries in the list, "
@@ -103,6 +158,7 @@ def list_as_dict():
     return False
 
 
+# dict_list_group
 def dict_out_of_loop(keys):
     message = ("Remember that a list of dictionaries, like <code>{}</code>, "
                "is still a list of individual items. Each dictionary needs to be accessed with "
@@ -126,6 +182,7 @@ def dict_out_of_loop(keys):
     return False
 
 
+# dict_acc_group
 def wrong_keys(unused_keys):
     message = "This problem does not require the key <code>{}</code>.\n"
     code = "unused_key"
@@ -138,6 +195,7 @@ def wrong_keys(unused_keys):
     return False
 
 
+# dict_list_group
 def dict_access_not_in_loop():
     message = ("You haven't used the dictionary access syntax in a for loop. "
                "Remember that a list of dictionaries is still a list of individual items. "
@@ -171,6 +229,7 @@ def hard_coded_list(val_list):
     return False
 
 
+# dict_list_group
 def iter_as_key(keys):
     message = ("It looks like you are using the iteration variable <code>{}"
                "</code> to access a value of a specific key in a dictionary. "
@@ -193,6 +252,7 @@ def iter_as_key(keys):
     return False
 
 
+# dict_list_group
 def list_str_as_list_var(keys):
     message = ("The list variable in an iteration can only take lists. "
                "To grab individual values in a list of dictionaries, "
@@ -208,6 +268,7 @@ def list_str_as_list_var(keys):
     return False
 
 
+# dict_list_group
 def append_and_sum():
     message = ("It looks like you're trying to build a list and "
                "then calculate a value. While this will get you a "
@@ -223,6 +284,7 @@ def append_and_sum():
     return False
 
 
+# dict_list_group
 def iter_prop_dict_acc():
     message = ("Improper usage of iteration variable."
                "The for statement gives the iteration variable a value, "
@@ -236,6 +298,7 @@ def iter_prop_dict_acc():
     return False
 
 
+# dict_list_group
 def list_str_dict(keys):
     message = ("When using dictionaries with iteration, the list cannot just be a key "
                "value like <code>{}</code>, it must be the list of dictionaries.")
@@ -250,6 +313,7 @@ def list_str_dict(keys):
     return False
 
 
+# dict_acc_group
 def missing_key(keys):
     message = "You seem to be missing the following dictionary keys:<ul>{}</ul>"
     code = "miss_key"
@@ -265,6 +329,7 @@ def missing_key(keys):
     return False
 
 
+# dict_acc_group
 def dict_parens_brack():
     message = ("It looks like you are trying to dictionary access <code>{}</code>. "
                "The dictionary access syntax does not require parenthesis.")
@@ -285,6 +350,7 @@ def dict_parens_brack():
     return False
 
 
+# dict_acc_group
 def comma_dict_acc():
     message = ("It looks like you are trying to dictionary access <code>{}</code>. "
                "Unlike with initializing dictionaries, keys don't need to be separated with commas "
@@ -298,6 +364,7 @@ def comma_dict_acc():
     return False
 
 
+# dict_list_group
 def no_dict_in_loop():
     message = "When working with a list of dictionaries, you need to use a dictionary access in your iteration."
     code = "no_dict_loop"
@@ -312,6 +379,7 @@ def no_dict_in_loop():
     return explain_r(message, code)
 
 
+# dict_decision
 def func_filter(keys):
     message = "Please do not modify the function call to retrieve the data."
     code = "func_filt"
@@ -324,6 +392,7 @@ def func_filter(keys):
     return False
 
 
+# dict_acc_group
 def str_list(keys):
     message = ('If you are trying to use a string such as <code>"{}"</code> as a dictionary key, '
                'it needs to be prefaced with a dictionary')
@@ -335,6 +404,7 @@ def str_list(keys):
     return False
 
 
+# dict_list_group
 def list_var_dict_acc():
     message = ("The for statement only specifies a list target, in this case, a list of dictionaries. "
                "It does not operate on the entire list. Keys should be used on the individual dictionaries of the list.")
@@ -347,6 +417,7 @@ def list_var_dict_acc():
     return False
 
 
+# dict_acc_group
 def key_comp(keys):
     message = ('The strings <code>"{}"</code> and <code>"{}"</code> are keys. '
                'Dictionary keys do not need to be compared to anything as they '
@@ -364,6 +435,7 @@ def key_comp(keys):
     return False
 
 
+# dict_acc_group
 def col_dict():
     message = "When using multiple keys, each key should have it's own set of brackets."
     code = "col_dict"
@@ -374,6 +446,7 @@ def col_dict():
     return False
 
 
+# dict_acc_group
 def var_key(keys):
     message = ("It looks like you are trying to use <code>{}</code> as a key. Dictionary keys are string values. "
                "Variable names don't have a meaning to a computer.")
@@ -387,6 +460,7 @@ def var_key(keys):
     return False
 
 
+# dict_plot
 def key_order(keys):
     message = "It looks like you aren't using the correct keys, or the correct key order. Double check your data map."
     code = "key_order_c"
@@ -407,6 +481,7 @@ def key_order(keys):
     return False
 
 
+# dict_plot
 def key_order_unchained(keys):
     message = "It looks like you aren't using the correct keys, or the correct key order. Double check your data map."
     code = "key_order_u"
@@ -429,6 +504,7 @@ def key_order_unchained(keys):
     return False
 
 
+# dict_decision
 def filt_key(c_value, num_slices):
     message = ("It looks like you're using <code>'{c_value}'</code> as a dictionary key to filter data. "
                "Dictionary keys don't filter data, they only access data that's already there. "
@@ -447,6 +523,7 @@ def filt_key(c_value, num_slices):
     return False
 
 
+# dict_acc_group
 def miss_dict_acc():
     message = ("You are missing something that looks like a dictionary access. "
                "In this unit, you should be using dictionary access")
@@ -456,6 +533,7 @@ def miss_dict_acc():
     return False
 
 
+# dict_decision
 def compare_key(c_value):
     message = ('In this problem, <code>"{}"</code> is not a key, '
                'but something you should compare against.'.format(c_value))
@@ -472,6 +550,7 @@ def compare_key(c_value):
     return False
 
 
+# dict_decision
 def str_equality():
     message = ("You are comparing two different string values, {} and {}. While dictionary keys are strings, "
                "they are only interpreted by the computer as keys when used with the dictionary access syntax")
@@ -486,28 +565,10 @@ def str_equality():
     return False
 
 
-def unnecessary_cast(cast_list):
-    """
-
-    Args:
-        cast_list: List of casts that are necessary to this problem
-
-    Returns:
-
-    """
-    message = "Converting to {} is unnecessary in this problem"
-    code = "ex_cast"
-    known_casts = ["float", "int", "str"]
-    matches = find_matches("_cast_(___)")
-    for match in matches:
-        user_cast = match["_cast_"].id
-        if user_cast not in cast_list and user_cast in known_casts:
-            return explain_r(message.format(user_cast), code)
-    return False
-
-
+# dict_list_group and dict_decision_group
 def fetch_acc_dict(values):
-    message = "The code to fetch the dictionary, <code>{}.{}</code> cannot be used to select data."
+    message = ("The code to fetch the list of dictionaries, <code>{}.{}</code>, cannot be used to select data. "
+               "Selection of data should be done with an if statement")
     code = "fetch_acc"
 
     matches = find_matches("_var_._func_[__str__]")
@@ -520,17 +581,7 @@ def fetch_acc_dict(values):
     return False
 
 
-def app_assign():
-    message = ("Appending modifies the list, so unlike addition,"
-               " an assignment statement is not needed when using append.")
-    code = "app_asgn"
-
-    matches = find_matches("_sum_ = _sum_.append(__exp__)")
-    if matches:
-        return explain_r(message, code)
-    return False
-
-
+# dict_plot
 def show_args():
     # TODO: Add this to plotting mistakes?
     message = ("The <code>plt.show</code> function only tells the computer to display the plot. "
@@ -543,6 +594,7 @@ def show_args():
     return False
 
 
+# dict_plot
 def dict_plot():
     message =("The list <code>{}</code> is a list of dictionaries. <code>plt.plot</code> only accepts a list"
               " of numbers. You need to extract the numbers from the list of dictionaries first.")
@@ -558,6 +610,7 @@ def dict_plot():
     return False
 
 
+# dict_acc_group
 def comp_in_dict_acc():
     message = ("You are using a boolean expression in a dictionary access. Remember that the dictionary "
                "access takes a key and provides a value. The comparison should be made with the value, not the key.")

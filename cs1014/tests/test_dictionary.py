@@ -5,6 +5,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../.
 
 from tests.mistake_test_template import *
 from cs1014.dictionaries import *
+from cs1014.input import *
 
 
 class DictionaryMistakeTest(MistakeTest):
@@ -843,3 +844,9 @@ class DictionaryMistakeTest(MistakeTest):
                        'plt.show()\n')
         ret = dict_plot()
         self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
+    def test_general_testing(self):
+        self.to_source('print("fun")')
+        matches = find_matches("_var_")
+        var = matches[0]["_var_"]
+        self.assertTrue(var.ast_name == "Name", "is: {}".format(var.ast_name))
