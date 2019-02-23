@@ -268,7 +268,8 @@ def parse_docstring(doc):
             if not re.match(r'\s', line):
                 if current_component == 'args':
                     match = re.search(ARG_PATTERN, line)
-                    current_arg, type_str, comment = match.group(1, 2, 3)
+                    current_arg = match.group(1)
+                    type_str = match.group(2)
                     args[current_arg.strip()] = type_str.strip()
                 elif current_component == 'returns':
                     position = find_colon(line)
@@ -303,15 +304,6 @@ def function_signature(function_name, returns=None, yields=None,
     if docstring is None:
         return False
 
-    '''
-    class Config:
-        napoleon_use_param = True
-        napoleon_use_rtype = True
-        napoleon_custom_sections = []
-
-    docstring = dedent(docstring)
-    docstring = GoogleDocstring(docstring, Config(), what='function', name=function_name)
-    '''
     try:
         body, args, parsed_returns = parse_docstring(docstring)
     except Exception as e:
