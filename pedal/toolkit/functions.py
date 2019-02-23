@@ -298,3 +298,5 @@ def ensure_coverage(percentage=.5, destructive=False, report=None):
     if unexecuted_lines:
         if percent_covered <= percentage:
             gently("Your code coverage is not adequate. You must cover at least half your code to receive feedback.")
+            return False
+    return True
