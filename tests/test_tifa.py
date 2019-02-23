@@ -353,6 +353,10 @@ unit_tests = {
 
     'prevent_empty_iteration_dict':
         ['x={"A":5}\nfor y in x:\n y', ['Iterating over empty list'], []],
+    
+    # Slices
+    'function_call_in_slice':
+        ['def x(): return 2\n"TEST"[:x()]', ['Unused Variable'], []],
 
     # Built-in modules
     'import_string_letters':

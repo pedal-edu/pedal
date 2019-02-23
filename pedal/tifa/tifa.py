@@ -806,6 +806,12 @@ class Tifa(ast.NodeVisitor):
             else:
                 return value_type.index(literal)
         elif isinstance(node.slice, ast.Slice):
+            if node.slice.lower is not None:
+                self.visit(node.slice.lower)
+            if node.slice.upper is not None:
+                self.visit(node.slice.upper)
+            if node.slice.step is not None:
+                self.visit(node.slice.step)
             return value_type
 
     def visit_Tuple(self, node):
