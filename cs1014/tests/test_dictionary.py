@@ -5,7 +5,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../.
 
 from tests.mistake_test_template import *
 from cs1014.dictionaries import *
-from cs1014.input import *
+from cs1014.input_mistakes import *
 
 
 class DictionaryMistakeTest(MistakeTest):

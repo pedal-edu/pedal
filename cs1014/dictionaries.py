@@ -627,12 +627,12 @@ def show_args():
 
 # dict_plot
 def dict_plot():
-    message =("The list <code>{}</code> is a list of dictionaries. <code>plt.plot</code> only accepts a list"
-              " of numbers. You need to extract the numbers from the list of dictionaries first.")
+    message = ("The list <code>{}</code> is a list of dictionaries. <code>plt.plot</code> only accepts a list"
+               " of numbers. You need to extract the numbers from the list of dictionaries first.")
     code = "dict_plot"
     tldr = "Plotting list of Dictionaries"
 
-    matches = find_matches("plt.plot(_var_)")
+    matches = find_matches("plt._func_(_var_)")
     for match in matches:
         _var_ = match["_var_"]
         var_type = str(_var_.get_data_state().type)
