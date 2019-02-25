@@ -397,7 +397,7 @@ class StretchyTreeMatcher:
                 if id_val == "attr":
                     std_node.astNode.id = std_node.astNode.attr
                 if std_node.field == "func" and ins_node.field != "none":
-                    # TODO: This 'ins_node.field != "None"' code is for an obscure edge case where the instructor code
+                    # TODO: This 'ins_node.field != "none"' code is for an obscure edge case where the instructor code
                     # is only _var_
                     mapping.add_func_to_sym_table(ins_node, std_node)
                 else:

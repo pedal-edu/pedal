@@ -8,7 +8,7 @@ def dict_acc_group(all_keys, unused_keys, used_keys):
     var_instead_of_key(all_keys)
     parens_in_dict(all_keys)
     missing_key(used_keys)
-    str_list(all_keys)  # must be run before dict_parents_brack()
+    str_list(all_keys)
     dict_parens_brack()
     comma_dict_acc()
     var_key(all_keys)
@@ -343,7 +343,7 @@ def dict_parens_brack():
             __str2__ = match["__str2__"]
         except KeyError:
             pass
-        if __str1__.is_ast("Str") and __str2__.is_ast("Str"):
+        if __str1__.is_ast("Str") and __str2__.is_ast("Str") and data_state(_var_.id):
             return explain_r(message.format(_var_.id), code)
     return False
 

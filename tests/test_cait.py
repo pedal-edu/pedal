@@ -642,6 +642,13 @@ class CaitTests(unittest.TestCase):
         my_match4 = find_matches("_var_.get_weather()")
         self.assertTrue(len(my_match4) == 1, "couldn't find attr func access")
 
+        MAIN_REPORT.clear()
+        set_source('book = {"number_of_pages":285, "price":99.23, "discount":0.1}\n'
+                   'print(["price"])')
+        parse_program()
+        match = find_match("_var_([__str1__])")
+        self.assertTrue(match["_var_"].id == "print", "couldn't find attr func access")
+
         set_source('print("fun")')
         parse_program()
         matches = find_matches("_var_")
@@ -660,7 +667,8 @@ class CaitTests(unittest.TestCase):
         my_match1 = find_matches("_var_._attr_[__str__]")
         self.assertTrue(len(my_match1) == 1, "couldn't find attr func access")
 
-        self.assertTrue(my_match1[0]['_attr_'].id == "get_weather", "'{}' instead of 'get_weather'".format(my_match1[0]['_attr_'].id))
+        self.assertTrue(my_match1[0]['_attr_'].id == "get_weather", "'{}' instead of 'get_weather'".format(
+            my_match1[0]['_attr_'].id))
 
         my_match2 = find_matches("_var_.___[__str__]")
         self.assertTrue(len(my_match2) == 1, "couldn't wild card attribute access")
