@@ -624,9 +624,51 @@ class TestSignatures(unittest.TestCase):
         with Execution(bad_code) as e:
             self.assertEqual(function_signature(
                 "haha_what",
-                something="int or str", another="banana",
+                something="str or int", another="banana",
                 returns="bool or int"
             ), ([], True))
+        
+        bad_code = dedent("""
+            def bad_function(malformed1, malformed2):
+                '''
+                Some long description
+                
+                Args
+                malformed1 str Description1
+                malformed2 int Description2
+                Returns:
+                    float: number of pages to fill
+                '''
+        """)
+        with Execution(bad_code) as e:
+            signature = function_signature(
+                "bad_function",
+                malformed1="str", malformed2="int",
+                returns="float"
+            )
+            self.assertEqual(signature[1], True)
+            self.assertEqual(set(signature[0]), {"malformed1", "malformed2"})
+        
+        student_code = dedent("""
+        def fixed_function(malformed1, two_part_name):
+            '''
+            Some long description
+            
+            Args:
+                malformed1 (str): The contents of the book as a string
+                two_part_name (int): the letters on each page
+            Returns:
+                float: number of pages to fill
+            '''
+        """)
+        with Execution(student_code) as e:
+            signature = function_signature(
+                "fixed_function",
+                malformed1="str", two_part_name="int",
+                returns="float"
+            )
+            self.assertEqual(signature[1], True)
+            self.assertEqual(signature[0], [])
 
 
 if __name__ == '__main__':

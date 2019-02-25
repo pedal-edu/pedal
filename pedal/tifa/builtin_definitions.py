@@ -2,7 +2,7 @@ from pedal.tifa.type_definitions import (UnknownType, FunctionType,
                                          NumType, NoneType, BoolType,
                                          TupleType, ListType, StrType,
                                          FileType, DictType, ModuleType,
-                                         SetType, DayType, TimeType,
+                                         SetType, DayType, TimeType, ClassType,
                                          LiteralNum)
 
 
@@ -211,6 +211,8 @@ def get_builtin_function(name):
     elif name == "filter":
         return FunctionType(name="filter", returns='identity')
     # Special Functions
+    elif name == "type":
+        return FunctionType(name="type", returns=UnknownType())
     elif name == "range":
         return FunctionType(name="range", returns=ListType(NumType(), empty=False))
     elif name == "dir":
