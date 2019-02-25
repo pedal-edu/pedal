@@ -301,6 +301,11 @@ class DictionaryMistakeTest(MistakeTest):
         ret = dict_parens_brack()
         self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
 
+        self.to_source('book = {"number_of_pages":285, "price":99.23, "discount":0.1}\n'
+                       'print(["price"])')
+        ret = dict_parens_brack()
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
         self.to_source('total_precipitation = 0\n'
                        'for precip in weather_reports:\n'
                        '    total_precipitation = total_precipitation + precip["Data"]["Precipitation"]\n'

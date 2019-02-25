@@ -1,5 +1,5 @@
 from pedal.cait.cait_api import find_matches, find_expr_sub_matches, data_state
-from cs1014.feedback_mod import *
+from pedal.mistakes.feedback_mod import *
 
 
 def append_group_on_change():

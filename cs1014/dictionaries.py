@@ -1,7 +1,5 @@
-from cs1014.feedback_mod import *
+from pedal.mistakes.feedback_mod import *
 from pedal.cait.cait_api import *
-from pedal.toolkit.utilities import *
-from pedal.sandbox.compatibility import get_output
 from pedal.mistakes.instructor_append import app_assign
 
 
@@ -10,9 +8,9 @@ def dict_acc_group(all_keys, unused_keys, used_keys):
     var_instead_of_key(all_keys)
     parens_in_dict(all_keys)
     missing_key(used_keys)
+    str_list(all_keys)  # must be run before dict_parents_brack()
     dict_parens_brack()
     comma_dict_acc()
-    str_list(all_keys)
     var_key(all_keys)
     miss_dict_acc()
     comp_in_dict_acc()

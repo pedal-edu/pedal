@@ -1,4 +1,4 @@
-from cs1014.feedback_mod import *
+from pedal.mistakes.feedback_mod import *
 from pedal.cait.cait_api import *
 
 
