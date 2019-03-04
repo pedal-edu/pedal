@@ -94,7 +94,7 @@ def _fail(code_message, actual_message, expected_message, show_expected_value,
     if sandboxed_results:
         code_message = _build_context(sandboxed_results, actual_message, expected_message,
                                       show_expected_value)
-    # return AssertionException(code_message.format(*sandboxed_values, *normal_values))
+    return AssertionException(code_message.format(*(sandboxed_values + normal_values)))
 
 
 def _build_result_from_target(target, index, quantity):
