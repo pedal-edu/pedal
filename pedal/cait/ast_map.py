@@ -60,6 +60,7 @@ class AstMap:
         self.func_table = {}
         self.conflict_keys = []
         self.match_root = None
+        self.diagnosis = ""
 
     def add_func_to_sym_table(self, ins_node, std_node):
         """
@@ -81,11 +82,20 @@ class AstMap:
             key = ins_node
         else:
             try:
-                key = ins_node.astNode.name
+                if ins_node.ast_name == "FunctionDef":
+                    key = ins_node.astNode.name
+                else:  # TODO: Little skulpt artifact that doesn't raise Attribute Errors...
+                    key = ins_node.id
+                    raise AttributeError
             except AttributeError:
                 key = ins_node.astNode.id
+
         try:
-            value = AstSymbol(std_node.astNode.name, std_node)
+            if std_node.ast_name == "FunctionDef":
+                value = AstSymbol(std_node.astNode.name, std_node)
+            else:  # TODO: Little skulpt artifact that doesn't raise Attribute Errors...
+                raise AttributeError
+#            value = AstSymbol(std_node.astNode.name, std_node)
         except AttributeError:
             node = std_node
             if type(node.astNode).__name__ != "Call":

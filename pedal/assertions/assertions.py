@@ -8,6 +8,7 @@ from pedal.assertions.setup import _setup_assertions
 
 _MAX_LENGTH = 80
 
+
 def safe_repr(obj, short=False):
     try:
         result = repr(obj)
@@ -17,7 +18,9 @@ def safe_repr(obj, short=False):
         return result
     return result[:_MAX_LENGTH] + ' [truncated]...'
 
+
 punctuation_table = str.maketrans(string.punctuation, ' ' * len(string.punctuation))
+
 
 def _normalize_string(a_string, numeric_endings=False):
     # Lower case
@@ -42,7 +45,7 @@ def equality_test(actual, expected, _exact_strings, _delta, _test_output):
     # Float comparison
     if (isinstance(expected, float) and
         isinstance(actual, (float, int)) and
-        abs(actual - expected) < _delta):
+            abs(actual - expected) < _delta):
         return True
     # Exact Comparison
     if actual == expected:
@@ -67,11 +70,15 @@ def equality_test(actual, expected, _exact_strings, _delta, _test_output):
     # Else
     return False
 
+
 class AssertionException(Exception):
     pass
 
+
 # Unittest Asserts
 DELTA = .001
+
+
 def _fail(code_message, actual_message, expected_message, show_expected_value,
           *values):
     normal_values = []
@@ -87,7 +94,8 @@ def _fail(code_message, actual_message, expected_message, show_expected_value,
     if sandboxed_results:
         code_message = _build_context(sandboxed_results, actual_message, expected_message,
                                       show_expected_value)
-    return AssertionException(code_message.format(*sandboxed_values, *normal_values))
+    # return AssertionException(code_message.format(*sandboxed_values, *normal_values))
+
 
 def _build_result_from_target(target, index, quantity):
     if target == "_":
@@ -98,7 +106,8 @@ def _build_result_from_target(target, index, quantity):
         else:
             return "the second result"
     return "<code>"+target+"</code>"
-    
+
+
 def _build_context(sandboxed_results, actual_message, expected_message,
                    show_expected_value):
     context = []

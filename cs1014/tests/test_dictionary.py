@@ -5,7 +5,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../.
 
 from tests.mistake_test_template import *
 from cs1014.dictionaries import *
-from cs1014.input import *
+from cs1014.input_mistakes import *
 
 
 class DictionaryMistakeTest(MistakeTest):
@@ -290,6 +290,26 @@ class DictionaryMistakeTest(MistakeTest):
         ret = missing_key(keys)
         self.assertFalse(ret, "Expected False, got {} instead".format(ret))
 
+    def test_blank_key(self):
+        keys = ["distance", "time"]
+        self.to_source('distance_in_kilometers = trip_data["____"]/1000\n'
+                       'trip_data = {"distance":123000.0, "time":14000.0}\n'
+                       'print(average_speed_in_mph) \n'
+                       'average_speed_in_mph = ____ / time_in_hours\n'
+                       'time_in_hours = trip_data["____"]/____\n'
+                       '____ = distance_in_kilometers / 1.6\n')
+        ret = blank_key(keys)
+        self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
+
+        self.to_source('trip_data = {"distance":123000.0, "time":14000.0}\n'
+                       'distance_in_kilometers = trip_data["distance"]/1000\n'
+                       'distance_in_miles = distance_in_kilometers / 1.6\n'
+                       'time_in_hours = trip_data["time"]/3600\n'
+                       'average_speed_in_mph = distance_in_miles / time_in_hours\n'
+                       'print(average_speed_in_mph) \n')
+        ret = blank_key(keys)
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
     def test_dict_parens_brack(self):
         # TODO: Check output string
         self.to_source('import weather\n'
@@ -300,6 +320,11 @@ class DictionaryMistakeTest(MistakeTest):
                        'print(sum)\n')
         ret = dict_parens_brack()
         self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
+
+        self.to_source('book = {"number_of_pages":285, "price":99.23, "discount":0.1}\n'
+                       'print(["price"])')
+        ret = dict_parens_brack()
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
 
         self.to_source('total_precipitation = 0\n'
                        'for precip in weather_reports:\n'
