@@ -568,7 +568,7 @@ class Sandbox(DataSandbox):
                 inputs = mocked._make_inputs('0', repeat='0')
             else:
                 inputs = self.inputs
-        elif isinstance(inputs, (tuple, list)):
+        if isinstance(inputs, (tuple, list)):
             inputs = mocked._make_inputs(*inputs)
         elif isinstance(inputs, str):
             inputs = mocked._make_inputs(inputs)

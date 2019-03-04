@@ -112,7 +112,7 @@ def execute_on_run_code(on_run, student_code, inputs):
     escaped_student_code = json.dumps(student_code)
     instructor_code = PEDAL_PIPELINE.format(on_run=on_run,
                                             student_code=escaped_student_code,
-                                            inputs=inputs)
+                                            inputs=','.join(inputs))
     # Execute the instructor code in a new environment
     global_variables = globals()
     compiled_code = compile(instructor_code, 'instructor_code.py', 'exec')
@@ -288,6 +288,7 @@ class GradeMagic(Magics):
             assignment, inputs = line.split(",", maxsplit=1)
         else:
             assignment, inputs = line, ""
+        inputs = [json.dumps(i) for i in inputs.split(",")]
         # Concatenate the JS code and then execute it by displaying it
         code = EXTRACT_STUDENT_CODE
         code += ANIMATE_LAST_CELL

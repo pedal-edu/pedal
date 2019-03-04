@@ -3,9 +3,10 @@ import unittest
 from pprint import pprint
 import os
 import sys
+import json
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from pedal.report.imperative import MAIN_REPORT
+from pedal.report.imperative import MAIN_REPORT, clear_report
 from pedal.sandbox import Sandbox
 import pedal.sandbox.compatibility as compatibility
 from pedal.source import set_source
@@ -81,32 +82,40 @@ class TestCode(unittest.TestCase):
         student.call('average', 10, 12)
 
     def test_compatibility_api(self):
+        clear_report()
         student_code = 'word = input("Give me a word")\nprint(word+"!")'
         set_source(student_code)
         self.assertFalse(compatibility.get_output())
         compatibility.queue_input("Hello")
-        self.assertIsNone(compatibility.run_student())
+        self.assertIsNone(compatibility.run_student(True))
         self.assertEqual(compatibility.get_output(),
                          ["Give me a word", "Hello!"])
         compatibility.queue_input("World", "Again")
-        self.assertIsNone(compatibility.run_student())
+        self.assertIsNone(compatibility.run_student(True))
         self.assertEqual(compatibility.get_output(),
                          ["Give me a word", "Hello!",
                           "Give me a word", "World!"])
-        self.assertIsNone(compatibility.run_student())
+        self.assertIsNone(compatibility.run_student(True))
         self.assertEqual(compatibility.get_output(),
                          ["Give me a word", "Hello!",
                           "Give me a word", "World!",
                           "Give me a word", "Again!"])
         compatibility.reset_output()
         compatibility.queue_input("Dogs", "Are", "Great")
-        self.assertIsNone(compatibility.run_student())
-        self.assertIsNone(compatibility.run_student())
-        self.assertIsNone(compatibility.run_student())
+        self.assertIsNone(compatibility.run_student(True))
+        self.assertIsNone(compatibility.run_student(True))
+        self.assertIsNone(compatibility.run_student(True))
         self.assertEqual(compatibility.get_output(),
                          ["Give me a word", "Dogs!",
                           "Give me a word", "Are!",
                           "Give me a word", "Great!"])
+        
+        
+        compatibility.reset_output()
+        compatibility.queue_input(json.dumps("Virginia,Trend"))
+        self.assertIsNone(compatibility.run_student(True))
+        self.assertEqual(compatibility.get_output(), 
+                         ["Give me a word", '"Virginia,Trend"!'])
 
     def test_compatibility_exceptions(self):
         student_code = '1 + "Banana"'
@@ -266,7 +275,6 @@ class TestCode(unittest.TestCase):
         # x.b == 10
         # x.update()
         # x.a == 15
-
 
 if __name__ == '__main__':
     unittest.main(buffer=False)
