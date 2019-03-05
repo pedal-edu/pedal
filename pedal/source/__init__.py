@@ -16,7 +16,8 @@ OPTIONALS = []
 CATEGORY = 'Syntax'
 
 __all__ = ['NAME', 'DESCRIPTION', 'SHORT_DESCRIPTION', 'REQUIRES', 'OPTIONALS',
-           'set_source', 'check_section_exists', 'next_section', 'verify_section']
+           'set_source', 'check_section_exists', 'next_section', 'verify_section',
+           'set_source_file']
 DEFAULT_PATTERN = r'^(##### Part .+)$'
 
 
@@ -87,3 +88,20 @@ def get_program(report=None):
     if report is None:
         report = MAIN_REPORT
     return report['source']['code']
+
+def set_source_file(filename, sections=False, independent=False, report=None):
+    if report is None:
+        report = MAIN_REPORT
+    try:
+        with open(filename, 'r') as student_file:
+            set_source(student_file.read(), filename=filename,
+                       sections=sections, independent=independent,
+                       report=report)
+    except IOError:
+        message = ("The given filename ('{filename}') was either not found"
+                   " or could not be opened. Please make sure the file is"
+                   " available.").format(filename=filename)
+        report.attach('Source File Not Found', category='Syntax', tool='Source',
+                      group=0 if sections else None,
+                      mistake={'message': message})
+        report['source']['success'] = False

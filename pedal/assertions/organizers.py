@@ -62,6 +62,13 @@ def section(*args):
     return wrap
 
 
+def phase(name):
+    _setup_assertions(MAIN_REPORT)
+    def wrap(f):
+        MAIN_REPORT['assertions']['functions'].append(f)
+        return f
+    return wrap
+
 def precondition(function):
     pass
 

@@ -324,9 +324,8 @@ def assertSequenceEqual(left, right):
 
 
 # Speciality Asserts
-def assertPrints(sandbox, strings):
+def assertPrints(sandbox, strings, score=None):
     pass
-
 
 def assertHasFunction(obj, function, args=None, returns=None):
     # If object is a sandbox, will check the .data[variable] attribute

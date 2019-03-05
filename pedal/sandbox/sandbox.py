@@ -562,7 +562,7 @@ class Sandbox(DataSandbox):
                                         report_exceptions)
                 return self
         if as_filename is None:
-            as_filename = self.report['source']['filename']
+            as_filename = os.path.basename(self.report['source']['filename'])
         if inputs is None:
             if self.inputs is None:
                 inputs = mocked._make_inputs('0', repeat='0')

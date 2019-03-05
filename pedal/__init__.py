@@ -20,4 +20,5 @@ from pedal.report.imperative import (suppress, explain, compliment,
                                      give_partial, gently, set_success)
 from pedal.sandbox.sandbox import run, reset
 from pedal.tifa import tifa_analysis
-from pedal.source import set_source, check_section_exists, next_section
+from pedal.source import (set_source, check_section_exists, next_section,
+                          set_source_file)

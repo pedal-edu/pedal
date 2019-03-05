@@ -6,7 +6,7 @@ python -m pedal.plugins.test_reference_solution <path to grade script>
 '''
 
 # Runner
-from pedal.report.imperative import clear_report
+from pedal.report.imperative import clear_report, MAIN_REPORT
 import sys
 import os
 from io import StringIO
@@ -29,8 +29,8 @@ def substitute_args(arg, student_path):
 def add_test(class_, name, python_file,
              expected_output_path, expected_output,
              grader_code, grader_path, grader_args, student_path):
+    grader_args = [substitute_args(arg, student_path) for arg in grader_args]
     def _inner_test(self):
-        grader_args = [substitute_args(arg, student_path) for arg in grader_args]
         captured_output = StringIO()
         with redirect_stdout(captured_output):
             # TODO: mock_open will only work if we are not anticipating
@@ -39,8 +39,9 @@ def add_test(class_, name, python_file,
                        create=True):
                 with patch.object(sys, 'argv', grader_args):
                     clear_report()
-                    compile(grader_code, grader_path, 'exec')
-                    exec(grader_code, globals())
+                    grader_exec = compile(grader_code, grader_path, 'exec')
+                    exec(grader_exec, globals())
+                    #print(repr(MAIN_REPORT.feedback[0].mistake['error']))
         actual_output = captured_output.getvalue()
         if expected_output is None:
             print("File not found:", expected_output_path)
