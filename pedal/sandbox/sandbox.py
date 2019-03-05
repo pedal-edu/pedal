@@ -255,15 +255,14 @@ class Sandbox(DataSandbox):
                 newlines.
         """
         if raw_output is None:
-            #:
             self.raw_output = ""
             self.output = []
-            self.output_contexts = {self.call_id: self.output}
+            self.output_contexts = {self.call_id: list(self.output)}
         else:
             self.raw_output = raw_output
             lines = raw_output.rstrip().split("\n")
             self.output = [line.rstrip() for line in lines]
-            self.output_contexts[self.call_id] = self.output
+            self.output_contexts[self.call_id] = list(self.output)
 
     def append_output(self, raw_output):
         """
@@ -279,7 +278,9 @@ class Sandbox(DataSandbox):
         self.raw_output += raw_output
         lines = raw_output.rstrip().split("\n")
         lines = [line.rstrip() for line in lines]
-        self.output.extend(lines)
+        if self.raw_output:
+            self.output.extend(lines)
+            self.output_contexts[self.call_id].extend(lines)
 
     def set_input(self, inputs):
         """

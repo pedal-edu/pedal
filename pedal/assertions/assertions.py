@@ -321,8 +321,46 @@ def assertSequenceEqual(left, right):
 
 
 # Speciality Asserts
-def assertPrints(sandbox, strings, score=None):
-    pass
+def assertPrints(result, expected_output, args=None, returns=None,
+                  score=None, message=None, report=None,
+                  contextualize=True, exact=False):
+    if not isinstance(result, SandboxResult):
+        raise TypeError("You must pass in a SandboxResult (e.g., using `call`) to assertPrints")
+    if report is None:
+        report = MAIN_REPORT
+    _setup_assertions(report)
+    call_id = result._actual_call_id
+    sandbox = result._actual_sandbox
+    calls = sandbox.call_contexts[call_id]
+    inputs = sandbox.input_contexts[call_id]
+    actual_output = sandbox.output_contexts[call_id]
+    if not equality_test(actual_output, expected_output, False, DELTA, True):
+        context= []
+        if calls:
+            context.append("I ran:<pre>"+
+                           "\n".join(map(str, calls))+
+                           "</pre>")
+        if inputs:
+            context.append("I entered as input:<pre>"+
+                           "\n".join(map(str, inputs))+
+                           "</pre>")
+        if actual_output:
+            context.append("The function printed:<pre>"+
+                           "\n".join(map(str, actual_output))+
+                           "</pre>")
+        else:
+            context.append("The function printed nothing.")
+        context.append("But I expected the output:<pre>"+ "\n".join(map(str, expected_output))+ "</pre>")
+        failure = AssertionException("\n".join(context))
+        report['assertions']['collected'].append(failure)
+        report.attach('Instructor Test', category='Instructor', tool='Assertions',
+                      mistake={'message': "Student code failed instructor test.<br>\n"+
+                                          str(failure)})
+        if report['assertions']['exceptions']:
+            raise failure
+        else:
+            return False
+    return True
 
 def assertHasFunction(obj, function, args=None, returns=None,
                       score=None, message=None, report=None,
