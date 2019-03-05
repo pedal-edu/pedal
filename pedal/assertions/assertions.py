@@ -223,13 +223,35 @@ def assertIs(left, right, score=None, message=None):
 def assertIsNot(left, right, score=None, message=None):
     pass
 
+def _actually_is_none(l, r):
+    if is_sandbox_result(l):
+        return l._actual_value is None
+    return l is None
 
-def assertIsNone(something):
-    pass
+def assertIsNone(something, score=None, message=None, report=None,
+                contextualize=True):
+    return _basic_assertion(something, None,
+                            _actually_is_none,
+                            "{} is none",
+                            "was"+PRE_VAL,
+                            "to be none",
+                            message, report, contextualize,
+                            show_expected_value=False)
 
+def _actually_is_not_none(l, r):
+    if is_sandbox_result(l):
+        return l._actual_value is not None
+    return l is not None
 
-def assertIsNotNone(something):
-    pass
+def assertIsNotNone(something, score=None, message=None, report=None,
+                contextualize=True):
+    return _basic_assertion(something, None,
+                            _actually_is_not_none,
+                            "{} is not none",
+                            "was"+PRE_VAL,
+                            "to not be none",
+                            message, report, contextualize,
+                            show_expected_value=False)
 
 
 def assertIn(needle, haystack, score=None, message=None, report=None,
