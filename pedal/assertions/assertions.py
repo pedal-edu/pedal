@@ -1,10 +1,11 @@
 from pedal.report.imperative import MAIN_REPORT
 from pedal.sandbox.result import SandboxResult
 from pedal.sandbox.exceptions import SandboxException
+from pedal.sandbox.sandbox import DataSandbox
 import string
 import re
 
-from pedal.assertions.setup import _setup_assertions
+from pedal.assertions.setup import _setup_assertions, AssertionException
 
 _MAX_LENGTH = 80
 
@@ -69,10 +70,6 @@ def equality_test(actual, expected, _exact_strings, _delta, _test_output):
             return True
     # Else
     return False
-
-
-class AssertionException(Exception):
-    pass
 
 
 # Unittest Asserts
@@ -327,10 +324,33 @@ def assertSequenceEqual(left, right):
 def assertPrints(sandbox, strings, score=None):
     pass
 
-def assertHasFunction(obj, function, args=None, returns=None):
+def assertHasFunction(obj, function, args=None, returns=None,
+                      score=None, message=None, report=None,
+                      contextualize=True, exact=False):
     # If object is a sandbox, will check the .data[variable] attribute
     # Otherwise, check it directly
-    pass
+    if isinstance(obj, DataSandbox):
+        comparison = lambda o, f: f in o.data
+    else:
+        comparison = lambda o, f: f in hasattr(o, f)
+    if not _basic_assertion(obj, function,
+                            comparison,
+                            "Could not find function {}{}",
+                            "was"+PRE_VAL,
+                            "to have the function",
+                            message, report, contextualize):
+        return False
+    if isinstance(obj, DataSandbox):
+        student_function = obj.data[function]
+    else:
+        student_function = getattr(obj, function)
+    return _basic_assertion(student_function, function,
+                            lambda l, r: callable(l),
+                            "The value {} is in the variable {}, and that value is not a callable function.",
+                            "was callable"+PRE_VAL,
+                            "to be callable",
+                            message, report, contextualize,
+                            show_expected_value=False)
 
 
 def assertHasClass(sandbox, class_name, attrs=None):

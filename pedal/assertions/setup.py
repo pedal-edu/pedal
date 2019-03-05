@@ -1,11 +1,17 @@
 from pedal.report.imperative import MAIN_REPORT
 
+class AssertionException(Exception):
+    pass
+
 def resolve_all(report=None):
     if report is None:
         report = MAIN_REPORT
     _setup_assertions(report)
     for function in report['assertions']['functions']:
-        function()
+        try:
+            function()
+        except AssertionException:
+            pass
 
 def _setup_assertions(report):
     if 'assertions' not in report:
