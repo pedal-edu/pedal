@@ -18,13 +18,16 @@ import argparse
 # Arguments
 DEFAULT_REFERENCE_SOLUTIONS_DIR = "reference_solutions/"
 
+
 class TestReferenceSolutions(unittest.TestCase):
     maxDiff = None
+
 
 def substitute_args(arg, student_path):
     if arg == "$_STUDENT_MAIN":
         return student_path
     return arg
+
 
 def add_test(class_, name, python_file,
              expected_output_path, expected_output,
@@ -51,6 +54,7 @@ def add_test(class_, name, python_file,
             self.assertEqual(actual_output, expected_output)
     setattr(class_, 'test_' + name, _inner_test)
 
+
 # Load reference solutions
 def add_all_tests(grader_path, reference_solutions_dir, grader_args):
     # Load grader file
@@ -70,15 +74,23 @@ def add_all_tests(grader_path, reference_solutions_dir, grader_args):
             add_test(TestReferenceSolutions, filename[:-3], python,
                      text_path, output, 
                      grader_code, grader_path, grader_args, path)
-        
+
+
 def run_tests():
     unittest.main(argv=['first-arg-is-ignored'])
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Run instructor grading script on a collection of reference solutions')
     parser.add_argument('grader', help='The path to the instructor grading script.')
-    parser.add_argument('--path', '-p', help='The path to the student reference files. If not given, assumed to be in the same folder as the instructor grading script.', default=DEFAULT_REFERENCE_SOLUTIONS_DIR)
-    parser.add_argument('--args', '-a', help='Pass in arguments that the grading script will use. Variable substitutions include "$_STUDENT_MAIN".', default='$_STUDENT_MAIN')
+    parser.add_argument('--path', '-p',
+                        help='The path to the student reference files. If not given, assumed to be in the same folder '
+                             'as the instructor grading script.',
+                        default=DEFAULT_REFERENCE_SOLUTIONS_DIR)
+    parser.add_argument('--args', '-a',
+                        help='Pass in arguments that the grading script will use. '
+                             'Variable substitutions include "$_STUDENT_MAIN".',
+                        default='$_STUDENT_MAIN')
     args = parser.parse_args()
     
     # Turn the reference solutions path into an absolute filename

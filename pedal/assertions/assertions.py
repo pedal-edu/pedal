@@ -148,12 +148,14 @@ def _build_context(sandboxed_results, actual_message, expected_message,
     context.append(expected_context)
     return "\n".join(context)
 
+
 def is_sandbox_result(value):
     if hasattr(value, "__actual_class__"):
         if value.__actual_class__ == SandboxResult:
             return True
     return False
-    
+
+
 def _basic_assertion(left, right, operator, code_comparison_message,
                      hc_message, hc_message_past, message, report, contextualize,
                      show_expected_value=True):
@@ -180,8 +182,10 @@ def _basic_assertion(left, right, operator, code_comparison_message,
         else:
             return False
     return True
-    
+
+
 PRE_VAL = ""
+
 
 def assertEqual(left, right, score=None, message=None, report=None,
                 contextualize=True, exact=False):
@@ -191,10 +195,8 @@ def assertEqual(left, right, score=None, message=None, report=None,
                             "was"+PRE_VAL,
                             "to be equal to",
                             message, report, contextualize)
-    
-    
 
-    
+
 assert_equal = assertEqual
 
 
@@ -234,7 +236,7 @@ def assertIsNotNone(something):
 
 
 def assertIn(needle, haystack, score=None, message=None, report=None,
-                contextualize=True):
+             contextualize=True):
     expected_message = "to be in"
     if not is_sandbox_result(needle) and is_sandbox_result(haystack):
         expected_message = "to contain"
