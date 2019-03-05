@@ -286,10 +286,9 @@ class GradeMagic(Magics):
     def grade_blockpy(self, line=""):
         if ',' in line:
             assignment, inputs = line.split(",", maxsplit=1)
-            inputs = [i for i in inputs.split(",")]
         else:
             assignment, inputs = line, ""
-            inputs = [json.dumps(i) for i in inputs.split(",")]
+        inputs = [json.dumps(i) for i in inputs.split(",")]
         # Concatenate the JS code and then execute it by displaying it
         code = EXTRACT_STUDENT_CODE
         code += ANIMATE_LAST_CELL
