@@ -3,7 +3,7 @@ from pedal.report.imperative import MAIN_REPORT
 class AssertionException(Exception):
     pass
 
-def resolve_all(report=None):
+def resolve_all(set_success=False, report=None):
     if report is None:
         report = MAIN_REPORT
     _setup_assertions(report)
@@ -12,12 +12,15 @@ def resolve_all(report=None):
             function()
         except AssertionException:
             pass
+    if not report['assertions']['failures'] and set_success:
+        report.set_success()
 
 def _setup_assertions(report):
     if 'assertions' not in report:
         report['assertions'] = {
             'functions': [],
             'exceptions': False,
+            'failures': 0,
             'collected': [],
             # Should we batch up multiple assertion failures?
             #   The grouping mechanism is try_all

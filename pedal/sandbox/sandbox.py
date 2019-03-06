@@ -129,7 +129,8 @@ class Sandbox(DataSandbox):
                  tracer_style='none',
                  threaded=False, report=None,
                  context=None, result_proxy=SandboxResult,
-                 instructor_filename="instructor_tests.py"):
+                 instructor_filename="instructor_tests.py",
+                 allowed_functions=None):
         """
         Args:
             initial_data (dict[str:Any]): An initial namespace to provide when
@@ -190,6 +191,17 @@ class Sandbox(DataSandbox):
         self.mocked_modules = {}
         self.modules = {}
         self.add_mocks(modules)
+        self.mocked_functions = {
+            'compile': mocked._disabled_compile,
+            'eval': mocked._disabled_eval,
+            'exec': mocked._disabled_exec,
+            'globals': mocked._disabled_globals,
+            'open': mocked._restricted_open
+        }
+        if allowed_functions is not None:
+            for function_name in allowed_functions:
+                if function_name in self.mocked_functions:
+                    del self.mocked_functions[function_name]
         # Patching
         self._current_patches = []
         # Settings
@@ -575,17 +587,13 @@ class Sandbox(DataSandbox):
             inputs = mocked._make_inputs(inputs)
         inputs = self._track_inputs(inputs)
         # Override builtins and mock stuff out
-        mocked._override_builtins(self.data, {
-            'compile': mocked._disabled_compile,
-            'eval': mocked._disabled_eval,
-            'exec': mocked._disabled_exec,
-            'globals': mocked._disabled_globals,
-            'open': mocked._restricted_open,
-            'input': inputs,
-            'raw_input': inputs,
-            'sys': sys,
-            'os': os
-        })
+        mocked_functions = self.mocked_functions.copy()
+        mocked_functions['input'] = inputs
+        mocked_functions['raw_input'] = inputs
+        mocked_functions['sys'] = sys
+        mocked_functions['os'] = os
+        mocked._override_builtins(self.data, mocked_functions)
+        
 
         self.exception = None
         self.exception_position = None
@@ -619,6 +627,7 @@ class Sandbox(DataSandbox):
 
 
 def run(initial_data=None, initial_raw_output=None, initial_exception=None,
+        allowed_functions=None,
         modules=None, inputs=None, report_exceptions=True, context=None,
         full_traceback=False, tracer_style='none', threaded=False,
         result_proxy=SandboxResult,
@@ -630,7 +639,7 @@ def run(initial_data=None, initial_raw_output=None, initial_exception=None,
         report['sandbox']['settings'] = [
             initial_data, initial_raw_output, initial_exception, modules,
             full_traceback, tracer_style, threaded, report, context,
-            result_proxy, instructor_filename
+            result_proxy, instructor_filename, allowed_functions
         ]
         report['sandbox']['run'] = Sandbox(*report['sandbox']['settings'])
 

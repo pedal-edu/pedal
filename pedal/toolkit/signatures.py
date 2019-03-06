@@ -321,7 +321,7 @@ def function_signature(function_name, returns=None, yields=None,
         return failing_parameters, type_check(parsed_returns, returns)
     else:
         return failing_parameters, False
-
+    
 
 def class_signature(class_name, report=None, root=None, **attributes):
     """

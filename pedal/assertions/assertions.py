@@ -1,10 +1,10 @@
+import string
+import re
+
 from pedal.report.imperative import MAIN_REPORT
 from pedal.sandbox.result import SandboxResult
 from pedal.sandbox.exceptions import SandboxException
 from pedal.sandbox.sandbox import DataSandbox
-import string
-import re
-
 from pedal.assertions.setup import _setup_assertions, AssertionException
 
 _MAX_LENGTH = 80
@@ -76,11 +76,13 @@ def equality_test(actual, expected, _exact_strings, _delta, _test_output):
 DELTA = .001
 
 
-def _fail(code_message, actual_message, expected_message, show_expected_value,
-          *values):
+def _fail(code_message, actual_message, expected_message,
+          show_expected_value, modify_right, *values):
     normal_values = []
     sandboxed_values = []
     sandboxed_results = []
+    if modify_right and values:
+        values = values[:-1] + (modify_right(values[-1]), )
     for value in values:
         if is_sandbox_result(value):
             sandboxed_results.append(value)
@@ -155,7 +157,7 @@ def is_sandbox_result(value):
 
 def _basic_assertion(left, right, operator, code_comparison_message,
                      hc_message, hc_message_past, message, report, contextualize,
-                     show_expected_value=True):
+                     show_expected_value=True, modify_right=None):
     if report is None:
         report = MAIN_REPORT
     _setup_assertions(report)
@@ -169,11 +171,12 @@ def _basic_assertion(left, right, operator, code_comparison_message,
         return False
     if not operator(left, right):
         failure = _fail(code_comparison_message, hc_message, hc_message_past,
-                        show_expected_value, left, right)
+                        show_expected_value, modify_right, left, right)
         report['assertions']['collected'].append(failure)
         report.attach('Instructor Test', category='Instructor', tool='Assertions',
                       mistake={'message': "Student code failed instructor test.<br>\n"+
                                           context+str(failure)})
+        report['assertions']['failures'] += 1
         if report['assertions']['exceptions']:
             raise failure
         else:
@@ -197,8 +200,14 @@ def assertEqual(left, right, score=None, message=None, report=None,
 assert_equal = assertEqual
 
 
-def assertNotEqual(left, right, score=None, message=None):
-    pass
+def assertNotEqual(left, right, score=None, message=None, report=None,
+                contextualize=True, exact=False):
+    return _basic_assertion(left, right,
+                            lambda l, r: not equality_test(l, r, False, DELTA, False),
+                            "{} == {}",
+                            "was"+PRE_VAL,
+                            "to not be equal to",
+                            message, report, contextualize)
 
 
 def assertTrue(something, score=None, message=None, report=None,
@@ -212,8 +221,15 @@ def assertTrue(something, score=None, message=None, report=None,
                             show_expected_value=False)
 
 
-def assertFalse(something, score=None, message=None):
-    pass
+def assertFalse(something, score=None, message=None, report=None,
+                contextualize=True):
+    return _basic_assertion(something, False,
+                            lambda l, r: not bool(l),
+                            "{} is false",
+                            "was true"+PRE_VAL,
+                            "to be false",
+                            message, report, contextualize,
+                            show_expected_value=False)
 
 
 def assertIs(left, right, score=None, message=None):
@@ -279,9 +295,20 @@ def assertNotIn(needle, haystack, score=None, message=None, report=None,
                             expected_message,
                             message, report, contextualize)
 
+def _humanize_types(types):
+    if isinstance(types, tuple):
+        return ', '.join([t.__name__ for t in types])
+    return types.__name__
 
-def assertIsInstance(value, types):
-    pass
+def assertIsInstance(value, types, score=None, message=None, report=None,
+                contextualize=True):
+    return _basic_assertion(value, types,
+                            lambda v, t: isinstance(v, t),
+                            "isinstance({}, {})",
+                            "was"+PRE_VAL,
+                            "to be of type",
+                            message, report, contextualize,
+                            modify_right=_humanize_types)
 
 
 def assertNotIsInstance(value, types):
@@ -349,6 +376,7 @@ def assertPrints(result, expected_output, args=None, returns=None,
                   score=None, message=None, report=None,
                   contextualize=True, exact=False):
     if not isinstance(result, SandboxResult):
+        return False
         raise TypeError("You must pass in a SandboxResult (e.g., using `call`) to assertPrints")
     if report is None:
         report = MAIN_REPORT
@@ -380,6 +408,7 @@ def assertPrints(result, expected_output, args=None, returns=None,
         report.attach('Instructor Test', category='Instructor', tool='Assertions',
                       mistake={'message': "Student code failed instructor test.<br>\n"+
                                           str(failure)})
+        report['assertions']['failures'] += 1
         if report['assertions']['exceptions']:
             raise failure
         else:
@@ -414,7 +443,6 @@ def assertHasFunction(obj, function, args=None, returns=None,
                             message, report, contextualize,
                             show_expected_value=False)
 
-
 def assertHasClass(sandbox, class_name, attrs=None):
     pass
 
@@ -423,6 +451,20 @@ def assertHas(obj, variable, types=None, value=None):
     # If object is a sandbox, will check the .data[variable] attribute
     # Otherwise, check it directly
     pass
+
+def assertGenerally(expression, score=None, message=None, report=None,
+                    contextualize=True):
+    if report is None:
+        report = MAIN_REPORT
+    _setup_assertions(report)
+    if expression:
+        return True
+    else:
+        report['assertions']['failures'] += 1
+        if report['assertions']['exceptions']:
+            raise AssertionException("General assertion")
+        else:
+            return False
 
 # Allow addition of new assertions
 # e.g., assertGraphType, assertGraphValues

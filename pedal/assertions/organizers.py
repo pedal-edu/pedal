@@ -1,6 +1,6 @@
 from pedal.report.imperative import MAIN_REPORT
 from pedal.assertions.setup import _setup_assertions
-
+from functools import wraps
 
 def contextualize_calls():
     pass
@@ -65,8 +65,15 @@ def section(*args):
 def phase(name):
     _setup_assertions(MAIN_REPORT)
     def wrap(f):
-        MAIN_REPORT['assertions']['functions'].append(f)
-        return f
+        @wraps(f)
+        def _handle_entry(*args, **kwargs):
+            old_exception_state = MAIN_REPORT['assertions']['exceptions']
+            MAIN_REPORT['assertions']['exceptions'] = True
+            value = f(*args, **kwargs)
+            MAIN_REPORT['assertions']['exceptions'] = old_exception_state
+            return value
+        MAIN_REPORT['assertions']['functions'].append(_handle_entry)
+        return _handle_entry
     return wrap
 
 def precondition(function):
