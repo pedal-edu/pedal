@@ -65,24 +65,6 @@ def strip_tags(html):
     return VPLStyler().convert(html)
 
 
-def find_file(filename, sections=False, independent=False, report=None):
-    if report is None:
-        report = MAIN_REPORT
-    try:
-        with open(filename, 'r') as student_file:
-            source.set_source(student_file.read(), filename=filename,
-                              sections=sections, independent=independent,
-                              report=report)
-    except IOError:
-        message = ("The given filename ('{filename}') was either not found"
-                   " or could not be opened. Please make sure the file is"
-                   " available.").format(filename=filename)
-        report.attach('Source File Not Found', category='Syntax', tool='VPL',
-                      group=0 if sections else None,
-                      mistake={'message': message})
-        report['source']['success'] = False
-
-
 def set_maximum_score(number, cap=True, report=None):
     if report is None:
         report = MAIN_REPORT

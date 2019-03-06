@@ -6,7 +6,7 @@ python -m pedal.plugins.test_reference_solution <path to grade script>
 '''
 
 # Runner
-from pedal.report.imperative import clear_report
+from pedal.report.imperative import clear_report, MAIN_REPORT
 import sys
 import os
 from io import StringIO
@@ -32,8 +32,8 @@ def substitute_args(arg, student_path):
 def add_test(class_, name, python_file,
              expected_output_path, expected_output,
              grader_code, grader_path, grader_args, student_path):
+    grader_args = [substitute_args(arg, student_path) for arg in grader_args]
     def _inner_test(self):
-        grader_args = [substitute_args(arg, student_path) for arg in grader_args]
         captured_output = StringIO()
         with redirect_stdout(captured_output):
             # TODO: mock_open will only work if we are not anticipating
@@ -42,8 +42,9 @@ def add_test(class_, name, python_file,
                        create=True):
                 with patch.object(sys, 'argv', grader_args):
                     clear_report()
-                    compile(grader_code, grader_path, 'exec')
-                    exec(grader_code, globals())
+                    grader_exec = compile(grader_code, grader_path, 'exec')
+                    exec(grader_exec, globals())
+                    #print(repr(MAIN_REPORT.feedback[0].mistake['error']))
         actual_output = captured_output.getvalue()
         if expected_output is None:
             print("File not found:", expected_output_path)
@@ -56,11 +57,13 @@ def add_test(class_, name, python_file,
 
 
 # Load reference solutions
-def add_all_tests(grader_path, reference_solutions_dir, grader_args):
+def add_all_tests(grader_path, reference_solutions_dir, grader_args, limit):
     # Load grader file
     with open(grader_path, 'r') as grader_file:
         grader_code = grader_file.read()
     for filename in os.listdir(reference_solutions_dir):
+        if limit is not None and limit != filename:
+            continue
         path = os.path.join(reference_solutions_dir, filename)
         if path.endswith(".py"):
             text_path = path[:-2] + "txt"
@@ -91,6 +94,7 @@ if __name__ == "__main__":
                         help='Pass in arguments that the grading script will use. '
                              'Variable substitutions include "$_STUDENT_MAIN".',
                         default='$_STUDENT_MAIN')
+    parser.add_argument('--limit', '-l', help='Limit to a specific file.', default=None)
     args = parser.parse_args()
     
     # Turn the reference solutions path into an absolute filename
@@ -110,5 +114,5 @@ if __name__ == "__main__":
     if not os.listdir(reference_solutions_path):
         print("No reference solutions found")
     else:
-        add_all_tests(args.grader, reference_solutions_path, grader_args)
+        add_all_tests(args.grader, reference_solutions_path, grader_args, args.limit)
         run_tests()

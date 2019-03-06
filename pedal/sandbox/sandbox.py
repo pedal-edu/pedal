@@ -129,7 +129,8 @@ class Sandbox(DataSandbox):
                  tracer_style='none',
                  threaded=False, report=None,
                  context=None, result_proxy=SandboxResult,
-                 instructor_filename="instructor_tests.py"):
+                 instructor_filename="instructor_tests.py",
+                 allowed_functions=None):
         """
         Args:
             initial_data (dict[str:Any]): An initial namespace to provide when
@@ -190,6 +191,17 @@ class Sandbox(DataSandbox):
         self.mocked_modules = {}
         self.modules = {}
         self.add_mocks(modules)
+        self.mocked_functions = {
+            'compile': mocked._disabled_compile,
+            'eval': mocked._disabled_eval,
+            'exec': mocked._disabled_exec,
+            'globals': mocked._disabled_globals,
+            'open': mocked._restricted_open
+        }
+        if allowed_functions is not None:
+            for function_name in allowed_functions:
+                if function_name in self.mocked_functions:
+                    del self.mocked_functions[function_name]
         # Patching
         self._current_patches = []
         # Settings
@@ -255,15 +267,14 @@ class Sandbox(DataSandbox):
                 newlines.
         """
         if raw_output is None:
-            #:
             self.raw_output = ""
             self.output = []
-            self.output_contexts = {self.call_id: self.output}
+            self.output_contexts = {self.call_id: list(self.output)}
         else:
             self.raw_output = raw_output
             lines = raw_output.rstrip().split("\n")
             self.output = [line.rstrip() for line in lines]
-            self.output_contexts[self.call_id] = self.output
+            self.output_contexts[self.call_id] = list(self.output)
 
     def append_output(self, raw_output):
         """
@@ -279,7 +290,9 @@ class Sandbox(DataSandbox):
         self.raw_output += raw_output
         lines = raw_output.rstrip().split("\n")
         lines = [line.rstrip() for line in lines]
-        self.output.extend(lines)
+        if self.raw_output:
+            self.output.extend(lines)
+            self.output_contexts[self.call_id].extend(lines)
 
     def set_input(self, inputs):
         """
@@ -562,7 +575,7 @@ class Sandbox(DataSandbox):
                                         report_exceptions)
                 return self
         if as_filename is None:
-            as_filename = self.report['source']['filename']
+            as_filename = os.path.basename(self.report['source']['filename'])
         if inputs is None:
             if self.inputs is None:
                 inputs = mocked._make_inputs('0', repeat='0')
@@ -574,17 +587,13 @@ class Sandbox(DataSandbox):
             inputs = mocked._make_inputs(inputs)
         inputs = self._track_inputs(inputs)
         # Override builtins and mock stuff out
-        mocked._override_builtins(self.data, {
-            'compile': mocked._disabled_compile,
-            'eval': mocked._disabled_eval,
-            'exec': mocked._disabled_exec,
-            'globals': mocked._disabled_globals,
-            'open': mocked._restricted_open,
-            'input': inputs,
-            'raw_input': inputs,
-            'sys': sys,
-            'os': os
-        })
+        mocked_functions = self.mocked_functions.copy()
+        mocked_functions['input'] = inputs
+        mocked_functions['raw_input'] = inputs
+        mocked_functions['sys'] = sys
+        mocked_functions['os'] = os
+        mocked._override_builtins(self.data, mocked_functions)
+        
 
         self.exception = None
         self.exception_position = None
@@ -618,6 +627,7 @@ class Sandbox(DataSandbox):
 
 
 def run(initial_data=None, initial_raw_output=None, initial_exception=None,
+        allowed_functions=None,
         modules=None, inputs=None, report_exceptions=True, context=None,
         full_traceback=False, tracer_style='none', threaded=False,
         result_proxy=SandboxResult,
@@ -629,7 +639,7 @@ def run(initial_data=None, initial_raw_output=None, initial_exception=None,
         report['sandbox']['settings'] = [
             initial_data, initial_raw_output, initial_exception, modules,
             full_traceback, tracer_style, threaded, report, context,
-            result_proxy, instructor_filename
+            result_proxy, instructor_filename, allowed_functions
         ]
         report['sandbox']['run'] = Sandbox(*report['sandbox']['settings'])
 

@@ -50,17 +50,17 @@ def match_signature(name, length, *parameters):
         if a_def._name == name:
             found_length = len(a_def.args.args)
             if found_length < length:
-                gently("The function named <code>{}</code> has fewer parameters ({}) than expected ({})."
+                gently("The function named <code>{}</code> has fewer parameters ({}) than expected ({}). "
                        "<br><br><i>(insuff_args)<i>".format(name, found_length, length))
             elif found_length > length:
-                gently("The function named <code>{}</code> has more parameters ({}) than expected ({})."
+                gently("The function named <code>{}</code> has more parameters ({}) than expected ({}). "
                        "<br><br><i>(excess_args)<i>".format(name, found_length, length))
             elif parameters:
                 for parameter, arg in zip(parameters, a_def.args.args):
                     arg_name = get_arg_name(arg)
                     if arg_name != parameter:
                         gently("Error in definition of <code>{}</code>. Expected a parameter named {}, instead "
-                               "found {}.<br><br><i>(name_missing)<i>".format(name, parameter, arg_name))
+                               "found {}. <br><br><i>(name_missing)<i>".format(name, parameter, arg_name))
                         return None
                 else:
                     return a_def

@@ -18,7 +18,7 @@ class TestCode(unittest.TestCase):
 
     def test_normal_run(self):
         student = Sandbox()
-        student.run('a=0\nprint(a)')
+        student.run('a=0\nprint(a)', as_filename='student.py')
         self.assertIn('a', student.data)
         self.assertEqual(student.data['a'], 0)
         self.assertEqual(len(student.output), 1)

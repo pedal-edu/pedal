@@ -123,7 +123,7 @@ class TestFunctions(unittest.TestCase):
             self.assertIsNone(match_signature('a', 2, 'x', 'y'))
         self.assertEqual(e.message, "Error in definition of "
                                     "<code>a</code>. Expected a parameter named "
-                                    "x, instead found l."
+                                    "x, instead found l. "
                                     "<br><br><i>(name_missing)<i>")
 
         with Execution('def a(x, y):\n  pass\na') as e:

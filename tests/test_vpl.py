@@ -8,18 +8,18 @@ import io
 pedal_library = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.insert(0, pedal_library)
 
-from pedal.plugins.vpl import find_file, resolve, strip_tags
-from pedal.source import next_section, verify_section, check_section_exists
+from pedal.plugins.vpl import resolve, strip_tags
+from pedal.source import next_section, verify_section, check_section_exists, set_source_file
 from pedal.report import MAIN_REPORT
 from pedal.report.imperative import compliment, clear_report
 
 
 class TestVPL(unittest.TestCase):
     def test_vpl(self):
-        find_file('tests/datafiles/student_example.py', sections=True)
+        set_source_file('tests/datafiles/student_example.py', sections=True)
 
     def test_file_not_found(self):
-        find_file('tests/datafiles/banana_cream_pudding.py', sections=True)
+        set_source_file('tests/datafiles/banana_cream_pudding.py', sections=True)
         check_section_exists(3)
         f = io.StringIO()
         with redirect_stdout(f):
@@ -43,7 +43,7 @@ class TestVPL(unittest.TestCase):
 
     def test_resolve(self):
         clear_report()
-        find_file('tests/datafiles/student_example.py', sections=True,
+        set_source_file('tests/datafiles/student_example.py', sections=True,
                   independent=True)
         # Part 0
         # Part 1
