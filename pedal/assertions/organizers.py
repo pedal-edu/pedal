@@ -61,7 +61,6 @@ def section(*args):
         section_number = args[0]
     return wrap
 
-
 def phase(name):
     _setup_assertions(MAIN_REPORT)
     def wrap(f):

@@ -11,7 +11,9 @@ def resolve_all(set_success=False, report=None):
         try:
             function()
         except AssertionException:
-            pass
+            break
+    #for f in report.feedback:
+    #    print("\t", f, f.mistake, f.misconception)
     if not report['assertions']['failures'] and set_success:
         report.set_success()
 

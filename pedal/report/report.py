@@ -62,12 +62,15 @@ class Report:
                                       result=True, group=group))
 
     def give_partial(self, value, message=None, group=None):
+        if value is None:
+            return False
         if group is None:
             group = self.group
         self.feedback.append(Feedback('give_partial', performance=value,
                                       priority='positive',
                                       group=group,
                                       mistake=message))
+        return True
 
     def hide_correctness(self):
         self.suppressions['success'] = []

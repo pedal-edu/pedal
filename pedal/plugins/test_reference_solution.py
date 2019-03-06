@@ -57,11 +57,13 @@ def add_test(class_, name, python_file,
 
 
 # Load reference solutions
-def add_all_tests(grader_path, reference_solutions_dir, grader_args):
+def add_all_tests(grader_path, reference_solutions_dir, grader_args, limit):
     # Load grader file
     with open(grader_path, 'r') as grader_file:
         grader_code = grader_file.read()
     for filename in os.listdir(reference_solutions_dir):
+        if limit is not None and limit != filename:
+            continue
         path = os.path.join(reference_solutions_dir, filename)
         if path.endswith(".py"):
             text_path = path[:-2] + "txt"
@@ -92,6 +94,7 @@ if __name__ == "__main__":
                         help='Pass in arguments that the grading script will use. '
                              'Variable substitutions include "$_STUDENT_MAIN".',
                         default='$_STUDENT_MAIN')
+    parser.add_argument('--limit', '-l', help='Limit to a specific file.', default=None)
     args = parser.parse_args()
     
     # Turn the reference solutions path into an absolute filename
@@ -111,5 +114,5 @@ if __name__ == "__main__":
     if not os.listdir(reference_solutions_path):
         print("No reference solutions found")
     else:
-        add_all_tests(args.grader, reference_solutions_path, grader_args)
+        add_all_tests(args.grader, reference_solutions_path, grader_args, args.limit)
         run_tests()
