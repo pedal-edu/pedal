@@ -112,7 +112,8 @@ def execute_on_run_code(on_run, student_code, inputs):
     escaped_student_code = json.dumps(student_code)
     instructor_code = PEDAL_PIPELINE.format(on_run=on_run,
                                             student_code=escaped_student_code,
-                                            inputs=','.join(inputs))
+                                            # inputs=','.join(inputs))
+                                            inputs=inputs)
     # Execute the instructor code in a new environment
     global_variables = globals()
     compiled_code = compile(instructor_code, 'instructor_code.py', 'exec')
@@ -186,7 +187,8 @@ on_run_code.push('print(execute_on_run_code({on_run_code}, student_code, {inputs
 BLOCKPY_GRADE = r'''
 on_run_code.push("from pedal.plugins.grade_magic import blockpy_grade");
 on_run_code.push('import json')
-on_run_code.push('inputs = json.dumps({inputs})')
+on_run_code.push('inputs = {inputs}')
+console.log('inputs = {inputs}')
 on_run_code.push("print(blockpy_grade({assignment}, student_code, inputs))");
 '''
 
@@ -286,15 +288,16 @@ class GradeMagic(Magics):
     def grade_blockpy(self, line=""):
         if ',' in line:
             assignment, inputs = line.split(",", maxsplit=1)
-            inputs = [i for i in inputs.split(",")]
+            inputs = json.dumps(inputs.split(","))
+            inputs = "\\'" + inputs[1:len(inputs) - 1] + "\\'"
         else:
             assignment, inputs = line, ""
-            inputs = [json.dumps(i) for i in inputs.split(",")]
+            inputs = json.dumps(inputs)
         # Concatenate the JS code and then execute it by displaying it
         code = EXTRACT_STUDENT_CODE
         code += ANIMATE_LAST_CELL
         code += BLOCKPY_GRADE.format(assignment=assignment,
-                                     inputs=json.dumps(inputs))
+                                     inputs=inputs)
         code += EXECUTE_CODE
         # self.logging()
         return display(Javascript(code))
