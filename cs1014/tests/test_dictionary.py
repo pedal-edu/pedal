@@ -831,6 +831,25 @@ class DictionaryMistakeTest(MistakeTest):
         self.to_source('import weather\n'
                        'import matplotlib.pyplot as plt\n'
                        'weather_reports = weather.get_weather()\n'
+                       'cityWeather = input("Choose a city: ")\n'
+                       'cityPrecip = []\n'
+                       '# add other input and variable initializations here\n'
+                       '# Put here the code to create the list of data to be plotted.\n'
+                       'for weather in weather_reports:\n'
+                       '    if weather["Station"]["City"] == cityWeather:\n'
+                       '        cityPrecip.append(weather["Data"]["Precipitation"])\n'
+                       '# Put here the code to display a properly labelled line plot of the list of data.\n'
+                       'plt.plot(cityPrecip)\n'
+                       'plt.title(cityWeather)\n'
+                       'plt.xlabel("Trend")\n'
+                       'plt.ylabel("Amount of Precipitation")\n'
+                       'plt.show()\n')
+        ret = dict_plot()
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
+        self.to_source('import weather\n'
+                       'import matplotlib.pyplot as plt\n'
+                       'weather_reports = weather.get_weather()\n'
                        'sum = []\n'
                        'for rain in weather_reports:\n'
                        '    if rain["Station"]["City"] == "Chicago":\n'
