@@ -122,7 +122,8 @@ class DictionaryMistakeTest(MistakeTest):
 
     def test_wrong_keys(self):
         # TODO: Check output string
-        keys = ["Temperature"]
+        keys = ['Date', "Temperature", "Wind", "Min Temp", "Max Temp", "Avg Temp", "Direction", "Speed", "Month", "Year",
+                "Week of", "Full", "State", "Code", "City", "Location"]
         self.to_source("total = 0\n"
                        "for reports in weather_reports:\n"
                        "    total = total + reports['Temperature']\n"
@@ -177,7 +178,8 @@ class DictionaryMistakeTest(MistakeTest):
 
     def test_iter_as_key(self):
         # TODO: Check output string
-        keys = ["Precipitation"]
+        keys = ['Data', 'Date', "Station", "Temperature", "Precipitation", "Wind", "Min Temp", "Max Temp", "Avg Temp",
+                "Direction", "Speed", "Month", "Year", "Week of", "Full", "State", "Code", "City", "Location"]
         self.to_source('total_precipitation = 0\n'
                        'for Precipitation in weather_reports:\n'
                        '    total_precipitation = total_precipitation + "Precipitation"\n'
@@ -200,7 +202,8 @@ class DictionaryMistakeTest(MistakeTest):
         self.assertFalse(ret, "Expected False, got {} instead".format(ret))
 
     def test_dict_acc_as_lis_var(self):
-        keys = ["Precipitation"]
+        keys = ['Data', 'Date', "Station", "Temperature", "Precipitation", "Wind", "Min Temp", "Max Temp", "Avg Temp",
+                "Direction", "Speed", "Month", "Year", "Week of", "Full", "State", "Code", "City", "Location"]
         self.to_source('precipitation_total=0\n'
                        'precipitation_list=[]\n'
                        'for precipitation in ["Precipitation"]:\n'
@@ -252,7 +255,8 @@ class DictionaryMistakeTest(MistakeTest):
 
     def test_list_str_dict(self):
         # TODO: Check output string
-        keys = ["Precipitation"]
+        keys = ['Data', 'Date', "Station", "Temperature", "Precipitation", "Wind", "Min Temp", "Max Temp", "Avg Temp",
+                "Direction", "Speed", "Month", "Year", "Week of", "Full", "State", "Code", "City", "Location"]
         self.to_source('total=0\n'
                        'number=0\n'
                        'for precipitation1 in "Precipitation":\n'
@@ -370,7 +374,8 @@ class DictionaryMistakeTest(MistakeTest):
         self.assertFalse(ret, "Expected False, got {} instead".format(ret))
 
     def func_filter(self):
-        keys = ["Precipitation", "Data"]
+        keys = ['Data', 'Date', "Station", "Temperature", "Precipitation", "Wind", "Min Temp", "Max Temp", "Avg Temp",
+                "Direction", "Speed", "Month", "Year", "Week of", "Full", "State", "Code", "City", "Location"]
         self.to_source('import weather\n'
                        'weather_reports = weather.get_weather()\n'
                        'total_precipitation = 0\n'
@@ -397,7 +402,8 @@ class DictionaryMistakeTest(MistakeTest):
 
     def test_str_list(self):
         # TODO: check output values
-        keys = ["Precipitation", "Data"]
+        keys = ['Data', 'Date', "Station", "Temperature", "Precipitation", "Wind", "Min Temp", "Max Temp", "Avg Temp",
+                "Direction", "Speed", "Month", "Year", "Week of", "Full", "State", "Code", "City", "Location"]
         self.to_source('import weather\n'
                        'weather_reports = weather.get_weather()\n'
                        'totalPrecip = 0\n'
@@ -434,7 +440,8 @@ class DictionaryMistakeTest(MistakeTest):
 
     def test_key_comp(self):
         # TODO: Check output values
-        keys = ["Data", "Precipitation", "City", "Station"]
+        keys = ['Data', 'Date', "Station", "Temperature", "Precipitation", "Wind", "Min Temp", "Max Temp", "Avg Temp",
+                "Direction", "Speed", "Month", "Year", "Week of", "Full", "State", "Code", "City", "Location"]
         self.to_source('import weather\n'
                        'weather_reports = weather.get_weather()\n'
                        'sum = 0\n'
@@ -477,7 +484,8 @@ class DictionaryMistakeTest(MistakeTest):
 
     def test_var_key(self):
         # TODO: Check output value
-        keys = ["Station", "City", "Precipitation"]
+        keys = ['Data', 'Date', "Station", "Temperature", "Precipitation", "Wind", "Min Temp", "Max Temp", "Avg Temp",
+                "Direction", "Speed", "Month", "Year", "Week of", "Full", "State", "Code", "City", "Location"]
         self.to_source("import weather\n"
                        "weather_reports = weather.get_weather()\n"
                        "sum = 0\n"

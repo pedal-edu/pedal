@@ -151,7 +151,7 @@ class StretchyTreeMatcher:
         if match[_VAR] and meta_matched:  # if variable
             # This if body is probably unnecessary.
             if type(std_node.astNode).__name__ == "Name":
-                return self.deep_find_match_generic(ins_node, std_node, check_meta)
+                return self.deep_find_match_generic(ins_node, std_node, check_meta=check_meta, ignores=["ctx"])
         # could else return False, but shallow_match_generic should do this as well
         elif match[_EXP]:  # and meta_matched:  # if expression
             # terminate recursion, the whole subtree should match since expression nodes match to anything
@@ -165,7 +165,7 @@ class StretchyTreeMatcher:
             mapping.add_node_pairing(ins_node, std_node)
             return [mapping]
         # else
-        return self.deep_find_match_generic(ins_node, std_node, check_meta)
+        return self.deep_find_match_generic(ins_node, std_node, check_meta=check_meta, ignores=["ctx"])
 
     # noinspection PyPep8Naming
     def deep_find_match_BinOp(self, ins_node, std_node, check_meta=True):
@@ -263,7 +263,7 @@ class StretchyTreeMatcher:
                 return [mapping]
         return self.deep_find_match_generic(ins_node, std_node, check_meta)
 
-    def deep_find_match_generic(self, ins_node, std_node, check_meta=True):
+    def deep_find_match_generic(self, ins_node, std_node, check_meta=True, ignores=None):
         """
         This first uses shallow match to find a base map (match) from which to
         build off. The algorithm then tracks all the possible mappings that
@@ -283,10 +283,13 @@ class StretchyTreeMatcher:
             ins_node: Instructor ast to find in the student ast
             std_node: Student AST to search for the instructor ast in
             check_meta: flag to check whether the fields of the instructor node and the student node should match
+            ignores: List of fields to ignore in the field match
 
         Returns:
             a mapping between the isntructor and student asts, or [] if such a mapping doesn't exist
         """
+        if ignores is None:
+            ignores = []
         base_mappings = self.shallow_match(ins_node, std_node, check_meta)
         if base_mappings:
             # base case this runs 0 times because no children
@@ -298,6 +301,8 @@ class StretchyTreeMatcher:
                 # make a new set of maps
                 running_maps = []
                 running_sibs = []
+                if insChild.field in ignores:
+                    continue
                 # accumulate all potential matches for current child
                 for j, std_child in enumerate(std_node.children[youngest_sib:], youngest_sib):
                     std_child = std_node.children[j]
@@ -414,7 +419,7 @@ class StretchyTreeMatcher:
             mapping.add_node_pairing(ins_node, std_node)
             return [mapping]
         # else
-        return self.shallow_match_generic(ins_node, std_node, check_meta)
+        return self.shallow_match_main(ins_node, std_node, check_meta=check_meta, ignores=["ctx"])
 
     # noinspection PyPep8Naming,PyMethodMayBeStatic
     def shallow_func_handle(self, ins_node, std_node, check_meta=True):
@@ -534,7 +539,7 @@ class StretchyTreeMatcher:
         Returns:
             list of AstMap: a mapping between the instructor and student root nodes (potentially empty)
         """
-        return self.shallow_match_main(ins_node, std_node, check_meta)
+        return self.shallow_match_main(ins_node, std_node, check_meta=check_meta)
 
     def shallow_match_main(self, ins_node, std_node, check_meta=True, ignores=None):
         """
