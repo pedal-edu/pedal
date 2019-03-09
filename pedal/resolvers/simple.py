@@ -9,6 +9,7 @@ DEFAULT_CATEGORY_PRIORITY = [
     'runtime',
     'student',
     'positive',
+    'instructions',
     'uncategorized',
 ]
 

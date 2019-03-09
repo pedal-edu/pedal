@@ -36,7 +36,7 @@ def resolve(report=None, priority_key=None):
         final_success = success or final_success
         final_score += partial
         if message is not None:
-            if feedback.priority != 'positive':
+            if feedback.priority not in ('positive', 'instructions'):
                 if found_failure:
                     continue
                 found_failure = True
@@ -47,7 +47,15 @@ def resolve(report=None, priority_key=None):
                      'category': feedback.category,
                      'priority': feedback.priority,
                      'data': data}
-            if feedback.priority != 'positive':
+            if feedback.priority == 'instructions':
+                # Find end of instructions
+                index = 0
+                for feedback in finals[group]:
+                    if feedback['priority'] != 'instructions':
+                        break
+                    index += 1
+                finals[group].insert(index, entry)
+            elif feedback.priority != 'positive':
                 finals[group].insert(0, entry)
             else:
                 finals[group].append(entry)

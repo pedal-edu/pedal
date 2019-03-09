@@ -1,12 +1,8 @@
 from pedal.report.imperative import MAIN_REPORT
-from pedal.assertions.setup import _setup_assertions
+from pedal.assertions.setup import _setup_assertions, AssertionException
 from functools import wraps
 
 def contextualize_calls():
-    pass
-
-
-def try_all():
     pass
 
 
@@ -74,6 +70,34 @@ def phase(name):
         MAIN_REPORT['assertions']['functions'].append(_handle_entry)
         return _handle_entry
     return wrap
+    
+def stop_on_failure(f):
+    _setup_assertions(MAIN_REPORT)
+    @wraps(f)
+    def wrapped(*args, **kwargs):
+        old_exception_state = MAIN_REPORT['assertions']['exceptions']
+        MAIN_REPORT['assertions']['exceptions'] = True
+        value = None
+        try:
+            value = f(*args, **kwargs)
+        except AssertionException:
+            pass
+        MAIN_REPORT['assertions']['exceptions'] = old_exception_state
+        return value
+    return wrapped
+
+
+def try_all():
+    _setup_assertions(MAIN_REPORT)
+    @wraps(f)
+    def wrapped(*args, **kwargs):
+        old_exception_state = MAIN_REPORT['assertions']['exceptions']
+        MAIN_REPORT['assertions']['exceptions'] = False
+        value = f(*args, **kwargs)
+        MAIN_REPORT['assertions']['exceptions'] = old_exception_state
+        return value
+    return wrapped
+
 
 def precondition(function):
     pass

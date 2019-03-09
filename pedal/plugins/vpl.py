@@ -84,7 +84,7 @@ def resolve(report=None, custom_success_message=None):
                 print("-" + report['source']['sections'][1 + intermediate_section])
         printed_first_bad = False
         for message in messages:
-            if message['priority'] == 'positive':
+            if message['priority'] in ('positive', 'instructions'):
                 print(strip_tags(message['message']))
             elif not printed_first_bad:
                 print(strip_tags(message['message']))

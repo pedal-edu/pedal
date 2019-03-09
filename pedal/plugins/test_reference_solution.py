@@ -7,6 +7,7 @@ python -m pedal.plugins.test_reference_solution <path to grade script>
 
 # Runner
 from pedal.report.imperative import clear_report, MAIN_REPORT
+from pedal.cait import parse_program
 import sys
 import os
 from io import StringIO
@@ -23,16 +24,19 @@ class TestReferenceSolutions(unittest.TestCase):
     maxDiff = None
 
 
-def substitute_args(arg, student_path):
+def substitute_args(arg, student_path, seed):
     if arg == "$_STUDENT_MAIN":
         return student_path
+    elif arg == "$_STUDENT_NAME":
+        return seed
     return arg
 
 
 def add_test(class_, name, python_file,
              expected_output_path, expected_output,
              grader_code, grader_path, grader_args, student_path):
-    grader_args = [substitute_args(arg, student_path) for arg in grader_args]
+    seed = find_seed(python_file)
+    grader_args = [substitute_args(arg, student_path, seed) for arg in grader_args]
     def _inner_test(self):
         captured_output = StringIO()
         with redirect_stdout(captured_output):
@@ -55,6 +59,21 @@ def add_test(class_, name, python_file,
             self.assertEqual(actual_output, expected_output)
     setattr(class_, 'test_' + name, _inner_test)
 
+def find_seed(python_code):
+    try:
+        ast = parse_program(python_code)
+        for assign in ast.find_all("Assign"):
+            if assign.targets[0].ast_name != "Name":
+                continue
+            if assign.targets[0].id == "__STUDENT_SEED__":
+                if assign.value.ast_name == "Str":
+                    return assign.value.s
+                elif assign.value.ast_name == "Num":
+                    return assign.value.n
+                elif assign.value.ast_name == "List":
+                    return [e.n for e in assign.value.elts]
+    except SyntaxError:
+        return 0
 
 # Load reference solutions
 def add_all_tests(grader_path, reference_solutions_dir, grader_args, limit):
@@ -93,7 +112,7 @@ if __name__ == "__main__":
     parser.add_argument('--args', '-a',
                         help='Pass in arguments that the grading script will use. '
                              'Variable substitutions include "$_STUDENT_MAIN".',
-                        default='$_STUDENT_MAIN')
+                        default='test_reference_solution.py,$_STUDENT_MAIN,$_STUDENT_NAME')
     parser.add_argument('--limit', '-l', help='Limit to a specific file.', default=None)
     args = parser.parse_args()
     

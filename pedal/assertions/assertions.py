@@ -172,7 +172,7 @@ def _basic_assertion(left, right, operator, code_comparison_message,
         failure = _fail(code_comparison_message, hc_message, hc_message_past,
                         show_expected_value, modify_right, left, right)
         report['assertions']['collected'].append(failure)
-        report.attach('Instructor Test', category='Instructor', tool='Assertions',
+        report.attach('Instructor Test', category='student', tool='Assertions',
                       mistake={'message': "Student code failed instructor test.<br>\n"+
                                           context+str(failure)})
         report['assertions']['failures'] += 1
@@ -430,7 +430,7 @@ def assertPrints(result, expected_output, args=None, returns=None,
     calls = sandbox.call_contexts[call_id]
     inputs = sandbox.input_contexts[call_id]
     actual_output = sandbox.output_contexts[call_id]
-    if not equality_test(actual_output, expected_output, False, DELTA, True):
+    if not equality_test(actual_output, expected_output, exact, DELTA, True):
         context= []
         if calls:
             context.append("I ran:<pre>"+
@@ -497,10 +497,47 @@ def assertHasClass(sandbox, class_name, attrs=None):
     pass
 
 
-def assertHas(obj, variable, types=None, value=None):
+def assertHas(obj, variable, types=None, value=None, score=None,
+              message=None, report=None, contextualize=True):
     # If object is a sandbox, will check the .data[variable] attribute
     # Otherwise, check it directly
-    pass
+    if isinstance(obj, DataSandbox):
+        comparison = lambda o, v: v in o.data
+    else:
+        comparison = lambda o, v: v in hasattr(o, v)
+    if not _basic_assertion(obj, variable,
+                            comparison,
+                            "Could not find variable {}{}",
+                            "was"+PRE_VAL,
+                            "to have the variable",
+                            message, report, contextualize):
+        return False
+    if isinstance(obj, DataSandbox):
+        student_variable = obj.data[variable]
+    else:
+        student_variable = getattr(obj, variable)
+    if types is not None:
+        if not _basic_assertion(student_variable, types,
+                            lambda v, t: isinstance(v, t),
+                            "isinstance({}, {})",
+                            "was"+PRE_VAL,
+                            "to be of type",
+                            message, report, contextualize,
+                            modify_right=_humanize_types):
+            return False
+    if value is not None:
+        if not _basic_assertion(student_variable, value,
+                            lambda l, r: equality_test(l, r, False, DELTA, False),
+                            "{} != {}",
+                            "was"+PRE_VAL,
+                            "to be equal to",
+                            message, report, contextualize,
+                            show_expected_value=False):
+            return False
+    if report is None:
+        report = MAIN_REPORT
+    report.give_partial(score)
+    return True
 
 def assertGenerally(expression, score=None, message=None, report=None,
                     contextualize=True):

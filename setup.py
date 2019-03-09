@@ -7,7 +7,7 @@ setuptools.setup(
     author_email='acbart9@gmail.com',
     description='Tools for analyzing student code.',
     packages=['pedal', 'pedal.report', 'pedal.plugins', 'pedal.resolvers',
-              'pedal.source', 'pedal.tifa',
+              'pedal.source', 'pedal.tifa', 'pedal.questions',
               'pedal.cait', 'pedal.mistakes', 'pedal.toolkit',
               'pedal.assertions', 'pedal.sandbox', 'CS1014'],
     license='Creative Commons Attribution-Noncommercial-Share Alike license',

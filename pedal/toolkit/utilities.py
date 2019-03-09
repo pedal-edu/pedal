@@ -114,38 +114,74 @@ def prevent_builtin_usage(function_names):
     return None
 
 
-def prevent_literal(*literals):
+def prevent_literal(*literals, muted=False):
+    '''
+    Confirms that the literal is not in the code, returning False if it is not.
+    
+    Args:
+        *literals (Any...): A series of literal values to look for.
+    Returns:
+        AstNode or False: If the literal is found in the code, then it is returned.
+    '''
     ast = parse_program()
     str_values = [s.s for s in ast.find_all("Str")]
     num_values = [n.n for n in ast.find_all("Num")]
+    name_values = ([name.id for name in ast.find_all("Name")]+
+                   [name.value for name in ast.find_all("NameConstant")])
     for literal in literals:
         if isinstance(literal, (int, float)):
             if literal in num_values:
-                explain("Do not use the literal value <code>{}</code> in your code."
-                        "<br><br><i>(hard_code)<i>".format(repr(literal)))
+                if not muted:
+                    explain("Do not use the literal value <code>{}</code> in your code."
+                            "<br><br><i>(hard_code)<i>".format(repr(literal)))
                 return literal
         elif isinstance(literal, str):
             if literal in str_values:
-                explain("Do not use the literal value <code>{}</code> in your code."
-                        "<br><br><i>(hard_code)<i>".format(repr(literal)))
+                if not muted:
+                    explain("Do not use the literal value <code>{}</code> in your code."
+                            "<br><br><i>(hard_code)<i>".format(repr(literal)))
+                return literal
+        elif literal in (True, False, None):
+            if str(literal) in name_values:
+                if not muted:
+                    explain("Do not use the literal value <code>{}</code> in your code."
+                            "<br><br><i>(hard_code)<i>".format(repr(literal)))
                 return literal
     return False
 
 
-def ensure_literal(*literals):
+def ensure_literal(*literals, muted=False):
+    '''
+    Confirms that the literal IS in the code, returning False if it is not.
+    
+    Args:
+        *literals (Any...): A series of literal values to look for.
+    Returns:
+        AstNode or False: If the literal is found in the code, then it is returned.
+    '''
     ast = parse_program()
     str_values = [s.s for s in ast.find_all("Str")]
     num_values = [n.n for n in ast.find_all("Num")]
+    name_values = ([str(name.id) for name in ast.find_all("Name")]+
+                   [str(name.value) for name in ast.find_all("NameConstant")])
     for literal in literals:
-        if isinstance(literal, (int, float)):
+        if literal in (True, False, None):
+            if str(literal) not in name_values:
+                if not muted:
+                    explain("You need the literal value <code>{}</code> in your code."
+                            "<br><br><i>(missing_literal)<i>".format(repr(literal)))
+                return True
+        elif isinstance(literal, (int, float)):
             if literal not in num_values:
-                explain("You need the literal value <code>{}</code> in your code."
-                        "<br><br><i>(missing_literal)<i>".format(repr(literal)))
+                if not muted:
+                    explain("You need the literal value <code>{}</code> in your code."
+                            "<br><br><i>(missing_literal)<i>".format(repr(literal)))
                 return literal
         elif isinstance(literal, str):
             if literal not in str_values:
-                explain("You need the literal value <code>{}</code> in your code."
-                        "<br><br><i>(missing_literal)<i>".format(repr(literal)))
+                if not muted:
+                    explain("You need the literal value <code>{}</code> in your code."
+                            "<br><br><i>(missing_literal)<i>".format(repr(literal)))
                 return literal
     return False
 
