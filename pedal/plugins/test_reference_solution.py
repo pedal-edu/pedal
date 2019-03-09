@@ -74,6 +74,7 @@ def find_seed(python_code):
                     return [e.n for e in assign.value.elts]
     except SyntaxError:
         return 0
+    return 0
 
 # Load reference solutions
 def add_all_tests(grader_path, reference_solutions_dir, grader_args, limit):

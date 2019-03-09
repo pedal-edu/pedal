@@ -14,7 +14,7 @@ __all__ = ['NAME', 'DESCRIPTION', 'SHORT_DESCRIPTION', 'REQUIRES', 'OPTIONALS',
            'Question', 'Pool', 'set_seed']
 
 from pedal.report.imperative import MAIN_REPORT
-from pedal.questions.setup import _setup_questions, set_seed
+from pedal.questions.setup import _setup_questions, set_seed, _name_hash
 
 class Question:
     def __init__(self, name, instructions, tests, seed=None, report=None):
@@ -58,6 +58,8 @@ class Pool:
         if force is None:
             if self.seed is None:
                 force = self.report['questions']['seed']
+                if isinstance(force, str):
+                    force = _name_hash(force+self.name)
                 # Assume iterable; could be check that throws better error
                 if not isinstance(force, int):
                     force = force[self.position]

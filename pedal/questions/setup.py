@@ -36,6 +36,4 @@ def set_seed(seed_value, report=None):
     '''
     if report is None:
         report = MAIN_REPORT
-    if isinstance(seed_value, str):
-        seed_value = _name_hash(seed_value)
     report['questions']['seed'] = seed_value

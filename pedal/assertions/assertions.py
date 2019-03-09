@@ -449,7 +449,7 @@ def assertPrints(result, expected_output, args=None, returns=None,
         context.append("But I expected the output:<pre>"+ "\n".join(map(str, expected_output))+ "</pre>")
         failure = AssertionException("\n".join(context))
         report['assertions']['collected'].append(failure)
-        report.attach('Instructor Test', category='Instructor', tool='Assertions',
+        report.attach('Instructor Test', category='student', tool='Assertions',
                       mistake={'message': "Student code failed instructor test.<br>\n"+
                                           str(failure)})
         report['assertions']['failures'] += 1

@@ -113,7 +113,7 @@ class SandboxTraceback:
         #print(list(), file=x)
         for frame in tb_e.stack:
             #print(frame, file=x)
-            if frame.filename == self.student_filename:
+            if frame.filename == os.path.basename(self.student_filename):
                 #frame.lineno += self.line_number
                 frame.lineno += self.line_offset
             frame._line = self.original_code_lines[frame.lineno-1]
