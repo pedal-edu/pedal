@@ -76,7 +76,8 @@ class SandboxTraceback:
     """
 
     def __init__(self, exception, exc_info, full_traceback,
-                 instructor_filename, line_offset, student_filename):
+                 instructor_filename, line_offset, student_filename,
+                 original_code_lines):
         """
         Args:
             exception (Exception): The exception that was raised.
@@ -95,6 +96,7 @@ class SandboxTraceback:
         self.instructor_filename = instructor_filename
         self.student_filename = student_filename
         self.line_number = traceback.extract_tb(exc_info[2])[-1][1]
+        self.original_code_lines = original_code_lines
 
     def _clean_traceback_line(self, line):
         return line.replace(', in <module>', '', 1)
@@ -114,6 +116,7 @@ class SandboxTraceback:
             if frame.filename == self.student_filename:
                 #frame.lineno += self.line_number
                 frame.lineno += self.line_offset
+            frame._line = self.original_code_lines[frame.lineno-1]
         lines = [self._clean_traceback_line(line)
                  for line in tb_e.format()]
         lines[0] = "Traceback:\n"

@@ -43,6 +43,8 @@ def set_source(code, filename='__main__.py', sections=False, independent=False,
     if report is None:
         report = MAIN_REPORT
     report['source']['code'] = code
+    report['source']['full'] = code
+    report['source']['lines'] = code.split("\n")
     report['source']['filename'] = filename
     report['source']['independent'] = independent
     report['source']['success'] = True

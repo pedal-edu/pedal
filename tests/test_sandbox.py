@@ -71,7 +71,7 @@ class TestCode(unittest.TestCase):
             """
             Traceback:
               File "tests/_sandbox_test_student.py", line 1
-                1+'0'
+                1 + "Banana"
             TypeError: unsupported operand type(s) for +: 'int' and 'str'
             """).strip() + "\n")
 

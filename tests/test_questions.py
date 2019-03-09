@@ -86,6 +86,7 @@ class TestQuestions(unittest.TestCase):
         self.assertEqual(finals[0][2]['message'], dedent("""
                Traceback:
                  File "__main__.py", line 1
+                   1 + ""
                TypeError: unsupported operand type(s) for +: 'int' and 'str'
                
                The error above occurred when I ran:<br>

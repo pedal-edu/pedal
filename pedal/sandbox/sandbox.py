@@ -522,7 +522,8 @@ class Sandbox(DataSandbox):
         traceback = SandboxTraceback(self.exception, exc_info,
                                      self.full_traceback,
                                      self.instructor_filename,
-                                     line_offset, student_filename)
+                                     line_offset, student_filename,
+                                     self.report['source']['lines'])
         self.exception_position = {'line': traceback.line_number}
         self.exception_formatted = traceback.format_exception()
         self.exception_name = str(self.exception.__class__)[8:-2]
@@ -532,6 +533,7 @@ class Sandbox(DataSandbox):
         if report_exceptions is None and not self.report_exceptions_mode:
             return True
         self.report.attach(self.exception_name,
+                           group=self.report.group,
                            category='Runtime', tool='Sandbox',
                            mistake={'message': self.exception_formatted,
                                     'error': self.exception})
