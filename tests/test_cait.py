@@ -600,17 +600,39 @@ class CaitTests(unittest.TestCase):
         self.assertTrue(matches02[0]['_func_def_'], "Couldn't retrieve function name.")
         self.assertTrue(matches02[0]['_funky_'], "Couldn't retrieve variable name.")
 
-    @unittest.skip("Not yet implemented")
+    @unittest.skip("Does not support keyword arguments")
+    def test_function_keyarg_matches(self):
+        self.assertTrue(False)
+
     def test_function_arg_matches(self):
         student_code2 = ("def my_func(funky):\n"
                          "    print(funky)")
         matcher2 = StretchyTreeMatcher("def _func_def_(_funky_):\n"
                                        "    pass", report=MAIN_REPORT)
         matches02 = matcher2.find_matches(student_code2)
+        match02 = matches02[0]
         self.assertTrue(matches02, "match not found, aborting test")
-        self.assertTrue(len(matches02[0].func_table.keys()) == 1, "improper number of keys, aborting test")
-        self.assertTrue(matches02[0]['_func_def_'], "Couldn't retrieve function name.")
-        self.assertTrue(matches02[0]['_funky_'], "Couldn't retrieve variable name.")
+        self.assertTrue(len(match02.func_table.keys()) == 1, "improper number of keys, aborting test")
+        self.assertTrue(match02['_func_def_'], "Couldn't retrieve function name.")
+        self.assertTrue(match02['_funky_'], "Couldn't retrieve variable name.")
+        self.assertTrue(match02['_funky_'].id == "funky",
+                        "Incorrect symbol name, expected 'funky' but got '{}' instead".format(match02['_funky_'].id))
+
+        student_code3 = ("def my_func(funky, dunky):\n"
+                         "    print(funky + dunky)")
+        matcher3 = StretchyTreeMatcher("def _func_def_(_funky_, _funky2_):\n"
+                                       "    pass", report=MAIN_REPORT)
+        matches03 = matcher3.find_matches(student_code3)
+        match03 = matches03[0]
+        self.assertTrue(matches03, "match not found, aborting test")
+        self.assertTrue(len(match03.func_table.keys()) == 1, "improper number of keys, aborting test")
+        self.assertTrue(match03['_func_def_'], "Couldn't retrieve function name.")
+        self.assertTrue(match03['_funky_'], "Couldn't retrieve variable name.")
+        self.assertTrue(match03['_funky_'].id == "funky",
+                        "Incorrect symbol name, expected 'funky' but got '{}' instead".format(match02['_funky_'].id))
+        self.assertTrue(match03['_funky2_'], "Couldn't retrieve variable name.")
+        self.assertTrue(match03['_funky2_'].id == "dunky",
+                        "Incorrect symbol name, expected 'dunky' but got '{}' instead".format(match03['_funky_'].id))
 
     def test_cait_node_is_method(self):
         set_source("class Dog:\n def bark(self):\n  pass\ndef dogs_bark(alod):\n pass")
@@ -687,8 +709,8 @@ class CaitTests(unittest.TestCase):
 
     def test_broken_traversal(self):
         set_source("user entered gobblydegook")
-        ast = parse_program()
-        self.assertFalse(ast.find_all('For'))
+        parse = parse_program()
+        self.assertFalse(parse.find_all('For'))
 
     def test_aug_assignment(self):
         set_source("magnitudes = [1.5, 1.9, 4.3, 2.1, 2.0, 3.6, 0.5, 2.5, 1.9, 4.0, 3.8, 0.7, 2.2, 5.1, 1.6]\n"
@@ -697,14 +719,10 @@ class CaitTests(unittest.TestCase):
                    "    if item > 2.0:\n"
                    "        count = count + 1\n"
                    "print(count)")
-        matches = find_matches("for ___ in ___:\n"
-                               "    __exp__\n"
-                               "print(_var_)")
-        all_good = False
-        for match in matches:
-            if match["__exp__"].find_matches(match["_var_"].id):
-                all_good = True
-        self.assertTrue(all_good)
+        match = find_matches("for ___ in ___:\n"
+                             "    __exp__\n"
+                             "print(_var_)")[0]
+        self.assertTrue(match["__exp__"].find_matches(match["_var_"].id))
 
         set_source("magnitudes = [1.5, 1.9, 4.3, 2.1, 2.0, 3.6, 0.5, 2.5, 1.9, 4.0, 3.8, 0.7, 2.2, 5.1, 1.6]\n"
                    "count = 0\n"
@@ -712,16 +730,12 @@ class CaitTests(unittest.TestCase):
                    "    if item > 2.0:\n"
                    "        count += 1\n"
                    "print(count)")
-        matches = find_matches("for ___ in ___:\n"
+        match = find_matches("for ___ in ___:\n"
                                "    __exp__\n"
-                               "print(_var_)")
-        all_good = False
-        for match in matches:
-            m__exp__ = match["__exp__"]
-            submatches = m__exp__.find_matches(match["_var_"].id, check_meta=False)
-            if submatches:
-                all_good = True
-        self.assertTrue(all_good)
+                               "print(_var_)")[0]
+        m__exp__ = match["__exp__"]
+        submatches = m__exp__.find_matches(match["_var_"].id, check_meta=False)
+        self.assertTrue(submatches)
 
 
 if __name__ == '__main__':
