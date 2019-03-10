@@ -436,7 +436,7 @@ class StretchyTreeMatcher:
         return self.shallow_symbol_handler(ins_node, std_node, "arg", check_meta=check_meta)
 
     def shallow_match_arguments(self, ins_node, std_node, check_meta=True):
-        # TODO: do we ignore default values?
+        # TODO: do we ignore default values? Currently not ignored
         return self.shallow_match_generic(ins_node, std_node, check_meta=check_meta)
 
     # noinspection PyPep8Naming,PyMethodMayBeStatic
