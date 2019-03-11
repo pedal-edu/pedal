@@ -192,7 +192,7 @@ console.log('inputs = {inputs}')
 on_run_code.push("print(blockpy_grade({assignment}, student_code, inputs))");
 '''
 
-# This chunk actually performs the on_run code exeuction using the kernel.
+# This chunk actually performs the on_run code execution using the kernel.
 EXECUTE_CODE = r'''
 on_run_code = on_run_code.join("\n");
 console.log(on_run_code);
@@ -222,7 +222,6 @@ if (kernel !== null) {
         }
     }}});
 }'''
-
 
 @magics_class
 class GradeMagic(Magics):
@@ -274,32 +273,55 @@ class GradeMagic(Magics):
         self.shell.logger.logstop()
         # ######Logging
 
-    @cell_magic
-    def grade(self, line="", cell=""):
-        # Concatenate the JS code and then execute it by displaying it
+    # noinspection PyMethodMayBeStatic
+    def grade_parser(self, line, cell=None):
+        if ',' in line:
+            if cell is None:
+                assignment, line = line.split(",", maxsplit=1)
+            else:
+                assignment = None
+            inputs = json.dumps(line.split(","))
+            inputs = "\\'" + inputs[1:len(inputs) - 1] + "\\'"
+        else:
+            if cell is None:
+                assignment, inputs = line, ""
+            else:
+                inputs = line
+            inputs = json.dumps(inputs)
+        return {"inputs": inputs, "assignment": assignment}
+
+    # noinspection PyMethodMayBeStatic
+    def unified_helper(self, local_code, **kwargs):
         code = EXTRACT_STUDENT_CODE
         code += ANIMATE_LAST_CELL
-        code += LOCAL_GRADE.format(on_run_code=json.dumps(cell), inputs="''")
+        code += local_code.format(**kwargs)
         code += EXECUTE_CODE
-        # self.logging()
+        return code
+
+    @cell_magic
+    def grade(self, line="", cell=""):
+        dump = self.grade_parser(line, cell)
+        code = self.unified_helper(LOCAL_GRADE, on_run_code="INSTRUCTOR_CODE", inputs=dump['inputs'])
+        cell = cell.replace("\\", "\\\\")
+        cell = cell.replace("\n", "\\n")
+        cell = cell.replace("'", "\\'")
+        cell = cell.replace('"', '\\"')
+        # Runs this code in the kernel as python code
+        # Can also run compiled code
+        self.shell.run_code("INSTRUCTOR_CODE = " + '"' + cell + '"')
+        # self.run_cell_magic(magic_name, line, cell)
+        # self.shell.run_cell_magic("javascript", "", "document.write(12)")
+        # IPython.utils.capture.CapturedIO(stdout, stderr, outputs=None)
+        # TODO: This was the easier way for me to get this to work
+        #  This might be worth using in more depth to have less translation
+        #  to and from javascript
         return display(Javascript(code))
+
 
     @line_magic
     def grade_blockpy(self, line=""):
-        if ',' in line:
-            assignment, inputs = line.split(",", maxsplit=1)
-            inputs = json.dumps(inputs.split(","))
-            inputs = "\\'" + inputs[1:len(inputs) - 1] + "\\'"
-        else:
-            assignment, inputs = line, ""
-            inputs = json.dumps(inputs)
-        # Concatenate the JS code and then execute it by displaying it
-        code = EXTRACT_STUDENT_CODE
-        code += ANIMATE_LAST_CELL
-        code += BLOCKPY_GRADE.format(assignment=assignment,
-                                     inputs=inputs)
-        code += EXECUTE_CODE
-        # self.logging()
+        dump = self.grade_parser(line)
+        code = self.unified_helper(BLOCKPY_GRADE, assignment=dump["assignment"], inputs=dump["inputs"])
         return display(Javascript(code))
 
 
