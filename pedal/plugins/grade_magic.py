@@ -3,8 +3,9 @@ import json
 import requests
 
 # IPython imports
-from IPython.core.magic import (Magics, magics_class, line_magic, cell_magic)
+from IPython.core.magic import (Magics, magics_class, line_magic, cell_magic, line_cell_magic)
 from IPython.display import Javascript, display
+from IPython.utils.io import capture_output
 
 # Logging imports
 import os
@@ -92,6 +93,8 @@ def blockpy_grade(assignment_id, student_code, inputs):
         assignment_id (int): The assignment ID to look up and use the on_run
                              code for.
         student_code (str): The code that was written by the student.
+
+        inputs (str): The inputs to queue into the assignment
 
     Returns:
         str: The HTML formatted feedback for the student.
@@ -287,6 +290,7 @@ class GradeMagic(Magics):
                 assignment, inputs = line, ""
             else:
                 inputs = line
+                assignment = ""
             inputs = json.dumps(inputs)
         return {"inputs": inputs, "assignment": assignment}
 
@@ -309,13 +313,33 @@ class GradeMagic(Magics):
         # Runs this code in the kernel as python code
         # Can also run compiled code
         self.shell.run_code("INSTRUCTOR_CODE = " + '"' + cell + '"')
-        # self.run_cell_magic(magic_name, line, cell)
-        # self.shell.run_cell_magic("javascript", "", "document.write(12)")
-        # IPython.utils.capture.CapturedIO(stdout, stderr, outputs=None)
         # TODO: This was the easier way for me to get this to work
         #  This might be worth using in more depth to have less translation
-        #  to and from javascript
+        #  to and from javascript. See usage_examples
         return display(Javascript(code))
+
+    @line_cell_magic
+    def usage_examples(self, line="", cell="print('running cell')\nprint('running cell')"):
+        # Runs code in the kernel's context
+        self.shell.run_code("print('fun')")
+
+        # Runs code in kernel's context using compiled code
+        sample = compile(cell, "usage_examples.py", "exec")
+        self.shell.run_code(sample)
+
+        # runs javascript code
+        self.shell.run_cell_magic("javascript", "", "console.log('I do JAVASCRIPT')")
+
+        # captures standard output, standard error, etc. and stops or not stops it
+        # class IPython.utils.capture.capture_output(stdout=True, stderr=True, display=True)
+        # Note that Tracebacks aren't put in standard error?
+        with capture_output(True, False, False) as captured:
+            print(dir(self))
+            self.shell.run_code("print(fun)")
+        print("I captured stdout")
+        print(captured.stdout)
+        print("I captured stderr")
+        print(captured.stderr)
 
 
     @line_magic
