@@ -158,6 +158,24 @@ class DictionaryMistakeTest(MistakeTest):
         ret = dict_access_not_in_loop()
         self.assertFalse(ret, "Expected False, got {} instead".format(ret))
 
+        self.to_source("""
+for weather in weather_reports:
+    if ("San Diego" in weather["Station"]["City"]):
+        sandiego_list.append(weather["Data"]["Temperature"]["Avg Temp"])
+for weather in weather_reports:
+    if ("Blacksburg" in weather["Station"]["City"]):
+        blacksburg_list.append(weather["Data"]["Temperature"]["Avg Temp"])
+for temp in sandiego_list:
+    sandiego_temp = sandiego_temp + 1
+    sandiego_number = sandiego_number + temp
+sandiego_average = sandiego_number / sandiego_temp
+for temp in blacksburg_list:
+    blacksburg_temp = blacksburg_temp + 1
+    blacksburg_number = blacksburg_number + temp
+blacksburg_average = blacksburg_number / blacksburg_temp""")
+        ret = dict_access_not_in_loop()
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
     def test_hard_coded_list(self):
         val_list = [0.0, 1.37, 1.86, 0.5, 0.0, 0.23]
         self.to_source('total_rain = 0\n'
