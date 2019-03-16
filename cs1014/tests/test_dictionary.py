@@ -6,6 +6,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../.
 from tests.mistake_test_template import *
 from cs1014.dictionaries import *
 from cs1014.input_mistakes import *
+from pedal.mistakes.iteration_context import all_labels_present
 
 
 class DictionaryMistakeTest(MistakeTest):
@@ -120,6 +121,27 @@ class DictionaryMistakeTest(MistakeTest):
         ret = dict_out_of_loop(keys)
         self.assertFalse(ret, "Expected False, got {} instead".format(ret))
 
+        self.to_source('import matplotlib.pyplot as plt\n'
+                       'import weather\n'
+                       'weather_reports = weather.get_weather()\n'
+                       'BB_min = []\n'
+                       'BB_max = []\n'
+                       'for weather in weather_reports: \n'
+                       '    if ("Blacksburg" in weather["Station"]["City"]): \n'
+                       '        BB_min.append(weather["Data"]["Temperature"]["Min Temp"])\n'
+                       '        \n'
+                       'for weather in weather_reports: \n'
+                       '    if ("Blacksburg" in weather["Station"]["City"]):\n'
+                       '        BB_max.append(weather["Data"]["Temperature"]["Max Temp"])\n'
+                       'plt.scatter(BB_min,BB_max)\n'
+                       'plt.xlabel("Trend")\n'
+                       'plt.ylabel("Temperatures")\n'
+                       'plt.title("Relationship between Minimum and Maximum Temperatures in Blacksburg")\n'
+                       'plt.show()\n')
+        ret = dict_out_of_loop(keys)
+        self.assertFalse(all_labels_present(), "false negative")
+        self.assertFalse(ret, "...")
+
     def test_wrong_keys(self):
         # TODO: Check output string
         keys = ['Date', "Temperature", "Wind", "Min Temp", "Max Temp", "Avg Temp", "Direction", "Speed", "Month", "Year",
@@ -158,23 +180,29 @@ class DictionaryMistakeTest(MistakeTest):
         ret = dict_access_not_in_loop()
         self.assertFalse(ret, "Expected False, got {} instead".format(ret))
 
-        self.to_source("""
-for weather in weather_reports:
-    if ("San Diego" in weather["Station"]["City"]):
-        sandiego_list.append(weather["Data"]["Temperature"]["Avg Temp"])
-for weather in weather_reports:
-    if ("Blacksburg" in weather["Station"]["City"]):
-        blacksburg_list.append(weather["Data"]["Temperature"]["Avg Temp"])
-for temp in sandiego_list:
-    sandiego_temp = sandiego_temp + 1
-    sandiego_number = sandiego_number + temp
-sandiego_average = sandiego_number / sandiego_temp
-for temp in blacksburg_list:
-    blacksburg_temp = blacksburg_temp + 1
-    blacksburg_number = blacksburg_number + temp
-blacksburg_average = blacksburg_number / blacksburg_temp""")
+        self.to_source('for weather in weather_reports:\n'
+                       '    if ("San Diego" in weather["Station"]["City"]):\n'
+                       '        sandiego_list.append(weather["Data"]["Temperature"]["Avg Temp"])\n'
+                       'for weather in weather_reports:\n'
+                       '    if ("Blacksburg" in weather["Station"]["City"]):\n'
+                       '        blacksburg_list.append(weather["Data"]["Temperature"]["Avg Temp"])\n'
+                       'for temp in sandiego_list:\n'
+                       '    sandiego_temp = sandiego_temp + 1\n'
+                       '    sandiego_number = sandiego_number + temp\n'
+                       'sandiego_average = sandiego_number / sandiego_temp\n'
+                       'for temp in blacksburg_list:\n'
+                       '    blacksburg_temp = blacksburg_temp + 1\n'
+                       '    blacksburg_number = blacksburg_number + temp\n'
+                       'blacksburg_average = blacksburg_number / blacksburg_temp\n'
+                       'plt.scatter(BB_min,BB_max)\n'
+                       'plt.xlabel("Trend")\n'
+                       'plt.ylabel("Temperatures")\n'
+                       'plt.title("Relationship between Minimum and Maximum Temperatures in Blacksburg")\n'
+                       'plt.show()\n')
         ret = dict_access_not_in_loop()
         self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+        ret2 = all_labels_present()
+        self.assertFalse(ret2, "Expected False, got message instead")
 
     def test_hard_coded_list(self):
         val_list = [0.0, 1.37, 1.86, 0.5, 0.0, 0.23]

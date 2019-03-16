@@ -5,7 +5,7 @@ import requests
 # IPython imports
 from IPython.core.magic import (Magics, magics_class, line_magic, cell_magic, line_cell_magic)
 from IPython.display import Javascript, display
-from IPython.utils.io import capture_output
+from IPython.utils.io import capture_output, CapturedIO
 
 # Logging imports
 import os
@@ -226,6 +226,7 @@ if (kernel !== null) {
     }}});
 }'''
 
+
 @magics_class
 class GradeMagic(Magics):
     """
@@ -319,7 +320,7 @@ class GradeMagic(Magics):
         return display(Javascript(code))
 
     @line_cell_magic
-    def usage_examples(self, line="", cell="print('running cell')\nprint('running cell')"):
+    def usage_examples(self, line="", cell="print('running cell')\nprint('running cell2')"):
         # Runs code in the kernel's context
         self.shell.run_code("print('fun')")
 
@@ -328,19 +329,31 @@ class GradeMagic(Magics):
         self.shell.run_code(sample)
 
         # runs javascript code
-        self.shell.run_cell_magic("javascript", "", "console.log('I do JAVASCRIPT')")
+        self.shell.run_cell_magic("javascript", "", "console.log('I do JAVASCRIPT');\n")
+        # Maybe can use javascript execution to pass things around...not sure though...can't get it to work
+        # You can pass values, but it doesn't seem to work unless you run it again.
+        # https://michhar.github.io/javascript-and-python-have-a-party/
 
+        self.shell.run_cell_magic(
+            "javascript", "",
+            # js_code = Javascript(
+            """var callbacks = { iopub : { output: function(out_data){ console.log(out_data) } } };\n"""
+            """var code = "fun = 12";\n"""
+            """IPython.notebook.kernel.execute(code);\n""")
+        # handle = display(js_code, display_id="usage_examples")
+        # handle.update(handle)
+        self.shell.run_cell_magic("javascript", "", "console.log('I do JAVASCRIPT TOO!!');\n")
         # captures standard output, standard error, etc. and stops or not stops it
         # class IPython.utils.capture.capture_output(stdout=True, stderr=True, display=True)
         # Note that Tracebacks aren't put in standard error?
         with capture_output(True, False, False) as captured:
             print(dir(self))
             self.shell.run_code("print(fun)")
+            sys.stderr.write("spam\n")
         print("I captured stdout")
         print(captured.stdout)
         print("I captured stderr")
         print(captured.stderr)
-
 
     @line_magic
     def grade_blockpy(self, line=""):

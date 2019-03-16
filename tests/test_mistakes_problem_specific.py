@@ -931,19 +931,38 @@ class SpecificMistakeTest(MistakeTest):
         self.to_source("plt.title(___)\n"
                        "plt.xlabel(___)\n"
                        "plt.ylabel(___)\n")
-        self.assertTrue(all_labels_present(), "false positive")
+        self.assertTrue(all_labels_present(), "false negative")
 
         self.to_source("plt.title(___)\n"
                        "plt.xlabel(___)\n"
                        "plt.show()\n"
                        "plt.ylabel(___)\n")
-        self.assertTrue(all_labels_present(), "false positive")
+        self.assertTrue(all_labels_present(), "false negative")
 
         self.to_source("plt.ylabel(___)\n"
                        "plt.title(___)\n"
                        "plt.xlabel(___)\n"
                        "plt.show()\n")
         self.assertFalse(all_labels_present(), "false positive")
+
+        self.to_source('import matplotlib.pyplot as plt\n'
+                       'import weather\n'
+                       'weather_reports = weather.get_weather()\n'
+                       'BB_min = []\n'
+                       'BB_max = []\n'
+                       'for weather in weather_reports: \n'
+                       '    if ("Blacksburg" in weather["Station"]["City"]): \n'
+                       '        BB_min.append(weather["Data"]["Temperature"]["Min Temp"])\n'
+                       '        \n'
+                       'for weather in weather_reports: \n'
+                       '    if ("Blacksburg" in weather["Station"]["City"]):\n'
+                       '        BB_max.append(weather["Data"]["Temperature"]["Max Temp"])\n'
+                       'plt.scatter(BB_min,BB_max)\n'
+                       'plt.xlabel("Trend")\n'
+                       'plt.ylabel("Temperatures")\n'
+                       'plt.title("Relationship between Minimum and Maximum Temperatures in Blacksburg")\n'
+                       'plt.show()\n')
+        self.assertFalse(all_labels_present(), "false negative")
 
     def test_hard_code_8_5(self):
         self.to_source("print(12)")
