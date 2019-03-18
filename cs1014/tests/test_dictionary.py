@@ -138,9 +138,12 @@ class DictionaryMistakeTest(MistakeTest):
                        'plt.ylabel("Temperatures")\n'
                        'plt.title("Relationship between Minimum and Maximum Temperatures in Blacksburg")\n'
                        'plt.show()\n')
+        all_labels_1 = all_labels_present()
         ret = dict_out_of_loop(keys)
-        self.assertFalse(all_labels_present(), "false negative")
+        self.assertFalse(all_labels_1, "false negative")
+        all_labels_2 = all_labels_present()
         self.assertFalse(ret, "...")
+        self.assertTrue(all_labels_1 == all_labels_2, "Side effects aren't undoing themselves")
 
     def test_wrong_keys(self):
         # TODO: Check output string

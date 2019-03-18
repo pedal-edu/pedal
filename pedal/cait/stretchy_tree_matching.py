@@ -80,7 +80,7 @@ class StretchyTreeMatcher:
             other_tree = CaitNode(ast_or_code, _NONE_FIELD, report=self.report)
         explore_root = self.root_node
         trim_set = ["Expr", "Module"]
-        explore_root_old_field = _NONE_FIELD
+        explore_root_old_field = explore_root.field
         if self.root_node is not None:  # Trimming ins_node
             while (len(explore_root.children) == 1 and
                    explore_root.ast_name in trim_set):
@@ -89,7 +89,7 @@ class StretchyTreeMatcher:
                 explore_root_old_field = explore_root.field
                 explore_root.field = _NONE_FIELD
         other_root = other_tree
-        other_root_old_field = _NONE_FIELD
+        other_root_old_field = other_root.field
         if other_root is not None:  # Trimming std_node
             while len(other_root.children) == 1 and other_root.ast_name in trim_set:
                 other_root.field = other_root_old_field
@@ -644,8 +644,6 @@ class StretchyTreeMatcher:
     @staticmethod
     def metas_match(ins_node, std_node, check_meta=True):
         """
-        TODO: 'or std_node.field == _NONE_FIELD' is a temporary stop-gag fix
-              for bug involving side-effects where field parameters are somehow set to none.
         Args:
             ins_node:
             std_node:
@@ -656,5 +654,5 @@ class StretchyTreeMatcher:
         """
         return ((check_meta and ins_node.field == std_node.field) or
                 not check_meta
-                or ins_node.field == _NONE_FIELD
-                or std_node.field == _NONE_FIELD)
+                # or std_node.field == _NONE_FIELD
+                or ins_node.field == _NONE_FIELD)
