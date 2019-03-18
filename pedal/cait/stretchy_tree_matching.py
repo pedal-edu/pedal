@@ -427,10 +427,10 @@ class StretchyTreeMatcher:
                     mapping.add_var_to_sym_table(ins_node, std_node)  # TODO: Capture result?
                 matched = True
         # could else return False, but shallow_match_generic should do this as well
-        elif match[_EXP] and meta_matched:  # expression TODO: In theory this won't run?
+        elif match[_EXP] and meta_matched:
             mapping.add_exp_to_sym_table(ins_node, std_node)
             matched = True
-        elif match[_WILD] and meta_matched:  # don't care TODO: In theory this won't run?
+        elif match[_WILD] and meta_matched:
             matched = True
 
         if matched:
