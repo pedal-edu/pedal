@@ -207,9 +207,9 @@ def dict_access_not_in_loop():
                            "    __exp__")
     for match in matches:
         submatches = match["__exp__"].find_matches("_var_[__str__]")
-        if not submatches:
-            return explain_r(message, code, tldr)
-    return False
+        if submatches:
+            return False
+    return explain_r(message, code, tldr)
 
 
 def hard_coded_list(val_list):

@@ -6,6 +6,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../.
 from tests.mistake_test_template import *
 from cs1014.dictionaries import *
 from cs1014.input_mistakes import *
+from pedal.mistakes.iteration_context import all_labels_present
 
 
 class DictionaryMistakeTest(MistakeTest):
@@ -120,9 +121,34 @@ class DictionaryMistakeTest(MistakeTest):
         ret = dict_out_of_loop(keys)
         self.assertFalse(ret, "Expected False, got {} instead".format(ret))
 
+        self.to_source('import matplotlib.pyplot as plt\n'
+                       'import weather\n'
+                       'weather_reports = weather.get_weather()\n'
+                       'BB_min = []\n'
+                       'BB_max = []\n'
+                       'for weather in weather_reports: \n'
+                       '    if ("Blacksburg" in weather["Station"]["City"]): \n'
+                       '        BB_min.append(weather["Data"]["Temperature"]["Min Temp"])\n'
+                       '        \n'
+                       'for weather in weather_reports: \n'
+                       '    if ("Blacksburg" in weather["Station"]["City"]):\n'
+                       '        BB_max.append(weather["Data"]["Temperature"]["Max Temp"])\n'
+                       'plt.scatter(BB_min,BB_max)\n'
+                       'plt.xlabel("Trend")\n'
+                       'plt.ylabel("Temperatures")\n'
+                       'plt.title("Relationship between Minimum and Maximum Temperatures in Blacksburg")\n'
+                       'plt.show()\n')
+        all_labels_1 = all_labels_present()
+        ret = dict_out_of_loop(keys)
+        self.assertFalse(all_labels_1, "false negative")
+        all_labels_2 = all_labels_present()
+        self.assertFalse(ret, "...")
+        self.assertTrue(all_labels_1 == all_labels_2, "Side effects aren't undoing themselves")
+
     def test_wrong_keys(self):
         # TODO: Check output string
-        keys = ["Temperature"]
+        keys = ['Date', "Temperature", "Wind", "Min Temp", "Max Temp", "Avg Temp", "Direction", "Speed", "Month", "Year",
+                "Week of", "Full", "State", "Code", "City", "Location"]
         self.to_source("total = 0\n"
                        "for reports in weather_reports:\n"
                        "    total = total + reports['Temperature']\n"
@@ -157,6 +183,30 @@ class DictionaryMistakeTest(MistakeTest):
         ret = dict_access_not_in_loop()
         self.assertFalse(ret, "Expected False, got {} instead".format(ret))
 
+        self.to_source('for weather in weather_reports:\n'
+                       '    if ("San Diego" in weather["Station"]["City"]):\n'
+                       '        sandiego_list.append(weather["Data"]["Temperature"]["Avg Temp"])\n'
+                       'for weather in weather_reports:\n'
+                       '    if ("Blacksburg" in weather["Station"]["City"]):\n'
+                       '        blacksburg_list.append(weather["Data"]["Temperature"]["Avg Temp"])\n'
+                       'for temp in sandiego_list:\n'
+                       '    sandiego_temp = sandiego_temp + 1\n'
+                       '    sandiego_number = sandiego_number + temp\n'
+                       'sandiego_average = sandiego_number / sandiego_temp\n'
+                       'for temp in blacksburg_list:\n'
+                       '    blacksburg_temp = blacksburg_temp + 1\n'
+                       '    blacksburg_number = blacksburg_number + temp\n'
+                       'blacksburg_average = blacksburg_number / blacksburg_temp\n'
+                       'plt.scatter(BB_min,BB_max)\n'
+                       'plt.xlabel("Trend")\n'
+                       'plt.ylabel("Temperatures")\n'
+                       'plt.title("Relationship between Minimum and Maximum Temperatures in Blacksburg")\n'
+                       'plt.show()\n')
+        ret = dict_access_not_in_loop()
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+        ret2 = all_labels_present()
+        self.assertFalse(ret2, "Expected False, got message instead")
+
     def test_hard_coded_list(self):
         val_list = [0.0, 1.37, 1.86, 0.5, 0.0, 0.23]
         self.to_source('total_rain = 0\n'
@@ -177,7 +227,8 @@ class DictionaryMistakeTest(MistakeTest):
 
     def test_iter_as_key(self):
         # TODO: Check output string
-        keys = ["Precipitation"]
+        keys = ['Data', 'Date', "Station", "Temperature", "Precipitation", "Wind", "Min Temp", "Max Temp", "Avg Temp",
+                "Direction", "Speed", "Month", "Year", "Week of", "Full", "State", "Code", "City", "Location"]
         self.to_source('total_precipitation = 0\n'
                        'for Precipitation in weather_reports:\n'
                        '    total_precipitation = total_precipitation + "Precipitation"\n'
@@ -200,7 +251,8 @@ class DictionaryMistakeTest(MistakeTest):
         self.assertFalse(ret, "Expected False, got {} instead".format(ret))
 
     def test_dict_acc_as_lis_var(self):
-        keys = ["Precipitation"]
+        keys = ['Data', 'Date', "Station", "Temperature", "Precipitation", "Wind", "Min Temp", "Max Temp", "Avg Temp",
+                "Direction", "Speed", "Month", "Year", "Week of", "Full", "State", "Code", "City", "Location"]
         self.to_source('precipitation_total=0\n'
                        'precipitation_list=[]\n'
                        'for precipitation in ["Precipitation"]:\n'
@@ -252,7 +304,8 @@ class DictionaryMistakeTest(MistakeTest):
 
     def test_list_str_dict(self):
         # TODO: Check output string
-        keys = ["Precipitation"]
+        keys = ['Data', 'Date', "Station", "Temperature", "Precipitation", "Wind", "Min Temp", "Max Temp", "Avg Temp",
+                "Direction", "Speed", "Month", "Year", "Week of", "Full", "State", "Code", "City", "Location"]
         self.to_source('total=0\n'
                        'number=0\n'
                        'for precipitation1 in "Precipitation":\n'
@@ -370,7 +423,8 @@ class DictionaryMistakeTest(MistakeTest):
         self.assertFalse(ret, "Expected False, got {} instead".format(ret))
 
     def func_filter(self):
-        keys = ["Precipitation", "Data"]
+        keys = ['Data', 'Date', "Station", "Temperature", "Precipitation", "Wind", "Min Temp", "Max Temp", "Avg Temp",
+                "Direction", "Speed", "Month", "Year", "Week of", "Full", "State", "Code", "City", "Location"]
         self.to_source('import weather\n'
                        'weather_reports = weather.get_weather()\n'
                        'total_precipitation = 0\n'
@@ -397,7 +451,8 @@ class DictionaryMistakeTest(MistakeTest):
 
     def test_str_list(self):
         # TODO: check output values
-        keys = ["Precipitation", "Data"]
+        keys = ['Data', 'Date', "Station", "Temperature", "Precipitation", "Wind", "Min Temp", "Max Temp", "Avg Temp",
+                "Direction", "Speed", "Month", "Year", "Week of", "Full", "State", "Code", "City", "Location"]
         self.to_source('import weather\n'
                        'weather_reports = weather.get_weather()\n'
                        'totalPrecip = 0\n'
@@ -434,7 +489,8 @@ class DictionaryMistakeTest(MistakeTest):
 
     def test_key_comp(self):
         # TODO: Check output values
-        keys = ["Data", "Precipitation", "City", "Station"]
+        keys = ['Data', 'Date', "Station", "Temperature", "Precipitation", "Wind", "Min Temp", "Max Temp", "Avg Temp",
+                "Direction", "Speed", "Month", "Year", "Week of", "Full", "State", "Code", "City", "Location"]
         self.to_source('import weather\n'
                        'weather_reports = weather.get_weather()\n'
                        'sum = 0\n'
@@ -477,7 +533,8 @@ class DictionaryMistakeTest(MistakeTest):
 
     def test_var_key(self):
         # TODO: Check output value
-        keys = ["Station", "City", "Precipitation"]
+        keys = ['Data', 'Date', "Station", "Temperature", "Precipitation", "Wind", "Min Temp", "Max Temp", "Avg Temp",
+                "Direction", "Speed", "Month", "Year", "Week of", "Full", "State", "Code", "City", "Location"]
         self.to_source("import weather\n"
                        "weather_reports = weather.get_weather()\n"
                        "sum = 0\n"

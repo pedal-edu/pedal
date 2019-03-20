@@ -201,16 +201,16 @@ class CaitTests(unittest.TestCase):
 
     def test_generic_match(self):
         # print("TESTING SAME ORDER")
-        std_code = "_sum = 0\n" \
-                   "_list = [1,2,3,4]\n" \
-                   "for item in _list:\n" \
-                   "    _sum = _sum + item\n" \
-                   "print(_sum)"
-        ins_code = '_accu_ = 0\n' \
-                   '_iList_ = __listInit__\n' \
-                   'for _item_ in _iList_:\n' \
-                   '    _accu_ = _accu_ + _item_\n' \
-                   'print(_accu_)'
+        std_code = ("_sum = 0\n"
+                    "_list = [1,2,3,4]\n"
+                    "for item in _list:\n"
+                    "    _sum = _sum + item\n"
+                    "print(_sum)")
+        ins_code = ('_accu_ = 0\n'
+                    '_iList_ = __listInit__\n'
+                    'for _item_ in _iList_:\n'
+                    '    _accu_ = _accu_ + _item_\n'
+                    'print(_accu_)')
         # var std_code = "_sum = 12 + 13"
         # var ins_code = "_accu_ = 12 + 11"
         ins_tree = StretchyTreeMatcher(ins_code, report=MAIN_REPORT)
@@ -221,13 +221,25 @@ class CaitTests(unittest.TestCase):
         self.assertTrue(mappings_array, "matches not found")
         if mappings_array:
             mappings = mappings_array[0]
-            self.assertTrue(
-                len(mappings.mappings) == len(ins_ast.linear_tree) - 1,  # -1 is because expression subsumes load
-                "incorrect number of mappings found {} instead of {}".format(len(mappings.mappings),
-                                                                             len(ins_ast.linear_tree) - 1))
-            self.assertEqual(len(mappings.symbol_table), 3, "inconsistent symbol matching")
-            lengths = sorted([len(v) for v in mappings.symbol_table.values()])
-            self.assertEqual(lengths, [2, 2, 4], "inconsistent symbol matching")
+            self.assertTrue(len(mappings["_accu_"]) == 4, "Incorrect variable map")
+            self.assertTrue(mappings["_accu_"].id == "_sum", "Incorrect variable map")
+
+            self.assertTrue(len(mappings["_iList_"]) == 2, "Incorrect variable map")
+            self.assertTrue(mappings["_iList_"].id == "_list", "Incorrect variable map")
+
+            self.assertTrue(len(mappings["_item_"]) == 2, "Incorrect variable map")
+            self.assertTrue(mappings["_item_"].id == "item", "Incorrect variable map")
+            # _accu_/_sum is 4
+            # _iList_/_list is 2
+            # _item_/item is 2
+            for k, v in mappings.mappings.items():
+                try:
+                    if k.id == "__lisetInit__":
+                        self.assertTrue("List" == v.ast_name,
+                                        "invalid mapping, {} mapped to {}".format(k.ast_name, v.ast_name))
+                except AttributeError:
+                    self.assertTrue(k.ast_name == v.ast_name,
+                                    "invalid mapping, {} mapped to {}".format(k.ast_name, v.ast_name))
             debug_print = False  # TODO: debug print
             if debug_print:
                 print(mappings)
@@ -236,15 +248,15 @@ class CaitTests(unittest.TestCase):
 
     def test_many_to_one(self):
         # print("TESTING MANY TO ONE")
-        std_code = "_sum = 0\nlist = [1,2,3,4]\n" \
-                   "for item in list:\n" \
-                   "    _sum = _sum + item\n" \
-                   "print(_sum)"
-        ins_code = "_accu_ = 0\n" \
-                   "_iList_ = __listInit__\n" \
-                   "for _item_ in _iList_:\n" \
-                   "    _accu_ = _accu2_ + _item_\n" \
-                   "print(_accu_)"
+        std_code = ("_sum = 0\nlist = [1,2,3,4]\n"
+                    "for item in list:\n"
+                    "    _sum = _sum + item\n"
+                    "print(_sum)")
+        ins_code = ("_accu_ = 0\n"
+                    "_iList_ = __listInit__\n"
+                    "for _item_ in _iList_:\n"
+                    "    _accu_ = _accu2_ + _item_\n"
+                    "print(_accu_)")
         ins_tree = StretchyTreeMatcher(ins_code, report=MAIN_REPORT)
         ins_ast = ins_tree.root_node
         std_ast = parse_code(std_code)
@@ -268,16 +280,16 @@ class CaitTests(unittest.TestCase):
         # print("TESTING COMMUTATIVITY ADDITION")
         # fail_count = 0
         # success_count = 0
-        std_code = "_sum = 0\n" \
-                   "list = [1,2,3,4]\n" \
-                   "for item in list:\n" \
-                   "    _sum = item + _sum\n" \
-                   "print(_sum)"
-        ins_code = "_accu_ = 0\n" \
-                   "_iList_ = __listInit__\n" \
-                   "for _item_ in _iList_:\n" \
-                   "    _accu_ = _accu_ + _item_\n" \
-                   "print(_accu_)"
+        std_code = ("_sum = 0\n"
+                    "list = [1,2,3,4]\n"
+                    "for item in list:\n"
+                    "    _sum = item + _sum\n"
+                    "print(_sum)")
+        ins_code = ("_accu_ = 0\n"
+                    "_iList_ = __listInit__\n"
+                    "for _item_ in _iList_:\n"
+                    "    _accu_ = _accu_ + _item_\n"
+                    "print(_accu_)")
         ins_tree = StretchyTreeMatcher(ins_code, report=MAIN_REPORT)
         ins_ast = ins_tree.root_node
         std_ast = parse_code(std_code)
@@ -295,16 +307,16 @@ class CaitTests(unittest.TestCase):
 
     def test_one_to_many(self):
         # print("TESTING ONE TO MANY")
-        std_code = "_sum = 0\n" \
-                   "list = [1,2,3,4]\n" \
-                   "for item in list:\n" \
-                   "    _sum = _sum + _sum\n" \
-                   "print(_sum)"
-        ins_code = "_accu_ = 0\n" \
-                   "_iList_ = __listInit__\n" \
-                   "for _item_ in _iList_:\n" \
-                   "    _accu_ = _accu_ + _item_\n" \
-                   "print(_accu_)"
+        std_code = ("_sum = 0\n"
+                    "list = [1,2,3,4]\n"
+                    "for item in list:\n"
+                    "    _sum = _sum + _sum\n"
+                    "print(_sum)")
+        ins_code = ("_accu_ = 0\n"
+                    "_iList_ = __listInit__\n"
+                    "for _item_ in _iList_:\n"
+                    "    _accu_ = _accu_ + _item_\n"
+                    "print(_accu_)")
         ins_tree = StretchyTreeMatcher(ins_code, report=MAIN_REPORT)
         ins_ast = ins_tree.root_node
         std_ast = parse_code(std_code)
@@ -320,18 +332,18 @@ class CaitTests(unittest.TestCase):
         # print("TESTING MULTI-MATCH")
         # var std_code = "_sum = 0\ncount = 0\nlist = [1,2,3,4]\nfor item in list:\n    _sum = _sum + item\n    count" \
         # " = count + 1\nprint(_sum)"
-        std_code = "_sum = 0\n" \
-                   "count = 0\n" \
-                   "_list = [1,2,3,4]\n" \
-                   "for item in _list:\n" \
-                   "    _sum = _sum + count\n" \
-                   "    count = _sum + count\n" \
-                   "print(_sum) "
-        ins_code = "_accu_ = 0\n" \
-                   "_iList_ = __listInit__\n" \
-                   "for _item_ in _iList_:\n" \
-                   "    _accu_ = _accu_ + __exp__\n" \
-                   "print(_accu_)"
+        std_code = ("_sum = 0\n"
+                    "count = 0\n"
+                    "_list = [1,2,3,4]\n"
+                    "for item in _list:\n"
+                    "    _sum = _sum + count\n"
+                    "    count = _sum + count\n"
+                    "print(_sum) ")
+        ins_code = ("_accu_ = 0\n"
+                    "_iList_ = __listInit__\n"
+                    "for _item_ in _iList_:\n"
+                    "    _accu_ = _accu_ + __exp__\n"
+                    "print(_accu_)")
         ins_tree = StretchyTreeMatcher(ins_code, report=MAIN_REPORT)
         ins_ast = ins_tree.root_node
         std_ast = parse_code(std_code)
@@ -345,18 +357,18 @@ class CaitTests(unittest.TestCase):
             print(mappings)
 
     def test_multimatch_true(self):
-        std_code = "_sum = 0\n" \
-                   "count = 0\n" \
-                   "_list = [1,2,3,4]\n" \
-                   "for item in _list:\n" \
-                   "    _sum = _sum + count\n" \
-                   "    count = _sum " \
-                   "+ count\n" \
-                   "print(_sum) "
-        ins_code = "_accu_ = 0\n" \
-                   "_iList_ = __listInit__\n" \
-                   "for _item_ in _iList_:\n" \
-                   "    _accu_ = _accu_ + __exp__"
+        std_code = ("_sum = 0\n"
+                    "count = 0\n"
+                    "_list = [1,2,3,4]\n"
+                    "for item in _list:\n"
+                    "    _sum = _sum + count\n"
+                    "    count = _sum "
+                    "+ count\n"
+                    "print(_sum) ")
+        ins_code = ("_accu_ = 0\n"
+                    "_iList_ = __listInit__\n"
+                    "for _item_ in _iList_:\n"
+                    "    _accu_ = _accu_ + __exp__")
         ins_tree = StretchyTreeMatcher(ins_code, report=MAIN_REPORT)
         ins_ast = ins_tree.root_node
         std_ast = parse_code(std_code)
@@ -370,18 +382,18 @@ class CaitTests(unittest.TestCase):
 
     def test_pass(self):
         # print("TESTING PASS MATCH")
-        std_code = 'import matplotlib.pyplot as plt\n' \
-                   'quakes = [1,2,3,4]\n' \
-                   'quakes_in_miles = []\n' \
-                   'for quakes in quakes:\n' \
-                   '    quakes_in_miles.append(quake * 0.62)\n' \
-                   'plt.hist(quakes_in_miles)\n' \
-                   'plt.xlabel("Depth in Miles")\n' \
-                   'plt.ylabel("Number of Earthquakes")\n' \
-                   'plt.title("Distribution of Depth in Miles of Earthquakes")\n' \
-                   'plt.show()'
-        ins_code = "for _item_ in _item_:\n" \
-                   "    pass"
+        std_code = ('import matplotlib.pyplot as plt\n'
+                    'quakes = [1,2,3,4]\n'
+                    'quakes_in_miles = []\n'
+                    'for quakes in quakes:\n'
+                    '    quakes_in_miles.append(quake * 0.62)\n'
+                    'plt.hist(quakes_in_miles)\n'
+                    'plt.xlabel("Depth in Miles")\n'
+                    'plt.ylabel("Number of Earthquakes")\n'
+                    'plt.title("Distribution of Depth in Miles of Earthquakes")\n'
+                    'plt.show()')
+        ins_code = ("for _item_ in _item_:\n"
+                    "    pass")
         ins_tree = StretchyTreeMatcher(ins_code, report=MAIN_REPORT)
         ins_ast = ins_tree.root_node
         std_ast = parse_code(std_code)
@@ -588,17 +600,39 @@ class CaitTests(unittest.TestCase):
         self.assertTrue(matches02[0]['_func_def_'], "Couldn't retrieve function name.")
         self.assertTrue(matches02[0]['_funky_'], "Couldn't retrieve variable name.")
 
-    @unittest.skip("Not yet implemented")
+    @unittest.skip("Does not support keyword arguments")
+    def test_function_keyarg_matches(self):
+        self.assertTrue(False)
+
     def test_function_arg_matches(self):
         student_code2 = ("def my_func(funky):\n"
                          "    print(funky)")
         matcher2 = StretchyTreeMatcher("def _func_def_(_funky_):\n"
                                        "    pass", report=MAIN_REPORT)
         matches02 = matcher2.find_matches(student_code2)
+        match02 = matches02[0]
         self.assertTrue(matches02, "match not found, aborting test")
-        self.assertTrue(len(matches02[0].func_table.keys()) == 1, "improper number of keys, aborting test")
-        self.assertTrue(matches02[0]['_func_def_'], "Couldn't retrieve function name.")
-        self.assertTrue(matches02[0]['_funky_'], "Couldn't retrieve variable name.")
+        self.assertTrue(len(match02.func_table.keys()) == 1, "improper number of keys, aborting test")
+        self.assertTrue(match02['_func_def_'], "Couldn't retrieve function name.")
+        self.assertTrue(match02['_funky_'], "Couldn't retrieve variable name.")
+        self.assertTrue(match02['_funky_'].id == "funky",
+                        "Incorrect symbol name, expected 'funky' but got '{}' instead".format(match02['_funky_'].id))
+
+        student_code3 = ("def my_func(funky, dunky):\n"
+                         "    print(funky + dunky)")
+        matcher3 = StretchyTreeMatcher("def _func_def_(_funky_, _funky2_):\n"
+                                       "    pass", report=MAIN_REPORT)
+        matches03 = matcher3.find_matches(student_code3)
+        match03 = matches03[0]
+        self.assertTrue(matches03, "match not found, aborting test")
+        self.assertTrue(len(match03.func_table.keys()) == 1, "improper number of keys, aborting test")
+        self.assertTrue(match03['_func_def_'], "Couldn't retrieve function name.")
+        self.assertTrue(match03['_funky_'], "Couldn't retrieve variable name.")
+        self.assertTrue(match03['_funky_'].id == "funky",
+                        "Incorrect symbol name, expected 'funky' but got '{}' instead".format(match02['_funky_'].id))
+        self.assertTrue(match03['_funky2_'], "Couldn't retrieve variable name.")
+        self.assertTrue(match03['_funky2_'].id == "dunky",
+                        "Incorrect symbol name, expected 'dunky' but got '{}' instead".format(match03['_funky_'].id))
 
     def test_cait_node_is_method(self):
         set_source("class Dog:\n def bark(self):\n  pass\ndef dogs_bark(alod):\n pass")
@@ -675,8 +709,33 @@ class CaitTests(unittest.TestCase):
 
     def test_broken_traversal(self):
         set_source("user entered gobblydegook")
-        ast = parse_program()
-        self.assertFalse(ast.find_all('For'))
+        parse = parse_program()
+        self.assertFalse(parse.find_all('For'))
+
+    def test_aug_assignment(self):
+        set_source("magnitudes = [1.5, 1.9, 4.3, 2.1, 2.0, 3.6, 0.5, 2.5, 1.9, 4.0, 3.8, 0.7, 2.2, 5.1, 1.6]\n"
+                   "count = 0\n"
+                   "for item in magnitudes:\n"
+                   "    if item > 2.0:\n"
+                   "        count = count + 1\n"
+                   "print(count)")
+        match = find_matches("for ___ in ___:\n"
+                             "    __exp__\n"
+                             "print(_var_)")[0]
+        self.assertTrue(match["__exp__"].find_matches(match["_var_"].id))
+
+        set_source("magnitudes = [1.5, 1.9, 4.3, 2.1, 2.0, 3.6, 0.5, 2.5, 1.9, 4.0, 3.8, 0.7, 2.2, 5.1, 1.6]\n"
+                   "count = 0\n"
+                   "for item in magnitudes:\n"
+                   "    if item > 2.0:\n"
+                   "        count += 1\n"
+                   "print(count)")
+        match = find_matches("for ___ in ___:\n"
+                               "    __exp__\n"
+                               "print(_var_)")[0]
+        m__exp__ = match["__exp__"]
+        submatches = m__exp__.find_matches(match["_var_"].id, check_meta=False)
+        self.assertTrue(submatches)
 
 
 if __name__ == '__main__':

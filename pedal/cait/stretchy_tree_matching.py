@@ -7,6 +7,7 @@ from pedal.cait.cait_node import CaitNode
 _VAR = "var"
 _EXP = "exp"
 _WILD = "wild"
+_NONE_FIELD = "none"
 
 
 def is_primitive(item):
@@ -56,7 +57,7 @@ class StretchyTreeMatcher:
         elif isinstance(ast_node, CaitNode):
             self.root_node = ast_node
         else:
-            self.root_node = CaitNode(ast_node, "none", report=self.report)
+            self.root_node = CaitNode(ast_node, _NONE_FIELD, report=self.report)
 
     def find_matches(self, ast_or_code, filename="__main__", check_meta=True):
         """
@@ -76,15 +77,30 @@ class StretchyTreeMatcher:
         elif isinstance(ast_or_code, CaitNode):
             other_tree = ast_or_code
         else:
-            other_tree = CaitNode(ast_or_code, "none", report=self.report)
+            other_tree = CaitNode(ast_or_code, _NONE_FIELD, report=self.report)
         explore_root = self.root_node
-        if self.root_node is not None:
+        trim_set = ["Expr", "Module"]
+        explore_root_old_field = explore_root.field
+        if self.root_node is not None:  # Trimming ins_node
             while (len(explore_root.children) == 1 and
-                   explore_root.ast_name in ["Expr", "Module"]):
+                   explore_root.ast_name in trim_set):
+                explore_root.field = explore_root_old_field
                 explore_root = explore_root.children[0]
-                explore_root.field = "none"
-        return self.any_node_match(explore_root, other_tree,
+                explore_root_old_field = explore_root.field
+                explore_root.field = _NONE_FIELD
+        other_root = other_tree
+        other_root_old_field = other_root.field
+        if other_root is not None:  # Trimming std_node
+            while len(other_root.children) == 1 and other_root.ast_name in trim_set:
+                other_root.field = other_root_old_field
+                other_root = other_root.children[0]
+                other_root_old_field = other_root.field
+                other_root.field = _NONE_FIELD
+        matches = self.any_node_match(explore_root, other_root,
                                    check_meta=check_meta)
+        explore_root.field = explore_root_old_field
+        other_root.field = other_root_old_field
+        return matches
 
     def any_node_match(self, ins_node, std_node, check_meta=True, cut=False):
         """
@@ -151,7 +167,7 @@ class StretchyTreeMatcher:
         if match[_VAR] and meta_matched:  # if variable
             # This if body is probably unnecessary.
             if type(std_node.astNode).__name__ == "Name":
-                return self.deep_find_match_generic(ins_node, std_node, check_meta)
+                return self.deep_find_match_generic(ins_node, std_node, check_meta=check_meta, ignores=["ctx"])
         # could else return False, but shallow_match_generic should do this as well
         elif match[_EXP]:  # and meta_matched:  # if expression
             # terminate recursion, the whole subtree should match since expression nodes match to anything
@@ -165,7 +181,7 @@ class StretchyTreeMatcher:
             mapping.add_node_pairing(ins_node, std_node)
             return [mapping]
         # else
-        return self.deep_find_match_generic(ins_node, std_node, check_meta)
+        return self.deep_find_match_generic(ins_node, std_node, check_meta=check_meta, ignores=["ctx"])
 
     # noinspection PyPep8Naming
     def deep_find_match_BinOp(self, ins_node, std_node, check_meta=True):
@@ -263,7 +279,7 @@ class StretchyTreeMatcher:
                 return [mapping]
         return self.deep_find_match_generic(ins_node, std_node, check_meta)
 
-    def deep_find_match_generic(self, ins_node, std_node, check_meta=True):
+    def deep_find_match_generic(self, ins_node, std_node, check_meta=True, ignores=None):
         """
         This first uses shallow match to find a base map (match) from which to
         build off. The algorithm then tracks all the possible mappings that
@@ -283,10 +299,13 @@ class StretchyTreeMatcher:
             ins_node: Instructor ast to find in the student ast
             std_node: Student AST to search for the instructor ast in
             check_meta: flag to check whether the fields of the instructor node and the student node should match
+            ignores: List of fields to ignore in the field match
 
         Returns:
             a mapping between the isntructor and student asts, or [] if such a mapping doesn't exist
         """
+        if ignores is None:
+            ignores = []
         base_mappings = self.shallow_match(ins_node, std_node, check_meta)
         if base_mappings:
             # base case this runs 0 times because no children
@@ -298,6 +317,8 @@ class StretchyTreeMatcher:
                 # make a new set of maps
                 running_maps = []
                 running_sibs = []
+                if insChild.field in ignores:
+                    continue
                 # accumulate all potential matches for current child
                 for j, std_child in enumerate(std_node.children[youngest_sib:], youngest_sib):
                     std_child = std_node.children[j]
@@ -393,33 +414,46 @@ class StretchyTreeMatcher:
         # TODO: add functionality to add function references to func_table?
         meta_matched = self.metas_match(ins_node, std_node, check_meta)
         if match[_VAR] and meta_matched:  # variable
-            if type(std_node.astNode).__name__ == "Name" or id_val == "attr":
-                if id_val == "attr":
-                    std_node.astNode.id = std_node.astNode.attr
-                if std_node.field == "func" and ins_node.field != "none":
-                    # TODO: This 'ins_node.field != "none"' code is for an obscure edge case where the instructor code
-                    # is only _var_
+            if type(std_node.astNode).__name__ == "Name" or id_val in ["attr", "arg"]:
+                if id_val in ["attr", "arg"]:
+                    std_node.astNode._id = std_node.astNode.__getattribute__(id_val)
+                if std_node.field == "func" and ins_node.field != _NONE_FIELD:
+                    # TODO: This 'ins_node.field != _NONE_FIELD' code is for an obscure edge case where the
+                    #  instructor code is only _var_
+                    std_node.astNode._id = std_node.astNode.__getattribute__(id_val)
                     mapping.add_func_to_sym_table(ins_node, std_node)
                 else:
+                    std_node.astNode._id = std_node.astNode.__getattribute__(id_val)
                     mapping.add_var_to_sym_table(ins_node, std_node)  # TODO: Capture result?
                 matched = True
         # could else return False, but shallow_match_generic should do this as well
-        elif match[_EXP] and meta_matched:  # expression TODO: In theory this won't run?
+        elif match[_EXP] and meta_matched:
             mapping.add_exp_to_sym_table(ins_node, std_node)
             matched = True
-        elif match[_WILD] and meta_matched:  # don't care TODO: In theory this won't run?
+        elif match[_WILD] and meta_matched:
             matched = True
 
         if matched:
             mapping.add_node_pairing(ins_node, std_node)
             return [mapping]
         # else
-        return self.shallow_match_generic(ins_node, std_node, check_meta)
+        return self.shallow_match_main(ins_node, std_node, check_meta=check_meta, ignores=["ctx"])
+
+    # noinspection PyPep8Naming,PyMethodMayBeStatic
+    def shallow_match_arg(self, ins_node, std_node, check_meta=True):
+        ins_node.astNode._id = ins_node.arg
+        # TODO: annotations are currently ignored because shallow_symbol_handler doesn't handle them, feature? or
+        #  should we fix this. Although this should actually be toggleable?
+        return self.shallow_symbol_handler(ins_node, std_node, "arg", check_meta=check_meta)
+
+    def shallow_match_arguments(self, ins_node, std_node, check_meta=True):
+        # TODO: do we ignore default values? Currently not ignored
+        return self.shallow_match_generic(ins_node, std_node, check_meta=check_meta)
 
     # noinspection PyPep8Naming,PyMethodMayBeStatic
     def shallow_func_handle(self, ins_node, std_node, check_meta=True):
         if ins_node.field == "func" and std_node.field == "func":
-            ins_node.astNode.id = ins_node.astNode.attr
+            ins_node.astNode._id = ins_node.astNode.attr
             return self.shallow_symbol_handler(ins_node, std_node, "attr", check_meta)
         return self.shallow_match_generic(ins_node, std_node, check_meta)
 
@@ -427,7 +461,7 @@ class StretchyTreeMatcher:
         if ins_node.field == "func" and std_node.ast_name == "Attribute":
             return self.shallow_func_handle(ins_node, std_node, check_meta)
         elif std_node.ast_name == "Attribute":
-            ins_node.astNode.id = ins_node.attr  # TODO: Fix this hack more gracefully
+            ins_node.astNode._id = ins_node.attr  # TODO: Fix this hack more gracefully
             # add_var_to_sym_table in ast_map needs the id attribute to make the map
             return self.shallow_symbol_handler(ins_node, std_node, "attr", check_meta)
         else:
@@ -450,6 +484,7 @@ class StretchyTreeMatcher:
         Returns:
             list of AstMap: a mapping of ins_node to std_node and possibly a symbol_table, or False if it doesn't match
         """
+        ins_node.ast_node._id = ins_node.id
         return self.shallow_symbol_handler(ins_node, std_node, "id", check_meta)
 
     # noinspection PyPep8Naming,PyMethodMayBeStatic
@@ -511,6 +546,8 @@ class StretchyTreeMatcher:
             name = ins.name
             match = _name_regex(name)
             if match[_VAR] and meta_matched:  # variable
+                ins._id = name
+                std._id = std.name
                 mapping[0].add_func_to_sym_table(ins_node, std_node)  # TODO: Capture result?
                 matched = True
             elif match[_WILD] and meta_matched:
@@ -534,7 +571,7 @@ class StretchyTreeMatcher:
         Returns:
             list of AstMap: a mapping between the instructor and student root nodes (potentially empty)
         """
-        return self.shallow_match_main(ins_node, std_node, check_meta)
+        return self.shallow_match_main(ins_node, std_node, check_meta=check_meta)
 
     def shallow_match_main(self, ins_node, std_node, check_meta=True, ignores=None):
         """
@@ -550,6 +587,7 @@ class StretchyTreeMatcher:
         """
         if ignores is None:
             ignores = []
+        ignores.append("_id")  # special exception for symbols in lookup tables
         ins = ins_node.astNode
         std = std_node.astNode
         ins_field_list = list(ast.iter_fields(ins))
@@ -601,8 +639,20 @@ class StretchyTreeMatcher:
     def shallow_match(self, ins_node, std_node, check_meta=True):
         method_name = 'shallow_match_' + type(ins_node.astNode).__name__
         target_func = getattr(self, method_name, self.shallow_match_generic)
-        return target_func(ins_node, std_node, check_meta)
+        return target_func(ins_node, std_node, check_meta=check_meta)
 
     @staticmethod
     def metas_match(ins_node, std_node, check_meta=True):
-        return (check_meta and ins_node.field == std_node.field) or not check_meta or ins_node.field == "none"
+        """
+        Args:
+            ins_node:
+            std_node:
+            check_meta:
+
+        Returns:
+
+        """
+        return ((check_meta and ins_node.field == std_node.field) or
+                not check_meta
+                # or std_node.field == _NONE_FIELD
+                or ins_node.field == _NONE_FIELD)

@@ -9,7 +9,7 @@ setuptools.setup(
     packages=['pedal', 'pedal.report', 'pedal.plugins', 'pedal.resolvers',
               'pedal.source', 'pedal.tifa', 'pedal.questions',
               'pedal.cait', 'pedal.mistakes', 'pedal.toolkit',
-              'pedal.assertions', 'pedal.sandbox', 'CS1014'],
+              'pedal.assertions', 'pedal.sandbox', 'cs1014'],
     license='Creative Commons Attribution-Noncommercial-Share Alike license',
     long_description=open('README.rst').read(),
     url='https://github.com/acbart/pedal',

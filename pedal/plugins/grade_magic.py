@@ -3,8 +3,9 @@ import json
 import requests
 
 # IPython imports
-from IPython.core.magic import (Magics, magics_class, line_magic, cell_magic)
+from IPython.core.magic import (Magics, magics_class, line_magic, cell_magic, line_cell_magic)
 from IPython.display import Javascript, display
+from IPython.utils.io import capture_output, CapturedIO
 
 # Logging imports
 import os
@@ -92,6 +93,8 @@ def blockpy_grade(assignment_id, student_code, inputs):
         assignment_id (int): The assignment ID to look up and use the on_run
                              code for.
         student_code (str): The code that was written by the student.
+
+        inputs (str): The inputs to queue into the assignment
 
     Returns:
         str: The HTML formatted feedback for the student.
@@ -192,7 +195,7 @@ console.log('inputs = {inputs}')
 on_run_code.push("print(blockpy_grade({assignment}, student_code, inputs))");
 '''
 
-# This chunk actually performs the on_run code exeuction using the kernel.
+# This chunk actually performs the on_run code execution using the kernel.
 EXECUTE_CODE = r'''
 on_run_code = on_run_code.join("\n");
 console.log(on_run_code);
@@ -274,32 +277,88 @@ class GradeMagic(Magics):
         self.shell.logger.logstop()
         # ######Logging
 
-    @cell_magic
-    def grade(self, line="", cell=""):
-        # Concatenate the JS code and then execute it by displaying it
+    # noinspection PyMethodMayBeStatic
+    def grade_parser(self, line, cell=None):
+        if ',' in line:
+            if cell is None:
+                assignment, line = line.split(",", maxsplit=1)
+            else:
+                assignment = None
+            inputs = json.dumps(line.split(","))
+            inputs = "\\'" + inputs[1:len(inputs) - 1] + "\\'"
+        else:
+            if cell is None:
+                assignment, inputs = line, ""
+            else:
+                inputs = line
+                assignment = ""
+            inputs = json.dumps(inputs)
+        return {"inputs": inputs, "assignment": assignment}
+
+    # noinspection PyMethodMayBeStatic
+    def unified_helper(self, local_code, **kwargs):
         code = EXTRACT_STUDENT_CODE
         code += ANIMATE_LAST_CELL
-        code += LOCAL_GRADE.format(on_run_code=json.dumps(cell), inputs="''")
+        code += local_code.format(**kwargs)
         code += EXECUTE_CODE
-        # self.logging()
+        return code
+
+    @cell_magic
+    def grade(self, line="", cell=""):
+        dump = self.grade_parser(line, cell)
+        code = self.unified_helper(LOCAL_GRADE, on_run_code="INSTRUCTOR_CODE", inputs=dump['inputs'])
+        cell = cell.replace("\\", "\\\\")
+        cell = cell.replace("\n", "\\n")
+        cell = cell.replace("'", "\\'")
+        cell = cell.replace('"', '\\"')
+        # Runs this code in the kernel as python code
+        # Can also run compiled code
+        self.shell.run_code("INSTRUCTOR_CODE = " + '"' + cell + '"')
+        # TODO: This was the easier way for me to get this to work
+        #  This might be worth using in more depth to have less translation
+        #  to and from javascript. See usage_examples
         return display(Javascript(code))
+
+    @line_cell_magic
+    def usage_examples(self, line="", cell="print('running cell')\nprint('running cell2')"):
+        # Runs code in the kernel's context
+        self.shell.run_code("print('fun')")
+
+        # Runs code in kernel's context using compiled code
+        sample = compile(cell, "usage_examples.py", "exec")
+        self.shell.run_code(sample)
+
+        # runs javascript code
+        self.shell.run_cell_magic("javascript", "", "console.log('I do JAVASCRIPT');\n")
+        # Maybe can use javascript execution to pass things around...not sure though...can't get it to work
+        # You can pass values, but it doesn't seem to work unless you run it again.
+        # https://michhar.github.io/javascript-and-python-have-a-party/
+
+        self.shell.run_cell_magic(
+            "javascript", "",
+            # js_code = Javascript(
+            """var callbacks = { iopub : { output: function(out_data){ console.log(out_data) } } };\n"""
+            """var code = "fun = 12";\n"""
+            """IPython.notebook.kernel.execute(code);\n""")
+        # handle = display(js_code, display_id="usage_examples")
+        # handle.update(handle)
+        self.shell.run_cell_magic("javascript", "", "console.log('I do JAVASCRIPT TOO!!');\n")
+        # captures standard output, standard error, etc. and stops or not stops it
+        # class IPython.utils.capture.capture_output(stdout=True, stderr=True, display=True)
+        # Note that Tracebacks aren't put in standard error?
+        with capture_output(True, False, False) as captured:
+            print(dir(self))
+            self.shell.run_code("print(fun)")
+            sys.stderr.write("spam\n")
+        print("I captured stdout")
+        print(captured.stdout)
+        print("I captured stderr")
+        print(captured.stderr)
 
     @line_magic
     def grade_blockpy(self, line=""):
-        if ',' in line:
-            assignment, inputs = line.split(",", maxsplit=1)
-            inputs = json.dumps(inputs.split(","))
-            inputs = "\\'" + inputs[1:len(inputs) - 1] + "\\'"
-        else:
-            assignment, inputs = line, ""
-            inputs = json.dumps(inputs)
-        # Concatenate the JS code and then execute it by displaying it
-        code = EXTRACT_STUDENT_CODE
-        code += ANIMATE_LAST_CELL
-        code += BLOCKPY_GRADE.format(assignment=assignment,
-                                     inputs=inputs)
-        code += EXECUTE_CODE
-        # self.logging()
+        dump = self.grade_parser(line)
+        code = self.unified_helper(BLOCKPY_GRADE, assignment=dump["assignment"], inputs=dump["inputs"])
         return display(Javascript(code))
 
 
