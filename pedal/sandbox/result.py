@@ -201,67 +201,67 @@ class SandboxResult:
         return self._clone_this_result(self.value + other)
 
     def __sub__(self, other):
-        if isinstance(other, Sandbox):
+        if isinstance(other, SandboxResult):
             return self._clone_this_result(self.value - other.value)
         return self._clone_this_result(self.value - other)
 
     def __mul__(self, other):
-        if isinstance(other, Sandbox):
+        if isinstance(other, SandboxResult):
             return self._clone_this_result(self.value * other.value)
         return self._clone_this_result(self.value * other)
 
     def __matmul__(self, other):
-        if isinstance(other, Sandbox):
+        if isinstance(other, SandboxResult):
             return self._clone_this_result(self.value.__matmul__(other.value))
         return self._clone_this_result(self.value.__matmul__(other))
 
     def __truediv__(self, other):
-        if isinstance(other, Sandbox):
+        if isinstance(other, SandboxResult):
             return self._clone_this_result(self.value.__truediv__(other.value))
         return self._clone_this_result(self.value.__truediv__(other))
 
     def __floordiv__(self, other):
-        if isinstance(other, Sandbox):
+        if isinstance(other, SandboxResult):
             return self._clone_this_result(self.value.__floordiv__(other.value))
         return self._clone_this_result(self.value.__floordiv__(other))
 
     def __mod__(self, other):
-        if isinstance(other, Sandbox):
+        if isinstance(other, SandboxResult):
             return self._clone_this_result(self.value.__mod__(other.value))
         return self._clone_this_result(self.value.__mod__(other))
 
     def __divmod__(self, other):
-        if isinstance(other, Sandbox):
+        if isinstance(other, SandboxResult):
             return self._clone_this_result(self.value.__divmod__(other.value))
         return self._clone_this_result(self.value.__divmod__(other))
 
     def __pow__(self, other, *modulo):
-        if isinstance(other, Sandbox):
+        if isinstance(other, SandboxResult):
             return self._clone_this_result(self.value.__pow__(other.value, *modulo))
         return self._clone_this_result(self.value.__pow__(other, *modulo))
 
     def __lshift__(self, other):
-        if isinstance(other, Sandbox):
+        if isinstance(other, SandboxResult):
             return self._clone_this_result(self.value.__lshift__(other.value))
         return self._clone_this_result(self.value.__lshift__(other))
 
     def __rshift__(self, other):
-        if isinstance(other, Sandbox):
+        if isinstance(other, SandboxResult):
             return self._clone_this_result(self.value.__rshift__(other.value))
         return self._clone_this_result(self.value.__rshift__(other))
 
     def __and__(self, other):
-        if isinstance(other, Sandbox):
+        if isinstance(other, SandboxResult):
             return self._clone_this_result(self.value.__and__(other.value))
         return self._clone_this_result(self.value.__and__(other))
 
     def __xor__(self, other):
-        if isinstance(other, Sandbox):
+        if isinstance(other, SandboxResult):
             return self._clone_this_result(self.value.__xor__(other.value))
         return self._clone_this_result(self.value.__xor__(other))
 
     def __or__(self, other):
-        if isinstance(other, Sandbox):
+        if isinstance(other, SandboxResult):
             return self._clone_this_result(self.value.__or__(other.value))
         return self._clone_this_result(self.value.__or__(other))
 

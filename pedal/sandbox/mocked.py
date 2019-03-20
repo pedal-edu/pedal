@@ -45,6 +45,14 @@ def _disabled_globals():
     error.
     """
     raise RuntimeError("You are not allowed to call 'globals'.")
+    
+class FunctionNotAllowed(Exception):
+    pass
+    
+def disabled_builtin(name):
+    def _disabled_version(*args, **kwargs):
+        raise FunctionNotAllowed("You are not allowed to call '{}'.".format(name))
+    return _disabled_version
 
 
 _OPEN_FORBIDDEN_NAMES = re.compile(r"(^[./])|(\.py$)")
