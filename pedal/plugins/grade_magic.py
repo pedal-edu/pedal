@@ -250,6 +250,10 @@ class GradeMagic(Magics):
         except BaseException:
             self.shell.logfile = old_logfile
             warn("Couldn't start log: %s" % sys.exc_info()[1])
+        self.shell.run_code("input = __builtins__.input")
+        self.shell.run_code("print = __builtins__.print")
+        self.shell.run_code("sum = __builtins__.sum")
+        self.shell.run_code("len = __builtins__.len")
 
     @line_magic
     def grade_logstop(self, line=""):
