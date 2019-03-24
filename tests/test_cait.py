@@ -35,6 +35,14 @@ class CaitTests(unittest.TestCase):
         MAIN_REPORT.clear()
 
     def test_var_match(self):
+        """
+        TODO: Things about symbols we haven't asked about
+                - how does scope work? Right now everything is stored
+                   in one name space because symbols don't currently
+                   have an idea of "scope".
+        Returns:
+
+        """
         # print("TESTING VAR MATCH")
         # tests whether variables are stored correctly
         test_tree = StretchyTreeMatcher("_accu_ = 0", report=MAIN_REPORT)
@@ -602,6 +610,15 @@ class CaitTests(unittest.TestCase):
 
     @unittest.skip("Does not support keyword arguments")
     def test_function_keyarg_matches(self):
+        """
+        TODO: This has a lot of aspects, such as
+                - are keywords symbols that should be saved?
+                - how are keywords stored in the name space?
+                - how does that interact with the name space stuff
+                    in variable matches?
+        Returns:
+
+        """
         self.assertTrue(False)
 
     def test_function_arg_matches(self):
@@ -736,6 +753,21 @@ class CaitTests(unittest.TestCase):
         m__exp__ = match["__exp__"]
         submatches = m__exp__.find_matches(match["_var_"].id, check_meta=False)
         self.assertTrue(submatches)
+
+    def test_function_recursion(self):
+        set_source("def recursive(item):\n"
+                   "    if item < 0:\n"
+                   "        return 0\n"
+                   "    else:"
+                   "        return recursive(item - 1)")
+        matches = find_matches("def _recur_(_var_):\n"
+                               "    __exp__")
+        for match in matches:
+            __exp__ = match["__exp__"]
+            _recur_ = match["_recur_"]
+            _var_ = match["_var_"]
+            self.assertTrue(__exp__.find_matches("{func}()".format(func=_recur_.id)),
+                            "couldn't find recursive function call")
 
 
 if __name__ == '__main__':
