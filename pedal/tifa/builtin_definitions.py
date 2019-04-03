@@ -5,7 +5,6 @@ from pedal.tifa.type_definitions import (UnknownType, FunctionType,
                                          SetType, DayType, TimeType, ClassType,
                                          LiteralNum)
 
-
 def get_builtin_module(name):
     if name == 'matplotlib':
         return ModuleType('matplotlib',
