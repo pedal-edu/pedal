@@ -400,7 +400,7 @@ def func_filter(keys):
     message = "Please do not modify the function call to retrieve the data."
     code = "func_filt"
     tldr = "Attempting to filter using fetch"
-    matches = find_matches("_var_._func_(__str__)")
+    matches = find_matches("_var_.get_weather(__str__)")
     for match in matches:
         __str__ = match["__str__"]
         if __str__.value in keys:  # TODO: Relies on .value returning id for Name nodes

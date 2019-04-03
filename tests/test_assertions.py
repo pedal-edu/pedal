@@ -36,6 +36,7 @@ class TestAssertions(unittest.TestCase):
             @section(1)
             def part1():
                 assertEqual(e.student.call('add', 1, 6, 3), 10)
+            suppress("analyzer")
         self.assertEqual(e.feedback, dedent("""
         Instructor Test<br>Student code failed instructor test.<br>
         I ran:<pre>add(1, 6, 3)</pre>
@@ -49,6 +50,7 @@ class TestAssertions(unittest.TestCase):
             @section(1)
             def part2():
                 assertEqual(10, e.student.call('add', 1, 6, 3))
+            suppress("analyzer")
         self.assertEqual(e.feedback, dedent("""
         Instructor Test<br>Student code failed instructor test.<br>
         I ran:<pre>add(1, 6, 3)</pre>
@@ -65,6 +67,7 @@ class TestAssertions(unittest.TestCase):
             def part2():
                 assertEqual(10, e.student.call('add', 1, 6, 3))
                 assertEqual(8, e.student.call('add', -1, 6, 3))
+            suppress("analyzer")
         self.assertEqual(e.feedback, dedent("""
         Instructor Test<br>Student code failed instructor test.<br>
         I ran:<pre>add(-1, 6, 3)</pre>
@@ -81,6 +84,7 @@ class TestAssertions(unittest.TestCase):
             def part3():
                 assertEqual(e.student.call('expected_answer', target='expect'),
                             e.student.call('add', 1, 6, 3, target='actual'))
+            suppress("analyzer")
         self.assertEqual(e.feedback, dedent("""
         Instructor Test<br>Student code failed instructor test.<br>
         I ran:<pre>expect = expected_answer()
@@ -96,6 +100,7 @@ class TestAssertions(unittest.TestCase):
             @section(1)
             def part4():
                 assertIn(e.student.call('make_color'), ('red', 'blue', 'green'))
+            suppress("analyzer")
         self.assertEqual(e.feedback, dedent("""
         Instructor Test<br>Student code failed instructor test.<br>
         I ran:<pre>make_color()</pre>
@@ -109,6 +114,7 @@ class TestAssertions(unittest.TestCase):
             @section(1)
             def part1():
                 assertIn('blue', e.student.call('make_colors'))
+            suppress("analyzer")
         self.assertEqual(e.feedback, dedent("""
         Instructor Test<br>Student code failed instructor test.<br>
         I ran:<pre>make_colors()</pre>
@@ -122,6 +128,7 @@ class TestAssertions(unittest.TestCase):
             @section(1)
             def part1():
                 assertNotIn('purple', e.student.call('make_colors'))
+            suppress("analyzer")
         self.assertEqual(e.feedback, dedent("""
         Instructor Test<br>Student code failed instructor test.<br>
         I ran:<pre>make_colors()</pre>
@@ -138,6 +145,7 @@ class TestAssertions(unittest.TestCase):
             def part1():
                 assertIn(e.student.call('make_color', target="color"),
                          e.student.call('make_colors', target="colors"))
+            suppress("analyzer")
         self.assertEqual(e.feedback, dedent("""
         Instructor Test<br>Student code failed instructor test.<br>
         I ran:<pre>color = make_color()
@@ -156,6 +164,7 @@ class TestAssertions(unittest.TestCase):
             def part1():
                 assertIn(e.student.call('make_color'),
                          e.student.call('make_colors'))
+            suppress("analyzer")
         self.assertEqual(e.feedback, dedent("""
         Instructor Test<br>Student code failed instructor test.<br>
         I ran:<pre>make_color()
@@ -171,6 +180,7 @@ class TestAssertions(unittest.TestCase):
             @section(1)
             def part1():
                 assertTrue(e.student.call('make_color'))
+            suppress("analyzer")
         self.assertEqual(e.feedback, dedent("""
         Instructor Test<br>Student code failed instructor test.<br>
         I ran:<pre>make_color()</pre>
@@ -186,6 +196,7 @@ class TestAssertions(unittest.TestCase):
             @section(1)
             def part1():
                 assertEqual(e.student.call('add_from_input', 4, inputs="6"), 10)
+            suppress("analyzer")
         self.assertEqual(e.feedback, dedent("""
         Instructor Test<br>Student code failed instructor test.<br>
         I ran:<pre>add_from_input(4)</pre>
@@ -201,6 +212,7 @@ class TestAssertions(unittest.TestCase):
             def part1():
                 assertEqual(e.student.call('make_brackets'), "[]",
                             exact=True)
+            suppress("analyzer")
         self.assertEqual(e.feedback, dedent("""
         Instructor Test<br>Student code failed instructor test.<br>
         I ran:<pre>make_brackets()</pre>

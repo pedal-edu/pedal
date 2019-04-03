@@ -110,11 +110,9 @@ class SandboxTraceback:
         length = self._count_relevant_tb_levels(tb)
         tb_e = traceback.TracebackException(cl, exc, tb, limit=length,
                                             capture_locals=False)
-        #print(list(), file=x)
+        # print(list(), file=x)
         for frame in tb_e.stack:
-            #print(frame, file=x)
             if frame.filename == os.path.basename(self.student_filename):
-                #frame.lineno += self.line_number
                 frame.lineno += self.line_offset
             frame._line = self.original_code_lines[frame.lineno-1]
         lines = [self._clean_traceback_line(line)
