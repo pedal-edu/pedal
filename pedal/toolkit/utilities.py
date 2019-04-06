@@ -113,8 +113,11 @@ def prevent_builtin_usage(function_names):
                 return a_call.func.id
     return None
 
+# TODO: UGLY HACK. This is to avoid muted=False kwargs in the following
+#       functions. Apparently skulpt doesn't support this syntax.
+muted = False
 
-def prevent_literal(*literals, muted=False):
+def prevent_literal(*literals):
     '''
     Confirms that the literal is not in the code, returning False if it is not.
     
@@ -149,8 +152,7 @@ def prevent_literal(*literals, muted=False):
                 return literal
     return False
 
-
-def ensure_literal(*literals, muted=False):
+def ensure_literal(*literals):
     '''
     Confirms that the literal IS in the code, returning False if it is not.
     
