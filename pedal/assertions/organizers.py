@@ -1,5 +1,6 @@
 from pedal.report.imperative import MAIN_REPORT
-from pedal.assertions.setup import _setup_assertions, AssertionException
+from pedal.assertions.setup import (_setup_assertions, AssertionException,
+                                    _add_relationships)
 from functools import wraps
 
 def contextualize_calls():
@@ -46,7 +47,7 @@ def section(*args):
     '''
     _setup_assertions(MAIN_REPORT)
     def wrap(f):
-        MAIN_REPORT['assertions']['functions'].append(f)
+        MAIN_REPORT['assertions']['functions'].append((section_number, f))
         return f
     section_number = -1
     if len(args) >= 1 and callable(args[0]):
@@ -57,7 +58,7 @@ def section(*args):
         section_number = args[0]
     return wrap
 
-def phase(name):
+def phase(name, before=None, after=None):
     _setup_assertions(MAIN_REPORT)
     def wrap(f):
         @wraps(f)
@@ -67,7 +68,9 @@ def phase(name):
             value = f(*args, **kwargs)
             MAIN_REPORT['assertions']['exceptions'] = old_exception_state
             return value
-        MAIN_REPORT['assertions']['functions'].append(_handle_entry)
+        MAIN_REPORT['assertions']['functions'].append((name, _handle_entry))
+        _add_relationships(name, before)
+        _add_relationships(after, name)
         return _handle_entry
     return wrap
     

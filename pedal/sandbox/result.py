@@ -131,7 +131,12 @@ class SandboxResult:
         return issubclass(self.value, subclass)
 
     def __len__(self):
-        return self._clone_this_result(len(self.value))
+        '''
+        Fun fact: cpython DEMANDS that __len__ return an integer. Not something
+        that looks like an integer, but a true, honest-to-god integer that
+        can fit into a slot.
+        '''
+        return len(self.value)
 
     def __getitem__(self, key):
         return self._clone_this_result(self.value[key])
