@@ -170,6 +170,7 @@ class Sandbox(DataSandbox):
         self.call_contexts = {self.call_id: []}
         self.input_contexts = {self.call_id: []}
         self.context = context
+        self.keep_context = False
         # Update outputs
         self.set_output(initial_raw_output)
         # filename
@@ -406,6 +407,8 @@ class Sandbox(DataSandbox):
                 exceptions. If None, then the recorded context will be used. If
                 a string, tracebacks will be shown with the given context. If
                 False, no context will be given.
+            keep_context (bool): Whether or not to stay in the current context,
+                or to start a new one. Defaults to False.
         Returns:
             If the call was successful, returns the result of executing the
             code. Otherwise, it will return an Exception relevant to the
@@ -430,13 +433,15 @@ class Sandbox(DataSandbox):
         inputs = kwargs.pop('inputs', self.inputs)
         threaded = kwargs.pop('threaded', self.threaded)
         context = kwargs.pop('context', self.context)
+        keep_context = kwargs.pop('keep_context', self.keep_context)
         report_exceptions = kwargs.pop('report_exceptions', self.report_exceptions_mode)
         # Create the actual arguments and call
-        self.call_id += 1
-        self.target_contexts[self.call_id] = target
-        self.output_contexts[self.call_id] = []
-        self.call_contexts[self.call_id] = []
-        self.input_contexts[self.call_id] = []
+        if not keep_context or not self.call_id:
+            self.call_id += 1
+            self.target_contexts[self.call_id] = target
+            self.output_contexts[self.call_id] = []
+            self.call_contexts[self.call_id] = []
+            self.input_contexts[self.call_id] = []
         actual, student = self._construct_call(function, args, kwargs, target,
                                                context)
         if context is None:

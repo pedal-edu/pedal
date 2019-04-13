@@ -220,7 +220,26 @@ class TestAssertions(unittest.TestCase):
         The result was:<pre>'{}'</pre>
         But I expected the result to be equal to:<pre>'[]'</pre>""").lstrip())
         
-        
+        with Execution(dedent('''
+            def fail_on_3(num):
+                if num == 3:
+                    return False
+                else:
+                    return True
+        ''')) as e:
+            @phase('1')
+            def part1():
+                assertEqual(e.student.call('fail_on_3', 1, keep_context=True), True)
+                assertEqual(e.student.call('fail_on_3', 2, keep_context=True), True)
+                assertEqual(e.student.call('fail_on_3', 3, keep_context=True), True)
+            suppress("analyzer")
+        self.assertEqual(e.feedback, dedent("""
+        Instructor Test<br>Student code failed instructor test.<br>
+        I ran:<pre>fail_on_3(1)
+        fail_on_3(2)
+        fail_on_3(3)</pre>
+        The result was:<pre>False</pre>
+        But I expected the result to be equal to:<pre>True</pre>""").lstrip())
         
         # Test {} in output or context
         
