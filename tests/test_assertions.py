@@ -230,7 +230,7 @@ class TestTopologicalSort(unittest.TestCase):
         self.assertEqual(_topological_sort(basic, {}), basic)
         
         backwards = basic[::-1]
-        self.assertEqual(_topological_sort(backwards, {}), basic)
+        self.assertEqual(_topological_sort(backwards, {}), backwards)
         
         force = {'Apple': ['Corn', 'Date'],
                  'Date': ['Corn', 'Eggplant'],
@@ -239,7 +239,7 @@ class TestTopologicalSort(unittest.TestCase):
                          ['Apple', 'Banana', 'Date', 'Corn', 'Eggplant'])
         
         self.assertEqual(_topological_sort(backwards, force),
-                         ['Apple', 'Banana', 'Date', 'Corn', 'Eggplant'])
+                         ['Banana', 'Apple', 'Date', 'Eggplant', 'Corn'])
 
         force = {'Eggplant': ['Date'],
                  'Date': ['Corn'],
@@ -268,11 +268,13 @@ class TestTopologicalSort(unittest.TestCase):
                      'render_introduction': ['win_and_lose_paths'],
                      'update': ['win_and_lose_paths'],
                      'win_and_lose_paths': ['conclusion']}
-        expected = ['create_world', 
+        expected = ['records',
+                    'render_introduction',
+                    'create_world', 
+                    'render',
                     'get_options', 'choose', 
-                    'records', 'render',
-                    'render_ending', 'render_introduction',
                     'update',
+                    'render_ending',
                     'win_and_lose_paths',
                     'conclusion']
         self.assertEqual(_topological_sort(names, orderings), expected)

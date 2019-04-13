@@ -15,7 +15,7 @@ def _topological_sort(names, orderings):
                     dfs(neighbor)
         stack.insert(0, name)
     
-    for name in sorted(names, reverse=True):
+    for name in names[::-1]:
         if name not in visited:
             dfs(name)
     
