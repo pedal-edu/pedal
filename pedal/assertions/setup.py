@@ -18,7 +18,6 @@ def _topological_sort(names, orderings):
     for name in names[::-1]:
         if name not in visited:
             dfs(name)
-    
     return stack
     
 
@@ -28,13 +27,13 @@ def resolve_all(set_success=False, report=None):
         report = MAIN_REPORT
     _setup_assertions(report)
     orderings = report['assertions']['relationships']
-    phases = report['assertions']['phases']
-    phase_names = list(phases.keys())
+    phase_functions = report['assertions']['phase_functions']
+    phase_names = report['assertions']['phases']
     phase_names = _topological_sort(phase_names, orderings)
     #pprint(orderings)
     for phase_name in phase_names:
         phase_success = True
-        for function in phases[phase_name]:
+        for function in phase_functions[phase_name]:
             try:
                 function()
             except AssertionException:
@@ -52,10 +51,12 @@ def resolve_all(set_success=False, report=None):
 def _add_phase(phase_name, function, report=None):
     if report is None:
         report = MAIN_REPORT
+    phase_functions = report['assertions']['phase_functions']
     phases = report['assertions']['phases']
-    if phase_name not in phases:
-        phases[phase_name] = []
-    phases[phase_name].append(function)
+    if phase_name not in phase_functions:
+        phase_functions[phase_name] = []
+        phases.append(phase_name)
+    phase_functions[phase_name].append(function)
         
 def _add_relationships(befores, afters, report=None):
     if report is None:
@@ -83,13 +84,15 @@ def _reset_phases(report=None):
         report = MAIN_REPORT
     report['assertions']['relationships'].clear()
     report['assertions']['phases'].clear()
+    report['assertions']['phase_functions'].clear()
     report['assertions']['failures'] = 0
 
 
 def _setup_assertions(report):
     if 'assertions' not in report:
         report['assertions'] = {
-            'phases': {},
+            'phases': [],
+            'phase_functions': {},
             'relationships': {},
             'exceptions': False,
             'failures': 0,
