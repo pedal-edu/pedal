@@ -438,10 +438,11 @@ class Sandbox(DataSandbox):
         # Create the actual arguments and call
         if not keep_context or not self.call_id:
             self.call_id += 1
-            self.target_contexts[self.call_id] = target
             self.output_contexts[self.call_id] = []
             self.call_contexts[self.call_id] = []
             self.input_contexts[self.call_id] = []
+        # Always update the target context to be most recent
+        self.target_contexts[self.call_id] = target
         actual, student = self._construct_call(function, args, kwargs, target,
                                                context)
         if context is None:
