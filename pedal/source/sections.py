@@ -11,6 +11,7 @@ def _calculate_section_number(section_index):
 def next_section(name="", report=None):
     if report is None:
         report = MAIN_REPORT
+    report.execute_hooks('source.next_section.before')
     source = report['source']
     if not report['source']['success']:
         return False

@@ -28,20 +28,34 @@ def resolve_all(set_success=False, report=None):
         report = MAIN_REPORT
     _setup_assertions(report)
     orderings = report['assertions']['relationships']
-    functions = report['assertions']['functions']
-    function_by_names = {name: function for name, function in functions}
-    functions = [name for name, function in functions]
-    functions = _topological_sort(functions, orderings)
+    phases = report['assertions']['phases']
+    phase_names = list(phases.keys())
+    phase_names = _topological_sort(phase_names, orderings)
     #pprint(orderings)
-    for name in functions:
-        try:
-            function_by_names[name]()
-        except AssertionException:
+    for phase_name in phase_names:
+        phase_success = True
+        for function in phases[phase_name]:
+            try:
+                function()
+            except AssertionException:
+                phase_success = False
+        if not phase_success:
             break
+        
     #for f in report.feedback:
     #    print("\t", f, f.mistake, f.misconception)
     if not report['assertions']['failures'] and set_success:
         report.set_success()
+    
+    _reset_phases(report)
+    
+def _add_phase(phase_name, function, report=None):
+    if report is None:
+        report = MAIN_REPORT
+    phases = report['assertions']['phases']
+    if phase_name not in phases:
+        phases[phase_name] = []
+    phases[phase_name].append(function)
         
 def _add_relationships(befores, afters, report=None):
     if report is None:
@@ -62,12 +76,20 @@ def _add_relationships(befores, afters, report=None):
             if not isinstance(after, str):
                 after = after.__name__
             relationships[before].append(after)
+            
+            
+def _reset_phases(report=None):
+    if report is None:
+        report = MAIN_REPORT
+    report['assertions']['relationships'].clear()
+    report['assertions']['phases'].clear()
+    report['assertions']['failures'] = 0
 
 
 def _setup_assertions(report):
     if 'assertions' not in report:
         report['assertions'] = {
-            'functions': [],
+            'phases': {},
             'relationships': {},
             'exceptions': False,
             'failures': 0,
