@@ -13,8 +13,8 @@ def next_section(name="", report=None):
         report = MAIN_REPORT
     report.execute_hooks('source.next_section.before')
     source = report['source']
-    if not report['source']['success']:
-        return False
+    #if not report['source']['success']:
+    #    return False
     source['section'] += 2
     section_index = source['section']
     section_number = _calculate_section_number(section_index)
@@ -69,7 +69,7 @@ def verify_section(report=None):
         report.attach('Syntax error', category='Syntax', tool='Source',
                       group=source['section'],
                       mistake={'message': "Invalid syntax on line "
-                                          + str(e.lineno+source['line_offset']),
+                                          + str(e.lineno+source['line_offset'])+"\n",
                                'error': e,
                                'position': {"line": e.lineno}})
         source['success'] = False
