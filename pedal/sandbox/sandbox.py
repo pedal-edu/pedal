@@ -183,6 +183,7 @@ class Sandbox(DataSandbox):
         self.exception_position = None
         self.exception_formatted = None
         self.report_exceptions_mode = False
+        self.raise_exceptions_mode = False
         # Input
         self.inputs = None
         # Modules
@@ -363,7 +364,8 @@ class Sandbox(DataSandbox):
         return key
 
     def run_file(filename, as_filename=None, modules=None, inputs=None,
-                 threaded=None, context=None, report_exceptions=None):
+                 threaded=None, context=None, report_exceptions=None,
+                 raise_exceptions=None):
         """
         Load the given filename and execute it within the current namespace.
         
@@ -378,7 +380,7 @@ class Sandbox(DataSandbox):
         with open(filename, 'r') as code_file:
             code = code_file.read() + '\n'
         self.run(code, as_filename, modules, inputs, threaded,
-                 context, report_exceptions)
+                 context, report_exceptions, raise_exceptions)
 
     def list(self, *args):
         pass
@@ -435,6 +437,7 @@ class Sandbox(DataSandbox):
         context = kwargs.pop('context', self.context)
         keep_context = kwargs.pop('keep_context', self.keep_context)
         report_exceptions = kwargs.pop('report_exceptions', self.report_exceptions_mode)
+        raise_exceptions = kwargs.pop('raise_exceptions', self.raise_exceptions_mode)
         # Create the actual arguments and call
         if not keep_context or not self.call_id:
             self.call_id += 1
@@ -453,7 +456,8 @@ class Sandbox(DataSandbox):
         #    self.call_contexts[self.call_id] = context
         self.run(actual, as_filename, modules, inputs,
                  threaded=threaded, context=context,
-                 report_exceptions=report_exceptions)
+                 report_exceptions=report_exceptions,
+                 raise_exceptions=raise_exceptions)
         self._purge_temporaries()
         if self.exception is None:
             self._ = self.data[target]
@@ -513,7 +517,7 @@ class Sandbox(DataSandbox):
             patch.stop()
 
     def _capture_exception(self, exception, exc_info, report_exceptions,
-                           context):
+                           raise_exceptions, context):
         self.exception = exception
         if context is not False:
             if context is None:
@@ -543,10 +547,13 @@ class Sandbox(DataSandbox):
                            category='Runtime', tool='Sandbox',
                            mistake={'message': self.exception_formatted,
                                     'error': self.exception})
+        if raise_exceptions is True:
+            raise self.exception
         return False
 
     def run(self, code, as_filename=None, modules=None, inputs=None,
-            threaded=None, report_exceptions=True, context=False):
+            threaded=None, report_exceptions=True, raise_exceptions=False,
+            context=False):
         """
         Execute the given string of code in this sandbox.
         
@@ -577,10 +584,11 @@ class Sandbox(DataSandbox):
             try:
                 return timeout(self.allowed_time, self.run, code, as_filename,
                                modules, inputs, False,
-                               report_exceptions, context)
+                               report_exceptions, raise_exceptions,
+                               context)
             except TimeoutError as timeout_exception:
                 self._capture_exception(timeout_exception, sys.exc_info(),
-                                        report_exceptions)
+                                        report_exceptions, raise_exceptions)
                 return self
         if as_filename is None:
             as_filename = os.path.basename(self.report['source']['filename'])
@@ -621,7 +629,8 @@ class Sandbox(DataSandbox):
                 exec(compiled_code, self.data)
         except Exception as user_exception:
             self._capture_exception(user_exception, sys.exc_info(),
-                                    report_exceptions, context)
+                                    report_exceptions, raise_exceptions,
+                                    context)
         finally:
             self._stop_patches()
             self.append_output(capture_stdout.getvalue())
@@ -636,7 +645,8 @@ class Sandbox(DataSandbox):
 
 def run(initial_data=None, initial_raw_output=None, initial_exception=None,
         allowed_functions=None,
-        modules=None, inputs=None, report_exceptions=True, context=None,
+        modules=None, inputs=None, report_exceptions=True, raise_exceptions=False,
+        context=None,
         full_traceback=False, tracer_style='none', threaded=False,
         result_proxy=SandboxResult,
         instructor_filename="instructor_tests.py",
@@ -655,7 +665,7 @@ def run(initial_data=None, initial_raw_output=None, initial_exception=None,
     if code is None:
         code = report['source']['code']
     sandbox.run(code, as_filename, modules, inputs, threaded,
-                report_exceptions, context)
+                report_exceptions, raise_exceptions, context)
     return sandbox
 
 

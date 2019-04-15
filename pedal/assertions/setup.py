@@ -1,3 +1,5 @@
+import sys
+
 from pedal.report.imperative import MAIN_REPORT
 
 class AssertionException(Exception):
@@ -35,9 +37,13 @@ def resolve_all(set_success=False, report=None):
         phase_success = True
         for function in phase_functions[phase_name]:
             try:
-                function()
+                print(phase_name, "TRYING", file=sys.stderr)
+                phase_success = phase_success and (function() is not False)
+                print(phase_name, "DONE", file=sys.stderr)
             except AssertionException:
                 phase_success = False
+            #print(phase_name, result, file=sys.stderr)
+        print("PHASE COMPLETE", phase_success, file=sys.stderr)
         if not phase_success:
             break
         
