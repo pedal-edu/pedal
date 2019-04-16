@@ -10,6 +10,7 @@ from unittest.mock import patch, mock_open, MagicMock
 from pedal.report import MAIN_REPORT
 from pedal.sandbox import mocked
 from pedal.sandbox.exceptions import (SandboxTraceback, SandboxHasNoFunction,
+                                      SandboxStudentCodeException,
                                       SandboxHasNoVariable, _add_context_to_error)
 from pedal.sandbox.timeout import timeout
 from pedal.sandbox.messages import EXTENDED_ERROR_EXPLANATION
@@ -115,6 +116,9 @@ class Sandbox(DataSandbox):
 
     CONTEXT_MESSAGE = (
         "\n\nThe error above occurred when I ran:<br>\n<pre>{context}</pre>"
+    )
+    FILE_CONTEXT_MESSAGE = (
+        "\n\nThe error above occurred when I ran your file: {filename}"
     )
     TRACER_STYLES = {
         'coverage': SandboxCoverageTracer,
@@ -525,7 +529,10 @@ class Sandbox(DataSandbox):
                             for calls in self.call_contexts.values()
                             for call in calls]
                 context = '\n'.join(contexts[1:])
-            context = self.CONTEXT_MESSAGE.format(context=context)
+            if context.strip():
+                context = self.CONTEXT_MESSAGE.format(context=context)
+            else:
+                context = self.FILE_CONTEXT_MESSAGE.format(filename=self.report['source']['filename'])
             self.exception = _add_context_to_error(self.exception, context)
         line_offset = self.report['source'].get('line_offset', 0)
         student_filename = self.report['source']['filename']
@@ -548,7 +555,7 @@ class Sandbox(DataSandbox):
                            mistake={'message': self.exception_formatted,
                                     'error': self.exception})
         if raise_exceptions is True:
-            raise self.exception
+            raise SandboxStudentCodeException(self.exception)
         return False
 
     def run(self, code, as_filename=None, modules=None, inputs=None,
