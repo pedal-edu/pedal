@@ -166,6 +166,10 @@ def _basic_assertion(left, right, operator, code_comparison_message,
         report = MAIN_REPORT
     _setup_assertions(report)
     context = ""
+    if message:
+        message = "\n"+message
+    else:
+        message = ""
     # TODO: Handle right-side sandbox result
     #if is_sandbox_result(right):
     #    right = right._actual_value
@@ -179,7 +183,7 @@ def _basic_assertion(left, right, operator, code_comparison_message,
         report['assertions']['collected'].append(failure)
         report.attach('Instructor Test', category='student', tool='Assertions',
                       mistake={'message': "Student code failed instructor test.<br>\n"+
-                                          context+str(failure)})
+                                          context+str(failure)+message})
         report['assertions']['failures'] += 1
         if report['assertions']['exceptions']:
             raise failure

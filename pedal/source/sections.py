@@ -59,8 +59,8 @@ def verify_section(report=None):
     if report is None:
         report = MAIN_REPORT
     source = report['source']
-    if not source['success']:
-        return False
+    #if not source['success']:
+    #    return False
     code = source['code']
     try:
         parsed = ast.parse(code, source['filename'])

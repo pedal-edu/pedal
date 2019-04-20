@@ -36,12 +36,14 @@ def resolve(report=None, priority_key=None):
         final_success = success or final_success
         final_score += partial
         if message is not None:
+            #print("RESETING GROUP", group, message[:20], found_failure, feedback.priority)
+            if group not in finals:
+                finals[group] = []
+                found_failure = False
             if feedback.priority not in ('positive', 'instructions'):
                 if found_failure:
                     continue
                 found_failure = True
-            if group not in finals:
-                finals[group] = []
             entry = {'label': feedback.label,
                      'message': message,
                      'category': feedback.category,
@@ -59,6 +61,8 @@ def resolve(report=None, priority_key=None):
                 finals[group].insert(0, entry)
             else:
                 finals[group].append(entry)
+    #from pprint import pprint
+    #pprint(finals)
     final_hide_correctness = suppressions.get('success', False)
     if not finals:
         finals[0] = [{

@@ -459,7 +459,8 @@ class Sandbox(DataSandbox):
         # if context is not False:
         #    self.call_contexts[self.call_id] = context
         self.run(actual, as_filename, modules, inputs,
-                 threaded=threaded, context=context,
+                 threaded=threaded,
+                 context=context, keep_context=keep_context,
                  report_exceptions=report_exceptions,
                  raise_exceptions=raise_exceptions)
         self._purge_temporaries()
@@ -521,14 +522,14 @@ class Sandbox(DataSandbox):
             patch.stop()
 
     def _capture_exception(self, exception, exc_info, report_exceptions,
-                           raise_exceptions, context):
+                           raise_exceptions, context, keep_context):
         self.exception = exception
         if context is not False:
-            if context is None:
-                contexts = [call
-                            for calls in self.call_contexts.values()
-                            for call in calls]
-                context = '\n'.join(contexts[1:])
+            if context is None or keep_context:
+                contexts = self.call_contexts[self.call_id]
+                if context is not None:
+                    contexts.append(context)
+                context = '\n'.join(contexts)#[1:])
             if context.strip():
                 context = self.CONTEXT_MESSAGE.format(context=context)
             else:
@@ -560,7 +561,7 @@ class Sandbox(DataSandbox):
 
     def run(self, code, as_filename=None, modules=None, inputs=None,
             threaded=None, report_exceptions=True, raise_exceptions=False,
-            context=False):
+            context=False, keep_context=False):
         """
         Execute the given string of code in this sandbox.
         
@@ -592,10 +593,11 @@ class Sandbox(DataSandbox):
                 return timeout(self.allowed_time, self.run, code, as_filename,
                                modules, inputs, False,
                                report_exceptions, raise_exceptions,
-                               context)
+                               context, keep_context)
             except TimeoutError as timeout_exception:
                 self._capture_exception(timeout_exception, sys.exc_info(),
-                                        report_exceptions, raise_exceptions)
+                                        report_exceptions, raise_exceptions,
+                                        context, keep_context)
                 return self
         if as_filename is None:
             as_filename = os.path.basename(self.report['source']['filename'])
@@ -637,7 +639,7 @@ class Sandbox(DataSandbox):
         except Exception as user_exception:
             self._capture_exception(user_exception, sys.exc_info(),
                                     report_exceptions, raise_exceptions,
-                                    context)
+                                    context, keep_context)
         finally:
             self._stop_patches()
             self.append_output(capture_stdout.getvalue())
@@ -672,7 +674,7 @@ def run(initial_data=None, initial_raw_output=None, initial_exception=None,
     if code is None:
         code = report['source']['code']
     sandbox.run(code, as_filename, modules, inputs, threaded,
-                report_exceptions, raise_exceptions, context)
+                report_exceptions, raise_exceptions, context=context, keep_context=False)
     return sandbox
 
 

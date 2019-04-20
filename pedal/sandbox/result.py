@@ -272,6 +272,8 @@ class SandboxResult:
         return self._clone_this_result(self.value.__or__(other))
 
     def __radd__(self, other):
+        if isinstance(self.value, str):
+            return self._clone_this_result(self.value.__add__(other))
         return self._clone_this_result(self.value.__radd__(other))
 
     def __rsub__(self, other):

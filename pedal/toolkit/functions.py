@@ -41,6 +41,25 @@ def match_function(name, root=None):
         if a_def._name == name:
             return a_def
     return None
+    
+def match_signature_muted(name, length, *parameters):
+    ast = parse_program()
+    defs = ast.find_all('FunctionDef')
+    for a_def in defs:
+        if a_def._name == name:
+            found_length = len(a_def.args.args)
+            if found_length != length:
+                return None
+            elif parameters:
+                for parameter, arg in zip(parameters, a_def.args.args):
+                    arg_name = get_arg_name(arg)
+                    if arg_name != parameter:
+                        return None
+                else:
+                    return a_def
+            else:
+                return a_def
+    return None
 
 
 def match_signature(name, length, *parameters):

@@ -69,8 +69,8 @@ def _add_context_to_error(e, message):
     if isinstance(e, BuiltinKeyError):
         new_args = repr(e.args[0]) + message
         e = KeyError(e, new_args)
-        e.args = new_args
-    if isinstance(e, OSError):
+        e.args = tuple([new_args])
+    elif isinstance(e, OSError):
         # TODO: Can't seem to modify the OSError, since they have so many args.
         return e
     elif e.args:
@@ -115,7 +115,7 @@ class SandboxTraceback:
         while tb and self._is_relevant_tb_level(tb):
             tb = tb.tb_next
         length = self._count_relevant_tb_levels(tb)
-        tb_e = traceback.TracebackException(cl, exc, tb, limit=length,
+        tb_e = traceback.TracebackException(cl, self.exception, tb, limit=length,
                                             capture_locals=False)
         # print(list(), file=x)
         for frame in tb_e.stack:

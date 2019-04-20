@@ -1,6 +1,7 @@
 from pedal.questions import QuestionGrader
 
-from pedal import run
+from pedal import run, compliment, explain, gently
+from pedal.report.imperative import MAIN_REPORT
 from pedal.assertions.assertions import *
 from pedal.toolkit.functions import *
 
@@ -24,6 +25,7 @@ class FunctionGrader(QuestionGrader):
     
     def _test(self, question):
         defined = self.grade_definition(question)
+        
         if not defined:
             return self.report_status(question)
         
@@ -42,15 +44,20 @@ class FunctionGrader(QuestionGrader):
         question.answer()
     
     def grade_definition(self, question):
-        self.student = run(report_exceptions=True, context=None)
-        self.student.report_exceptions_mode=True
+        self.student = run(report_exceptions=True, context=False)
+        self.student.report_exceptions_mode=False
+        
+        self.definition = match_signature_muted(self.function_name, *self.signature)
+        if not assertGenerally(self.definition):
+            gently("Function not defined")
+            return False
+        
         if self.student.exception:
             return False
         if not assertHasFunction(self.student, self.function_name):
+            gently("Function defined incorrectly")
             return False
-        self.definition = match_signature(self.function_name, *self.signature)
-        if not assertGenerally(self.definition):
-            return False
+        
         self.points += self.DEFINITION_POINTS
         return True
     
@@ -74,7 +81,7 @@ class FunctionGrader(QuestionGrader):
         for arguments, expected in self.tests:
             #import sys
             #print(repr(arguments), file=sys.stderr)
-            result = self.student.call(self.function_name, *arguments, context=None)
+            result = self.student.call(self.function_name, *arguments, context=False)
             #print(repr(self.student.exception), file=sys.stderr)
             if self.student.exception:
                 all_good = False
@@ -90,4 +97,6 @@ class FunctionGrader(QuestionGrader):
                 all_good = False
         if all_good:
             self.points += self.UNIT_TEST_COMPLETION_POINTS
+        else:
+            gently("Failing unit tests")
         return all_good
