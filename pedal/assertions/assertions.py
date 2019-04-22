@@ -435,12 +435,47 @@ def assertGreaterEqual(left, right, score=None, message=None, report=None,
     return False
 
 
-def assertLess(left, right):
-    pass
+def assertLess(left, right, score=None, message=None, report=None,
+                       contextualize=True, compare_lengths=None):
+    if compare_lengths is None:
+        compare_lengths = (iterable(left) and isinstance(right, (int, float)))
+    if _basic_assertion(left, right,
+                            lambda l, r:
+                                len(l) < r if
+                                compare_lengths else
+                                l < r,
+                            "len({}) >= {}" if compare_lengths else "{} >= {}",
+                            "was"+PRE_VAL,
+                            "to have its length less than" 
+                                if compare_lengths else
+                                "to be less than",
+                            message, report, contextualize):
+        if report is None:
+            report = MAIN_REPORT
+        report.give_partial(score)
+        return True
+    return False
 
 
-def assertLessEqual(left, right):
-    pass
+def assertLessEqual(left, right, score=None, message=None, report=None,
+                    contextualize=True, compare_lengths=None):
+    if compare_lengths is None:
+        compare_lengths = (iterable(left) and isinstance(right, (int, float)))
+    if _basic_assertion(left, right,
+                            lambda l, r:
+                                len(l) <= r if
+                                compare_lengths else
+                                l <= r,
+                            "len({}) > {}" if compare_lengths else "{} > {}",
+                            "was"+PRE_VAL,
+                            "to have its length less than or equal to" if compare_lengths else
+                                "to be less than or equal to",
+                            message, report, contextualize):
+        if report is None:
+            report = MAIN_REPORT
+        report.give_partial(score)
+        return True
+    return False
 
 
 def assertRegexpMatches(text, pattern):
