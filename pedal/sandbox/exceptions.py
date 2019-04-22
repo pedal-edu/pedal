@@ -71,7 +71,9 @@ def _add_context_to_error(e, message):
         e = KeyError(e, new_args)
         e.args = tuple([new_args])
     elif isinstance(e, OSError):
-        # TODO: Can't seem to modify the OSError, since they have so many args.
+        # TODO: Investigate OSError, since they have so many args.
+        #       Might be weird.
+        e.args = tuple([e.args[0] + message])
         return e
     elif e.args:
         e.args = tuple([e.args[0] + message])
@@ -111,6 +113,8 @@ class SandboxTraceback:
     def format_exception(self, preamble=""):
         if not self.exception:
             return ""
+        if isinstance(self.exception, TimeoutError):
+            return str(self.exception)
         cl, exc, tb = self.exc_info
         while tb and self._is_relevant_tb_level(tb):
             tb = tb.tb_next

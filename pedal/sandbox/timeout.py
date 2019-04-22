@@ -58,13 +58,14 @@ class InterruptableThread(threading.Thread):
         '''
         Trigger a thread ending exception!
         '''
-        assert self.isAlive(), "thread must be started"
+        assert self.is_alive(), "thread must be started"
         for thread_id, thread in threading._active.items():
             if thread is self:
                 InterruptableThread._async_raise(thread_id, exception)
                 return
 
     def terminate(self):
+        self.exc_info = sys.exc_info()
         self.raise_exception(SystemExit)
 
 
@@ -82,11 +83,12 @@ def timeout(duration, func, *args, **kwargs):
     target_thread.start()
     target_thread.join(duration)
 
-    if target_thread.isAlive():
+    if target_thread.is_alive():
         target_thread.terminate()
-        raise TimeoutError('Your code took too long to run '
-                           '(it was given {} seconds); '
-                           'maybe you have an infinite loop?'.format(duration))
+        timeout_exception = TimeoutError('Your code took too long to run '
+                                         '(it was given {} seconds); '
+                                         'maybe you have an infinite loop?'.format(duration))
+        raise timeout_exception
     else:
         if target_thread.exc_info[0] is not None:
             ei = target_thread.exc_info
@@ -94,6 +96,7 @@ def timeout(duration, func, *args, **kwargs):
             # 3109 for showing how to convert that to valid Python 3 statements.
             e = ei[0](ei[1])
             e.__traceback__ = ei[2]
+            e.exc_info = target_thread.exc_info
             raise e
 
 

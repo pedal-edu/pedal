@@ -223,7 +223,7 @@ class Sandbox(DataSandbox):
         self.report = report
         # Threading
         self.threaded = threaded
-        self.allowed_time = 1
+        self.allowed_time = 3
 
     def _set_tracer_style(self, tracer_style):
         self._tracer_style = tracer_style.lower()
