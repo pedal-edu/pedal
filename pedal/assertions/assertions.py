@@ -7,6 +7,8 @@ from pedal.sandbox.exceptions import SandboxException
 from pedal.sandbox.sandbox import DataSandbox
 from pedal.assertions.setup import _setup_assertions, AssertionException
 
+iterable = lambda obj: hasattr(obj,'__iter__') or hasattr(obj,'__getitem__')
+
 _MAX_LENGTH = 80
 
 def _escape_curly_braces(result):
@@ -196,12 +198,18 @@ PRE_VAL = ""
 
 
 def assertEqual(left, right, score=None, message=None, report=None,
-                contextualize=True, exact=False):
+                contextualize=True, exact=False, compare_lengths=None):
+    if compare_lengths is None:
+        compare_lengths = (iterable(left) and isinstance(right, (int, float)))
     if _basic_assertion(left, right,
-                            lambda l, r: equality_test(l, r, False, DELTA, False),
-                            "{} != {}",
+                            lambda l, r:
+                                equality_test(len(l), r, False, DELTA, False) if
+                                compare_lengths else
+                                equality_test(l, r, False, DELTA, False),
+                            "len({}) != {}" if compare_lengths else "{} != {}",
                             "was"+PRE_VAL,
-                            "to be equal to",
+                            "to have its length equal to" 
+                                if compare_lengths else "to be equal to",
                             message, report, contextualize):
         if report is None:
             report = MAIN_REPORT
@@ -384,12 +392,47 @@ def assertNotAlmostEqual(left, right):
     pass
 
 
-def assertGreater(left, right):
-    pass
+def assertGreater(left, right, score=None, message=None, report=None,
+                  contextualize=True, compare_lengths=None):
+    if compare_lengths is None:
+        compare_lengths = (iterable(left) and isinstance(right, (int, float)))
+    if _basic_assertion(left, right,
+                            lambda l, r:
+                                len(l) > r if
+                                compare_lengths else
+                                l > r,
+                            "len({}) <= {}" if compare_lengths else "{} <= {}",
+                            "was"+PRE_VAL,
+                            "to have its length greater than" 
+                                if compare_lengths else
+                                "to be greater than",
+                            message, report, contextualize):
+        if report is None:
+            report = MAIN_REPORT
+        report.give_partial(score)
+        return True
+    return False
 
 
-def assertGreaterEqual(left, right):
-    pass
+def assertGreaterEqual(left, right, score=None, message=None, report=None,
+                       contextualize=True, compare_lengths=None):
+    if compare_lengths is None:
+        compare_lengths = (iterable(left) and isinstance(right, (int, float)))
+    if _basic_assertion(left, right,
+                            lambda l, r:
+                                len(l) >= r if
+                                compare_lengths else
+                                l >= r,
+                            "len({}) < {}" if compare_lengths else "{} < {}",
+                            "was"+PRE_VAL,
+                            "to have its length greater than or equal to" if compare_lengths else
+                                "to be greater than or equal to",
+                            message, report, contextualize):
+        if report is None:
+            report = MAIN_REPORT
+        report.give_partial(score)
+        return True
+    return False
 
 
 def assertLess(left, right):
