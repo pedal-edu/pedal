@@ -16,6 +16,16 @@ __all__ = ['NAME', 'DESCRIPTION', 'SHORT_DESCRIPTION', 'REQUIRES', 'OPTIONALS',
 from pedal.report.imperative import MAIN_REPORT
 from pedal.questions.setup import _setup_questions, set_seed, _name_hash
 
+class QuestionGrader:
+    def _get_functions_with_filter(self, filter='grade_'):
+        return [getattr(self, method_name) for method_name in dir(self)
+                   if method_name.startswith(filter) and
+                      callable(getattr(self, method_name))]
+    def _test(self, question):
+        methods = self._get_functions_with_filter()
+        for method in methods:
+            method(question)
+
 class Question:
     def __init__(self, name, instructions, tests, seed=None, report=None):
         self.name = name
@@ -31,8 +41,11 @@ class Question:
         self.answered = True
     
     def ask(self):
-        for test in self.tests:
-            test(self)
+        if isinstance(self.tests, QuestionGrader):
+            self.tests._test(self)
+        else:
+            for test in self.tests:
+                test(self)
         if not self.answered:
             self.report.attach('Question', category='Instructions', tool='Questions',
                                group=self.report.group,

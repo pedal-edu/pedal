@@ -7,6 +7,12 @@ class SandboxException(Exception):
     Generic base exception for sandbox errors.
     """
 
+class SandboxStudentCodeException(SandboxException):
+    """
+    Caused by an error in student code
+    """
+    def __init__(self, actual):
+        self.actual = actual
 
 class SandboxPreventModule(Exception):
     """
@@ -63,6 +69,7 @@ def _add_context_to_error(e, message):
     if isinstance(e, BuiltinKeyError):
         new_args = repr(e.args[0]) + message
         e = KeyError(e, new_args)
+        e.args = new_args
     if isinstance(e, OSError):
         # TODO: Can't seem to modify the OSError, since they have so many args.
         return e

@@ -89,8 +89,8 @@ class TestQuestions(unittest.TestCase):
                    1 + ""
                TypeError: unsupported operand type(s) for +: 'int' and 'str'
                
-               The error above occurred when I ran:<br>
-               <pre></pre>\n""").lstrip())
+               The error above occurred when I ran your file: __main__.py
+               """).lstrip())
         # Tried writing some good code
         make_exam('for x in []: pass')
         final_success, final_score, _, finals = sectional.resolve()

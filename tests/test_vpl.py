@@ -70,6 +70,7 @@ class TestVPL(unittest.TestCase):
         Hey, not a bad job!
         -##### Part 3
         Invalid syntax on line 15
+        
         -Overall
         Incomplete
         --|>

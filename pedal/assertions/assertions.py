@@ -9,15 +9,18 @@ from pedal.assertions.setup import _setup_assertions, AssertionException
 
 _MAX_LENGTH = 80
 
+def _escape_curly_braces(result):
+    return result.replace("{", "{{").replace("}", "}}")
 
 def safe_repr(obj, short=False):
     try:
         result = repr(obj)
     except Exception:
         result = object.__repr__(obj)
-    if not short or len(result) < _MAX_LENGTH:
-        return result
-    return result[:_MAX_LENGTH] + ' [truncated]...'
+    if short and len(result) >= _MAX_LENGTH:
+        result = result[:_MAX_LENGTH] + ' [truncated]...'        
+    result = result
+    return result
 
 
 punctuation_table = str.maketrans(string.punctuation, ' ' * len(string.punctuation))
@@ -91,8 +94,8 @@ def _fail(code_message, actual_message, expected_message,
         else:
             normal_values.append(safe_repr(value))
     if sandboxed_results:
-        code_message = _build_context(sandboxed_results, actual_message, expected_message,
-                                      show_expected_value)
+        code_message = _build_context(sandboxed_results, actual_message,
+                                      expected_message, show_expected_value)
     return AssertionException(code_message.format(*(sandboxed_values + normal_values)))
 
 
@@ -123,9 +126,11 @@ def _build_context(sandboxed_results, actual_message, expected_message,
         targets.append(sandbox.target_contexts[call_id])
     # Actual rendering of text
     if calls:
-        context.append("I ran:<pre>"+ "\n".join(map(str, calls))+ "</pre>")
+        calls = [_escape_curly_braces(str(call)) for call in calls]
+        context.append("I ran:<pre>"+ "\n".join(calls)+ "</pre>")
     if inputs:
-        context.append("I entered as input:<pre>"+ "\n".join(map(str, inputs))+ "</pre>")
+        inputs = [_escape_curly_braces(str(inp)) for inp in inputs]
+        context.append("I entered as input:<pre>"+ "\n".join(inputs)+ "</pre>")
     actual_message += ":<pre>{}</pre>"
     for i, target in enumerate(targets):
         named_target = _build_result_from_target(target, i, len(targets))

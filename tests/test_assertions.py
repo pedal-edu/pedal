@@ -10,6 +10,7 @@ from pedal.report import *
 from pedal.source import set_source
 from pedal.assertions import *
 from tests.execution_helper import Execution
+from pedal.assertions.setup import _topological_sort
 
 
 class TestAssertions(unittest.TestCase):
@@ -21,7 +22,7 @@ class TestAssertions(unittest.TestCase):
         
     def test_primitive_assertions(self):
         with Execution(dedent("0")) as e:
-            @section(1)
+            @phase('1')
             def part1():
                 assertEqual(5, 0)
         self.assertEqual(e.feedback, dedent("""
@@ -33,7 +34,7 @@ class TestAssertions(unittest.TestCase):
             def add(a, b, c):
                 return a + b - c
         ''')) as e:
-            @section(1)
+            @phase('1')
             def part1():
                 assertEqual(e.student.call('add', 1, 6, 3), 10)
             suppress("analyzer")
@@ -47,7 +48,7 @@ class TestAssertions(unittest.TestCase):
             def add(a, b, c):
                 return a + b - c
         ''')) as e:
-            @section(1)
+            @phase('1')
             def part2():
                 assertEqual(10, e.student.call('add', 1, 6, 3))
             suppress("analyzer")
@@ -63,7 +64,7 @@ class TestAssertions(unittest.TestCase):
                     return -1
                 return a + b + c
         ''')) as e:
-            @section(1)
+            @phase('1')
             def part2():
                 assertEqual(10, e.student.call('add', 1, 6, 3))
                 assertEqual(8, e.student.call('add', -1, 6, 3))
@@ -80,7 +81,7 @@ class TestAssertions(unittest.TestCase):
             def expected_answer():
                 return 10
         ''')) as e:
-            @section(1)
+            @phase('1')
             def part3():
                 assertEqual(e.student.call('expected_answer', target='expect'),
                             e.student.call('add', 1, 6, 3, target='actual'))
@@ -97,7 +98,7 @@ class TestAssertions(unittest.TestCase):
             def make_color():
                 return "purple"
         ''')) as e:
-            @section(1)
+            @phase('1')
             def part4():
                 assertIn(e.student.call('make_color'), ('red', 'blue', 'green'))
             suppress("analyzer")
@@ -111,7 +112,7 @@ class TestAssertions(unittest.TestCase):
             def make_colors():
                 return ["purple", "orange", "muave"]
         ''')) as e:
-            @section(1)
+            @phase('1')
             def part1():
                 assertIn('blue', e.student.call('make_colors'))
             suppress("analyzer")
@@ -125,7 +126,7 @@ class TestAssertions(unittest.TestCase):
             def make_colors():
                 return ["purple", "orange", "muave"]
         ''')) as e:
-            @section(1)
+            @phase('1')
             def part1():
                 assertNotIn('purple', e.student.call('make_colors'))
             suppress("analyzer")
@@ -141,7 +142,7 @@ class TestAssertions(unittest.TestCase):
             def make_color():
                 return 'blue'
         ''')) as e:
-            @section(1)
+            @phase('1')
             def part1():
                 assertIn(e.student.call('make_color', target="color"),
                          e.student.call('make_colors', target="colors"))
@@ -160,7 +161,7 @@ class TestAssertions(unittest.TestCase):
             def make_color():
                 return 'blue'
         ''')) as e:
-            @section(1)
+            @phase('1')
             def part1():
                 assertIn(e.student.call('make_color'),
                          e.student.call('make_colors'))
@@ -177,7 +178,7 @@ class TestAssertions(unittest.TestCase):
             def make_color():
                 return 0
         ''')) as e:
-            @section(1)
+            @phase('1')
             def part1():
                 assertTrue(e.student.call('make_color'))
             suppress("analyzer")
@@ -193,7 +194,7 @@ class TestAssertions(unittest.TestCase):
                 return int(val1) - val2
             add_from_input
         ''')) as e:
-            @section(1)
+            @phase('1')
             def part1():
                 assertEqual(e.student.call('add_from_input', 4, inputs="6"), 10)
             suppress("analyzer")
@@ -208,7 +209,7 @@ class TestAssertions(unittest.TestCase):
             def make_brackets():
                 return "{}"
         ''')) as e:
-            @section(1)
+            @phase('1')
             def part1():
                 assertEqual(e.student.call('make_brackets'), "[]",
                             exact=True)
@@ -219,9 +220,83 @@ class TestAssertions(unittest.TestCase):
         The result was:<pre>'{}'</pre>
         But I expected the result to be equal to:<pre>'[]'</pre>""").lstrip())
         
-        
+        with Execution(dedent('''
+            def fail_on_3(num):
+                if num == 3:
+                    return False
+                else:
+                    return True
+        ''')) as e:
+            @phase('1')
+            def part1():
+                assertEqual(e.student.call('fail_on_3', 1, keep_context=True), True)
+                assertEqual(e.student.call('fail_on_3', 2, keep_context=True), True)
+                assertEqual(e.student.call('fail_on_3', 3, keep_context=True), True)
+            suppress("analyzer")
+        self.assertEqual(e.feedback, dedent("""
+        Instructor Test<br>Student code failed instructor test.<br>
+        I ran:<pre>fail_on_3(1)
+        fail_on_3(2)
+        fail_on_3(3)</pre>
+        The result was:<pre>False</pre>
+        But I expected the result to be equal to:<pre>True</pre>""").lstrip())
         
         # Test {} in output or context
+        
+class TestTopologicalSort(unittest.TestCase):
+    def test_topological_sort(self):
+        basic = ['Apple', 'Banana', 'Corn', 'Date', 'Eggplant']
+        self.assertEqual(_topological_sort(basic, {}), basic)
+        
+        backwards = basic[::-1]
+        self.assertEqual(_topological_sort(backwards, {}), backwards)
+        
+        force = {'Apple': ['Corn', 'Date'],
+                 'Date': ['Corn', 'Eggplant'],
+                 'Banana': ['Eggplant']}
+        self.assertEqual(_topological_sort(basic, force),
+                         ['Apple', 'Banana', 'Date', 'Corn', 'Eggplant'])
+        
+        self.assertEqual(_topological_sort(backwards, force),
+                         ['Banana', 'Apple', 'Date', 'Eggplant', 'Corn'])
+
+        force = {'Eggplant': ['Date'],
+                 'Date': ['Corn'],
+                 'Corn': ['Banana'],
+                 'Banana': ['Apple']}
+        self.assertEqual(_topological_sort(basic, force),
+                         backwards)
+        
+        self.assertEqual(_topological_sort(backwards, force),
+                         backwards)
+        
+    def test_project_names(self):
+        names = ['records', 'render_introduction',
+                 'create_world', 'render',
+                 'get_options', 'choose', 'update',
+                 'render_ending', 'win_and_lose_paths',
+                 'conclusion']
+        orderings = {'choose': ['win_and_lose_paths'],
+                     'create_world': ['render',
+                                      'get_options',
+                                      'render_ending',
+                                      'win_and_lose_paths'],
+                     'get_options': ['choose', 'update', 'win_and_lose_paths'],
+                     'render': ['win_and_lose_paths'],
+                     'render_ending': ['win_and_lose_paths'],
+                     'render_introduction': ['win_and_lose_paths'],
+                     'update': ['win_and_lose_paths'],
+                     'win_and_lose_paths': ['conclusion']}
+        expected = ['records',
+                    'render_introduction',
+                    'create_world', 
+                    'render',
+                    'get_options', 'choose', 
+                    'update',
+                    'render_ending',
+                    'win_and_lose_paths',
+                    'conclusion']
+        self.assertEqual(_topological_sort(names, orderings), expected)
 
 if __name__ == '__main__':
     unittest.main(buffer=False)
