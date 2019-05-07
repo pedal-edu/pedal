@@ -446,7 +446,11 @@ class DictionaryMistakeTest(MistakeTest):
                        'for precip in weather_reports:\n'
                        '    total_precipitation = total_precipitation + precip["Data"]["Precipitation"]\n'
                        'print(total_precipitation)\n')
-        ret = func_filter()
+        ret = func_filter(keys)
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
+        self.to_source("report_list = classics.get_books(test=True)")
+        ret = func_filter(keys)
         self.assertFalse(ret, "Expected False, got {} instead".format(ret))
 
     def test_str_list(self):
