@@ -580,8 +580,12 @@ class SpecificMistakeTest(MistakeTest):
         self.assertFalse(wrong_iteration_body_9_1(), "false positive")
 
         self.to_source("for item in items:\n"
+                       "    rainfall_sum = rainfall_sum + 0")
+        self.assertFalse(wrong_iteration_body_9_1(), "false positive")
+
+        self.to_source("for item in items:\n"
                        "    pass")
-        self.assertFalse(wrong_iteration_body_9_1(), "false negative")
+        self.assertTrue(wrong_iteration_body_9_1(), "false negative")
 
     def test_wrong_print_9_1(self):
         self.to_source("for item in items:\n"

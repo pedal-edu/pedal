@@ -78,7 +78,7 @@ def hard_coding(val_list):
         __exp__ = match["__exp__"]
         value = __exp__.value
         if value in val_list:
-            return explain_r(message, code, tldr)
+            return explain_r(message, code, tldr=tldr)
 
     # Pattern 2 possibility
     matches = find_matches("__exp__\n"
@@ -91,7 +91,7 @@ def hard_coding(val_list):
             __exp2__ = submatch["__exp2__"]
             value = __exp2__.value
             if value in val_list:
-                return explain_r(message, code, tldr)
+                return explain_r(message, code, tldr=tldr)
     return False
 
 
@@ -107,7 +107,7 @@ def print_dict_key(keys):
     for match in matches:
         __str__ = match["__str__"]
         if __str__.is_ast("Str") and __str__.value in keys:
-            return explain_r(message.format(__str__.value), code, tldr)
+            return explain_r(message.format(__str__.value), code, tldr=tldr)
     return False
 
 
@@ -124,7 +124,7 @@ def var_instead_of_key(keys):
         if _var_.id in keys:
             submatch = find_match("_dict_['{}']".format(_var_.id))
             if submatch is None:
-                return explain_r(message.format(_var_.id), code, tldr)
+                return explain_r(message.format(_var_.id), code, tldr=tldr)
     return False
 
 
@@ -138,7 +138,7 @@ def parens_in_dict(keys):
     for match in matches:
         __str__ = match['__str__']
         if __str__.is_ast("Str") and __str__.value in keys:
-            return explain_r(message.format(__str__.value), code, tldr)
+            return explain_r(message.format(__str__.value), code, tldr=tldr)
     return False
 
 
@@ -153,7 +153,7 @@ def list_as_dict():
     for match in matches:
         _list_ = match['_list_']
         if _list_.was_type("ListType") and str(_list_.get_data_state().type.subtype) == "DictType":
-            return explain_r(message.format(_list_.id), code, tldr)
+            return explain_r(message.format(_list_.id), code, tldr=tldr)
     return False
 
 
@@ -177,7 +177,7 @@ def dict_out_of_loop(keys):
         for submatch in submatches:
             __str__ = submatch['__str__']
             if __str__.is_ast("Str") and __str__.value in keys:
-                return explain_r(message.format(_var_.id), code, tldr)
+                return explain_r(message.format(_var_.id), code, tldr=tldr)
     return False
 
 
@@ -191,7 +191,7 @@ def wrong_keys(unused_keys):
     for match in matches:
         __str__ = match["__str__"]
         if __str__.is_ast("Str") and __str__.value in unused_keys:
-            return explain_r(message.format(__str__.value), code, tldr)
+            return explain_r(message.format(__str__.value), code, tldr=tldr)
     return False
 
 
@@ -209,7 +209,7 @@ def dict_access_not_in_loop():
         submatches = match["__exp__"].find_matches("_var_[__str__]")
         if submatches:
             return False
-    return explain_r(message, code, tldr)
+    return explain_r(message, code, tldr=tldr)
 
 
 def hard_coded_list(val_list):
@@ -224,7 +224,7 @@ def hard_coded_list(val_list):
             try:
                 vals = sum([x.value for x in __exp__.elts])
                 if sum(val_list) == vals:
-                    return explain_r(message, code, tldr)
+                    return explain_r(message, code, tldr=tldr)
             except TypeError:
                 pass  # This should be the only error
     return False
@@ -249,7 +249,7 @@ def iter_as_key(keys):
                 missing = False
                 break
         if missing and _var_.id in keys:
-            return explain_r(message.format(_var_.id), code, tldr)
+            return explain_r(message.format(_var_.id), code, tldr=tldr)
     return False
 
 
@@ -265,7 +265,7 @@ def list_str_as_list_var(keys):
     for match in matches:
         __str__ = match["__str__"]
         if __str__.is_ast("Str") and __str__.value in keys:
-            return explain_r(message, code, tldr)
+            return explain_r(message, code, tldr=tldr)
     return False
 
 
@@ -281,7 +281,7 @@ def append_and_sum():
                          "for ___ in _var_:\n"
                          "    ___ = ___ + ___")
     if matches:
-        return explain_r(message, code, tldr)
+        return explain_r(message, code, tldr=tldr)
     return False
 
 
@@ -295,7 +295,7 @@ def iter_prop_dict_acc():
     match = find_match("for _var_[__str__] in ___:\n"
                        "    pass")
     if match:
-        return explain_r(message, code, tldr)
+        return explain_r(message, code, tldr=tldr)
     return False
 
 
@@ -310,7 +310,7 @@ def list_str_dict(keys):
     for match in matches:
         __str__ = match['__str__']
         if __str__.is_ast("Str") and __str__.value in keys:
-            return explain_r(message.format(__str__.value), code, tldr)
+            return explain_r(message.format(__str__.value), code, tldr=tldr)
     return False
 
 
@@ -325,7 +325,7 @@ def missing_key(keys):
         if not matches:
             key_list += '<li><code>"' + key + '"</code></li>'
     if key_list != "":
-        return explain_r(message.format(key_list), code, tldr)
+        return explain_r(message.format(key_list), code, tldr=tldr)
     return False
 
 
@@ -340,7 +340,7 @@ def blank_key(keys):
             key_list += '<li><code>"' + key + '"</code></li>'
 
     if key_list != "":
-        return explain_r(message.format(key_list), code, tldr)
+        return explain_r(message.format(key_list), code, tldr=tldr)
 
 
 # dict_acc_group
@@ -360,7 +360,7 @@ def dict_parens_brack():
         except KeyError:
             pass
         if __str1__.is_ast("Str") and __str2__.is_ast("Str") and data_state(_var_.id):
-            return explain_r(message.format(_var_.id), code, tldr)
+            return explain_r(message.format(_var_.id), code, tldr=tldr)
     return False
 
 
@@ -375,7 +375,7 @@ def comma_dict_acc():
     for match in matches:
         submatch = match['__exp__'].find_match("_dict_[__str1__]")
         if submatch:
-            return explain_r(message.format(submatch['_dict_'].id), code, tldr)
+            return explain_r(message.format(submatch['_dict_'].id), code, tldr=tldr)
     return False
 
 
@@ -392,7 +392,7 @@ def no_dict_in_loop():
         for submatch in submatches:
             if submatch["__str__"].is_ast("Str"):
                 return False
-    return explain_r(message, code, tldr)
+    return explain_r(message, code, tldr=tldr)
 
 
 # dict_decision
@@ -404,7 +404,7 @@ def func_filter(keys):
     for match in matches:
         __str__ = match["__str__"]
         if __str__.value in keys:  # TODO: Relies on .value returning id for Name nodes
-            return explain_r(message, code, tldr)
+            return explain_r(message, code, tldr=tldr)
     return False
 
 
@@ -417,7 +417,7 @@ def str_list(keys):
 
     for key in keys:
         if find_match("['{}']".format(key)):
-            return explain_r(message.format(key), code, tldr)
+            return explain_r(message.format(key), code, tldr=tldr)
     return False
 
 
@@ -431,7 +431,7 @@ def list_var_dict_acc():
     matches = find_matches("for ___ in _var_[__str__]:\n"
                            "    pass")
     if matches:
-        return explain_r(message, code, tldr)
+        return explain_r(message, code, tldr=tldr)
     return False
 
 
@@ -450,7 +450,7 @@ def key_comp(keys):
         __str1__ = match["__str1__"]
         __str2__ = match["__str2__"]
         if __str1__.is_ast("Str") and __str1__.value in keys and __str2__.is_ast("Str") and __str2__.value in keys:
-            return explain_r(message.format(__str1__.value, __str2__.value), code, tldr)
+            return explain_r(message.format(__str1__.value, __str2__.value), code, tldr=tldr)
     return False
 
 
@@ -462,7 +462,7 @@ def col_dict():
 
     matches = find_matches("_var_[__str1__: __str2__]")
     if matches:
-        return explain_r(message, code, tldr)
+        return explain_r(message, code, tldr=tldr)
     return False
 
 
@@ -477,7 +477,7 @@ def var_key(keys):
     for match in matches:
         _key_ = match['_key_']
         if _key_.id in keys:
-            return explain_r(message.format(_key_.id), code, tldr)
+            return explain_r(message.format(_key_.id), code, tldr=tldr)
     return False
 
 
@@ -499,7 +499,7 @@ def key_order(keys):
     if construct:
         matches = find_matches(construct)
         if not matches:
-            return explain_r(message, code, tldr)
+            return explain_r(message, code, tldr=tldr)
     return False
 
 
@@ -523,7 +523,7 @@ def key_order_unchained(keys):
     if construct:
         matches = find_matches(construct)
         if not matches:
-            return explain_r(message, code, tldr)
+            return explain_r(message, code, tldr=tldr)
     return False
 
 
@@ -543,7 +543,7 @@ def filt_key(c_value, num_slices):
             for num in range(a_slice + 1):
                 value = match["__str{}__".format(num)]
                 if value.is_ast("Str") and value.value == c_value:
-                    return explain_r(message.format(c_value=value), code, tldr)
+                    return explain_r(message.format(c_value=value), code, tldr=tldr)
     return False
 
 
@@ -555,7 +555,7 @@ def miss_dict_acc():
     tldr = "Missing Dictionary Access"
 
     if not find_matches("_var_[__str1__]"):
-        return explain_r(message, code, tldr)
+        return explain_r(message, code, tldr=tldr)
     return False
 
 
@@ -574,7 +574,7 @@ def compare_key(c_value):
             for submatch in submatches:
                 __str__ = submatch["__str__"]
                 if __str__.is_ast("Str") and __str__.value == c_value:
-                    return explain_r(message, code, tldr)
+                    return explain_r(message, code, tldr=tldr)
     return False
 
 
@@ -590,7 +590,7 @@ def str_equality():
         __str1__ = match["__str1__"]
         __str2__ = match["__str2__"]
         if __str1__.is_ast("Str") and __str2__.is_ast("Str"):
-            return explain_r(message.format(__str1__.value, __str2__.value), code, tldr)
+            return explain_r(message.format(__str1__.value, __str2__.value), code, tldr=tldr)
     return False
 
 
@@ -607,7 +607,7 @@ def fetch_acc_dict(values):
         _func_ = match["_func_"].id
         __str__ = match["__str__"]
         if __str__.is_ast("Str") and __str__.value in values:
-            return explain_r(message.format(_var_, _func_), code, tldr)
+            return explain_r(message.format(_var_, _func_), code, tldr=tldr)
     return False
 
 
@@ -621,7 +621,7 @@ def show_args():
 
     matches = find_matches("plt.show(__exp__)")
     if matches:
-        return explain_r(message, code, tldr)
+        return explain_r(message, code, tldr=tldr)
     return False
 
 
@@ -637,7 +637,7 @@ def dict_plot():
         _var_ = match["_var_"]
         var_type = str(_var_.get_data_state().type)
         if var_type == "ListType" and str(_var_.get_data_state().type.subtype) == "DictType":
-            return explain_r(message.format(_var_.id), code, tldr)
+            return explain_r(message.format(_var_.id), code, tldr=tldr)
     return False
 
 
@@ -650,5 +650,5 @@ def comp_in_dict_acc():
 
     matches = find_matches("_var_[__exp__][__exp2__ == __exp3__]")
     if matches:
-        return explain_r(message, code, tldr)
+        return explain_r(message, code, tldr=tldr)
     return False

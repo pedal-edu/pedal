@@ -127,3 +127,42 @@ def check_for_plot(plt_type, data):
     else:
         return ("You have not created a {} with the proper data."
                 "<br><br><i>(no_plt)<i>".format(plt_type))
+
+
+def check_for_plot_r(plt_type, data):
+    """
+    Returns any errors found for this plot type and data.
+    In other words, if it returns False, the plot was found correctly.
+    """
+    if plt_type == 'plot':
+        plt_type = 'line'
+    type_found = False
+    data_found = False
+    for graph in compatibility.get_plots():
+        for a_plot in graph['data']:
+            data_found_here = compare_data(plt_type, data, a_plot)
+            if a_plot['type'] == plt_type and data_found_here:
+                return False
+            if a_plot['type'] == plt_type:
+                type_found = True
+            if data_found_here:
+                data_found = True
+    plt_type = GRAPH_TYPES.get(plt_type, plt_type)
+    if type_found and data_found:
+        return {"message": "You have created a {}, but it does not have the right data. "
+                           "That data appears to have been plotted in another graph.".format(plt_type),
+                "code": "other_plt",
+                "tldr": "Plotting Another Graph"}
+    elif type_found:
+        return {"message": "You have created a {}, but it does not have the right data.".format(plt_type),
+                "code": "wrong_plt_data",
+                "tldr": "Plot Data Incorrect"}
+    elif data_found:
+        return {"message": "You have plotted the right data, but you appear to have not plotted it as a {}.".format(plt_type),
+                "code": "wrong_plt_type",
+                "tldr": "Wrong Plot Type"
+                }
+    else:
+        return {"message": "You have not created a {} with the proper data.".format(plt_type),
+                "code": "no_plt",
+                "tldr": "Missing Plot"}
