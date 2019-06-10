@@ -167,17 +167,17 @@ def check_for_plot_r(plt_type, data):
         return {"message": "You have created a {}, but it does not have the right data. "
                            "That data appears to have been plotted in another graph.".format(plt_type),
                 "code": "other_plt",
-                "tldr": "Plotting Another Graph"}
+                "label": "Plotting Another Graph"}
     elif type_found:
         return {"message": "You have created a {}, but it does not have the right data.".format(plt_type),
                 "code": "wrong_plt_data",
-                "tldr": "Plot Data Incorrect"}
+                "label": "Plot Data Incorrect"}
     elif data_found:
         return {"message": "You have plotted the right data, but you appear to have not plotted it as a {}.".format(plt_type),
                 "code": "wrong_plt_type",
-                "tldr": "Wrong Plot Type"
+                "label": "Wrong Plot Type"
                 }
     else:
         return {"message": "You have not created a {} with the proper data.".format(plt_type),
                 "code": "no_plt",
-                "tldr": "Missing Plot"}
+                "label": "Missing Plot"}
