@@ -17,6 +17,19 @@ class HistogramMistakeTests(MistakeTest):
                        "plt.hist(items)")
         self.assertTrue(histogram_argument_not_list(), "false negative")
 
+        self.to_source('import classics\n'
+                       'report_list = classics.get_books(test=True)\n'
+                       'for report in report_list:\n'
+                       '    hist = report["bibliography"]["type"]\n'
+                       '    if hist == "Text":\n'
+                       '        list.append("Text")\n'
+                       'plt.hist(list)\n'
+                       'plt.x("test")\n'
+                       'plt.y("test")\n'
+                       'plt.title(list)\n')
+        ret = histogram_argument_not_list()
+        self.assertTrue(ret, "Didn't give message returned {} instead".format(ret))
+
     def test_histogram_wrong_list(self):
         self.to_source("for item in items:\n"
                        "    target.append(item)\n"

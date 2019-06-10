@@ -1,4 +1,4 @@
-from pedal.mistakes.feedback_mod import *
+from pedal.report.imperative import gently_r, explain_r
 from pedal.cait.cait_api import *
 
 
@@ -20,6 +20,6 @@ def unnecessary_cast(needed_casts):
     for match in matches:
         user_cast = match["_cast_"].id
         if user_cast not in needed_casts and user_cast in known_casts:
-            return explain_r(message.format(user_cast), code, tldr=tldr)
+            return explain_r(message.format(user_cast), code, label=tldr)
     return False
 

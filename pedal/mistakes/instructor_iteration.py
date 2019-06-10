@@ -1,7 +1,7 @@
 from pedal.cait.cait_api import (parse_program, find_match, find_matches,
                                  find_expr_sub_matches, data_state,
                                  def_use_error)
-from pedal.mistakes.feedback_mod import *
+from pedal.report.imperative import gently_r, explain_r
 
 
 def iteration_group():
@@ -37,7 +37,7 @@ def wrong_target_is_list():
     if match:
         _item_ = match["_item_"].astNode
         if data_state(_item_).was_type('list'):
-            return explain_r(message.format(_item_.id), code, tldr=tldr)
+            return explain_r(message.format(_item_.id), code, label=tldr)
     return False
 
 
@@ -50,7 +50,7 @@ def wrong_list_repeated_in_for():
     if match:
         _item_ = match["_item_"].astNode
         if data_state(_item_).was_type('list'):
-            return explain_r(message.format(_item_.id), code, tldr=tldr)
+            return explain_r(message.format(_item_.id), code, label=tldr)
     return False
 
 
@@ -68,9 +68,9 @@ def missing_iterator_initialization():
     if match:
         _list_ = match["_list_"].astNode
         if _list_.id == "___":
-            return explain_r(message1, code1, tldr=tldr1)
+            return explain_r(message1, code1, label=tldr1)
         elif not data_state(_list_).was_type('list'):
-            return explain_r(message2.format(_list_.id), code2, tldr=tldr2)
+            return explain_r(message2.format(_list_.id), code2, label=tldr2)
     return False
 
 
@@ -85,7 +85,7 @@ def wrong_iterator_not_list():
     if match:
         _item_ = match["_item_"].astNode
         if not data_state(_item_).was_type('list'):
-            return explain_r(message.format(_item_.id), code, tldr=tldr)
+            return explain_r(message.format(_item_.id), code, label=tldr)
     return False
 
 
@@ -97,7 +97,7 @@ def missing_target_slot_empty():
     if match:
         _item_ = match["_item_"].astNode
         if _item_.id == "___":
-            return explain_r(message, code, tldr=tldr)
+            return explain_r(message, code, label=tldr)
     return False
 
 
@@ -109,7 +109,7 @@ def list_not_initialized_on_run():
     if match:
         _item_ = match["_item_"][0].astNode
         if def_use_error(_item_):
-            return explain_r(message, code, tldr=tldr)
+            return explain_r(message, code, label=tldr)
     return False
 
 
@@ -121,7 +121,7 @@ def list_initialization_misplaced():
     if match:
         _item_ = match["_item_"][0].astNode
         if data_state(_item_).was_type('list') and def_use_error(_item_):
-            return explain_r(message.format(_item_.id), code, tldr=tldr)
+            return explain_r(message.format(_item_.id), code, label=tldr)
     return False
 
 
@@ -134,7 +134,7 @@ def missing_for_slot_empty():
         _item_ = match["_item_"][0].astNode
         _list_ = match["_list_"][0].astNode
         if _item_.id == "___" or _list_.id == "___":
-            return explain_r(message, code, tldr=tldr)
+            return explain_r(message, code, label=tldr)
     return False
 
 
@@ -149,5 +149,5 @@ def wrong_target_reassigned():
         _item_ = match["_item_"][0]
         submatches = __expr__.find_matches("{} = ___".format(_item_), )
         if submatches:
-            return explain_r(message.format(_item_), code, tldr=tldr)
+            return explain_r(message.format(_item_), code, label=tldr)
     return False

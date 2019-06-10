@@ -1,5 +1,5 @@
 from pedal.cait.cait_api import find_matches, find_expr_sub_matches, data_state
-from pedal.mistakes.feedback_mod import *
+from pedal.report.imperative import gently_r, explain_r
 
 
 def append_group_on_change():
@@ -49,7 +49,7 @@ def missing_append_in_iteration():
             submatch = __expr__.find_matches("___.append(___)")
             if submatch:
                 return False
-        return explain_r(message, code, tldr=tldr)
+        return explain_r(message, code, label=tldr)
     return False
 
 
@@ -66,7 +66,7 @@ def wrong_not_append_to_list():
         for submatch in submatches:
             _target_ = submatch["_target_"]
             if not data_state(_target_).was_type('list'):
-                return explain_r(message.format(_target_), code, tldr=tldr)
+                return explain_r(message.format(_target_), code, label=tldr)
     return False
 
 
@@ -85,7 +85,7 @@ def missing_append_list_initialization():
                                      "for ___ in ___:\n"
                                      "    __expr__".format(_new_list_.id))
             if not matches02:
-                return explain_r(message.format(_new_list_.id), code, tldr=tldr)
+                return explain_r(message.format(_new_list_.id), code, label=tldr)
     return False
 
 
@@ -106,7 +106,7 @@ def wrong_append_list_initialization():
         if submatch and (__expr1__.ast_name == "List" and
                          len(__expr1__.elts) != 0 or
                          __expr1__.ast_name != "List"):
-            return explain_r(message.format(_list_.id), code, tldr=tldr)
+            return explain_r(message.format(_list_.id), code, label=tldr)
     return False
 
 
@@ -120,7 +120,7 @@ def append_list_wrong_slot():
             _item_ = match["_item_"].astNode
             _target_ = match["_target_"].astNode
             if data_state(_item_).was_type('list'):
-                return explain_r(message.format(_item_.id, _target_.id), code, tldr=tldr)
+                return explain_r(message.format(_item_.id, _target_.id), code, label=tldr)
     return False
 
 

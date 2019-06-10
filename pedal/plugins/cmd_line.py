@@ -40,6 +40,7 @@ def process(file, module, ins_code, report):
 
 p2Flag = True
 secrets = False
+assignment_id = -1
 if __name__ == "__main__":
     # processing args
     feedback_code = sys.argv[1]
@@ -55,10 +56,24 @@ if __name__ == "__main__":
     else:
         inputs = sys.argv[3:]
 else:
-    feedback_code = ("C:/Users/User/Documents/Luke_Stuff/Research/ComputationalThinking/DictionaryUnit/test_cmd/"
-                     "ins_script.py")
+    # feedback_suffix = "prequiz.py"
+    # assignment_id = 409
+    feedback_suffix = "postquiz1.py"
+    assignment_id = 410 # Pass Count = 1
+    # feedback_suffix = "postquiz2-1.py"
+    # assignment_id = 411 # Pass Count = 2
+    # feedback_suffix =  "postquiz2-2.py"
+    # assignment_id = 412
+    # feedback_code = ("C:/Users/User/Documents/Luke_Stuff/Research/ComputationalThinking/DictionaryUnit/test_cmd/"
+    #                 "ins_script.py")
+    feedback_code = ("C:/Users/User/Documents/Luke_Stuff/Research/ComputationalThinking/"
+                     "DictionaryUnit/ID/Assessments/")
+    feedback_code += feedback_suffix
+
     code_dir = ("C:/Users/User/Documents/Luke_Stuff/Research/ComputationalThinking/ResearchData/"
-                "ComputationalThinking/Tests/results/Spring2019/DictionaryData/cs1014_spr2019_log-v1/")
+                "ComputationalThinking/Tests/results/")
+    code_dir += "Spring2019/DictionaryData/cs1014_spr2019_log-v1/"
+    # code_dir += "Fall2018/DictionaryData/exported-f18/"
     p2Flag = True
     secrets = True
     inputs = []
@@ -74,6 +89,7 @@ foo = importlib.util.module_from_spec(my_spec)
 # Grabbing student files
 if p2Flag:
     student_feedback = []
+    pass_count = 0
     main_table = "MainTable"
     if secrets:
         main_table += "-2"
@@ -81,11 +97,23 @@ if p2Flag:
     df = pd.read_csv(code_dir + main_table)
     code_states = code_dir + "CodeStates/"
     for index, row in df.iterrows():
-        code_f = code_states + str(int(row['CodeStateID'])) + "/__main__.py"
-        with open(code_f) as code:
-            feedback_result = process(code, my_spec, foo, MAIN_REPORT)
-            student_feedback.append(feedback_result)
-            df.at[index, 'Score'] = 0.0 if feedback_result else 1.0
+        scan = True
+        if assignment_id >= 0:
+            if secrets:
+                if int(row["AssignmentID"]) != assignment_id:
+                    scan = False
+        if scan:
+            code_f = code_states + str(int(row['CodeStateID'])) + "/__main__.py"
+            # check assignment and find corresponding answer key in DictionaryUnit/ID/Assessments/...
+            with open(code_f) as code:
+                feedback_result = process(code, my_spec, foo, MAIN_REPORT)
+                # df.at[index, 'InterventionMessage'] = feedback_result
+                student_feedback.append(feedback_result)
+                score = 0.0
+                if not feedback_result:
+                    score = 1.0
+                    pass_count += 1
+                df.at[index, 'Score'] = score
     df.to_csv(code_dir + "processed.csv", index=False)
 else:
     student_feedback = []

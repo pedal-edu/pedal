@@ -923,6 +923,19 @@ class DictionaryMistakeTest(MistakeTest):
         ret = dict_plot()
         self.assertFalse(ret, "Expected False, got {} instead".format(ret))
 
+        self.to_source('import classics\n'
+                       'report_list = classics.get_books(test=True)\n'
+                       'for report in report_list:\n'
+                       '    hist = report["bibliography"]["type"]\n'
+                       '    if hist == "Text":\n'
+                       '        list.append("Text")\n'
+                       'plt.hist(list)\n'
+                       'plt.x("test")\n'
+                       'plt.y("test")\n'
+                       'plt.title(list)\n')
+        ret = dict_plot()
+        self.assertFalse(ret, "Didn't give message returned {} instead".format(ret))
+
     def test_comp_in_dict_acc(self):
         self.to_source('import weather\n'
                        'weather_reports = weather.get_weather()\n'
