@@ -389,7 +389,8 @@ def no_dict_in_loop():
     matches = find_matches("for _item_ in _list_:\n"
                            "    __expr__")
     for match in matches:
-        submatches = match['__expr__'].find_matches("_item_[__str__]")
+        _item_ = match['_item_']
+        submatches = match['__expr__'].find_matches("{}[__str__]".format(_item_.id))
         for submatch in submatches:
             if submatch["__str__"].is_ast("Str"):
                 return False
