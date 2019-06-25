@@ -59,7 +59,7 @@ class StretchyTreeMatcher:
         else:
             self.root_node = CaitNode(ast_node, _NONE_FIELD, report=self.report)
 
-    def find_matches(self, ast_or_code, filename="__main__", check_meta=True):
+    def find_matches(self, ast_or_code, filename="__main__", check_meta=True, pre_match=None):
         """
         Args:
             ast_or_code (str or AstNode): The students' code or a valid AstNode from
@@ -97,12 +97,12 @@ class StretchyTreeMatcher:
                 other_root_old_field = other_root.field
                 other_root.field = _NONE_FIELD
         matches = self.any_node_match(explore_root, other_root,
-                                   check_meta=check_meta)
+                                      check_meta=check_meta, pre_match=pre_match)
         explore_root.field = explore_root_old_field
         other_root.field = other_root_old_field
         return matches
 
-    def any_node_match(self, ins_node, std_node, check_meta=True, cut=False):
+    def any_node_match(self, ins_node, std_node, check_meta=True, cut=False, pre_match=None):
         """
         Finds whether ins_node can be matched to some node in the tree std_node
 
@@ -120,7 +120,7 @@ class StretchyTreeMatcher:
         # @TODO: create a more public function that converts ins_node and std_node into CaitNodes
         # TODO: Create exhaustive any_node_match
         # matching: an object representing the mapping and the symbol table
-        matching = self.deep_find_match(ins_node, std_node, check_meta)
+        matching = self.deep_find_match(ins_node, std_node, check_meta, pre_match=pre_match)
         # if a direct matching is found
         if matching:
             for match in matching:
@@ -131,7 +131,7 @@ class StretchyTreeMatcher:
         # if not matching or exhaust:  # otherwise
         # try to matching ins_node to each child of std_node, recursively
         for std_child in std_node.children:
-            matching_c = self.any_node_match(ins_node, std_child, check_meta=check_meta, cut=cut)
+            matching_c = self.any_node_match(ins_node, std_child, check_meta=check_meta, cut=cut, pre_match=pre_match)
             if matching_c:
                 for match in matching_c:
                     match.match_root = std_child
@@ -141,7 +141,8 @@ class StretchyTreeMatcher:
             return matching
         return []
 
-    def deep_find_match(self, ins_node, std_node, check_meta=True):
+    def deep_find_match(self, ins_node, std_node, check_meta=True,
+                        pre_match=None):
         """
         Finds whether ins_node and matches std_node and whether ins_node's children flexibly match std_node's children
         in order
@@ -149,28 +150,30 @@ class StretchyTreeMatcher:
             ins_node: The instructor ast that should be included in the student AST
             std_node: The student AST that we are searching for the included tree
             check_meta: Flag, if True, check whether the two nodes originated from the same ast field
+            pre_match: If this was part of a previous match...
 
         Returns:
             a mapping of nodes and a symbol table mapping ins_node to std_node, or [] if no mapping was found
         """
         method_name = "deep_find_match_" + type(ins_node.astNode).__name__
         target_func = getattr(self, method_name, self.deep_find_match_generic)
-        return target_func(ins_node, std_node, check_meta)
+        return target_func(ins_node, std_node, check_meta, pre_match=pre_match)
 
     # noinspection PyPep8Naming
-    def deep_find_match_Name(self, ins_node, std_node, check_meta=True):
+    def deep_find_match_Name(self, ins_node, std_node, check_meta=True, pre_match=None):
         name_id = ins_node.astNode.id
         match = _name_regex(name_id)
         mapping = AstMap()
         matched = False
         meta_matched = self.metas_match(ins_node, std_node, check_meta)
         if match[_VAR] and meta_matched:  # if variable
-            # This if body is probably unnecessary.
             if type(std_node.astNode).__name__ == "Name":
-                return self.deep_find_match_generic(ins_node, std_node, check_meta=check_meta, ignores=["ctx"])
+                return self.deep_find_match_generic(ins_node, std_node,
+                                                    check_meta=check_meta, ignores=["ctx"],pre_match=pre_match)
         # could else return False, but shallow_match_generic should do this as well
         elif match[_EXP]:  # and meta_matched:  # if expression
             # terminate recursion, the whole subtree should match since expression nodes match to anything
+            mapping.merge_map_with(pre_match)
             mapping.add_exp_to_sym_table(ins_node, std_node)
             matched = True
         elif match[_WILD] and meta_matched:  # if wild card, don't care
@@ -181,20 +184,21 @@ class StretchyTreeMatcher:
             mapping.add_node_pairing(ins_node, std_node)
             return [mapping]
         # else
-        return self.deep_find_match_generic(ins_node, std_node, check_meta=check_meta, ignores=["ctx"])
+        return self.deep_find_match_generic(ins_node, std_node,
+                                            check_meta=check_meta, ignores=["ctx"], pre_match=pre_match)
 
     # noinspection PyPep8Naming
-    def deep_find_match_BinOp(self, ins_node, std_node, check_meta=True):
+    def deep_find_match_BinOp(self, ins_node, std_node, check_meta=True, pre_match=None):
         op = ins_node.astNode.op
         op = type(op).__name__
         is_generic = not (op == "Mult" or op == "Add")
         if is_generic:
-            return self.deep_find_match_generic(ins_node, std_node, check_meta)
+            return self.deep_find_match_generic(ins_node, std_node, check_meta, pre_match=pre_match)
         else:  # this means that the node is clearly commutative
-            return self.deep_find_match_binflex(ins_node, std_node, False)
+            return self.deep_find_match_binflex(ins_node, std_node, False, pre_match=pre_match)
 
     # noinspection PyMethodMayBeStatic
-    def binflex_helper(self, case_left, case_right, new_mappings, base_mappings):
+    def binflex_helper(self, case_left, case_right, new_mappings, base_mappings, pre_match=None):
         """
         adds to new_mappings (return/modify by argument) the mappings for both the left and right subtrees as denoted by
         case_left and case_right
@@ -203,19 +207,19 @@ class StretchyTreeMatcher:
             case_right: The mappings for the right opperand
             new_mappings: The new set of mappings to generate
             base_mappings: The original mappings of the binop node
-
+            pre_match: A mapping passed down from an initial match
         Returns:
             None
         """
         if case_left and case_right:
             for case_l in case_left:
-                new_map = base_mappings[0].new_merged_map(case_l)
+                new_map = base_mappings[0].new_merged_map(case_l).new_merged_map(pre_match)
                 for case_r in case_right:
                     both = new_map.new_merged_map(case_r)
                     if not both.has_conflicts():
                         new_mappings.append(both)
 
-    def deep_find_match_binflex(self, ins_node, std_node, check_meta=False):
+    def deep_find_match_binflex(self, ins_node, std_node, check_meta=False, pre_match=None):
         base_mappings = self.shallow_match(ins_node, std_node, check_meta)
         if not base_mappings:
             return []
@@ -233,17 +237,17 @@ class StretchyTreeMatcher:
             # case 1: ins_left->std_left and ins_right->std_right
             case_left = self.deep_find_match(ins_left, std_left, False)
             case_right = self.deep_find_match(ins_right, std_right, False)
-            self.binflex_helper(case_left, case_right, new_mappings, base_mappings)
+            self.binflex_helper(case_left, case_right, new_mappings, base_mappings, pre_match=pre_match)
             # case 2: ins_left->std_right and ins_right->std_left
             case_left = self.deep_find_match(ins_left, std_right, False)
             case_right = self.deep_find_match(ins_right, std_left, False)
-            self.binflex_helper(case_left, case_right, new_mappings, base_mappings)
+            self.binflex_helper(case_left, case_right, new_mappings, base_mappings, pre_match=pre_match)
             if len(new_mappings) == 0:
                 return []
             return new_mappings
         return []
 
-    def deep_find_match_Expr(self, ins_node, std_node, check_meta=True):
+    def deep_find_match_Expr(self, ins_node, std_node, check_meta=True, pre_match=None):
         """
         An Expression node (not to be confused with expressions denoted by the instructor nodes in Name ast nodes)
         checks whether it should be generic, or not
@@ -251,6 +255,7 @@ class StretchyTreeMatcher:
             ins_node: Instructor ast to find in the student ast
             std_node: Student AST to search for the instructor ast in
             check_meta: flag to check whether the fields of the instructor node and the student node should match
+            pre_match: An AstMap from a previous matching run
 
         Returns:
             AstMap: a mapping between the instructor and student asts, or False if such a mapping doesn't exist
@@ -258,7 +263,7 @@ class StretchyTreeMatcher:
         # if check_meta and ins_node.field != std_node.field:
         if not self.metas_match(ins_node, std_node, check_meta):
             return []
-        mapping = AstMap()
+        mapping = AstMap() if pre_match is None else pre_match
         value = ins_node.value
         ast_type = type(value.astNode).__name__
         if ast_type == "Name":
@@ -279,7 +284,7 @@ class StretchyTreeMatcher:
                 return [mapping]
         return self.deep_find_match_generic(ins_node, std_node, check_meta)
 
-    def deep_find_match_generic(self, ins_node, std_node, check_meta=True, ignores=None):
+    def deep_find_match_generic(self, ins_node, std_node, check_meta=True, ignores=None, pre_match=None):
         """
         This first uses shallow match to find a base map (match) from which to
         build off. The algorithm then tracks all the possible mappings that
@@ -300,6 +305,7 @@ class StretchyTreeMatcher:
             std_node: Student AST to search for the instructor ast in
             check_meta: flag to check whether the fields of the instructor node and the student node should match
             ignores: List of fields to ignore in the field match
+            pre_match: a map from a previous match
 
         Returns:
             a mapping between the isntructor and student asts, or [] if such a mapping doesn't exist
@@ -308,6 +314,8 @@ class StretchyTreeMatcher:
             ignores = []
         base_mappings = self.shallow_match(ins_node, std_node, check_meta)
         if base_mappings:
+            for mapping in base_mappings:
+                mapping.merge_map_with(pre_match)
             # base case this runs 0 times because no children
             # find each child of ins_node that matches IN ORDER
             base_sibs = [-1]

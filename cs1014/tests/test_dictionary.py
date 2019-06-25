@@ -417,6 +417,13 @@ class DictionaryMistakeTest(MistakeTest):
 
         self.to_source('total_precipitation = 0\n'
                        'for precip in weather_reports:\n'
+                       '    total_precipitation = total_precipitation + precip2["Data"]["Precipitation"]\n'
+                       'print(total_precipitation)\n')
+        ret = no_dict_in_loop()
+        self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
+
+        self.to_source('total_precipitation = 0\n'
+                       'for precip in weather_reports:\n'
                        '    total_precipitation = total_precipitation + precip["Data"]["Precipitation"]\n'
                        'print(total_precipitation)\n')
         ret = no_dict_in_loop()
