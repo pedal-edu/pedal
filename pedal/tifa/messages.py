@@ -97,7 +97,7 @@ def _format_message(issue, data):
                 "was used. One of the times that you gave <code>{name}</code> "
                 "a value was incorrect."
                 ).format(line=data['position']['line'], name=data['name'])
-    elif issue == 'Iterating over non-list':
+    elif issue == 'Iterating over Non-list':
         if 'name' not in data or data['name'] is None:
             expression = "expression"
         else:

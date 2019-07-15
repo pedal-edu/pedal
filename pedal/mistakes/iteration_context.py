@@ -244,7 +244,7 @@ def wrong_should_be_counting():
         for match in matches:
             _item_ = match["_item_"][0]
             __expr__ = match["__expr__"]
-            submatches = __expr__.find_matches("___ = ___ + {}".format(_item_.id), )
+            submatches = __expr__.find_matches("___ = ___ + _item_")
             if submatches:
                 return explain_r(message, code, label=tldr)
     return False
@@ -332,7 +332,8 @@ def wrong_cannot_sum_list():
         for match in matches:
             _list_ = match["_list_"][0]
             __expr__ = match["__expr__"]
-            submatches = __expr__.find_matches("___ = ___ + {}".format(_list_.id), )
+            # submatches = __expr__.find_matches("___ = ___ + {}".format(_list_.id), )
+            submatches = __expr__.find_matches("___ = ___ + _list_")
             if submatches:
                 return explain_r(message, code, label=tldr)
     return False
@@ -416,8 +417,7 @@ def missing_summing_list():
         for match in matches:
             _item_ = match["_item_"][0]
             __expr__ = match["__expr__"]
-            submatches = find_expr_sub_matches("_sum_ = _sum_ + {}"
-                                               .format(_item_.id), __expr__)
+            submatches = __expr__.find_matches("_sum_ = _sum_ + _item_")
             if submatches:
                 return False
     return explain_r(message, code, label=tldr)
@@ -577,8 +577,10 @@ def wrong_average_numerator():
             __expr__ = match["__expr__"]
             __expr2__ = match["__expr2__"]
             _item_ = match["_item_"][0]
-            submatches = __expr__.find_matches("_total_ = _total_ + {}".format(_item_.id), )
-            submatches02 = find_expr_sub_matches("_value_/___", __expr2__)
+            # TODO: In theory, we could merge these matches to match variables...
+            submatches = __expr__.find_matches("_total_ = _total_ + _item_")
+            # submatches02 = find_expr_sub_matches("_value_/___", __expr2__)
+            submatches02 = __expr2__.find_matches("_value_/___")
             if submatches and submatches02:
                 for submatch in submatches:
                     for submatch02 in submatches02:
@@ -870,7 +872,7 @@ def wrong_conversion_10_2():
         # code version 1 start
         _target_ = match["_target_"][0]
         __expr__ = match["__expr__"]
-        matches02 = __expr__.find_matches("{0!s}*0.04".format(_target_.id))
+        matches02 = __expr__.find_matches("_target_*0.04".format(_target_.id))
         if matches02:
             return False
         return explain_r(message.format(_target_.id), code, label=tldr)
@@ -954,7 +956,7 @@ def wrong_conversion_problem_10_5():
         for match in matches:
             _item_ = match["_item_"][0]
             __expr__ = match["__expr__"]
-            matches02 = __expr__.find_matches("{0!s}*0.62".format(_item_.id))
+            matches02 = __expr__.find_matches("_item_*0.62")
             if matches02:
                 return False
         return explain_r(message, code, label=tldr)
@@ -978,7 +980,8 @@ def wrong_filter_problem_atl1_10_5():
             _item_ = match["_item_"][0].astNode
             __cond__ = match["__cond__"]
             __expr__ = match["__expr__"]
-            matches02 = __expr__.find_matches("{0!s}*0.62".format(_item_.id))
+            # matches02 = __expr__.find_matches("{0!s}*0.62".format(_item_.id))
+            matches02 = __expr__.find_matches("_item_*0.62")
             if matches02:
                 for match02 in matches02:
                     if (__cond__.has(_item_) and
@@ -1001,7 +1004,7 @@ def wrong_filter_problem_atl2_10_5():
             __cond__ = match["__cond__"]
             _item_ = match["_item_"][0].astNode
             _miles_ = match["_miles_"][0].astNode
-            matches02 = __expr__.find_matches("{0!s}*0.62".format(_item_.id))
+            matches02 = __expr__.find_matches("_item_*0.62")
             for _ in matches02:
                 if not (__cond__.has(_miles_) and
                         __cond__.numeric_logic_check(1, "_item_ > 10")):
@@ -1023,8 +1026,9 @@ def wrong_append_problem_atl1_10_5():
             __expr__ = match["__expr__"]
             if (__cond__.numeric_logic_check(0.1, "item > 16.1290322580645") and
                     __cond__.has(_item_)):
-                new_code = "{}*0.62".format(_item_.id)
-                matches02 = __expr__.find_matches(new_code, )
+                # new_code = "{}*0.62".format(_item_.id)
+                new_code = "_item_*0.62"
+                matches02 = __expr__.find_matches(new_code)
                 if not matches02:
                     return explain_r(message, code, label=tldr)
     return False

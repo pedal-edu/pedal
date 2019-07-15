@@ -147,7 +147,7 @@ def wrong_target_reassigned():
     for match in matches:
         __expr__ = match["__expr__"]
         _item_ = match["_item_"][0]
-        submatches = __expr__.find_matches("{} = ___".format(_item_), )
+        submatches = __expr__.find_matches("_item_ = ___")
         if submatches:
             return explain_r(message.format(_item_), code, label=tldr)
     return False

@@ -52,9 +52,9 @@ unit_tests = {
         ['y = []\nfor x in y:\n\tpass', ['Unused Variable', 'Initialization Problem'], ['Iterating over empty list']],
     'double_iterate_through_strings':
         ['ss = ["Testing", "Here"]\nfor a in ss:\n    print(a)\nfor b in a:\n    print(b)',
-         ['Iterating over non-list', 'Iterating over empty list'], []],
+         ['Iterating over Non-list', 'Iterating over empty list'], []],
     'iterate_through_number':
-        ['y = 5\nfor x in y:\n\tpass', ['Unused Variable', 'Initialization Problem'], ['Iterating over non-list']],
+        ['y = 5\nfor x in y:\n\tpass', ['Unused Variable', 'Initialization Problem'], ['Iterating over Non-list']],
     'iterate_over_iteration_variable':
         ['y = [1,2,3]\nfor y in y:\n\tpass', [], ['Iteration Problem']],
     'type_change':
@@ -96,15 +96,15 @@ unit_tests = {
 
     # Iterating over the result of a builtin
     'print_range':
-        ['x = range(100)\nprint(x)', ['Iterating over non-list'], []],
+        ['x = range(100)\nprint(x)', ['Iterating over Non-list'], []],
     'iterate_range':
-        ['x = range(100)\nfor y in x:\n    print(y)', ['Iterating over non-list'], []],
+        ['x = range(100)\nfor y in x:\n    print(y)', ['Iterating over Non-list'], []],
     'iterate_over_ranges_atomic_subtype':
-        ['x = range(100)\nfor y in x:\n    pass\nfor z in y:\n    print(z)', [], ['Iterating over non-list']],
+        ['x = range(100)\nfor y in x:\n    pass\nfor z in y:\n    print(z)', [], ['Iterating over Non-list']],
     'iterate_over_split':
-        ['for x in "a,b,c".split(","):\n  x+""', ['Iterating over non-list', 'Iterating over empty list'], []],
+        ['for x in "a,b,c".split(","):\n  x+""', ['Iterating over Non-list', 'Iterating over empty list'], []],
     'iterate_over_string_upper':
-        ['for l in "abc".upper():\n  l+""', ['Iterating over non-list', 'Iterating over empty list'], []],
+        ['for l in "abc".upper():\n  l+""', ['Iterating over Non-list', 'Iterating over empty list'], []],
 
     # Incompatible types
     'add_int_str':
@@ -150,7 +150,7 @@ unit_tests = {
          ['Incompatible types']],
     'function_with_subtypes_add_int_primitive_int':
         ['def add_first(a_list):\n    for element in a_list:\n        return element + 5\nprint(add_first(1))', [],
-         ['Iterating over non-list']],
+         ['Iterating over Non-list']],
     'function_with_subtypes_add_int_primitive_str':
         ['def add_first(a_list):\n    for element in a_list:\n        return element + 5\nprint(add_first("1"))', [],
          ['Incompatible types']],
@@ -226,7 +226,7 @@ unit_tests = {
 
     # List comprehensions
     'list_comprehension':
-        ['a = [5 for x in range(100)]\nfor i in a:\n    5+i', ['Iterating over non-list', 'Incompatible types'], []],
+        ['a = [5 for x in range(100)]\nfor i in a:\n    5+i', ['Iterating over Non-list', 'Incompatible types'], []],
 
     # Return outside function
     'no_return_outside_function':

@@ -81,6 +81,7 @@ def missing_append_list_initialization():
         submatches = __expr__.find_matches("_new_list_.append(___)", )
         for submatch in submatches:
             _new_list_ = submatch["_new_list_"].astNode
+            # TODO: In theory revisit this by merging matches
             matches02 = find_matches("{} = []\n"
                                      "for ___ in ___:\n"
                                      "    __expr__".format(_new_list_.id))
@@ -102,7 +103,7 @@ def wrong_append_list_initialization():
         _list_ = match["_list_"].astNode
         __expr1__ = match["__expr1__"]
         __expr2__ = match["__expr2__"]
-        submatch = find_expr_sub_matches("{}.append(___)".format(_list_.id), __expr2__)
+        submatch = __expr2__.find_matches("_list_.append(___)")
         if submatch and (__expr1__.ast_name == "List" and
                          len(__expr1__.elts) != 0 or
                          __expr1__.ast_name != "List"):

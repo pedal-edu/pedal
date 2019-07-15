@@ -101,7 +101,7 @@ def histogram_wrong_list():
         for match in matches:
             _list_ = match["_list_"].astNode
             __expr__ = match["__expr__"]
-            submatches = __expr__.find_matches("{}.append(___)".format(_list_.id))
+            submatches = __expr__.find_matches("_list_.append(___)")
             if submatches:
                 return False
         return explain_r(message, code, label=tldr)

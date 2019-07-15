@@ -86,7 +86,7 @@ def hard_coding(val_list):
     for match in matches:
         __exp__ = match["__exp__"]
         _var_ = match["_var_"]
-        submatches = __exp__.find_matches("{} = __exp2__".format(_var_.id))
+        submatches = __exp__.find_matches("_var_ = __exp2__")
         for submatch in submatches:
             __exp2__ = submatch["__exp2__"]
             value = __exp2__.value
@@ -390,7 +390,6 @@ def no_dict_in_loop():
                            "    __expr__")
     for match in matches:
         _item_ = match['_item_']
-        # submatches = match['__expr__'].find_matches("{}[__str__]".format(_item_.id))
         submatches = match['__expr__'].find_matches("_item_[__str__]")
         for submatch in submatches:
             if submatch["__str__"].is_ast("Str"):
