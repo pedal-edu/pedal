@@ -275,6 +275,50 @@ class TestCode(unittest.TestCase):
         # x.b == 10
         # x.update()
         # x.a == 15
+    
+    def test_sandboxing_open(self):
+        student_code = dedent('''
+            print(open("test_sandbox.py").read())
+        ''')
+        set_source(student_code)
+        student = Sandbox()
+        student.run(student_code, as_filename='student.py')
+        self.assertEqual(str(student.exception), "The filename you passed to 'open' is restricted.")
+
+    def test_sandboxing_pedal(self):
+        student_code = dedent('''
+            from pedal.report import MAIN_REPORT
+            print(MAIN_REPORT)
+        ''')
+        set_source(student_code)
+        student = Sandbox()
+        student.run(student_code, as_filename='student.py')
+        self.assertEqual(str(student.exception), "You cannot import pedal!")
+    
+    def test_sandboxing_sys_modules(self):
+        clear_report()
+        student_code = dedent('''
+            import sys
+            # Might try to bypass us
+            del sys.modules['pedal']
+            from pedal.report import MAIN_REPORT
+            print(MAIN_REPORT)
+        ''')
+        set_source(student_code)
+        student = Sandbox()
+        student.run(student_code, as_filename='student.py')
+        self.assertEqual(str(student.exception), "You cannot import pedal!")
+    
+    def test_sandboxing_devious_open1(self):
+        student_code = dedent('''
+            __builtins__['globals']()['open']("test_sandbox.py")
+            # Fine to import anything else
+            
+        ''')
+        set_source(student_code)
+        student = Sandbox()
+        student.run(student_code, as_filename='student.py')
+        self.assertEqual(str(student.exception), "You are not allowed to call 'globals'.")
 
 if __name__ == '__main__':
     unittest.main(buffer=False)

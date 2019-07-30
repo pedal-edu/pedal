@@ -34,6 +34,7 @@ def resolve_all(set_success=False, report=None):
     phase_names = report['assertions']['phases']
     phase_names = _topological_sort(phase_names, orderings)
     #pprint(orderings)
+    phase_success = False
     for phase_name in phase_names:
         phase_success = True
         for function in phase_functions[phase_name]:
@@ -48,7 +49,7 @@ def resolve_all(set_success=False, report=None):
         
     #for f in report.feedback:
     #    print("\t", f, f.mistake, f.misconception)
-    if not report['assertions']['failures'] and set_success:
+    if not report['assertions']['failures'] and phase_success and set_success:
         report.set_success()
     
     _reset_phases(report)

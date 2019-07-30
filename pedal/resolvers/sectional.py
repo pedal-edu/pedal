@@ -1,3 +1,5 @@
+import sys
+
 from pedal.resolvers import simple
 from pedal.report import MAIN_REPORT
 

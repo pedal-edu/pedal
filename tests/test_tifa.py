@@ -561,6 +561,16 @@ class TestVariables(unittest.TestCase):
                           '  0+r["Data"]["Precipitation"]')
         issues = tifa.report['tifa']['issues']
         self.assertTrue(tifa.report['tifa']['success'])
+        
+        tifa = pedal.tifa.Tifa()
+        tifa.process_code('import police_shootings\n'
+                          'rs = police_shootings.get_shootings()\n'
+                          'for r in rs:\n'
+                          '  x=0+r["Person.Age"]\n'
+                          'x')
+        issues = tifa.report['tifa']['issues']
+        self.assertTrue(dir(tifa.report['tifa']['top_level_variables']['x'].type.is_equal('NumType')))
+        self.assertTrue(tifa.report['tifa']['success'])
 
     def test_get_types(self):
         tifa = pedal.tifa.Tifa()

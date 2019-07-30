@@ -58,7 +58,8 @@ def disabled_builtin(name):
 _OPEN_FORBIDDEN_NAMES = re.compile(r"(^[./])|(\.py$)")
 _OPEN_FORBIDDEN_MODES = re.compile(r"[wa+]")
 
-
+# TODO: Turn this into a function that lets us more elegantly specify valid and
+# invalid filenames/paths
 def _restricted_open(name, mode='r', buffering=-1):
     if _OPEN_FORBIDDEN_NAMES.search(name):
         raise RuntimeError("The filename you passed to 'open' is restricted.")
@@ -67,6 +68,11 @@ def _restricted_open(name, mode='r', buffering=-1):
     else:
         return _original_builtins['open'](name, mode, buffering)
 
+# TODO: Allow this to be flexible
+def _restricted_import(name, globals=None, locals=None, fromlist=(), level=0):
+    if name == 'pedal' or name.startswith('pedal.'):
+        raise RuntimeError("You cannot import pedal!")
+    return _original_builtins['__import__'](name, globals, locals, fromlist, level)
 
 try:
     __builtins__
@@ -74,7 +80,8 @@ except NameError:
     _default_builtins = {'globals': globals,
                          'locals': locals,
                          'open': open,
-                         'input': input}
+                         'input': input,
+                         '__import__': __import__}
 else:
     if isinstance(__builtins__, types.ModuleType):
         _default_builtins = __builtins__.__dict__
@@ -89,6 +96,7 @@ _original_builtins = {
     'exec': _default_builtins.get('exec', _disabled_exec),
     'eval': _default_builtins.get('eval', _disabled_eval),
     'compile': _default_builtins.get('compile', _disabled_compile),
+    '__import__': _default_builtins['__import__']
 }
 
 

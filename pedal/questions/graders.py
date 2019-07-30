@@ -69,6 +69,9 @@ class FunctionGrader(QuestionGrader):
         self.component_points = min(self.component_points, self.MAX_COMPONENTS_POINTS)
         self.points += self.component_points
     
+    def assertEqual(self, *parameters):
+        return assertEqual(*parameters)
+    
     def grade_unit_tests(self, question):
         all_good = True
         if self.UNIT_TEST_TOTAL_POINTS is None:
@@ -91,7 +94,7 @@ class FunctionGrader(QuestionGrader):
             else:
                 all_good = False
                 continue
-            if assertEqual(result, expected):
+            if self.assertEqual(result, expected):
                 self.points += VALUE_POINT_ADD
             else:
                 all_good = False

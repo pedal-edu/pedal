@@ -5,7 +5,7 @@ import sys
 import io
 import os
 import string
-from unittest.mock import patch, mock_open, MagicMock
+from unittest.mock import patch
 
 from pedal.report import MAIN_REPORT
 from pedal.sandbox import mocked
@@ -193,7 +193,8 @@ class Sandbox(DataSandbox):
         # Modules
         if modules is None:
             modules = {'matplotlib': True,
-                       'pedal': mocked.MockPedal()}
+                       'pedal': mocked.MockPedal()
+                       }
         self.mocked_modules = {}
         self.modules = {}
         self.add_mocks(modules)
@@ -202,7 +203,8 @@ class Sandbox(DataSandbox):
             'eval': mocked._disabled_eval,
             'exec': mocked._disabled_exec,
             'globals': mocked._disabled_globals,
-            'open': mocked._restricted_open
+            'open': mocked._restricted_open,
+            '__import__': mocked._restricted_import,
         }
         if allowed_functions is not None:
             for function_name in allowed_functions:
@@ -522,7 +524,8 @@ class Sandbox(DataSandbox):
             patch.stop()
 
     def _capture_exception(self, exception, exc_info, report_exceptions,
-                           raise_exceptions, context, keep_context):
+                           raise_exceptions, context, keep_context,
+                           as_filename="", code=""):
         self.exception = exception
         if context is not False:
             if context is None or keep_context:
@@ -536,12 +539,16 @@ class Sandbox(DataSandbox):
                 context = self.FILE_CONTEXT_MESSAGE.format(filename=self.report['source']['filename'])
             self.exception = _add_context_to_error(self.exception, context)
         line_offset = self.report['source'].get('line_offset', 0)
-        student_filename = self.report['source']['filename']
+        student_filename = self.report['source'].get('filename', as_filename)
+        if 'lines' in self.report['source']:
+            lines = self.report['source']['lines']
+        else:
+            lines = code.split("\n")
         traceback = SandboxTraceback(self.exception, exc_info,
                                      self.full_traceback,
                                      self.instructor_filename,
                                      line_offset, student_filename,
-                                     self.report['source']['lines'])
+                                     lines)
         self.exception_position = {'line': traceback.line_number}
         self.exception_formatted = traceback.format_exception()
         self.exception_name = str(self.exception.__class__)[8:-2]
@@ -597,8 +604,10 @@ class Sandbox(DataSandbox):
             except TimeoutError as timeout_exception:
                 self._capture_exception(timeout_exception, sys.exc_info(),
                                         report_exceptions, raise_exceptions,
-                                        context, keep_context)
+                                        context, keep_context, as_filename,
+                                        code)
                 return self
+        
         if as_filename is None:
             as_filename = os.path.basename(self.report['source']['filename'])
         if inputs is None:
@@ -618,30 +627,37 @@ class Sandbox(DataSandbox):
         mocked_functions['sys'] = sys
         mocked_functions['os'] = os
         mocked._override_builtins(self.data, mocked_functions)
-        
 
         self.exception = None
         self.exception_position = None
         self.exception_formatted = None
 
         # Patch in dangerous built-ins
+        x = sys.stdout
         capture_stdout = io.StringIO()
         self._start_patches(
             patch('sys.stdout', capture_stdout),
             patch('time.sleep', return_value=None),
             patch.dict('sys.modules', self.mocked_modules)
         )
-        # Compile and run student code
+        # TODO: Hack, add more flexibile way to specify unusable modules
+        for module in list(sys.modules.keys()):
+            if module.startswith('pedal.'):
+                del sys.modules[module]
         try:
             compiled_code = compile(code, as_filename, 'exec')
             with self.trace._as_filename(as_filename, code):
                 exec(compiled_code, self.data)
         except Exception as user_exception:
-            self._capture_exception(user_exception, sys.exc_info(),
-                                    report_exceptions, raise_exceptions,
-                                    context, keep_context)
-        finally:
             self._stop_patches()
+            info = sys.exc_info()
+            self._capture_exception(user_exception, info,
+                                    report_exceptions, raise_exceptions,
+                                    context, keep_context, as_filename,
+                                    code)
+        else:
+            self._stop_patches()
+        finally:
             self.append_output(capture_stdout.getvalue())
         if context is None:
             self.call_contexts[self.call_id].append(code)
