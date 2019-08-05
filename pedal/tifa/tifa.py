@@ -40,7 +40,6 @@ class Tifa(ast.NodeVisitor):
             report = MAIN_REPORT
         self.report = report
         self._initialize_report()
-        self.PYTHON_3 = python_3
 
     def _initialize_report(self):
         """
@@ -119,7 +118,7 @@ class Tifa(ast.NodeVisitor):
             self.report['tifa']['error'] = error
             self.report.attach('tifa_error', category='Analyzer', tool='TIFA',
                                mistake={
-                                   'message': "Could not process code",
+                                   'message': "Could not process code: "+str(error),
                                    'error': error
                                })
             return self.report['tifa']
@@ -445,7 +444,7 @@ class Tifa(ast.NodeVisitor):
         callee = self.identify_caller(node)
 
         # Handle args
-        arguments = [self.visit(arg) for arg in node.args]
+        arguments = [self.visit(arg) for arg in node.args] if node.args else []
 
         # TODO: Handle keywords
         # TODO: Handle starargs
@@ -610,7 +609,7 @@ class Tifa(ast.NodeVisitor):
                     self.report_issue('Incorrect Arity', {"position": position})
                 # TODO: Handle special types of parameters
                 for arg, parameter in zip(args, parameters):
-                    name = arg.arg if self.PYTHON_3 else arg.id
+                    name = arg.arg
                     if parameter is not None:
                         parameter = parameter.clone_mutably()
                         self.store_variable(name, parameter, position)
@@ -712,7 +711,7 @@ class Tifa(ast.NodeVisitor):
                     self.report_issue('Incorrect Arity', {"position": position})
                 # TODO: Handle special types of parameters
                 for arg, parameter in zip(args, parameters):
-                    name = arg.arg if self.PYTHON_3 else arg.id
+                    name = arg.arg
                     if parameter is not None:
                         parameter = parameter.clone_mutably()
                         self.store_variable(name, parameter, position)
@@ -870,15 +869,10 @@ class Tifa(ast.NodeVisitor):
         self.merge_paths(this_path_id, body_path.id, empty_path.id)
 
     def visit_With(self, node):
-        if self.PYTHON_3:
-            for item in node.items:
-                type_value = self.visit(item.context_expr)
-                self.visit(item.optional_vars)
-                self._walk_target(item.optional_vars, type_value)
-        else:
-            type_value = self.visit(node.context_expr)
-            # self.visit(node.optional_vars)
-            self._walk_target(node.optional_vars, type_value)
+        for item in node.items:
+            type_value = self.visit(item.context_expr)
+            self.visit(item.optional_vars)
+            self._walk_target(item.optional_vars, type_value)
         # Handle the bodies
         self.visit_statements(node.body)
 

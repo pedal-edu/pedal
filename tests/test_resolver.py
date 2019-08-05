@@ -245,6 +245,13 @@ class TestCode(unittest.TestCase):
         self.assertEqual(score, .5)
         self.assertEqual(len(messages), 1)
 
+    def test_attribute_error(self):
+        with Execution('"".unsafe()') as e:
+            pass
+        self.assertEqual(e.data, [])
+        self.assertEqual(len(e.data), 2)
+        self.assertEqual(e.data[0].category, "Analyzer")
+        self.assertEqual(e.data[1].category, "Runtime")
 
 if __name__ == '__main__':
     unittest.main(buffer=False)
