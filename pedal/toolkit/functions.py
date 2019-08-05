@@ -1,5 +1,5 @@
 from pedal.cait.cait_api import parse_program
-from pedal.report.imperative import gently, explain, MAIN_REPORT
+from pedal.report.imperative import gently, explain, gently_r, explain_r, MAIN_REPORT
 from pedal.sandbox import compatibility
 import ast
 
@@ -69,25 +69,25 @@ def match_signature(name, length, *parameters):
         if a_def._name == name:
             found_length = len(a_def.args.args)
             if found_length < length:
-                gently("The function named <code>{}</code> has fewer parameters ({}) than expected ({}). "
-                       "<br><br><i>(insuff_args)<i>".format(name, found_length, length))
+                gently_r("The function named <code>{}</code> has fewer parameters ({}) "
+                         "than expected ({}). ".format(name, found_length, length), "insuff_args")
             elif found_length > length:
-                gently("The function named <code>{}</code> has more parameters ({}) than expected ({}). "
-                       "<br><br><i>(excess_args)<i>".format(name, found_length, length))
+                gently_r("The function named <code>{}</code> has more parameters ({}) "
+                         "than expected ({}). ".format(name, found_length, length), "excess_args")
             elif parameters:
                 for parameter, arg in zip(parameters, a_def.args.args):
                     arg_name = get_arg_name(arg)
                     if arg_name != parameter:
-                        gently("Error in definition of <code>{}</code>. Expected a parameter named {}, instead "
-                               "found {}. <br><br><i>(name_missing)<i>".format(name, parameter, arg_name))
+                        gently_r("Error in definition of <code>{}</code>. Expected a parameter named {}, "
+                                 "instead found {}.".format(name, parameter, arg_name), "name_missing")
                         return None
                 else:
                     return a_def
             else:
                 return a_def
     else:
-        gently("No function named <code>{name}</code> was found."
-               "<br><br><i>(missing_func_{name})<i>".format(name=name))
+        gently_r("No function named <code>{name}</code> was found.".format(name=name),
+                 "missing_func_{name}".format(name=name))
     return None
 
 
@@ -157,14 +157,13 @@ def output_test(name, *tests):
             else:
                 result = ("I ran your function <code>{}</code> on some new arguments, and it gave the wrong output "
                           "{}/{} times.".format(name, len(tests) - success_count, len(tests)) + result)
-                gently(result + "</table>")
+                gently_r(result + "</table>", "wrong_output")
                 return None
         else:
-            gently("You defined {}, but did not define it as a function."
-                   "<br><br><i>(not_func_def)<i>".format(name))
+            gently_r("You defined {}, but did not define it as a function.".format(name), "not_func_def")
             return None
     else:
-        gently("The function <code>{}</code> was not defined.<br><br><i>(no_func_def)<i>".format(name))
+        gently_r("The function <code>{}</code> was not defined.".format(name), "no_func_def")
         return None
 
 
@@ -215,7 +214,7 @@ def unit_test(name, *tests):
             else:
                 result = "I ran your function <code>{}</code> on some new arguments, " \
                          "and it failed {}/{} tests.".format(name, len(tests) - success_count, len(tests)) + result
-                gently(result + "</table>")
+                gently_r(result + "</table>", "tests_failed")
                 return None
         else:
             gently("You defined {}, but did not define it as a function.".format(name))
@@ -302,14 +301,15 @@ def check_coverage(report=None):
     else:
         return False, 1
 
+
 def ensure_coverage(percentage=.5, destructive=False, report=None):
-    '''
+    """
     Note that this avoids destroying the current sandbox instance stored on the
     report, if there is one present.
     
     Args:
         destructive (bool): Whether or not to remove the sandbox.
-    '''
+    """
     if report is None:
         report = MAIN_REPORT
     student_code = report['source']['code']
@@ -319,6 +319,7 @@ def ensure_coverage(percentage=.5, destructive=False, report=None):
             gently("Your code coverage is not adequate. You must cover at least half your code to receive feedback.")
             return False
     return True
+
 
 def ensure_cisc108_tests(test_count, report=None):
     student = compatibility.get_student_data()

@@ -217,6 +217,9 @@ class AstMap:
         Returns:
             AstMap: self modified by adding the contents of other
         """
+        if other is None:
+            return
+
         if not isinstance(other, type(self)):
             raise TypeError
 
@@ -252,7 +255,9 @@ class AstMap:
 
     def __getitem__(self, id_n):
         if id_n.startswith('__'):
-            return self.exp_table[id_n]
+            expression = self.exp_table[id_n]
+            expression.map = self
+            return expression
         else:
             if id_n in self.symbol_table:
                 return self.symbol_table[id_n]

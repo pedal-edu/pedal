@@ -4,7 +4,7 @@ import sys
 import os
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from pedal.cait.cait_node import *
+from pedal.cait.cait_api import *
 
 
 class CaitNodeTest(unittest.TestCase):
@@ -147,3 +147,31 @@ class CaitNodeTest(unittest.TestCase):
                             num_node.value, x_val=x_val))
 
         # TODO: Test .value for Name nodes
+
+    def test_nested_expr_matching(self):
+        student_code = ("my_sum = 0\n"
+                        "for my_item in my_list:\n"
+                        "    if True:\n"
+                        "        my_sum = my_sum + my_item\n")
+        pattern0 = ("for _item_ in _list_:\n"
+                    "    __expr__")
+        match01 = find_match(pattern0, student_code)
+        self.assertTrue(match01)
+
+        __expr__ = match01['__expr__']
+        match02 = __expr__.find_match("___ = ___ + _item_")
+        self.assertTrue(match02)
+
+        # Case 2
+        student_code = ("my_sum = 0\n"
+                        "for my_item in my_list:\n"
+                        "    if True:\n"
+                        "        my_sum = my_sum + my_item2\n")
+        pattern0 = ("for _item_ in _list_:\n"
+                    "    __expr__")
+        match01 = find_match(pattern0, student_code)
+        self.assertTrue(match01)
+
+        __expr__ = match01['__expr__']
+        match02 = __expr__.find_match("___ = ___ + _item_")
+        self.assertFalse(match02)

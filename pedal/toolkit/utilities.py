@@ -1,6 +1,6 @@
 from pedal.cait.cait_api import parse_program
 from pedal.report.imperative import gently, explain
-
+from pedal.report.imperative import gently_r, explain_r
 
 def is_top_level(ast_node):
     ast = parse_program()
@@ -20,7 +20,7 @@ def no_nested_function_definitions():
         if not is_top_level(a_def):
             gently("You have defined a function inside of another block. For instance, you may have placed it inside "
                    "another function definition, or inside of a loop. Do not nest your function definition!"
-                   "<br><br><i>(nest_func)<i>")
+                   "<br><br><i>(nest_func)<i></br></br>")
             return False
     return True
 
@@ -98,34 +98,41 @@ def prevent_unused_result():
                     pass
                 elif a_call.func.attr in ('replace', 'strip', 'lstrip', 'rstrip'):
                     gently("Remember! You cannot modify a string directly. Instead, you should assign the result back "
-                           "to the string variable.<br><br><i>(str_mutate)<i>")
+                           "to the string variable.<br><br><i>(str_mutate)<i></br></br>")
 
 
 def prevent_builtin_usage(function_names):
+    message = "You cannot use the builtin function <code>{}</code>."
+    code = "builtin_use"
+    label = "Builtin Usage"
     # Prevent direction calls
     ast = parse_program()
     all_calls = ast.find_all('Call')
     for a_call in all_calls:
         if a_call.func.ast_name == 'Name':
             if a_call.func.id in function_names:
-                explain("You cannot use the builtin function <code>{}</code>.<br><br><i>(builtin_use)<i>".format(
-                    a_call.func.id))
+                explain_r(message.format(a_call.func.id), code, label=label)
                 return a_call.func.id
     return None
+
 
 # TODO: UGLY HACK. This is to avoid muted=False kwargs in the following
 #       functions. Apparently skulpt doesn't support this syntax.
 muted = False
 
+
 def prevent_literal(*literals):
-    '''
+    """
     Confirms that the literal is not in the code, returning False if it is not.
     
     Args:
         *literals (Any...): A series of literal values to look for.
     Returns:
         AstNode or False: If the literal is found in the code, then it is returned.
-    '''
+    """
+    message = "Do not use the literal value <code>{}</code> in your code."
+    code = "hard_code"
+    label = "Hard Coding"
     ast = parse_program()
     str_values = [s.s for s in ast.find_all("Str")]
     num_values = [n.n for n in ast.find_all("Num")]
@@ -135,32 +142,33 @@ def prevent_literal(*literals):
         if isinstance(literal, (int, float)):
             if literal in num_values:
                 if not muted:
-                    explain("Do not use the literal value <code>{}</code> in your code."
-                            "<br><br><i>(hard_code)<i>".format(repr(literal)))
+                    explain_r(message.format(repr(literal)), code, label=label)
                 return literal
         elif isinstance(literal, str):
             if literal in str_values:
                 if not muted:
-                    explain("Do not use the literal value <code>{}</code> in your code."
-                            "<br><br><i>(hard_code)<i>".format(repr(literal)))
+                    explain_r(message.format(repr(literal)), code, label=label)
                 return literal
         elif literal in (True, False, None):
             if str(literal) in name_values:
                 if not muted:
-                    explain("Do not use the literal value <code>{}</code> in your code."
-                            "<br><br><i>(hard_code)<i>".format(repr(literal)))
+                    explain_r(message.format(repr(literal)), code, label=label)
                 return literal
     return False
 
+
 def ensure_literal(*literals):
-    '''
+    """
     Confirms that the literal IS in the code, returning False if it is not.
     
     Args:
         *literals (Any...): A series of literal values to look for.
     Returns:
         AstNode or False: If the literal is found in the code, then it is returned.
-    '''
+    """
+    message = "You need the literal value <code>{}</code> in your code."
+    code = "missing_literal"
+    label = "Missing Literal"
     ast = parse_program()
     str_values = [s.s for s in ast.find_all("Str")]
     num_values = [n.n for n in ast.find_all("Num")]
@@ -170,29 +178,28 @@ def ensure_literal(*literals):
         if literal in (True, False, None):
             if str(literal) not in name_values:
                 if not muted:
-                    explain("You need the literal value <code>{}</code> in your code."
-                            "<br><br><i>(missing_literal)<i>".format(repr(literal)))
+                    explain_r(message.format(repr(literal)), code, label=label)
                 return True
         elif isinstance(literal, (int, float)):
             if literal not in num_values:
                 if not muted:
-                    explain("You need the literal value <code>{}</code> in your code."
-                            "<br><br><i>(missing_literal)<i>".format(repr(literal)))
+                    explain_r(message.format(repr(literal)), code, label=label)
                 return literal
         elif isinstance(literal, str):
             if literal not in str_values:
                 if not muted:
-                    explain("You need the literal value <code>{}</code> in your code."
-                            "<br><br><i>(missing_literal)<i>".format(repr(literal)))
+                    explain_r(message.format(repr(literal)), code, label=label)
                 return literal
     return False
 
 
 def prevent_advanced_iteration():
+    message = "You should not use a <code>while</code> loop to solve this problem."
+    code = "while_usage"
+    label = "Usage of <code>while</code>"
     ast = parse_program()
     if ast.find_all('While'):
-        explain("You should not use a <code>while</code> loop to solve this problem."
-                "<br><br><i>(while_usage)<i>")
+        explain_r(message, code, label=label)
     prevent_builtin_usage(['sum', 'map', 'filter', 'reduce', 'len', 'max', 'min',
                            'max', 'sorted', 'all', 'any', 'getattr', 'setattr',
                            'eval', 'exec', 'iter'])
@@ -235,20 +242,26 @@ UNARY_OP_NAMES = {
 
 
 def ensure_operation(op_name, root=None):
+    message = "You are not using the <code>{}</code> operator.".format(op_name)
+    code = "missing_op"
+    label = "Missing <code>{}</code> Operator".format(op_name)
     if root is None:
         root = parse_program()
     result = find_operation(op_name, root)
     if not result:
-        gently("You are not using the <code>{}</code> operator.<br><br><i>(missing_op)<i>".format(op_name))
+        gently_r(message, code, label)
     return result
 
 
 def prevent_operation(op_name, root=None):
+    message = "You may not use the <code>{}</code> operator.".format(op_name)
+    code = "bad_op"
+    label = "Bad Operator".format(op_name)
     if root is None:
         root = parse_program()
     result = find_operation(op_name, root)
     if result:
-        gently("You may not use the <code>{}</code> operator.<br><br><i>(bad_op)<i>".format(op_name))
+        gently_r(message, code, label=label)
     return result
 
 
@@ -326,12 +339,13 @@ def ensure_assignment(variable_name, type=None, value=None, root=None):
             elif assign.value.ast_name == type:
                 return assign
     if potentials and potentials[0].value.ast_name not in ("Str", "Bool", "Num", "List", "Tuple"):
-        explain(("You needed to assign a literal value to {variable}, but you "
-                 "created an expression instead.").format(variable=variable_name))
+        explain_r(("You needed to assign a literal value to {variable}, but you "
+                   "created an expression instead.").format(variable=variable_name), "exp_vs_lit",
+                  label="Expression Instead of Literal")
     elif type is None:
-        explain(("You have not properly assigned anything to the variable "
-                 "{variable}.").format(variable=variable_name))
+        explain_r(("You have not properly assigned anything to the variable "
+                   "{variable}.").format(variable=variable_name), "no_assign", label="No Proper Assignment")
     else:
-        explain(("You have not assigned a {type} to the variable {variable}."
-                 "").format(type=type, variable=variable_name))
+        explain_r(("You have not assigned a {type} to the variable {variable}."
+                   "").format(type=type, variable=variable_name), "type_assign", label="Unexpected Variable Type")
     return False

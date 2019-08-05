@@ -1,7 +1,7 @@
 from pedal.cait.cait_api import (parse_program, find_match, find_matches,
                                  find_expr_sub_matches, data_state,
                                  def_use_error)
-from pedal.report.imperative import explain
+from pedal.report.imperative import gently_r, explain_r
 
 
 def iteration_group():
@@ -29,107 +29,125 @@ def all_for_loops():
 
 # this conflics with list_repeated_in_for
 def wrong_target_is_list():
+    message = ('The variable <code>{0!s}</code> is a list and '
+               'should not be placed in the iteration variable slot of the "for" block')
+    code = "target_is_list"
+    tldr = "Iteration Variable Overwriting List"
     match = find_match("for _item_ in ___:\n    pass")
     if match:
         _item_ = match["_item_"].astNode
         if data_state(_item_).was_type('list'):
-            explain('The variable <code>{0!s}</code> is a list and should not be placed in the iteration variable slot'
-                    ' of the "for" block<br><br><i>(target_is_list)<i></br>.'.format(_item_.id))
-            return True
+            return explain_r(message.format(_item_.id), code, label=tldr)
     return False
 
 
 # this conflicts with list_in_wrong_slot_in_for
 def wrong_list_repeated_in_for():
+    message = 'The <code>{0!s}</code> variable can only appear once in the "for" block.'
+    code = "list_repeat"
+    tldr = "Duplicate Iteration Variable"
     match = find_match("for _item_ in _item_:\n    pass")
     if match:
         _item_ = match["_item_"].astNode
         if data_state(_item_).was_type('list'):
-            explain('The <code>{0!s}</code> variable can only appear once in the "for" block <br><br><i>'
-                    '(list_repeat)<i></br>'.format(_item_.id))
-            return True
+            return explain_r(message.format(_item_.id), code, label=tldr)
     return False
 
 
-# this isn't consistent with the pattern you wrote
+# this isn't consistent with the pattern you wrote TODO: Fix this
 def missing_iterator_initialization():
+    message1 = "The slot to hold a list in the iteration is empty."
+    code1 = "no_iter_init-blank"
+    tldr1 = "Iteration Variable is Blank"
+
+    message2 = "The variable <code>{0!s}</code> is in the list slot of the iteration but is not a list."
+    code2 = "no_iter_init"
+    tldr2 = "Iteration Variable is Not a List"
+
     match = find_match("for ___ in _list_:\n    pass")
     if match:
         _list_ = match["_list_"].astNode
         if _list_.id == "___":
-            explain("The slot to hold a list in the iteration is empty.<br><br><i>(no_iter_init-blank)<i></br>")
-            return True
+            return explain_r(message1, code1, label=tldr1)
         elif not data_state(_list_).was_type('list'):
-            explain("The variable <code>{0!s}</code> is in the list slot of the iteration but is not a list."
-                    "<br><br><i>(no_iter_init)<i></br>".format(_list_.id))
-            return True
+            return explain_r(message2.format(_list_.id), code2, label=tldr2)
     return False
 
 
 # TODO: We need to cover the different cases for these
 def wrong_iterator_not_list():
+    message = ("The variable <code>{0!s}</code> has been set to something that is not a list but is placed "
+               "in the iteration block that must be a list.")
+    code = "iter_not_list"
+    tldr = "Iteration List is not list"
+
     match = find_match("for ___ in _item_:\n    pass")
     if match:
         _item_ = match["_item_"].astNode
         if not data_state(_item_).was_type('list'):
-            explain("The variable <code>{0!s}</code> has been set to something that is not a list but is placed in the "
-                    "iteration block that must be a list.<br><br><i>(iter_not_list)<i></br>".format(_item_.id))
-            return True
+            return explain_r(message.format(_item_.id), code, label=tldr)
     return False
 
 
 def missing_target_slot_empty():
+    message = "You must fill in the empty slot in the iteration."
+    code = "target_empty"
+    tldr = "Missing Iteration Variable"
     match = find_match("for _item_ in ___:\n    pass")
     if match:
         _item_ = match["_item_"].astNode
         if _item_.id == "___":
-            explain("You must fill in the empty slot in the iteration.<br><br><i>(target_empty)<i></br>")
-            return True
+            return explain_r(message, code, label=tldr)
     return False
 
 
 def list_not_initialized_on_run():
+    message = "The list in your for loop has not been initialized."
+    code = "no_list_init"
+    tldr = "List Variable Uninitialized"
     match = find_match("for ___ in _item_:\n    pass")
     if match:
         _item_ = match["_item_"][0].astNode
         if def_use_error(_item_):
-            explain("The list in your for loop has not been initialized<br><br><i>(no_list_init)<i></br>")
-            return True
+            return explain_r(message, code, label=tldr)
     return False
 
 
 def list_initialization_misplaced():
+    message = "Initialization of <code>{0!s}</code> is a list but either in the wrong place or redefined"
+    code = "list_init_misplaced"
+    tldr = "Iterating over Non-list"
     match = find_match("for ___ in _item_:\n    pass")
     if match:
         _item_ = match["_item_"][0].astNode
         if data_state(_item_).was_type('list') and def_use_error(_item_):
-            explain("Initialization of <code>{0!s}</code> is a list but either in the wrong place or redefined"
-                    "<br><br><i>(list_init_misplaced)<i></br>".format(_item_.id))
-            return True
+            return explain_r(message.format(_item_.id), code, label=tldr)
     return False
 
 
 def missing_for_slot_empty():
+    message = "You must fill in the empty slot in the iteration."
+    code = "for_incomplete"
+    tldr = "Iteration Incomplete"
     match = find_match("for _item_ in _list_:\n    pass")
     if match:
         _item_ = match["_item_"][0].astNode
         _list_ = match["_list_"][0].astNode
         if _item_.id == "___" or _list_.id == "___":
-            explain("You must fill in the empty slot in the iteration.<br><br><i>(for_incomplete)<i></br>")
-            return True
+            return explain_r(message, code, label=tldr)
     return False
 
 
 def wrong_target_reassigned():
+    message = "The variable <code>{0!s}</code> has been reassigned. The iteration variable shouldn't be reassigned"
+    code = "target_reassign"
+    tldr = "Iteration Variable has been Reassigned"
     matches = find_matches("for _item_ in ___:\n"
                            "   __expr__")
     for match in matches:
         __expr__ = match["__expr__"]
         _item_ = match["_item_"][0]
-        submatches = __expr__.find_matches("{} = ___".format(_item_), )
+        submatches = __expr__.find_matches("_item_ = ___")
         if submatches:
-            explain("The variable <code>{0!s}</code> has been reassigned. "
-                    "The iteration variable shouldn't be reassigned"
-                    "<br><br><i>(target_reassign)<i></br>".format(_item_))
-            return True
+            return explain_r(message.format(_item_), code, label=tldr)
     return False

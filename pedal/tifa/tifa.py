@@ -528,7 +528,7 @@ class Tifa(ast.NodeVisitor):
                                "position": self.locate(iter)})
 
         if not isinstance(iter_type, INDEXABLE_TYPES):
-            self.report_issue("Iterating over non-list",
+            self.report_issue("Iterating over Non-list",
                               {"name": iter_list_name,
                                "position": self.locate(iter)})
 

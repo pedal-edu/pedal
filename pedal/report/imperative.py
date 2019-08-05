@@ -3,8 +3,8 @@ Imperative style commands for constructing feedback in a convenient way.
 Uses a global report object (MAIN_REPORT).
 """
 
-__all__ = ['set_success', 'compliment', 'give_partial', 'explain',
-           'gently', 'hide_correctness', 'suppress', 'log', 'debug',
+__all__ = ['set_success', 'compliment', 'give_partial', 'explain', 'explain_r',
+           'gently', 'gently_r', 'hide_correctness', 'suppress', 'log', 'debug',
            'clear_report', 'get_all_feedback', 'MAIN_REPORT']
 
 from pedal.report.report import Report
@@ -54,6 +54,16 @@ def explain(message, priority='medium', line=None, label='explain'):
 
 def gently(message, line=None, label='explain'):
     MAIN_REPORT.gently(message, line, label=label)
+
+
+def gently_r(message, code, line=None, label="explain"):
+    gently(message + "<br><br><i>({})<i></br></br>".format(code), line, label=label)
+    return message
+
+
+def explain_r(message, code, priority='medium', line=None, label="explain"):
+    explain(message + "<br><br><i>({})<i></br></br>".format(code), priority, line, label=label)
+    return message
 
 
 def hide_correctness():

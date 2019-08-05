@@ -417,6 +417,13 @@ class DictionaryMistakeTest(MistakeTest):
 
         self.to_source('total_precipitation = 0\n'
                        'for precip in weather_reports:\n'
+                       '    total_precipitation = total_precipitation + precip2["Data"]["Precipitation"]\n'
+                       'print(total_precipitation)\n')
+        ret = no_dict_in_loop()
+        self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
+
+        self.to_source('total_precipitation = 0\n'
+                       'for precip in weather_reports:\n'
                        '    total_precipitation = total_precipitation + precip["Data"]["Precipitation"]\n'
                        'print(total_precipitation)\n')
         ret = no_dict_in_loop()
@@ -446,7 +453,11 @@ class DictionaryMistakeTest(MistakeTest):
                        'for precip in weather_reports:\n'
                        '    total_precipitation = total_precipitation + precip["Data"]["Precipitation"]\n'
                        'print(total_precipitation)\n')
-        ret = func_filter()
+        ret = func_filter(keys)
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
+        self.to_source("report_list = classics.get_books(test=True)")
+        ret = func_filter(keys)
         self.assertFalse(ret, "Expected False, got {} instead".format(ret))
 
     def test_str_list(self):
@@ -918,6 +929,19 @@ class DictionaryMistakeTest(MistakeTest):
                        'plt.show()\n')
         ret = dict_plot()
         self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
+        self.to_source('import classics\n'
+                       'report_list = classics.get_books(test=True)\n'
+                       'for report in report_list:\n'
+                       '    hist = report["bibliography"]["type"]\n'
+                       '    if hist == "Text":\n'
+                       '        list.append("Text")\n'
+                       'plt.hist(list)\n'
+                       'plt.x("test")\n'
+                       'plt.y("test")\n'
+                       'plt.title(list)\n')
+        ret = dict_plot()
+        self.assertFalse(ret, "Didn't give message returned {} instead".format(ret))
 
     def test_comp_in_dict_acc(self):
         self.to_source('import weather\n'
