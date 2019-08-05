@@ -248,10 +248,7 @@ class TestCode(unittest.TestCase):
     def test_attribute_error(self):
         with Execution('"".unsafe()') as e:
             pass
-        self.assertEqual(e.data, [])
-        self.assertEqual(len(e.data), 2)
-        self.assertEqual(e.data[0].category, "Analyzer")
-        self.assertEqual(e.data[1].category, "Runtime")
+        self.assertEqual(len(e.data), 1)
 
 if __name__ == '__main__':
     unittest.main(buffer=False)
