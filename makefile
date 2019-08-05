@@ -1,7 +1,7 @@
 .PHONY: docs tests
 
 docs:
-	cd docs && make html -b coverage
+	cd docsrc/ && make html -b coverage
 
 tests:
 	python -m unittest discover -s tests/

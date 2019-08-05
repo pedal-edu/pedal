@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>pedal.tifa &#8212; Pedal 1.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for pedal.tifa</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Python Type Inferencer and Flow Analyzer (TIFA)</span>
+
+<span class="sd">TIFA uses a number of simplifications of the Python language.</span>
+<span class="sd">  * Variables cannot change type</span>
+<span class="sd">  * Variables cannot be deleted</span>
+<span class="sd">  * Complex types have to be homogenous</span>
+<span class="sd">  * No introspection or reflective characteristics</span>
+<span class="sd">  * No dunder methods</span>
+<span class="sd">  * No closures (maybe?)</span>
+<span class="sd">  * You cannot write a variable out of scope</span>
+<span class="sd">  * You cannot read a mutable variable out of scope</span>
+<span class="sd">  * No multiple inheritance</span>
+
+<span class="sd">Additionally, it reads the following as issues:</span>
+<span class="sd">  * Cannot read a variable without having first written to it.</span>
+<span class="sd">  * Cannot rewrite a variable unless it has been read.</span>
+
+<span class="sd">Important concepts:</span>
+
+<span class="sd">.. glossary::</span>
+
+<span class="sd">    Issue</span>
+<span class="sd">        A problematic situation in the submitted code that will be reported</span>
+<span class="sd">        but may not stop the execution. However, when an Issue occurs,</span>
+<span class="sd">        any results may be invalid.</span>
+
+<span class="sd">    Error</span>
+<span class="sd">        A situation in execution that terminates the program.</span>
+
+<span class="sd">    Name</span>
+<span class="sd">        A name of a variable</span>
+
+<span class="sd">    Scope</span>
+<span class="sd">        The context of a function, with its own namespaces. Represented</span>
+<span class="sd">        internally using numeric IDs (Scope IDs).</span>
+
+<span class="sd">    Scope Chain</span>
+<span class="sd">        A stack of scopes, with the innermost scope on top.</span>
+
+<span class="sd">    Fully Qualified Name</span>
+<span class="sd">        A string representation of a variable and its scope</span>
+<span class="sd">        chain, written using &quot;/&quot;. For example: 0/1/4/my_variable_name</span>
+
+<span class="sd">    Path</span>
+<span class="sd">        A single path of execution through the control flow; every program</span>
+<span class="sd">        has at least one sequential path, but IFs, FORs, WHILEs, etc. can</span>
+<span class="sd">        cause multiple paths. Paths are represented using numeric IDs (Path</span>
+<span class="sd">        IDs).</span>
+
+<span class="sd">    State</span>
+<span class="sd">        Information about a Name that indicates things like the variable&#39;s</span>
+<span class="sd">        current type and whether that name has been read, set, or</span>
+<span class="sd">        overwritten.</span>
+
+<span class="sd">    Identifier</span>
+<span class="sd">        A wrapper around variables, used to hold their potential</span>
+<span class="sd">        non-existence (which is an Issue but not an Error).</span>
+
+<span class="sd">    Type</span>
+<span class="sd">        A symbolic representation of the variable&#39;s type.</span>
+
+<span class="sd">    Literal</span>
+<span class="sd">        Sometimes, we need a specialized representation of a literal value</span>
+<span class="sd">        to be passed around. This is particularly important for accessing</span>
+<span class="sd">        elements in an tuples.</span>
+
+<span class="sd">    Name Map</span>
+<span class="sd">        (Path x Fully Qualified Names) =&gt; States</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">pedal.tifa.tifa</span> <span class="k">import</span> <span class="n">Tifa</span>
+<span class="kn">from</span> <span class="nn">pedal.report</span> <span class="k">import</span> <span class="n">MAIN_REPORT</span>
+
+<span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;TIFA&#39;</span>
+<span class="n">SHORT_DESCRIPTION</span> <span class="o">=</span> <span class="s2">&quot;Finds common issues caused by students.&quot;</span>
+<span class="n">DESCRIPTION</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;Python Type Inferencer and Flow Analyzer (TIFA)</span>
+
+<span class="s1">Tifa traverses an AST to detect common issues made by students.</span>
+<span class="s1">&#39;&#39;&#39;</span>
+<span class="n">REQUIRES</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Source&#39;</span><span class="p">]</span>
+<span class="n">OPTIONALS</span> <span class="o">=</span> <span class="p">[]</span>
+
+
+<div class="viewcode-block" id="tifa_analysis"><a class="viewcode-back" href="../../api.html#pedal.tifa.tifa_analysis">[docs]</a><span class="k">def</span> <span class="nf">tifa_analysis</span><span class="p">(</span><span class="n">python_3</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Perform the TIFA analysis and attach the results to the Report.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        python_3 (bool): Whether to expect a Python3 formated file, or Python</span>
+<span class="sd">            2. This has slight nuance on certain AST elements.</span>
+<span class="sd">        report (:class:`Report`): The Report object to attach results to.</span>
+<span class="sd">            Defaults to :data:`MAIN_REPORT`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">report</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">report</span> <span class="o">=</span> <span class="n">MAIN_REPORT</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">Tifa</span><span class="p">(</span><span class="n">python_3</span><span class="o">=</span><span class="n">python_3</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span>
+    <span class="n">t</span><span class="o">.</span><span class="n">process_code</span><span class="p">(</span><span class="n">report</span><span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">][</span><span class="s1">&#39;code&#39;</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">t</span></div>
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;NAME&#39;</span><span class="p">,</span> <span class="s1">&#39;DESCRIPTION&#39;</span><span class="p">,</span> <span class="s1">&#39;SHORT_DESCRIPTION&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;REQUIRES&#39;</span><span class="p">,</span> <span class="s1">&#39;OPTIONALS&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;tifa_analysis&#39;</span><span class="p">,</span> <span class="s1">&#39;Tifa&#39;</span><span class="p">]</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Pedal</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../usage/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage/quickstart.html">QuickStart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../instructor_reference.html">Instructor Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">Developer API</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, acbart, lukesg08.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
