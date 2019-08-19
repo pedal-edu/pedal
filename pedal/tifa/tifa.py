@@ -332,6 +332,12 @@ class Tifa(ast.NodeVisitor):
                 if potential_name is not None and result is None:
                     result = potential_name
             return result
+    
+    def visit_AnnAssign(self, node):
+        """
+        TODO: Implement!
+        """
+        pass
 
     def visit_Assign(self, node):
         """
