@@ -15,7 +15,7 @@ Or install from the https://github.com/acbart/pedal
 Important Concepts
 ==================
 
-.. image:: docs/_static/pedal-overview.png
+.. image:: docs/html/_static/pedal-overview.png
 
 * *Report*: A collection of Feedback and a namespace for the results of Tools, accessible by the Tool name. Reports can be generated imperatively (using the default Report, similar to MatPlotLib) or by explicitly creating and passing Report objects.
 * *Tool*: A system that can read and write to a Report, building on the work of previous Tools.
