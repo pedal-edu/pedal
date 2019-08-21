@@ -11,4 +11,4 @@ You can quickly install via PyPi using `pip`:
 GitHub
 ------
 
-Download the repository on GitHub.
+Download the repository on GitHub: [https://github.com/pedal-edu/pedal](https://github.com/pedal-edu/pedal)

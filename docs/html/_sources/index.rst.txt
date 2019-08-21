@@ -6,13 +6,22 @@
 Welcome to Pedal's documentation!
 =================================
 
+Pedal is a framework to analyze student's code and provide feedback.
+Pedal is not only a collection of powerful program analysis tools, but
+is also built to give a model for what Feedback should be.
+
+.. image:: _static/pedal-overview.png
+
 .. toctree::
     :maxdepth: 2
     :caption: Contents:
-    
+
+    concepts
+
     usage/installation
     usage/quickstart
     usage/tutorial
+    integrations
     
     instructor_reference
     
