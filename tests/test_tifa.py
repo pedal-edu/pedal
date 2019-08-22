@@ -113,6 +113,10 @@ unit_tests = {
         ['a = "ERROR" * 5', ['Incompatible types'], []],
     'unary_and_sub_int_int':
         ['-(5)+0', ['Incompatible types'], []],
+    'simple_unary_op':
+        ['+1', ['Incompatible types'], []],
+    'unary_compare':
+        ['-1 < 5', ['Incompatible types'], []],
     'iadd_int_int':
         ['a=0\na+=5\na', ['Incompatible types', 'Unused Variable', 'Initialization Problem', 'Overwritten Variable'],
          []],
