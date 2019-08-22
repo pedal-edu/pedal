@@ -322,6 +322,11 @@ class TestUtilities(unittest.TestCase):
         with Execution('print("Hello", 5)') as e:
             self.assertFalse(prevent_literal("Fire", 3, 4))
         self.assertEqual(e.message, "No errors reported.")
+        with Execution('a = -1+2\na') as e:
+            self.assertEqual(prevent_literal(3, 4, 5, -1), -1)
+        self.assertEqual(e.message, "Do not use the literal value "
+                                    "<code>-1</code> in your code."
+                                    "<br><br><i>(hard_code)<i></br></br>")
 
     def test_ensure_literal(self):
         with Execution('a = 5\na') as e:

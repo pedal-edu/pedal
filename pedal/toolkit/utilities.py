@@ -115,6 +115,12 @@ def prevent_builtin_usage(function_names):
                 return a_call.func.id
     return None
 
+def find_negatives(root=None):
+    if root is None:
+        root = parse_program()
+    return [-op.operand.n for op in root.find_all("UnaryOp")
+            if op.op.ast_name == "USub" and op.operand.ast_name == "Num"]
+
 
 # TODO: UGLY HACK. This is to avoid muted=False kwargs in the following
 #       functions. Apparently skulpt doesn't support this syntax.
@@ -136,11 +142,12 @@ def prevent_literal(*literals):
     ast = parse_program()
     str_values = [s.s for s in ast.find_all("Str")]
     num_values = [n.n for n in ast.find_all("Num")]
+    negative_values = find_negatives(ast)
     name_values = ([name.id for name in ast.find_all("Name")]+
                    [name.value for name in ast.find_all("NameConstant")])
     for literal in literals:
         if isinstance(literal, (int, float)):
-            if literal in num_values:
+            if literal in num_values or literal in negative_values:
                 if not muted:
                     explain_r(message.format(repr(literal)), code, label=label)
                 return literal
@@ -172,6 +179,7 @@ def ensure_literal(*literals):
     ast = parse_program()
     str_values = [s.s for s in ast.find_all("Str")]
     num_values = [n.n for n in ast.find_all("Num")]
+    negative_values = find_negatives(ast)
     name_values = ([str(name.id) for name in ast.find_all("Name")]+
                    [str(name.value) for name in ast.find_all("NameConstant")])
     for literal in literals:
@@ -181,7 +189,7 @@ def ensure_literal(*literals):
                     explain_r(message.format(repr(literal)), code, label=label)
                 return True
         elif isinstance(literal, (int, float)):
-            if literal not in num_values:
+            if literal not in num_values and literal not in negative_values:
                 if not muted:
                     explain_r(message.format(repr(literal)), code, label=label)
                 return literal
@@ -234,8 +242,8 @@ BIN_OP_NAMES = {
     "&": "BitAnd",
     "@": "MatMult"}
 UNARY_OP_NAMES = {
-    # "+=": "UAdd",
-    # "-=": "USub",
+    # "+": "UAdd",
+    # "-": "USub",
     "not": "Not",
     "~": "Invert"
 }
