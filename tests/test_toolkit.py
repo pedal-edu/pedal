@@ -342,6 +342,14 @@ class TestUtilities(unittest.TestCase):
         with Execution('print("Fire", 3, 4)') as e:
             self.assertFalse(ensure_literal("Fire", 3, 4))
         self.assertEqual(e.message, "No errors reported.")
+        with Execution('a = 5\na') as e:
+            self.assertEqual(ensure_literal(-5), -5)
+        self.assertEqual(e.message, "You need the literal value "
+                                    "<code>-5</code> in your code."
+                                    "<br><br><i>(missing_literal)<i></br></br>")
+        with Execution('print("Fire2", 3, 4, -6)') as e:
+            self.assertFalse(ensure_literal("Fire2", 3, 4, -6))
+        self.assertEqual(e.message, "No errors reported.")
 
     def test_prevent_advanced_iteration(self):
         with Execution('while False:\n  pass') as e:

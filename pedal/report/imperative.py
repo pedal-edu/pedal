@@ -5,7 +5,7 @@ Uses a global report object (MAIN_REPORT).
 
 __all__ = ['set_success', 'compliment', 'give_partial', 'explain', 'explain_r',
            'gently', 'gently_r', 'hide_correctness', 'suppress', 'log', 'debug',
-           'clear_report', 'get_all_feedback', 'MAIN_REPORT']
+           'clear_report', 'get_all_feedback', 'MAIN_REPORT', 'guidance']
 
 from pedal.report.report import Report
 
@@ -50,6 +50,10 @@ def give_partial(value, message=None):
 
 def explain(message, priority='medium', line=None, label='explain'):
     MAIN_REPORT.explain(message, priority, line, label=label)
+
+
+def guidance(message, priority='medium', line=None, label='Guidance'):
+    MAIN_REPORT.guidance(message, priority, line, label=label)
 
 
 def gently(message, line=None, label='explain'):

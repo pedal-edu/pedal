@@ -89,6 +89,14 @@ class Report:
         self.explain(message, priority='student', line=line, group=group,
                      label=label)
 
+    def guidance(self, message, line=None, group=None, label='guidance'):
+        hint = {'message': message}
+        if line is not None:
+            hint['line'] = line
+        if group is None:
+            group = self.group
+        self.attach(label, priority='instructions', category='instructions', group=group, hint=hint)
+
     def compliment(self, message, line=None, group=None, label='explain'):
         self.explain(message, priority='positive', line=line, group=group,
                      label=label)

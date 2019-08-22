@@ -16,5 +16,12 @@ class TestCode(unittest.TestCase):
         self.assertEqual(len(get_all_feedback()), 1)
 
 
+    def test_guidance(self):
+        clear_report()
+        guidance("Make sure you do the next steps")
+
+        self.assertEqual(len(get_all_feedback()), 1)
+
+
 if __name__ == '__main__':
     unittest.main(buffer=False)

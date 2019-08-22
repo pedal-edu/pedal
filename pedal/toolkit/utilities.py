@@ -115,6 +115,7 @@ def prevent_builtin_usage(function_names):
                 return a_call.func.id
     return None
 
+
 def find_negatives(root=None):
     if root is None:
         root = parse_program()
