@@ -17,7 +17,7 @@ def _disabled_compile(source, filename, mode, flags=0, dont_inherit=False):
     raise RuntimeError("You are not allowed to call 'compile'.")
 
 
-def _disabled_eval(object, globals=globals(), locals=locals()):
+def _disabled_eval(object, globals=globals(), locals=None):
     """
     A version of the built-in `eval` method that fails with a runtime
     error.
@@ -28,7 +28,7 @@ def _disabled_eval(object, globals=globals(), locals=locals()):
 # -------------------------------------------------------------
 
 
-def _disabled_exec(object, globals=globals(), locals=locals()):
+def _disabled_exec(object, globals=globals(), locals=None):
     """
     A version of the built-in `exec` method that fails with a runtime
     error.

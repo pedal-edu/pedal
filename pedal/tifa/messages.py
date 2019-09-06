@@ -125,6 +125,15 @@ def _format_message(issue, data):
                 "{line}. But you can't do that with that operator. Make "
                 "sure both sides of the operator are the right type."
                 ).format(op=op, left=left, right=right, line=line)
+    elif issue == "Parameter Type Mismatch":
+        name = data['parameter_name']
+        parameter = data['parameter'].singular_name
+        argument = data['argument'].singular_name
+        line = data['position']['line']
+        return ("You defined the parameter <code>{name}</code> on line {line} "
+                "as {parameter}. However, the argument passed to that parameter "
+                "was {argument}. The formal parameter type must match the argument's type."
+                ).format(name=name, argument=argument, parameter=parameter, line=line)
     elif issue == 'Read out of scope':
         return ("You attempted to read a variable from a different scope on "
                 "line {line}. You should only use variables inside the "

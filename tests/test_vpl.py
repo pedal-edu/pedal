@@ -8,6 +8,8 @@ import io
 pedal_library = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.insert(0, pedal_library)
 
+here = "" if os.path.basename(os.getcwd()) == "tests" else "tests/"
+
 from pedal.plugins.vpl import resolve, strip_tags
 from pedal.source import next_section, verify_section, check_section_exists, set_source_file
 from pedal.report import MAIN_REPORT
@@ -43,7 +45,7 @@ class TestVPL(unittest.TestCase):
 
     def test_resolve(self):
         clear_report()
-        set_source_file('tests/datafiles/student_example.py', sections=True,
+        set_source_file(here+'datafiles/student_example.py', sections=True,
                   independent=True)
         # Part 0
         # Part 1

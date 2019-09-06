@@ -6,6 +6,8 @@ from textwrap import dedent
 pedal_library = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.insert(0, pedal_library)
 
+here = "" if os.path.basename(os.getcwd()) == "tests" else "tests/"
+
 from pedal.report import *
 from pedal.source import set_source
 
@@ -189,9 +191,9 @@ class TestFunctions(unittest.TestCase):
 
     def test_check_coverage(self):
         test_files = [
-            ('tests/sandbox_coverage/bad_non_recursive.py', {4}),
-            ('tests/sandbox_coverage/good_recursive.py', False),
-            ('tests/sandbox_coverage/complex.py', {7, 9, 10, 11, 12, 13, 14, 15}),
+            (here+'sandbox_coverage/bad_non_recursive.py', {4}),
+            (here+'sandbox_coverage/good_recursive.py', False),
+            (here+'sandbox_coverage/complex.py', {7, 9, 10, 11, 12, 13, 14, 15}),
         ]
         for TEST_FILENAME, missing_lines in test_files:
             with open(TEST_FILENAME) as student_file:

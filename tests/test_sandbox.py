@@ -11,6 +11,7 @@ from pedal.sandbox import Sandbox
 import pedal.sandbox.compatibility as compatibility
 from pedal.source import set_source
 
+here = "" if os.path.basename(os.getcwd()) == "tests" else "tests/"
 
 class TestCode(unittest.TestCase):
     def setUp(self):
@@ -59,7 +60,7 @@ class TestCode(unittest.TestCase):
         self.assertTrue(student._)
 
     def test_improved_exceptions(self):
-        TEST_FILENAME = 'tests/_sandbox_test_student.py'
+        TEST_FILENAME = here+'_sandbox_test_student.py'
         with open(TEST_FILENAME) as student_file:
             student_code = student_file.read()
         student = Sandbox()
@@ -70,10 +71,10 @@ class TestCode(unittest.TestCase):
         self.assertEqual(student.exception_formatted, dedent(
             """
             Traceback:
-              File "tests/_sandbox_test_student.py", line 1
+              File "{filename}", line 1
                 1 + "Banana"
             TypeError: unsupported operand type(s) for +: 'int' and 'str'
-            """).strip() + "\n")
+            """.format(filename=TEST_FILENAME)).strip() + "\n")
 
     def test_call(self):
         student_code = "def average(a,b):\n return (a+b)/2"
@@ -177,7 +178,7 @@ class TestCode(unittest.TestCase):
         plt2 = compatibility.get_plots()
         self.assertEqual(len(plt2), 2)
 
-    def test_matplotlib_compatibility(self):
+    def test_blocked_module_import(self):
         student_code = dedent('''
             import os
             os
@@ -187,7 +188,7 @@ class TestCode(unittest.TestCase):
         self.assertIsNone(exception)
 
     def test_coverage(self):
-        TEST_FILENAME = 'tests/_sandbox_test_coverage.py'
+        TEST_FILENAME = here+'_sandbox_test_coverage.py'
         with open(TEST_FILENAME) as student_file:
             student_code = student_file.read()
         student = Sandbox(tracer_style='coverage')

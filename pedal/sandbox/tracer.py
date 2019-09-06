@@ -8,7 +8,7 @@ except ImportError:
 
 try:
     from bdb import Bdb, BdbQuit
-except ImportError:
+except Exception:
     class Bdb:
         pass
 

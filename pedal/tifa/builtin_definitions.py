@@ -229,3 +229,5 @@ def get_builtin_function(name):
                             returns=DictType(keys=StrType(),
                                              values=UnknownType(),
                                              empty=False))
+    elif name in ("classmethod", "staticmethod"):
+        return FunctionType(name=name, returns='identity')

@@ -9,7 +9,7 @@ from pedal.tifa.type_definitions import (UnknownType, RecursedType,
                                          ListType, StrType, GeneratorType,
                                          DictType, ModuleType, SetType,
                                          # FileType, DayType, TimeType,
-                                         type_from_json, type_to_literal,
+                                         type_from_json, type_to_literal, get_tifa_type,
                                          LiteralNum, LiteralBool,
                                          LiteralNone, LiteralStr,
                                          LiteralTuple)
@@ -617,6 +617,13 @@ class Tifa(ast.NodeVisitor):
                 # TODO: Handle special types of parameters
                 for arg, parameter in zip(args, parameters):
                     name = arg.arg
+                    if arg.annotation:
+                        annotation = get_tifa_type(arg.annotation, {})
+                        # TODO: Check that arg.type and parameter type match!
+                        if not are_types_equal(annotation, parameter):
+                            self.report_issue("Parameter Type Mismatch",
+                                              {"parameter": annotation, "parameter_name": name,
+                                               "argument": parameter})
                     if parameter is not None:
                         parameter = parameter.clone_mutably()
                         self.store_variable(name, parameter, position)

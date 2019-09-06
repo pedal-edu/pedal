@@ -2,6 +2,11 @@ import traceback
 import os
 import sys
 
+try:
+    TimeoutError
+except NameError:
+    TimeoutError = Exception
+
 class SandboxException(Exception):
     """
     Generic base exception for sandbox errors.
