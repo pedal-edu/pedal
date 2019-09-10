@@ -9,7 +9,7 @@ from pedal.tifa.type_definitions import (UnknownType, RecursedType,
                                          ListType, StrType, GeneratorType,
                                          DictType, ModuleType, SetType,
                                          # FileType, DayType, TimeType,
-                                         type_from_json, type_to_literal,
+                                         type_from_json, type_to_literal, get_tifa_type,
                                          LiteralNum, LiteralBool,
                                          LiteralNone, LiteralStr,
                                          LiteralTuple)
@@ -617,6 +617,14 @@ class Tifa(ast.NodeVisitor):
                 # TODO: Handle special types of parameters
                 for arg, parameter in zip(args, parameters):
                     name = arg.arg
+                    if arg.annotation:
+                        self.visit(arg.annotation)
+                        annotation = get_tifa_type(arg.annotation, {})
+                        # TODO: Check that arg.type and parameter type match!
+                        if not are_types_equal(annotation, parameter):
+                            self.report_issue("Parameter Type Mismatch",
+                                              {"parameter": annotation, "parameter_name": name,
+                                               "argument": parameter})
                     if parameter is not None:
                         parameter = parameter.clone_mutably()
                         self.store_variable(name, parameter, position)
@@ -626,10 +634,19 @@ class Tifa(ast.NodeVisitor):
                 self.visit_statements(node.body)
                 return_state = self.find_variable_scope("*return")
                 return_value = NoneType()
+                # TODO: Figure out if we are not returning something when we should
                 # If the pseudo variable exists, we load it and get its type
                 if return_state.exists and return_state.in_scope:
                     return_state = self.load_variable("*return", call_position)
                     return_value = return_state.type
+                    if node.returns:
+                        #self.visit(node.returns)
+                        returns = get_tifa_type(node.returns, {})
+                        if not are_types_equal(return_value, returns):
+                            self.report_issue("Multiple Return Types",
+                                              {"expected": returns.singular_name,
+                                               "actual": return_value.singular_name,
+                                               "position": return_state.position})
             return return_value
 
         function = FunctionType(definition=definition, name=function_name)
@@ -929,6 +946,7 @@ class Tifa(ast.NodeVisitor):
         return state
 
     def return_variable(self, type):
+
         return self.store_variable("*return", type)
 
     def append_variable(self, name, type, position=None):

@@ -1,3 +1,6 @@
+import ast
+
+
 def are_literals_equal(first, second):
     if first is None or second is None:
         return False
@@ -512,3 +515,38 @@ def type_to_literal(type):
     else:
         # TODO: Finish the mapping
         return LiteralStr("")
+
+
+TYPE_STRINGS = {
+    "str": StrType, "string": StrType,
+    "num": NumType, "number": NumType, "int": NumType, "integer": NumType, "float": NumType,
+    "complex": NumType,
+    "bool": BoolType, "boolean": BoolType,
+    "none": NoneType,
+    "dict": DictType, "dictionary": DictType,
+    "list": ListType,
+    "tuple": TupleType,
+    "set": SetType,
+    "file": FileType,
+    "func": FunctionType, "function": FunctionType,
+    "class": ClassType,
+}
+
+
+def get_tifa_type_from_str(value, custom_types):
+    value = value.lower()
+    if value in custom_types:
+        return custom_types[value]
+    if value in TYPE_STRINGS:
+        return TYPE_STRINGS[value]()
+    else:
+        custom_types.add(value)
+        return UnknownType()
+        # TODO: handle custom types
+
+
+def get_tifa_type(v, custom_types):
+    if isinstance(v, ast.Str):
+        return get_tifa_type_from_str(v.s, custom_types)
+    elif isinstance(v, ast.Name):
+        return get_tifa_type_from_str(v.id, custom_types)

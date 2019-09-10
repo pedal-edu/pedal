@@ -17,7 +17,7 @@ def _disabled_compile(source, filename, mode, flags=0, dont_inherit=False):
     raise RuntimeError("You are not allowed to call 'compile'.")
 
 
-def _disabled_eval(object, globals=globals(), locals=locals()):
+def _disabled_eval(object, globals=globals(), locals=None):
     """
     A version of the built-in `eval` method that fails with a runtime
     error.
@@ -28,7 +28,7 @@ def _disabled_eval(object, globals=globals(), locals=locals()):
 # -------------------------------------------------------------
 
 
-def _disabled_exec(object, globals=globals(), locals=locals()):
+def _disabled_exec(object, globals=globals(), locals=None):
     """
     A version of the built-in `exec` method that fails with a runtime
     error.
@@ -100,7 +100,7 @@ _original_builtins = {
 }
 
 
-def _make_inputs(*input_list, **kwargs):
+def make_inputs(input_list, repeat=None):
     """
     Helper function for creating mock user input.
 
@@ -111,10 +111,6 @@ def _make_inputs(*input_list, **kwargs):
                              will return the next element of input_list each
                              time it is called.
     """
-    if 'repeat' in kwargs:
-        repeat = kwargs['repeat']
-    else:
-        repeat = None
     generator = iter(input_list)
 
     def mock_input(prompt=''):

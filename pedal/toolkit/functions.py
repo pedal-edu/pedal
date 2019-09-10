@@ -3,6 +3,8 @@ from pedal.report.imperative import gently, explain, gently_r, explain_r, MAIN_R
 from pedal.sandbox import compatibility
 import ast
 
+from pedal.toolkit.signatures import type_check, parse_type, normalize_type
+
 DELTA = 0.001
 
 
@@ -60,6 +62,34 @@ def match_signature_muted(name, length, *parameters):
             else:
                 return a_def
     return None
+
+
+def find_def_by_name(name, root=None):
+    if root is None:
+        root = parse_program()
+    defs = root.find_all('FunctionDef')
+    for a_def in defs:
+        if a_def._name == name:
+            return a_def
+    return None
+
+
+def match_parameters(name, *types, root=None):
+    defn = find_def_by_name(name, root)
+    if defn:
+        for expected, actual in zip(types, defn.args.args):
+            if actual.annotation:
+                if not isinstance(expected, str):
+                    expected = expected.__name__
+                actual_type = parse_type(actual.annotation)
+                if not type_check(expected, actual_type):
+                    gently_r("Error in definition of function `{}` parameter `{}`. Expected `{}`, "
+                             "instead found `{}`.".format(name, actual.arg, expected, actual_type),
+                             "wrong_parameter_type")
+                    return None
+        else:
+            return defn
+
 
 
 def match_signature(name, length, *parameters):

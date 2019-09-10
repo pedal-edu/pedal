@@ -89,6 +89,8 @@ class DataSandbox:
     def var(self):
         return {k: SandboxVariable(k, v) for k, v in self.data.items()}
 
+    def __repr__(self):
+        return ""
 
 class Sandbox(DataSandbox):
     """
@@ -189,7 +191,8 @@ class Sandbox(DataSandbox):
         self.report_exceptions_mode = False
         self.raise_exceptions_mode = False
         # Input
-        self.inputs = None
+        self.set_input(None)
+        self._input_tracker = self._track_inputs()
         # Modules
         if modules is None:
             modules = {'matplotlib': True,
@@ -302,22 +305,34 @@ class Sandbox(DataSandbox):
             self.output.extend(lines)
             self.output_contexts[self.call_id].extend(lines)
 
-    def set_input(self, inputs):
+    def set_input(self, inputs, clear=True):
         """
         Queues the given value as the next arguments to the `input` function.
         """
-        if isinstance(inputs, tuple):
-            self.inputs = mocked._make_inputs(*inputs)
-        else:
+        if inputs is None:
+            self.inputs = []
+        if clear:
+            self.inputs.clear()
+        if isinstance(inputs, str):
+            self.inputs.append(inputs)
+        elif isinstance(inputs, (list, tuple)):
+            self.inputs.extend(inputs)
+        elif inputs is not None:
+            # TODO: intelligently handle custom generator
             self.inputs = inputs
 
-    def _track_inputs(self, inputs):
+    def _track_inputs(self):
         """
         Wraps an input function with a tracker.
         """
 
-        def _input_tracker(*args, **kwargs):
-            value_entered = inputs(*args, **kwargs)
+        def _input_tracker(prompt, *args, **kwargs):
+            print(prompt)
+            if self.inputs:
+                value_entered = self.inputs.pop(0)
+            else:
+                # TODO: Make this smarter, more elegant in choosing IF we should repeat 0
+                value_entered = '0'
             self.input_contexts[self.call_id].append(value_entered)
             return value_entered
 
@@ -438,7 +453,7 @@ class Sandbox(DataSandbox):
         as_filename = kwargs.pop('as_filename', self.instructor_filename)
         target = kwargs.pop('target', '_')
         modules = kwargs.pop('modules', {})
-        inputs = kwargs.pop('inputs', self.inputs)
+        inputs = kwargs.pop('inputs', None)
         threaded = kwargs.pop('threaded', self.threaded)
         context = kwargs.pop('context', self.context)
         keep_context = kwargs.pop('keep_context', self.keep_context)
@@ -460,8 +475,8 @@ class Sandbox(DataSandbox):
         # self.call_contexts[self.call_id].append(student_call)
         # if context is not False:
         #    self.call_contexts[self.call_id] = context
-        self.run(actual, as_filename, modules, inputs,
-                 threaded=threaded,
+        self.run(actual, as_filename=as_filename, modules=modules,
+                 inputs=inputs, threaded=threaded,
                  context=context, keep_context=keep_context,
                  report_exceptions=report_exceptions,
                  raise_exceptions=raise_exceptions)
@@ -610,20 +625,13 @@ class Sandbox(DataSandbox):
         
         if as_filename is None:
             as_filename = os.path.basename(self.report['source']['filename'])
-        if inputs is None:
-            if self.inputs is None:
-                inputs = mocked._make_inputs('0', repeat='0')
-            else:
-                inputs = self.inputs
-        if isinstance(inputs, (tuple, list)):
-            inputs = mocked._make_inputs(*inputs)
-        elif isinstance(inputs, str):
-            inputs = mocked._make_inputs(inputs)
-        inputs = self._track_inputs(inputs)
+            # todo: earlier version of inputs being made?
+        if inputs is not None:
+            self.set_input(inputs)
         # Override builtins and mock stuff out
         mocked_functions = self.mocked_functions.copy()
-        mocked_functions['input'] = inputs
-        mocked_functions['raw_input'] = inputs
+        mocked_functions['input'] = self._input_tracker
+        mocked_functions['raw_input'] = self._input_tracker
         mocked_functions['sys'] = sys
         mocked_functions['os'] = os
         mocked._override_builtins(self.data, mocked_functions)

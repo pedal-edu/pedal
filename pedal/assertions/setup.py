@@ -4,7 +4,8 @@ from pedal.report.imperative import MAIN_REPORT
 from pedal.sandbox.exceptions import SandboxStudentCodeException
 
 class AssertionException(Exception):
-    pass
+    def __str__(self):
+        return self.args[0]
 
 def _topological_sort(names, orderings):
     visited = set()

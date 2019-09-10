@@ -6,6 +6,8 @@ from textwrap import dedent
 pedal_library = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.insert(0, pedal_library)
 
+here = "" if os.path.basename(os.getcwd()) == "tests" else "tests/"
+
 from pedal.report import *
 from pedal.source import set_source
 
@@ -13,7 +15,7 @@ from pedal.cait.cait_api import parse_program
 from pedal.sandbox.sandbox import Sandbox
 from pedal.toolkit.files import files_not_handled_correctly
 from pedal.toolkit.functions import (match_signature, output_test, unit_test,
-                                     check_coverage)
+                                     check_coverage, match_parameters)
 from pedal.toolkit.signatures import (function_signature)
 from pedal.toolkit.utilities import (is_top_level, function_prints,
                                      no_nested_function_definitions,
@@ -132,6 +134,33 @@ class TestFunctions(unittest.TestCase):
                                        "<code>a</code>. Expected a parameter named "
                                        "x, instead found l.")
 
+    def test_match_parameters(self):
+        with Execution('def a(x:str, y:int):\n  pass\na') as e:
+            self.assertIsNone(match_parameters('a', int, "int"))
+        self.assertEqual(e.message,
+                "Error in definition of function `a` parameter `x`. "
+                "Expected `int`, instead found `str`."
+                "<br><br><i>(wrong_parameter_type)<i></br></br>")
+
+        with Execution('def a(x:int, y:int):\n  pass\na') as e:
+            self.assertIsNotNone(match_parameters('a', int, "int"))
+        self.assertNotEqual(e.message, "Error in definition of "
+                                       "function `a`. Expected `int` parameter, instead found `str`.")
+
+        with Execution('def a(x:[str], y:{int:str}):\n  pass\na') as e:
+            self.assertIsNotNone(match_parameters('a', "list[str]", "dict[int:str]"))
+        self.assertNotEqual(e.message,
+                "Error in definition of function `a` parameter `x`. "
+                "Expected `int`, instead found `str`."
+                "<br><br><i>(wrong_parameter_type)<i></br></br>")
+
+        with Execution('def a(x:{str:[bool]}):\n  pass\na') as e:
+            self.assertIsNone(match_parameters('a', "dict[int: list[bool]]"))
+        self.assertEqual(e.message,
+                "Error in definition of function `a` parameter `x`. "
+                "Expected `dict[int: list[bool]]`, instead found `dict[str: list[bool]]`."
+                "<br><br><i>(wrong_parameter_type)<i></br></br>")
+
     def test_unit_test(self):
         # All passing
         with Execution('def a(x,y):\n  return(x+y)\na') as e:
@@ -189,9 +218,9 @@ class TestFunctions(unittest.TestCase):
 
     def test_check_coverage(self):
         test_files = [
-            ('tests/sandbox_coverage/bad_non_recursive.py', {4}),
-            ('tests/sandbox_coverage/good_recursive.py', False),
-            ('tests/sandbox_coverage/complex.py', {7, 9, 10, 11, 12, 13, 14, 15}),
+            (here+'sandbox_coverage/bad_non_recursive.py', {4}),
+            (here+'sandbox_coverage/good_recursive.py', False),
+            (here+'sandbox_coverage/complex.py', {7, 9, 10, 11, 12, 13, 14, 15}),
         ]
         for TEST_FILENAME, missing_lines in test_files:
             with open(TEST_FILENAME) as student_file:

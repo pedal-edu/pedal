@@ -166,6 +166,18 @@ unit_tests = {
     'read_not_out_of_scope':
         ['def x():\n    if 1:\n        y=0\n    else:\n        y=1\n    y\nx()\nx()', ['Read out of scope'], []],
 
+    # Function with annotations
+    'annotated_parameters_correct':
+        ['def x(n: int):\n    1+n\nx(5)', ['Parameter Type Mismatch', 'Incompatible types'], []],
+    'annotated_parameters_wrong_argument':
+        ['def x(n: int):\n    1+n\nx("5")', [], ['Parameter Type Mismatch']],
+    'annotated_parameters_wrong_parameter':
+        ['def x(n: int):\n    "1"+n\nx(5)', [], ['Incompatible types']],
+    'annotated_parameters_append_list':
+        ['def x(l: list):\n    l.append(1)\nx([])', ['Parameter Type Mismatch', 'Incompatible types'], []],
+    'annotated_returns_int':
+        ['def x()->int:\n    return "Wrong"\nx()', [], ['Multiple Return Types']],
+
     'append_to_empty_list':
         ['a = []\na.append(1)\nprint(a)', ['Initialization Problem', 'Unused Variable'], []],
     'append_to_non_empty_list':

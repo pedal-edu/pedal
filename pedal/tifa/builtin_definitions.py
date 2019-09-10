@@ -147,45 +147,21 @@ def _builtin_zip(tifa, function_type, callee, args, position):
     return ListType(empty=True)
 
 
+# TODO: Exceptions
+
 def get_builtin_function(name):
     # Void Functions
     if name == "print":
         return FunctionType(name="print", returns=NoneType())
     # Math Functions
-    elif name == "int":
-        return FunctionType(name="int", returns=NumType())
-    elif name == "abs":
-        return FunctionType(name="abs", returns=NumType())
-    elif name == "float":
-        return FunctionType(name="float", returns=NumType())
-    elif name == "len":
-        return FunctionType(name="len", returns=NumType())
-    elif name == "ord":
-        return FunctionType(name="ord", returns=NumType())
-    elif name == "pow":
-        return FunctionType(name="pow", returns=NumType())
-    elif name == "round":
-        return FunctionType(name="round", returns=NumType())
-    elif name == "sum":
-        return FunctionType(name="sum", returns=NumType())
+    elif name in ("int", "abs", "float", "len", "ord", "pow", "round", "sum"):
+        return FunctionType(name=name, returns=NumType())
     # Boolean Functions
-    elif name == "bool":
-        return FunctionType(name="bool", returns=BoolType())
-    elif name == "all":
-        return FunctionType(name="all", returns=BoolType())
-    elif name == "any":
-        return FunctionType(name="any", returns=BoolType())
-    elif name == "isinstance":
-        return FunctionType(name="isinstance", returns=BoolType())
+    elif name in ("bool", "all", "any", "isinstance"):
+        return FunctionType(name=name, returns=BoolType())
     # String Functions
-    elif name == "input":
-        return FunctionType(name="input", returns=StrType())
-    elif name == "str":
-        return FunctionType(name="str", returns=StrType())
-    elif name == "chr":
-        return FunctionType(name="chr", returns=StrType())
-    elif name == "repr":
-        return FunctionType(name="repr", returns=StrType())
+    elif name in ("str", 'chr', 'bin', 'repr', 'input'):
+        return FunctionType(name=name, returns=StrType())
     # File Functions
     elif name == "open":
         return FunctionType(name="open", returns=FileType())
@@ -229,3 +205,5 @@ def get_builtin_function(name):
                             returns=DictType(keys=StrType(),
                                              values=UnknownType(),
                                              empty=False))
+    elif name in ("classmethod", "staticmethod"):
+        return FunctionType(name=name, returns='identity')
