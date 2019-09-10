@@ -1,7 +1,7 @@
 import re
 from pedal.source import get_program
 from pedal.sandbox.compatibility import get_output
-from pedal.report.imperative import gently, explain
+from pedal.report.imperative import gently_r, explain_r
 
 
 # Feedback for author's name
@@ -9,8 +9,8 @@ def check_author_name_on_header():
     code = get_program()
     m_author = re.search('Author: \\w+', code)
     if not m_author:
-        gently("You need to add your name to the author field at the top of the file."
-               "<br><br><i>(name_missing)<i></br></br>")
+        gently_r("You need to add your name to the author field at the top of the file.", "name_missing",
+                 label="Missing Name")
 
 
 def get_plots(output):
@@ -29,23 +29,23 @@ def check_output_on_header(expected_output):
     between_stars = code.split("*****")[2].strip()
     between_stars = "\\n".join([x.strip() for x in between_stars.split("\\n")])
     if 'REPLACE THIS TEXT WITH THE OUTPUT OF THIS PROGRAM' in between_stars:
-        gently("In your code, you need to 'REPLACE THIS TEXT WITH THE OUTPUT OF THIS PROGRAM'"
-               "<br><br><i>(wrong_output_blank)<i></br></br>")
+        gently_r("In your code, you need to 'REPLACE THIS TEXT WITH THE OUTPUT OF THIS PROGRAM'", "wrong_output_blank",
+                 label="Blank Output")
     elif expected_output not in between_stars:
-        gently("The output you copied between the *****, seems to be incorrect. You may have copied it into the wrong "
-               "location, or it is incomplete.<br><br><i>(wrong_output_fill)<i></br></br>")
+        gently_r("The output you copied between the *****, seems to be incorrect. "
+                 "You may have copied it into the wrong location, or it is incomplete.", "wrong_output_fill", label="")
 
 
 def check_problem_submission(prob_id):
     if prob_id not in get_program():
-        explain("Make sure that you are turning in {}<br><br><i>(wrong_problem)<i></br></br>".format(prob_id))
+        explain_r("Make sure that you are turning in {}</br>".format(prob_id), "wrong_problem", label="Wrong Problem")
         return True
 
 
 def check_print_output(multiple_lines):
     for line in multiple_lines:
         if line not in get_output():
-            gently("You are not doing the correct calculation<br><br><i>(catch_all)<i></br></br>")
+            gently_r("You are not doing the correct calculation</br>", "catch_all", label="Wrong Output")
             return True
 
 

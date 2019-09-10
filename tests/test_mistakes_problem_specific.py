@@ -50,6 +50,9 @@ class SpecificMistakeTest(MistakeTest):
         self.to_source("my_list = [0, 0, 1]")
         self.assertFalse(list_all_zeros_8_2(), "False positive")
 
+        self.to_source("my_list = ___")
+        self.assertFalse(list_all_zeros_8_2(), "False positive")
+
     def test_wrong_list_initialization_placement_8_3(self):
         self.to_source("length_sum = 0\n"
                        "episode_length_list = [1, 2, 3]\n"

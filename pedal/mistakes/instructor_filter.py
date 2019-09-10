@@ -19,7 +19,8 @@ def missing_if_in_for():
     Returns:
 
     """
-    message = "The arrangement of decision and iteration is not correct for the filter pattern."
+    message = ("The arrangement of decision and iteration is not correct for the filter pattern. "
+               "You need to evaluate the decision for each element of the list.")
     code = "missing_if_in_for"
     tldr = "Missing if In For"
     matches = find_matches("for _item_ in ___:\n"
