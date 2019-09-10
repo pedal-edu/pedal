@@ -39,6 +39,10 @@ def _format_message(issue, data):
         return ("You attempted to return outside of a function on line {line}."
                 " But you can only return from within a function."
                 ).format(line=data['position']['line'])
+    elif issue == "Multiple Return Types":
+        return ("Your function returned {actual} on line {line}, even though you defined it to"
+                " return {expected}. Your function should return values consistently."
+                ).format(expected=data['expected'], actual=data['actual'], line=data['position']['line'])
     elif issue == 'Write out of scope':
         # DEPRECATED
         # Attempted to modify a variable in a higher scope

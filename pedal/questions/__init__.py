@@ -47,13 +47,19 @@ class Question:
             for test in self.tests:
                 test(self)
         if not self.answered:
-            self.report.attach('Question', category='Instructions', tool='Questions',
-                               group=self.report.group,
-                               priority='instructions',
-                               hint=self.instructions)
+            show_question(self.instructions, self.report)
+
+
+def show_question(instructions, report=None):
+    if report is None:
+        report = MAIN_REPORT
+    report.attach('Question', category='Instructions', tool='Questions',
+                   group=report.group, priority='instructions', hint=instructions)
+
 
 class Pool:
     _POOL_TRACKER = 0
+
     def __init__(self, name, choices, seed=None, report=None, position=None):
         self.name = name
         self.choices = choices

@@ -89,8 +89,8 @@ class TestCode(unittest.TestCase):
         self.assertFalse(compatibility.get_output())
         compatibility.queue_input("Hello")
         self.assertIsNone(compatibility.run_student(True))
-        self.assertEqual(compatibility.get_output(),
-                         ["Give me a word", "Hello!"])
+        self.assertEqual(["Give me a word", "Hello!"],
+                         compatibility.get_output())
         compatibility.queue_input("World", "Again")
         self.assertIsNone(compatibility.run_student(True))
         self.assertEqual(compatibility.get_output(),
@@ -320,6 +320,8 @@ class TestCode(unittest.TestCase):
         student = Sandbox()
         student.run(student_code, as_filename='student.py')
         self.assertEqual(str(student.exception), "You are not allowed to call 'globals'.")
+
+    # TODO: test `import builtins` strategy to access original builtins
 
 if __name__ == '__main__':
     unittest.main(buffer=False)

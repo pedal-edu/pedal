@@ -17,11 +17,11 @@ def run_student(raise_exceptions=False, report=None, old_style_messages=False):
         report = MAIN_REPORT
     sandbox = _check_sandbox(report)
     source_code = report['source']['code']
-    sandbox.run(source_code, report_exceptions=not raise_exceptions)
+    filename = report['source']['filename']
+    sandbox.run(source_code, as_filename=filename, report_exceptions=not raise_exceptions)
     if raise_exceptions:
         raise_exception(sandbox.exception, sandbox.exception_position,
-                        report=report, message=None if old_style_messages else 
-                                               sandbox.exception_formatted)
+                        report=report, message=None if old_style_messages else sandbox.exception_formatted)
     return sandbox.exception
 
 

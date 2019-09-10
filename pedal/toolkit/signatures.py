@@ -81,6 +81,33 @@ Type validation:
     list[int, str, or bool], dict[int: str], or bool or int
 '''
 
+def parse_type_slice(slice):
+    if slice.ast_name == "Index":
+        return parse_type(slice.index)
+    elif slice.ast_name == "Slice":
+        return "{}:{}".format(parse_type(slice.lower), parse_type(slice.upper))
+    elif slice.ast_name == "ExtSlice":
+        return ", ".join(parse_type_slice(s) for s in slice.dims)
+
+def parse_type(node):
+    if node.ast_name == "Str":
+        return node.s
+    elif node.ast_name == "Name":
+        return node.id
+    elif node.ast_name == "NameConstant":
+        return node.value
+    elif node.ast_name == "List":
+        return "list[{}]".format(", ".join([parse_type(n) for n in node.elts]))
+    elif node.ast_name == "Dict":
+        return "dict[{}]".format(", ".join(["{}: {}".format(parse_type(k), parse_type(v))
+                                            for k,v in zip(node.keys, node.values)]))
+    elif node.ast_name == "Subscript":
+        return parse_type(node.value) + "[{}]".format(parse_type_slice(node.slice))
+    elif node.ast_name == "BoolOp":
+        if node.op.ast_name == "Or":
+            return " or ".join(parse_type(v) for v in node.values)
+    return "?"
+
 
 class SignatureException(Exception):
     pass

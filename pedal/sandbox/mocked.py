@@ -100,7 +100,7 @@ _original_builtins = {
 }
 
 
-def _make_inputs(*input_list, **kwargs):
+def make_inputs(input_list, repeat=None):
     """
     Helper function for creating mock user input.
 
@@ -111,10 +111,6 @@ def _make_inputs(*input_list, **kwargs):
                              will return the next element of input_list each
                              time it is called.
     """
-    if 'repeat' in kwargs:
-        repeat = kwargs['repeat']
-    else:
-        repeat = None
     generator = iter(input_list)
 
     def mock_input(prompt=''):
