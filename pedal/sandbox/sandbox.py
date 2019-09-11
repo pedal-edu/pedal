@@ -384,7 +384,7 @@ class Sandbox(DataSandbox):
             self.call_contexts[self.call_id].append("{} = {}".format(key, value))
         return key
 
-    def run_file(filename, as_filename=None, modules=None, inputs=None,
+    def run_file(self, filename, as_filename=None, modules=None, inputs=None,
                  threaded=None, context=None, report_exceptions=None,
                  raise_exceptions=None):
         """
@@ -396,8 +396,8 @@ class Sandbox(DataSandbox):
                 a string, tracebacks will be shown with the given context. If
                 False, no context will be given.
         """
-        if _as_filename is None:
-            _as_filename = filename
+        if as_filename is None:
+            as_filename = filename
         with open(filename, 'r') as code_file:
             code = code_file.read() + '\n'
         self.run(code, as_filename, modules, inputs, threaded,
@@ -644,9 +644,9 @@ class Sandbox(DataSandbox):
         x = sys.stdout
         capture_stdout = io.StringIO()
         self._start_patches(
+            patch.dict('sys.modules', self.mocked_modules),
             patch('sys.stdout', capture_stdout),
             patch('time.sleep', return_value=None),
-            patch.dict('sys.modules', self.mocked_modules)
         )
         # TODO: Hack, add more flexibile way to specify unusable modules
         for module in list(sys.modules.keys()):
