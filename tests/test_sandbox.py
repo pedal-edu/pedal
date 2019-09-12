@@ -95,7 +95,7 @@ class TestCode(unittest.TestCase):
             
             The error above occurred when I ran:<br>
             <pre>get_input()</pre>
-            And entered the input:
+            And entered the inputs:
             ```
             Banana
             ```
