@@ -52,8 +52,11 @@ def get_plots(report=None):
     if report is None:
         report = MAIN_REPORT
     sandbox = _check_sandbox(report)
-    mock_plt = sandbox.modules['matplotlib.pyplot']
-    return mock_plt.plots
+    if 'matplotlib.pyplot' in sandbox.modules:
+        mock_plt = sandbox.modules['matplotlib.pyplot']
+        if hasattr(mock_plt, 'plots'):
+            return mock_plt.plots
+    return []
 
 
 def capture_output(function, *args, **kwargs):

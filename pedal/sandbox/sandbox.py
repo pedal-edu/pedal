@@ -122,6 +122,9 @@ class Sandbox(DataSandbox):
     FILE_CONTEXT_MESSAGE = (
         "\n\nThe error above occurred when I ran your file: {filename}"
     )
+    INPUT_CONTEXT_MESSAGE = (
+        "And entered the inputs:\n```\n{inputs}\n```"
+    )
     TRACER_STYLES = {
         'coverage': SandboxCoverageTracer,
         'calls': SandboxCallTracer,
@@ -550,6 +553,10 @@ class Sandbox(DataSandbox):
                 context = '\n'.join(contexts)#[1:])
             if context.strip():
                 context = self.CONTEXT_MESSAGE.format(context=context)
+                inputs = self.input_contexts[self.call_id]
+                if inputs is not None and inputs:
+                    inputs = "\n".join(inputs)
+                    context += "\n"+self.INPUT_CONTEXT_MESSAGE.format(inputs=inputs)
             else:
                 context = self.FILE_CONTEXT_MESSAGE.format(filename=self.report['source']['filename'])
             self.exception = _add_context_to_error(self.exception, context)

@@ -97,6 +97,7 @@ def match_parameters(name, *types, returns=None, root=None):
                         gently_r("Error in definition of function `{}` return type. Expected `{}`, "
                                  "instead found {}.".format(name, returns, actual_type),
                                  "wrong_return_type")
+                        return None
                 else:
                     gently_r("Error in definition of function `{}` return type. Expected `{}`, "
                              "but there was no return type specified.".format(name, returns),

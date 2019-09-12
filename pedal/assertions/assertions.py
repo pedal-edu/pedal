@@ -9,12 +9,14 @@ from pedal.assertions.setup import _setup_assertions, AssertionException
 
 # TODO: Allow bundling of assertions to make a table
 
-iterable = lambda obj: hasattr(obj,'__iter__') or hasattr(obj,'__getitem__')
+iterable = lambda obj: hasattr(obj, '__iter__') or hasattr(obj, '__getitem__')
 
 _MAX_LENGTH = 80
 
+
 def _escape_curly_braces(result):
     return result.replace("{", "{{").replace("}", "}}")
+
 
 def safe_repr(obj, short=False):
     try:
@@ -22,7 +24,7 @@ def safe_repr(obj, short=False):
     except Exception:
         result = object.__repr__(obj)
     if short and len(result) >= _MAX_LENGTH:
-        result = result[:_MAX_LENGTH] + ' [truncated]...'        
+        result = result[:_MAX_LENGTH] + ' [truncated]...'
     result = result
     return result
 
@@ -62,7 +64,7 @@ def _normalize_string(a_string, numeric_endings=False):
 def equality_test(actual, expected, _exact_strings, _delta, _test_output):
     # Float comparison
     if (isinstance(expected, float) and
-        isinstance(actual, (float, int)) and
+            isinstance(actual, (float, int)) and
             abs(actual - expected) < _delta):
         return True
     # Exact Comparison
@@ -70,20 +72,20 @@ def equality_test(actual, expected, _exact_strings, _delta, _test_output):
         return True
     # Inexact string comparison
     if (_exact_strings and isinstance(expected, str) and
-        isinstance(actual, str) and
-        _normalize_string(actual) == _normalize_string(expected)):
+            isinstance(actual, str) and
+            _normalize_string(actual) == _normalize_string(expected)):
         return True
     # Output comparison
     if _test_output:
         # Inexact output comparison
         normalized_actual = [_normalize_string(line) for line in actual]
         if (isinstance(expected, str) and
-            _normalize_string(expected) in normalized_actual):
+                _normalize_string(expected) in normalized_actual):
             return True
         # Exact output comparison
         normalized_expected = [_normalize_string(line) for line in expected]
         if (isinstance(expected, list) and
-            normalized_expected == normalized_actual):
+                normalized_expected == normalized_actual):
             return True
     # Else
     return False
@@ -99,7 +101,7 @@ def _fail(code_message, actual_message, expected_message,
     sandboxed_values = []
     sandboxed_results = []
     if modify_right and values:
-        values = values[:-1] + (modify_right(values[-1]), )
+        values = values[:-1] + (modify_right(values[-1]),)
     for value in values:
         if is_sandbox_result(value):
             sandboxed_results.append(value)
@@ -121,7 +123,8 @@ def _build_result_from_target(target, index, quantity):
             return "the first result"
         else:
             return "the second result"
-    return "<code>"+target+"</code>"
+    return "<code>" + target + "</code>"
+
 
 def _build_context(sandboxed_results, actual_message, expected_message,
                    show_expected_value):
@@ -141,21 +144,21 @@ def _build_context(sandboxed_results, actual_message, expected_message,
     # Actual rendering of text
     if calls:
         calls = [_escape_curly_braces(str(call)) for call in calls]
-        context.append("I ran:<pre>"+ "\n".join(calls)+ "</pre>")
+        context.append("I ran:<pre>" + "\n".join(calls) + "</pre>")
     if inputs:
         inputs = [_escape_curly_braces(str(inp)) for inp in inputs]
-        context.append("I entered as input:<pre>"+ "\n".join(inputs)+ "</pre>")
+        context.append("I entered as input:<pre>" + "\n".join(inputs) + "</pre>")
     actual_message += ":<pre>{}</pre>"
     for i, target in enumerate(targets):
         named_target = _build_result_from_target(target, i, len(targets))
         if target == '_':
-            context.append(named_target.capitalize() + " "+actual_message)
+            context.append(named_target.capitalize() + " " + actual_message)
         else:
-            context.append("The value of "+named_target+" "+actual_message)
+            context.append("The value of " + named_target + " " + actual_message)
     expected_context = "But I expected "
     if len(targets) == 2:
         expected_context += _build_result_from_target(targets[0], 0, 2)
-        expected_context += " " +expected_message + " "
+        expected_context += " " + expected_message + " "
         expected_context += _build_result_from_target(targets[1], 1, 2)
     else:
         expected_context += _build_result_from_target(targets[0], 0, 1)
@@ -181,11 +184,11 @@ def _basic_assertion(left, right, operator, code_comparison_message,
     _setup_assertions(report)
     context = ""
     if message:
-        message = "\n"+message
+        message = "\n" + message
     else:
         message = ""
     # TODO: Handle right-side sandbox result
-    #if is_sandbox_result(right):
+    # if is_sandbox_result(right):
     #    right = right._actual_value
     if isinstance(left, Exception):
         return False
@@ -196,8 +199,8 @@ def _basic_assertion(left, right, operator, code_comparison_message,
                         show_expected_value, modify_right, left, right)
         report['assertions']['collected'].append(failure)
         report.attach('Instructor Test', category='student', tool='Assertions',
-                      mistake={'message': "Student code failed instructor test.<br>\n"+
-                                          context+str(failure)+message})
+                      mistake={'message': "Student code failed instructor test.<br>\n" +
+                                          context + str(failure) + message})
         report['assertions']['failures'] += 1
         if report['assertions']['exceptions']:
             raise failure
@@ -214,15 +217,15 @@ def assertEqual(left, right, score=None, message=None, report=None,
     if compare_lengths is None:
         compare_lengths = (iterable(left) and isinstance(right, (int, float)))
     if _basic_assertion(left, right,
-                            lambda l, r:
-                                equality_test(len(l), r, False, DELTA, False) if
-                                compare_lengths else
-                                equality_test(l, r, False, DELTA, False),
-                            "len({}) != {}" if compare_lengths else "{} != {}",
-                            "was"+PRE_VAL,
-                            "to have its length equal to" 
-                                if compare_lengths else "to be equal to",
-                            message, report, contextualize):
+                        lambda l, r:
+                        equality_test(len(l), r, False, DELTA, False) if
+                        compare_lengths else
+                        equality_test(l, r, False, DELTA, False),
+                        "len({}) != {}" if compare_lengths else "{} != {}",
+                        "was" + PRE_VAL,
+                        "to have its length equal to"
+                        if compare_lengths else "to be equal to",
+                        message, report, contextualize):
         if report is None:
             report = MAIN_REPORT
         report.give_partial(score)
@@ -234,13 +237,13 @@ assert_equal = assertEqual
 
 
 def assertNotEqual(left, right, score=None, message=None, report=None,
-                contextualize=True, exact=False):
+                   contextualize=True, exact=False):
     if _basic_assertion(left, right,
-                            lambda l, r: not equality_test(l, r, False, DELTA, False),
-                            "{} == {}",
-                            "was"+PRE_VAL,
-                            "to not be equal to",
-                            message, report, contextualize):
+                        lambda l, r: not equality_test(l, r, False, DELTA, False),
+                        "{} == {}",
+                        "was" + PRE_VAL,
+                        "to not be equal to",
+                        message, report, contextualize):
         if report is None:
             report = MAIN_REPORT
         report.give_partial(score)
@@ -249,14 +252,14 @@ def assertNotEqual(left, right, score=None, message=None, report=None,
 
 
 def assertTrue(something, score=None, message=None, report=None,
-                contextualize=True):
+               contextualize=True):
     if _basic_assertion(something, True,
-                            lambda l, r: bool(l),
-                            "{} is true",
-                            "was false"+PRE_VAL,
-                            "to be true",
-                            message, report, contextualize,
-                            show_expected_value=False):
+                        lambda l, r: bool(l),
+                        "{} is true",
+                        "was false" + PRE_VAL,
+                        "to be true",
+                        message, report, contextualize,
+                        show_expected_value=False):
         if report is None:
             report = MAIN_REPORT
         report.give_partial(score)
@@ -267,12 +270,12 @@ def assertTrue(something, score=None, message=None, report=None,
 def assertFalse(something, score=None, message=None, report=None,
                 contextualize=True):
     if _basic_assertion(something, False,
-                            lambda l, r: not bool(l),
-                            "{} is false",
-                            "was true"+PRE_VAL,
-                            "to be false",
-                            message, report, contextualize,
-                            show_expected_value=False):
+                        lambda l, r: not bool(l),
+                        "{} is false",
+                        "was true" + PRE_VAL,
+                        "to be false",
+                        message, report, contextualize,
+                        show_expected_value=False):
         if report is None:
             report = MAIN_REPORT
         report.give_partial(score)
@@ -287,40 +290,44 @@ def assertIs(left, right, score=None, message=None):
 def assertIsNot(left, right, score=None, message=None):
     pass
 
+
 def _actually_is_none(l, r):
     if is_sandbox_result(l):
         return l._actual_value is None
     return l is None
 
+
 def assertIsNone(something, score=None, message=None, report=None,
-                contextualize=True):
+                 contextualize=True):
     if _basic_assertion(something, None,
-                            _actually_is_none,
-                            "{} is none",
-                            "was"+PRE_VAL,
-                            "to be none",
-                            message, report, contextualize,
-                            show_expected_value=False):
+                        _actually_is_none,
+                        "{} is none",
+                        "was" + PRE_VAL,
+                        "to be none",
+                        message, report, contextualize,
+                        show_expected_value=False):
         if report is None:
             report = MAIN_REPORT
         report.give_partial(score)
         return True
     return False
 
+
 def _actually_is_not_none(l, r):
     if is_sandbox_result(l):
         return l._actual_value is not None
     return l is not None
 
+
 def assertIsNotNone(something, score=None, message=None, report=None,
-                contextualize=True):
+                    contextualize=True):
     if _basic_assertion(something, None,
-                            _actually_is_not_none,
-                            "{} is not none",
-                            "was"+PRE_VAL,
-                            "to not be none",
-                            message, report, contextualize,
-                            show_expected_value=False):
+                        _actually_is_not_none,
+                        "{} is not none",
+                        "was" + PRE_VAL,
+                        "to not be none",
+                        message, report, contextualize,
+                        show_expected_value=False):
         if report is None:
             report = MAIN_REPORT
         report.give_partial(score)
@@ -334,11 +341,11 @@ def assertIn(needle, haystack, score=None, message=None, report=None,
     if not is_sandbox_result(needle) and is_sandbox_result(haystack):
         expected_message = "to contain"
     if _basic_assertion(needle, haystack,
-                            lambda n, h: n in h,
-                            "{} not in {}",
-                            "was"+PRE_VAL,
-                            expected_message,
-                            message, report, contextualize):
+                        lambda n, h: n in h,
+                        "{} not in {}",
+                        "was" + PRE_VAL,
+                        expected_message,
+                        message, report, contextualize):
         if report is None:
             report = MAIN_REPORT
         report.give_partial(score)
@@ -352,31 +359,33 @@ def assertNotIn(needle, haystack, score=None, message=None, report=None,
     if not is_sandbox_result(needle) and is_sandbox_result(haystack):
         expected_message = "to not contain"
     if _basic_assertion(needle, haystack,
-                            lambda n, h: n not in h,
-                            "{} in {}",
-                            "was"+PRE_VAL,
-                            expected_message,
-                            message, report, contextualize):
+                        lambda n, h: n not in h,
+                        "{} in {}",
+                        "was" + PRE_VAL,
+                        expected_message,
+                        message, report, contextualize):
         if report is None:
             report = MAIN_REPORT
         report.give_partial(score)
         return True
     return False
 
+
 def _humanize_types(types):
     if isinstance(types, tuple):
         return ', '.join([t.__name__ for t in types])
     return types.__name__
 
+
 def assertIsInstance(value, types, score=None, message=None, report=None,
-                contextualize=True):
+                     contextualize=True):
     if _basic_assertion(value, types,
-                            lambda v, t: isinstance(v, t),
-                            "isinstance({}, {})",
-                            "was"+PRE_VAL,
-                            "to be of type",
-                            message, report, contextualize,
-                            modify_right=_humanize_types):
+                        lambda v, t: isinstance(v, t),
+                        "isinstance({}, {})",
+                        "was" + PRE_VAL,
+                        "to be of type",
+                        message, report, contextualize,
+                        modify_right=_humanize_types):
         if report is None:
             report = MAIN_REPORT
         report.give_partial(score)
@@ -409,16 +418,16 @@ def assertGreater(left, right, score=None, message=None, report=None,
     if compare_lengths is None:
         compare_lengths = (iterable(left) and isinstance(right, (int, float)))
     if _basic_assertion(left, right,
-                            lambda l, r:
-                                len(l) > r if
-                                compare_lengths else
-                                l > r,
-                            "len({}) <= {}" if compare_lengths else "{} <= {}",
-                            "was"+PRE_VAL,
-                            "to have its length greater than" 
-                                if compare_lengths else
-                                "to be greater than",
-                            message, report, contextualize):
+                        lambda l, r:
+                        len(l) > r if
+                        compare_lengths else
+                        l > r,
+                        "len({}) <= {}" if compare_lengths else "{} <= {}",
+                        "was" + PRE_VAL,
+                        "to have its length greater than"
+                        if compare_lengths else
+                        "to be greater than",
+                        message, report, contextualize):
         if report is None:
             report = MAIN_REPORT
         report.give_partial(score)
@@ -431,15 +440,15 @@ def assertGreaterEqual(left, right, score=None, message=None, report=None,
     if compare_lengths is None:
         compare_lengths = (iterable(left) and isinstance(right, (int, float)))
     if _basic_assertion(left, right,
-                            lambda l, r:
-                                len(l) >= r if
-                                compare_lengths else
-                                l >= r,
-                            "len({}) < {}" if compare_lengths else "{} < {}",
-                            "was"+PRE_VAL,
-                            "to have its length greater than or equal to" if compare_lengths else
-                                "to be greater than or equal to",
-                            message, report, contextualize):
+                        lambda l, r:
+                        len(l) >= r if
+                        compare_lengths else
+                        l >= r,
+                        "len({}) < {}" if compare_lengths else "{} < {}",
+                        "was" + PRE_VAL,
+                        "to have its length greater than or equal to" if compare_lengths else
+                        "to be greater than or equal to",
+                        message, report, contextualize):
         if report is None:
             report = MAIN_REPORT
         report.give_partial(score)
@@ -448,20 +457,20 @@ def assertGreaterEqual(left, right, score=None, message=None, report=None,
 
 
 def assertLess(left, right, score=None, message=None, report=None,
-                       contextualize=True, compare_lengths=None):
+               contextualize=True, compare_lengths=None):
     if compare_lengths is None:
         compare_lengths = (iterable(left) and isinstance(right, (int, float)))
     if _basic_assertion(left, right,
-                            lambda l, r:
-                                len(l) < r if
-                                compare_lengths else
-                                l < r,
-                            "len({}) >= {}" if compare_lengths else "{} >= {}",
-                            "was"+PRE_VAL,
-                            "to have its length less than" 
-                                if compare_lengths else
-                                "to be less than",
-                            message, report, contextualize):
+                        lambda l, r:
+                        len(l) < r if
+                        compare_lengths else
+                        l < r,
+                        "len({}) >= {}" if compare_lengths else "{} >= {}",
+                        "was" + PRE_VAL,
+                        "to have its length less than"
+                        if compare_lengths else
+                        "to be less than",
+                        message, report, contextualize):
         if report is None:
             report = MAIN_REPORT
         report.give_partial(score)
@@ -474,15 +483,15 @@ def assertLessEqual(left, right, score=None, message=None, report=None,
     if compare_lengths is None:
         compare_lengths = (iterable(left) and isinstance(right, (int, float)))
     if _basic_assertion(left, right,
-                            lambda l, r:
-                                len(l) <= r if
-                                compare_lengths else
-                                l <= r,
-                            "len({}) > {}" if compare_lengths else "{} > {}",
-                            "was"+PRE_VAL,
-                            "to have its length less than or equal to" if compare_lengths else
-                                "to be less than or equal to",
-                            message, report, contextualize):
+                        lambda l, r:
+                        len(l) <= r if
+                        compare_lengths else
+                        l <= r,
+                        "len({}) > {}" if compare_lengths else "{} > {}",
+                        "was" + PRE_VAL,
+                        "to have its length less than or equal to" if compare_lengths else
+                        "to be less than or equal to",
+                        message, report, contextualize):
         if report is None:
             report = MAIN_REPORT
         report.give_partial(score)
@@ -516,8 +525,8 @@ def assertSequenceEqual(left, right):
 
 # Speciality Asserts
 def assertPrints(result, expected_output, args=None, returns=None,
-                  score=None, message=None, report=None,
-                  contextualize=True, exact=False):
+                 score=None, message=None, report=None,
+                 contextualize=True, exact=False):
     if not isinstance(result, SandboxResult):
         return False
         raise TypeError("You must pass in a SandboxResult (e.g., using `call`) to assertPrints")
@@ -530,26 +539,26 @@ def assertPrints(result, expected_output, args=None, returns=None,
     inputs = sandbox.input_contexts[call_id]
     actual_output = sandbox.output_contexts[call_id]
     if not equality_test(actual_output, expected_output, exact, DELTA, True):
-        context= []
+        context = []
         if calls:
-            context.append("I ran:<pre>"+
-                           "\n".join(map(str, calls))+
+            context.append("I ran:<pre>" +
+                           "\n".join(map(str, calls)) +
                            "</pre>")
         if inputs:
-            context.append("I entered as input:<pre>"+
-                           "\n".join(map(str, inputs))+
+            context.append("I entered as input:<pre>" +
+                           "\n".join(map(str, inputs)) +
                            "</pre>")
         if actual_output:
-            context.append("The function printed:<pre>"+
-                           "\n".join(map(str, actual_output))+
+            context.append("The function printed:<pre>" +
+                           "\n".join(map(str, actual_output)) +
                            "</pre>")
         else:
             context.append("The function printed nothing.")
-        context.append("But I expected the output:<pre>"+ "\n".join(map(str, expected_output))+ "</pre>")
+        context.append("But I expected the output:<pre>" + "\n".join(map(str, expected_output)) + "</pre>")
         failure = AssertionException("\n".join(context))
         report['assertions']['collected'].append(failure)
         report.attach('Instructor Test', category='student', tool='Assertions',
-                      mistake={'message': "Student code failed instructor test.<br>\n"+
+                      mistake={'message': "Student code failed instructor test.<br>\n" +
                                           str(failure)})
         report['assertions']['failures'] += 1
         if report['assertions']['exceptions']:
@@ -558,6 +567,7 @@ def assertPrints(result, expected_output, args=None, returns=None,
             return False
     report.give_partial(score)
     return True
+
 
 def assertHasFunction(obj, function, args=None, returns=None,
                       score=None, message=None, report=None,
@@ -575,7 +585,7 @@ def assertHasFunction(obj, function, args=None, returns=None,
     if not _basic_assertion(obj, function,
                             comparison,
                             "Could not find function {}{}",
-                            "was"+PRE_VAL,
+                            "was" + PRE_VAL,
                             "to have the function",
                             message, report, contextualize):
         return False
@@ -587,17 +597,18 @@ def assertHasFunction(obj, function, args=None, returns=None,
         except:
             student_function = getattr(obj, function)
     if _basic_assertion(student_function, function,
-                            lambda l, r: callable(l),
-                            "The value {} is in the variable {}, and that value is not a callable function.",
-                            "was callable"+PRE_VAL,
-                            "to be callable",
-                            message, report, contextualize,
-                            show_expected_value=False):
+                        lambda l, r: callable(l),
+                        "The value {} is in the variable {}, and that value is not a callable function.",
+                        "was callable" + PRE_VAL,
+                        "to be callable",
+                        message, report, contextualize,
+                        show_expected_value=False):
         if report is None:
             report = MAIN_REPORT
         report.give_partial(score)
         return True
     return False
+
 
 def assertHasClass(sandbox, class_name, attrs=None):
     pass
@@ -614,7 +625,7 @@ def assertHas(obj, variable, types=None, value=None, score=None,
     if not _basic_assertion(obj, variable,
                             comparison,
                             "Could not find variable {}{}",
-                            "was"+PRE_VAL,
+                            "was" + PRE_VAL,
                             "to have the variable",
                             message, report, contextualize):
         return False
@@ -624,26 +635,27 @@ def assertHas(obj, variable, types=None, value=None, score=None,
         student_variable = getattr(obj, variable)
     if types is not None:
         if not _basic_assertion(student_variable, types,
-                            lambda v, t: isinstance(v, t),
-                            "isinstance({}, {})",
-                            "was"+PRE_VAL,
-                            "to be of type",
-                            message, report, contextualize,
-                            modify_right=_humanize_types):
+                                lambda v, t: isinstance(v, t),
+                                "isinstance({}, {})",
+                                "was" + PRE_VAL,
+                                "to be of type",
+                                message, report, contextualize,
+                                modify_right=_humanize_types):
             return False
     if value is not None:
         if not _basic_assertion(student_variable, value,
-                            lambda l, r: equality_test(l, r, False, DELTA, False),
-                            "{} != {}",
-                            "was"+PRE_VAL,
-                            "to be equal to",
-                            message, report, contextualize,
-                            show_expected_value=False):
+                                lambda l, r: equality_test(l, r, False, DELTA, False),
+                                "{} != {}",
+                                "was" + PRE_VAL,
+                                "to be equal to",
+                                message, report, contextualize,
+                                show_expected_value=False):
             return False
     if report is None:
         report = MAIN_REPORT
     report.give_partial(score)
     return True
+
 
 def assertGenerally(expression, score=None, message=None, report=None,
                     contextualize=True):

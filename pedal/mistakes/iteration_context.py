@@ -4,7 +4,7 @@ from pedal.cait.cait_api import (parse_program,
 from pedal.report.imperative import explain, gently
 import pedal.mistakes.instructor_append as append_api
 from pedal.toolkit.utilities import *
-from pedal.sandbox.compatibility import get_output
+from pedal.sandbox.compatibility import get_output, get_plots
 from pedal.report.imperative import gently_r, explain_r
 
 
@@ -1133,19 +1133,21 @@ def wrong_duplicate_var_in_add():
 
 
 # ########################PLOTTING###############################
-def plot_group_error(output=None):
+def plot_group_error(output=None, plots=None):
     if output is None:
         output = get_output()
-    if len(output) > 1:
-        explain_r('You should only be printing/plotting one thing!', "print_one", "Multiple Calls to print or plot")
+    if plots is None:
+        plots = get_plots()
+    if len(plots) > 1:
+        explain_r('You should only be plotting one thing!', "print_one", "Multiple Calls to plot")
         return True
-    elif len(output) == 0:
+    elif len(plots) == 0:
         explain_r('The algorithm is plotting an empty list. Check your logic.', 'blank_plot', "Blank Plot")
         return True
-    elif not isinstance(output[0], list):
+    elif output:
         explain('You should be plotting, not printing!', 'printing', "Printing instead of Plotting")
         return True
-    elif len(output[0]) != 1:
+    elif len(plots.data[0]) != 1:
         explain('You should only be plotting one thing!', 'one_plot', "Too Many Plots")
         return True
 
