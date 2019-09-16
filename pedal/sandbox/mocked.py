@@ -45,10 +45,12 @@ def _disabled_globals():
     error.
     """
     raise RuntimeError("You are not allowed to call 'globals'.")
-    
+
+
 class FunctionNotAllowed(Exception):
     pass
-    
+
+
 def disabled_builtin(name):
     def _disabled_version(*args, **kwargs):
         raise FunctionNotAllowed("You are not allowed to call '{}'.".format(name))
@@ -60,6 +62,8 @@ _OPEN_FORBIDDEN_MODES = re.compile(r"[wa+]")
 
 # TODO: Turn this into a function that lets us more elegantly specify valid and
 # invalid filenames/paths
+
+
 def _restricted_open(name, mode='r', buffering=-1):
     if _OPEN_FORBIDDEN_NAMES.search(name):
         raise RuntimeError("The filename you passed to 'open' is restricted.")
@@ -69,10 +73,13 @@ def _restricted_open(name, mode='r', buffering=-1):
         return _original_builtins['open'](name, mode, buffering)
 
 # TODO: Allow this to be flexible
+
+
 def _restricted_import(name, globals=None, locals=None, fromlist=(), level=0):
     if name == 'pedal' or name.startswith('pedal.'):
         raise RuntimeError("You cannot import pedal!")
     return _original_builtins['__import__'](name, globals, locals, fromlist, level)
+
 
 try:
     __builtins__

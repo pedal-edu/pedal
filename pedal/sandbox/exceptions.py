@@ -5,7 +5,8 @@ import sys
 try:
     TimeoutError
 except NameError:
-    TimeoutError = Exception
+    class TimeoutError(Exception):
+        pass
 
 class SandboxException(Exception):
     """
@@ -154,6 +155,9 @@ class SandboxTraceback:
         if self.full_traceback:
             return False
         filename, a_, b_, _ = traceback.extract_tb(tb, limit=1)[0]
+        # Is the error in the student file?
+        if filename == self.student_filename:
+            return False
         # Is the error in the instructor file?
         if filename == self.instructor_filename:
             return True
