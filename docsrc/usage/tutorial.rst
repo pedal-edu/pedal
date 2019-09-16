@@ -87,21 +87,32 @@ The triple underscore is used as a wild match card. It will match to any node or
 
     _var_
 
-is a place holder for variables, denoted by single under scores. Many instructor variables are allowed to map to one variable in source, but each variable in source can only map to one instructor variable. Note that these aren't bidirectional mappings
+is a place holder for variables, denoted by single under scores. Many source variables are allowed to match to one matcher variable, but each matcher variable code can only match to one source variable. Note this implies that these aren't bidirectional mappings.
+
 example:
 
 .. code:: python
 
-    # source 1
-    var1 = var1/var2
-    # source 2
-    var1 = var2/var2
-    # matcher 1
-    match = find_match("_var1_ = _var1_/_var_2")
-    # matcher 2
-    match = find_match("_var1_ = _var2_/_var_2")
+    # Matcher 1
+    _var1_ = _var2_/_var3_
 
-In the example above, matcher 1 would find source 1 but wouldn't find source 2 because source variable `var2` is being mapped to both `_var1_` and `_var2_`. However, matcher 2 would find both source 1 and source 2 because while matcher 2's `_var2_` will map to both source 2's `var1` and `var2`, source 2's `var2` only maps to matcher 2's `_var2_` If a variable name is not surrounded by single underscores, Cait will try to match the exact variable name. Note: this only works for AST nodes that are Name nodes and FuncDefinition nodes. Note that the matcher will save these variables/names for later reference (discussed below)
+    # Matcher 2
+    _var1_ = _var2_/_var2_
+
+    # Source 1
+    x = y/x
+
+    # Source 2
+    x = y/y
+
+    # Source 3
+    x = x/x
+
+Matcher 1 will map to Source 1, Source 2, Source 3. In Source 1, source variable x matches to both _var1_ and _var3_, however, _var3_ only matches to source variable x (and similarly _var1_ only matches to source variable x). Similarly this applies to Source 2 and 3.
+
+Matcher 2 will NOT map to Source 1 and will only map to Source 2, Source 3 because for source 1, _var2_ would not be able to match to both source variable x AND source variable y.
+
+In more simple terms, if you are familiar with regular expressions, these variable markers work similarly to groupings in regular expressions. The values of the groups marked denoted by say $1 and $2 might be the exact same string internally, but are referenced by two different groups in practice.
 
 .. code:: python
 

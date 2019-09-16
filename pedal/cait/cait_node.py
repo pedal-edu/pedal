@@ -328,6 +328,18 @@ class CaitNode:
         """
         Retrieves any patterns that match against this CaitNode. Expected to be
         used for subpattern matching.
+        Args:
+            pattern (CaitNode/str): The pattern searched for in this cait_node
+            is_mod (bool): Assumes that this node is a module node
+            check_meta (bool): Checks if meta information of the nodes also matches (e.g. instead of just checking children,
+                            also checking whether the children have the same field name in both the pattern and the
+                            source
+            use_previous (bool): If True, the match will be searched while inheriting the symbol table of the parent. This
+                            means that variable consistency must be maintained between parent and child matches.
+
+        Returns:
+            :obj: 'list' of :'obj': AstMap: a list of matches
+
         """
         # Avoid circular import
         import pedal.cait.stretchy_tree_matching as stm
@@ -340,8 +352,8 @@ class CaitNode:
         prev_match = self.map if use_previous else None
         return matcher.find_matches(self, check_meta=check_meta, pre_match=prev_match)
 
-    def find_match(self, pattern, is_mod=False):
-        matches = self.find_matches(pattern, is_mod)
+    def find_match(self, pattern, is_mod=False, check_meta=True, use_previous=True):
+        matches = self.find_matches(pattern, is_mod, check_meta=check_meta, use_previous=use_previous)
         if len(matches) != 0:
             return matches[0]
         return None

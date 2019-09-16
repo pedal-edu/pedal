@@ -51,20 +51,19 @@ def list_all_zeros_8_2():
     message = 'Try seeing what happens when you change the numbers in the list.'
     code = 'default_list_8.2'
     tldr = 'Use different numbers'
-    std_ast = parse_program()
-    lists = std_ast.find_all('List')
-    is_all_zero = True
-    for init_list in lists:
-        for node in init_list.elts:
-            if node.ast_name == 'Num' and node.n != 0:
-                is_all_zero = False
+    matches = find_matches("_var_ = [__list__]")
+    for match in matches:
+        __list__ = match['__list__']
+        list_node = __list__.parent
+        all_num = list_node.find_all("Num")
+        all_zeros = True
+        for num in all_num:
+            if num.n != 0:
+                all_zeros = False
                 break
-        if is_all_zero:
-            break
-    if is_all_zero:
-        return explain_r(message, code, label=tldr)
+        if all_zeros:
+            return explain_r(message, code, label=tldr)
     return False
-
 
 # ################8.2 End#######################
 

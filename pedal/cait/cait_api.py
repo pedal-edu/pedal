@@ -73,7 +73,7 @@ def _load_cait(student_code, report):
         else:
             student_ast = report['source']['ast']
     else:
-        report.attach("No source code found", tool='cait',
+        report.attach("Unparsable Source", tool='cait',
                       category='analyzer')
         cait['success'] = False
         cait['ast'] = CaitNode(ast.parse(""), report=report)

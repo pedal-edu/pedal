@@ -254,6 +254,35 @@ class CaitTests(unittest.TestCase):
                 print(ins_ast.astNode)
                 print(std_ast.astNode)
 
+    def test_commutativity(self):
+        # print("TESTING COMMUTATIVITY ADDITION")
+        # fail_count = 0
+        # success_count = 0
+        std_code = ("_sum = 0\n"
+                    "list = [1,2,3,4]\n"
+                    "for item in list:\n"
+                    "    _sum = item + _sum\n"
+                    "print(_sum)")
+        ins_code = ("_accu_ = 0\n"
+                    "_iList_ = __listInit__\n"
+                    "for _item_ in _iList_:\n"
+                    "    _accu_ = _accu_ + _item_\n"
+                    "print(_accu_)")
+        ins_tree = StretchyTreeMatcher(ins_code, report=MAIN_REPORT)
+        ins_ast = ins_tree.root_node
+        std_ast = parse_code(std_code)
+
+        mappings = ins_tree.find_matches(std_ast.astNode)
+        self.assertTrue(mappings, "mapping not found")
+        if mappings:
+            mappings = mappings[0]
+            self.assertTrue(mappings.conflict_keys != 0, "Conflicting keys in ADDITION when there shouldn't be")
+            debug_print = False  # TODO: debug print
+            if debug_print:
+                print(ins_ast.astNode)
+                print(std_ast.astNode)
+                print(mappings)
+
     def test_many_to_one(self):
         # print("TESTING MANY TO ONE")
         std_code = ("_sum = 0\nlist = [1,2,3,4]\n"
@@ -279,35 +308,6 @@ class CaitTests(unittest.TestCase):
                 lengths = sorted([len(v) for v in mappings.symbol_table.values()])
                 self.assertEqual(lengths, [1, 2, 2, 3], "inconsistent symbol matching")
             debug_print = False
-            if debug_print:
-                print(ins_ast.astNode)
-                print(std_ast.astNode)
-                print(mappings)
-
-    def test_commutativity(self):
-        # print("TESTING COMMUTATIVITY ADDITION")
-        # fail_count = 0
-        # success_count = 0
-        std_code = ("_sum = 0\n"
-                    "list = [1,2,3,4]\n"
-                    "for item in list:\n"
-                    "    _sum = item + _sum\n"
-                    "print(_sum)")
-        ins_code = ("_accu_ = 0\n"
-                    "_iList_ = __listInit__\n"
-                    "for _item_ in _iList_:\n"
-                    "    _accu_ = _accu_ + _item_\n"
-                    "print(_accu_)")
-        ins_tree = StretchyTreeMatcher(ins_code, report=MAIN_REPORT)
-        ins_ast = ins_tree.root_node
-        std_ast = parse_code(std_code)
-
-        mappings = ins_tree.find_matches(std_ast.astNode)
-        self.assertTrue(mappings, "mapping not found")
-        if mappings:
-            mappings = mappings[0]
-            self.assertTrue(mappings.conflict_keys != 0, "Conflicting keys in ADDITION when there shouldn't be")
-            debug_print = False  # TODO: debug print
             if debug_print:
                 print(ins_ast.astNode)
                 print(std_ast.astNode)
