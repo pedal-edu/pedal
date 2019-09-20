@@ -764,6 +764,15 @@ class Tifa(ast.NodeVisitor):
             self.visit(generator)
         return ListType(self.visit(node.elt))
 
+
+    def visit_NameConstant(self, node):
+        value = node.value
+        if isinstance(value, bool):
+            return BoolType()
+        else:
+            return NoneType()
+
+
     def visit_Name(self, node):
         name = node.id
         if name == "___":

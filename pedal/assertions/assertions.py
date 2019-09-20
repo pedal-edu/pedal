@@ -144,11 +144,11 @@ def _build_context(sandboxed_results, actual_message, expected_message,
     # Actual rendering of text
     if calls:
         calls = [_escape_curly_braces(str(call)) for call in calls]
-        context.append("I ran:<pre>" + "\n".join(calls) + "</pre>")
+        context.append("I ran:\n<pre>" + "\n".join(calls) + "</pre>")
     if inputs:
         inputs = [_escape_curly_braces(str(inp)) for inp in inputs]
-        context.append("I entered as input:<pre>" + "\n".join(inputs) + "</pre>")
-    actual_message += ":<pre>{}</pre>"
+        context.append("I entered as input:\n<pre>" + "\n".join(inputs) + "</pre>")
+    actual_message += ":\n<pre>{}</pre>"
     for i, target in enumerate(targets):
         named_target = _build_result_from_target(target, i, len(targets))
         if target == '_':
@@ -164,7 +164,7 @@ def _build_context(sandboxed_results, actual_message, expected_message,
         expected_context += _build_result_from_target(targets[0], 0, 1)
         expected_context += " " + expected_message
         if show_expected_value:
-            expected_context += ":<pre>{}</pre>"
+            expected_context += ":\n<pre>{}</pre>"
     context.append(expected_context)
     return "\n".join(context)
 
@@ -541,20 +541,20 @@ def assertPrints(result, expected_output, args=None, returns=None,
     if not equality_test(actual_output, expected_output, exact, DELTA, True):
         context = []
         if calls:
-            context.append("I ran:<pre>" +
+            context.append("I ran:\n<pre>" +
                            "\n".join(map(str, calls)) +
                            "</pre>")
         if inputs:
-            context.append("I entered as input:<pre>" +
+            context.append("I entered as input:\n<pre>" +
                            "\n".join(map(str, inputs)) +
                            "</pre>")
         if actual_output:
-            context.append("The function printed:<pre>" +
+            context.append("The function printed:\n<pre>" +
                            "\n".join(map(str, actual_output)) +
                            "</pre>")
         else:
             context.append("The function printed nothing.")
-        context.append("But I expected the output:<pre>" + "\n".join(map(str, expected_output)) + "</pre>")
+        context.append("But I expected the output:\n<pre>" + "\n".join(map(str, expected_output)) + "</pre>")
         failure = AssertionException("\n".join(context))
         report['assertions']['collected'].append(failure)
         report.attach('Instructor Test', category='student', tool='Assertions',

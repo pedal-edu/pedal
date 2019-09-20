@@ -550,3 +550,12 @@ def get_tifa_type(v, custom_types):
         return get_tifa_type_from_str(v.s, custom_types)
     elif isinstance(v, ast.Name):
         return get_tifa_type_from_str(v.id, custom_types)
+    elif isinstance(v, ast.List):
+        elements = v.elts
+        if elements:
+            return ListType(subtype=get_tifa_type(elements[0], custom_types))
+        else:
+            return ListType(empty=True)
+    # TODO: Finish filling in static type system
+    else:
+        return UnknownType()
