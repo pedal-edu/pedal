@@ -539,10 +539,10 @@ class SpecificMistakeTest(MistakeTest):
         self.assertTrue(wrong_for_inside_if(), "false negative")
 
     def test_wrong_list_initialization_9_1(self):
-        self.to_source('rainfall_list = weather.get("Precipitation","Location","Blacksburg, VA")')
+        self.to_source('rainfall_list = weather.get("Data.Precipitation","Station.Location","Blacksburg, VA")')
         self.assertFalse(wrong_list_initialization_9_1(), "false positive")
 
-        self.to_source('rainfall_list = weather.get("Precipitation","Location","Blacksburg, PA")')
+        self.to_source('rainfall_list = weather.get("Data.Precipitation","Station.Location","Blacksburg, PA")')
         self.assertTrue(wrong_list_initialization_9_1(), "false negative")
 
     def test_wrong_accumulator_initialization_9_1(self):
@@ -601,10 +601,10 @@ class SpecificMistakeTest(MistakeTest):
         self.assertFalse(wrong_print_9_1(), "false positive")
 
     def test_wrong_list_initialization_9_2(self):
-        self.to_source('rainfall_list = weather.get("Precipitation","Location","Blacksburg, VA")')
+        self.to_source('rainfall_list = weather.get("Data.Precipitation","Station.Location","Blacksburg, VA")')
         self.assertFalse(wrong_list_initialization_9_2(), "false positive")
 
-        self.to_source('rainfall_list = weather.get("Precipitation","Location","Blacksburg, PA")')
+        self.to_source('rainfall_list = weather.get("Data.Precipitation","Station.Location","Blacksburg, PA")')
         self.assertTrue(wrong_list_initialization_9_2(), "false negative")
 
     def test_wrong_accumulator_initialization_9_2(self):
@@ -832,7 +832,7 @@ class SpecificMistakeTest(MistakeTest):
         self.assertTrue(wrong_append_problem_atl2_10_5(), "false negative")
 
     def test_wrong_debug_10_6(self):
-        self.to_source("quakes = earthquakes.get('depth','(None)','')\n"
+        self.to_source("quakes = earthquakes.get('location.depth','(None)','')\n"
                        "quakes_in_miles = []\n"
                        "for quake in quake:\n"
                        "    quake.append(quake * 0.62)\n"
@@ -843,7 +843,7 @@ class SpecificMistakeTest(MistakeTest):
                        "plt.show()")
         self.assertTrue(wrong_debug_10_6(), "false negative")
 
-        self.to_source('quakes = earthquakes.get("depth","(None)","")\n'
+        self.to_source('quakes = earthquakes.get("location.depth","(None)","")\n'
                        'quakes_in_miles = []\n'
                        'for quake in quakes:\n'
                        '    quake.append(quake * 0.62)\n'
@@ -854,7 +854,7 @@ class SpecificMistakeTest(MistakeTest):
                        'plt.show()')
         self.assertFalse(wrong_debug_10_6(), "false positive")
 
-        self.to_source('quakes = earthquakes.get("depth","(None)","")\n'
+        self.to_source('quakes = earthquakes.get("location.depth","(None)","")\n'
                        'quakes_in_miles = []\n'
                        'for quake in quakes:\n'
                        '    quakes_in_miles.append(quake * 0.62)\n'
@@ -865,7 +865,7 @@ class SpecificMistakeTest(MistakeTest):
                        'plt.show()')
         self.assertFalse(wrong_debug_10_6(), "false positive")
 
-        self.to_source('quakes = earthquakes.get("depth","(None)","")\n'
+        self.to_source('quakes = earthquakes.get("location.depth","(None)","")\n'
                        'quakes_in_miles = []\n'
                        'for quake in quake:\n'
                        '    quakes_in_miles.append(quake * 0.62)\n'
@@ -876,7 +876,7 @@ class SpecificMistakeTest(MistakeTest):
                        'plt.show()')
         self.assertFalse(wrong_debug_10_6(), "false positive")
 
-        self.to_source('quakes = earthquakes.get("depth","(None)","")\n'
+        self.to_source('quakes = earthquakes.get("location.depth","(None)","")\n'
                        'quakes_in_miles = []\n'
                        'for quake in quakes_in_miles:\n'
                        '    quakes.append(quake * 0.62)\n'
@@ -889,7 +889,7 @@ class SpecificMistakeTest(MistakeTest):
 
     def test_wrong_debug_10_7(self):
         self.to_source("filtered_sentence_counts = []\n"
-                       "book_sentence_counts = classics.get('sentences','(None)','')\n"
+                       "book_sentence_counts = classics.get('metrics.statistics.sentences','(None)','')\n"
                        "for book in book_sentence_counts:\n"
                        "    if book >= 5000:\n"
                        "        filtered_sentence_counts.append(book)\n"
@@ -901,7 +901,7 @@ class SpecificMistakeTest(MistakeTest):
         self.assertFalse(wrong_debug_10_7(), "false positive")
 
         self.to_source("filtered_sentence_counts = []\n"
-                       "book_sentence_counts = classics.get('sentences','(None)','')\n"
+                       "book_sentence_counts = classics.get('metrics.statistics.sentences','(None)','')\n"
                        "for book in book_sentence_counts:\n"
                        "    if book_sentence_counts >= 5000:\n"
                        "        filtered_sentence_counts.append(book)\n"

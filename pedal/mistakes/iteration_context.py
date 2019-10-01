@@ -4,7 +4,7 @@ from pedal.cait.cait_api import (parse_program,
 from pedal.report.imperative import explain, gently
 import pedal.mistakes.instructor_append as append_api
 from pedal.toolkit.utilities import *
-from pedal.sandbox.compatibility import get_output
+from pedal.sandbox.compatibility import get_output, get_plots
 from pedal.report.imperative import gently_r, explain_r
 
 
@@ -641,7 +641,7 @@ def wrong_list_initialization_9_1():
     message = "The list of rainfall amounts (<code>rainfall_list</code>) is not initialized properly."
     code = "list_init_9.1"
     tldr = "Incorrect List Initialization"
-    match = find_match('rainfall_list = weather.get("Precipitation","Location","Blacksburg, VA")')
+    match = find_match('rainfall_list = weather.get("Data.Precipitation","Station.Location","Blacksburg, VA")')
     if not match:
         return explain_r(message, code, label=tldr)
     return False
@@ -732,7 +732,7 @@ def wrong_list_initialization_9_2():
     message = "The list of rainfall amounts (<code>rainfall_list</code>) is not initialized properly."
     code = "list_init_9.2"
     tldr = "Incorrect List Initialization"
-    matches = find_matches('rainfall_list = weather.get("Precipitation","Location","Blacksburg, VA")')
+    matches = find_matches('rainfall_list = weather.get("Data.Precipitation","Station.Location","Blacksburg, VA")')
     if not matches:
         return explain_r(message, code, label=tldr)
     return False
@@ -1060,7 +1060,7 @@ def wrong_debug_10_6():
     message = "This is not one of the two changes needed. Undo the change and try again."
     code = "debug_10.6"
     tldr = "At least one unnecessary change"
-    matches = find_matches('quakes = earthquakes.get("depth","(None)","")\n'
+    matches = find_matches('quakes = earthquakes.get("location.depth","(None)","")\n'
                            'quakes_in_miles = []\n'
                            'for quake in _list1_:\n'
                            '    _list2_.append(quake * 0.62)\n'
@@ -1085,7 +1085,7 @@ def wrong_debug_10_7():
     code = "debug_10.7"
     tldr = "At least one unnecessary change"
     match = find_match("filtered_sentence_counts = []\n"
-                       "book_sentence_counts = classics.get('sentences','(None)','')\n"
+                       "book_sentence_counts = classics.get('metrics.statistics.sentences','(None)','')\n"
                        "for book in book_sentence_counts:\n"
                        "    if book >= 5000:\n"
                        "        filtered_sentence_counts.append(book)\n"
@@ -1132,19 +1132,21 @@ def wrong_duplicate_var_in_add():
 
 
 # ########################PLOTTING###############################
-def plot_group_error(output=None):
+def plot_group_error(output=None, plots=None):
     if output is None:
         output = get_output()
-    if len(output) > 1:
-        explain_r('You should only be printing/plotting one thing!', "print_one", "Multiple Calls to print or plot")
+    if plots is None:
+        plots = get_plots()
+    if len(plots) > 1:
+        explain_r('You should only be plotting one thing!', "print_one", "Multiple Calls to plot")
         return True
-    elif len(output) == 0:
+    elif len(plots) == 0:
         explain_r('The algorithm is plotting an empty list. Check your logic.', 'blank_plot', "Blank Plot")
         return True
-    elif not isinstance(output[0], list):
+    elif output:
         explain('You should be plotting, not printing!', 'printing', "Printing instead of Plotting")
         return True
-    elif len(output[0]) != 1:
+    elif len(plots[0]['data']) != 1:
         explain('You should only be plotting one thing!', 'one_plot', "Too Many Plots")
         return True
 

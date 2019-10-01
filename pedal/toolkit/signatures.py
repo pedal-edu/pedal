@@ -83,7 +83,7 @@ Type validation:
 
 def parse_type_slice(slice):
     if slice.ast_name == "Index":
-        return parse_type(slice.index)
+        return parse_type(slice.value)
     elif slice.ast_name == "Slice":
         return "{}:{}".format(parse_type(slice.lower), parse_type(slice.upper))
     elif slice.ast_name == "ExtSlice":

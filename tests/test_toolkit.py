@@ -161,6 +161,14 @@ class TestFunctions(unittest.TestCase):
                 "Expected `dict[int: list[bool]]`, instead found `dict[str: list[bool]]`."
                 "<br><br><i>(wrong_parameter_type)<i></br></br>")
 
+        with Execution('def a(x:int)->int:\n  pass\na') as e:
+            self.assertIsNotNone(match_parameters('a', int, returns=int))
+        self.assertNotEqual(e.message, "Not right")
+
+        with Execution('def a(x:int)->int:\n  pass\na') as e:
+            self.assertIsNone(match_parameters('a', int, returns=str))
+        self.assertEqual(e.message, "Error in definition of function `a` return type. Expected `str`, instead found int.<br><br><i>(wrong_return_type)<i></br></br>")
+
     def test_unit_test(self):
         # All passing
         with Execution('def a(x,y):\n  return(x+y)\na') as e:

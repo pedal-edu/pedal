@@ -76,6 +76,32 @@ class TestCode(unittest.TestCase):
             TypeError: unsupported operand type(s) for +: 'int' and 'str'
             """.format(filename=TEST_FILENAME)).strip() + "\n")
 
+    def test_error_context(self):
+        student_code = dedent('''
+                    def get_input():
+                        return int(input("Gimme the number"))
+                ''')
+        set_source(student_code)
+        student = Sandbox()
+        student.run(student_code, as_filename='student.py')
+        result = student.call("get_input", inputs="Banana")
+        self.assertEqual(student.exception_position, {'line': 3})
+        self.assertEqual(student.exception_formatted, dedent(
+            """
+            Traceback:
+              File "student.py", line 3, in get_input
+                return int(input("Gimme the number"))
+            ValueError: invalid literal for int() with base 10: 'Banana'
+            
+            The error above occurred when I ran:<br>
+            <pre>get_input()</pre>
+            And entered the inputs:
+            ```
+            Banana
+            ```
+
+            """).strip() + "\n")
+
     def test_call(self):
         student_code = "def average(a,b):\n return (a+b)/2"
         student = Sandbox()

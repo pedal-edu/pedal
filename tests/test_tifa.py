@@ -24,6 +24,9 @@ unit_tests = {
     'literal_in_call': ['print("dog" in input("test"))', [], []],
     'wrong_method_for_type': ['[].replace(",","")', [], []],
 
+    "check_true_argument_in_function_call":
+        ['def is_true(x:bool)->bool:\n return x\nis_true(True)', 'Parameter Type Mismatch', ''],
+
     # Double call
     'double_call': ['def x(a):\n    return a\nx(5)\nx(3)', ['Read out of scope'], []],
 
@@ -177,6 +180,8 @@ unit_tests = {
         ['def x(l: list):\n    l.append(1)\nx([])', ['Parameter Type Mismatch', 'Incompatible types'], []],
     'annotated_returns_int':
         ['def x()->int:\n    return "Wrong"\nx()', [], ['Multiple Return Types']],
+    'annotated_returns_list_int':
+        ['def x()->[int]:\n    return [1,2,3]\nx().append(4)', ['Multiple Return Types', 'Incompatible types'], []],
 
     'append_to_empty_list':
         ['a = []\na.append(1)\nprint(a)', ['Initialization Problem', 'Unused Variable'], []],

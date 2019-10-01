@@ -97,6 +97,7 @@ def match_parameters(name, *types, returns=None, root=None):
                         gently_r("Error in definition of function `{}` return type. Expected `{}`, "
                                  "instead found {}.".format(name, returns, actual_type),
                                  "wrong_return_type")
+                        return None
                 else:
                     gently_r("Error in definition of function `{}` return type. Expected `{}`, "
                              "but there was no return type specified.".format(name, returns),
@@ -236,7 +237,17 @@ def unit_test(name, *tests):
                     tip = out[1]
                     out = out[0]
                 message = ("<td><code>{}</code></td>" * 3)
-                test_out = the_function(*inp)
+                ran = True
+                try:
+                    test_out = the_function(*inp)
+                except Exception as e:
+                    message = message.format(inputs, str(e), repr(out))
+                    message = "<tr class=''>" + RED_X + message + "</tr>"
+                    success = False
+                    ran = False
+                if not ran:
+                    result += message
+                    continue
                 message = message.format(inputs, repr(test_out), repr(out))
                 if (isinstance(out, float) and
                         isinstance(test_out, (float, int)) and

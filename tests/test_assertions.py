@@ -40,9 +40,12 @@ class TestAssertions(unittest.TestCase):
             suppress("analyzer")
         self.assertEqual(e.feedback, dedent("""
         Instructor Test<br>Student code failed instructor test.<br>
-        I ran:<pre>add(1, 6, 3)</pre>
-        The result was:<pre>4</pre>
-        But I expected the result to be equal to:<pre>10</pre>""").lstrip())
+        I ran:
+        <pre>add(1, 6, 3)</pre>
+        The result was:
+        <pre>4</pre>
+        But I expected the result to be equal to:
+        <pre>10</pre>""").lstrip())
         
         with Execution(dedent('''
             def add(a, b, c):
@@ -54,9 +57,12 @@ class TestAssertions(unittest.TestCase):
             suppress("analyzer")
         self.assertEqual(e.feedback, dedent("""
         Instructor Test<br>Student code failed instructor test.<br>
-        I ran:<pre>add(1, 6, 3)</pre>
-        The result was:<pre>4</pre>
-        But I expected the result to be equal to:<pre>10</pre>""").lstrip())
+        I ran:
+        <pre>add(1, 6, 3)</pre>
+        The result was:
+        <pre>4</pre>
+        But I expected the result to be equal to:
+        <pre>10</pre>""").lstrip())
         
         with Execution(dedent('''
             def add(a, b, c):
@@ -71,9 +77,12 @@ class TestAssertions(unittest.TestCase):
             suppress("analyzer")
         self.assertEqual(e.feedback, dedent("""
         Instructor Test<br>Student code failed instructor test.<br>
-        I ran:<pre>add(-1, 6, 3)</pre>
-        The result was:<pre>-1</pre>
-        But I expected the result to be equal to:<pre>8</pre>""").lstrip())
+        I ran:
+        <pre>add(-1, 6, 3)</pre>
+        The result was:
+        <pre>-1</pre>
+        But I expected the result to be equal to:
+        <pre>8</pre>""").lstrip())
         
         with Execution(dedent('''
             def add(a, b, c):
@@ -88,10 +97,13 @@ class TestAssertions(unittest.TestCase):
             suppress("analyzer")
         self.assertEqual(e.feedback, dedent("""
         Instructor Test<br>Student code failed instructor test.<br>
-        I ran:<pre>expect = expected_answer()
+        I ran:
+        <pre>expect = expected_answer()
         actual = add(1, 6, 3)</pre>
-        The value of <code>expect</code> was:<pre>10</pre>
-        The value of <code>actual</code> was:<pre>4</pre>
+        The value of <code>expect</code> was:
+        <pre>10</pre>
+        The value of <code>actual</code> was:
+        <pre>4</pre>
         But I expected <code>expect</code> to be equal to <code>actual</code>""").lstrip())
         
         with Execution(dedent('''
@@ -104,9 +116,12 @@ class TestAssertions(unittest.TestCase):
             suppress("analyzer")
         self.assertEqual(e.feedback, dedent("""
         Instructor Test<br>Student code failed instructor test.<br>
-        I ran:<pre>make_color()</pre>
-        The result was:<pre>'purple'</pre>
-        But I expected the result to be in:<pre>('red', 'blue', 'green')</pre>""").lstrip())
+        I ran:
+        <pre>make_color()</pre>
+        The result was:
+        <pre>'purple'</pre>
+        But I expected the result to be in:
+        <pre>('red', 'blue', 'green')</pre>""").lstrip())
         
         with Execution(dedent('''
             def make_colors():
@@ -118,9 +133,12 @@ class TestAssertions(unittest.TestCase):
             suppress("analyzer")
         self.assertEqual(e.feedback, dedent("""
         Instructor Test<br>Student code failed instructor test.<br>
-        I ran:<pre>make_colors()</pre>
-        The result was:<pre>['purple', 'orange', 'muave']</pre>
-        But I expected the result to contain:<pre>'blue'</pre>""").lstrip())
+        I ran:
+        <pre>make_colors()</pre>
+        The result was:
+        <pre>['purple', 'orange', 'muave']</pre>
+        But I expected the result to contain:
+        <pre>'blue'</pre>""").lstrip())
         
         with Execution(dedent('''
             def make_colors():
@@ -132,9 +150,12 @@ class TestAssertions(unittest.TestCase):
             suppress("analyzer")
         self.assertEqual(e.feedback, dedent("""
         Instructor Test<br>Student code failed instructor test.<br>
-        I ran:<pre>make_colors()</pre>
-        The result was:<pre>['purple', 'orange', 'muave']</pre>
-        But I expected the result to not contain:<pre>'purple'</pre>""").lstrip())
+        I ran:
+        <pre>make_colors()</pre>
+        The result was:
+        <pre>['purple', 'orange', 'muave']</pre>
+        But I expected the result to not contain:
+        <pre>'purple'</pre>""").lstrip())
         
         with Execution(dedent('''
             def make_colors():
@@ -149,10 +170,13 @@ class TestAssertions(unittest.TestCase):
             suppress("analyzer")
         self.assertEqual(e.feedback, dedent("""
         Instructor Test<br>Student code failed instructor test.<br>
-        I ran:<pre>color = make_color()
+        I ran:
+        <pre>color = make_color()
         colors = make_colors()</pre>
-        The value of <code>color</code> was:<pre>'blue'</pre>
-        The value of <code>colors</code> was:<pre>['purple', 'orange', 'muave']</pre>
+        The value of <code>color</code> was:
+        <pre>'blue'</pre>
+        The value of <code>colors</code> was:
+        <pre>['purple', 'orange', 'muave']</pre>
         But I expected <code>color</code> to be in <code>colors</code>""").lstrip())
         
         with Execution(dedent('''
@@ -168,10 +192,13 @@ class TestAssertions(unittest.TestCase):
             suppress("analyzer")
         self.assertEqual(e.feedback, dedent("""
         Instructor Test<br>Student code failed instructor test.<br>
-        I ran:<pre>make_color()
+        I ran:
+        <pre>make_color()
         make_colors()</pre>
-        The first result was:<pre>'blue'</pre>
-        The second result was:<pre>['purple', 'orange', 'muave']</pre>
+        The first result was:
+        <pre>'blue'</pre>
+        The second result was:
+        <pre>['purple', 'orange', 'muave']</pre>
         But I expected the first result to be in the second result""").lstrip())
         
         with Execution(dedent('''
@@ -184,8 +211,10 @@ class TestAssertions(unittest.TestCase):
             suppress("analyzer")
         self.assertEqual(e.feedback, dedent("""
         Instructor Test<br>Student code failed instructor test.<br>
-        I ran:<pre>make_color()</pre>
-        The result was false:<pre>0</pre>
+        I ran:
+        <pre>make_color()</pre>
+        The result was false:
+        <pre>0</pre>
         But I expected the result to be true""").lstrip())
         
         with Execution(dedent('''
@@ -200,10 +229,14 @@ class TestAssertions(unittest.TestCase):
             suppress("analyzer")
         self.assertEqual(e.feedback, dedent("""
         Instructor Test<br>Student code failed instructor test.<br>
-        I ran:<pre>add_from_input(4)</pre>
-        I entered as input:<pre>6</pre>
-        The result was:<pre>2</pre>
-        But I expected the result to be equal to:<pre>10</pre>""").lstrip())
+        I ran:
+        <pre>add_from_input(4)</pre>
+        I entered as input:
+        <pre>6</pre>
+        The result was:
+        <pre>2</pre>
+        But I expected the result to be equal to:
+        <pre>10</pre>""").lstrip())
         
         with Execution(dedent('''
             def make_brackets():
@@ -216,9 +249,12 @@ class TestAssertions(unittest.TestCase):
             suppress("analyzer")
         self.assertEqual(e.feedback, dedent("""
         Instructor Test<br>Student code failed instructor test.<br>
-        I ran:<pre>make_brackets()</pre>
-        The result was:<pre>'{}'</pre>
-        But I expected the result to be equal to:<pre>'[]'</pre>""").lstrip())
+        I ran:
+        <pre>make_brackets()</pre>
+        The result was:
+        <pre>'{}'</pre>
+        But I expected the result to be equal to:
+        <pre>'[]'</pre>""").lstrip())
         
         with Execution(dedent('''
             def fail_on_3(num):
@@ -235,11 +271,14 @@ class TestAssertions(unittest.TestCase):
             suppress("analyzer")
         self.assertEqual(e.feedback, dedent("""
         Instructor Test<br>Student code failed instructor test.<br>
-        I ran:<pre>fail_on_3(1)
+        I ran:
+        <pre>fail_on_3(1)
         fail_on_3(2)
         fail_on_3(3)</pre>
-        The result was:<pre>False</pre>
-        But I expected the result to be equal to:<pre>True</pre>""").lstrip())
+        The result was:
+        <pre>False</pre>
+        But I expected the result to be equal to:
+        <pre>True</pre>""").lstrip())
         
         # Test {} in output or context
         
