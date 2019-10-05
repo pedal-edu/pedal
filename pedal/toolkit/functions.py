@@ -3,7 +3,7 @@ from pedal.report.imperative import gently, explain, gently_r, explain_r, MAIN_R
 from pedal.sandbox import compatibility
 import ast
 
-from pedal.toolkit.signatures import type_check, parse_type, normalize_type
+from pedal.toolkit.signatures import type_check, parse_type, normalize_type, parse_type_value, test_type_equality
 
 DELTA = 0.001
 
@@ -79,10 +79,9 @@ def match_parameters(name, *types, returns=None, root=None):
     if defn:
         for expected, actual in zip(types, defn.args.args):
             if actual.annotation:
-                if not isinstance(expected, str):
-                    expected = expected.__name__
+                expected = parse_type_value(expected, True)
                 actual_type = parse_type(actual.annotation)
-                if not type_check(expected, actual_type):
+                if not test_type_equality(expected, actual_type):
                     gently_r("Error in definition of function `{}` parameter `{}`. Expected `{}`, "
                              "instead found `{}`.".format(name, actual.arg, expected, actual_type),
                              "wrong_parameter_type")
@@ -168,32 +167,32 @@ def output_test(name, *tests):
                             message += "<tr class='info'><td colspan=4>" + tip + "</td></tr>"
                         success = False
                     elif len(test_out) > 1:
-                        message = message.format(inputs, repr(out), "<i>Too many outputs</i>", tip)
+                        message = message.format(inputs, "\n".join(out), "<i>Too many outputs</i>", tip)
                         message = "<tr class=''>" + RED_X + message + "</tr>"
                         if tip:
                             message += "<tr class='info'><td colspan=4>" + tip + "</td></tr>"
                         success = False
                     elif out not in test_out:
-                        message = message.format(inputs, repr(out), repr(test_out[0]), tip)
+                        message = message.format(inputs, "\n".join(out), "\n".join(test_out), tip)
                         message = "<tr class=''>" + RED_X + message + "</tr>"
                         if tip:
                             message += "<tr class='info'><td colspan=4>" + tip + "</td></tr>"
                         success = False
                     else:
-                        message = message.format(inputs, repr(out), repr(test_out[0]), tip)
+                        message = message.format(inputs, "\n".join(out), "\n".join(test_out), tip)
                         message = "<tr class=''>" + GREEN_CHECK + message + "</tr>"
                         success_count += 1
                 elif out != test_out:
                     if len(test_out) < 1:
-                        message = message.format(inputs, repr(out), "<i>No output</i>", tip)
+                        message = message.format(inputs, "\n".join(out), "<i>No output</i>", tip)
                     else:
-                        message = message.format(inputs, repr(out), repr(test_out[0]), tip)
+                        message = message.format(inputs, "\n".join(out), "\n".join(test_out), tip)
                     message = "<tr class=''>" + RED_X + message + "</tr>"
                     if tip:
                         message += "<tr class='info'><td colspan=4>" + tip + "</td></tr>"
                     success = False
                 else:
-                    message = message.format(inputs, repr(out), repr(test_out[0]), tip)
+                    message = message.format(inputs, "\n".join(out), "\n".join(test_out), tip)
                     message = "<tr class=''>" + GREEN_CHECK + message + "</tr>"
                     success_count += 1
                 result += message

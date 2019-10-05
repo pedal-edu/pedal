@@ -281,6 +281,34 @@ class TestAssertions(unittest.TestCase):
         <pre>True</pre>""").lstrip())
         
         # Test {} in output or context
+
+    def test_print_assertions(self):
+        with Execution(dedent('''
+            def print_rating(r):
+                print("""
+            banana cream pudding
+            alphabet soup
+            raktajino""")
+        ''')) as e:
+            @phase('1')
+            def part1():
+                assertPrints(e.student.call("print_rating", 9),
+                             ["banana cream pudding", "alphabet soup", "raktajino"])
+
+            suppress("analyzer")
+        self.assertEqual(e.feedback, dedent("""
+        Instructor Test<br>Student code failed instructor test.<br>
+        I ran:
+        <pre>print_rating(9)</pre>
+        The function printed:
+        <pre>
+        banana cream pudding
+        alphabet soup
+        raktajino</pre>
+        But I expected the output:
+        <pre>banana cream pudding
+        alphabet soup
+        raktajino</pre>""").lstrip())
         
 class TestTopologicalSort(unittest.TestCase):
     def test_topological_sort(self):
