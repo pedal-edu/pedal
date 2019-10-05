@@ -21,7 +21,7 @@ import time
 # installs per user.
 
 # This really should come in as a configuration setting somewhere.
-BLOCKPY_URL = 'https://think.cs.vt.edu/blockpy/load_assignment_give_feedback'
+BLOCKPY_URL = 'https://think.cs.vt.edu/blockpy/blockpy/load_assignment_give_feedback'
 
 
 def get_response_error(response):

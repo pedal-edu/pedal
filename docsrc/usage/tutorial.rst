@@ -65,8 +65,10 @@ CAIT
 
 .. code:: python
 
+    from pedal.source import set_source
     from pedal.cait import parse_program, find_matches
     from pedal.tifa import tifa_analysis # optional
+    set_source("string_of_student_code")
     tifa_analysis() # optional, use for flow/data analysis
     parse_program()
     matches = find_matches("_var_ = __expr__")
@@ -112,7 +114,7 @@ Matcher 1 will map to Source 1, Source 2, Source 3. In Source 1, source variable
 
 Matcher 2 will NOT map to Source 1 and will only map to Source 2, Source 3 because for source 1, _var2_ would not be able to match to both source variable x AND source variable y.
 
-In more simple terms, if you are familiar with regular expressions, these variable markers work similarly to groupings in regular expressions. The values of the groups marked denoted by say $1 and $2 might be the exact same string internally, but are referenced by two different groups in practice.
+In more simple terms, if you are familiar with regular expressions, these variable markers work similarly to groupings in regular expressions. The values of the groups marked denoted by say $1 and $2 might be the exact same string internally, but are referenced by two different groups in practice. e.g. "fun,fun," can map to (.*,)(.*,), which gets to two different groups, $1 and $2.
 
 .. code:: python
 
@@ -166,14 +168,14 @@ Retrieving variables, functions, and expressions is another operation supported 
                            "    __expr__\n"
                            "__expr2__")
     for match in matches:
-        # _item_ = match["_item_"][0] is equivalent
+        # _item_ = match["_item_"][0] is nearly equivalent
         _item_ = match["_item_"]
         __expr__ = match["__expr__"]
         __expr2__ = match["__expr2__"]
 
 The code above shows how to retrieve expressions and variables. The expressions (`__expr__` and `__expr2__`) will return AST nodes with expanded functionality from the built in ast node class.
 
-Retrieval of variables and functions will return an AstSymbolList, which can be accessed as a list of AstSymbols or as the first AstSymbol in the list. These AstSymbol objects will also have a reference to the specific Name or FuncDefinition AST node that the symbol matched to (details in ast_map.py). So there should be one for every time the variable/function definition ocurred in code. Note that overlapping variable and function names in instructor code will cause conflicts as they are considered to be the "same symbol" with respect to CAIT. This can allow checks such as detecting if students overwrite a function that they have written.
+Retrieval of variables and functions will return an AstSymbolList, which can be accessed as a list of AstSymbols or as the first AstSymbol in the list. These AstSymbol objects will also have a reference to the specific Name or FuncDefinition AST node that the symbol matched to (details in ast_map.py). So there should be one for every time the variable/function definition occurred in code. Note that overlapping variable and function names in instructor code will cause conflicts as they are considered to be the "same symbol" with respect to CAIT. This can allow checks such as detecting if students overwrite a function that they have written.
 
 Finally, for subtree matching, you can use the `find_matches` function of the expression. When calling `find_matches` on an expression, you can perform deep searches, such as if you are looking for a specific expression in a subtree and you don't care where that expression is in that subtree. For example:
 

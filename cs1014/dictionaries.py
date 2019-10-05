@@ -317,7 +317,7 @@ def list_str_dict(keys):
 
 # dict_acc_group
 def missing_key(keys):
-    message = "You seem to be missing the following dictionary keys:<ul>{}</ul>"
+    message = "You seem to be missing the following dictionary key(s):<ul>{}</ul>"
     code = "miss_key"
     tldr = "Missing necessary keys"
     key_list = ""
