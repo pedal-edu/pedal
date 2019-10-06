@@ -128,7 +128,7 @@ def parse_type_value(value, parse_strings=False):
         if value == []:
             return "[]"
         else:
-            return "[{}]".format(parse_type_value(value))
+            return "[{}]".format(parse_type_value(value[0]))
     elif isinstance(value, tuple):
         if value == ():
             return "()"
