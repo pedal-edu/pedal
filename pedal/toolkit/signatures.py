@@ -1,6 +1,8 @@
+import ast
 import re
 
 from pedal.cait.cait_api import parse_program
+from pedal.cait.cait_node import CaitNode
 from pedal.report.imperative import gently, explain
 
 """
@@ -91,22 +93,58 @@ def parse_type_slice(slice):
 
 def parse_type(node):
     if node.ast_name == "Str":
-        return node.s
+        try:
+            return parse_type(ast.parse(node.s).body[0].value)
+        except:
+            return node.s
     elif node.ast_name == "Name":
         return node.id
     elif node.ast_name == "NameConstant":
         return node.value
     elif node.ast_name == "List":
-        return "list[{}]".format(", ".join([parse_type(n) for n in node.elts]))
+        return "[{}]".format(", ".join([parse_type(n) for n in node.elts]))
     elif node.ast_name == "Dict":
-        return "dict[{}]".format(", ".join(["{}: {}".format(parse_type(k), parse_type(v))
-                                            for k,v in zip(node.keys, node.values)]))
+        return "{"+(", ".join(["{}: {}".format(parse_type(k), parse_type(v))
+                                            for k,v in zip(node.keys, node.values)]))+"}"
     elif node.ast_name == "Subscript":
         return parse_type(node.value) + "[{}]".format(parse_type_slice(node.slice))
     elif node.ast_name == "BoolOp":
         if node.op.ast_name == "Or":
             return " or ".join(parse_type(v) for v in node.values)
     return "?"
+
+
+def parse_type_value(value, parse_strings=False):
+    if isinstance(value, str):
+        if parse_strings:
+            return parse_type(CaitNode(ast.parse(value).body[0].value))
+        else:
+            return repr(value)
+    elif value in (int, str, bool, float, list, dict, object):
+        return value.__name__
+    elif value is None:
+        return "None"
+    elif isinstance(value, list):
+        if value == []:
+            return "[]"
+        else:
+            return "[{}]".format(parse_type_value(value[0]))
+    elif isinstance(value, tuple):
+        if value == ():
+            return "()"
+        else:
+            return "({})".format("".join(["{}, ".format(parse_type_value(v))
+                                     for v in value]))
+    elif isinstance(value, dict):
+        if value == {}:
+            return "{}"
+        else:
+            return "{" + (", ".join(["{}: {}".format(parse_type_value(k), parse_type_value(v))
+                                     for k, v in value.items()])) + "}"
+
+
+def test_type_equality(left, right):
+    return left == right
 
 
 class SignatureException(Exception):
@@ -152,7 +190,7 @@ def _normalize_identifier(identifier):
         return identifier
 
 
-SPECIAL_SYMBOLS = r"\s*(->|\s*[\[\],\(\)\:]|or)\s*"
+SPECIAL_SYMBOLS = r"\s*(->|\s*[\[\],\(\)\:\{\}]|or)\s*"
 
 
 def _parse_tokens(tokens):
@@ -168,6 +206,10 @@ def _parse_tokens(tokens):
         elif current == "]":
             subexpression = result_stack.pop()
             result_stack[-1].append(subexpression)
+        # Ending a curly bracket, better stop here.
+        elif current == "}":
+            subexpression = result_stack.pop()
+            result_stack[-1].append(subexpression)
         # We've reached the last token!
         elif not tokens:
             # And had no tokens before this one
@@ -176,6 +218,10 @@ def _parse_tokens(tokens):
         # Starting a parentheized expression
         elif current == "(":
             result_stack.append(Stack())
+        elif current == "[":
+            result_stack.append(Stack("list"))
+        elif current == "{":
+            result_stack.append(Stack("dict"))
         # Nullary function
         elif current == "->":
             result_stack[-1].append(Stack("callable"))
@@ -234,6 +280,7 @@ def check_piece(left, right, indent=1):
 
 def type_check(left, right):
     left = normalize_type(left)
+    print(left, "||||", right)
     right = normalize_type(right)
     return check_piece(left, right)
     

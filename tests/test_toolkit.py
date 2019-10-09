@@ -148,17 +148,24 @@ class TestFunctions(unittest.TestCase):
                                        "function `a`. Expected `int` parameter, instead found `str`.")
 
         with Execution('def a(x:[str], y:{int:str}):\n  pass\na') as e:
-            self.assertIsNotNone(match_parameters('a', "list[str]", "dict[int:str]"))
+            self.assertIsNotNone(match_parameters('a', "[str]", "{int:str}"))
+        self.assertNotEqual(e.message,
+                "Error in definition of function `a` parameter `x`. "
+                "Expected `int`, instead found `str`."
+                "<br><br><i>(wrong_parameter_type)<i></br></br>")
+
+        with Execution('def a(x:[str], y:{int:str}):\n  pass\na') as e:
+            self.assertIsNotNone(match_parameters('a', "[str]", {int:str}))
         self.assertNotEqual(e.message,
                 "Error in definition of function `a` parameter `x`. "
                 "Expected `int`, instead found `str`."
                 "<br><br><i>(wrong_parameter_type)<i></br></br>")
 
         with Execution('def a(x:{str:[bool]}):\n  pass\na') as e:
-            self.assertIsNone(match_parameters('a', "dict[int: list[bool]]"))
+            self.assertIsNone(match_parameters('a', "{int: [bool]}"))
         self.assertEqual(e.message,
                 "Error in definition of function `a` parameter `x`. "
-                "Expected `dict[int: list[bool]]`, instead found `dict[str: list[bool]]`."
+                "Expected `{int: [bool]}`, instead found `{str: [bool]}`."
                 "<br><br><i>(wrong_parameter_type)<i></br></br>")
 
         with Execution('def a(x:int)->int:\n  pass\na') as e:

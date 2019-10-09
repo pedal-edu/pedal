@@ -72,7 +72,7 @@ class TestCode(unittest.TestCase):
             """
             Traceback:
               File "{filename}", line 1
-                1 + "Banana"
+                1+'0'
             TypeError: unsupported operand type(s) for +: 'int' and 'str'
             """.format(filename=TEST_FILENAME)).strip() + "\n")
 

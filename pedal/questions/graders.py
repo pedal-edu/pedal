@@ -101,5 +101,5 @@ class FunctionGrader(QuestionGrader):
         if all_good:
             self.points += self.UNIT_TEST_COMPLETION_POINTS
         else:
-            gently("Failing unit tests")
+            gently("Failing instructor unit tests")
         return all_good
