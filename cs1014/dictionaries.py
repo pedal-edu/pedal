@@ -321,9 +321,12 @@ def missing_key(keys):
     code = "miss_key"
     tldr = "Missing necessary keys"
     key_list = ""
+    first = False
     for key in keys:
         matches = find_matches("\"{}\"".format(key))
         if not matches:
+            if not first:
+                key_list += ", "
             key_list += '<li><code>"' + key + '"</code></li>'
     if key_list != "":
         return explain_r(message.format(key_list), code, label=tldr)
@@ -336,8 +339,11 @@ def blank_key(keys):
     tldr = "Missing Key"
     key_list = ""
 
+    first = False
     for key in keys:
         if not find_match("_var_['{}']".format(key)):
+            if not first:
+                key_list += ", "
             key_list += '<li><code>"' + key + '"</code></li>'
 
     if key_list != "":
@@ -478,7 +484,7 @@ def var_key(keys):
     matches = find_matches("_var_[_key_]")
     for match in matches:
         _key_ = match['_key_']
-        if _key_.id in keys:
+        if _key_.id in keys and not _key_.was_type("StrType"):
             return explain_r(message.format(_key_.id), code, label=tldr)
     return False
 
@@ -490,15 +496,19 @@ def key_order(keys):
     tldr = "Wrong key order"
 
     construct = None
+    # Assemble chain of dictionary slicing
     find_chain = "_var_"
     for a_slice in range(len(keys)):
         find_chain += "[__str{}__]".format(a_slice)
+    # If we find a chain of dictionary accesses
     if find_match(find_chain):
+        # Assemble a new match pattern using the provided key order
         construct = "_var_"
         for key in keys:
             construct += "['{}']".format(key)
 
     if construct:
+        # check if we have a set of keys of the proper order
         matches = find_matches(construct)
         if not matches:
             return explain_r(message, code, label=tldr)
