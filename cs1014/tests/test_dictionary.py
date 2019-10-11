@@ -4,8 +4,8 @@ import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
 
 from tests.mistake_test_template import *
-from cs1014.dictionaries import *
-from cs1014.input_mistakes import *
+from CS1014.dictionaries import *
+from CS1014.input_mistakes import *
 from pedal.mistakes.iteration_context import all_labels_present
 
 
@@ -561,6 +561,18 @@ class DictionaryMistakeTest(MistakeTest):
                        'sum = 0\n'
                        'for weather_instance in weather_reports:\n'
                        '    if weather_instance["Station"]["City"] == "Chicago":\n'
+                       '        sum = sum + weather_instance["Data"]["Precipitation"]\n'
+                       'print(sum)\n')
+        ret = var_key(keys)
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
+        self.to_source('import weather\n'
+                       'Station = "Station"\n'
+                       'City = "City"\n'
+                       'weather_reports = weather.get_weather()\n'
+                       'sum = 0\n'
+                       'for weather_instance in weather_reports:\n'
+                       '    if weather_instance[Station][City] == "Chicago":\n'
                        '        sum = sum + weather_instance["Data"]["Precipitation"]\n'
                        'print(sum)\n')
         ret = var_key(keys)
