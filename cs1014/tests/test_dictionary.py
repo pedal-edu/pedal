@@ -156,9 +156,25 @@ class DictionaryMistakeTest(MistakeTest):
         ret = wrong_keys(keys)
         self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
 
+        self.to_source("temperature = 'Temperature'\n"
+                       "total = 0\n"
+                       "for reports in weather_reports:\n"
+                       "    total = total + reports[temperature]\n"
+                       "print(total)\n")
+        ret = wrong_keys(keys)
+        self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
+
         self.to_source("total = 0\n"
                        "for reports in weather_reports:\n"
                        "    total = total + reports['Precipitation']\n"
+                       "print(total)\n")
+        ret = wrong_keys(keys)
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
+        self.to_source("precip = 'Precipitation'\n"
+                       "total = 0\n"
+                       "for reports in weather_reports:\n"
+                       "    total = total + reports[precip]\n"
                        "print(total)\n")
         ret = wrong_keys(keys)
         self.assertFalse(ret, "Expected False, got {} instead".format(ret))
