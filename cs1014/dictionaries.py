@@ -60,7 +60,7 @@ def dict_chain_group(key_sets):
         key_order_unchained(key_set)
 
 
-def var_check(expr, keys):
+def var_check(expr, keys=None):
     """
 
     :param expr: Expression to be evaluated
@@ -70,13 +70,13 @@ def var_check(expr, keys):
     :return: Key value if expression was a name node assigned a key value or if the value is a string key value
     :rtype: bool/Str
     """
-    if expr.is_ast('Str') and expr.value in keys:
+    if expr.is_ast('Str') and (keys is None or expr.value in keys):
         return expr.value
     elif expr.is_ast("Name"):
         matches = find_matches("{} = __key__".format(expr.value))  # TODO: Relies on .value returning id for Name nodes
         for match in matches:
             __key__ = match["__key__"]
-            if __key__.is_ast('Str') and __key__.value in keys:
+            if __key__.is_ast('Str') and (keys is None or __key__.value in keys):
                 return __key__.value
     return False
 
@@ -90,6 +90,18 @@ def list_dict_indices(expr):
     :rtype: CaitNode(Index)
     """
     return expr.parent.parent.parent.find_all('Index')  # TODO: Relies on AST Structure
+
+
+def dict_detect(expr):
+    if expr.find_match("_var_[__expr__]"):
+        return expr
+    elif expr.is_ast("Name"):
+        matches = find_matches("{} = _var_[__expr__]".format(expr.id))
+        if matches:
+            return matches[-1]["_var_"].ast_node.parent.parent
+            # TODO: Rework to chase down all indirect accesses part of the same chain as a string (and then CaitNode)
+        # fall through return None
+    return None
 
 
 # dict_hard_codes
@@ -453,7 +465,8 @@ def no_dict_in_loop():
         _item_ = match['_item_']
         submatches = match['__expr__'].find_matches("_item_[__str__]")
         for submatch in submatches:
-            if submatch["__str__"].is_ast("Str"):
+            key = var_check(submatch["__str__"])
+            if key:
                 return False
     return explain_r(message, code, label=tldr)
 
@@ -500,7 +513,6 @@ def list_var_dict_acc():
 
 # dict_acc_group
 def key_comp(keys):
-    # TODO: Get this to work for when variables are keys?
     message = ('The strings <code>"{}"</code> and <code>"{}"</code> are keys. '
                'Dictionary keys do not need to be compared to anything as they '
                'are not filtering data. Dictionary keys are only used to access existing data.')
@@ -513,7 +525,9 @@ def key_comp(keys):
     for match in matches:
         __str1__ = match["__str1__"]
         __str2__ = match["__str2__"]
-        if __str1__.is_ast("Str") and __str1__.value in keys and __str2__.is_ast("Str") and __str2__.value in keys:
+        value1 = var_check(__str1__, keys)
+        value2 = var_check(__str2__, keys)
+        if value1 and value2:
             return explain_r(message.format(__str1__.value, __str2__.value), code, label=tldr)
     return False
 
