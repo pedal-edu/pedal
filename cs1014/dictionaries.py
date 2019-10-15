@@ -67,17 +67,17 @@ def var_check(expr, keys):
     :type expr: CaitNode
     :param keys: List of keys
     :type keys: list of Str
-    :return: True if expression was a name node assigned a key value or if the value is a string key value
-    :rtype: bool
+    :return: Key value if expression was a name node assigned a key value or if the value is a string key value
+    :rtype: bool/Str
     """
     if expr.is_ast('Str') and expr.value in keys:
-        return True
+        return expr.value
     elif expr.is_ast("Name"):
         matches = find_matches("{} = __key__".format(expr.value))  # TODO: Relies on .value returning id for Name nodes
         for match in matches:
             __key__ = match["__key__"]
             if __key__.is_ast('Str') and __key__.value in keys:
-                return True
+                return __key__.value
     return False
 
 
@@ -138,8 +138,9 @@ def print_dict_key(keys):
 
     for match in matches:
         __str__ = match["__str__"]
-        if var_check(__str__, keys):
-            return explain_r(message.format(__str__.value), code, label=tldr)
+        key = var_check(__str__, keys)
+        if key:
+            return explain_r(message.format(key), code, label=tldr)
     return False
 
 
@@ -176,8 +177,9 @@ def parens_in_dict(keys):
     matches = find_matches("_var_(__str__)")
     for match in matches:
         __str__ = match['__str__']
-        if var_check(__str__, keys):
-            return explain_r(message.format(__str__.value), code, label=tldr)
+        key = var_check(__str__, keys)
+        if key:
+            return explain_r(message.format(key), code, label=tldr)
     return False
 
 
@@ -233,8 +235,9 @@ def wrong_keys(unused_keys):
         indices = list_dict_indices(__str__)
         for index in indices:
             __str__ = index.value
-            if var_check(__str__, unused_keys):
-                return explain_r(message.format(__str__.value), code, label=tldr)
+            key = var_check(__str__, unused_keys)
+            if key:
+                return explain_r(message.format(key), code, label=tldr)
     return False
 
 

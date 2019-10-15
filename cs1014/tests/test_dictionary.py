@@ -45,6 +45,13 @@ class DictionaryMistakeTest(MistakeTest):
         ret = print_dict_key(key_list)
         self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
 
+        self.to_source('price = "price"\n'
+                       'book = {"number_of_pages":285, "price":99.23, "discount":0.1}\n'
+                       'how_much= book[price]\n'
+                       'print(price)')
+        ret = print_dict_key(key_list)
+        self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
+
         self.to_source('book = {"number_of_pages":285, "price":99.23, "discount":0.1}\n'
                        'how_much= book["price"]\n'
                        'print(["price"])')
@@ -56,17 +63,29 @@ class DictionaryMistakeTest(MistakeTest):
         ret = print_dict_key(key_list)
         self.assertFalse(ret, "Expected False, got {} instead".format(ret))
 
+        self.to_source('price = "price"\n'
+                       'book = {"number_of_pages":285, "price":99.23, "discount":0.1}\n'
+                       'print (book[price])')
+        ret = print_dict_key(key_list)
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
     def test_var_instead_of_key(self):
         # TODO: Check output string
         key_list = ['price', 'number_of_pages', 'discount']
 
         self.to_source('book = {"number_of_pages":285, "price":99.23, "discount":0.1}\n'
-                       'print (price)')
+                       'print(price)')
         ret = var_instead_of_key(key_list)
         self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
 
         self.to_source('book = {"number_of_pages":285, "price":99.23, "discount":0.1}\n'
-                       'print (book["price"])')
+                       'print(book["price"])')
+        ret = var_instead_of_key(key_list)
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
+        self.to_source('book = {"number_of_pages":285, "price":99.23, "discount":0.1}\n'
+                       'price = book["price"]\n'
+                       'print(price)')
         ret = var_instead_of_key(key_list)
         self.assertFalse(ret, "Expected False, got {} instead".format(ret))
 
@@ -75,12 +94,25 @@ class DictionaryMistakeTest(MistakeTest):
         key_list = ['price', 'number_of_pages', 'discount']
 
         self.to_source('book = {"number_of_pages":285, "price":99.23, "discount":0.1}\n'
-                       'print (book("price"))')
+                       'print(book("price"))')
         ret = parens_in_dict(key_list)
         self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
 
+        self.to_source('price = "price"\n'
+                       'book = {"number_of_pages":285, "price":99.23, "discount":0.1}\n'
+                       'print(book(price))')
+        ret = parens_in_dict(key_list)
+        self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
+        self.assertTrue("price" in ret, "Message '{}' didn't include correct key".format(ret))
+
         self.to_source('book = {"number_of_pages":285, "price":99.23, "discount":0.1}\n'
-                       'print (book["price"])')
+                       'print(book["price"])')
+        ret = parens_in_dict(key_list)
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
+        self.to_source('price = "price"'
+                       'book = {"number_of_pages":285, "price":99.23, "discount":0.1}\n'
+                       'print(book[price])')
         ret = parens_in_dict(key_list)
         self.assertFalse(ret, "Expected False, got {} instead".format(ret))
 
@@ -163,6 +195,7 @@ class DictionaryMistakeTest(MistakeTest):
                        "print(total)\n")
         ret = wrong_keys(keys)
         self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
+        self.assertTrue("Temperature" in ret, "Message '{}' didn't include correct key".format(ret))
 
         self.to_source("total = 0\n"
                        "for reports in weather_reports:\n"
