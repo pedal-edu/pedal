@@ -91,7 +91,7 @@ Finding Data types
   match = find_match("for _item_ in _list_:\n"
                      "    _sum_ = _sum_ + _item_")
   data_type = match['_sum_'].get_data_type()
-  type(data_type) == NumType # checks if it was always this type (UnknownType otherwise)
+  type(data_type) == NumType # checks if it the last type it took on
 
   data_state = match['_sum_'].get_data_state()
   data_state.was_type('NumType') # checks if _sum_ was a number at some point
@@ -116,6 +116,7 @@ If you want to explore the data types yourself, recursively access the `trace` (
       print(data_state.type)
       if len(data_state.trace) > 0:
           print_types(data_state.trace[0])
+  print_types(data_state)
   '''#Output
   StrType
   NumType

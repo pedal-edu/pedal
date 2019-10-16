@@ -45,6 +45,13 @@ class DictionaryMistakeTest(MistakeTest):
         ret = print_dict_key(key_list)
         self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
 
+        self.to_source('price = "price"\n'
+                       'book = {"number_of_pages":285, "price":99.23, "discount":0.1}\n'
+                       'how_much= book[price]\n'
+                       'print(price)')
+        ret = print_dict_key(key_list)
+        self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
+
         self.to_source('book = {"number_of_pages":285, "price":99.23, "discount":0.1}\n'
                        'how_much= book["price"]\n'
                        'print(["price"])')
@@ -56,17 +63,29 @@ class DictionaryMistakeTest(MistakeTest):
         ret = print_dict_key(key_list)
         self.assertFalse(ret, "Expected False, got {} instead".format(ret))
 
+        self.to_source('price = "price"\n'
+                       'book = {"number_of_pages":285, "price":99.23, "discount":0.1}\n'
+                       'print (book[price])')
+        ret = print_dict_key(key_list)
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
     def test_var_instead_of_key(self):
         # TODO: Check output string
         key_list = ['price', 'number_of_pages', 'discount']
 
         self.to_source('book = {"number_of_pages":285, "price":99.23, "discount":0.1}\n'
-                       'print (price)')
+                       'print(price)')
         ret = var_instead_of_key(key_list)
         self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
 
         self.to_source('book = {"number_of_pages":285, "price":99.23, "discount":0.1}\n'
-                       'print (book["price"])')
+                       'print(book["price"])')
+        ret = var_instead_of_key(key_list)
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
+        self.to_source('book = {"number_of_pages":285, "price":99.23, "discount":0.1}\n'
+                       'price = book["price"]\n'
+                       'print(price)')
         ret = var_instead_of_key(key_list)
         self.assertFalse(ret, "Expected False, got {} instead".format(ret))
 
@@ -75,12 +94,25 @@ class DictionaryMistakeTest(MistakeTest):
         key_list = ['price', 'number_of_pages', 'discount']
 
         self.to_source('book = {"number_of_pages":285, "price":99.23, "discount":0.1}\n'
-                       'print (book("price"))')
+                       'print(book("price"))')
         ret = parens_in_dict(key_list)
         self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
 
+        self.to_source('price = "price"\n'
+                       'book = {"number_of_pages":285, "price":99.23, "discount":0.1}\n'
+                       'print(book(price))')
+        ret = parens_in_dict(key_list)
+        self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
+        self.assertTrue("price" in ret, "Message '{}' didn't include correct key".format(ret))
+
         self.to_source('book = {"number_of_pages":285, "price":99.23, "discount":0.1}\n'
-                       'print (book["price"])')
+                       'print(book["price"])')
+        ret = parens_in_dict(key_list)
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
+        self.to_source('price = "price"'
+                       'book = {"number_of_pages":285, "price":99.23, "discount":0.1}\n'
+                       'print(book[price])')
         ret = parens_in_dict(key_list)
         self.assertFalse(ret, "Expected False, got {} instead".format(ret))
 
@@ -156,9 +188,26 @@ class DictionaryMistakeTest(MistakeTest):
         ret = wrong_keys(keys)
         self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
 
+        self.to_source("temperature = 'Temperature'\n"
+                       "total = 0\n"
+                       "for reports in weather_reports:\n"
+                       "    total = total + reports[temperature]\n"
+                       "print(total)\n")
+        ret = wrong_keys(keys)
+        self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
+        self.assertTrue("Temperature" in ret, "Message '{}' didn't include correct key".format(ret))
+
         self.to_source("total = 0\n"
                        "for reports in weather_reports:\n"
                        "    total = total + reports['Precipitation']\n"
+                       "print(total)\n")
+        ret = wrong_keys(keys)
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
+        self.to_source("precip = 'Precipitation'\n"
+                       "total = 0\n"
+                       "for reports in weather_reports:\n"
+                       "    total = total + reports[precip]\n"
                        "print(total)\n")
         ret = wrong_keys(keys)
         self.assertFalse(ret, "Expected False, got {} instead".format(ret))
@@ -429,6 +478,14 @@ class DictionaryMistakeTest(MistakeTest):
         ret = no_dict_in_loop()
         self.assertFalse(ret, "Expected False, got {} instead".format(ret))
 
+        self.to_source('total_precipitation = 0\n'
+                       'key = "Precipitation"\n'
+                       'for city in weather_reports:\n'
+                       '    total_precipitation = total_precipitation + city[key]\n'
+                       'print(total_precipitation)\n')
+        ret = no_dict_in_loop()
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
     def func_filter(self):
         keys = ['Data', 'Date', "Station", "Temperature", "Precipitation", "Wind", "Min Temp", "Max Temp", "Avg Temp",
                 "Direction", "Speed", "Month", "Year", "Week of", "Full", "State", "Code", "City", "Location"]
@@ -515,9 +572,62 @@ class DictionaryMistakeTest(MistakeTest):
         self.to_source('import weather\n'
                        'weather_reports = weather.get_weather()\n'
                        'sum = 0\n'
+                       'data = "Data"\n'
+                       'precip = "Precipitation"\n'
+                       'for weather_instance in weather_reports:\n'
+                       '    if weather_instance[data] == precip:\n'
+                       '        sum = sum + weather_instance[data]\n'
+                       'print(sum)\n')
+        ret = key_comp(keys)
+        self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
+        # TODO: Get this to work
+        """
+        self.to_source('import weather\n'
+                       'weather_reports = weather.get_weather()\n'
+                       'sum = 0\n'
+                       'precip = "Precipitation"\n'
+                       'for weather_instance in weather_reports:\n'
+                       '    data = weather_instance["Data"]\n'
+                       '    if data == precip:\n'
+                       '        sum = sum + weather_instance[data]\n'
+                       'print(sum)\n')
+        ret = key_comp(keys)
+        self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
+        """
+
+        self.to_source('import weather\n'
+                       'weather_reports = weather.get_weather()\n'
+                       'sum = 0\n'
                        'for weather_instance in weather_reports:\n'
                        '    if weather_instance["Station"]["City"] == "Chicago":\n'
                        '        sum = sum + weather_instance["Data"]["Precipitation"]\n'
+                       'print(sum)\n')
+        ret = key_comp(keys)
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
+        self.to_source('import weather\n'
+                       'weather_reports = weather.get_weather()\n'
+                       'sum = 0\n'
+                       'loc1 = "Station"\n'
+                       'loc2 = "City"\n'
+                       'data = "Data"\n'
+                       'precip = "Precipitation"\n'
+                       'for weather_instance in weather_reports:\n'
+                       '    if weather_instance[loc1][loc2] == "Chicago":\n'
+                       '        sum = sum + weather_instance[data][precip]\n'
+                       'print(sum)\n')
+        ret = key_comp(keys)
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
+        self.to_source('import weather\n'
+                       'weather_reports = weather.get_weather()\n'
+                       'sum = 0\n'
+                       'data = "Data"\n'
+                       'precip = "Precipitation"\n'
+                       'for weather_instance in weather_reports:\n'
+                       '    loc1 = weather_instance["Station"]["City"]\n'
+                       '    if loc1 == "Chicago":\n'
+                       '        sum = sum + weather_instance[data][precip]\n'
                        'print(sum)\n')
         ret = key_comp(keys)
         self.assertFalse(ret, "Expected False, got {} instead".format(ret))
