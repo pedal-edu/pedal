@@ -533,27 +533,30 @@ TYPE_STRINGS = {
 }
 
 
-def get_tifa_type_from_str(value, custom_types):
-    value = value.lower()
-    if value in custom_types:
-        return custom_types[value]
-    if value in TYPE_STRINGS:
-        return TYPE_STRINGS[value]()
+def get_tifa_type_from_str(value, self):
+    #if value in custom_types:
+    #    return custom_types[value]
+    if value.lower() in TYPE_STRINGS:
+        return TYPE_STRINGS[value.lower()]()
     else:
-        custom_types.add(value)
+        variable = self.find_variable_scope(value)
+        if variable.exists:
+            state = self.load_variable(value)
+            return state.type
+        #custom_types.add(value)
         return UnknownType()
         # TODO: handle custom types
 
 
-def get_tifa_type(v, custom_types):
+def get_tifa_type(v, self):
     if isinstance(v, ast.Str):
-        return get_tifa_type_from_str(v.s, custom_types)
+        return get_tifa_type_from_str(v.s, self)
     elif isinstance(v, ast.Name):
-        return get_tifa_type_from_str(v.id, custom_types)
+        return get_tifa_type_from_str(v.id, self)
     elif isinstance(v, ast.List):
         elements = v.elts
         if elements:
-            return ListType(subtype=get_tifa_type(elements[0], custom_types))
+            return ListType(subtype=get_tifa_type(elements[0], self))
         else:
             return ListType(empty=True)
     # TODO: Finish filling in static type system

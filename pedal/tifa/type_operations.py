@@ -3,7 +3,7 @@ import ast
 from pedal.tifa.type_definitions import (UnknownType, NumType, BoolType,
                                          TupleType, ListType, StrType,
                                          DictType, SetType, GeneratorType,
-                                         DayType, TimeType)
+                                         DayType, TimeType, FunctionType, TYPE_STRINGS)
 
 
 def merge_types(left, right):
@@ -79,12 +79,16 @@ VALID_UNARYOP_TYPES = {
 }
 
 
-def are_types_equal(left, right):
+def are_types_equal(left, right, formal=False):
     """
     Determine if two types are equal.
 
     This could be more Polymorphic - move the code for each type into
     its respective class instead.
+
+    Args:
+        formal (bool): Whether the left argument is formal, indicating that it can accept
+            type names.
     """
     if left is None or right is None:
         return False
@@ -108,6 +112,11 @@ def are_types_equal(left, right):
                     return False
             return True
     elif isinstance(left, DictType):
+        #print("L", [literal.value for literal in left.literals], [v.singular_name
+        #                                                          if not formal and not isinstance(v, FunctionType)
+        #                                                          else TYPE_STRINGS[v.name]().singular_name
+        #                                                          for v in left.values])
+        #print("R", [literal.value for literal in right.literals], [v.singular_name for v in right.values])
         if left.empty or right.empty:
             return True
         elif left.literals is not None and right.literals is not None:
@@ -118,6 +127,11 @@ def are_types_equal(left, right):
                     if not are_types_equal(l, r):
                         return False
                 for l, r in zip(left.values, right.values):
+                    if formal:
+                        if isinstance(l, FunctionType) and l.name in TYPE_STRINGS:
+                            l = TYPE_STRINGS[l.name]()
+                        if isinstance(r, FunctionType) and r.name in TYPE_STRINGS:
+                            r = TYPE_STRINGS[r.name]()
                     if not are_types_equal(l, r):
                         return False
                 return True

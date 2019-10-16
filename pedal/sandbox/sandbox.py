@@ -332,6 +332,8 @@ class Sandbox(DataSandbox):
         def _input_tracker(*args, **kwargs):
             if args:
                 prompt = args[0]
+            else:
+                prompt = ""
             print(prompt)
             if self.inputs:
                 value_entered = self.inputs.pop(0)

@@ -81,7 +81,7 @@ def _add_context_to_error(e, message):
         #       Might be weird.
         e.args = tuple([e.args[0] + message])
         return e
-    elif e.args:
+    elif hasattr(e, 'args') and e.args:
         e.args = tuple([e.args[0] + message])
     return e
 x=sys.stdout
