@@ -92,6 +92,24 @@ def list_dict_indices(expr):
     return expr.parent.parent.parent.find_all('Index')  # TODO: Relies on AST Structure
 
 
+def uncover_type(name, tifa_type):
+    """
+
+    :param name: A Name Ast Node whose type we are looking through
+    :type name: CaitNode (Name)
+    :param tifa_type: The data type of the item
+    :type tifa_type: str
+    :return: the data_state object representing when name was of the specified type
+    :rtype: Tifa State or None
+    """
+    state = name.get_data_state()
+    if name.was_type(tifa_type) and state:
+        while state and str(state.type) != tifa_type:
+            state = state.trace[0]
+        return state
+    return None
+
+
 def dict_detect(expr):
     if expr.find_match("_var_[__expr__]"):
         return expr
@@ -197,7 +215,7 @@ def parens_in_dict(keys):
 
 # dict_list_group
 def list_as_dict():
-    message = ("A list of Dictionaries like <code>{}</code> is not itself a dictionary. "
+    message = ("The list of Dictionaries <code>{}</code> is not itself a dictionary. "
                "To access key-value pairs of the dictionaries in the list, "
                "you need to access each dictionary in the list one at a time.")
     code = "list_dict"
@@ -205,8 +223,8 @@ def list_as_dict():
     matches = find_matches("_list_[__exp__]")
     for match in matches:
         _list_ = match['_list_']
-        if (_list_.was_type("ListType") and _list_.get_data_state()
-                and str(_list_.get_data_state().type.subtype) == "DictType"):
+        type_check = uncover_type(_list_, "ListType")
+        if type_check and str(type_check.type.subtype) == "DictType":
             return explain_r(message.format(_list_.id), code, label=tldr)
     return False
 
@@ -518,12 +536,19 @@ def key_comp(keys):
                'are not filtering data. Dictionary keys are only used to access existing data.')
     code = "key_comp"
     tldr = "Comparing Keys"
-
+    """
     matches = find_matches("for _var_ in ___:\n"
                            "    if _var_[__str1__] == __str2__:\n"
                            "        pass")
+    """
+    matches = find_matches("for _var_ in ___:\n"
+                           "    if __expr__ == __str2__:\n"
+                           "        pass")
     for match in matches:
-        __str1__ = match["__str1__"]
+        __expr__ = match["__expr__"]
+        submatch = dict_detect(__expr__)
+        # __str1__ = match["__str1__"]
+        __str1__ = submatch.find_match("_var_[__str1__]")["__str1__"]
         __str2__ = match["__str2__"]
         value1 = var_check(__str1__, keys)
         value2 = var_check(__str2__, keys)
