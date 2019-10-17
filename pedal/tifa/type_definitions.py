@@ -380,6 +380,12 @@ class DictType(Type):
     def is_empty(self):
         return self.empty
 
+    def has_literal(self, l):
+        for literal, value in zip(self.literals, self.values):
+            if are_literals_equal(literal, l):
+                return value
+        return None
+
     def index(self, i):
         if self.empty:
             return UnknownType()
@@ -390,6 +396,11 @@ class DictType(Type):
             return UnknownType()
         else:
             return self.keys.clone()
+
+    def update_key(self, literal_key, type):
+        self.literals.append(literal_key)
+        self.values.append(type)
+
 
     def load_attr(self, attr, tifa, callee=None, callee_position=None):
         if attr == 'items':
@@ -533,27 +544,30 @@ TYPE_STRINGS = {
 }
 
 
-def get_tifa_type_from_str(value, custom_types):
-    value = value.lower()
-    if value in custom_types:
-        return custom_types[value]
-    if value in TYPE_STRINGS:
-        return TYPE_STRINGS[value]()
+def get_tifa_type_from_str(value, self):
+    #if value in custom_types:
+    #    return custom_types[value]
+    if value.lower() in TYPE_STRINGS:
+        return TYPE_STRINGS[value.lower()]()
     else:
-        custom_types.add(value)
+        variable = self.find_variable_scope(value)
+        if variable.exists:
+            state = self.load_variable(value)
+            return state.type
+        #custom_types.add(value)
         return UnknownType()
         # TODO: handle custom types
 
 
-def get_tifa_type(v, custom_types):
+def get_tifa_type(v, self):
     if isinstance(v, ast.Str):
-        return get_tifa_type_from_str(v.s, custom_types)
+        return get_tifa_type_from_str(v.s, self)
     elif isinstance(v, ast.Name):
-        return get_tifa_type_from_str(v.id, custom_types)
+        return get_tifa_type_from_str(v.id, self)
     elif isinstance(v, ast.List):
         elements = v.elts
         if elements:
-            return ListType(subtype=get_tifa_type(elements[0], custom_types))
+            return ListType(subtype=get_tifa_type(elements[0], self))
         else:
             return ListType(empty=True)
     # TODO: Finish filling in static type system

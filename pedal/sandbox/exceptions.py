@@ -81,7 +81,7 @@ def _add_context_to_error(e, message):
         #       Might be weird.
         e.args = tuple([e.args[0] + message])
         return e
-    elif e.args:
+    elif hasattr(e, 'args') and e.args:
         e.args = tuple([e.args[0] + message])
     return e
 x=sys.stdout
@@ -131,7 +131,10 @@ class SandboxTraceback:
         for frame in tb_e.stack:
             if frame.filename == os.path.basename(self.student_filename):
                 frame.lineno += self.line_offset
-            frame._line = self.original_code_lines[frame.lineno-1]
+            if frame.lineno-1 < len(self.original_code_lines):
+                frame._line = self.original_code_lines[frame.lineno-1]
+            else:
+                frame._line = "*line missing*"
         lines = [self._clean_traceback_line(line)
                  for line in tb_e.format()]
         lines[0] = "Traceback:\n"

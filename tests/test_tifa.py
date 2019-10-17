@@ -97,6 +97,10 @@ unit_tests = {
         ['a = 0\nif True:\n\tprint(a)\n\tif False:\n\t\ta = 0\n\telse:\n\t\ta = 2\nelse:\n\ta = 1',
          ['Overwritten Variable'], []],
 
+    'possibly_overwritten_in_elif_branch':
+        ['highest = 0\nfor score in [1,2]:\n    if False:\n        pass\n    elif False:\n        pass\n    else:\n        highest = 0\nhighest',
+         ['Possible Initialization Problem'], []],
+
     # Iterating over the result of a builtin
     'print_range':
         ['x = range(100)\nprint(x)', ['Iterating over Non-list'], []],
@@ -236,6 +240,25 @@ unit_tests = {
     'incorrect_dict_iteration': ['dict = {"T": "V"}\nfor key,value in dict:\n    print(key)', [], []],
     'incorrect_dict_iteration2': ['dict = {"T": 0}\nfor i in dict:\n print(i, dict[i])', [], []],
 
+    # Record type
+    'record_type_simple': [
+        ('Dog = {"Name": str, "Age": int, "Fluffy": bool}\n'
+         'def do_stuff(a_dog: Dog) -> Dog:\n'
+         '    a_dog["Name"]+""\n'
+         '    a_dog["Age"] = a_dog["Age"]+5\n'
+         '    return a_dog\n'
+         'ada = {"Name": "Ada", "Age": 2, "Fluffy": True}\n'
+         'do_stuff(ada)["Name"] + ""'
+         ), ['Incompatible types'], []
+    ],
+    'dict_with_setter': [
+        ('person1={"Name": "Babbage", "Age": 3}\n'
+            'def make_older(a_dog: dict) -> int:\n'
+            '    a_dog["Age"]+=1\n'
+            '    return a_dog["Age"]\n'
+            'make_older(person1) + 0'), ['Incompatible types', 'Type Changes'], []
+    ],
+
     # While
     'while_until_input': [
         'user = input("Give a word.")\nwhile user:\n    print(user)\n    user = input("Give another word.")',
@@ -262,7 +285,7 @@ unit_tests = {
             [], []],
     'instance_assignment':
         ['class A:\n pass\na = A()\na.b = 0\nb', [], ['Initialization Problem']],
-    'instance_assignment':
+    'instance_assignment_alt':
         ['class A:\n pass\na = A()\na.b = 0\na.b', ['Initialization Problem'], []],
     'constructor_assignment':
         ['class A:\n def __init__(self):\n  self.x=0\na=A()\na.x+""', [], ['Incompatible types']],
@@ -332,7 +355,7 @@ unit_tests = {
     'overwritten_double_nested_branch':
         ['b= 0\nif True:\n    if True:\n        b=0\nb', ['Possible Initialization Problem'], []],
     # Overwritten in one branches
-    'overwritten_in_one_branch':
+    'overwritten_in_one_branch_alt':
         ['a = 0\nif True:\n\ta = 1\na', ['Possible Initialization Problem'], []],
     'filter_pattern2':
         ["t = 0\nfor x in []:\n    if x:\n        t = t + 1\nprint(t)", ['Possible Initialization Problem'], []],

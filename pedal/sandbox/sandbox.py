@@ -329,7 +329,11 @@ class Sandbox(DataSandbox):
         Wraps an input function with a tracker.
         """
 
-        def _input_tracker(prompt, *args, **kwargs):
+        def _input_tracker(*args, **kwargs):
+            if args:
+                prompt = args[0]
+            else:
+                prompt = ""
             print(prompt)
             if self.inputs:
                 value_entered = self.inputs.pop(0)

@@ -17,12 +17,21 @@ global:
     prints:
 functions:
     function: do_complicated_stuff
-    signature: int, int, list[int], (int->str), dict[str:list[int]] -> list[int]
+    signature: int, int -> float
     cases:
-        arguments:
+      - arguments: 5, 4
         inputs:
-        returns:
+        returns: 27.3
         prints:
+syntax:
+    prevent:
+        ___ + ___
+
+
+
+
+
+        signature: int, int, list[int], (int->str), dict[str:list[int]] -> list[int]
 """
 
 from pedal.toolkit.printing import *

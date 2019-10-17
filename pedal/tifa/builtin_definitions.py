@@ -207,3 +207,5 @@ def get_builtin_function(name):
                                              empty=False))
     elif name in ("classmethod", "staticmethod"):
         return FunctionType(name=name, returns='identity')
+    elif name in ("__name__",):
+        return StrType()
