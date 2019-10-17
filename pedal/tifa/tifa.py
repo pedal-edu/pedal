@@ -624,8 +624,13 @@ class Tifa(ast.NodeVisitor):
                     if arg.annotation:
                         self.visit(arg.annotation)
                         annotation = get_tifa_type(arg.annotation, self)
+                        # TODO: Use parameter information to "fill in" empty lists
+                        if isinstance(parameter, ListType) and isinstance(annotation, ListType):
+                            if isinstance(parameter.subtype, UnknownType):
+                                parameter.subtype = annotation.subtype
                         # TODO: Check that arg.type and parameter type match!
                         if not are_types_equal(annotation, parameter, True):
+                            print(annotation, parameter)
                             self.report_issue("Parameter Type Mismatch",
                                               {"parameter": annotation, "parameter_name": name,
                                                "argument": parameter})
@@ -1040,7 +1045,6 @@ class Tifa(ast.NodeVisitor):
             self.name_map[current_path][full_name] = new_state
         else:
             new_state = self.trace_state(variable.state, "load", position)
-            print("LOOKUP", variable.state)
             if variable.state.set == 'no':
                 self.report_issue("Initialization Problem", {'name': name})
             if variable.state.set == 'maybe':
@@ -1085,7 +1089,6 @@ class Tifa(ast.NodeVisitor):
                 return ModuleType()
 
     def combine_states(self, left, right):
-        print("COMBINING", self.locate(), self.path_chain[0], left, right)
         state = State(left.name, [left], left.type, 'branch', self.locate(),
                       read=left.read, set=left.set, over=left.over,
                       over_position=left.over_position)
@@ -1104,7 +1107,6 @@ class Tifa(ast.NodeVisitor):
             if left.over == 'no':
                 state.over_position = right.over_position
             state.trace.append(right)
-        print("CREATED", state)
         return state
 
     def merge_paths(self, parent_path_id, left_path_id, right_path_id):
@@ -1124,11 +1126,9 @@ class Tifa(ast.NodeVisitor):
             right_identifier = self.find_path_parent(right_path_id, left_name)
             if right_identifier.exists:
                 # Was on both IF and ELSE path
-                print("IF/ELSE", right_identifier.scoped_name)
                 right_state = right_identifier.state
             else:
                 # Was only on IF path, potentially on the parent path
-                print("IF", left_name)
                 right_state = self.name_map[parent_path_id].get(left_name)
             combined = self.combine_states(left_state, right_state)
             self.name_map[parent_path_id][left_name] = combined
@@ -1140,7 +1140,6 @@ class Tifa(ast.NodeVisitor):
                 parent_state = self.name_map[parent_path_id].get(right_name)
                 combined = self.combine_states(right_state, parent_state)
                 self.name_map[parent_path_id][right_name] = combined
-                print("PARENT", self.path_id, right_state.set, right_name, parent_state, combined)
 
     def trace_state(self, state, method, position):
         """

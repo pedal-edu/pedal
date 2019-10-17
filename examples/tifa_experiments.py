@@ -8,25 +8,24 @@ sys.path.insert(0, pedal_library)
 from pedal import set_source, find_match, tifa_analysis
 
 
-set_source("""
-highest = 0
-if False:
-    0
-else:
-    if False:
-        0
-    else:
-        highest = 0
-highest""")
+# set_source("""
+# highest = 0
+# if False:
+#     0
+# else:
+#     if False:
+#         0
+#     else:
+#         highest = 0
+# highest""")
 
-# set_source(('''def alpha(card: str) -> int:
-#     return 1
-#
-# def beta(cards: [str]) -> [int]:
-#     for card in cards:
-#         alpha(card)
-#
-# beta([])'''))
+set_source(('''def alpha(card: str) -> int:
+    return 1
+def beta(cards: [str]) -> [int]:
+    for card in cards:
+        alpha(card)
+
+beta([])'''))
 
 t = tifa_analysis()
 pprint(t.name_map)
