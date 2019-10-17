@@ -19,18 +19,10 @@ from pedal import set_source, find_match, tifa_analysis
 #         highest = 0
 # highest""")
 
-set_source(('''def alpha(card: str) -> int:
-    return 1
-def beta(cards: [str]) -> [int]:
-    for card in cards:
-        alpha(card)
+#t = tifa_analysis()
+#pprint(t.name_map)
 
-beta([])'''))
-
-t = tifa_analysis()
-pprint(t.name_map)
-
-pprint(t.report['tifa']['issues'])
+#pprint(t.report['tifa']['issues'])
 
 '''
 set_source(('Dog = {"Name": str, "Age": int, "Fluffy": bool}\n'
@@ -41,8 +33,10 @@ set_source(('Dog = {"Name": str, "Age": int, "Fluffy": bool}\n'
             'ada = {"Name": "Ada", "Age": 2, "Fluffy": True}\n'
             'do_stuff(ada)["Name"] + ""\n'
             'do_stuff(ada)["Age"] + 0'))
+'''
+
+
 t = tifa_analysis()
 pprint(t.name_map)
 
 pprint(t.report['tifa']['issues'])
-'''

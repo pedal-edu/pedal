@@ -251,6 +251,13 @@ unit_tests = {
          'do_stuff(ada)["Name"] + ""'
          ), ['Incompatible types'], []
     ],
+    'dict_with_setter': [
+        ('person1={"Name": "Babbage", "Age": 3}\n'
+            'def make_older(a_dog: dict) -> int:\n'
+            '    a_dog["Age"]+=1\n'
+            '    return a_dog["Age"]\n'
+            'make_older(person1) + 0'), ['Incompatible types', 'Type Changes'], []
+    ],
 
     # While
     'while_until_input': [

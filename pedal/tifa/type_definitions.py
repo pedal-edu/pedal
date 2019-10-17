@@ -380,6 +380,12 @@ class DictType(Type):
     def is_empty(self):
         return self.empty
 
+    def has_literal(self, l):
+        for literal, value in zip(self.literals, self.values):
+            if are_literals_equal(literal, l):
+                return value
+        return None
+
     def index(self, i):
         if self.empty:
             return UnknownType()
@@ -390,6 +396,11 @@ class DictType(Type):
             return UnknownType()
         else:
             return self.keys.clone()
+
+    def update_key(self, literal_key, type):
+        self.literals.append(literal_key)
+        self.values.append(type)
+
 
     def load_attr(self, attr, tifa, callee=None, callee_position=None):
         if attr == 'items':
