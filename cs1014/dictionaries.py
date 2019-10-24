@@ -548,12 +548,13 @@ def key_comp(keys):
         __expr__ = match["__expr__"]
         submatch = dict_detect(__expr__)
         # __str1__ = match["__str1__"]
-        __str1__ = submatch.find_match("_var_[__str1__]")["__str1__"]
-        __str2__ = match["__str2__"]
-        value1 = var_check(__str1__, keys)
-        value2 = var_check(__str2__, keys)
-        if value1 and value2:
-            return explain_r(message.format(__str1__.value, __str2__.value), code, label=tldr)
+        if submatch:
+            __str1__ = submatch.find_match("_var_[__str1__]")["__str1__"]
+            __str2__ = match["__str2__"]
+            value1 = var_check(__str1__, keys)
+            value2 = var_check(__str2__, keys)
+            if value1 and value2:
+                return explain_r(message.format(__str1__.value, __str2__.value), code, label=tldr)
     return False
 
 
