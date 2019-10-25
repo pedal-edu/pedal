@@ -169,7 +169,7 @@ class StretchyTreeMatcher:
         if match[_VAR] and meta_matched:  # if variable
             if type(std_node.astNode).__name__ == "Name":
                 return self.deep_find_match_generic(ins_node, std_node,
-                                                    check_meta=check_meta, ignores=["ctx"],pre_match=pre_match)
+                                                    check_meta=check_meta, ignores=["ctx"], pre_match=pre_match)
         # could else return False, but shallow_match_generic should do this as well
         elif match[_EXP]:  # and meta_matched:  # if expression
             # terminate recursion, the whole subtree should match since expression nodes match to anything
