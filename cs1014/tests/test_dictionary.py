@@ -75,7 +75,7 @@ class DictionaryMistakeTest(MistakeTest):
 
     def test_var_instead_of_key(self):
         # TODO: Check output string
-        key_list = ['price', 'number_of_pages', 'discount']
+        key_list = ['price', 'number_of_pages', 'discount', 'title']
 
         self.to_source('book = {"number_of_pages":285, "price":99.23, "discount":0.1}\n'
                        'print(price)')
@@ -91,6 +91,17 @@ class DictionaryMistakeTest(MistakeTest):
                        'price = book["price"]\n'
                        'print(price)')
         ret = var_instead_of_key(key_list)
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
+        self.to_source("import weather\n"
+                       "import matplotlib.pyplot as plt\n"
+                       "weather_reports = weather.get_report()\n"
+                       "list = []\n"
+                       "City = input('City')\n"
+                       "for report in weather_reports:\n"
+                       "    if City == report['Station']['City']:\n"
+                       "        list.append(report[\"Data\"][\"Precipitation\"])\n")
+        ret = var_instead_of_key(['City', 'Data', 'Precipitation'])
         self.assertFalse(ret, "Expected False, got {} instead".format(ret))
 
     def test_parens_in_dict(self):
@@ -119,6 +130,17 @@ class DictionaryMistakeTest(MistakeTest):
                        'print(book[price])')
         ret = parens_in_dict(key_list)
         self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
+        self.to_source('price = input("price")\n'
+                       'book = {"number_of_pages":285, "price":99.23, "discount":0.1}\n'
+                       'print(book[price])')
+        ret = parens_in_dict(key_list)
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
+        self.to_source('for item in _list:\n'
+                       '    print(item("price"))')
+        ret = parens_in_dict(key_list)
+        self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
 
     def test_list_as_dict(self):
         # TODO: Check output string
@@ -602,20 +624,6 @@ class DictionaryMistakeTest(MistakeTest):
                        'print(sum)\n')
         ret = key_comp(keys)
         self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
-        # TODO: Get this to work
-        """
-        self.to_source('import weather\n'
-                       'weather_reports = weather.get_weather()\n'
-                       'sum = 0\n'
-                       'precip = "Precipitation"\n'
-                       'for weather_instance in weather_reports:\n'
-                       '    data = weather_instance["Data"]\n'
-                       '    if data == precip:\n'
-                       '        sum = sum + weather_instance[data]\n'
-                       'print(sum)\n')
-        ret = key_comp(keys)
-        self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
-        """
 
         self.to_source('import weather\n'
                        'weather_reports = weather.get_weather()\n'
@@ -656,6 +664,27 @@ class DictionaryMistakeTest(MistakeTest):
         ret = key_comp(keys)
         self.assertFalse(ret, "Expected False, got {} instead".format(ret))
         '''
+        # TODO: Get this to work
+        """
+        self.to_source('import weather\n'
+                       'weather_reports = weather.get_weather()\n'
+                       'sum = 0\n'
+                       'precip = "Precipitation"\n'
+                       'for weather_instance in weather_reports:\n'
+                       '    data = weather_instance["Data"]\n'
+                       '    if data == precip:\n'
+                       '        sum = sum + weather_instance[data]\n'
+                       'print(sum)\n')
+        ret = key_comp(keys)
+        self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
+        """
+
+        # TODO: Fix this bug (An if statement bypasses this for now, real bug is in CAIT)
+        self.to_source('for reports in weather_reports:\n'
+                       '    if report["Station"]["City"] == "Chicago":\n'
+                       '        trend.append(reports["Data"]["Precipitation"])')
+        ret = key_comp(keys)
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
 
     def test_col_dict(self):
         self.to_source('import weather\n'

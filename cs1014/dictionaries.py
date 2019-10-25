@@ -111,7 +111,7 @@ def uncover_type(name, tifa_type):
 
 
 def dict_detect(expr):
-    if expr.find_match("_var_[__expr__]"):
+    if expr.find_match("_var_[__expr__]", use_previous=False):
         return expr
     elif expr.is_ast("Name"):
         matches = find_matches("{} = _var_[__expr__]".format(expr.id))
@@ -186,7 +186,10 @@ def var_instead_of_key(keys):
         _var_ = match["_var_"]
         if _var_.id in keys:
             submatch = find_match("_dict_['{}']".format(_var_.id))
-            if submatch is None:
+            submatch2 = find_match("{} = ___".format(_var_.id))
+            if submatch is None and submatch2 is None:
+                # If we don't find a dictionary access using this key and
+                # we don't see that this variable is assigned to a value...
                 return explain_r(message.format(_var_.id), code, label=tldr)
     return False
 
@@ -207,8 +210,9 @@ def parens_in_dict(keys):
     matches = find_matches("_var_(__str__)")
     for match in matches:
         __str__ = match['__str__']
+        _var_ = match['_var_']
         key = var_check(__str__, keys)
-        if key:
+        if key and data_state(_var_.id):
             return explain_r(message.format(key), code, label=tldr)
     return False
 
@@ -548,13 +552,13 @@ def key_comp(keys):
         __expr__ = match["__expr__"]
         submatch = dict_detect(__expr__)
         # __str1__ = match["__str1__"]
-        if submatch:
-            __str1__ = submatch.find_match("_var_[__str1__]")["__str1__"]
-            __str2__ = match["__str2__"]
-            value1 = var_check(__str1__, keys)
-            value2 = var_check(__str2__, keys)
-            if value1 and value2:
-                return explain_r(message.format(__str1__.value, __str2__.value), code, label=tldr)
+        # if submatch:
+        __str1__ = submatch.find_match("_var_[__str1__]", use_previous=False)["__str1__"]
+        __str2__ = match["__str2__"]
+        value1 = var_check(__str1__, keys)
+        value2 = var_check(__str2__, keys)
+        if value1 and value2:
+            return explain_r(message.format(__str1__.value, __str2__.value), code, label=tldr)
     return False
 
 
