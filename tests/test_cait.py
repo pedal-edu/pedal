@@ -769,6 +769,40 @@ class CaitTests(unittest.TestCase):
             self.assertTrue(__exp__.find_matches("{func}()".format(func=_recur_.id)),
                             "couldn't find recursive function call")
 
+    def test_use_previous(self):
+        set_source('for reports in weather_reports:\n'
+                   '    if report["Station"]["City"] == "Chicago":\n'
+                   '        trend.append(reports["Data"]["Precipitation"])')
+        matches = find_matches("for _var_ in ___:\n"
+                               "    if __expr__ == __str2__:\n"
+                               "        pass")
+        for match in matches:
+            __expr__ = match["__expr__"]
+            submatch = __expr__.find_matches("_var2_[__expr__]")
+            self.assertTrue(submatch)
+
+        set_source('for reports in weather_reports:\n'
+                   '    if report["Station"]["City"] == "Chicago":\n'
+                   '        trend.append(reports["Data"]["Precipitation"])')
+        matches = find_matches("for _var_ in ___:\n"
+                               "    if __expr__ == __str2__:\n"
+                               "        pass")
+        for match in matches:
+            __expr__ = match["__expr__"]
+            submatch = __expr__.find_matches("_var_[__expr__]", use_previous=True)
+            self.assertFalse(submatch)
+
+        set_source('for reports in weather_reports:\n'
+                   '    if report["Station"]["City"] == "Chicago":\n'
+                   '        trend.append(reports["Data"]["Precipitation"])')
+        matches = find_matches("for _var_ in ___:\n"
+                               "    if __expr__ == __str2__:\n"
+                               "        pass")
+        for match in matches:
+            __expr__ = match["__expr__"]
+            submatch = __expr__.find_matches("_var_[__expr__]")
+            self.assertFalse(submatch)
+
 
 if __name__ == '__main__':
     unittest.main(buffer=False)

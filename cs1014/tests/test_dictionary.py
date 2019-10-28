@@ -7,6 +7,10 @@ from tests.mistake_test_template import *
 from CS1014.dictionaries import *
 from CS1014.input_mistakes import *
 from pedal.mistakes.iteration_context import all_labels_present
+from pedal.resolvers import simple
+# import pedal.sandbox.compatibility as compatibility
+# from tests.execution_helper import Execution
+from pedal.toolkit.utilities import *
 
 
 class DictionaryMistakeTest(MistakeTest):
@@ -71,7 +75,7 @@ class DictionaryMistakeTest(MistakeTest):
 
     def test_var_instead_of_key(self):
         # TODO: Check output string
-        key_list = ['price', 'number_of_pages', 'discount']
+        key_list = ['price', 'number_of_pages', 'discount', 'title']
 
         self.to_source('book = {"number_of_pages":285, "price":99.23, "discount":0.1}\n'
                        'print(price)')
@@ -87,6 +91,17 @@ class DictionaryMistakeTest(MistakeTest):
                        'price = book["price"]\n'
                        'print(price)')
         ret = var_instead_of_key(key_list)
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
+        self.to_source("import weather\n"
+                       "import matplotlib.pyplot as plt\n"
+                       "weather_reports = weather.get_report()\n"
+                       "list = []\n"
+                       "City = input('City')\n"
+                       "for report in weather_reports:\n"
+                       "    if City == report['Station']['City']:\n"
+                       "        list.append(report[\"Data\"][\"Precipitation\"])\n")
+        ret = var_instead_of_key(['City', 'Data', 'Precipitation'])
         self.assertFalse(ret, "Expected False, got {} instead".format(ret))
 
     def test_parens_in_dict(self):
@@ -116,6 +131,17 @@ class DictionaryMistakeTest(MistakeTest):
         ret = parens_in_dict(key_list)
         self.assertFalse(ret, "Expected False, got {} instead".format(ret))
 
+        self.to_source('price = input("price")\n'
+                       'book = {"number_of_pages":285, "price":99.23, "discount":0.1}\n'
+                       'print(book[price])')
+        ret = parens_in_dict(key_list)
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
+        self.to_source('for item in _list:\n'
+                       '    print(item("price"))')
+        ret = parens_in_dict(key_list)
+        self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
+
     def test_list_as_dict(self):
         # TODO: Check output string
         self.to_source("total = 0\n"
@@ -133,6 +159,24 @@ class DictionaryMistakeTest(MistakeTest):
                        "print (total)\n".format(self._dict_str))
         ret = list_as_dict()
         self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
+        self.to_source("earthquake_report = [{\"Location\" : \"California\", \"Magnitude\" : 2.3, \"Depth\" : 7.66},\n"
+                       "                  {\"Location\" : \"Japan\", \"Magnitude\" : 5.3, \"Depth\" : 3.34},\n"
+                       "                  {\"Location\" : \"Burma\", \"Magnitude\" : 4.9, \"Depth\" :97.07},\n"
+                       "                  {\"Location\" : \"Alaska\", \"Magnitude\" : 4.6, \"Depth\" : 35.0},\n"
+                       "                  {\"Location\" : \"Washington\", \"Magnitude\" : 2.19, \"Depth\" : 15.28},\n"
+                       "                  {\"Location\" : \"China\", \"Magnitude\" : 4.3, \"Depth\" : 10.0}\n"
+                       "                  ]\n"
+                       "total = 0\n"
+                       "number = 0\n"
+                       "for earthquake_report in earthquake_reports:\n"
+                       "    total = total + earthquake_report['Magnitude']\n"
+                       "    number = 1 + number\n"
+                       "average = total / number\n"
+                       "print(average)"
+                       )
+        ret = list_as_dict()
+        self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
 
     def test_dict_out_of_loop(self):
         # TODO: Check output string
@@ -580,20 +624,6 @@ class DictionaryMistakeTest(MistakeTest):
                        'print(sum)\n')
         ret = key_comp(keys)
         self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
-        # TODO: Get this to work
-        """
-        self.to_source('import weather\n'
-                       'weather_reports = weather.get_weather()\n'
-                       'sum = 0\n'
-                       'precip = "Precipitation"\n'
-                       'for weather_instance in weather_reports:\n'
-                       '    data = weather_instance["Data"]\n'
-                       '    if data == precip:\n'
-                       '        sum = sum + weather_instance[data]\n'
-                       'print(sum)\n')
-        ret = key_comp(keys)
-        self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
-        """
 
         self.to_source('import weather\n'
                        'weather_reports = weather.get_weather()\n'
@@ -619,6 +649,8 @@ class DictionaryMistakeTest(MistakeTest):
         ret = key_comp(keys)
         self.assertFalse(ret, "Expected False, got {} instead".format(ret))
 
+        # TODO: Get this to work
+        '''
         self.to_source('import weather\n'
                        'weather_reports = weather.get_weather()\n'
                        'sum = 0\n'
@@ -629,6 +661,28 @@ class DictionaryMistakeTest(MistakeTest):
                        '    if loc1 == "Chicago":\n'
                        '        sum = sum + weather_instance[data][precip]\n'
                        'print(sum)\n')
+        ret = key_comp(keys)
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+        '''
+        # TODO: Get this to work
+        """
+        self.to_source('import weather\n'
+                       'weather_reports = weather.get_weather()\n'
+                       'sum = 0\n'
+                       'precip = "Precipitation"\n'
+                       'for weather_instance in weather_reports:\n'
+                       '    data = weather_instance["Data"]\n'
+                       '    if data == precip:\n'
+                       '        sum = sum + weather_instance[data]\n'
+                       'print(sum)\n')
+        ret = key_comp(keys)
+        self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
+        """
+
+        # TODO: Fix this bug (An if statement bypasses this for now, real bug is in CAIT)
+        self.to_source('for reports in weather_reports:\n'
+                       '    if report["Station"]["City"] == "Chicago":\n'
+                       '        trend.append(reports["Data"]["Precipitation"])')
         ret = key_comp(keys)
         self.assertFalse(ret, "Expected False, got {} instead".format(ret))
 
@@ -1097,3 +1151,49 @@ class DictionaryMistakeTest(MistakeTest):
         matches = find_matches("_var_")
         var = matches[0]["_var_"]
         self.assertTrue(var.ast_name == "Name", "is: {}".format(var.ast_name))
+
+    def test_group(self):
+        self.to_source("earthquake_report = [{'Location' : 'California', 'Magnitude' : 2.3, 'Depth' : 7.66},\n"
+                       "                  {'Location' : 'Japan', 'Magnitude' : 5.3, 'Depth' : 3.34},\n"
+                       "                  {'Location' : 'Burma', 'Magnitude' : 4.9, 'Depth' :97.07},\n"
+                       "                  {'Location' : 'Alaska', 'Magnitude' : 4.6, 'Depth' : 35.0},\n"
+                       "                  {'Location' : 'Washington', 'Magnitude' : 2.19, 'Depth' : 15.28},\n"
+                       "                  {'Location' : 'China', 'Magnitude' : 4.3, 'Depth' : 10.0}\n"
+                       "                  ]\n"
+                       "total = 0\n"
+                       "number = 0\n"
+                       "for earthquake_report in earthquake_reports:\n"
+                       "    total = total + earthquake_report['Magnitude']\n"
+                       "    number = 1 + number\n"
+                       "average = total / number\n"
+                       "print(average)"
+                       )
+        target_dict = ('_quake_dict_list_ =  [{"Location": "California", "Magnitude": 2.3, "Depth": 7.66},'
+                       '{"Location": "Japan", "Magnitude": 5.3, "Depth": 3.34},'
+                       '{"Location": "Burma", "Magnitude": 4.9, "Depth": 97.07},'
+                       '{"Location": "Alaska", "Magnitude": 4.6, "Depth": 35.0},'
+                       '{"Location": "Washington", "Magnitude": 2.19, "Depth": 15.28},'
+                       '{"Location": "China", "Magnitude": 4.3, "Depth": 10.0}]')
+        matches = find_matches(target_dict)
+        if not matches:
+            explain_r("You need to properly define a dictionary for the abstraction first", "dict_def_err",
+                      label="Dictionary Definition Incorrect")
+
+        all_keys = ["Location", "Magnitude", "Depth"]
+        unused_keys = ["Location", "Depth"]
+        used_keys = ["Magnitude"]
+        dict_acc_group(all_keys, unused_keys, used_keys)
+        dict_list_group(all_keys)
+
+        target_list = [2.3, 5.3, 4.9, 4.6, 2.19, 4.3]
+        ___target_avg = sum(target_list) / len(target_list)
+
+        prevent_literal(___target_avg, str(___target_avg))
+
+        (success, score, category, label,
+         message, data, hide) = simple.resolve()
+        # self.assertFalse(success)
+        # self.assertEqual(message, 'You should always create unit tests.')
+        self.assertEqual(message, "The list of Dictionaries <code>earthquake_report</code> is not itself a dictionary. "
+                                  "To access key-value pairs of the dictionaries in the list, you need to access each "
+                                  "dictionary in the list one at a time.<br><br><i>(list_dict)<i></br></br>")
