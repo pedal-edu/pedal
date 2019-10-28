@@ -258,6 +258,16 @@ unit_tests = {
             '    return a_dog["Age"]\n'
             'make_older(person1) + 0'), ['Incompatible types', 'Type Changes'], []
     ],
+    'function_returns_typed_dict': [
+        ('def count_words(words: str) -> {str: int}:\n'
+         '  counts = {}\n'
+         '  for word in words.split(","):\n'
+         '    if word not in counts:\n'
+         '      counts[word] = 0\n'
+         '    counts[word] += 1\n'
+         '  return counts\n'
+         'count_words("alpha,alpha,beta,alpha")'), ['Multiple Return Types'], []
+    ],
 
     # While
     'while_until_input': [

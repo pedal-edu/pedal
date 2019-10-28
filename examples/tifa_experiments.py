@@ -34,9 +34,22 @@ set_source(('Dog = {"Name": str, "Age": int, "Fluffy": bool}\n'
             'do_stuff(ada)["Name"] + ""\n'
             'do_stuff(ada)["Age"] + 0'))
 '''
+set_source('''
+def count_words(words: str) -> {str: int}:
+    counts = {}
+    for word in words.split(","):
+        if word not in counts:
+            counts[word] = 0
+        counts[word] += 1
+    return counts
 
+count_words("alpha,alpha,beta,alpha")''')
 
 t = tifa_analysis()
 pprint(t.name_map)
 
-pprint(t.report['tifa']['issues'])
+if t.report['tifa']['success']:
+    pprint(t.report['tifa']['issues'])
+else:
+    print("EXCEPTION")
+    print(t.report['tifa']['error'])

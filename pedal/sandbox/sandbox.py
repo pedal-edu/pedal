@@ -541,6 +541,8 @@ class Sandbox(DataSandbox):
             patch.start()
 
     def _stop_patches(self):
+        if not self._current_patches:
+            return
         patches = self._current_patches.pop()
         for patch in patches:
             patch.stop()
@@ -628,6 +630,7 @@ class Sandbox(DataSandbox):
                                report_exceptions, raise_exceptions,
                                context, keep_context)
             except TimeoutError as timeout_exception:
+                self._stop_patches()
                 self._capture_exception(timeout_exception, sys.exc_info(),
                                         report_exceptions, raise_exceptions,
                                         context, keep_context, as_filename,

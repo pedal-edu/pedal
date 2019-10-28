@@ -370,10 +370,16 @@ class Tifa(ast.NodeVisitor):
                 # TODO: Handle updating value in list
                 pass
             elif isinstance(left_hand_type, DictType):
-                if isinstance(target.slice, ast.Index) and left_hand_type.literals:
-                    literal = self.get_literal(target.slice.value)
-                    if not literal:
-                        pass  # TODO: Invalid literal?
+                if not isinstance(target.slice, ast.Index):
+                    # TODO: Can't subscript a dictionary assignment
+                    return None
+                literal = self.get_literal(target.slice.value)
+                if not literal:
+                    key_type = self.visit(target.slice.value)
+                    left_hand_type.empty = False
+                    left_hand_type.keys = key_type.clone()
+                    left_hand_type.values = type.clone()
+                elif left_hand_type.literals:
                     original_type = left_hand_type.has_literal(literal)
                     if not original_type:
                         left_hand_type.update_key(literal, type.clone())
@@ -382,8 +388,6 @@ class Tifa(ast.NodeVisitor):
                         self.report_issue("Type changes",
                                           {'name': "Dictionary", 'old': original_type,
                                            'new': type})
-                else:
-                    pass  # TODO: Can't subscript a dictionary assignment
         elif isinstance(target, ast.Attribute):
             left_hand_type = self.visit(target.value)
             if isinstance(left_hand_type, InstanceType):
@@ -670,8 +674,8 @@ class Tifa(ast.NodeVisitor):
                         returns = get_tifa_type(node.returns, self)
                         if not are_types_equal(return_value, returns, True):
                             self.report_issue("Multiple Return Types",
-                                              {"expected": returns.singular_name,
-                                               "actual": return_value.singular_name,
+                                              {"expected": returns.precise_description(),
+                                               "actual": return_value.precise_description(),
                                                "position": return_state.position})
             return return_value
 
