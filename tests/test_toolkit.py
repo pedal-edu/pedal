@@ -3,6 +3,8 @@ import os
 import sys
 from textwrap import dedent
 
+from pedal.toolkit.records import check_record_instance
+
 pedal_library = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.insert(0, pedal_library)
 
@@ -726,6 +728,58 @@ class TestSignatures(unittest.TestCase):
             )
             self.assertEqual(signature[1], True)
             self.assertEqual(signature[0], [])
+
+
+class TestRecords(unittest.TestCase):
+    def test_check_instance_works(self):
+        student_code = dedent("""
+        banana = {"Name": "Banana", "Age": 47, "Macros": [0, 24, 33]}
+        """)
+        Fruit = {"Name": str, "Age": int, "Macros": [int]}
+        with Execution(student_code) as e:
+            result = check_record_instance(e.student.data['banana'], Fruit, "banana", "Fruit")
+        self.assertTrue(result)
+
+    def test_check_instance_failed_dict(self):
+        student_code = dedent("""
+        banana = "Banana"
+        """)
+        Fruit = {"Name": str, "Age": int, "Macros": [int]}
+        with Execution(student_code) as e:
+            result = check_record_instance(e.student.data['banana'], Fruit, "`banana`", "Fruit")
+        self.assertFalse(result)
+        self.assertEqual("`banana` was not a Fruit because it is not a dictionary.", e.message)
+
+    def test_check_instance_failed_missing_key(self):
+        student_code = dedent("""
+        banana = {"Name": "Banana", "Macros": [0, 24, 33]}
+        """)
+        Fruit = {"Name": str, "Age": int, "Macros": [int]}
+        with Execution(student_code) as e:
+            result = check_record_instance(e.student.data['banana'], Fruit, "`banana`", "Fruit")
+        self.assertFalse(result)
+        self.assertEqual("`banana` was supposed to have the key `Age`, but it did not.", e.message)
+
+
+    def test_check_instance_failed_wrong_key_type(self):
+        student_code = dedent("""
+        banana = {"Name": "Banana", "Age": 'old', "Macros": [0, 24, 33]}
+        """)
+        Fruit = {"Name": str, "Age": int, "Macros": [int]}
+        with Execution(student_code) as e:
+            result = check_record_instance(e.student.data['banana'], Fruit, "`banana`", "Fruit")
+        self.assertFalse(result)
+        self.assertEqual("`banana` was not a Fruit because its key `Age` did not have a `int` value", e.message)
+
+    def test_check_instance_failed_extra_keys(self):
+        student_code = dedent("""
+        banana = {"Name": "Banana", "Age": 4, "Dumb": "Wrong", "Macros": [0, 24, 33]}
+        """)
+        Fruit = {"Name": str, "Age": int, "Macros": [int]}
+        with Execution(student_code) as e:
+            result = check_record_instance(e.student.data['banana'], Fruit, "`banana`", "Fruit")
+        self.assertFalse(result)
+        self.assertEqual("`banana` had extra keys that it should not have.", e.message)
 
 
 if __name__ == '__main__':

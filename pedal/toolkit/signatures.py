@@ -280,7 +280,6 @@ def check_piece(left, right, indent=1):
 
 def type_check(left, right):
     left = normalize_type(left)
-    print(left, "||||", right)
     right = normalize_type(right)
     return check_piece(left, right)
     

@@ -105,6 +105,9 @@ class Type:
     def __str__(self):
         return str(self.__class__.__name__)
 
+    def precise_description(self):
+        return self.singular_name
+
     def clone_mutably(self):
         if self.immutable:
             return self.clone()
@@ -368,6 +371,20 @@ class FileType(Type):
 class DictType(Type):
     singular_name = 'a dictionary'
 
+    def precise_description(self):
+        base = "a dictionary"
+        if self.literals:
+            base += " mapping "
+            # TODO: Handle recursive precise names more correctly
+            base += ", ".join("{!r} to {}".format(l.value, r.precise_description())
+                              for l, r in zip(self.literals, self.values))
+        elif self.keys:
+            keys = self.keys[0] if isinstance(self.keys, list) else self.keys
+            values = self.values[0] if isinstance(self.values, list) else self.values
+            base += " mapping {}".format(keys.precise_description())
+            base += " to {}".format(values.precise_description())
+        return base
+
     def __init__(self, empty=False, literals=None, keys=None, values=None):
         self.empty = empty
         self.literals = literals
@@ -570,6 +587,14 @@ def get_tifa_type(v, self):
             return ListType(subtype=get_tifa_type(elements[0], self))
         else:
             return ListType(empty=True)
+    elif isinstance(v, ast.Dict):
+        if not v.keys:
+            return DictType(empty=True)
+        if all(isinstance(k, ast.Str) for k in v.keys):
+            return DictType(literals=[LiteralStr(s.s) for s in v.keys],
+                            values=[get_tifa_type(vv, self) for vv in v.values])
+        return DictType(keys=[get_tifa_type(k, self) for k in v.keys],
+                        values=[get_tifa_type(vv, self) for vv in v.values])
     # TODO: Finish filling in static type system
     else:
         return UnknownType()

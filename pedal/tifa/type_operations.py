@@ -112,6 +112,7 @@ def are_types_equal(left, right, formal=False):
                     return False
             return True
     elif isinstance(left, DictType):
+        #print(left.empty, left.keys, left.literals, right)
         if not left.keys and not left.literals:
             return isinstance(right, DictType)
         #print("L", [literal.value for literal in left.literals], [v.singular_name

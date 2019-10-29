@@ -62,9 +62,11 @@ class KeyError(BuiltinKeyError):
     __module__ = "builtins"
 
     def __init__(self, original, message):
-        self.__cause__ = original.__cause__
-        self.__traceback__ = original.__traceback__
-        self.__context__ = original.__context__
+        for field in ['__cause__', '__traceback__', '__context__']:
+            if hasattr(original, field):
+                setattr(self, field, getattr(original, field))
+            else:
+                setattr(self, field, None)
         self.message = message
 
     def __str__(self):
