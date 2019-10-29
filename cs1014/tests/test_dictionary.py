@@ -649,8 +649,6 @@ class DictionaryMistakeTest(MistakeTest):
         ret = key_comp(keys)
         self.assertFalse(ret, "Expected False, got {} instead".format(ret))
 
-        # TODO: Get this to work
-        '''
         self.to_source('import weather\n'
                        'weather_reports = weather.get_weather()\n'
                        'sum = 0\n'
@@ -663,9 +661,7 @@ class DictionaryMistakeTest(MistakeTest):
                        'print(sum)\n')
         ret = key_comp(keys)
         self.assertFalse(ret, "Expected False, got {} instead".format(ret))
-        '''
-        # TODO: Get this to work
-        """
+
         self.to_source('import weather\n'
                        'weather_reports = weather.get_weather()\n'
                        'sum = 0\n'
@@ -677,14 +673,28 @@ class DictionaryMistakeTest(MistakeTest):
                        'print(sum)\n')
         ret = key_comp(keys)
         self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
-        """
 
-        # TODO: Fix this bug (An if statement bypasses this for now, real bug is in CAIT)
         self.to_source('for reports in weather_reports:\n'
                        '    if report["Station"]["City"] == "Chicago":\n'
                        '        trend.append(reports["Data"]["Precipitation"])')
         ret = key_comp(keys)
         self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
+        self.to_source("weather_reports = weather.get_weather()\n"
+                       "for report in weather_reports:\n"
+                       "    City = report['Station']['City']\n"
+                       "    if City == 'Blacksburg':\n"
+                       "        pass\n")
+        ret = key_comp(keys)
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
+        self.to_source("weather_reports = weather.get_weather()\n"
+                       "for report in weather_reports:\n"
+                       "    City = report['Station']\n"
+                       "    if City == 'City':\n"
+                       "        pass\n")
+        ret = key_comp(keys)
+        self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
 
     def test_col_dict(self):
         self.to_source('import weather\n'

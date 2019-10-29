@@ -67,7 +67,8 @@ def var_check(expr, keys=None):
     :type expr: CaitNode
     :param keys: List of keys
     :type keys: list of Str
-    :return: Key value if expression was a name node assigned a key value or if the value is a string key value
+    :return: Key value if expression was a name node assigned a key value or if the value is a string key value,
+                otherwise returns False
     :rtype: bool/Str
     """
     if expr.is_ast('Str') and (keys is None or expr.value in keys):
@@ -114,10 +115,15 @@ def dict_detect(expr):
     if expr.find_match("_var_[__expr__]", use_previous=False):
         return expr
     elif expr.is_ast("Name"):
-        matches = find_matches("{} = _var_[__expr__]".format(expr.id))
-        if matches:
-            return matches[-1]["_var_"].ast_node.parent.parent
-            # TODO: Rework to chase down all indirect accesses part of the same chain as a string (and then CaitNode)
+        # TODO: This match is buggy because in the case slicing, the dictionary dives deeper instead of making siblings
+        matches = find_matches("{} = __expr__".format(expr.id))
+        submatch = None
+        for match in matches:
+            __expr__ = match["__expr__"]
+            submatch = __expr__.find_match("__expr__[__expr2__]", use_previous=False)
+            if submatch:
+                return __expr__
+                # TODO: Rework to chase down all indirect accesses part of the same chain as a string (and then CaitNode)
         # fall through return None
     return None
 
@@ -546,19 +552,23 @@ def key_comp(keys):
                            "        pass")
     """
     matches = find_matches("for _var_ in ___:\n"
-                           "    if __expr__ == __str2__:\n"
+                           "    if __expr1__ == __expr2__:\n"
                            "        pass")
     for match in matches:
-        __expr__ = match["__expr__"]
-        submatch = dict_detect(__expr__)
+        __str1__ = match["__expr1__"]
+        __str2__ = match["__expr2__"]
+        submatch1 = dict_detect(__str1__)
+        submatch2 = dict_detect(__str2__)
         # __str1__ = match["__str1__"]
-        # if submatch:
-        __str1__ = submatch.find_match("_var_[__str1__]", use_previous=False)["__str1__"]
-        __str2__ = match["__str2__"]
-        value1 = var_check(__str1__, keys)
-        value2 = var_check(__str2__, keys)
-        if value1 and value2:
-            return explain_r(message.format(__str1__.value, __str2__.value), code, label=tldr)
+        if submatch1:
+            __str1__ = submatch1.find_match("_var_[__str1__]", use_previous=False)["__str1__"]
+        elif submatch2:
+            __str2__ = submatch2.find_match("_var_[__str2__]", use_previous=False)["__str2__"]
+        if submatch1 or submatch2:
+            value1 = var_check(__str1__, keys)
+            value2 = var_check(__str2__, keys)
+            if value1 and value2:
+                return explain_r(message.format(__str1__.value, __str2__.value), code, label=tldr)
     return False
 
 
