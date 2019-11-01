@@ -1171,6 +1171,15 @@ def all_labels_present():  # TODO: make sure it's before the show, maybe check f
     return False
 
 
+def show_parens():
+    message = "Make sure you add parenthesis to <code>plt.show</code>"
+    code = "show_parens"
+    tldr = "Incorrect Show"
+    if not find_match("plt.show"):
+        return gently_r()
+    return False
+
+
 def hard_code_8_5():  # TODO: This one's weird
     message = "Use iteration to calculate the sum."
     code = "hard_code_8.5"
