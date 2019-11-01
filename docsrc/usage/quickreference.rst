@@ -121,3 +121,12 @@ If you want to explore the data types yourself, recursively access the `trace` (
   StrType
   NumType
   '''
+
+Getting Output
+==================
+.. code:: python
+
+from pedal.sandbox.compatibility import get_output
+output = get_output()
+for item in output:
+    print(item)  # Each line of output is given as a separate item in the list.
