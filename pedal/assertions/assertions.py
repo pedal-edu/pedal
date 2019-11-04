@@ -371,10 +371,17 @@ def assertNotIn(needle, haystack, score=None, message=None, report=None,
     return False
 
 
+def _humanize_type(t):
+    if hasattr(t, '__name__'):
+        return t.__name__
+    else:
+        return str(t)
+
+
 def _humanize_types(types):
     if isinstance(types, tuple):
-        return ', '.join([t.__name__ for t in types])
-    return types.__name__
+        return ', '.join(_humanize_type(t) for t in types)
+    return _humanize_type(types)
 
 
 def assertIsInstance(value, types, score=None, message=None, report=None,
