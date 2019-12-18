@@ -6,11 +6,17 @@ from pedal.sandbox.result import SandboxResult
 from pedal.sandbox.exceptions import SandboxException
 from pedal.sandbox.sandbox import DataSandbox
 from pedal.assertions.setup import _setup_assertions, AssertionException
+from pedal.assertions.tests import _normalize_string, strip_punctuation, equality_test, output_test
+
 
 # TODO: Allow bundling of assertions to make a table
 
-iterable = lambda obj: hasattr(obj, '__iter__') or hasattr(obj, '__getitem__')
 
+def iterable(obj):
+    return hasattr(obj, '__iter__') or hasattr(obj, '__getitem__')
+
+
+DELTA = .001
 _MAX_LENGTH = 80
 
 
@@ -27,72 +33,6 @@ def safe_repr(obj, short=False):
         result = result[:_MAX_LENGTH] + ' [truncated]...'
     result = result
     return result
-
-
-try:
-    punctuation_table = str.maketrans(string.punctuation, ' ' * len(string.punctuation))
-except AttributeError:
-    punctuation_table = None
-
-if punctuation_table is None:
-    def strip_punctuation(a_string):
-        return ''.join(ch for ch in a_string if ch not in set(string.punctuation))
-else:
-    def strip_punctuation(a_string):
-        return a_string.translate(punctuation_table)
-
-
-def _normalize_string(a_string, numeric_endings=False):
-    # Lower case
-    a_string = a_string.lower()
-    # Remove trailing decimals (TODO: How awful!)
-    if numeric_endings:
-        a_string = re.sub(r"(\s*[0-9]+)\.[0-9]+(\s*)", r"\1\2", a_string)
-    # Remove punctuation
-    a_string = strip_punctuation(a_string)
-    # Split lines
-    lines = a_string.split("\n")
-    normalized = [[piece
-                   for piece in line.split()]
-                  for line in lines]
-    normalized = [[piece for piece in line if piece]
-                  for line in normalized
-                  if line]
-    return sorted(normalized)
-
-
-def equality_test(actual, expected, _exact_strings, _delta, _test_output):
-    # Float comparison
-    if (isinstance(expected, float) and
-            isinstance(actual, (float, int)) and
-            abs(actual - expected) < _delta):
-        return True
-    # Exact Comparison
-    if actual == expected:
-        return True
-    # Inexact string comparison
-    if (_exact_strings and isinstance(expected, str) and
-            isinstance(actual, str) and
-            _normalize_string(actual) == _normalize_string(expected)):
-        return True
-    # Output comparison
-    if _test_output:
-        # Inexact output comparison
-        normalized_actual = [_normalize_string(line) for line in actual]
-        if (isinstance(expected, str) and
-                _normalize_string(expected) in normalized_actual):
-            return True
-        # Exact output comparison
-        normalized_expected = [_normalize_string(line) for line in expected]
-        if (isinstance(expected, list) and
-                normalized_expected == normalized_actual):
-            return True
-    # Else
-    return False
-
-
-# Unittest Asserts
-DELTA = .001
 
 
 def _fail(code_message, actual_message, expected_message,
@@ -218,9 +158,9 @@ def assertEqual(left, right, score=None, message=None, report=None,
         compare_lengths = (iterable(left) and isinstance(right, (int, float)))
     if _basic_assertion(left, right,
                         lambda l, r:
-                        equality_test(len(l), r, False, DELTA, False) if
+                        equality_test(len(l), r, exact, DELTA) if
                         compare_lengths else
-                        equality_test(l, r, False, DELTA, False),
+                        equality_test(l, r, exact, DELTA),
                         "len({}) != {}" if compare_lengths else "{} != {}",
                         "was" + PRE_VAL,
                         "to have its length equal to"
@@ -239,7 +179,7 @@ assert_equal = assertEqual
 def assertNotEqual(left, right, score=None, message=None, report=None,
                    contextualize=True, exact=False):
     if _basic_assertion(left, right,
-                        lambda l, r: not equality_test(l, r, False, DELTA, False),
+                        lambda l, r: not equality_test(l, r, exact, DELTA),
                         "{} == {}",
                         "was" + PRE_VAL,
                         "to not be equal to",
@@ -547,7 +487,7 @@ def assertPrints(result, expected_output, args=None, returns=None,
     calls = sandbox.call_contexts[call_id]
     inputs = sandbox.input_contexts[call_id]
     actual_output = sandbox.output_contexts[call_id]
-    if not equality_test(actual_output, expected_output, exact, DELTA, True):
+    if not output_test(actual_output, expected_output, exact):
         context = []
         if calls:
             context.append("I ran:\n<pre>" +
@@ -653,7 +593,7 @@ def assertHas(obj, variable, types=None, value=None, score=None,
             return False
     if value is not None:
         if not _basic_assertion(student_variable, value,
-                                lambda l, r: equality_test(l, r, False, DELTA, False),
+                                lambda l, r: equality_test(l, r, False, DELTA),
                                 "{} != {}",
                                 "was" + PRE_VAL,
                                 "to be equal to",
