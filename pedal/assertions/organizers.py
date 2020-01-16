@@ -32,7 +32,7 @@ Phases are reset between sections.
 '''
 
 
-from pedal.report.imperative import MAIN_REPORT
+from pedal.core.imperative import MAIN_REPORT
 from pedal.assertions.setup import (_setup_assertions, AssertionException,
                                     _add_relationships, _add_phase)
 from functools import wraps

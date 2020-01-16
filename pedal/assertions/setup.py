@@ -1,11 +1,13 @@
 import sys
 
-from pedal.report.imperative import MAIN_REPORT
+from pedal.core.imperative import MAIN_REPORT
 from pedal.sandbox.exceptions import SandboxStudentCodeException
+
 
 class AssertionException(Exception):
     def __str__(self):
         return self.args[0]
+
 
 def _topological_sort(names, orderings):
     visited = set()
@@ -54,7 +56,8 @@ def resolve_all(set_success=False, report=None):
         report.set_success()
     
     _reset_phases(report)
-    
+
+
 def _add_phase(phase_name, function, report=None):
     if report is None:
         report = MAIN_REPORT
@@ -64,7 +67,8 @@ def _add_phase(phase_name, function, report=None):
         phase_functions[phase_name] = []
         phases.append(phase_name)
     phase_functions[phase_name].append(function)
-        
+
+
 def _add_relationships(befores, afters, report=None):
     if report is None:
         report = MAIN_REPORT

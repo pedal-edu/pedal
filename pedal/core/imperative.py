@@ -7,7 +7,7 @@ __all__ = ['set_success', 'compliment', 'give_partial', 'explain', 'explain_r',
            'gently', 'gently_r', 'hide_correctness', 'suppress', 'log', 'debug',
            'clear_report', 'get_all_feedback', 'MAIN_REPORT', 'guidance']
 
-from pedal.report.report import Report
+from pedal.core.report import Report
 
 #: The global Report object. Meant to be used as a default singleton
 #: for any tool, so that instructors do not have to create their own Report.

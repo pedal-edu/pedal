@@ -8,7 +8,7 @@ import os
 from unittest.mock import patch, mock_open, MagicMock
 import traceback
 
-from pedal.report import MAIN_REPORT
+from pedal.core import MAIN_REPORT
 from pedal.sandbox import mocked
 from pedal.sandbox.timeout import timeout
 from pedal.sandbox.messages import EXTENDED_ERROR_EXPLANATION

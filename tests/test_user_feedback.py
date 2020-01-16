@@ -6,7 +6,7 @@ pedal_library = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.insert(0, pedal_library)
 
 from tests.execution_helper import Execution
-from pedal.report.imperative import *
+from pedal.core.imperative import *
 
 
 class TestFeedback(unittest.TestCase):

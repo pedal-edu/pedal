@@ -3,7 +3,7 @@ import re
 
 from pedal.cait.cait_api import parse_program
 from pedal.cait.cait_node import CaitNode
-from pedal.report.imperative import gently, explain
+from pedal.core.imperative import gently, explain
 
 """
 Verify indentation

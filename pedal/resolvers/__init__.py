@@ -6,6 +6,7 @@ Does there need to be some kind of hook for Tools to wrap up their business?
 
 Simple
     Find the highest priority feedback and show that, along with any positive feedback.
+    Break ties by showing the first one that was triggered.
 
 Sectional
     Find the highest priority feedback for each section, and show that along with any positive feedback.

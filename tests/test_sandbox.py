@@ -6,7 +6,7 @@ import sys
 import json
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from pedal.report.imperative import MAIN_REPORT, clear_report
+from pedal.core.imperative import MAIN_REPORT, clear_report
 from pedal.sandbox import Sandbox
 import pedal.sandbox.compatibility as compatibility
 from pedal.source import set_source

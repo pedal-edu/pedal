@@ -6,7 +6,7 @@ from textwrap import dedent
 pedal_library = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.insert(0, pedal_library)
 
-from pedal.report import *
+from pedal.core import *
 from pedal.source import set_source
 from pedal.assertions import *
 from tests.execution_helper import Execution

@@ -1,4 +1,4 @@
-from pedal.report import MAIN_REPORT, Feedback
+from pedal.core import MAIN_REPORT, Feedback
 from pedal.resolvers.core import make_resolver
 
 DEFAULT_CATEGORY_PRIORITY = [

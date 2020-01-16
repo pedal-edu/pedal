@@ -1,4 +1,4 @@
-from pedal.report import MAIN_REPORT
+from pedal.core import MAIN_REPORT
 from pedal.cait.stretchy_tree_matching import StretchyTreeMatcher
 from pedal.cait.cait_node import CaitNode
 import ast

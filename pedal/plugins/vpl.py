@@ -7,7 +7,7 @@ import re
 import sys
 from html.parser import HTMLParser
 
-from pedal.report import MAIN_REPORT
+from pedal.core import MAIN_REPORT
 from pedal import source
 from pedal.resolvers import sectional
 from pedal.cait.cait_api import expire_cait_cache

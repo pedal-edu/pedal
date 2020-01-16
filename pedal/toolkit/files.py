@@ -1,5 +1,5 @@
 from pedal.cait.cait_api import parse_program
-from pedal.report.imperative import explain
+from pedal.core.imperative import explain
 from pedal.toolkit.utilities import ensure_literal
 
 

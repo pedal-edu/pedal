@@ -13,7 +13,7 @@ CATEGORY = 'Instructions'
 __all__ = ['NAME', 'DESCRIPTION', 'SHORT_DESCRIPTION', 'REQUIRES', 'OPTIONALS',
            'Question', 'Pool', 'set_seed']
 
-from pedal.report.imperative import MAIN_REPORT, gently
+from pedal.core.imperative import MAIN_REPORT, gently
 from pedal.questions.setup import _setup_questions, set_seed, _name_hash
 from pedal.questions.loader import load_question, SETTING_SHOW_CASE_DETAILS
 

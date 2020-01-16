@@ -1,5 +1,5 @@
 from pedal.cait.cait_api import parse_program
-from pedal.report.imperative import gently, explain, gently_r, explain_r, MAIN_REPORT
+from pedal.core.imperative import gently, explain, gently_r, explain_r, MAIN_REPORT
 from pedal.sandbox import compatibility
 import ast
 

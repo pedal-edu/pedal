@@ -1,4 +1,4 @@
-from pedal.report.imperative import gently_r
+from pedal.core.imperative import gently_r
 from pedal.toolkit.utilities import find_function_calls, is_top_level
 
 

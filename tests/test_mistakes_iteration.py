@@ -5,7 +5,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 
 from tests.mistake_test_template import *
 from pedal.mistakes.instructor_iteration import *
-from pedal.report import MAIN_REPORT
+from pedal.core import MAIN_REPORT
 
 class IterationMistakes(MistakeTest):
     def test_wrong_target_is_list(self):

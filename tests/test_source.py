@@ -5,7 +5,7 @@ from textwrap import dedent
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from pedal.report import *
+from pedal.core import *
 from pedal.source import *
 from pedal.tifa import tifa_analysis
 from tests.execution_helper import Execution

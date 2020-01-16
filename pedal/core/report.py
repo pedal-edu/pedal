@@ -1,4 +1,4 @@
-from pedal.report.feedback import Feedback
+from pedal.core.feedback import Feedback
 
 __all__ = ['Report']
 

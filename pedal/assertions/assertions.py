@@ -1,7 +1,7 @@
 import string
 import re
 
-from pedal.report.imperative import MAIN_REPORT
+from pedal.core.imperative import MAIN_REPORT
 from pedal.sandbox.result import SandboxResult
 from pedal.sandbox.exceptions import SandboxException
 from pedal.sandbox.sandbox import DataSandbox

@@ -1,7 +1,7 @@
 import ast
 from pprint import pprint
 
-from pedal.report import MAIN_REPORT
+from pedal.core import MAIN_REPORT
 
 from pedal.tifa.type_definitions import (UnknownType, RecursedType,
                                          FunctionType, ClassType, InstanceType,

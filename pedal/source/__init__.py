@@ -3,7 +3,7 @@ A package for verifying source code.
 """
 
 from pedal.source.sections import *
-from pedal.report import MAIN_REPORT
+from pedal.core import MAIN_REPORT
 import re
 import ast
 

@@ -4,7 +4,7 @@ import sys
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from pedal.report import *
+from pedal.core import *
 from pedal.source import set_source, next_section, verify_section
 from pedal.tifa import tifa_analysis
 from pedal.resolvers import simple, sectional

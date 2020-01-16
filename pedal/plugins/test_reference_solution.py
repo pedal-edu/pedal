@@ -6,7 +6,7 @@ python -m pedal.plugins.test_reference_solution <path to grade script>
 '''
 
 # Runner
-from pedal.report.imperative import clear_report, MAIN_REPORT
+from pedal.core.imperative import clear_report, MAIN_REPORT
 from pedal.cait import parse_program
 import sys
 import os

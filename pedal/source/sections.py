@@ -1,4 +1,4 @@
-from pedal.report import MAIN_REPORT
+from pedal.core import MAIN_REPORT
 import ast
 
 

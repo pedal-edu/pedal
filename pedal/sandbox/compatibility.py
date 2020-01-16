@@ -3,7 +3,7 @@ import sys
 from pedal.sandbox.sandbox import Sandbox
 from pedal.sandbox.messages import EXTENDED_ERROR_EXPLANATION
 
-from pedal.report import MAIN_REPORT, Feedback
+from pedal.core import MAIN_REPORT, Feedback
 
 
 def _check_sandbox(report):

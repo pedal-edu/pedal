@@ -1,4 +1,4 @@
-from pedal.report.imperative import gently_r, explain_r
+from pedal.core.imperative import gently_r, explain_r
 from pedal.cait.cait_api import *
 from pedal.mistakes.instructor_append import app_assign
 

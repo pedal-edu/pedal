@@ -8,7 +8,7 @@ pedal_library = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.insert(0, pedal_library)
 
 from pedal import *
-from pedal.report import *
+from pedal.core import *
 from pedal.resolvers import sectional
 from pedal.questions import *
 from pedal.assertions import *

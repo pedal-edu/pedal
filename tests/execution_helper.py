@@ -1,4 +1,4 @@
-from pedal.report import *
+from pedal.core import *
 from pedal.source import set_source
 from pedal.tifa import tifa_analysis
 from pedal.resolvers import simple

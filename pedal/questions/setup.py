@@ -1,4 +1,4 @@
-from pedal.report.imperative import MAIN_REPORT
+from pedal.core.imperative import MAIN_REPORT
 
 import hashlib
 

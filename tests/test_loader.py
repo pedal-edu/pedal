@@ -10,7 +10,7 @@ sys.path.insert(0, pedal_library)
 
 here = "" if os.path.basename(os.getcwd()) == "tests" else "tests/"
 
-from pedal.report import *
+from pedal.core import *
 from pedal.source import set_source
 
 from pedal.cait.cait_api import parse_program

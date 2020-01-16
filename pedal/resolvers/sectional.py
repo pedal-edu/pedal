@@ -1,7 +1,7 @@
 import sys
 
 from pedal.resolvers import simple
-from pedal.report import MAIN_REPORT
+from pedal.core import MAIN_REPORT
 
 
 def resolve(report=None, priority_key=None):

@@ -1,7 +1,7 @@
 from pedal.questions import QuestionGrader
 
 from pedal import run, compliment, explain, gently
-from pedal.report.imperative import MAIN_REPORT
+from pedal.core.imperative import MAIN_REPORT
 from pedal.assertions.assertions import *
 from pedal.toolkit.functions import *
 

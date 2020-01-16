@@ -1,4 +1,4 @@
-from pedal.report.imperative import MAIN_REPORT
+from pedal.core.imperative import MAIN_REPORT
 
 from pedal.assertions.setup import _setup_assertions, resolve_all
 from pedal.assertions.assertions import *

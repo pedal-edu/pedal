@@ -2,7 +2,7 @@
 # BlockPy Examples
 # Boiler plate code automatically prepended before execution
 # Import get_output, set_success, gently, explain
-from pedal.report import *
+from pedal.core import *
 # In JS, patch `get_program`, and then imperative define the report's source
 report.set_source(get_program())
 # Run the tifa analysis; stuff is automatically added to the report
@@ -35,7 +35,7 @@ _PARTIALS = sum_partials()
     
 ################################################################################
 # Jupyter Notebooks
-from pedal.report import *
+from pedal.core import *
 report.set_source(STUDENT_SOURCE)
     # get_output, set_success, gently, explain
 from pedal.tifa import tifa_analysis
