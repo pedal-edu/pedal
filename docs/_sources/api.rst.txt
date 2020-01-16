@@ -1,0 +1,58 @@
+Developer API
+=============
+
+This is the complete API reference for Pedal and its associated components. If you are an instructor, you might find it more helpful to read over the :ref:`tutorial` too.
+
+Report
+------
+
+.. automodule:: pedal.core
+    :members:
+
+Imperative
+**********
+
+.. automodule:: pedal.core.imperative
+    :members:
+
+Report
+******
+    
+.. automodule:: pedal.core.report
+    :members:
+
+Feedback
+********
+
+.. automodule:: pedal.core.feedback
+    :members:
+
+Source
+------
+
+.. automodule:: pedal.source
+    :members:
+
+Tifa
+----
+
+.. automodule:: pedal.tifa
+    :members:
+
+Cait
+----
+
+.. automodule:: pedal.cait
+    :members:
+
+Sandbox
+-------
+
+.. automodule:: pedal.sandbox
+    :members:
+
+Assertions
+----------
+
+.. automodule:: pedal.assertions
+    :members:

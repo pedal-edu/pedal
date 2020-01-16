@@ -14,6 +14,8 @@
     <script type="text/javascript" src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Tutorial" href="tutorial.html" />
+    <link rel="prev" title="QuickStart" href="quickstart.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
@@ -108,14 +110,43 @@
 <span class="n">match</span> <span class="o">=</span> <span class="n">find_match</span><span class="p">(</span><span class="s2">&quot;for _item_ in _list_:</span><span class="se">\n</span><span class="s2">&quot;</span>
                    <span class="s2">&quot;    _sum_ = _sum_ + _item_&quot;</span><span class="p">)</span>
 <span class="n">data_type</span> <span class="o">=</span> <span class="n">match</span><span class="p">[</span><span class="s1">&#39;_sum_&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get_data_type</span><span class="p">()</span>
-<span class="nb">type</span><span class="p">(</span><span class="n">data_type</span><span class="p">)</span> <span class="o">==</span> <span class="n">NumType</span> <span class="c1"># checks if it was always NumType</span>
+<span class="nb">type</span><span class="p">(</span><span class="n">data_type</span><span class="p">)</span> <span class="o">==</span> <span class="n">NumType</span> <span class="c1"># checks if it the last type it took on</span>
 
 <span class="n">data_state</span> <span class="o">=</span> <span class="n">match</span><span class="p">[</span><span class="s1">&#39;_sum_&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get_data_state</span><span class="p">()</span>
 <span class="n">data_state</span><span class="o">.</span><span class="n">was_type</span><span class="p">(</span><span class="s1">&#39;NumType&#39;</span><span class="p">)</span> <span class="c1"># checks if _sum_ was a number at some point</span>
 <span class="n">data_state</span><span class="o">.</span><span class="n">was_type</span><span class="p">(</span><span class="n">NumType</span><span class="p">)</span> <span class="c1"># equivalent to previous line</span>
+
+<span class="n">match</span><span class="p">[</span><span class="s1">&#39;_sum_&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">was_type</span><span class="p">(</span><span class="s1">&#39;NumType&#39;</span><span class="p">)</span> <span class="c1"># If you&#39;re only doing one access, you can use this</span>
 </pre></div>
 </div>
-<p>If you want to explore the data types yourself, recursively access the <cite>trace</cite> (a list of <cite>State</cite> objects) attribute of data_state and check each state’s <cite>type</cite> attribute</p>
+<p>If you want to explore the data types yourself, recursively access the <cite>trace</cite> (a list of <cite>State</cite> objects) attribute of data_state and check each state’s <cite>type</cite> attribute. For example</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.tifa.type_definitions</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="sd">&#39;&#39;&#39;# Student Source Code</span>
+<span class="sd">var = 14</span>
+<span class="sd">var = &#39;String&#39;</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="n">match</span> <span class="o">=</span> <span class="n">find_match</span><span class="p">(</span><span class="s2">&quot;_var_ = ___</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">data_state</span> <span class="o">=</span> <span class="n">match</span><span class="p">[</span><span class="s1">&#39;_var_&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get_data_state</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">print_types</span><span class="p">(</span><span class="n">data_state</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">data_state</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_state</span><span class="o">.</span><span class="n">trace</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">print_types</span><span class="p">(</span><span class="n">data_state</span><span class="o">.</span><span class="n">trace</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">print_types</span><span class="p">(</span><span class="n">data_state</span><span class="p">)</span>
+<span class="sd">&#39;&#39;&#39;#Output</span>
+<span class="sd">StrType</span>
+<span class="sd">NumType</span>
+<span class="sd">&#39;&#39;&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="getting-output">
+<h2>Getting Output<a class="headerlink" href="#getting-output" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.sandbox.compatibility</span> <span class="kn">import</span> <span class="n">get_output</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">get_output</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">output</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>  <span class="c1"># Each line of output is given as a separate item in the list.</span>
+</pre></div>
+</div>
 </div>
 </div>
 
@@ -136,11 +167,22 @@
 
 <h3>Navigation</h3>
 <p class="caption"><span class="caption-text">Contents:</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../concepts.html">Important Concepts</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">QuickStart</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Quick Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#list-of-pedal-data-types">List of Pedal Data Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#save-and-reference-variable">Save and reference variable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#reference-a-function-call">Reference a function call</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#reference-a-function-definition">Reference a function definition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#subtree-matching">Subtree matching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#finding-data-types">Finding Data types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#getting-output">Getting Output</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrations.html">Integrations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../instructor_reference.html">Instructor Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api.html">Developer API</a></li>
 </ul>
@@ -149,6 +191,8 @@
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="quickstart.html" title="previous chapter">QuickStart</a></li>
+      <li>Next: <a href="tutorial.html" title="next chapter">Tutorial</a></li>
   </ul></li>
 </ul>
 </div>

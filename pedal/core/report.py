@@ -134,9 +134,7 @@ class Report:
         
         Args:
             event (str): An event name. Multiple functions can be triggered for
-                the same `event`. The format is as follows:
-                    "pedal.module.function.extra"
-
+                the same `event`. The format is as follows: `"pedal.module.function.extra"`
                 The `".extra"` component is optional to add further nuance, but
                 the general idea is that you are referring to functions that,
                 when called, should trigger other functions to be called first.

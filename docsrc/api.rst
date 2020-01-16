@@ -6,25 +6,31 @@ This is the complete API reference for Pedal and its associated components. If y
 Report
 ------
 
-.. automodule:: pedal.report
+.. automodule:: pedal.core
     :members:
 
 Imperative
 **********
 
-.. automodule:: pedal.report.imperative
+.. automodule:: pedal.core.imperative
     :members:
 
 Report
 ******
     
-.. automodule:: pedal.report.report
+.. automodule:: pedal.core.report
+    :members:
+
+Location
+********
+
+.. automodule:: pedal.core.location
     :members:
 
 Feedback
 ********
 
-.. automodule:: pedal.report.feedback
+.. automodule:: pedal.core.feedback
     :members:
 
 Source

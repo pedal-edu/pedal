@@ -91,10 +91,42 @@ Finding Data types
   match = find_match("for _item_ in _list_:\n"
                      "    _sum_ = _sum_ + _item_")
   data_type = match['_sum_'].get_data_type()
-  type(data_type) == NumType # checks if it was always NumType
+  type(data_type) == NumType # checks if it the last type it took on
 
   data_state = match['_sum_'].get_data_state()
   data_state.was_type('NumType') # checks if _sum_ was a number at some point
   data_state.was_type(NumType) # equivalent to previous line
 
-If you want to explore the data types yourself, recursively access the `trace` (a list of `State` objects) attribute of data_state and check each state's `type` attribute
+  match['_sum_'].was_type('NumType') # If you're only doing one access, you can use this
+
+
+
+If you want to explore the data types yourself, recursively access the `trace` (a list of `State` objects) attribute of data_state and check each state's `type` attribute. For example
+
+.. code:: python
+
+  from pedal.tifa.type_definitions import *
+  '''# Student Source Code
+  var = 14
+  var = 'String'
+  '''
+  match = find_match("_var_ = ___\n")
+  data_state = match['_var_'].get_data_state()
+  def print_types(data_state):
+      print(data_state.type)
+      if len(data_state.trace) > 0:
+          print_types(data_state.trace[0])
+  print_types(data_state)
+  '''#Output
+  StrType
+  NumType
+  '''
+
+Getting Output
+==================
+.. code:: python
+
+    from pedal.sandbox.compatibility import get_output
+    output = get_output()
+    for item in output:
+        print(item)  # Each line of output is given as a separate item in the list.

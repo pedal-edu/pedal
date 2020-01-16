@@ -1,0 +1,215 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Quick Reference &#8212; Pedal 1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="quick-reference">
+<h1>Quick Reference<a class="headerlink" href="#quick-reference" title="Permalink to this headline">¶</a></h1>
+<p>All the items in this guide may depend on one or more imports from the pedal package. However, most of these should work with the following imports</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.cait.cait_api</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pedal.tifa</span> <span class="kn">import</span> <span class="n">tifa_analysis</span>
+</pre></div>
+</div>
+<p>Note that you’ll need to run tifa_analysis.</p>
+<p>more often than not, you’ll want to use <cite>find_matches</cite> as opposed to the <cite>find_match</cite> command used in this quick reference guide. The <cite>find_match</cite> function is used for brevity, but typicaly you’ll use the following pattern</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">matches</span> <span class="o">=</span> <span class="n">find_matches</span><span class="p">(</span><span class="s2">&quot;#instructor code&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">matches</span><span class="p">:</span>
+  <span class="c1"># do something</span>
+</pre></div>
+</div>
+<p>Also note that many of these items return a CaitNode; CaitNodes should mirror the built-in ast_node class except with added fields or functionality. In general it should be easier to work with CaitNodes as many additional operations and matching functionality are supported with CaitNodes.</p>
+<div class="section" id="list-of-pedal-data-types">
+<h2>List of Pedal Data Types<a class="headerlink" href="#list-of-pedal-data-types" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>BoolType</p></li>
+<li><p>DictType</p></li>
+<li><p>FunctionType</p></li>
+<li><p>LiteralBool</p></li>
+<li><p>LiteralNone</p></li>
+<li><p>LiteralNum</p></li>
+<li><p>LiteralStr</p></li>
+<li><p>NoneType</p></li>
+<li><p>NumType</p></li>
+<li><p>StrType</p></li>
+<li><p>TupleType</p></li>
+<li><p>UnknownType</p></li>
+</ul>
+</div>
+<div class="section" id="save-and-reference-variable">
+<h2>Save and reference variable<a class="headerlink" href="#save-and-reference-variable" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">match</span> <span class="o">=</span> <span class="n">find_match</span><span class="p">(</span><span class="s2">&quot;_var_ = ___ + _var_&quot;</span><span class="p">)</span>
+<span class="n">student_var</span> <span class="o">=</span> <span class="n">match</span><span class="p">[</span><span class="s1">&#39;_var_&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="reference-a-function-call">
+<h2>Reference a function call<a class="headerlink" href="#reference-a-function-call" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">match</span> <span class="o">=</span> <span class="n">find_match</span><span class="p">(</span><span class="s2">&quot;_var_ = _function_()&quot;</span><span class="p">)</span>
+<span class="n">student_func_call</span> <span class="o">=</span> <span class="n">match</span><span class="p">[</span><span class="s1">&#39;_function_&#39;</span><span class="p">]</span>
+<span class="n">args</span> <span class="o">=</span> <span class="n">student_func_call</span><span class="o">.</span><span class="n">args</span> <span class="c1">#access list of arguments as CaitNodes</span>
+<span class="n">keywords</span> <span class="o">=</span> <span class="n">student_func_call</span><span class="o">.</span><span class="n">keywords</span> <span class="c1">#access keyword arguments as CaitNodes</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="reference-a-function-definition">
+<h2>Reference a function definition<a class="headerlink" href="#reference-a-function-definition" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">match</span> <span class="o">=</span> <span class="n">find_match</span><span class="p">(</span><span class="s2">&quot;def _my_func_():</span><span class="se">\n</span><span class="s2">&quot;</span>
+                   <span class="s2">&quot;    pass</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">student_func_def</span> <span class="o">=</span> <span class="n">match</span><span class="p">[</span><span class="s1">&#39;_my_func_&#39;</span><span class="p">]</span> <span class="c1"># root node of function definition</span>
+</pre></div>
+</div>
+<p>Note that by modifying this example, you can also check to see if the function is called, e.g.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">match</span> <span class="o">=</span> <span class="n">find_match</span><span class="p">(</span><span class="s2">&quot;def _my_func_():</span><span class="se">\n</span><span class="s2">&quot;</span>
+                   <span class="s2">&quot;    pass</span><span class="se">\n</span><span class="s2">&quot;</span>
+                   <span class="s2">&quot;_my_func_()&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;You haven&#39;t defined a function and used the function you defined!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>will look for a function definition followed by the usage of the function as an ast sibling (so same indentation level as definition</p>
+</div>
+<div class="section" id="subtree-matching">
+<h2>Subtree matching<a class="headerlink" href="#subtree-matching" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">match</span> <span class="o">=</span> <span class="n">find_match</span><span class="p">(</span><span class="s2">&quot;for _item_ in _list_:</span><span class="se">\n</span><span class="s2">&quot;</span>
+                   <span class="s2">&quot;    __exp__&quot;</span><span class="p">)</span>
+<span class="n">match</span><span class="p">[</span><span class="s1">&#39;__exp__&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">find_match</span><span class="p">(</span><span class="s2">&quot;# whatever submatch&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Normally CAIT will match to direct siblings. By using an expression, you can instead search everything contained in the body of the for loop, or other ast child nodes (see tutorial)</p>
+</div>
+<div class="section" id="finding-data-types">
+<h2>Finding Data types<a class="headerlink" href="#finding-data-types" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.tifa.type_definitions</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">match</span> <span class="o">=</span> <span class="n">find_match</span><span class="p">(</span><span class="s2">&quot;for _item_ in _list_:</span><span class="se">\n</span><span class="s2">&quot;</span>
+                   <span class="s2">&quot;    _sum_ = _sum_ + _item_&quot;</span><span class="p">)</span>
+<span class="n">data_type</span> <span class="o">=</span> <span class="n">match</span><span class="p">[</span><span class="s1">&#39;_sum_&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get_data_type</span><span class="p">()</span>
+<span class="nb">type</span><span class="p">(</span><span class="n">data_type</span><span class="p">)</span> <span class="o">==</span> <span class="n">NumType</span> <span class="c1"># checks if it the last type it took on</span>
+
+<span class="n">data_state</span> <span class="o">=</span> <span class="n">match</span><span class="p">[</span><span class="s1">&#39;_sum_&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get_data_state</span><span class="p">()</span>
+<span class="n">data_state</span><span class="o">.</span><span class="n">was_type</span><span class="p">(</span><span class="s1">&#39;NumType&#39;</span><span class="p">)</span> <span class="c1"># checks if _sum_ was a number at some point</span>
+<span class="n">data_state</span><span class="o">.</span><span class="n">was_type</span><span class="p">(</span><span class="n">NumType</span><span class="p">)</span> <span class="c1"># equivalent to previous line</span>
+
+<span class="n">match</span><span class="p">[</span><span class="s1">&#39;_sum_&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">was_type</span><span class="p">(</span><span class="s1">&#39;NumType&#39;</span><span class="p">)</span> <span class="c1"># If you&#39;re only doing one access, you can use this</span>
+</pre></div>
+</div>
+<p>If you want to explore the data types yourself, recursively access the <cite>trace</cite> (a list of <cite>State</cite> objects) attribute of data_state and check each state’s <cite>type</cite> attribute. For example</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.tifa.type_definitions</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="sd">&#39;&#39;&#39;# Student Source Code</span>
+<span class="sd">var = 14</span>
+<span class="sd">var = &#39;String&#39;</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="n">match</span> <span class="o">=</span> <span class="n">find_match</span><span class="p">(</span><span class="s2">&quot;_var_ = ___</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">data_state</span> <span class="o">=</span> <span class="n">match</span><span class="p">[</span><span class="s1">&#39;_var_&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get_data_state</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">print_types</span><span class="p">(</span><span class="n">data_state</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">data_state</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_state</span><span class="o">.</span><span class="n">trace</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">print_types</span><span class="p">(</span><span class="n">data_state</span><span class="o">.</span><span class="n">trace</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">print_types</span><span class="p">(</span><span class="n">data_state</span><span class="p">)</span>
+<span class="sd">&#39;&#39;&#39;#Output</span>
+<span class="sd">StrType</span>
+<span class="sd">NumType</span>
+<span class="sd">&#39;&#39;&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="getting-output">
+<h2>Getting Output<a class="headerlink" href="#getting-output" title="Permalink to this headline">¶</a></h2>
+<p>from pedal.sandbox.compatibility import get_output
+output = get_output()
+for item in output:</p>
+<blockquote>
+<div><p>print(item)  # Each line of output is given as a separate item in the list.</p>
+</div></blockquote>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Pedal</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../concepts.html">Important Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">QuickStart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrations.html">Integrations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../instructor_reference.html">Instructor Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">Developer API</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, acbart, lukesg08.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="../_sources/usage/quickreference.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

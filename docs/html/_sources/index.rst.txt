@@ -65,6 +65,7 @@ This only briefly summarizes some of our features, read some of the sections bel
 
     usage/installation
     usage/quickstart
+    usage/quickreference
     usage/tutorial
     integrations
     

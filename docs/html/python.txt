@@ -1,0 +1,51 @@
+Undocumented Python objects
+===========================
+pedal.assertions
+----------------
+Functions:
+ * set_assertion_mode
+
+pedal.core.imperative
+---------------------
+Functions:
+ * clear_report
+ * debug
+ * explain
+ * explain_r
+ * gently
+ * gently_r
+ * get_all_feedback
+ * guidance
+ * hide_correctness
+ * log
+ * suppress
+
+pedal.core.report
+-----------------
+Classes:
+ * Report -- missing methods:
+
+   - attach
+   - clear
+   - compliment
+   - debug
+   - execute_hooks
+   - explain
+   - gently
+   - give_partial
+   - guidance
+   - hide_correctness
+   - log
+
+pedal.sandbox
+-------------
+Functions:
+ * reset
+ * run
+
+pedal.source
+------------
+Functions:
+ * get_program
+ * set_source_file
+
