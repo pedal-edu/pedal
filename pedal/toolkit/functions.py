@@ -43,7 +43,8 @@ def match_function(name, root=None):
         if a_def._name == name:
             return a_def
     return None
-    
+
+
 def match_signature_muted(name, length, *parameters):
     ast = parse_program()
     defs = ast.find_all('FunctionDef')
@@ -105,7 +106,6 @@ def match_parameters(name, *types, returns=None, root=None):
             return defn
 
 
-
 def match_signature(name, length, *parameters):
     ast = parse_program()
     defs = ast.find_all('FunctionDef')
@@ -135,6 +135,13 @@ def match_signature(name, length, *parameters):
     return None
 
 
+TEST_TABLE_HEADER = "<table class='blockpy-feedback-unit table table-sm table-bordered table-hover'>"
+TEST_TABLE_OUTPUT = TEST_TABLE_HEADER+(
+    "<tr class='table-active'><th></th><th>Arguments</th><th>Expected</th><th>Actual</th></tr>"
+)
+TEST_TABLE_UNITS = TEST_TABLE_HEADER+(
+    "<tr class='table-active'><th></th><th>Arguments</th><th>Returned</th><th>Expected</th></tr>"
+)
 GREEN_CHECK = "<td class='green-check-mark'>&#10004;</td>"
 RED_X = "<td>&#10060;</td>"
 
@@ -144,9 +151,7 @@ def output_test(name, *tests):
     if name in student.data:
         the_function = student.data[name]
         if callable(the_function):
-            result = ("<table class='blockpy-feedback-unit table table-condensed table-bordered table-hover'>"
-                      "<tr class='active'><th></th><th>Arguments</th><th>Expected</th><th>Actual</th></tr>"
-                      )
+            result = TEST_TABLE_OUTPUT
             success = True
             success_count = 0
             for test in tests:
@@ -164,7 +169,7 @@ def output_test(name, *tests):
                         message = message.format(inputs, repr(out), "<i>No output</i>", tip)
                         message = "<tr class=''>" + RED_X + message + "</tr>"
                         if tip:
-                            message += "<tr class='info'><td colspan=4>" + tip + "</td></tr>"
+                            message += "<tr class='table-info'><td colspan=4>" + tip + "</td></tr>"
                         success = False
                     elif len(test_out) > 1:
                         message = message.format(inputs, "\n".join(out), "<i>Too many outputs</i>", tip)
@@ -176,7 +181,7 @@ def output_test(name, *tests):
                         message = message.format(inputs, "\n".join(out), "\n".join(test_out), tip)
                         message = "<tr class=''>" + RED_X + message + "</tr>"
                         if tip:
-                            message += "<tr class='info'><td colspan=4>" + tip + "</td></tr>"
+                            message += "<tr class='table-info'><td colspan=4>" + tip + "</td></tr>"
                         success = False
                     else:
                         message = message.format(inputs, "\n".join(out), "\n".join(test_out), tip)
@@ -189,7 +194,7 @@ def output_test(name, *tests):
                         message = message.format(inputs, "\n".join(out), "\n".join(test_out), tip)
                     message = "<tr class=''>" + RED_X + message + "</tr>"
                     if tip:
-                        message += "<tr class='info'><td colspan=4>" + tip + "</td></tr>"
+                        message += "<tr class='table-info'><td colspan=4>" + tip + "</td></tr>"
                     success = False
                 else:
                     message = message.format(inputs, "\n".join(out), "\n".join(test_out), tip)
@@ -222,9 +227,7 @@ def unit_test(name, *tests):
     if name in student.data:
         the_function = student.data[name]
         if callable(the_function):
-            result = ("<table class='blockpy-feedback-unit table table-condensed table-bordered table-hover'>"
-                      "<tr class='active'><th></th><th>Arguments</th><th>Returned</th><th>Expected</th></tr>"
-                      )
+            result = TEST_TABLE_UNITS
             success = True
             success_count = 0
             for test in tests:
@@ -257,7 +260,7 @@ def unit_test(name, *tests):
                     # gently(message)
                     message = "<tr class=''>" + RED_X + message + "</tr>"
                     if tip:
-                        message += "<tr class='info'><td colspan=4>" + tip + "</td></tr>"
+                        message += "<tr class='table-info'><td colspan=4>" + tip + "</td></tr>"
                     success = False
                 else:
                     message = "<tr class=''>" + GREEN_CHECK + message + "</tr>"

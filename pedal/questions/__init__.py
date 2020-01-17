@@ -13,8 +13,10 @@ CATEGORY = 'Instructions'
 __all__ = ['NAME', 'DESCRIPTION', 'SHORT_DESCRIPTION', 'REQUIRES', 'OPTIONALS',
            'Question', 'Pool', 'set_seed']
 
-from pedal.report.imperative import MAIN_REPORT
+from pedal.report.imperative import MAIN_REPORT, gently
 from pedal.questions.setup import _setup_questions, set_seed, _name_hash
+from pedal.questions.loader import load_question, SETTING_SHOW_CASE_DETAILS
+
 
 class QuestionGrader:
     def _get_functions_with_filter(self, filter='grade_'):
@@ -92,3 +94,28 @@ class Pool:
             if choice.answered:
                 return True
         return False
+
+
+def check_pool_exam(name, questions, force=None, seed=None):
+    _setup_questions(MAIN_REPORT)
+    # Choose a question
+    if force is None:
+        if seed is None:
+            force = MAIN_REPORT['questions']['seed']
+            if isinstance(force, str):
+                force = _name_hash(force + name)
+        else:
+            force = seed
+    elif isinstance(force, str):
+        force = _name_hash(force + name)
+    question = questions[force % len(questions)]
+    # Ask it
+    show_question(question['instructions'])
+    # Check if they're done
+    if 'settings' not in question:
+        question['settings'] = {}
+    question['settings'][SETTING_SHOW_CASE_DETAILS] = False
+    results = list(load_question(question))
+    if results:
+        message, label = results[0]
+        gently(message, label=label)

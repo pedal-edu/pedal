@@ -83,6 +83,7 @@ Type validation:
     list[int, str, or bool], dict[int: str], or bool or int
 '''
 
+
 def parse_type_slice(slice):
     if slice.ast_name == "Index":
         return parse_type(slice.value)
@@ -91,7 +92,10 @@ def parse_type_slice(slice):
     elif slice.ast_name == "ExtSlice":
         return ", ".join(parse_type_slice(s) for s in slice.dims)
 
+
 def parse_type(node):
+    if node == None:
+        return "Any"
     if node.ast_name == "Str":
         try:
             return parse_type(ast.parse(node.s).body[0].value)
