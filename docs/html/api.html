@@ -444,9 +444,14 @@ this feedback’s messages.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt>
-<code class="sig-name descname">fields (Dict[str</code></dt>
-<dd><p>Any]): The raw data that was used to interpolate the template to produce the message.</p>
+<dt id="pedal.core.feedback.Feedback.fields">
+<code class="sig-name descname">fields</code><a class="headerlink" href="#pedal.core.feedback.Feedback.fields" title="Permalink to this definition">¶</a></dt>
+<dd><p>The raw data that was used to interpolate the template to produce the message.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>Dict[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a>,Any]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
@@ -536,6 +541,85 @@ categories.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pedal.core.environment">
+<span id="environment"></span><h3>Environment<a class="headerlink" href="#module-pedal.core.environment" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="pedal.core.environment.Environment">
+<em class="property">class </em><code class="sig-name descname">Environment</code><a class="reference internal" href="_modules/pedal/core/environment.html#Environment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.environment.Environment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract Environment class, meant to be subclassed by the environment to help simplify configuration.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-pedal.core.submission">
+<span id="submission"></span><h3>Submission<a class="headerlink" href="#module-pedal.core.submission" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="pedal.core.submission.Submission">
+<em class="property">class </em><code class="sig-name descname">Submission</code><span class="sig-paren">(</span><em class="sig-param">files=None</em>, <em class="sig-param">main_file='answer.py'</em>, <em class="sig-param">user=None</em>, <em class="sig-param">assignment=None</em>, <em class="sig-param">course=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pedal/core/submission.html#Submission"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.submission.Submission" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simple class for holding information about the student’s submission.</p>
+<p class="rubric">Examples</p>
+<p>A very simple example of creating a Submission with a single file:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Submission</span><span class="p">([{</span><span class="s1">&#39;answer.py&#39;</span><span class="p">:</span> <span class="s2">&quot;a = 0&quot;</span><span class="p">}]</span>
+</pre></div>
+</div>
+<dl class="attribute">
+<dt id="pedal.core.submission.Submission.files">
+<code class="sig-name descname">files</code><a class="headerlink" href="#pedal.core.submission.Submission.files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dictionary of filenames mapped to their contents, emulating
+a file system.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><cite>dict</cite> mapping <cite>str</cite> to <cite>str</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.core.submission.Submission.main_file">
+<code class="sig-name descname">main_file</code><a class="headerlink" href="#pedal.core.submission.Submission.main_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>The entry point file that will be considered the main file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.core.submission.Submission.user">
+<code class="sig-name descname">user</code><a class="headerlink" href="#pedal.core.submission.Submission.user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Additional information about the user.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>Any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.core.submission.Submission.assignment">
+<code class="sig-name descname">assignment</code><a class="headerlink" href="#pedal.core.submission.Submission.assignment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Additional information about the assignment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>Any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.core.submission.Submission.course">
+<code class="sig-name descname">course</code><a class="headerlink" href="#pedal.core.submission.Submission.course" title="Permalink to this definition">¶</a></dt>
+<dd><p>Additional information about the course.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>Any</p>
 </dd>
 </dl>
 </dd></dl>

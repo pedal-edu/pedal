@@ -1,4 +1,4 @@
-from pedal.core.feedback import Feedback
+from pedal.core.feedback import Feedback, FeedbackSuccess
 
 __all__ = ['Report']
 
@@ -9,10 +9,9 @@ class Report:
     data that the Tool might want to provide for other tools.
 
     Attributes:
-        feedback (list of Feedback): The raw feedback generated for this Report
-                                     so far.
-        suppressions (list of tuple(str, str)): The categories and labels that
-                                                have been suppressed so far.
+        feedback (list of :py:class:`~pedal.core.feedback.Feedback`): The raw feedback generated for
+            this Report so far.
+        suppressions (list of tuple(str, str)): The categories and labels that have been suppressed so far.
         group (int or str): The label for the current group. Feedback given
             by a Tool will automatically receive the current `group`. This
             is used by the Source tool, for example, in order to group feedback
@@ -51,15 +50,14 @@ class Report:
         self.group_names = {}
         self.hooks = {}
 
-    def set_success(self, group=None):
+    def set_success(self, tool=None, justification=None, group=None, score=100):
         """
         Creates Successful feedback for the user, indicating that the entire
         assignment is done.
         """
         if group is None:
             group = self.group
-        self.feedback.append(Feedback('set_success', priority='positive',
-                                      result=True, group=group))
+        self.feedback.append(FeedbackSuccess(tool, justification, group, score))
 
     def give_partial(self, value, message=None, group=None):
         if value is None:

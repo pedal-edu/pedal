@@ -49,8 +49,9 @@ class Feedback:
             should be an underscore-separated string following the same conventions as
             names in Python. They do not have to be globally unique, but labels should be
             as unique as possible (especially within a category).
-        tool (str): An internal name for indicating the tool that created
-            this feedback. Should be taken directly from the Tool itself.
+        tool (str, optional): An internal name for indicating the tool that created
+            this feedback. Should be taken directly from the Tool itself. If `None`, then
+            this was not created by a tool but directly by the control script.
         category (str): A human-presentable name showable to the learner, indicating what
             sort of feedback this falls into (e.g., "runtime", "syntax", "algorithm").
             More than one Feedback will be in a category, most likely.
@@ -73,7 +74,7 @@ class Feedback:
             `"html"`.
         template (Dict[str,str]): The raw string template (using the `str.format` style) that was used to generate
             this feedback's messages.
-        fields (Dict[str:Any]): The raw data that was used to interpolate the template to produce the message.
+        fields (Dict[str,Any]): The raw data that was used to interpolate the template to produce the message.
         locations (:obj:`list` of :py:attr:`~pedal.core.location.Location`): Information about specific locations
             relevant to this message.
 
@@ -100,7 +101,7 @@ class Feedback:
             categories.
     """
 
-    def __init__(self, label, tool, category='instructor', kind='mistake', justification=None,
+    def __init__(self, label, tool=None, category='instructor', kind='mistake', justification=None,
                  priority=None, valence=-1, title=None, message=None, template=None, fields=None,
                  locations=None, score=None, correct=None, muted=None, version=None, author=None,
                  group=None):
@@ -152,3 +153,24 @@ class Feedback:
         if self.group is not None:
             metadata += ", group=" + str(self.group)
         return "Feedback({}{})".format(self.label, metadata)
+
+
+PEDAL_DEVELOPERS = ["Austin Cory Bart <acbart@udel.edu>", "Luke Gusukuma <lukesg08@vt.edu>"]
+
+
+class FeedbackSuccess(Feedback):
+    MESSAGE = {'text': "Great work!"}
+
+    def __init__(self, tool, justification, group, score):
+        super().__init__("set_success", tool=tool, kind=Kind.result, justification=justification, valence=1,
+                         title="Success", message=self.MESSAGE, template=self.MESSAGE, score=score, correct=True,
+                         muted=False, version='1.0.0', author=PEDAL_DEVELOPERS, group=group)
+
+
+class FeedbackPartialCredit(Feedback):
+    MESSAGE = {'text': "Partial credit"}
+
+    def __init__(self, tool, justification, group, score):
+        super().__init__("set_success", tool=tool, kind=Kind.result, justification=justification, valence=1,
+                         title="Success", message=self.MESSAGE, template=self.MESSAGE, score=score, correct=True,
+                         muted=False, version='1.0.0', author=PEDAL_DEVELOPERS, group=group)

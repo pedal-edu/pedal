@@ -33,6 +33,18 @@ Feedback
 .. automodule:: pedal.core.feedback
     :members:
 
+Environment
+***********
+
+.. automodule:: pedal.core.environment
+    :members:
+
+Submission
+***********
+
+.. automodule:: pedal.core.submission
+    :members:
+
 Source
 ------
 
