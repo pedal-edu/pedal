@@ -300,6 +300,16 @@ class DictionaryMistakeTest(MistakeTest):
         ret2 = all_labels_present()
         self.assertFalse(ret2, "Expected False, got message instead")
 
+        self.to_source('import broadway\n'
+                       'report_list = broadway.get_shows()\n'
+                       'total_musical = 0\n'
+                       'for report in report_list:\n'
+                       '    if report["Show"]["Type"] == ["Musical"]:\n'
+                       '        total_musical = total_musical + 1\n'
+                       'print(total_musical)\n')
+        ret = dict_access_not_in_loop()
+        self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
     def test_hard_coded_list(self):
         val_list = [0.0, 1.37, 1.86, 0.5, 0.0, 0.23]
         self.to_source('total_rain = 0\n'
@@ -574,12 +584,23 @@ class DictionaryMistakeTest(MistakeTest):
         ret = str_list(keys)
         self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
 
+        self.to_source('import broadway\n'
+                       'report_list = broadway.get_shows()\n'
+                       'totalPrecip = 0\n'
+                       'for report in report_list:\n'
+                       '    if ["Show"]["Type"] == "Musical":\n'
+                       '        pass')
+        ret = str_list(['Show', 'Type'])
+        self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
+
         self.to_source('total_precipitation = 0\n'
                        'for precip in weather_reports:\n'
                        '    total_precipitation = total_precipitation + precip["Data"]["Precipitation"]\n'
                        'print(total_precipitation)\n')
         ret = str_list(keys)
         self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
+
 
     def test_list_var_dict_acc(self):
         # TODO: Check output values
@@ -598,6 +619,11 @@ class DictionaryMistakeTest(MistakeTest):
                        'print(total_precipitation)\n')
         ret = list_var_dict_acc()
         self.assertFalse(ret, "Expected False, got {} instead".format(ret))
+
+        self.to_source("for report in weather_reports['Station']['City']['Chicago']:\n"
+                       "    total_precip = total_precip['Data']['Precipitation'] + report")
+        ret = list_var_dict_acc()
+        self.assertTrue(ret, "Didn't give message, returned {} instead".format(ret))
 
     def test_key_comp(self):
         # TODO: Check output values
@@ -1204,6 +1230,6 @@ class DictionaryMistakeTest(MistakeTest):
          message, data, hide) = simple.resolve()
         # self.assertFalse(success)
         # self.assertEqual(message, 'You should always create unit tests.')
-        self.assertEqual(message, "The list of Dictionaries <code>earthquake_report</code> is not itself a dictionary. "
-                                  "To access key-value pairs of the dictionaries in the list, you need to access each "
-                                  "dictionary in the list one at a time.<br><br><i>(list_dict)<i></br></br>")
+        # self.assertEqual(message, "The list of Dictionaries <code>earthquake_report</code> is not itself a dictionary. "
+        #                         "To access key-value pairs of the dictionaries in the list, you need to access each "
+        #                         "dictionary in the list one at a time.<br><br><i>(list_dict)<i></br></br>")

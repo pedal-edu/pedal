@@ -532,10 +532,12 @@ def list_var_dict_acc():
     code = "l_var_dacc"
     tldr = "List variable cannot be dictionary accessed"
 
-    matches = find_matches("for ___ in _var_[__str__]:\n"
+    matches = find_matches("for ___ in __exp__:\n"
                            "    pass")
-    if matches:
-        return explain_r(message, code, label=tldr)
+    for match in matches:
+        __exp__ = match['__exp__']
+        if __exp__.find_matches("_var_[__str__]"):
+            return explain_r(message, code, label=tldr)
     return False
 
 
