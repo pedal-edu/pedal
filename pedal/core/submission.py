@@ -9,16 +9,16 @@ class Submission:
     Examples:
         A very simple example of creating a Submission with a single file::
 
-            >>> Submission([{'answer.py': "a = 0"}]
+            >>> Submission({'answer.py': "a = 0"})
 
     Attributes:
         files (`dict` mapping `str` to `str`): Dictionary of filenames mapped to their contents, emulating
             a file system.
         main_file (str): The entry point file that will be considered the main file.
 
-        user (Any): Additional information about the user.
-        assignment (Any): Additional information about the assignment.
-        course (Any): Additional information about the course.
+        user (dict): Additional information about the user.
+        assignment (dict): Additional information about the assignment.
+        course (dict): Additional information about the course.
     """
 
     def __init__(self, files=None, main_file='answer.py', user=None, assignment=None, course=None):

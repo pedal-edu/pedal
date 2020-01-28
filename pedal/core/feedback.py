@@ -4,6 +4,8 @@ Simple data classes for storing feedback to present to learners.
 
 __all__ = ['Feedback']
 
+from pedal.core.location import Location
+
 
 class Kind:
     """
@@ -101,6 +103,10 @@ class Feedback:
             categories.
     """
 
+    POSITIVE_VALENCE = 1
+    NEUTRAL_VALENCE = 0
+    NEGATIVE_VALENCE = -1
+
     def __init__(self, label, tool=None, category='instructor', kind='mistake', justification=None,
                  priority=None, valence=-1, title=None, message=None, template=None, fields=None,
                  locations=None, score=None, correct=None, muted=None, version=None, author=None,
@@ -118,6 +124,9 @@ class Feedback:
         self.message = message
         self.template = template
         self.fields = fields
+        if isinstance(locations, int):
+            locations = Location(locations)
+        # TODO: Handle tuples (Line, Col) and (Filename, Line, Col), and possibly lists thereof
         self.locations = locations
         # Result
         self.score = score
@@ -156,21 +165,3 @@ class Feedback:
 
 
 PEDAL_DEVELOPERS = ["Austin Cory Bart <acbart@udel.edu>", "Luke Gusukuma <lukesg08@vt.edu>"]
-
-
-class FeedbackSuccess(Feedback):
-    MESSAGE = {'text': "Great work!"}
-
-    def __init__(self, tool, justification, group, score):
-        super().__init__("set_success", tool=tool, kind=Kind.result, justification=justification, valence=1,
-                         title="Success", message=self.MESSAGE, template=self.MESSAGE, score=score, correct=True,
-                         muted=False, version='1.0.0', author=PEDAL_DEVELOPERS, group=group)
-
-
-class FeedbackPartialCredit(Feedback):
-    MESSAGE = {'text': "Partial credit"}
-
-    def __init__(self, tool, justification, group, score):
-        super().__init__("set_success", tool=tool, kind=Kind.result, justification=justification, valence=1,
-                         title="Success", message=self.MESSAGE, template=self.MESSAGE, score=score, correct=True,
-                         muted=False, version='1.0.0', author=PEDAL_DEVELOPERS, group=group)

@@ -1,5 +1,5 @@
 const OUTPUT_FILE = "../../dist/skulpt-pedal.js";
-const SOURCE_DIR = '../../pedal'; // No trailing slash
+const SOURCE_DIRS = ['../../pedal', "../../CS1014"]; // No trailing slash
 
 const skulpt = require("../../../blockpy-edu/skulpt/dist/skulpt.js");
 Sk.configure({__future__: Sk.python3});
@@ -56,7 +56,7 @@ function processDirectories(dirs, recursive, exts, ret, minifyjs, excludes) {
     });
 }
 
-var dirs = [SOURCE_DIR];
+var dirs = SOURCE_DIRS;
 var result = {};
 processDirectories(dirs, true, '.py', result, true, []);
 let output = [];
@@ -66,4 +66,4 @@ for (let filename in result) {
 }
 fs.writeFileSync(OUTPUT_FILE, output.join("\n"), 'utf8');
 
-console.log(Object.keys(result))
+console.log(Object.keys(result));

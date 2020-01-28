@@ -1,6 +1,6 @@
-from pedal.core.feedback import Feedback, FeedbackSuccess
+from pedal.core.feedback import Feedback
 
-__all__ = ['Report']
+__all__ = ['Report', 'MAIN_REPORT']
 
 
 class Report:
@@ -9,6 +9,7 @@ class Report:
     data that the Tool might want to provide for other tools.
 
     Attributes:
+        submission (:py:class:`~pedal.core.submission.Submission`): The contextualized submission information.
         feedback (list of :py:class:`~pedal.core.feedback.Feedback`): The raw feedback generated for
             this Report so far.
         suppressions (list of tuple(str, str)): The categories and labels that have been suppressed so far.
@@ -49,6 +50,9 @@ class Report:
         self.group = None
         self.group_names = {}
         self.hooks = {}
+
+    def contextualize(self, submission):
+        self.submission = submission
 
     def set_success(self, tool=None, justification=None, group=None, score=100):
         """
@@ -95,18 +99,21 @@ class Report:
             group = self.group
         self.attach(label, priority='instructions', category='instructions', group=group, hint=hint)
 
-    def compliment(self, message, line=None, group=None, label='explain'):
-        self.explain(message, priority='positive', line=line, group=group,
-                     label=label)
-
     def attach(self, label, **kwargs):
         self.feedback.append(Feedback(label, **kwargs))
 
-    def log(self, message):
-        pass
+    def add_feedback(self, feedback):
+        """
+        Attaches the given feedback object to this report.
 
-    def debug(self, message):
-        pass
+        Args:
+            feedback:
+
+        Returns:
+            :py:class:`~pedal.core.feedback.Feedback`: The attached feedback
+        """
+        self.feedback.append(feedback)
+        return feedback
 
     def suppress(self, category, label=True, where=True):
         """
@@ -158,3 +165,9 @@ class Report:
 
     def __contains__(self, key):
         return key in self._results
+
+#: The global Report object. Meant to be used as a default singleton
+#: for any tool, so that instructors do not have to create their own Report.
+#: Of course, all APIs are expected to work with a given Report, and only
+#: default to this Report when no others are given.
+MAIN_REPORT = Report()
