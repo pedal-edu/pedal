@@ -61,16 +61,13 @@ This only briefly summarizes some of our features, read some of the sections bel
     :maxdepth: 2
     :caption: Contents:
 
-    concepts
-
     usage/installation
     usage/quickstart
+    usage/examples
     usage/quickreference
+    concepts
     usage/tutorial
     integrations
-    
-    instructor_reference
-    
     api
 
 

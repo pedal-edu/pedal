@@ -19,11 +19,13 @@ class Submission:
         user (dict): Additional information about the user.
         assignment (dict): Additional information about the assignment.
         course (dict): Additional information about the course.
+        execution (dict): Additional information about the results of previously executing the students' code.
     """
 
-    def __init__(self, files=None, main_file='answer.py', user=None, assignment=None, course=None):
+    def __init__(self, files=None, main_file='answer.py', user=None, assignment=None, course=None, execution=None):
         self.files = files
         self.main_file = main_file
         self.user = user
         self.assignment = assignment
         self.course = course
+        self.execution = execution

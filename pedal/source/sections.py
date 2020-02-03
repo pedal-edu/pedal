@@ -1,20 +1,17 @@
-from pedal.core import MAIN_REPORT
+from pedal.core import Feedback, MAIN_REPORT
+from pedal.source.constants import TOOL_NAME_SOURCE
 import ast
 
+DEFAULT_SECTION_PATTERN = r'^(##### Part .+)$'
 
-#def move_to_section(section_number, name, report=None):
-#    pass
 
 def _calculate_section_number(section_index):
     return int((section_index+1)/2)
 
-def next_section(name="", report=None):
-    if report is None:
-        report = MAIN_REPORT
-    report.execute_hooks('source.next_section.before')
+
+def next_section(name="", report=MAIN_REPORT):
+    report.execute_hooks(TOOL_NAME_SOURCE, 'next_section.before')
     source = report['source']
-    #if not report['source']['success']:
-    #    return False
     source['section'] += 2
     section_index = source['section']
     section_number = _calculate_section_number(section_index)
@@ -29,21 +26,22 @@ def next_section(name="", report=None):
             source['code'] = ''.join(sections[:section_index + 1])
         report.group = section_index
     else:
+        report.add_feedback(Feedback())
         report.attach('Syntax error', category='Syntax', tool='Source',
                       mistake=("Tried to advance to next section but the "
                                "section was not found. Tried to load section "
                                "{count}, but there were only {found} sections."
                                ).format(count=section_number, found=found))
+    report.execute_hooks(TOOL_NAME_SOURCE, 'next_section.after')
 
-def check_section_exists(section_number, report=None):
+
+def check_section_exists(section_number, report=MAIN_REPORT):
     """
     Checks that the right number of sections exist. The prologue before the
     first section is 0, while subsequent ones are 1, 2, 3, etc. 
     So if you have 3 sections in your code plus the prologue,
     you should pass in 3 and not 4 to verify that all of them exist.
     """
-    if report is None:
-        report = MAIN_REPORT
     if not report['source']['success']:
         return False
     found = int((len(report['source']['sections']) - 1) / 2)
@@ -55,9 +53,7 @@ def check_section_exists(section_number, report=None):
                                ).format(count=section_number, found=found))
 
 
-def verify_section(report=None):
-    if report is None:
-        report = MAIN_REPORT
+def verify_section(report=MAIN_REPORT):
     source = report['source']
     #if not source['success']:
     #    return False

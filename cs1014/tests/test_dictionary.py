@@ -6,7 +6,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../.
 from tests.mistake_test_template import *
 from CS1014.dictionaries import *
 from CS1014.input_mistakes import *
-from pedal.mistakes.iteration_context import all_labels_present
+from CS1014.mistakes.iteration_context import all_labels_present
 from pedal.resolvers import simple
 # import pedal.sandbox.compatibility as compatibility
 # from tests.execution_helper import Execution

@@ -139,18 +139,29 @@ class Report:
         
         Args:
             event (str): An event name. Multiple functions can be triggered for
-                the same `event`. The format is as follows: `"pedal.module.function.extra"`
+                the same `event`. The format is as follows: `"namespace.function.extra"`
                 The `".extra"` component is optional to add further nuance, but
                 the general idea is that you are referring to functions that,
                 when called, should trigger other functions to be called first.
+                The namespace is typically a tool or module.
             function (callable): A callable function. This function should
-                accept a keyword parameter named `report`, which will 
+                accept a keyword parameter named `report`; this report will be passed
+                as as that argument.
         """
         if event not in self.hooks:
             self.hooks[event] = []
         self.hooks[event].append(function)
 
-    def execute_hooks(self, event):
+    def execute_hooks(self, tool, event_name):
+        """
+        Trigger the functions for all of the associated hooks.
+        Hooks will be called with this report as a keyword `report` argument.
+
+        Args:
+            tool (str): The name of the tool, to namespace events by.
+            event_name (str): The event name (separate words with periods).
+        """
+        event = tool + '.' + event_name
         if event in self.hooks:
             for function in self.hooks[event]:
                 function(report=self)
@@ -170,4 +181,5 @@ class Report:
 #: for any tool, so that instructors do not have to create their own Report.
 #: Of course, all APIs are expected to work with a given Report, and only
 #: default to this Report when no others are given.
+#: Ideally, the average instructor will never know this exists.
 MAIN_REPORT = Report()

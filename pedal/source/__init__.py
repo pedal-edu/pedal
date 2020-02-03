@@ -1,24 +1,39 @@
 """
-A package for verifying source code.
+A Tool for verifying source code, and chunking up source code into multiple parts.
+
+- Requires: None
+- Optional: None
+- Category: Syntax
+
+
 """
 
+from pedal.source.constants import TOOL_NAME_SOURCE
 from pedal.source.sections import *
-from pedal.core import MAIN_REPORT
+from pedal.core.report import MAIN_REPORT
 import re
 import ast
 
-NAME = 'Source'
-SHORT_DESCRIPTION = "Verifies source code and attaches it to the report"
-DESCRIPTION = '''
-'''
-REQUIRES = []
-OPTIONALS = []
-CATEGORY = 'Syntax'
 
-__all__ = ['NAME', 'DESCRIPTION', 'SHORT_DESCRIPTION', 'REQUIRES', 'OPTIONALS',
-           'set_source', 'check_section_exists', 'next_section', 'verify_section',
+__all__ = ['TOOL_NAME_SOURCE',
+           'set_source',
+           'check_section_exists', 'next_section', 'verify_section',
            'set_source_file']
-DEFAULT_PATTERN = r'^(##### Part .+)$'
+
+
+def _empty_source_report():
+    return {
+        'code': None,
+        'full': None,
+        'lines': None,
+        'filename': None,
+        'independent': None,
+        'success': None,
+        'sections': None,
+        'section': None,
+        'section_pattern': None,
+        'line_offset': None
+    }
 
 
 def set_source(code, filename='__main__.py', sections=False, independent=False,
@@ -54,7 +69,7 @@ def set_source(code, filename='__main__.py', sections=False, independent=False,
         _check_issues(code, report)
     else:
         if sections:
-            pattern = DEFAULT_PATTERN
+            pattern = DEFAULT_SECTION_PATTERN
         else:
             pattern = sections
         report.group = 0
@@ -68,7 +83,7 @@ def set_source(code, filename='__main__.py', sections=False, independent=False,
 
 def _check_issues(code, report):
     if code.strip() == '':
-        report.attach('Blank source', category='Syntax', tool=NAME,
+        report.attach('Blank source', category='Syntax', tool=TOOL_NAME_SOURCE,
                       group=report['source']['section'],
                       mistake="Source code file is blank.")
         report['source']['success'] = False
@@ -90,6 +105,7 @@ def get_program(report=None):
     if report is None:
         report = MAIN_REPORT
     return report['source']['code']
+
 
 def set_source_file(filename, sections=False, independent=False, report=None):
     if report is None:

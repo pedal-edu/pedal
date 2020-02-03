@@ -1,5 +1,11 @@
 """
 A package of tools for capturing student code by matching it against patterns.
+
+Requires:
+- :py:class:`pedal.source.source.Source`
+
+Optional:
+- :py:class:`pedal.tifa.tifa.Tifa`
 """
 
 NAME = 'CAIT'

@@ -1,6 +1,41 @@
+.. _quick_reference:
+
 Quick Reference
-^^^^^^^^^^^^^^^
-All the items in this guide may depend on one or more imports from the pedal package. However, most of these should work with the following imports
+===============
+
+This section describes the functions and tools available within Pedal for the
+benefit of an instructor authoring feedback. It does not attempt to exhaustively
+document all the features available - for that, you should refer to the :ref:`full_api`.
+
+Core Commands
+-------------
+
+Imported as::
+
+    from pedal import set_success, compliment
+
+.. function:: set_success(justification: str = None)
+
+    Set this submission as correct/complete/successful. Typically resolved as overriding
+    all other feedback. Often triggered as part of a conditional. You can optionally set
+    an (internal) `justification` message for why this was triggered.
+
+.. function:: compliment(message: str, value: number = 0, justification: str = None)
+
+    Provides a `message` to the student complimenting them on something they did correctly.
+    You can also specify a numeric `value` that will be added as partial credit.
+    Finally, you can optionally set an internal `justification` message for why this was triggered.
+
+.. function:: give_partial(value: number, justification: str = None)
+
+    Increases the student's overall score by the numeric `value`.
+    Finally, you can optionally set an internal `justification` message for why this was triggered.
+
+CAIT
+----
+
+All the items in this guide may depend on one or more imports from the pedal package.
+However, most of these should work with the following imports
 
 .. code:: python
 
@@ -20,7 +55,7 @@ more often than not, you'll want to use `find_matches` as opposed to the `find_m
 Also note that many of these items return a CaitNode; CaitNodes should mirror the built-in ast_node class except with added fields or functionality. In general it should be easier to work with CaitNodes as many additional operations and matching functionality are supported with CaitNodes.
 
 List of Pedal Data Types
-========================
+^^^^^^^^^^^^^^^^^^^^^^^^
 - BoolType
 - DictType
 - FunctionType
@@ -36,14 +71,14 @@ List of Pedal Data Types
 
 
 Save and reference variable
-===========================
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 .. code:: python
 
   match = find_match("_var_ = ___ + _var_")
   student_var = match['_var_']
 
 Reference a function call
-==================================
+^^^^^^^^^^^^^^^^^^^^^^^^^
 .. code:: python
 
   match = find_match("_var_ = _function_()")
@@ -52,7 +87,7 @@ Reference a function call
   keywords = student_func_call.keywords #access keyword arguments as CaitNodes
 
 Reference a function definition
-===============================
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 .. code:: python
 
   match = find_match("def _my_func_():\n"
@@ -72,7 +107,7 @@ Note that by modifying this example, you can also check to see if the function i
 will look for a function definition followed by the usage of the function as an ast sibling (so same indentation level as definition
 
 Subtree matching
-================
+^^^^^^^^^^^^^^^^
 
 .. code:: python
 
@@ -83,7 +118,7 @@ Subtree matching
 Normally CAIT will match to direct siblings. By using an expression, you can instead search everything contained in the body of the for loop, or other ast child nodes (see tutorial)
 
 Finding Data types
-==================
+^^^^^^^^^^^^^^^^^^
 
 .. code:: python
 
@@ -123,7 +158,7 @@ If you want to explore the data types yourself, recursively access the `trace` (
   '''
 
 Getting Output
-==================
+^^^^^^^^^^^^^^
 .. code:: python
 
     from pedal.sandbox.compatibility import get_output

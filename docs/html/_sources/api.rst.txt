@@ -1,18 +1,15 @@
+.. _full_api:
+
 Developer API
 =============
 
-This is the complete API reference for Pedal and its associated components. If you are an instructor, you might find it more helpful to read over the :ref:`tutorial` too.
+This is the complete API reference for Pedal and its associated components.
+If you are an instructor, you might find it more helpful to read over the :ref:`tutorial` too.
 
-Report
-------
+Core Commands
+*************
 
-.. automodule:: pedal.core
-    :members:
-
-Imperative
-**********
-
-.. automodule:: pedal.core.imperative
+.. automodule:: pedal.core.commands
     :members:
 
 Report

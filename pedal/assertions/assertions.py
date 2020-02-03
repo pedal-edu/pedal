@@ -1,7 +1,7 @@
 import string
 import re
 
-from pedal.core.imperative import MAIN_REPORT
+from pedal.core.report import MAIN_REPORT
 from pedal.sandbox.result import SandboxResult
 from pedal.sandbox.exceptions import SandboxException
 from pedal.sandbox.sandbox import DataSandbox
@@ -171,9 +171,6 @@ def assertEqual(left, right, score=None, message=None, report=None,
         report.give_partial(score)
         return True
     return False
-
-
-assert_equal = assertEqual
 
 
 def assertNotEqual(left, right, score=None, message=None, report=None,
@@ -621,5 +618,8 @@ def assertGenerally(expression, score=None, message=None, report=None,
         else:
             return False
 
+
 # Allow addition of new assertions
 # e.g., assertGraphType, assertGraphValues
+assert_equal = assertEqual
+assert_prints = assertPrints

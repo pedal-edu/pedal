@@ -1,13 +1,3 @@
-from pedal.core import MAIN_REPORT
-from pedal.cait.stretchy_tree_matching import StretchyTreeMatcher
-from pedal.cait.cait_node import CaitNode
-import ast
-
-
-class CaitException(Exception):
-    pass
-
-
 """
 CaitReport:
     A collection of information from the latest CAIT run.
@@ -19,6 +9,15 @@ CaitReport:
         success: Whether there have been any errors so far.
         error: The exception that occurred, or None if no exception so far.
 """
+
+from pedal.core import MAIN_REPORT
+from pedal.cait.stretchy_tree_matching import StretchyTreeMatcher
+from pedal.cait.cait_node import CaitNode
+import ast
+
+
+class CaitException(Exception):
+    pass
 
 
 def _parse_source(code, cait_report):

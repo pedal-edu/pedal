@@ -1,107 +1,255 @@
 
-<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta charset="utf-8" />
-    <title>Developer API &#8212; Pedal 1.0 documentation</title>
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Developer API &mdash; Pedal 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Instructor Reference" href="instructor_reference.html" />
+    <link rel="prev" title="Integrations" href="integrations.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
    
-  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
 
-  </head><body>
-  
+          
+            <a href="index.html" class="icon icon-home"> Pedal
+          
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body" role="main">
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="usage/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage/quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage/quickreference.html">Quick Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="concepts.html">Important Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="integrations.html">Integrations</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Developer API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-pedal.core.commands">Core Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pedal.core.report">Report</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pedal.core.location">Location</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pedal.core.feedback">Feedback</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pedal.core.environment">Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pedal.core.submission">Submission</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-pedal.source">Source</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-pedal.tifa">Tifa</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-pedal.cait">Cait</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-pedal.sandbox">Sandbox</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-pedal.assertions">Assertions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Pedal</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Developer API</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/api.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="developer-api">
-<h1>Developer API<a class="headerlink" href="#developer-api" title="Permalink to this headline">¶</a></h1>
-<p>This is the complete API reference for Pedal and its associated components. If you are an instructor, you might find it more helpful to read over the <a class="reference internal" href="usage/tutorial.html#tutorial"><span class="std std-ref">Tutorial</span></a> too.</p>
-<div class="section" id="module-pedal.core">
-<span id="report"></span><h2>Report<a class="headerlink" href="#module-pedal.core" title="Permalink to this headline">¶</a></h2>
-<p>The collection of classes and functions used to store the fundamental Report
-and Feedback objects.</p>
-<div class="section" id="module-pedal.core.imperative">
-<span id="imperative"></span><h3>Imperative<a class="headerlink" href="#module-pedal.core.imperative" title="Permalink to this headline">¶</a></h3>
+<span id="full-api"></span><h1>Developer API<a class="headerlink" href="#developer-api" title="Permalink to this headline">¶</a></h1>
+<p>This is the complete API reference for Pedal and its associated components.
+If you are an instructor, you might find it more helpful to read over the <a class="reference internal" href="usage/tutorial.html#tutorial"><span class="std std-ref">Tutorial</span></a> too.</p>
+<div class="section" id="module-pedal.core.commands">
+<span id="core-commands"></span><h2>Core Commands<a class="headerlink" href="#module-pedal.core.commands" title="Permalink to this headline">¶</a></h2>
 <p>Imperative style commands for constructing feedback in a convenient way.
 Uses a global report object (MAIN_REPORT).</p>
 <dl class="function">
-<dt id="pedal.core.imperative.set_success">
-<code class="sig-name descname">set_success</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pedal/core/imperative.html#set_success"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.imperative.set_success" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates Successful feedback for the user, indicating that the entire
+<dt id="pedal.core.commands.set_success">
+<code class="sig-name descname">set_success</code><span class="sig-paren">(</span><em class="sig-param">score=1</em>, <em class="sig-param">justification=None</em>, <em class="sig-param">tool=None</em>, <em class="sig-param">group=None</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pedal/core/commands.html#set_success"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.commands.set_success" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>(Feedback Function)</strong></p>
+<p>Creates Successful feedback for the user, indicating that the entire
 assignment is done.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>score</strong> (<em>number</em>) – Arbitrary value to set the user’s score to. Defaults to 1.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
-<dt id="pedal.core.imperative.compliment">
-<code class="sig-name descname">compliment</code><span class="sig-paren">(</span><em class="sig-param">message</em>, <em class="sig-param">line=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pedal/core/imperative.html#compliment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.imperative.compliment" title="Permalink to this definition">¶</a></dt>
+<dt id="pedal.core.commands.compliment">
+<code class="sig-name descname">compliment</code><span class="sig-paren">(</span><em class="sig-param">message</em>, <em class="sig-param">value=0</em>, <em class="sig-param">justification=None</em>, <em class="sig-param">locations=None</em>, <em class="sig-param">tool=None</em>, <em class="sig-param">group=None</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pedal/core/commands.html#compliment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.commands.compliment" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a positive feedback for the user, potentially on a specific line of
 code.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The message to display to the user.</p></li>
-<li><p><strong>line</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – The relevant line of code to reference.</p></li>
+<li><p><strong>locations</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – The relevant line of code to reference.</p></li>
+<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – The number to increase the user’s score by.</p></li>
+<li><p><strong>justification</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – A justification for why this partial credit was given.</p></li>
 </ul>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="function">
-<dt id="pedal.core.imperative.give_partial">
-<code class="sig-name descname">give_partial</code><span class="sig-paren">(</span><em class="sig-param">value</em>, <em class="sig-param">message=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pedal/core/imperative.html#give_partial"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.imperative.give_partial" title="Permalink to this definition">¶</a></dt>
-<dd><p>Increases the user’s current score by the <cite>value</cite>. Optionally display
-a positive message too.</p>
+<dt id="pedal.core.commands.give_partial">
+<code class="sig-name descname">give_partial</code><span class="sig-paren">(</span><em class="sig-param">value</em>, <em class="sig-param">justification=None</em>, <em class="sig-param">tool=None</em>, <em class="sig-param">group=None</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pedal/core/commands.html#give_partial"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.commands.give_partial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Increases the user’s current score by the <cite>value</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>value</strong> (<em>number</em>) – The number to increase the user’s score by.</p></li>
-<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The message to display to the user.</p></li>
+<li><p><strong>justification</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – A justification for why this partial credit was given.</p></li>
 </ul>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="data">
-<dt id="pedal.core.imperative.MAIN_REPORT">
-<code class="sig-name descname">MAIN_REPORT</code><em class="property"> = &lt;pedal.core.report.Report object&gt;</em><a class="headerlink" href="#pedal.core.imperative.MAIN_REPORT" title="Permalink to this definition">¶</a></dt>
-<dd><p>The global Report object. Meant to be used as a default singleton
-for any tool, so that instructors do not have to create their own Report.
-Of course, all APIs are expected to work with a given Report, and only
-default to this Report when no others are given.</p>
-</dd></dl>
-
 </div>
-<div class="section" id="id1">
-<h3>Report<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
-<span class="target" id="module-pedal.core.report"></span><dl class="class">
+<div class="section" id="module-pedal.core.report">
+<span id="report"></span><h2>Report<a class="headerlink" href="#module-pedal.core.report" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
 <dt id="pedal.core.report.Report">
 <em class="property">class </em><code class="sig-name descname">Report</code><a class="reference internal" href="_modules/pedal/core/report.html#Report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.report.Report" title="Permalink to this definition">¶</a></dt>
 <dd><p>A class for storing Feedback generated by Tools, along with any auxiliary
 data that the Tool might want to provide for other tools.</p>
 <dl class="attribute">
-<dt id="pedal.core.report.Report.feedback">
-<code class="sig-name descname">feedback</code><a class="headerlink" href="#pedal.core.report.Report.feedback" title="Permalink to this definition">¶</a></dt>
-<dd><p>The raw feedback generated for this Report
-so far.</p>
+<dt id="pedal.core.report.Report.submission">
+<code class="sig-name descname">submission</code><a class="headerlink" href="#pedal.core.report.Report.submission" title="Permalink to this definition">¶</a></dt>
+<dd><p>The contextualized submission information.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>list of Feedback</p>
+<dd class="field-odd"><p><a class="reference internal" href="#pedal.core.submission.Submission" title="pedal.core.submission.Submission"><code class="xref py py-class docutils literal notranslate"><span class="pre">Submission</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.core.report.Report.feedback">
+<code class="sig-name descname">feedback</code><a class="headerlink" href="#pedal.core.report.Report.feedback" title="Permalink to this definition">¶</a></dt>
+<dd><p>The raw feedback generated for
+this Report so far.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list of <a class="reference internal" href="#pedal.core.feedback.Feedback" title="pedal.core.feedback.Feedback"><code class="xref py py-class docutils literal notranslate"><span class="pre">Feedback</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -109,8 +257,7 @@ so far.</p>
 <dl class="attribute">
 <dt id="pedal.core.report.Report.suppressions">
 <code class="sig-name descname">suppressions</code><a class="headerlink" href="#pedal.core.report.Report.suppressions" title="Permalink to this definition">¶</a></dt>
-<dd><p>The categories and labels that
-have been suppressed so far.</p>
+<dd><p>The categories and labels that have been suppressed so far.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>list of tuple(<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a>)</p>
@@ -180,6 +327,23 @@ probably be in a dictionary itself.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="pedal.core.report.Report.add_feedback">
+<code class="sig-name descname">add_feedback</code><span class="sig-paren">(</span><em class="sig-param">feedback</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pedal/core/report.html#Report.add_feedback"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.report.Report.add_feedback" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attaches the given feedback object to this report.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>feedback</strong> – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The attached feedback</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pedal.core.feedback.Feedback" title="pedal.core.feedback.Feedback"><code class="xref py py-class docutils literal notranslate"><span class="pre">Feedback</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="pedal.core.report.Report.add_hook">
 <code class="sig-name descname">add_hook</code><span class="sig-paren">(</span><em class="sig-param">event</em>, <em class="sig-param">function</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pedal/core/report.html#Report.add_hook"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.report.Report.add_hook" title="Permalink to this definition">¶</a></dt>
 <dd><p>Register the <cite>function</cite> to be executed when the given <cite>event</cite> is
@@ -188,12 +352,29 @@ triggered.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>event</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – An event name. Multiple functions can be triggered for
-the same <cite>event</cite>. The format is as follows: <cite>“pedal.module.function.extra”</cite>
+the same <cite>event</cite>. The format is as follows: <cite>“namespace.function.extra”</cite>
 The <cite>“.extra”</cite> component is optional to add further nuance, but
 the general idea is that you are referring to functions that,
-when called, should trigger other functions to be called first.</p></li>
+when called, should trigger other functions to be called first.
+The namespace is typically a tool or module.</p></li>
 <li><p><strong>function</strong> (<em>callable</em>) – A callable function. This function should
-accept a keyword parameter named <cite>report</cite>, which will</p></li>
+accept a keyword parameter named <cite>report</cite>; this report will be passed
+as as that argument.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pedal.core.report.Report.execute_hooks">
+<code class="sig-name descname">execute_hooks</code><span class="sig-paren">(</span><em class="sig-param">tool</em>, <em class="sig-param">event_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pedal/core/report.html#Report.execute_hooks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.report.Report.execute_hooks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Trigger the functions for all of the associated hooks.
+Hooks will be called with this report as a keyword <cite>report</cite> argument.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tool</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The name of the tool, to namespace events by.</p></li>
+<li><p><strong>event_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The event name (separate words with periods).</p></li>
 </ul>
 </dd>
 </dl>
@@ -201,7 +382,7 @@ accept a keyword parameter named <cite>report</cite>, which will</p></li>
 
 <dl class="method">
 <dt id="pedal.core.report.Report.set_success">
-<code class="sig-name descname">set_success</code><span class="sig-paren">(</span><em class="sig-param">group=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pedal/core/report.html#Report.set_success"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.report.Report.set_success" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">set_success</code><span class="sig-paren">(</span><em class="sig-param">tool=None</em>, <em class="sig-param">justification=None</em>, <em class="sig-param">group=None</em>, <em class="sig-param">score=100</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pedal/core/report.html#Report.set_success"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.report.Report.set_success" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates Successful feedback for the user, indicating that the entire
 assignment is done.</p>
 </dd></dl>
@@ -225,9 +406,19 @@ TODO: Currently, only global suppression is supported.</p></li>
 
 </dd></dl>
 
+<dl class="data">
+<dt id="pedal.core.report.MAIN_REPORT">
+<code class="sig-name descname">MAIN_REPORT</code><em class="property"> = &lt;pedal.core.report.Report object&gt;</em><a class="headerlink" href="#pedal.core.report.MAIN_REPORT" title="Permalink to this definition">¶</a></dt>
+<dd><p>The global Report object. Meant to be used as a default singleton
+for any tool, so that instructors do not have to create their own Report.
+Of course, all APIs are expected to work with a given Report, and only
+default to this Report when no others are given.
+Ideally, the average instructor will never know this exists.</p>
+</dd></dl>
+
 </div>
 <div class="section" id="module-pedal.core.location">
-<span id="location"></span><h3>Location<a class="headerlink" href="#module-pedal.core.location" title="Permalink to this headline">¶</a></h3>
+<span id="location"></span><h2>Location<a class="headerlink" href="#module-pedal.core.location" title="Permalink to this headline">¶</a></h2>
 <p>Simple data class for storing information about a location within source code.</p>
 <dl class="class">
 <dt id="pedal.core.location.Location">
@@ -310,11 +501,11 @@ If missing, then defaults to the student’s submission’s main file.</p>
 
 </div>
 <div class="section" id="module-pedal.core.feedback">
-<span id="feedback"></span><h3>Feedback<a class="headerlink" href="#module-pedal.core.feedback" title="Permalink to this headline">¶</a></h3>
+<span id="feedback"></span><h2>Feedback<a class="headerlink" href="#module-pedal.core.feedback" title="Permalink to this headline">¶</a></h2>
 <p>Simple data classes for storing feedback to present to learners.</p>
 <dl class="class">
 <dt id="pedal.core.feedback.Feedback">
-<em class="property">class </em><code class="sig-name descname">Feedback</code><span class="sig-paren">(</span><em class="sig-param">label</em>, <em class="sig-param">tool</em>, <em class="sig-param">category='instructor'</em>, <em class="sig-param">kind='mistake'</em>, <em class="sig-param">justification=None</em>, <em class="sig-param">priority=None</em>, <em class="sig-param">valence=-1</em>, <em class="sig-param">title=None</em>, <em class="sig-param">message=None</em>, <em class="sig-param">template=None</em>, <em class="sig-param">fields=None</em>, <em class="sig-param">locations=None</em>, <em class="sig-param">score=None</em>, <em class="sig-param">correct=None</em>, <em class="sig-param">muted=None</em>, <em class="sig-param">version=None</em>, <em class="sig-param">author=None</em>, <em class="sig-param">group=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pedal/core/feedback.html#Feedback"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.feedback.Feedback" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">Feedback</code><span class="sig-paren">(</span><em class="sig-param">label</em>, <em class="sig-param">tool=None</em>, <em class="sig-param">category='instructor'</em>, <em class="sig-param">kind='mistake'</em>, <em class="sig-param">justification=None</em>, <em class="sig-param">priority=None</em>, <em class="sig-param">valence=-1</em>, <em class="sig-param">title=None</em>, <em class="sig-param">message=None</em>, <em class="sig-param">template=None</em>, <em class="sig-param">fields=None</em>, <em class="sig-param">locations=None</em>, <em class="sig-param">score=None</em>, <em class="sig-param">correct=None</em>, <em class="sig-param">muted=None</em>, <em class="sig-param">version=None</em>, <em class="sig-param">author=None</em>, <em class="sig-param">group=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pedal/core/feedback.html#Feedback"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.feedback.Feedback" title="Permalink to this definition">¶</a></dt>
 <dd><p>A class for storing raw feedback.</p>
 <dl class="attribute">
 <dt id="pedal.core.feedback.Feedback.label">
@@ -334,10 +525,11 @@ as unique as possible (especially within a category).</p>
 <dt id="pedal.core.feedback.Feedback.tool">
 <code class="sig-name descname">tool</code><a class="headerlink" href="#pedal.core.feedback.Feedback.tool" title="Permalink to this definition">¶</a></dt>
 <dd><p>An internal name for indicating the tool that created
-this feedback. Should be taken directly from the Tool itself.</p>
+this feedback. Should be taken directly from the Tool itself. If <cite>None</cite>, then
+this was not created by a tool but directly by the control script.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a>, optional</p>
 </dd>
 </dl>
 </dd></dl>
@@ -347,7 +539,8 @@ this feedback. Should be taken directly from the Tool itself.</p>
 <code class="sig-name descname">category</code><a class="headerlink" href="#pedal.core.feedback.Feedback.category" title="Permalink to this definition">¶</a></dt>
 <dd><p>A human-presentable name showable to the learner, indicating what
 sort of feedback this falls into (e.g., “runtime”, “syntax”, “algorithm”).
-More than one Feedback will be in a category, most likely.</p>
+More than one feedback will be in a category, but a feedback cannot be in
+more than one category.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></p>
@@ -547,9 +740,163 @@ categories.</p>
 
 </dd></dl>
 
+<dl class="class">
+<dt id="pedal.core.feedback.FeedbackKind">
+<em class="property">class </em><code class="sig-name descname">FeedbackKind</code><a class="reference internal" href="_modules/pedal/core/feedback.html#FeedbackKind"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.feedback.FeedbackKind" title="Permalink to this definition">¶</a></dt>
+<dd><p>An enumeration of the possible kinds of feedback responses, based on their pedagogical role.
+Valence can vary between specific instances of a kind of feedback, but some tend to
+have a specific valence.</p>
+<p>TODO: Rewrite the documentation below in the #: alternate style.</p>
+<dl class="attribute">
+<dt id="pedal.core.feedback.FeedbackKind.MISCONCEPTION">
+<code class="sig-name descname">MISCONCEPTION</code><a class="headerlink" href="#pedal.core.feedback.FeedbackKind.MISCONCEPTION" title="Permalink to this definition">¶</a></dt>
+<dd><p>A description of the misconception that
+is believed to be in the student’s mind, or perhaps the relevant concept from the
+material that should be associated with this. (“Variables must be initialized before they are used”).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.core.feedback.FeedbackKind.MISTAKE">
+<code class="sig-name descname">MISTAKE</code><a class="headerlink" href="#pedal.core.feedback.FeedbackKind.MISTAKE" title="Permalink to this definition">¶</a></dt>
+<dd><p>A description of the error or bug that the student has created (“NameError on line 5: sum
+has not been defined”).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.core.feedback.FeedbackKind.HINT">
+<code class="sig-name descname">HINT</code><a class="headerlink" href="#pedal.core.feedback.FeedbackKind.HINT" title="Permalink to this definition">¶</a></dt>
+<dd><p>A suggestion for what the student can do (“Initialize the sum variable on line 2”).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.core.feedback.FeedbackKind.CONSTRAINT">
+<code class="sig-name descname">CONSTRAINT</code><a class="headerlink" href="#pedal.core.feedback.FeedbackKind.CONSTRAINT" title="Permalink to this definition">¶</a></dt>
+<dd><p>A description of the task requirements or task type that the student has violated
+(“You used a for loop, but this question expected you to use recursion.”).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.core.feedback.FeedbackKind.METACOGNITIVE">
+<code class="sig-name descname">METACOGNITIVE</code><a class="headerlink" href="#pedal.core.feedback.FeedbackKind.METACOGNITIVE" title="Permalink to this definition">¶</a></dt>
+<dd><p>A suggestion for more regulative strategies (“You have been working for 5
+hours, perhaps it is time to take a break?”).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.core.feedback.FeedbackCategory">
+<em class="property">class </em><code class="sig-name descname">FeedbackCategory</code><a class="reference internal" href="_modules/pedal/core/feedback.html#FeedbackCategory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.feedback.FeedbackCategory" title="Permalink to this definition">¶</a></dt>
+<dd><p>An Enumeration of feedback condition categories.
+These categories represent distinct types of feedback conditions based on their
+presence within the students’ submission.
+Notice that these explain the condition, not the feedback response (which would
+fall under Kind).</p>
+<p>Some are contextualized to instruction (“mistakes”, “specification”, “instructor”)
+and some are generic (“syntax”, “runtime”, “algorithmic”). One category is also
+available for errors identified by the student.</p>
+<dl class="attribute">
+<dt id="pedal.core.feedback.FeedbackCategory.ALGORITHMIC">
+<code class="sig-name descname">ALGORITHMIC</code><em class="property"> = 'algorithmic'</em><a class="headerlink" href="#pedal.core.feedback.FeedbackCategory.ALGORITHMIC" title="Permalink to this definition">¶</a></dt>
+<dd><p>Errors that do not prevent functioning code but are generically wrong.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.core.feedback.FeedbackCategory.INSTRUCTIONS">
+<code class="sig-name descname">INSTRUCTIONS</code><em class="property"> = 'instructions'</em><a class="headerlink" href="#pedal.core.feedback.FeedbackCategory.INSTRUCTIONS" title="Permalink to this definition">¶</a></dt>
+<dd><p>A category for feedback that are not actually errors, but is neutral.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.core.feedback.FeedbackCategory.INSTRUCTOR">
+<code class="sig-name descname">INSTRUCTOR</code><em class="property"> = 'instructor'</em><a class="headerlink" href="#pedal.core.feedback.FeedbackCategory.INSTRUCTOR" title="Permalink to this definition">¶</a></dt>
+<dd><p>Errors marked by the instructor in a one-off fashion.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.core.feedback.FeedbackCategory.MISTAKES">
+<code class="sig-name descname">MISTAKES</code><em class="property"> = 'mistakes'</em><a class="headerlink" href="#pedal.core.feedback.FeedbackCategory.MISTAKES" title="Permalink to this definition">¶</a></dt>
+<dd><p>Errors that do not prevent functioning code but are specifically wrong.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.core.feedback.FeedbackCategory.POSITIVE">
+<code class="sig-name descname">POSITIVE</code><em class="property"> = 'positive'</em><a class="headerlink" href="#pedal.core.feedback.FeedbackCategory.POSITIVE" title="Permalink to this definition">¶</a></dt>
+<dd><p>A category for feedback that are not actually errors, but is positive information.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.core.feedback.FeedbackCategory.RUNTIME">
+<code class="sig-name descname">RUNTIME</code><em class="property"> = 'runtime'</em><a class="headerlink" href="#pedal.core.feedback.FeedbackCategory.RUNTIME" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execution errors triggered during runtime by an invalid Python operation</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.core.feedback.FeedbackCategory.SPECIFICATION">
+<code class="sig-name descname">SPECIFICATION</code><em class="property"> = 'specification'</em><a class="headerlink" href="#pedal.core.feedback.FeedbackCategory.SPECIFICATION" title="Permalink to this definition">¶</a></dt>
+<dd><p>Errors suggested because the code failed to meet specified behavior.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.core.feedback.FeedbackCategory.STUDENT">
+<code class="sig-name descname">STUDENT</code><em class="property"> = 'student'</em><a class="headerlink" href="#pedal.core.feedback.FeedbackCategory.STUDENT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Errors marked by the students’ own code, such as failing test cases.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.core.feedback.FeedbackCategory.STYLE">
+<code class="sig-name descname">STYLE</code><em class="property"> = 'style'</em><a class="headerlink" href="#pedal.core.feedback.FeedbackCategory.STYLE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stylistic errors that do not prevent correct behavior but are otherwise undesirable</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.core.feedback.FeedbackCategory.SYNTAX">
+<code class="sig-name descname">SYNTAX</code><em class="property"> = 'syntax'</em><a class="headerlink" href="#pedal.core.feedback.FeedbackCategory.SYNTAX" title="Permalink to this definition">¶</a></dt>
+<dd><p>Grammatical and typographical errors that prevent parsing.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.core.feedback.FeedbackCategory.SYSTEM">
+<code class="sig-name descname">SYSTEM</code><em class="property"> = 'system'</em><a class="headerlink" href="#pedal.core.feedback.FeedbackCategory.SYSTEM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Errors caused by the Pedal grading infrastructure or the surrounding infrastructure.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.core.feedback.FeedbackCategory.UNKNOWN">
+<code class="sig-name descname">UNKNOWN</code><em class="property"> = 'uncategorized'</em><a class="headerlink" href="#pedal.core.feedback.FeedbackCategory.UNKNOWN" title="Permalink to this definition">¶</a></dt>
+<dd><p>A category for unknown feedback. Ideally, never used.</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 <div class="section" id="module-pedal.core.environment">
-<span id="environment"></span><h3>Environment<a class="headerlink" href="#module-pedal.core.environment" title="Permalink to this headline">¶</a></h3>
+<span id="environment"></span><h2>Environment<a class="headerlink" href="#module-pedal.core.environment" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="pedal.core.environment.Environment">
 <em class="property">class </em><code class="sig-name descname">Environment</code><a class="reference internal" href="_modules/pedal/core/environment.html#Environment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.environment.Environment" title="Permalink to this definition">¶</a></dt>
@@ -558,14 +905,14 @@ categories.</p>
 
 </div>
 <div class="section" id="module-pedal.core.submission">
-<span id="submission"></span><h3>Submission<a class="headerlink" href="#module-pedal.core.submission" title="Permalink to this headline">¶</a></h3>
+<span id="submission"></span><h2>Submission<a class="headerlink" href="#module-pedal.core.submission" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="pedal.core.submission.Submission">
-<em class="property">class </em><code class="sig-name descname">Submission</code><span class="sig-paren">(</span><em class="sig-param">files=None</em>, <em class="sig-param">main_file='answer.py'</em>, <em class="sig-param">user=None</em>, <em class="sig-param">assignment=None</em>, <em class="sig-param">course=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pedal/core/submission.html#Submission"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.submission.Submission" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">Submission</code><span class="sig-paren">(</span><em class="sig-param">files=None</em>, <em class="sig-param">main_file='answer.py'</em>, <em class="sig-param">user=None</em>, <em class="sig-param">assignment=None</em>, <em class="sig-param">course=None</em>, <em class="sig-param">execution=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pedal/core/submission.html#Submission"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.submission.Submission" title="Permalink to this definition">¶</a></dt>
 <dd><p>Simple class for holding information about the student’s submission.</p>
 <p class="rubric">Examples</p>
 <p>A very simple example of creating a Submission with a single file:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Submission</span><span class="p">([{</span><span class="s1">&#39;answer.py&#39;</span><span class="p">:</span> <span class="s2">&quot;a = 0&quot;</span><span class="p">}]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Submission</span><span class="p">({</span><span class="s1">&#39;answer.py&#39;</span><span class="p">:</span> <span class="s2">&quot;a = 0&quot;</span><span class="p">})</span>
 </pre></div>
 </div>
 <dl class="attribute">
@@ -597,7 +944,7 @@ a file system.</p>
 <dd><p>Additional information about the user.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>Any</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -608,7 +955,7 @@ a file system.</p>
 <dd><p>Additional information about the assignment.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>Any</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -619,18 +966,32 @@ a file system.</p>
 <dd><p>Additional information about the course.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>Any</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.core.submission.Submission.execution">
+<code class="sig-name descname">execution</code><a class="headerlink" href="#pedal.core.submission.Submission.execution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Additional information about the results of previously executing the students’ code.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 </dd></dl>
 
-</div>
-</div>
 <div class="section" id="module-pedal.source">
-<span id="source"></span><h2>Source<a class="headerlink" href="#module-pedal.source" title="Permalink to this headline">¶</a></h2>
-<p>A package for verifying source code.</p>
+<span id="source"></span><h3>Source<a class="headerlink" href="#module-pedal.source" title="Permalink to this headline">¶</a></h3>
+<p>A Tool for verifying source code, and chunking up source code into multiple parts.</p>
+<ul class="simple">
+<li><p>Requires: None</p></li>
+<li><p>Optional: None</p></li>
+<li><p>Category: Syntax</p></li>
+</ul>
 <dl class="function">
 <dt id="pedal.source.set_source">
 <code class="sig-name descname">set_source</code><span class="sig-paren">(</span><em class="sig-param">code</em>, <em class="sig-param">filename='__main__.py'</em>, <em class="sig-param">sections=False</em>, <em class="sig-param">independent=False</em>, <em class="sig-param">report=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pedal/source.html#set_source"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.source.set_source" title="Permalink to this definition">¶</a></dt>
@@ -657,7 +1018,7 @@ left None, defaults to the global MAIN_REPORT.</p></li>
 
 <dl class="function">
 <dt id="pedal.source.check_section_exists">
-<code class="sig-name descname">check_section_exists</code><span class="sig-paren">(</span><em class="sig-param">section_number</em>, <em class="sig-param">report=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pedal/source/sections.html#check_section_exists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.source.check_section_exists" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">check_section_exists</code><span class="sig-paren">(</span><em class="sig-param">section_number</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pedal/source/sections.html#check_section_exists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.source.check_section_exists" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks that the right number of sections exist. The prologue before the
 first section is 0, while subsequent ones are 1, 2, 3, etc.
 So if you have 3 sections in your code plus the prologue,
@@ -666,7 +1027,7 @@ you should pass in 3 and not 4 to verify that all of them exist.</p>
 
 </div>
 <div class="section" id="module-pedal.tifa">
-<span id="tifa"></span><h2>Tifa<a class="headerlink" href="#module-pedal.tifa" title="Permalink to this headline">¶</a></h2>
+<span id="tifa"></span><h3>Tifa<a class="headerlink" href="#module-pedal.tifa" title="Permalink to this headline">¶</a></h3>
 <p>Python Type Inferencer and Flow Analyzer (TIFA)</p>
 <dl class="simple">
 <dt>TIFA uses a number of simplifications of the Python language.</dt><dd><ul class="simple">
@@ -1124,89 +1485,67 @@ each target and unravel the type.</p></li>
 
 </div>
 <div class="section" id="module-pedal.cait">
-<span id="cait"></span><h2>Cait<a class="headerlink" href="#module-pedal.cait" title="Permalink to this headline">¶</a></h2>
+<span id="cait"></span><h3>Cait<a class="headerlink" href="#module-pedal.cait" title="Permalink to this headline">¶</a></h3>
 <p>A package of tools for capturing student code by matching it against patterns.</p>
+<p>Requires:
+- <code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.source.source.Source</span></code></p>
+<p>Optional:
+- <code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.tifa.tifa.Tifa</span></code></p>
 </div>
 <div class="section" id="module-pedal.sandbox">
-<span id="sandbox"></span><h2>Sandbox<a class="headerlink" href="#module-pedal.sandbox" title="Permalink to this headline">¶</a></h2>
+<span id="sandbox"></span><h3>Sandbox<a class="headerlink" href="#module-pedal.sandbox" title="Permalink to this headline">¶</a></h3>
 </div>
 <div class="section" id="module-pedal.assertions">
-<span id="assertions"></span><h2>Assertions<a class="headerlink" href="#module-pedal.assertions" title="Permalink to this headline">¶</a></h2>
+<span id="assertions"></span><h3>Assertions<a class="headerlink" href="#module-pedal.assertions" title="Permalink to this headline">¶</a></h3>
+</div>
 </div>
 </div>
 
 
+           </div>
+           
           </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="integrations.html" class="btn btn-neutral float-left" title="Integrations" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, acbart, lukesg08
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="index.html">Pedal</a></h1>
+
+    </section>
+
+  </div>
+  
 
 
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
 
-
-
-
-
-
-<h3>Navigation</h3>
-<p class="caption"><span class="caption-text">Contents:</span></p>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="concepts.html">Important Concepts</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage/installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage/quickstart.html">QuickStart</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage/quickreference.html">Quick Reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage/tutorial.html">Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="integrations.html">Integrations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="instructor_reference.html">Instructor Reference</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Developer API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-pedal.core">Report</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-pedal.source">Source</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-pedal.tifa">Tifa</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-pedal.cait">Cait</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-pedal.sandbox">Sandbox</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-pedal.assertions">Assertions</a></li>
-</ul>
-</li>
-</ul>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="instructor_reference.html" title="previous chapter">Instructor Reference</a></li>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2018, acbart, lukesg08.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
-      
-      |
-      <a href="_sources/api.rst.txt"
-          rel="nofollow">Page source</a>
-    </div>
-
+  
+  
     
+   
 
-    
-  </body>
+</body>
 </html>

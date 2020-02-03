@@ -1,73 +1,189 @@
 
-<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta charset="utf-8" />
-    <title>Tutorial &#8212; Pedal 1.0 documentation</title>
-    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/language_data.js"></script>
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Tutorial &mdash; Pedal 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Integrations" href="../integrations.html" />
-    <link rel="prev" title="Quick Reference" href="quickreference.html" />
+    <link rel="prev" title="Important Concepts" href="../concepts.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
    
-  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
 
-  </head><body>
-  
+          
+            <a href="../index.html" class="icon icon-home"> Pedal
+          
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body" role="main">
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickreference.html">Quick Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../concepts.html">Important Concepts</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#using-pedal">Using Pedal</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tools">Tools</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#source">Source</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tifa">TIFA</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cait">CAIT</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mistakes">Mistakes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#toolkit">Toolkit</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sandbox">Sandbox</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#resolvers">Resolvers</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#example-usage">Example Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lab-with-sequential-sections">Lab with Sequential Sections</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#exam-with-independent-sections">Exam with Independent Sections</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#large-project">Large Project</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../integrations.html">Integrations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">Developer API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Pedal</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Tutorial</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/usage/tutorial.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="tutorial">
 <span id="id1"></span><h1>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="using-pedal">
 <h2>Using Pedal<a class="headerlink" href="#using-pedal" title="Permalink to this headline">¶</a></h2>
-<p>Pedal is a collection of tools to analyze student’s work in a pipeline. Pedal not only provides some of these tools, but it provides a <em>framework</em> around those tools. In this tutorial we go over the important concepts of Pedal, review each of the tools that compose Pedal, and then give practical examples of how to use Pedal.</p>
-<div class="section" id="important-concepts">
-<h3>Important Concepts<a class="headerlink" href="#important-concepts" title="Permalink to this headline">¶</a></h3>
-<img alt="../_images/pedal-overview.png" src="../_images/pedal-overview.png" />
-<ul class="simple">
-<li><p><em>Report</em>: A collection of Feedback and a namespace for the results of Tools, accessible by the Tool name. Reports can be generated imperatively (using the default Report, similar to MatPlotLib) or by explicitly creating and passing Report objects.</p></li>
-<li><p><em>Tool</em>: A system that can read and write to a Report, building on the work of previous Tools.</p></li>
-<li><p><em>Resolver</em>: A system that can analyze a Report and create a relevant bit of output for another system (e.g., BlockPy, Web-CAT).</p></li>
-<li><p><em>Feedback</em>: A structured representation of content to be delivered to a student in response to their submission of work.</p></li>
-</ul>
-<p>We base our idea of “Feedback” on concepts established by Narciss 2006. Our Feedback objects are composed of up to 7 components:</p>
-<ul class="simple">
-<li><p>result (bool): Whether or not this feedback is associated with the learner completing the task (“Success!”)</p></li>
-<li><p>performance (float): A relative amount that this feedback contributes to the students’ performance (think in terms of partial credit, like “Triggering this feedback is worth 20%”).</p></li>
-<li><p>misconceptions (Component): A description of the misconception that is believed to be in the student’s mind, or perhaps the relevant concept from the material that should be associated with this. (“Variables must be initialized before they are used.”)</p></li>
-<li><p>mistakes (Component): A description of the error or bug that the student has created (“NameError on line 5: sum has not been defined”)</p></li>
-<li><p>hints (Component): A suggestion for what the student can do (“Initialize the sum variable one line 1”)</p></li>
-<li><p>constraints (Component): A description of the task requirements or task type that the student has violated (“You used a for loop, but this question expected you to use recursion.”)</p></li>
-<li><p>metacognitives (Component): A suggestion for more regulative strategies (“You have been working for 5 hours, perhaps it is time to take a break?”)</p></li>
-</ul>
-<p>One of these components is described by the following union type, where a Component is one of:</p>
-<ul class="simple">
-<li><p>A str field representing renderable text for a student</p></li>
-<li><p>An object with a “message (str)” field of renderable text for a student, along with whatever other fields are useful (e.g., the line number of the error)</p></li>
-<li><p>A list of Components</p></li>
-</ul>
-<p>Additionally, a given Feedback object has the following metadata:</p>
-<ul class="simple">
-<li><p>label (str): An internal name for this specific piece of feedback. This is particularly useful for us for research purposes (we currently show it in italics as part of the message)</p></li>
-<li><p>tool (str): An internal name for indicating the tool that created this feedback (e.g., “tifa” or “source”)</p></li>
-<li><p>category (str): A human-presentable name showable to a student (this is like the “Analyzer Error” message in the top left of our BlockPy boxes).</p></li>
-<li><p>priority (str): An indication of how important this feedback is. Might be “high/medium/low” or the name of a category to supersede.</p></li>
-</ul>
-</div>
+<p>Pedal is a collection of tools to analyze student’s work in a pipeline.
+Pedal not only provides some of these tools, but it provides a <em>framework</em> around those tools.
+In this tutorial we go over the important concepts of Pedal, review each of the tools that compose Pedal,
+and then give practical examples of how to use Pedal.</p>
 <div class="section" id="tools">
 <h3>Tools<a class="headerlink" href="#tools" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="source">
@@ -85,6 +201,15 @@
 </div>
 <div class="section" id="cait">
 <h4>CAIT<a class="headerlink" href="#cait" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.cait</span> <span class="kn">import</span> <span class="n">parse_program</span><span class="p">,</span> <span class="n">find_matches</span>
+
+<span class="n">ast</span> <span class="o">=</span> <span class="n">parse_program</span><span class="p">()</span>
+<span class="k">if</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;For&quot;</span><span class="p">):</span>
+    <span class="k">pass</span> <span class="c1"># For loop detected!</span>
+
+<span class="n">matches</span> <span class="o">=</span> <span class="n">find_matches</span><span class="p">(</span><span class="s2">&quot;_var_ = __expr__&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.source</span> <span class="kn">import</span> <span class="n">set_source</span>
 <span class="kn">from</span> <span class="nn">pedal.cait</span> <span class="kn">import</span> <span class="n">parse_program</span><span class="p">,</span> <span class="n">find_matches</span>
 <span class="kn">from</span> <span class="nn">pedal.tifa</span> <span class="kn">import</span> <span class="n">tifa_analysis</span> <span class="c1"># optional</span>
@@ -238,73 +363,52 @@
 </div>
 
 
+           </div>
+           
           </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../integrations.html" class="btn btn-neutral float-right" title="Integrations" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../concepts.html" class="btn btn-neutral float-left" title="Important Concepts" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, acbart, lukesg08
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../index.html">Pedal</a></h1>
+
+    </section>
+
+  </div>
+  
 
 
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
 
-
-
-
-
-
-<h3>Navigation</h3>
-<p class="caption"><span class="caption-text">Contents:</span></p>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../concepts.html">Important Concepts</a></li>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="quickstart.html">QuickStart</a></li>
-<li class="toctree-l1"><a class="reference internal" href="quickreference.html">Quick Reference</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorial</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#using-pedal">Using Pedal</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../integrations.html">Integrations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../instructor_reference.html">Instructor Reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../api.html">Developer API</a></li>
-</ul>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="../index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="quickreference.html" title="previous chapter">Quick Reference</a></li>
-      <li>Next: <a href="../integrations.html" title="next chapter">Integrations</a></li>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2018, acbart, lukesg08.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
-      
-      |
-      <a href="../_sources/usage/tutorial.rst.txt"
-          rel="nofollow">Page source</a>
-    </div>
-
+  
+  
     
+   
 
-    
-  </body>
+</body>
 </html>

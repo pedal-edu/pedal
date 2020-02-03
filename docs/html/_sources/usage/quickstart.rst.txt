@@ -1,202 +1,301 @@
-QuickStart
-==========
+Quick Start Guide
+=================
 
-Pedal is composed of several modules. You can use any of them in combination to detect conditions in your students' code and provide an appropriate response.
+Pedal is composed of `Tools` that write `Feedback` to a centralized `Report`
+by detecting `Conditions` in your learners' `Submission` and providing an appropriate `Response`.
+In this Quick Start Guide, we'll show you how you can make this happen in just a few lines of code.
+Once you've got the basics, you can check out the :ref:`Tutorial`_ for a more in-depth coverage.
 
-Source
-^^^^^^
+Simple Environment
+^^^^^^^^^^^^^^^^^^
 
-.. code:: python
-
-  from pedal.source import set_source
-  STUDENT_CODE = "message='Hello World'\nprint(message)"
-  set_source(STUDENT_CODE)
-
-One of the simplest tools, the Source tool provides a function for attaching source code to a Report. It is a requirement for any tool that wants to do code analysis. But notice that this tool is not required in general - you could find other ways to attach code (e.g., a History tool that attaches all previous code written) or other aspects of the students' performance (e.g., a Demographics tool to attach bio-data about the student).
-
-TIFA
-^^^^
-
-Tifa is a Type Inferencer and Flow Analyzer. Its goal is not to be a general purpose tool for doing so, but to be focused on simplistic code written in pedagogical settings. This means that it can make a lot of assumptions and forbid a lot of features. Further, it's primary job is not just to collect type information, but to detect issues in the code (e.g., a variable changes type, a variable is not read, a variable is defined in one scope then used in another).
+Although Pedal can be configured in a lot of ways, you may want to begin by using our default
+"Simple Environment", which immediately sets up some of core Tools for a submission of learners' code.
 
 .. code:: python
 
-    from pedal.tifa import tifa_analysis
-    tifa_analysis()
+    from pedal.environments.simple import SimpleEnvironment
+    student_code = "print('Hello world!')"
+    ast, student, resolve = SimpleEnvironment(student_code)
 
-CAIT
-^^^^
+    # ... More instructor logic can go here ...
+
+    resolve()
+
+After just the lines above, the learners' submission will have been:
+
+* Checked for `Source` code errors that prevent parsing, with relevant syntax error messages generated.
+* Parsed into a traversable AST by `CAIT`, to enable structural checks.
+* Executed in our `Sandbox` (relatively safely), with relevant runtime error messages generated.
+* Reviewed by `TIFA`, which detects and provides feedback on common algorithmic errors (e.g., unused variables).
+* A default `Resolver` is provided to be called at the end of your script.
+
+We'll talk about what you get from the features above, but first, let's talk about how you provide
+custom feedback.
+
+Core Feedback Functions
+^^^^^^^^^^^^^^^^^^^^^^^
+
+There are a few core feedback commands that provide simple Responses to students.
+Most likely, these will be called within the body of `if` statements throughout your instructor control script.
 
 .. code:: python
 
-    from pedal.cait import parse_program, find_matches
+    from pedal import gently, set_success, give_partial, compliment
 
-    ast = parse_program()
+The first is `gently`, which allows you to present the learner with a simple textual message.
+This might be a hint, or a description of the mistake they made, or something else.
+However, it should be used to deliver negative feedback.
+There are other Feedback Functions to deliver negative feedback; the name `gently` refers to the
+fact that most Resolvers will prioritize this feedback lower than runtime errors, syntax errors, etc.
+
+.. code:: python
+
+    gently("You failed to solve the question correctly!")
+
+The next is `set_success`, which allows you to establish that the learner has completed the problem
+successfully. The default resolver will prioritize this feedback above all others.
+
+.. code:: python
+
+    set_success()
+
+Along the way, you can give students partial credit with `give_partial`. You'll need to check whether
+your autograder expects the sum to be 1 or 100.
+
+.. code:: python
+
+    give_partial(45)
+
+Finally, you can give the student compliments on things that are going well.
+
+.. code:: python
+
+    compliment("You've almost got it!")
+
+There are several other core commands, so check out the :ref:`quick_reference`_ for more.
+
+Finding AST Elements
+^^^^^^^^^^^^^^^^^^^^
+
+`CAIT` is a "Capturer for AST Inclusion Trees", a fancy way of saying it can be used to access the
+AST of the learners' code. If the code failed to parse, `CAIT` functions are still safe to run - they
+will not cause exceptions, just return no results. `CAIT` has almost no `Feedback Functions`; instead, it
+supports `Feedback Condition` authoring through two mechanisms.
+
+The first major feature is `find_all`:
+
+.. code:: python
+
     if ast.find_all("For"):
-        pass # For loop detected!
+        gently("It looks like your code is using a `for` loop; don't do that!")
 
-    matches = find_matches("_var_ = __expr__")
-
-Capturer for AST Inclusion Trees. Its goal is to take a desired AST and a target AST, and captures trees in the target ast that include the desired AST. A metaphor might be "Regular Expressions for source code".
-
-For the following explanations, source refers to the code you are trying to find trees in:
-
-`find_matches` takes regular python code, defined as "instructor code", but creates special placeholders shown below
+The `find_all` function returns a list of `CaitNodes`, which represent elements of the AST.
+You can access attributes of these nodes; we recommend you refer to the
+`GreenTreeSnakes <https://greentreesnakes.readthedocs.io/en/latest/nodes.html>`_ documentation
+for more information about what is available.
 
 .. code:: python
 
-    ___
+    loops = ast.find_all("For")
+    for loop in loops:
+        if loop.target.name == "Tuple":
+            gently("You have a `for` loop with multiple targets, don't do that!")
 
-The triple underscore is used as a wild match card. It will match to any node or subtree. If you wish to access such data, you should use expressions instead (described further down)
+Finding AST Patterns
+^^^^^^^^^^^^^^^^^^^^
 
-.. code:: python
-
-    _var_
-
-is a place holder for variables, denoted by single under scores. Many instructor variables are allowed to map to one variable in source, but each variable in source can only map to one instructor variable. Note that these aren't bidirectional mappings
-example:
-
-.. code:: python
-
-    # source 1
-    var1 = var1/var2
-    # source 2
-    var1 = var2/var2
-    # matcher 1
-    match = find_match("_var1_ = _var1_/_var_2")
-    # matcher 2
-    match = find_match("_var1_ = _var2_/_var_2")
-
-In the example above, matcher 1 would find source 1 but wouldn't find source 2 because source variable `var2` is being mapped to both `_var1_` and `_var2_`. However, matcher 2 would find both source 1 and source 2 because while matcher 2's `_var2_` will map to both source 2's `var1` and `var2`, source 2's `var2` only maps to matcher 2's `_var2_` If a variable name is not surrounded by single underscores, Cait will try to match the exact variable name. Note: this only works for AST nodes that are Name nodes and FuncDefinition nodes. Note that the matcher will save these variables/names for later reference (discussed below)
+CAIT can also be used to declaratively identify regions of source using a Regular-expression style
+function named `find_matches` (or `find_match` to get the first result):
 
 .. code:: python
 
-    __expr__
+    matches = ast.find_matches("answer = 5")
+    if matches:
+        gently("The variable `answer` should not be assigned the value `5`.")
 
-is a place holder for subtree expressions. An expression is denoted by a double underscore before and after the name of the expression. Example:
+The `find_matches` function supports several kinds of wildcards, and gives you access to
+identifiers in the learners' code.
 
-
-.. code:: python
-
-    # source 1
-    summer = 0
-    counter = 0
-    running_avg = []
-    for item in i_list:
-        summer = summer + item
-        counter = count + 1
-        running_avg.append(summer/counter)
-    # matcher 1
-    matches = find_matches("for ___ in ___:\n"
-                           "    __expr1__\n"
-                           "    __expr2__")
-    # match 1
-    for item in i_list:
-        summer = summer + item
-        counter = count + 1
-    # match 2
-    for item in i_list:
-        summer = summer + item
-        running_avg.append(summer/counter)
-    # match 2
-    for item in i_list:
-        counter = count + 1
-        running_avg.append(summer/counter)
-
-In this example, matches would return a list of three matches, as shown above (match 1, match 2, and match 3). Note that the matcher will save these expressions for later reference (discussed below). Another special note is that unlike the variable place holder, each expression reference is expected to only be used once in any given match. The following example matcher will produce undefined behavior:
+**Wild Card Match**:  The triple underscore is used as a wild match card.
+It will match to any node or subtree.
+If you wish to access such data, you should use expressions instead.
 
 .. code:: python
 
-    # matcher 1
-    matches = find_matches("for ___ in ___:\n"
-                           "    __expr1__\n"
-                           "    __expr1__")
+    if ast.find_matches("answer = ___"):
+        gently("You assigned something to the variable `answer`")
 
-
-Retrieving variables, functions, and expressions is another operation supported in Cait
-
-.. code:: python
-
-    matches = find_matches("for _item_ in ___:\n"
-                           "    __expr__\n"
-                           "__expr2__")
-    for match in matches:
-        # _item_ = match["_item_"][0] is equivalent
-        _item_ = match["_item_"]
-        __expr__ = match["__expr__"]
-        __expr2__ = match["__expr2__"]
-
-The code above shows how to retrieve expressions and variables. The expressions (`__expr__` and `__expr2__`) will return AST nodes with expanded functionality from the built in ast node class.
-
-Retrieval of variables and functions will return an AstSymbolList, which can be accessed as a list of AstSymbols or as the first AstSymbol in the list. These AstSymbol objects will also have a reference to the specific Name or FuncDefinition AST node that the symbol matched to (details in ast_map.py). So there should be one for every time the variable/function definition ocurred in code. Note that overlapping variable and function names in instructor code will cause conflicts as they are considered to be the "same symbol" with respect to CAIT. This can allow checks such as detecting if students overwrite a function that they have written.
-
-Finally, for subtree matching, you can use the `find_matches` function of the expression. When calling `find_matches` on an expression, you can perform deep searches, such as if you are looking for a specific expression in a subtree and you don't care where that expression is in that subtree. For example:
+**Variable Name Match**: A place holder for variables, denoted by single underscores on both sides.
+Many instructor variables are allowed to map to one variable in student code,
+but each variable in student code can only map to one instructor variable.
+You can get a variable's name via its `id` attribute.
 
 .. code:: python
 
-    # source 1
-    summer = 0
-    for item in i_list:
-        summer = summer + item
+    match = ast.find_match("_accumulator_ = 0")
+    if match["_accumulator_"].id == "sum":
+        gently("Do not name your accumulating variable `sum`, since that is a reserved word.")
 
-    # source 2
-    summer = 0
-    for item in i_list:
-        if True:
-            if True:
-                if True:
-                    summer = summer + item
+**Subtree Expressions Match**: A place holder for subtree expressions.
+An expression is denoted by a double underscore before and after the name of the expression.
+You can get the expression's AST node name via the `name` attribute.
 
-    # matcher 1
-    matches = find_matches("for ___ in ___:\n"
-                           "    __expr1__\n")
-    __expr1__ = match["__expr1__"]
-    submatches = __expr1__.find_matches("_var1_ = _var2_ + _var1_")
+.. code:: python
 
-In the example above, `__expr1__` will match to the inner body of the for loops in source 1 and source 2. The `submatches` variable would then in both cases, extract the `summer = summer + item` from both sources, returning the same type of list as `find_matches`.
+    match = ast.find_match("_accumulator_ = __initial__")
+    if match["__initial__"].name == "List":
+        gently("You initialized your accumulator as a list literal.")
 
-A final note for that example, note that some operations are expected to be commutative. Currently only addition and multiplication are supported as commutative operators. This commutativity currently unintelligently allows either ordering for the subtrees of the addition or multiplication ast nodes, and in the case as above, would return two matches, one for `_var1_ = _var2_ + _var1_` and one for `_var1 = _var1_ + _var2_`. If they are not commutative (e.g. because of a function call that changes state), Cait currently doesn't detect such cases
+Checking Execution Results
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Mistakes
-^^^^^^^^
+The `Sandbox` module is responsible for running student code as safely as possible,
+preventing access to the instructor control script and the grading functionality.
+Once run, you can get access to students' final variables' values via the `data` attribute:
 
-A collection of code configuration patterns that represent common mistakes for students. These mistakes are grouped together by topics.
+.. code:: python
 
-.. todo: Example code
+    if 'sum' in student.data and student.data['sum'] == 47:
+        set_success()
 
-Toolkit
-^^^^^^^
+You can also check for variable's in a few other ways:
 
-A collection of helper functions to analyze student code, such as detecting incorrectly closed files, preventing the use of certain operators or literals, and unit testing functionality.
+.. code:: python
 
-.. todo: Example code
+    integer_variables = student.get_variables_by_type(int)
+    for name, value in integer_variables:
+        if value == 47:
+            gently("You should not have assigned the value 47 to the variable "+name)
 
-Sandbox
-^^^^^^^
+However, you should be aware that true sandboxing is impossible in a dynamic language like Python
+We recommend setting course policies that disincentivize cheating and ensuring your autograding environment
+has multiple lines of defense, such as proper file system permissions.
 
-A sophisticated system for executing students' code under different circumstances. Relies on the `exec` and `patch` tools of Python to prevent students from escaping their namespace.
+Checking Execution Output
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
-However, you should be aware that true sandboxing is impossible in a dynamic language like Python. Be sure that your environment has multiple lines of defense, such as proper file system permissions.
+The `output` attribute provides a list of strings representation of all the lines printed by the students'
+code, minus the trailing newlines.
 
-.. todo: Example code
+.. code:: python
 
-Assertions
-^^^^^^^^^^
+    if "Hello world!" not in student.output:
+        gently("You need to print the string 'Hello world!'")
 
-Unit-testing style assertions, plus some goodies to help analyze more sophisticated stuff like "assert the students' function prints X"
+There is also `raw_output` to get a single string, including newline characters.
 
-.. todo: Fill this in
+.. code:: python
 
-Questions
-^^^^^^^^^
+    if "Complex\nText" in student.raw_output:
+        gently("You should have the precise text we gave you in there.")
 
-Dynamically generate questions or draw them from a pool.
+Calling Students' Functions
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. todo: Fill this in
+You can call students' functions and pass in arguments.
 
-Resolvers
-^^^^^^^^^
+.. code:: python
 
-Choose the appropriate feedback to deliver to the student.
+    result = student.call("add_numbers", 5, 7)
+    if result == 13:
+        set_success()
 
-.. todo: Fill this in
+If you inspect the result of calling a student function, it will appear to be a simple Python
+value - in the case above, if the students' code returned an integer, you could add or divide
+the result normally. However, it's secretly a heavily-proxied wrapper object that pretends to be
+the value - the payoff of that complexity is additional metadata for how that value is produced,
+which you can see in the Assertions.
+
+Simple Assertions
+^^^^^^^^^^^^^^^^^
+
+Most instructors will already be comfortable with writing assertions, as they would with a
+unit testing framework.
+
+.. code:: python
+
+    from pedal.assertions import *
+
+    assert_equal(student.call('add', 5, 7), 13)
+
+The `assert_*` functions have a large amount of extra machinery to produce vastly improved error messages.
+When a students' code causes an error, the traceback will not show any instructor lines.
+
+.. todo:: produce an example feedback message.
+
+There are also some more advanced assertions:
+
+.. code:: python
+
+    assert_prints(student.call("print_values", [1,2,3]), ["1", "2", "3"])
+
+Simple Unit Testing
+^^^^^^^^^^^^^^^^^^^
+
+Assertions are a convenient way to check an individual aspect of code, but sometimes you want to
+bundle up a series of input/output tests (whether that means stdin/stdout or arguments/return values).
+The `Toolkit` module is a collection of useful functions, including `unit_test` and `output_test`.
+
+.. code:: python
+
+    from pedal.toolkit.functions import unit_test, output_test
+
+    if unit_test('add', [ (3, 4, 7), (5, 5, 10), (-3, -3, -6) ]):
+        set_success()
+
+These Feedback Functions return True if all unit tests pass, but generate Responses depending on how
+they failed. The results of failed tests are placed into an HTML table.
+
+Other Toolkit Tools
+^^^^^^^^^^^^^^^^^^^
+
+There are a large number of other tools in the toolkit. For example, you can quickly perform
+a check of the source code that a function has the appropriate signature:
+
+.. code:: python
+
+    from pedal.toolkit.functions import match_signature
+
+    if not match_signature('add', 2):
+        gently("The `add` function should have 2 parameters.")
+
+Or assert that all functions must have a docstring:
+
+.. code:: python
+
+    from pedal.toolkit.functions import all_documented
+
+    all_documented()
+
+Worried that students are printing out a literal value instead of relying on variables?
+
+.. code:: python
+
+    from pedal.toolkit.utilities import only_printing_variables
+
+    if not only_printing_variables():
+        gently("You should only be printing variables' values, not literal values.")
+
+Are they not allowed to use certain operators for this question?
+
+.. code:: python
+
+    from pedal.toolkit.utilities import prevent_operation
+
+    prevent_operation("/")
+    prevent_operation("*")
+
+The toolkit is rich and extensive, although somewhat situational. Refer to the complete
+`quick_reference`_ for more information.
+
+Resolver the Feedback
+^^^^^^^^^^^^^^^^^^^^^
+
+Ultimately, when you're done detecting conditions and generating responses, you need to
+resolve the feedback into some output. The Simple Environment provides access to the
+Simple Resolver, which has a prioritization scheme to choose a single, most important piece of feedback.
+
+.. code:: python
+
+    resolve()

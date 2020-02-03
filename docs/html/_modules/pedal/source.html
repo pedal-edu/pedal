@@ -1,55 +1,196 @@
 
+
 <!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pedal.source &mdash; Pedal 1.0 documentation</title>
+  
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta charset="utf-8" />
-    <title>pedal.source &#8212; Pedal 1.0 documentation</title>
-    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/language_data.js"></script>
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
    
-  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
 
-  </head><body>
-  
+          
+            <a href="../../index.html" class="icon icon-home"> Pedal
+          
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body" role="main">
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../usage/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage/quickstart.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage/examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage/quickreference.html">Quick Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../concepts.html">Important Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../integrations.html">Integrations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">Developer API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Pedal</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>pedal.source</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <h1>Source code for pedal.source</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">A package for verifying source code.</span>
+<span class="sd">A Tool for verifying source code, and chunking up source code into multiple parts.</span>
+
+<span class="sd">- Requires: None</span>
+<span class="sd">- Optional: None</span>
+<span class="sd">- Category: Syntax</span>
+
+
 <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="kn">from</span> <span class="nn">pedal.source.constants</span> <span class="k">import</span> <span class="n">TOOL_NAME_SOURCE</span>
 <span class="kn">from</span> <span class="nn">pedal.source.sections</span> <span class="k">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pedal.core</span> <span class="k">import</span> <span class="n">MAIN_REPORT</span>
+<span class="kn">from</span> <span class="nn">pedal.core.report</span> <span class="k">import</span> <span class="n">MAIN_REPORT</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">ast</span>
 
-<span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;Source&#39;</span>
-<span class="n">SHORT_DESCRIPTION</span> <span class="o">=</span> <span class="s2">&quot;Verifies source code and attaches it to the report&quot;</span>
-<span class="n">DESCRIPTION</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
-<span class="s1">&#39;&#39;&#39;</span>
-<span class="n">REQUIRES</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">OPTIONALS</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">CATEGORY</span> <span class="o">=</span> <span class="s1">&#39;Syntax&#39;</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;NAME&#39;</span><span class="p">,</span> <span class="s1">&#39;DESCRIPTION&#39;</span><span class="p">,</span> <span class="s1">&#39;SHORT_DESCRIPTION&#39;</span><span class="p">,</span> <span class="s1">&#39;REQUIRES&#39;</span><span class="p">,</span> <span class="s1">&#39;OPTIONALS&#39;</span><span class="p">,</span>
-           <span class="s1">&#39;set_source&#39;</span><span class="p">,</span> <span class="s1">&#39;check_section_exists&#39;</span><span class="p">,</span> <span class="s1">&#39;next_section&#39;</span><span class="p">,</span> <span class="s1">&#39;verify_section&#39;</span><span class="p">,</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;TOOL_NAME_SOURCE&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;set_source&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;check_section_exists&#39;</span><span class="p">,</span> <span class="s1">&#39;next_section&#39;</span><span class="p">,</span> <span class="s1">&#39;verify_section&#39;</span><span class="p">,</span>
            <span class="s1">&#39;set_source_file&#39;</span><span class="p">]</span>
-<span class="n">DEFAULT_PATTERN</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;^(##### Part .+)$&#39;</span>
+
+
+<span class="k">def</span> <span class="nf">_empty_source_report</span><span class="p">():</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s1">&#39;code&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s1">&#39;full&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s1">&#39;lines&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s1">&#39;filename&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s1">&#39;independent&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s1">&#39;success&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s1">&#39;sections&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s1">&#39;section&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s1">&#39;section_pattern&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s1">&#39;line_offset&#39;</span><span class="p">:</span> <span class="kc">None</span>
+    <span class="p">}</span>
 
 
 <div class="viewcode-block" id="set_source"><a class="viewcode-back" href="../../api.html#pedal.source.set_source">[docs]</a><span class="k">def</span> <span class="nf">set_source</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;__main__.py&#39;</span><span class="p">,</span> <span class="n">sections</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">independent</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -85,7 +226,7 @@
         <span class="n">_check_issues</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">report</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">sections</span><span class="p">:</span>
-            <span class="n">pattern</span> <span class="o">=</span> <span class="n">DEFAULT_PATTERN</span>
+            <span class="n">pattern</span> <span class="o">=</span> <span class="n">DEFAULT_SECTION_PATTERN</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">pattern</span> <span class="o">=</span> <span class="n">sections</span>
         <span class="n">report</span><span class="o">.</span><span class="n">group</span> <span class="o">=</span> <span class="mi">0</span>
@@ -99,7 +240,7 @@
 
 <span class="k">def</span> <span class="nf">_check_issues</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">report</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">code</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
-        <span class="n">report</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="s1">&#39;Blank source&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="s1">&#39;Syntax&#39;</span><span class="p">,</span> <span class="n">tool</span><span class="o">=</span><span class="n">NAME</span><span class="p">,</span>
+        <span class="n">report</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="s1">&#39;Blank source&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="s1">&#39;Syntax&#39;</span><span class="p">,</span> <span class="n">tool</span><span class="o">=</span><span class="n">TOOL_NAME_SOURCE</span><span class="p">,</span>
                       <span class="n">group</span><span class="o">=</span><span class="n">report</span><span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">][</span><span class="s1">&#39;section&#39;</span><span class="p">],</span>
                       <span class="n">mistake</span><span class="o">=</span><span class="s2">&quot;Source code file is blank.&quot;</span><span class="p">)</span>
         <span class="n">report</span><span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">][</span><span class="s1">&#39;success&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
@@ -122,6 +263,7 @@
         <span class="n">report</span> <span class="o">=</span> <span class="n">MAIN_REPORT</span>
     <span class="k">return</span> <span class="n">report</span><span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">][</span><span class="s1">&#39;code&#39;</span><span class="p">]</span>
 
+
 <span class="k">def</span> <span class="nf">set_source_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">sections</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">independent</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">report</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">report</span> <span class="o">=</span> <span class="n">MAIN_REPORT</span>
@@ -140,67 +282,43 @@
         <span class="n">report</span><span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">][</span><span class="s1">&#39;success&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
 </pre></div>
 
+           </div>
+           
           </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, acbart, lukesg08
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../../index.html">Pedal</a></h1>
+
+    </section>
+
+  </div>
+  
 
 
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
 
-
-
-
-
-
-<h3>Navigation</h3>
-<p class="caption"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../concepts.html">Important Concepts</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../usage/installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../usage/quickstart.html">QuickStart</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../usage/quickreference.html">Quick Reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../usage/tutorial.html">Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../integrations.html">Integrations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../instructor_reference.html">Instructor Reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../api.html">Developer API</a></li>
-</ul>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="../../index.html">Documentation overview</a><ul>
-  <li><a href="../index.html">Module code</a><ul>
-  </ul></li>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2018, acbart, lukesg08.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
-      
-    </div>
-
+  
+  
     
+   
 
-    
-  </body>
+</body>
 </html>
