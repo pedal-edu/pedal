@@ -1,9 +1,11 @@
 from pedal.questions import QuestionGrader
 
-from pedal import run, compliment, explain, gently
-from pedal.core.imperative import MAIN_REPORT
+from pedal.sandbox import run
+from pedal.core.commands import compliment, explain, gently
+from pedal.core.report import MAIN_REPORT
 from pedal.assertions.assertions import *
 from pedal.toolkit.functions import *
+
 
 class FunctionGrader(QuestionGrader):
     MAX_POINTS = 10

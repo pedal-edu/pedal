@@ -1,8 +1,13 @@
-from pedal.core import Feedback, MAIN_REPORT
+from pedal.core.commands import feedback
+from pedal.core.report import MAIN_REPORT
 from pedal.source.constants import TOOL_NAME_SOURCE
 import ast
 
 DEFAULT_SECTION_PATTERN = r'^(##### Part .+)$'
+
+
+def separate_into_sections(report=MAIN_REPORT):
+    pass
 
 
 def _calculate_section_number(section_index):

@@ -11,6 +11,10 @@ from pedal.core.feedback import Feedback, FeedbackKind, FeedbackCategory, PEDAL_
 from pedal.core.report import MAIN_REPORT
 
 
+#: Lowercase "function" version that works like other Core Feedback Functions.
+feedback = Feedback
+
+
 def set_success(score=1, justification=None, tool=None, group=None, report=MAIN_REPORT):
     """
     **(Feedback Function)**
@@ -19,14 +23,16 @@ def set_success(score=1, justification=None, tool=None, group=None, report=MAIN_
     assignment is done.
 
     Args:
+        justification (str): Internal message that explains why this function was used.
         score (number): Arbitrary value to set the user's score to. Defaults to 1.
     """
-    return report.add_feedback(Feedback("set_success",
-                                        tool=tool, category=FeedbackCategory.INSTRUCTOR, kind=FeedbackKind.RESULT,
-                                        justification=justification, valence=Feedback.POSITIVE_VALENCE,
-                                        title="Success", message=set_success.MESSAGE, template=set_success.MESSAGE,
-                                        score=score, correct=True,
-                                        muted=False, version='1.0.0', author=PEDAL_DEVELOPERS, group=group))
+    return feedback("set_success",
+                    tool=tool, category=FeedbackCategory.INSTRUCTOR, kind=FeedbackKind.RESULT,
+                    justification=justification, valence=Feedback.POSITIVE_VALENCE,
+                    title="Success", message=set_success.MESSAGE, template=set_success.MESSAGE,
+                    score=score, correct=True,
+                    muted=False, version='1.0.0', author=PEDAL_DEVELOPERS, group=group,
+                    report=report)
 
 
 set_success.MESSAGE = {'text': "Great work!"}
@@ -43,14 +49,14 @@ def compliment(message, value=0, justification=None, locations=None, tool=None, 
         value (float): The number to increase the user's score by.
         justification (str): A justification for why this partial credit was given.
     """
-    return report.add_feedback(Feedback("compliment", tool=tool,
-                                        category=FeedbackCategory.INSTRUCTOR, kind=FeedbackKind.ENCOURAGEMENT,
-                                        justification=justification, locations=locations,
-                                        valence=Feedback.POSITIVE_VALENCE,
-                                        title="Compliment", message=message, template=message,
-                                        score=value, correct=False, muted=False, version='1.0.0',
-                                        author=PEDAL_DEVELOPERS, group=group
-                                        ))
+    return feedback("compliment", tool=tool,
+                    category=FeedbackCategory.INSTRUCTOR, kind=FeedbackKind.ENCOURAGEMENT,
+                    justification=justification, locations=locations,
+                    valence=Feedback.POSITIVE_VALENCE,
+                    title="Compliment", message=message, template=message,
+                    score=value, correct=False, muted=False, version='1.0.0',
+                    author=PEDAL_DEVELOPERS, group=group, report=report
+                    )
 
 
 def give_partial(value, justification=None, tool=None, group=None, report=MAIN_REPORT):
@@ -61,14 +67,15 @@ def give_partial(value, justification=None, tool=None, group=None, report=MAIN_R
         value (number): The number to increase the user's score by.
         justification (str): A justification for why this partial credit was given.
     """
-    return report.add_feedback(Feedback("give_partial", tool=tool, category=FeedbackCategory.INSTRUCTOR,
-                                        kind=FeedbackKind.RESULT,
-                                        justification=justification, valence=Feedback.POSITIVE_VALENCE,
-                                        title="Partial Credit", message=give_partial.MESSAGE, template=give_partial.MESSAGE,
-                                        score=value, correct=False, muted=True, version='1.0.0', author=PEDAL_DEVELOPERS, group=group))
+    return feedback("give_partial", tool=tool, category=FeedbackCategory.INSTRUCTOR,
+                    kind=FeedbackKind.RESULT,
+                    justification=justification, valence=Feedback.POSITIVE_VALENCE,
+                    title="Partial Credit", message=give_partial.TEMPLATE, template=give_partial.TEMPLATE,
+                    score=value, correct=False, muted=True, version='1.0.0', author=PEDAL_DEVELOPERS, group=group,
+                    report=report)
 
 
-give_partial.MESSAGE = {'text': "Partial credit"}
+give_partial.TEMPLATE = "Partial credit"
 
 
 # TODO: Fix the rest
@@ -117,3 +124,26 @@ def clear_report():
 
 def get_all_feedback():
     return MAIN_REPORT.feedback
+
+
+def explain(self, message, priority='medium', line=None, group=None,
+            label='explain'):
+    misconception = {'message': message}
+    if line is not None:
+        misconception['line'] = line
+    if group is None:
+        group = self.group
+    self.attach(label, priority=priority, category='instructor',
+                group=group, misconception=misconception)
+
+def gently(self, message, line=None, group=None, label='explain'):
+    self.explain(message, priority='student', line=line, group=group,
+                 label=label)
+
+def guidance(self, message, line=None, group=None, label='guidance'):
+    hint = {'message': message}
+    if line is not None:
+        hint['line'] = line
+    if group is None:
+        group = self.group
+    self.attach(label, priority='instructions', category='instructions', group=group, hint=hint)

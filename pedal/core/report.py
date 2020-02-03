@@ -1,5 +1,3 @@
-from pedal.core.feedback import Feedback
-
 __all__ = ['Report', 'MAIN_REPORT']
 
 
@@ -54,53 +52,10 @@ class Report:
     def contextualize(self, submission):
         self.submission = submission
 
-    def set_success(self, tool=None, justification=None, group=None, score=100):
-        """
-        Creates Successful feedback for the user, indicating that the entire
-        assignment is done.
-        """
-        if group is None:
-            group = self.group
-        self.feedback.append(FeedbackSuccess(tool, justification, group, score))
-
-    def give_partial(self, value, message=None, group=None):
-        if value is None:
-            return False
-        if group is None:
-            group = self.group
-        self.feedback.append(Feedback('give_partial', performance=value,
-                                      priority='positive',
-                                      group=group,
-                                      mistake=message))
-        return True
-
     def hide_correctness(self):
         self.suppressions['success'] = []
 
-    def explain(self, message, priority='medium', line=None, group=None,
-                label='explain'):
-        misconception = {'message': message}
-        if line is not None:
-            misconception['line'] = line
-        if group is None:
-            group = self.group
-        self.attach(label, priority=priority, category='instructor',
-                    group=group, misconception=misconception)
 
-    def gently(self, message, line=None, group=None, label='explain'):
-        self.explain(message, priority='student', line=line, group=group,
-                     label=label)
-
-    def guidance(self, message, line=None, group=None, label='guidance'):
-        hint = {'message': message}
-        if line is not None:
-            hint['line'] = line
-        if group is None:
-            group = self.group
-        self.attach(label, priority='instructions', category='instructions', group=group, hint=hint)
-
-    def attach(self, label, **kwargs):
-        self.feedback.append(Feedback(label, **kwargs))
 
     def add_feedback(self, feedback):
         """

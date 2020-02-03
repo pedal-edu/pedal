@@ -8,6 +8,7 @@ import string
 from unittest.mock import patch
 
 from pedal.core import MAIN_REPORT
+from pedal.core.commands import feedback
 from pedal.sandbox import mocked
 from pedal.sandbox.exceptions import (SandboxTraceback, SandboxHasNoFunction,
                                       SandboxStudentCodeException,

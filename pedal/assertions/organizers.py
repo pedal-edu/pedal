@@ -135,7 +135,7 @@ def stop_on_failure(f):
     return wrapped
 
 
-def try_all():
+def try_all(f):
     _setup_assertions(MAIN_REPORT)
     @wraps(f)
     def wrapped(*args, **kwargs):

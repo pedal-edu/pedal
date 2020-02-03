@@ -5,6 +5,7 @@ Simple data classes for storing feedback to present to learners.
 __all__ = ['Feedback', 'FeedbackKind', 'FeedbackCategory']
 
 from pedal.core.location import Location
+from pedal.core.report import MAIN_REPORT
 
 
 class FeedbackCategory:
@@ -120,11 +121,9 @@ class Feedback:
 
         title (str, optional): A formal, student-facing title for this feedback. If None, indicates
             that the :py:attr:`~pedal.core.feedback.Feedback.label` should be used instead.
-        message (Dict[str,str]): A dictionary mapping types of message outputs to their generated
-            format. By default, we expect `"text"` and `"markdown"`, but other possibilities include
-            `"html"`.
-        template (Dict[str,str]): The raw string template (using the `str.format` style) that was used to generate
-            this feedback's messages.
+        message (str): A markdown-formatted message (aka also supporting HTML) that could be rendered
+            to the user.
+        text (str): A console-friendly, plain-text message that could be rendered to the user.
         fields (Dict[str,Any]): The raw data that was used to interpolate the template to produce the message.
         locations (:obj:`list` of :py:attr:`~pedal.core.location.Location`): Information about specific locations
             relevant to this message.
@@ -155,11 +154,13 @@ class Feedback:
     POSITIVE_VALENCE = 1
     NEUTRAL_VALENCE = 0
     NEGATIVE_VALENCE = -1
+    CATEGORIES = FeedbackCategory
+    KINDS = FeedbackKind
 
     def __init__(self, label, tool=None, category='instructor', kind='mistake', justification=None,
                  priority=None, valence=-1, title=None, message=None, template=None, fields=None,
                  locations=None, score=None, correct=None, muted=None, version=None, author=None,
-                 group=None):
+                 group=None, report=MAIN_REPORT):
         # Model
         self.label = label
         self.tool = tool
@@ -186,6 +187,10 @@ class Feedback:
         self.author = author
         # Organizational
         self.group = group
+        # Self-attach to a given report?
+        if report is not None:
+            report.add_feedback(self)
+
 
     def __str__(self):
         """

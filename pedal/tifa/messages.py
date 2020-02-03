@@ -1,5 +1,8 @@
 import ast
 
+from pedal.core.commands import feedback
+from pedal.core.report import MAIN_REPORT
+
 OPERATION_DESCRIPTION = {
     ast.Pow: "an exponent",
     ast.Add: "an addition",
@@ -26,6 +29,34 @@ OPERATION_DESCRIPTION = {
     ast.In: "an in",
     ast.NotIn: "an not in",
 }
+
+
+def action_after_return(data, report=MAIN_REPORT):
+    """
+    **(Feedback Function)**
+
+    Args:
+        data:
+        report:
+
+    Returns:
+
+    """
+    fields = {'line': data['position']['line']}
+    feedback(action_after_return.__name__, category=feedback.CATEGORIES.ALGORITHMIC,
+             message=action_after_return.TEMPLATE.format(**fields),
+             fields=fields, kind=feedback.KINDS.MISTAKE, justification=action_after_return.JUSTIFICATION,
+             title=action_after_return.TITLE, locations=fields['line'], version=action_after_return.VERSION,
+             report=report)
+
+
+action_after_return.VERSION = '0.0.1'
+action_after_return.TITLE = "Action after Return"
+action_after_return.TEMPLATE = ("You performed an action after already returning from a "
+                                "function, on line {line}. You can only return on a path "
+                                "once.")
+action_after_return.JUSTIFICATION = ("TIFA visited a node not in the top scope when its "
+                                     "*return variable was definitely set in this scope.")
 
 
 def _format_message(issue, data):
