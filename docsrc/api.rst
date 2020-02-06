@@ -35,9 +35,9 @@ Important Concepts
 
     An "Atomic" Feedback Function is one that has exactly one possible label outcome.
         They should have their metadata moved to be static function attributes.
-        TEMPLATE (str): The .format() compatible string used to generate the `message` attribute.
-        TEMPLATE_TEXT (str): The .format() compatible string used to generate the `text` attribute.
-            If not present, you can expect the TEMPLATE to be plain text.
+        TEMPLATE_TEXT ((**)=>str): A function that can be used to generate the ``text`` string.
+            They might also have MESSAGE_TEXT with the same concept.
+            All of the fields will be passed in as keyword arguments.
         JUSTIFICATION (str): A static justification
         TITLE (str): A static student-friendly title
         VERSION (str): A semvar string (e.g., '0.0.1'), should be paired with a docstring changelog.
@@ -92,7 +92,7 @@ Submission
 Source
 ------
 
-.. automodule:: pedal.source
+.. automodule:: pedal.source.source
     :members:
 
 Tifa

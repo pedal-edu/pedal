@@ -162,6 +162,7 @@
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Feedback&#39;</span><span class="p">,</span> <span class="s1">&#39;FeedbackKind&#39;</span><span class="p">,</span> <span class="s1">&#39;FeedbackCategory&#39;</span><span class="p">]</span>
 
 <span class="kn">from</span> <span class="nn">pedal.core.location</span> <span class="k">import</span> <span class="n">Location</span>
+<span class="kn">from</span> <span class="nn">pedal.core.report</span> <span class="k">import</span> <span class="n">MAIN_REPORT</span>
 
 
 <div class="viewcode-block" id="FeedbackCategory"><a class="viewcode-back" href="../../../api.html#pedal.core.feedback.FeedbackCategory">[docs]</a><span class="k">class</span> <span class="nc">FeedbackCategory</span><span class="p">:</span>
@@ -277,11 +278,9 @@
 
 <span class="sd">        title (str, optional): A formal, student-facing title for this feedback. If None, indicates</span>
 <span class="sd">            that the :py:attr:`~pedal.core.feedback.Feedback.label` should be used instead.</span>
-<span class="sd">        message (Dict[str,str]): A dictionary mapping types of message outputs to their generated</span>
-<span class="sd">            format. By default, we expect `&quot;text&quot;` and `&quot;markdown&quot;`, but other possibilities include</span>
-<span class="sd">            `&quot;html&quot;`.</span>
-<span class="sd">        template (Dict[str,str]): The raw string template (using the `str.format` style) that was used to generate</span>
-<span class="sd">            this feedback&#39;s messages.</span>
+<span class="sd">        message (str): A markdown-formatted message (aka also supporting HTML) that could be rendered</span>
+<span class="sd">            to the user.</span>
+<span class="sd">        text (str): A console-friendly, plain-text message that could be rendered to the user.</span>
 <span class="sd">        fields (Dict[str,Any]): The raw data that was used to interpolate the template to produce the message.</span>
 <span class="sd">        locations (:obj:`list` of :py:attr:`~pedal.core.location.Location`): Information about specific locations</span>
 <span class="sd">            relevant to this message.</span>
@@ -312,11 +311,13 @@
     <span class="n">POSITIVE_VALENCE</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">NEUTRAL_VALENCE</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">NEGATIVE_VALENCE</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="n">CATEGORIES</span> <span class="o">=</span> <span class="n">FeedbackCategory</span>
+    <span class="n">KINDS</span> <span class="o">=</span> <span class="n">FeedbackKind</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">tool</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="s1">&#39;instructor&#39;</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;mistake&#39;</span><span class="p">,</span> <span class="n">justification</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">priority</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">valence</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">template</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">locations</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">score</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">correct</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">muted</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">author</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">group</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                 <span class="n">group</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
         <span class="c1"># Model</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="n">label</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tool</span> <span class="o">=</span> <span class="n">tool</span>
@@ -343,6 +344,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">author</span> <span class="o">=</span> <span class="n">author</span>
         <span class="c1"># Organizational</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">group</span> <span class="o">=</span> <span class="n">group</span>
+        <span class="c1"># Self-attach to a given report?</span>
+        <span class="k">if</span> <span class="n">report</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">report</span><span class="o">.</span><span class="n">add_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>

@@ -158,7 +158,7 @@ class Feedback:
     KINDS = FeedbackKind
 
     def __init__(self, label, tool=None, category='instructor', kind='mistake', justification=None,
-                 priority=None, valence=-1, title=None, message=None, template=None, fields=None,
+                 priority=None, valence=-1, title=None, message=None, text=None, fields=None,
                  locations=None, score=None, correct=None, muted=None, version=None, author=None,
                  group=None, report=MAIN_REPORT):
         # Model
@@ -172,7 +172,7 @@ class Feedback:
         # Presentation
         self.title = title
         self.message = message
-        self.template = template
+        self.text = text
         self.fields = fields
         if isinstance(locations, int):
             locations = Location(locations)

@@ -1,10 +1,13 @@
 """
-A Tool for verifying source code, and chunking up source code into multiple parts.
+A Tool for verifying source code, chunking up source code into multiple parts, and substituting code within
+the submission.
 
 - Requires: None
 - Optional: None
 - Category: Syntax
 
+Code Substitution may seem esoteric, but its what powers the code chunking. The submission is literally
+modified such that the current submission is replaced by the current file.
 
 """
 

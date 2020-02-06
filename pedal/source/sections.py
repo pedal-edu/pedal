@@ -1,13 +1,22 @@
 from pedal.core.commands import feedback
 from pedal.core.report import MAIN_REPORT
-from pedal.source.constants import TOOL_NAME_SOURCE
+from pedal.source.constants import TOOL_NAME_SOURCE, not_enough_sections, syntax_error
 import ast
+import re
 
 DEFAULT_SECTION_PATTERN = r'^(##### Part .+)$'
 
 
-def separate_into_sections(report=MAIN_REPORT):
-    pass
+def separate_into_sections(pattern= DEFAULT_SECTION_PATTERN, report=MAIN_REPORT):
+    if report['source']['sections']:
+        # TODO: System constraint violated: separating into sections multiple times
+        pass
+    report.group = 0
+    report['source']['section'] = 0
+    report['source']['line_offset'] = 0
+    report['source']['section_pattern'] = pattern
+    report['source']['sections'] = re.split(pattern, report['source']['code'], flags=re.MULTILINE)
+    report.submission.main_code = report['source']['sections'][0]
 
 
 def _calculate_section_number(section_index):
@@ -31,12 +40,7 @@ def next_section(name="", report=MAIN_REPORT):
             source['code'] = ''.join(sections[:section_index + 1])
         report.group = section_index
     else:
-        report.add_feedback(Feedback())
-        report.attach('Syntax error', category='Syntax', tool='Source',
-                      mistake=("Tried to advance to next section but the "
-                               "section was not found. Tried to load section "
-                               "{count}, but there were only {found} sections."
-                               ).format(count=section_number, found=found))
+        not_enough_sections(section_number, found)
     report.execute_hooks(TOOL_NAME_SOURCE, 'next_section.after')
 
 
@@ -60,13 +64,12 @@ def check_section_exists(section_number, report=MAIN_REPORT):
 
 def verify_section(report=MAIN_REPORT):
     source = report['source']
-    #if not source['success']:
-    #    return False
     code = source['code']
     try:
         parsed = ast.parse(code, source['filename'])
         source['ast'] = parsed
     except SyntaxError as e:
+        syntax_error()
         report.attach('Syntax error', category='Syntax', tool='Source',
                       group=source['section'],
                       mistake={'message': "Invalid syntax on line "

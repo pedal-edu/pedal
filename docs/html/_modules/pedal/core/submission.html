@@ -172,16 +172,24 @@
 <span class="sd">        files (`dict` mapping `str` to `str`): Dictionary of filenames mapped to their contents, emulating</span>
 <span class="sd">            a file system.</span>
 <span class="sd">        main_file (str): The entry point file that will be considered the main file.</span>
-
+<span class="sd">        main_code (str): The actual code to run; if None, then defaults to the code of the main file.</span>
+<span class="sd">            Useful for tools that want to change the currently active code (e.g., Source&#39;s sections) or</span>
+<span class="sd">            run additional commands (e.g., Sandboxes&#39; call).</span>
 <span class="sd">        user (dict): Additional information about the user.</span>
 <span class="sd">        assignment (dict): Additional information about the assignment.</span>
 <span class="sd">        course (dict): Additional information about the course.</span>
 <span class="sd">        execution (dict): Additional information about the results of previously executing the students&#39; code.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">files</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">main_file</span><span class="o">=</span><span class="s1">&#39;answer.py&#39;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">assignment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">course</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">execution</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">files</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">main_file</span><span class="o">=</span><span class="s1">&#39;answer.py&#39;</span><span class="p">,</span> <span class="n">main_code</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">user</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">assignment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">course</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">execution</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">files</span> <span class="o">=</span> <span class="n">files</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_file</span> <span class="o">=</span> <span class="n">main_file</span>
+        <span class="k">if</span> <span class="n">main_code</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">main_code</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">main_file</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">main_code</span> <span class="o">=</span> <span class="n">main_code</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_original_main_code</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_code</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">user</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assignment</span> <span class="o">=</span> <span class="n">assignment</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">course</span> <span class="o">=</span> <span class="n">course</span>

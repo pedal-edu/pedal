@@ -86,23 +86,25 @@
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="usage/installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage/quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage/quickstart.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage/examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage/quickreference.html">Quick Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="concepts.html">Important Concepts</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage/tutorial.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="integrations.html">Integrations</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Developer API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#important-concepts">Important Concepts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-pedal.core.commands">Core Commands</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-pedal.core.report">Report</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-pedal.core.location">Location</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-pedal.core.feedback">Feedback</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-pedal.core.environment">Environment</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-pedal.core.submission">Submission</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#module-pedal.source">Source</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-pedal.tifa">Tifa</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-pedal.cait">Cait</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-pedal.sandbox">Sandbox</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-pedal.assertions">Assertions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-pedal.source.source">Source</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tifa">Tifa</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cait">Cait</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sandbox">Sandbox</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#assertions">Assertions</a></li>
 </ul>
 </li>
 </ul>
@@ -175,6 +177,58 @@
 <span id="full-api"></span><h1>Developer API<a class="headerlink" href="#developer-api" title="Permalink to this headline">¶</a></h1>
 <p>This is the complete API reference for Pedal and its associated components.
 If you are an instructor, you might find it more helpful to read over the <a class="reference internal" href="usage/tutorial.html#tutorial"><span class="std std-ref">Tutorial</span></a> too.</p>
+<div class="section" id="important-concepts">
+<h2>Important Concepts<a class="headerlink" href="#important-concepts" title="Permalink to this headline">¶</a></h2>
+<dl class="describe">
+<dt>
+<code class="sig-name descname">Feedback Function</code></dt>
+<dd><p>Any function that can attach a Feedback object to a Report is technically a Feedback Function, and
+should be clearly marked as such.</p>
+<p>Feedback Response should be Markdown, but should also provide a plain-text console-friendly version.</p>
+<p>Recommended to have a <cite>muted</cite> boolean parameter that allows you to use it strictly as a Condition.</p>
+<dl class="simple">
+<dt>Three perspectives:</dt><dd><dl class="simple">
+<dt>Grader Developer: We need to be able to create feedback responses that are delivered clearly</dt><dd><p>to the autograder without being cumbersome.</p>
+</dd>
+<dt>Feedback Experimenter: We need to be able to customize these messages in a way that exposes all</dt><dd><p>the features.</p>
+</dd>
+<dt>Researcher: We aren’t trying to analyze Feedback through the source code. We want to be</dt><dd><p>able to generate metadata about any piece of Feedback included in the Report.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>Tools should register all their known Feedback labels up front. Goal is to broadcast what the current
+feedback is. Ideally we’d also have a system for elegantly overriding that feedback’s wording.</p>
+<p>Feedback Labels should have a standard naming schema; the other fields should also have some guidance
+on how they should be authored.</p>
+<blockquote>
+<div><p>Executive decision: Follow Python variable naming rules (lowercase, underscores)</p>
+</div></blockquote>
+<dl>
+<dt>An “Atomic” Feedback Function is one that has exactly one possible label outcome.</dt><dd><p>They should have their metadata moved to be static function attributes.
+TEMPLATE (str): The .format() compatible string used to generate the <cite>message</cite> attribute.
+TEMPLATE_TEXT (str): The .format() compatible string used to generate the <cite>text</cite> attribute.</p>
+<blockquote>
+<div><p>If not present, you can expect the TEMPLATE to be plain text.</p>
+</div></blockquote>
+<p>JUSTIFICATION (str): A static justification
+TITLE (str): A static student-friendly title
+VERSION (str): A semvar string (e.g., ‘0.0.1’), should be paired with a docstring changelog.</p>
+</dd>
+<dt>A “Composite” Feedback Function has multiple possible label outcomes.</dt><dd><p>LABELS attribute could spell them all out?</p>
+</dd>
+<dt>Feedback in tools:</dt><dd><p>TIFA: Relatively centralized. Finite set. Desire for configurability, reuse of phrasings.
+Source: Mostly reporting syntax errors. Finite set.
+CAIT: No feedback functions, just feedback condition detectors.
+Assertions: Finite set. Desire for configurability, reuse of phrasings. Heavily procedurally developed.
+Questions: Finite set, but inherits from others?
+Sandbox: Runtime errors. Finite set, but also external? Strong desire for configurability.
+Toolkit: Could be Finite set. Often want to mute these and use them as conditions.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
 <div class="section" id="module-pedal.core.commands">
 <span id="core-commands"></span><h2>Core Commands<a class="headerlink" href="#module-pedal.core.commands" title="Permalink to this headline">¶</a></h2>
 <p>Imperative style commands for constructing feedback in a convenient way.
@@ -187,7 +241,10 @@ Uses a global report object (MAIN_REPORT).</p>
 assignment is done.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>score</strong> (<em>number</em>) – Arbitrary value to set the user’s score to. Defaults to 1.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>justification</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Internal message that explains why this function was used.</p></li>
+<li><p><strong>score</strong> (<em>number</em>) – Arbitrary value to set the user’s score to. Defaults to 1.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -381,13 +438,6 @@ Hooks will be called with this report as a keyword <cite>report</cite> argument.
 </dd></dl>
 
 <dl class="method">
-<dt id="pedal.core.report.Report.set_success">
-<code class="sig-name descname">set_success</code><span class="sig-paren">(</span><em class="sig-param">tool=None</em>, <em class="sig-param">justification=None</em>, <em class="sig-param">group=None</em>, <em class="sig-param">score=100</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pedal/core/report.html#Report.set_success"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.report.Report.set_success" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates Successful feedback for the user, indicating that the entire
-assignment is done.</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="pedal.core.report.Report.suppress">
 <code class="sig-name descname">suppress</code><span class="sig-paren">(</span><em class="sig-param">category</em>, <em class="sig-param">label=True</em>, <em class="sig-param">where=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pedal/core/report.html#Report.suppress"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.report.Report.suppress" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
@@ -505,7 +555,7 @@ If missing, then defaults to the student’s submission’s main file.</p>
 <p>Simple data classes for storing feedback to present to learners.</p>
 <dl class="class">
 <dt id="pedal.core.feedback.Feedback">
-<em class="property">class </em><code class="sig-name descname">Feedback</code><span class="sig-paren">(</span><em class="sig-param">label</em>, <em class="sig-param">tool=None</em>, <em class="sig-param">category='instructor'</em>, <em class="sig-param">kind='mistake'</em>, <em class="sig-param">justification=None</em>, <em class="sig-param">priority=None</em>, <em class="sig-param">valence=-1</em>, <em class="sig-param">title=None</em>, <em class="sig-param">message=None</em>, <em class="sig-param">template=None</em>, <em class="sig-param">fields=None</em>, <em class="sig-param">locations=None</em>, <em class="sig-param">score=None</em>, <em class="sig-param">correct=None</em>, <em class="sig-param">muted=None</em>, <em class="sig-param">version=None</em>, <em class="sig-param">author=None</em>, <em class="sig-param">group=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pedal/core/feedback.html#Feedback"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.feedback.Feedback" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">Feedback</code><span class="sig-paren">(</span><em class="sig-param">label</em>, <em class="sig-param">tool=None</em>, <em class="sig-param">category='instructor'</em>, <em class="sig-param">kind='mistake'</em>, <em class="sig-param">justification=None</em>, <em class="sig-param">priority=None</em>, <em class="sig-param">valence=-1</em>, <em class="sig-param">title=None</em>, <em class="sig-param">message=None</em>, <em class="sig-param">template=None</em>, <em class="sig-param">fields=None</em>, <em class="sig-param">locations=None</em>, <em class="sig-param">score=None</em>, <em class="sig-param">correct=None</em>, <em class="sig-param">muted=None</em>, <em class="sig-param">version=None</em>, <em class="sig-param">author=None</em>, <em class="sig-param">group=None</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pedal/core/feedback.html#Feedback"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.feedback.Feedback" title="Permalink to this definition">¶</a></dt>
 <dd><p>A class for storing raw feedback.</p>
 <dl class="attribute">
 <dt id="pedal.core.feedback.Feedback.label">
@@ -614,24 +664,22 @@ that the <a class="reference internal" href="#pedal.core.feedback.Feedback.label
 <dl class="attribute">
 <dt id="pedal.core.feedback.Feedback.message">
 <code class="sig-name descname">message</code><a class="headerlink" href="#pedal.core.feedback.Feedback.message" title="Permalink to this definition">¶</a></dt>
-<dd><p>A dictionary mapping types of message outputs to their generated
-format. By default, we expect <cite>“text”</cite> and <cite>“markdown”</cite>, but other possibilities include
-<cite>“html”</cite>.</p>
+<dd><p>A markdown-formatted message (aka also supporting HTML) that could be rendered
+to the user.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>Dict[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a>,<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a>]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="pedal.core.feedback.Feedback.template">
-<code class="sig-name descname">template</code><a class="headerlink" href="#pedal.core.feedback.Feedback.template" title="Permalink to this definition">¶</a></dt>
-<dd><p>The raw string template (using the <cite>str.format</cite> style) that was used to generate
-this feedback’s messages.</p>
+<dt id="pedal.core.feedback.Feedback.text">
+<code class="sig-name descname">text</code><a class="headerlink" href="#pedal.core.feedback.Feedback.text" title="Permalink to this definition">¶</a></dt>
+<dd><p>A console-friendly, plain-text message that could be rendered to the user.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>Dict[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a>,<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a>]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -736,6 +784,18 @@ categories.</p>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.core.feedback.Feedback.CATEGORIES">
+<code class="sig-name descname">CATEGORIES</code><a class="headerlink" href="#pedal.core.feedback.Feedback.CATEGORIES" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pedal.core.feedback.FeedbackCategory" title="pedal.core.feedback.FeedbackCategory"><code class="xref py py-class docutils literal notranslate"><span class="pre">FeedbackCategory</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.core.feedback.Feedback.KINDS">
+<code class="sig-name descname">KINDS</code><a class="headerlink" href="#pedal.core.feedback.Feedback.KINDS" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pedal.core.feedback.FeedbackKind" title="pedal.core.feedback.FeedbackKind"><code class="xref py py-class docutils literal notranslate"><span class="pre">FeedbackKind</span></code></a></p>
 </dd></dl>
 
 </dd></dl>
@@ -908,7 +968,7 @@ available for errors identified by the student.</p>
 <span id="submission"></span><h2>Submission<a class="headerlink" href="#module-pedal.core.submission" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="pedal.core.submission.Submission">
-<em class="property">class </em><code class="sig-name descname">Submission</code><span class="sig-paren">(</span><em class="sig-param">files=None</em>, <em class="sig-param">main_file='answer.py'</em>, <em class="sig-param">user=None</em>, <em class="sig-param">assignment=None</em>, <em class="sig-param">course=None</em>, <em class="sig-param">execution=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pedal/core/submission.html#Submission"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.submission.Submission" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">Submission</code><span class="sig-paren">(</span><em class="sig-param">files=None</em>, <em class="sig-param">main_file='answer.py'</em>, <em class="sig-param">main_code=None</em>, <em class="sig-param">user=None</em>, <em class="sig-param">assignment=None</em>, <em class="sig-param">course=None</em>, <em class="sig-param">execution=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pedal/core/submission.html#Submission"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.submission.Submission" title="Permalink to this definition">¶</a></dt>
 <dd><p>Simple class for holding information about the student’s submission.</p>
 <p class="rubric">Examples</p>
 <p>A very simple example of creating a Submission with a single file:</p>
@@ -931,6 +991,19 @@ a file system.</p>
 <dt id="pedal.core.submission.Submission.main_file">
 <code class="sig-name descname">main_file</code><a class="headerlink" href="#pedal.core.submission.Submission.main_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>The entry point file that will be considered the main file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.core.submission.Submission.main_code">
+<code class="sig-name descname">main_code</code><a class="headerlink" href="#pedal.core.submission.Submission.main_code" title="Permalink to this definition">¶</a></dt>
+<dd><p>The actual code to run; if None, then defaults to the code of the main file.
+Useful for tools that want to change the currently active code (e.g., Source’s sections) or
+run additional commands (e.g., Sandboxes’ call).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></p>
@@ -984,17 +1057,20 @@ a file system.</p>
 
 </dd></dl>
 
-<div class="section" id="module-pedal.source">
-<span id="source"></span><h3>Source<a class="headerlink" href="#module-pedal.source" title="Permalink to this headline">¶</a></h3>
-<p>A Tool for verifying source code, and chunking up source code into multiple parts.</p>
-<ul class="simple">
-<li><p>Requires: None</p></li>
-<li><p>Optional: None</p></li>
-<li><p>Category: Syntax</p></li>
-</ul>
+<div class="section" id="module-pedal.source.source">
+<span id="source"></span><h3>Source<a class="headerlink" href="#module-pedal.source.source" title="Permalink to this headline">¶</a></h3>
+<p><strong>Source Report</strong></p>
+<dl class="field-list simple">
+<dt class="field-odd">code (str)</dt>
+<dd class="field-odd"><p>A backup of the original file.</p>
+</dd>
+<dt class="field-even">line (List[str])</dt>
+<dd class="field-even"><p>The lines split up using the newline character (<code class="docutils literal notranslate"><span class="pre">'\n'</span></code>)</p>
+</dd>
+</dl>
 <dl class="function">
-<dt id="pedal.source.set_source">
-<code class="sig-name descname">set_source</code><span class="sig-paren">(</span><em class="sig-param">code</em>, <em class="sig-param">filename='__main__.py'</em>, <em class="sig-param">sections=False</em>, <em class="sig-param">independent=False</em>, <em class="sig-param">report=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pedal/source.html#set_source"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.source.set_source" title="Permalink to this definition">¶</a></dt>
+<dt id="pedal.source.source.set_source">
+<code class="sig-name descname">set_source</code><span class="sig-paren">(</span><em class="sig-param">code</em>, <em class="sig-param">filename='__main__.py'</em>, <em class="sig-param">sections=False</em>, <em class="sig-param">independent=False</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pedal/source/source.html#set_source"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.source.source.set_source" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets the contents of the Source to be the given code. Can also be
 optionally given a filename.</p>
 <dl class="field-list simple">
@@ -1016,487 +1092,18 @@ left None, defaults to the global MAIN_REPORT.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="pedal.source.check_section_exists">
-<code class="sig-name descname">check_section_exists</code><span class="sig-paren">(</span><em class="sig-param">section_number</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pedal/source/sections.html#check_section_exists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.source.check_section_exists" title="Permalink to this definition">¶</a></dt>
-<dd><p>Checks that the right number of sections exist. The prologue before the
-first section is 0, while subsequent ones are 1, 2, 3, etc.
-So if you have 3 sections in your code plus the prologue,
-you should pass in 3 and not 4 to verify that all of them exist.</p>
-</dd></dl>
-
 </div>
-<div class="section" id="module-pedal.tifa">
-<span id="tifa"></span><h3>Tifa<a class="headerlink" href="#module-pedal.tifa" title="Permalink to this headline">¶</a></h3>
-<p>Python Type Inferencer and Flow Analyzer (TIFA)</p>
-<dl class="simple">
-<dt>TIFA uses a number of simplifications of the Python language.</dt><dd><ul class="simple">
-<li><p>Variables cannot change type</p></li>
-<li><p>Variables cannot be deleted</p></li>
-<li><p>Complex types have to be homogenous</p></li>
-<li><p>No introspection or reflective characteristics</p></li>
-<li><p>No dunder methods</p></li>
-<li><p>No closures (maybe?)</p></li>
-<li><p>You cannot write a variable out of scope</p></li>
-<li><p>You cannot read a mutable variable out of scope</p></li>
-<li><p>No multiple inheritance</p></li>
-</ul>
-</dd>
-<dt>Additionally, it reads the following as issues:</dt><dd><ul class="simple">
-<li><p>Cannot read a variable without having first written to it.</p></li>
-<li><p>Cannot rewrite a variable unless it has been read.</p></li>
-</ul>
-</dd>
-</dl>
-<p>Important concepts:</p>
-<dl class="glossary simple">
-<dt id="term-issue">Issue</dt><dd><p>A problematic situation in the submitted code that will be reported
-but may not stop the execution. However, when an Issue occurs,
-any results may be invalid.</p>
-</dd>
-<dt id="term-error">Error</dt><dd><p>A situation in execution that terminates the program.</p>
-</dd>
-<dt id="term-name">Name</dt><dd><p>A name of a variable</p>
-</dd>
-<dt id="term-scope">Scope</dt><dd><p>The context of a function, with its own namespaces. Represented
-internally using numeric IDs (Scope IDs).</p>
-</dd>
-<dt id="term-scope-chain">Scope Chain</dt><dd><p>A stack of scopes, with the innermost scope on top.</p>
-</dd>
-<dt id="term-fully-qualified-name">Fully Qualified Name</dt><dd><p>A string representation of a variable and its scope
-chain, written using “/”. For example: 0/1/4/my_variable_name</p>
-</dd>
-<dt id="term-path">Path</dt><dd><p>A single path of execution through the control flow; every program
-has at least one sequential path, but IFs, FORs, WHILEs, etc. can
-cause multiple paths. Paths are represented using numeric IDs (Path
-IDs).</p>
-</dd>
-<dt id="term-state">State</dt><dd><p>Information about a Name that indicates things like the variable’s
-current type and whether that name has been read, set, or
-overwritten.</p>
-</dd>
-<dt id="term-identifier">Identifier</dt><dd><p>A wrapper around variables, used to hold their potential
-non-existence (which is an Issue but not an Error).</p>
-</dd>
-<dt id="term-type">Type</dt><dd><p>A symbolic representation of the variable’s type.</p>
-</dd>
-<dt id="term-literal">Literal</dt><dd><p>Sometimes, we need a specialized representation of a literal value
-to be passed around. This is particularly important for accessing
-elements in an tuples.</p>
-</dd>
-<dt id="term-name-map">Name Map</dt><dd><p>(Path x Fully Qualified Names) =&gt; States</p>
-</dd>
-</dl>
-<dl class="function">
-<dt id="pedal.tifa.tifa_analysis">
-<code class="sig-name descname">tifa_analysis</code><span class="sig-paren">(</span><em class="sig-param">python_3=True</em>, <em class="sig-param">report=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pedal/tifa.html#tifa_analysis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.tifa_analysis" title="Permalink to this definition">¶</a></dt>
-<dd><p>Perform the TIFA analysis and attach the results to the Report.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>python_3</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Whether to expect a Python3 formated file, or Python
-2. This has slight nuance on certain AST elements.</p></li>
-<li><p><strong>report</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Report</span></code>) – The Report object to attach results to.
-Defaults to <code class="xref py py-data docutils literal notranslate"><span class="pre">MAIN_REPORT</span></code>.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="class">
-<dt id="pedal.tifa.Tifa">
-<em class="property">class </em><code class="sig-name descname">Tifa</code><span class="sig-paren">(</span><em class="sig-param">python_3=True</em>, <em class="sig-param">report=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pedal/tifa/tifa.html#Tifa"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa" title="Permalink to this definition">¶</a></dt>
-<dd><p>TIFA Class for traversing an AST and finding common issues.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>python_3</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Whether to parse the code in regular PYTHON_3 mode or
-the modified AST that Skulpt uses.</p></li>
-<li><p><strong>report</strong> (<a class="reference internal" href="#pedal.core.report.Report" title="pedal.core.report.Report"><em>Report</em></a>) – The report object to store data and feedback in. If
-left None, defaults to the global MAIN_REPORT.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="class">
-<dt id="pedal.tifa.Tifa.NewPath">
-<em class="property">class </em><code class="sig-name descname">NewPath</code><span class="sig-paren">(</span><em class="sig-param">tifa</em>, <em class="sig-param">origin_path</em>, <em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pedal/tifa/tifa.html#Tifa.NewPath"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.NewPath" title="Permalink to this definition">¶</a></dt>
-<dd><p>Context manager for entering and leaving execution paths (e.g., if
-statements).)</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>tifa</strong> (<a class="reference internal" href="#pedal.tifa.Tifa" title="pedal.tifa.Tifa"><em>Tifa</em></a>) – The tifa instance, so we can modify some of its
-properties that track variables and paths.</p></li>
-<li><p><strong>origin_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – The path ID parent to this one.</p></li>
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The symbolic name of this path, typically ‘i’ for an IF
-body and ‘e’ for ELSE body.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="simple">
-<dt>Fields:</dt><dd><p>id (int): The path ID of this path</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="class">
-<dt id="pedal.tifa.Tifa.NewScope">
-<em class="property">class </em><code class="sig-name descname">NewScope</code><span class="sig-paren">(</span><em class="sig-param">tifa</em>, <em class="sig-param">definitions_scope_chain</em>, <em class="sig-param">class_type=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pedal/tifa/tifa.html#Tifa.NewScope"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.NewScope" title="Permalink to this definition">¶</a></dt>
-<dd><p>Context manager for entering and leaving scopes (e.g., inside of
-function calls).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>tifa</strong> (<a class="reference internal" href="#pedal.tifa.Tifa" title="pedal.tifa.Tifa"><em>Tifa</em></a>) – The tifa instance, so we can modify some of its
-properties that track variables and paths.</p></li>
-<li><p><strong>definitions_scope_chain</strong> (<em>list of int</em>) – The scope chain of the
-definition</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="pedal.tifa.Tifa.find_variable_out_of_scope">
-<code class="sig-name descname">find_variable_out_of_scope</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pedal/tifa/tifa.html#Tifa.find_variable_out_of_scope"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.find_variable_out_of_scope" title="Permalink to this definition">¶</a></dt>
-<dd><p>Walk through every scope and determine if this variable can be found
-elsewhere (which would be an issue).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The name of the variable</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><dl class="simple">
-<dt>An Identifier for the variable, which could potentially</dt><dd><p>not exist.</p>
-</dd>
-</dl>
-</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Identifier</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="pedal.tifa.Tifa.find_variable_scope">
-<code class="sig-name descname">find_variable_scope</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pedal/tifa/tifa.html#Tifa.find_variable_scope"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.find_variable_scope" title="Permalink to this definition">¶</a></dt>
-<dd><p>Walk through this scope and all enclosing scopes, finding the relevant
-identifier given by <cite>name</cite>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The name of the variable</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><dl class="simple">
-<dt>An Identifier for the variable, which could potentially</dt><dd><p>not exist.</p>
-</dd>
-</dl>
-</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Identifier</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="pedal.tifa.Tifa.identify_caller">
-<code class="sig-name descname">identify_caller</code><span class="sig-paren">(</span><em class="sig-param">node</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pedal/tifa/tifa.html#Tifa.identify_caller"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.identify_caller" title="Permalink to this definition">¶</a></dt>
-<dd><p>Figures out the variable that was used to kick off this call,
-which is almost always the relevant Name to track as being updated.
-If the origin wasn’t a Name, nothing will need to be updated so None
-is returned instead.</p>
-<p>TODO: Is this sufficient?</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>node</strong> (<em>AST</em>) – An AST node</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><dl class="simple">
-<dt>The name of the variable or None if no origin could</dt><dd><p>be found.</p>
-</dd>
-</dl>
-</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a> or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.8)">None</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="pedal.tifa.Tifa.in_scope">
-<em class="property">static </em><code class="sig-name descname">in_scope</code><span class="sig-paren">(</span><em class="sig-param">full_name</em>, <em class="sig-param">scope_chain</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pedal/tifa/tifa.html#Tifa.in_scope"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.in_scope" title="Permalink to this definition">¶</a></dt>
-<dd><p>Determine if the fully qualified variable name is in the given scope
-chain.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>full_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – A fully qualified variable name</p></li>
-<li><p><strong>scope_chain</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – A representation of a scope chain.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Whether the variable lives in this scope</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)">bool</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="pedal.tifa.Tifa.iterate_variable">
-<code class="sig-name descname">iterate_variable</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">position=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pedal/tifa/tifa.html#Tifa.iterate_variable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.iterate_variable" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update the variable by iterating through it - this doesn’t do anything
-fancy yet.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="pedal.tifa.Tifa.load_module">
-<code class="sig-name descname">load_module</code><span class="sig-paren">(</span><em class="sig-param">chain</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pedal/tifa/tifa.html#Tifa.load_module"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.load_module" title="Permalink to this definition">¶</a></dt>
-<dd><p>Finds the module in the set of available modules.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>chain</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – A chain of module imports (e.g., “matplotlib.pyplot”)</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><dl class="simple">
-<dt>The specific module with its members, or an empty</dt><dd><p>module type.</p>
-</dd>
-</dl>
-</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>ModuleType</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="pedal.tifa.Tifa.load_variable">
-<code class="sig-name descname">load_variable</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">position=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pedal/tifa/tifa.html#Tifa.load_variable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.load_variable" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieve the variable with the given name.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The unqualified name of the variable. If the variable is
-not found in the current scope or an enclosing sope, all
-other scopes will be searched to see if it was read out
-of scope.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The current state of the variable.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>State</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="pedal.tifa.Tifa.locate">
-<code class="sig-name descname">locate</code><span class="sig-paren">(</span><em class="sig-param">node=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pedal/tifa/tifa.html#Tifa.locate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.locate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a dictionary representing the current location within the
-AST.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><dl class="simple">
-<dt>A dictionary with the fields ‘column’ and ‘line’,</dt><dd><p>indicating the current position in the source code.</p>
-</dd>
-</dl>
-</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>Position dict</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="pedal.tifa.Tifa.merge_paths">
-<code class="sig-name descname">merge_paths</code><span class="sig-paren">(</span><em class="sig-param">parent_path_id</em>, <em class="sig-param">left_path_id</em>, <em class="sig-param">right_path_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pedal/tifa/tifa.html#Tifa.merge_paths"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.merge_paths" title="Permalink to this definition">¶</a></dt>
-<dd><p>Combines any variables on the left and right path into the parent
-name space.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>parent_path_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – The parent path of the left and right branches</p></li>
-<li><p><strong>left_path_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – One of the two paths</p></li>
-<li><p><strong>right_path_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – The other of the two paths.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="pedal.tifa.Tifa.process_ast">
-<code class="sig-name descname">process_ast</code><span class="sig-paren">(</span><em class="sig-param">ast_tree</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pedal/tifa/tifa.html#Tifa.process_ast"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.process_ast" title="Permalink to this definition">¶</a></dt>
-<dd><p>Given an AST, actually performs the type and flow analyses to return a
-report.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>ast_tree</strong> (<em>Ast</em>) – The AST object</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The final report object created (also available as a field).</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#pedal.core.report.Report" title="pedal.core.report.Report">Report</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="pedal.tifa.Tifa.process_code">
-<code class="sig-name descname">process_code</code><span class="sig-paren">(</span><em class="sig-param">code</em>, <em class="sig-param">filename='__main__'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pedal/tifa/tifa.html#Tifa.process_code"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.process_code" title="Permalink to this definition">¶</a></dt>
-<dd><p>Processes the AST of the given source code to generate a report.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>code</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The Python source code</p></li>
-<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The filename of the source code (defaults to __main__)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The successful or successful report object</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#pedal.core.report.Report" title="pedal.core.report.Report">Report</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="pedal.tifa.Tifa.report_issue">
-<code class="sig-name descname">report_issue</code><span class="sig-paren">(</span><em class="sig-param">issue</em>, <em class="sig-param">data=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pedal/tifa/tifa.html#Tifa.report_issue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.report_issue" title="Permalink to this definition">¶</a></dt>
-<dd><p>Report the given issue with associated metadata, including the position
-if not explicitly included.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="pedal.tifa.Tifa.store_variable">
-<code class="sig-name descname">store_variable</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">type</em>, <em class="sig-param">position=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pedal/tifa/tifa.html#Tifa.store_variable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.store_variable" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update the variable with the given name to now have the new type.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The unqualified name of the variable. The variable will
-be assumed to be in the current scope.</p></li>
-<li><p><strong>type</strong> (<em>Type</em>) – The new type of this variable.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The new state of the variable.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>State</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="pedal.tifa.Tifa.trace_state">
-<code class="sig-name descname">trace_state</code><span class="sig-paren">(</span><em class="sig-param">state</em>, <em class="sig-param">method</em>, <em class="sig-param">position</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pedal/tifa/tifa.html#Tifa.trace_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.trace_state" title="Permalink to this definition">¶</a></dt>
-<dd><p>Makes a copy of the given state with the given method type.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>state</strong> (<em>State</em>) – The state to copy (as in, we trace a copy of it!)</p></li>
-<li><p><strong>method</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The operation being applied to the state.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The new State</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>State</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="pedal.tifa.Tifa.visit">
-<code class="sig-name descname">visit</code><span class="sig-paren">(</span><em class="sig-param">node</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pedal/tifa/tifa.html#Tifa.visit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Process this node by calling its appropriate visit_*</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>node</strong> (<em>AST</em>) – The node to visit</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The type calculated during the visit.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Type</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="pedal.tifa.Tifa.visit_AnnAssign">
-<code class="sig-name descname">visit_AnnAssign</code><span class="sig-paren">(</span><em class="sig-param">node</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pedal/tifa/tifa.html#Tifa.visit_AnnAssign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_AnnAssign" title="Permalink to this definition">¶</a></dt>
-<dd><p>TODO: Implement!</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="pedal.tifa.Tifa.visit_Assign">
-<code class="sig-name descname">visit_Assign</code><span class="sig-paren">(</span><em class="sig-param">node</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pedal/tifa/tifa.html#Tifa.visit_Assign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_Assign" title="Permalink to this definition">¶</a></dt>
-<dd><p>Simple assignment statement:
-__targets__ = __value__</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>node</strong> (<em>AST</em>) – An Assign node</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="pedal.tifa.Tifa.visit_Dict">
-<code class="sig-name descname">visit_Dict</code><span class="sig-paren">(</span><em class="sig-param">node</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pedal/tifa/tifa.html#Tifa.visit_Dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_Dict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Three types of dictionaries
-- empty
-- uniform type
-- record
-TODO: Handle records appropriately</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="pedal.tifa.Tifa.walk_targets">
-<code class="sig-name descname">walk_targets</code><span class="sig-paren">(</span><em class="sig-param">targets</em>, <em class="sig-param">type</em>, <em class="sig-param">walker</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pedal/tifa/tifa.html#Tifa.walk_targets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.walk_targets" title="Permalink to this definition">¶</a></dt>
-<dd><p>Iterate through the targets and call the given function on each one.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>targets</strong> (<em>list of Ast nodes</em>) – A list of potential targets to be
-traversed.</p></li>
-<li><p><strong>type</strong> (<em>Type</em>) – The given type to be unraveled and applied to the
-targets.</p></li>
-<li><p><strong>walker</strong> (<em>Ast Node</em><em>, </em><em>Type -&gt; None</em>) – A function that will process
-each target and unravel the type.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
+<div class="section" id="tifa">
+<h3>Tifa<a class="headerlink" href="#tifa" title="Permalink to this headline">¶</a></h3>
 </div>
-<div class="section" id="module-pedal.cait">
-<span id="cait"></span><h3>Cait<a class="headerlink" href="#module-pedal.cait" title="Permalink to this headline">¶</a></h3>
-<p>A package of tools for capturing student code by matching it against patterns.</p>
-<p>Requires:
-- <code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.source.source.Source</span></code></p>
-<p>Optional:
-- <code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.tifa.tifa.Tifa</span></code></p>
+<div class="section" id="cait">
+<h3>Cait<a class="headerlink" href="#cait" title="Permalink to this headline">¶</a></h3>
 </div>
-<div class="section" id="module-pedal.sandbox">
-<span id="sandbox"></span><h3>Sandbox<a class="headerlink" href="#module-pedal.sandbox" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="sandbox">
+<h3>Sandbox<a class="headerlink" href="#sandbox" title="Permalink to this headline">¶</a></h3>
 </div>
-<div class="section" id="module-pedal.assertions">
-<span id="assertions"></span><h3>Assertions<a class="headerlink" href="#module-pedal.assertions" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="assertions">
+<h3>Assertions<a class="headerlink" href="#assertions" title="Permalink to this headline">¶</a></h3>
 </div>
 </div>
 </div>

@@ -155,9 +155,7 @@
            <div itemprop="articleBody">
             
   <h1>Source code for pedal.core.report</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">pedal.core.feedback</span> <span class="k">import</span> <span class="n">Feedback</span>
-
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Report&#39;</span><span class="p">,</span> <span class="s1">&#39;MAIN_REPORT&#39;</span><span class="p">]</span>
+<span></span><span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Report&#39;</span><span class="p">,</span> <span class="s1">&#39;MAIN_REPORT&#39;</span><span class="p">]</span>
 
 
 <div class="viewcode-block" id="Report"><a class="viewcode-back" href="../../../api.html#pedal.core.report.Report">[docs]</a><span class="k">class</span> <span class="nc">Report</span><span class="p">:</span>
@@ -211,53 +209,10 @@
     <span class="k">def</span> <span class="nf">contextualize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">submission</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">submission</span> <span class="o">=</span> <span class="n">submission</span>
 
-<div class="viewcode-block" id="Report.set_success"><a class="viewcode-back" href="../../../api.html#pedal.core.report.Report.set_success">[docs]</a>    <span class="k">def</span> <span class="nf">set_success</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tool</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">justification</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">score</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Creates Successful feedback for the user, indicating that the entire</span>
-<span class="sd">        assignment is done.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">group</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">group</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">group</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">feedback</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">FeedbackSuccess</span><span class="p">(</span><span class="n">tool</span><span class="p">,</span> <span class="n">justification</span><span class="p">,</span> <span class="n">group</span><span class="p">,</span> <span class="n">score</span><span class="p">))</span></div>
-
-    <span class="k">def</span> <span class="nf">give_partial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">False</span>
-        <span class="k">if</span> <span class="n">group</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">group</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">group</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">feedback</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Feedback</span><span class="p">(</span><span class="s1">&#39;give_partial&#39;</span><span class="p">,</span> <span class="n">performance</span><span class="o">=</span><span class="n">value</span><span class="p">,</span>
-                                      <span class="n">priority</span><span class="o">=</span><span class="s1">&#39;positive&#39;</span><span class="p">,</span>
-                                      <span class="n">group</span><span class="o">=</span><span class="n">group</span><span class="p">,</span>
-                                      <span class="n">mistake</span><span class="o">=</span><span class="n">message</span><span class="p">))</span>
-        <span class="k">return</span> <span class="kc">True</span>
-
     <span class="k">def</span> <span class="nf">hide_correctness</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">suppressions</span><span class="p">[</span><span class="s1">&#39;success&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
-    <span class="k">def</span> <span class="nf">explain</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">priority</span><span class="o">=</span><span class="s1">&#39;medium&#39;</span><span class="p">,</span> <span class="n">line</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                <span class="n">label</span><span class="o">=</span><span class="s1">&#39;explain&#39;</span><span class="p">):</span>
-        <span class="n">misconception</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="n">message</span><span class="p">}</span>
-        <span class="k">if</span> <span class="n">line</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">misconception</span><span class="p">[</span><span class="s1">&#39;line&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">line</span>
-        <span class="k">if</span> <span class="n">group</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">group</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">group</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">priority</span><span class="o">=</span><span class="n">priority</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="s1">&#39;instructor&#39;</span><span class="p">,</span>
-                    <span class="n">group</span><span class="o">=</span><span class="n">group</span><span class="p">,</span> <span class="n">misconception</span><span class="o">=</span><span class="n">misconception</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">gently</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">line</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;explain&#39;</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">explain</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">priority</span><span class="o">=</span><span class="s1">&#39;student&#39;</span><span class="p">,</span> <span class="n">line</span><span class="o">=</span><span class="n">line</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="n">group</span><span class="p">,</span>
-                     <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">guidance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">line</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;guidance&#39;</span><span class="p">):</span>
-        <span class="n">hint</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="n">message</span><span class="p">}</span>
-        <span class="k">if</span> <span class="n">line</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">hint</span><span class="p">[</span><span class="s1">&#39;line&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">line</span>
-        <span class="k">if</span> <span class="n">group</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">group</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">group</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">priority</span><span class="o">=</span><span class="s1">&#39;instructions&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="s1">&#39;instructions&#39;</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="n">group</span><span class="p">,</span> <span class="n">hint</span><span class="o">=</span><span class="n">hint</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">attach</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">feedback</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Feedback</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
 
 <div class="viewcode-block" id="Report.add_feedback"><a class="viewcode-back" href="../../../api.html#pedal.core.report.Report.add_feedback">[docs]</a>    <span class="k">def</span> <span class="nf">add_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feedback</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>

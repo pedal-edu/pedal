@@ -1,14 +1,22 @@
+"""
+
+**Source Report**
+
+:code (str): A backup of the original file.
+:lines (List[str]): The lines split up using the newline character (``'\\n'``).
+"""
+
 import re
 import ast
 
 from pedal.core.report import MAIN_REPORT
+from pedal.source import separate_into_sections
 from pedal.source.constants import blank_source
 
 
 def _empty_source_report():
     return {
         'code': None,
-        'full': None,
         'lines': None,
         'filename': None,
         'independent': None,
@@ -44,7 +52,6 @@ def set_source(code, filename='__main__.py', sections=False, independent=False,
                          left None, defaults to the global MAIN_REPORT.
     """
     report['source']['code'] = code
-    report['source']['full'] = code
     report['source']['lines'] = code.split("\n")
     report['source']['filename'] = filename
     report['source']['independent'] = independent
@@ -54,17 +61,7 @@ def set_source(code, filename='__main__.py', sections=False, independent=False,
         report['source']['section'] = None
         _check_issues(code, report)
     else:
-        if sections:
-            pattern = DEFAULT_SECTION_PATTERN
-        else:
-            pattern = sections
-        report.group = 0
-        report['source']['section_pattern'] = pattern
-        report['source']['section'] = 0
-        report['source']['line_offset'] = 0
-        report['source']['sections'] = re.split(pattern, code,
-                                                flags=re.MULTILINE)
-        report['source']['code'] = report['source']['sections'][0]
+        separate_into_sections(report=report)
 
 
 def _check_issues(code, report=MAIN_REPORT):
