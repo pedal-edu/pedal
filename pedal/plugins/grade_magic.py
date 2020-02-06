@@ -264,6 +264,11 @@ class GradeMagic(Magics):
         ts = time.time()
         logger = self.shell.logger  # logging
         old_logfile = self.shell.logfile  # logging
+        """
+        import subprocess
+        p = subprocess.Popen("uname -n", stdout=subprocess.PIPE, shell=True)
+        (output, err) = p.communicate()  # output contains the username
+        """
         logfname = os.path.expanduser("log_folder~/log_{}.py~".format(ts))
         self.shell.logfile = logfname
         loghead = u'# IPython log file\n\n'
