@@ -1,0 +1,16 @@
+{
+  "name": "build_skulpt",
+  "version": "0.0.1",
+  "description": "Builds Pedal for Skulpt",
+  "main": "build_skulpt.js",
+  "scripts": {
+    "build_skulpt": "node build_skulpt.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "acbart",
+  "license": "ISC",
+  "dependencies": {
+    "babel-minify": "^0.5.1",
+    "js-beautify": "^1.10.3"
+  }
+}
