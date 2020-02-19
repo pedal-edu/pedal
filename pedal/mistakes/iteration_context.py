@@ -322,7 +322,7 @@ def wrong_cannot_sum_list():
                             ' time.<br><br><i>(sum_list)<i></br>')
     Returns:
     """
-    message = 'Addition can only be done with a single value at a time, not with an entire list at one'
+    message = 'Addition can only be done with a single value at a time, not with an entire list at once'
     code = "sum_list"
     tldr = "Cannot Sum a List"
     matches = find_matches("for ___ in _list_ :\n"
