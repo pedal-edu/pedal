@@ -64,9 +64,9 @@ class SandboxResult:
 
     def __delattr__(self, name):
         if name in SandboxResult.ASSIGNABLE_ATTRS:
-            object.__delattr__(self, name, value)
+            object.__delattr__(self, name)
         else:
-            delattr(self.value, name, value)
+            delattr(self.value, name)
 
     def _clone_this_result(self, new_value):
         """

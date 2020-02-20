@@ -6,7 +6,7 @@
 :lines (List[str]): The lines split up using the newline character (``'\\n'``).
 """
 
-import re
+import sys
 import ast
 
 from pedal.core.report import MAIN_REPORT
@@ -72,7 +72,7 @@ def verify(code=None, report=MAIN_REPORT):
         parsed = ast.parse(code, report['source']['filename'])
         report['source']['ast'] = parsed
     except SyntaxError as e:
-        syntax_error(e.lineno, e.filename, e.offset, e.text, e.__traceback__, e, report)
+        syntax_error(e.lineno, e.filename, code, e.offset, e.text, e.__traceback__, e, sys.exc_info(), report=report)
         report['source']['success'] = False
         report['source']['ast'] = ast.parse("")
 

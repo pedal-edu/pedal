@@ -1,6 +1,7 @@
 from pedal.core.commands import feedback
 from pedal.core.feedback import AtomicFeedbackFunction
 from pedal.core.report import MAIN_REPORT
+from pedal.utilities.exceptions import ExpandedTraceback
 
 TOOL_NAME_SOURCE = 'source'
 
@@ -44,14 +45,16 @@ def source_file_not_found(filename, sections, report=MAIN_REPORT):
 
 
 @AtomicFeedbackFunction(title="Syntax Error",
-                        message_template="Bad syntax on line {lineno}".format,
-                        text_template="Bad syntax on line {lineno}".format,
+                        message_template="```\n{context}\n```\nBad syntax on line {lineno}".format,
+                        text_template="{context}\nBad syntax on line {lineno}".format,
                         version='0.0.1',
                         justification="Syntax error was triggered while calling ast.parse")
-def syntax_error(line, filename, offset, text, traceback, exception, report=MAIN_REPORT):
+def syntax_error(line, filename, code, offset, text, traceback, exception, exc_info, report=MAIN_REPORT):
+    traceback = ExpandedTraceback(exception, exc_info, traceback, report.submission.instructor_file,
+                                  line, filename, code)
+    context = traceback.format_exception()
     fields = {'lineno': line, 'filename': filename, 'offset': offset, 'text': text,
-              'traceback': traceback, 'exception': exception}
-    # TODO: Enhance with better traceback
+              'traceback': traceback, 'exception': exception, 'context': context}
     return feedback(syntax_error.__name__, category=feedback.CATEGORIES.SYNTAX, tool=TOOL_NAME_SOURCE,
                     title=syntax_error.title, version=syntax_error.version,
                     fields=fields,

@@ -1,5 +1,6 @@
 import ast
 import re
+import sys
 from pedal.core.report import MAIN_REPORT
 from pedal.source.constants import TOOL_NAME_SOURCE, not_enough_sections, syntax_error
 
@@ -68,7 +69,8 @@ def verify_section(report=MAIN_REPORT):
         parsed = ast.parse(code, source['filename'])
         source['ast'] = parsed
     except SyntaxError as e:
-        syntax_error(e.lineno, e.filename, e.offset, e.text, e.__traceback__, e, report)
+        info = sys.exc_info()
+        syntax_error(e.lineno, e.filename, code, e.offset, e.text, e.__traceback__, e, info, report=report)
         source['success'] = False
         if 'ast' in source:
             del source['ast']

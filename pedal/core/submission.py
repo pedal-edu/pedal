@@ -25,7 +25,8 @@ class Submission:
     """
 
     def __init__(self, files=None, main_file='answer.py', main_code=None,
-                 user=None, assignment=None, course=None, execution=None):
+                 user=None, assignment=None, course=None, execution=None,
+                 instructor_file='on_run.py'):
         self.files = files
         self.main_file = main_file
         if main_code is None:
@@ -37,3 +38,4 @@ class Submission:
         self.assignment = assignment
         self.course = course
         self.execution = execution
+        self.instructor_file = instructor_file

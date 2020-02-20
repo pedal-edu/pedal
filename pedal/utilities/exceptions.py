@@ -71,7 +71,8 @@ class ExpandedTraceback:
         self.line_number = traceback.extract_tb(exc_info[2])[-1][1]
         self.original_code_lines = original_code_lines
 
-    def _clean_traceback_line(self, line):
+    @staticmethod
+    def _clean_traceback_line(line):
         return line.replace(', in <module>', '', 1)
 
     def format_exception(self, preamble=""):
@@ -127,8 +128,8 @@ class ExpandedTraceback:
         if filename.startswith(current_directory):
             return True
         # Is the error related to a file in the parent directory?
-        parent_directory = os.path.dirname(current_directory)
-        # Currently we don't refer to this?
+        # parent_directory = os.path.dirname(current_directory)
+        # TODO: Currently we don't refer to this?
         # Is the error in a local file?
         if filename.startswith('.'):
             return False

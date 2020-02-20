@@ -172,7 +172,7 @@ def assertNotEqual(left, right, score=None, message=None, report=MAIN_REPORT,
     if _basic_assertion(left, right,
                         lambda l, r: not equality_test(l, r, exact, DELTA),
                         "{} == {}",
-                        "was" + PRE_VAL,
+                        "was",
                         "to not be equal to",
                         message, contextualize, report=report):
         report.give_partial(score)
@@ -185,7 +185,7 @@ def assertTrue(something, score=None, message=None, report=MAIN_REPORT,
     if _basic_assertion(something, True,
                         lambda l, r: bool(l),
                         "{} is true",
-                        "was false" + PRE_VAL,
+                        "was false",
                         "to be true",
                         message, contextualize, report=report,
                         show_expected_value=False):
@@ -199,7 +199,7 @@ def assertFalse(something, score=None, message=None, report=MAIN_REPORT,
     if _basic_assertion(something, False,
                         lambda l, r: not bool(l),
                         "{} is false",
-                        "was true" + PRE_VAL,
+                        "was true",
                         "to be false",
                         message, contextualize, report=report,
                         show_expected_value=False):
@@ -227,7 +227,7 @@ def assertIsNone(something, score=None, message=None, report=MAIN_REPORT,
     if _basic_assertion(something, None,
                         _actually_is_none,
                         "{} is none",
-                        "was" + PRE_VAL,
+                        "was",
                         "to be none",
                         message, contextualize, report=report,
                         show_expected_value=False):
@@ -247,7 +247,7 @@ def assertIsNotNone(something, score=None, message=None, report=MAIN_REPORT,
     if _basic_assertion(something, None,
                         _actually_is_not_none,
                         "{} is not none",
-                        "was" + PRE_VAL,
+                        "was",
                         "to not be none",
                         message, contextualize, report=report,
                         show_expected_value=False):
@@ -264,7 +264,7 @@ def assertIn(needle, haystack, score=None, message=None, report=MAIN_REPORT,
     if _basic_assertion(needle, haystack,
                         lambda n, h: n in h,
                         "{} not in {}",
-                        "was" + PRE_VAL,
+                        "was",
                         expected_message,
                         message, contextualize, report=report):
         report.give_partial(score)
@@ -280,7 +280,7 @@ def assertNotIn(needle, haystack, score=None, message=None, report=MAIN_REPORT,
     if _basic_assertion(needle, haystack,
                         lambda n, h: n not in h,
                         "{} in {}",
-                        "was" + PRE_VAL,
+                        "was",
                         expected_message,
                         message, contextualize, report=report):
         report.give_partial(score)
@@ -293,7 +293,7 @@ def assertIsInstance(value, types, score=None, message=None, report=MAIN_REPORT,
     if _basic_assertion(value, types,
                         lambda v, t: isinstance(v, t),
                         "isinstance({}, {})",
-                        "was" + PRE_VAL,
+                        "was",
                         "to be of type",
                         message, contextualize, report=report,
                         modify_right=humanize_types):
@@ -332,7 +332,7 @@ def assertGreater(left, right, score=None, message=None, report=MAIN_REPORT,
                         compare_lengths else
                         l > r,
                         "len({}) <= {}" if compare_lengths else "{} <= {}",
-                        "was" + PRE_VAL,
+                        "was",
                         "to have its length greater than"
                         if compare_lengths else
                         "to be greater than",
@@ -352,7 +352,7 @@ def assertGreaterEqual(left, right, score=None, message=None, report=MAIN_REPORT
                         compare_lengths else
                         l >= r,
                         "len({}) < {}" if compare_lengths else "{} < {}",
-                        "was" + PRE_VAL,
+                        "was",
                         "to have its length greater than or equal to" if compare_lengths else
                         "to be greater than or equal to",
                         message, contextualize, report=report):
@@ -371,7 +371,7 @@ def assertLess(left, right, score=None, message=None, report=MAIN_REPORT,
                         compare_lengths else
                         l < r,
                         "len({}) >= {}" if compare_lengths else "{} >= {}",
-                        "was" + PRE_VAL,
+                        "was",
                         "to have its length less than"
                         if compare_lengths else
                         "to be less than",
@@ -391,7 +391,7 @@ def assertLessEqual(left, right, score=None, message=None, report=MAIN_REPORT,
                         compare_lengths else
                         l <= r,
                         "len({}) > {}" if compare_lengths else "{} > {}",
-                        "was" + PRE_VAL,
+                        "was",
                         "to have its length less than or equal to" if compare_lengths else
                         "to be less than or equal to",
                         message, contextualize, report=report):
@@ -486,7 +486,7 @@ def assertHasFunction(obj, function, args=None, returns=None,
     if not _basic_assertion(obj, function,
                             comparison,
                             "Could not find function {}{}",
-                            "was" + PRE_VAL,
+                            "was",
                             "to have the function",
                             message, contextualize, report=report):
         return False
@@ -500,7 +500,7 @@ def assertHasFunction(obj, function, args=None, returns=None,
     if _basic_assertion(student_function, function,
                         lambda l, r: callable(l),
                         "The value {} is in the variable {}, and that value is not a callable function.",
-                        "was callable" + PRE_VAL,
+                        "was callable",
                         "to be callable",
                         message, contextualize, report=report,
                         show_expected_value=False):
@@ -520,7 +520,7 @@ def assertHas(obj, variable, types=None, value=None, score=None,
     if not _basic_assertion(obj, variable,
                             comparison,
                             "Could not find variable {}{}",
-                            "was" + PRE_VAL,
+                            "was",
                             "to have the variable",
                             message, contextualize, report=report):
         return False
@@ -532,7 +532,7 @@ def assertHas(obj, variable, types=None, value=None, score=None,
         if not _basic_assertion(student_variable, types,
                                 lambda v, t: isinstance(v, t),
                                 "isinstance({}, {})",
-                                "was" + PRE_VAL,
+                                "was",
                                 "to be of type",
                                 message, contextualize, report=report,
                                 modify_right=humanize_types):
@@ -541,7 +541,7 @@ def assertHas(obj, variable, types=None, value=None, score=None,
         if not _basic_assertion(student_variable, value,
                                 lambda l, r: equality_test(l, r, False, DELTA),
                                 "{} != {}",
-                                "was" + PRE_VAL,
+                                "was",
                                 "to be equal to",
                                 message, contextualize, report=report,
                                 show_expected_value=False):

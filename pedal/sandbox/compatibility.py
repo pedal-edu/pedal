@@ -4,7 +4,6 @@ from pedal.sandbox.sandbox import Sandbox
 from pedal.sandbox.messages import EXTENDED_ERROR_EXPLANATION
 
 from pedal.core.report import MAIN_REPORT
-from pedal.core.commands import Feedback
 
 
 def _check_sandbox(report=MAIN_REPORT):

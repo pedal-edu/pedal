@@ -55,9 +55,9 @@ class InterruptableThread(threading.Thread):
             raise SystemError("PyThreadState_SetAsyncExc failed")
 
     def raise_exception(self, exception):
-        '''
+        """
         Trigger a thread ending exception!
-        '''
+        """
         assert self.is_alive(), "thread must be started"
         for thread_id, thread in threading._active.items():
             if thread is self:
