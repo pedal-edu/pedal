@@ -39,3 +39,17 @@ class Submission:
         self.course = course
         self.execution = execution
         self.instructor_file = instructor_file
+
+    def replace_main(self, code: str, file: str = None):
+        """
+        Substitutes the current main code and filename with the given arguments.
+        Args:
+            code:
+            file:
+
+        Returns:
+
+        """
+        self.main_code = code
+        if file is not None:
+            self.main_file = file

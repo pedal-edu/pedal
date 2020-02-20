@@ -1,7 +1,8 @@
 from pedal.core import *
 from pedal.core.report import MAIN_REPORT
-from pedal.core.commands import clear_report, suppress
-from pedal.source import set_source
+from pedal.core.commands import clear_report, suppress, contextualize_report
+from pedal.sandbox.compatibility import get_sandbox
+from pedal.source import verify
 from pedal.tifa import tifa_analysis
 from pedal.resolvers import simple
 from pedal.sandbox import compatibility
@@ -17,9 +18,11 @@ class Execution:
 
     def __enter__(self):
         clear_report(report=self.report)
-        set_source(self.code, report=self.report)
+        contextualize_report(self.code, report=self.report)
+        verify(report=self.report)
         tifa_analysis(report=self.report)
-        self.student = compatibility._check_sandbox(self.report)
+        # TODO: Clean this up
+        self.student = get_sandbox(self.report)
         self.student.report_exceptions_mode = True
         self.report['sandbox']['run'].tracer_style = self.tracer_style
         compatibility.run_student(raise_exceptions=True, old_style_messages=self.old_style_messages)

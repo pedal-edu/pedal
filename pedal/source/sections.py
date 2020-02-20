@@ -2,30 +2,57 @@ import ast
 import re
 import sys
 from pedal.core.report import MAIN_REPORT
-from pedal.source.constants import TOOL_NAME_SOURCE, not_enough_sections, syntax_error
+from pedal.source.constants import TOOL_NAME
+from pedal.source.feedbacks import not_enough_sections, incorrect_number_of_sections
+from pedal.source.substitutions import Substitution
 
 DEFAULT_SECTION_PATTERN = r'^(##### Part .+)$'
 
 
 def separate_into_sections(pattern=DEFAULT_SECTION_PATTERN, report=MAIN_REPORT):
-    if report['source']['sections']:
+    """
+    Chunks the current submissions' main code into separate sections.
+    Args:
+        pattern:
+        report:
+
+    Returns:
+
+    """
+    if not report[TOOL_NAME]['success']:
+        pass
+    if report[TOOL_NAME]['sections']:
         # TODO: System constraint violated: separating into sections multiple times
         pass
     report.group = 0
-    report['source']['section'] = 0
-    report['source']['line_offset'] = 0
-    report['source']['section_pattern'] = pattern
-    report['source']['sections'] = re.split(pattern, report['source']['code'], flags=re.MULTILINE)
-    report.submission.main_code = report['source']['sections'][0]
+    report[TOOL_NAME]['section'] = 0
+    report[TOOL_NAME]['line_offset'] = 0
+    report[TOOL_NAME]['section_pattern'] = pattern
+    report[TOOL_NAME]['sections'] = re.split(pattern, report.submission.main_code, flags=re.MULTILINE)
+
+    backup = Substitution(report.submission.main_code, report.submission.main_file)
+    report[TOOL_NAME]['substitutions'].append(backup)
+    report.submission.replace_main(report[TOOL_NAME]['sections'][0])
+
+    print(report[TOOL_NAME]['sections'])
 
 
 def _calculate_section_number(section_index):
     return int((section_index+1)/2)
 
 
+def stop_sections(report=MAIN_REPORT):
+    # TODO: If no substitutions, then throw error that we haven't separated into sections
+    old_submission = report[TOOL_NAME]['substitutions'].pop()
+    report.submission.replace_main(old_submission.code, old_submission.filename)
+
+
 def next_section(name="", report=MAIN_REPORT):
-    report.execute_hooks(TOOL_NAME_SOURCE, 'next_section.before')
-    source = report['source']
+    report.execute_hooks(TOOL_NAME, 'next_section.before')
+    source = report[TOOL_NAME]
+    old_submission = report[TOOL_NAME]['substitutions'][-1]
+    report.submission.replace_main(old_submission.code, old_submission.filename)
+    # Advance to next section
     source['section'] += 2
     section_index = source['section']
     section_number = _calculate_section_number(section_index)
@@ -33,15 +60,17 @@ def next_section(name="", report=MAIN_REPORT):
     found = len(source['sections'])
     if section_index < found:
         if source['independent']:
-            source['code'] = ''.join(sections[section_index])
+            new_code = ''.join(sections[section_index])
             old_code = ''.join(sections[:section_index])
             source['line_offset'] = len(old_code.split("\n"))-1
         else:
-            source['code'] = ''.join(sections[:section_index + 1])
+            new_code = ''.join(sections[:section_index + 1])
+        report.submission.replace_main(new_code)
+        report[TOOL_NAME]['success'] = None
         report.group = section_index
     else:
         not_enough_sections(section_number, found)
-    report.execute_hooks(TOOL_NAME_SOURCE, 'next_section.after')
+    report.execute_hooks(TOOL_NAME, 'next_section.after')
 
 
 def check_section_exists(section_number, report=MAIN_REPORT):
@@ -51,30 +80,12 @@ def check_section_exists(section_number, report=MAIN_REPORT):
     So if you have 3 sections in your code plus the prologue,
     you should pass in 3 and not 4 to verify that all of them exist.
     """
-    if not report['source']['success']:
+    if report[TOOL_NAME]['success'] is False:
         return False
-    found = int((len(report['source']['sections']) - 1) / 2)
+    found = int((len(report[TOOL_NAME]['sections']) - 1) / 2)
+    print(section_number, found, len(report[TOOL_NAME]['sections']))
     if section_number > found:
-        report.attach('Syntax error', category='Syntax', tool='Source',
-                      group=report['source']['section'],
-                      mistake=("Incorrect number of sections in your file. "
-                               "Expected {count}, but only found {found}"
-                               ).format(count=section_number, found=found))
-
-
-def verify_section(report=MAIN_REPORT):
-    source = report['source']
-    code = source['code']
-    try:
-        parsed = ast.parse(code, source['filename'])
-        source['ast'] = parsed
-    except SyntaxError as e:
-        info = sys.exc_info()
-        syntax_error(e.lineno, e.filename, code, e.offset, e.text, e.__traceback__, e, info, report=report)
-        source['success'] = False
-        if 'ast' in source:
-            del source['ast']
-    return source['success']
+        incorrect_number_of_sections(section_number, found, group=report[TOOL_NAME]['section'], report=report)
 
 
 class _finish_section:
@@ -117,6 +128,7 @@ def finish_section(number, *functions, **kwargs):
         return result
 
 
+# TODO: set up precondition and postcondition decorators for sections
 def section(number):
     """
     """

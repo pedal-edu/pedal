@@ -11,12 +11,14 @@ modified such that the current submission is replaced by the current file.
 
 """
 
-from pedal.source.constants import TOOL_NAME_SOURCE
-from pedal.source.sections import *
-from pedal.source.source import set_source, set_source_file, get_program
+from pedal.source.constants import TOOL_NAME
+from pedal.source.sections import (separate_into_sections, check_section_exists,
+                                   finish_section, next_section)
+from pedal.source.source import (verify, verify_section, set_source, set_source_file, get_program)
 
 
-__all__ = ['TOOL_NAME_SOURCE',
-           'set_source', 'set_source_file', 'get_program',
+__all__ = ['TOOL_NAME',
+           'set_source', 'verify', 'set_source_file', 'get_program',
+           'separate_into_sections',
            'check_section_exists', 'next_section', 'verify_section',
            ]

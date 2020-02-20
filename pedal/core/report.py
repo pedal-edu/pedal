@@ -28,12 +28,14 @@ class Report:
             hooks to have them executed when the event is triggered by another
             tool. For example, the Assertions tool has hooks on the Source tool
             to trigger assertion resolutions before advancing to next sections.
-        _results (dict of str => any): Maps tool names to their data. The
+        _tool_data (dict of str => any): Maps tool names to their data. The
                                        namespace for a tool can be used to
                                        store whatever they want, but will
                                        probably be in a dictionary itself.
     """
     group_order = None
+
+    TOOLS = {}
 
     def __init__(self):
         """
@@ -44,18 +46,17 @@ class Report:
     def clear(self):
         self.feedback = []
         self.suppressions = {}
-        self._results = {}
+        self._tool_data = {}
         self.group = None
         self.group_names = {}
         self.hooks = {}
+        self.submission = None
 
     def contextualize(self, submission):
         self.submission = submission
 
     def hide_correctness(self):
         self.suppressions['success'] = []
-
-
 
     def add_feedback(self, feedback):
         """
@@ -121,16 +122,35 @@ class Report:
             for function in self.hooks[event]:
                 function(report=self)
 
-    def __getitem__(self, key):
-        if key not in self._results:
-            self._results[key] = {}
-        return self._results[key]
+    def __getitem__(self, tool_name):
+        if tool_name not in self._tool_data:
+            self.TOOLS[tool_name]['reset'](report=self)
+        return self._tool_data[tool_name]
 
-    def __setitem__(self, key, value):
-        self._results[key] = value
+    def __setitem__(self, tool_name, value):
+        self._tool_data[tool_name] = value
 
-    def __contains__(self, key):
-        return key in self._results
+    def __contains__(self, tool_name):
+        return tool_name in self._tool_data
+
+    @classmethod
+    def register_tool(cls, tool_name: str, reset_function):
+        """
+        Identifies that the given Tool should be made available.
+        Args:
+            tool_name: A unique string identifying this tool.
+            reset_function: The function to call to reset the Tool.
+
+        Returns:
+
+        """
+        if tool_name in cls.TOOLS:
+            # TODO: More sophisticated exceptions
+            raise Exception("Tool namespace {} already registered.")
+        cls.TOOLS[tool_name] = {
+            'reset': reset_function
+        }
+
 
 #: The global Report object. Meant to be used as a default singleton
 #: for any tool, so that instructors do not have to create their own Report.

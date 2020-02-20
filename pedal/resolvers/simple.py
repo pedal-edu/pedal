@@ -88,7 +88,7 @@ def resolve(report=MAIN_REPORT, priority_key=by_priority):
                 continue
         success, partial, message, data = parse_feedback(feedback)
         final_success = success or final_success
-        final_score += partial
+        final_score += partial if partial is not None else 0
         if message is not None and final_message is None and feedback.priority != 'positive':
             final_message = message
             final_category = feedback.category

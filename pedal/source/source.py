@@ -1,26 +1,33 @@
 """
 
-**Source Report**
+.. csv-table:: Source Report Data
+    :header: "Field", "Type", "Initial", "Description"
+    :widths: 20, 20, 20, 40
 
-:code (str): A backup of the original file.
-:lines (List[str]): The lines split up using the newline character (``'\\n'``).
+    "substitutions", "List[Substitution]", "[]", "The history of previous source codes before the latest substitutions."
+    "success", "bool", "None", "Whether the current file has been parsed successfully."
+    "ast", "ast.Ast", "None", "The root node of the latest successfully parsed chunk of code."
+
 """
 
 import sys
 import ast
 
-from pedal.core.report import MAIN_REPORT
+from pedal.core.report import Report, MAIN_REPORT
+from pedal.source.constants import TOOL_NAME, DEFAULT_STUDENT_FILENAME
 from pedal.source.sections import separate_into_sections
-from pedal.source.constants import blank_source, syntax_error, source_file_not_found
+from pedal.source.feedbacks import blank_source, syntax_error, source_file_not_found
+from pedal.source.substitutions import Substitution
 
 
-def _empty_source_report():
-    return {
-        'code': None,
-        'lines': None,
-        'filename': None,
-        'independent': None,
+def reset(report=MAIN_REPORT):
+    report[TOOL_NAME] = {
+        'substitutions': [],
+
         'success': None,
+        'ast': None,
+
+        'independent': None,
         'sections': None,
         'section': None,
         'section_pattern': None,
@@ -28,7 +35,10 @@ def _empty_source_report():
     }
 
 
-def set_source(code, filename='__main__.py', sections=False, independent=False,
+Report.register_tool(TOOL_NAME, reset)
+
+
+def set_source(code, filename=DEFAULT_STUDENT_FILENAME, sections=False, independent=False,
                report=MAIN_REPORT):
     """
     Sets the contents of the Source to be the given code. Can also be
@@ -37,7 +47,7 @@ def set_source(code, filename='__main__.py', sections=False, independent=False,
     Args:
         code (str): The contents of the source file.
         filename (str): The filename of the students' code. Defaults to
-                        __main__.py.
+                        `answer.py`.
         sections (str or bool): Whether or not the file should be divided into
                                 sections. If a str, then it should be a
                                 Python regular expression for how the sections
@@ -49,39 +59,98 @@ def set_source(code, filename='__main__.py', sections=False, independent=False,
         report (Report): The report object to store data and feedback in. If
                          left None, defaults to the global MAIN_REPORT.
     """
-    report['source']['code'] = code
-    report['source']['lines'] = code.split("\n")
-    report['source']['filename'] = filename
-    report['source']['independent'] = independent
-    report['source']['success'] = True
+    backup = Substitution(report.submission.main_code, report.submission.main_file)
+    report[TOOL_NAME]['substitutions'].append(backup)
+    report.submission.replace_main(code, filename)
+
+    report[TOOL_NAME]['independent'] = independent
+    report[TOOL_NAME]['success'] = True
     if not sections:
-        report['source']['sections'] = None
-        report['source']['section'] = None
+        report[TOOL_NAME]['sections'] = None
+        report[TOOL_NAME]['section'] = None
         verify(code, report)
     else:
         separate_into_sections(report=report)
 
 
-def verify(code=None, report=MAIN_REPORT):
+def restore_code(report=MAIN_REPORT):
+    if TOOL_NAME in report:
+        old_submission = report[TOOL_NAME]['substitutions'].pop()
+        report.submission.replace_main(old_submission.code, old_submission.filename)
+        verify(report=report)
+
+
+def verify(code=None, filename=DEFAULT_STUDENT_FILENAME, report=MAIN_REPORT, muted=False):
+    """
+    Parses the given source code and checks for syntax errors; if no code is given, defaults to the
+    current Main file of the submission.
+
+    Args:
+        code (str): Some code to parse and syntax check.
+        filename: An optional filename to use
+        report:
+
+    Returns:
+
+    """
     if code is None:
-        code = report['source']['code']
+        code = report.submission.main_code
+        filename = report.submission.main_file
     if code.strip() == '':
         blank_source()
-        report['source']['success'] = False
+        report[TOOL_NAME]['success'] = False
     try:
-        parsed = ast.parse(code, report['source']['filename'])
-        report['source']['ast'] = parsed
+        parsed = ast.parse(code, filename)
+        report[TOOL_NAME]['ast'] = parsed
     except SyntaxError as e:
-        syntax_error(e.lineno, e.filename, code, e.offset, e.text, e.__traceback__, e, sys.exc_info(), report=report)
-        report['source']['success'] = False
-        report['source']['ast'] = ast.parse("")
+        syntax_error(e.lineno, e.filename, code, e.offset, e.text, e.__traceback__, e, sys.exc_info(), report=report,
+                     muted=muted)
+        report[TOOL_NAME]['success'] = False
+        report[TOOL_NAME]['ast'] = ast.parse("")
+    return report[TOOL_NAME]['success']
 
 
-def get_program(report=MAIN_REPORT):
-    return report['source']['code']
+# Legacy verify_section; now done by verify since its aware of sections
+verify_section = verify
 
 
-def set_source_file(filename, sections=False, independent=False, report=MAIN_REPORT):
+def get_program(report=MAIN_REPORT) -> str:
+    """
+    Retrieves the current main file.
+    Args:
+        report:
+
+    Returns:
+
+    """
+    return report.submission.main_code
+
+
+def get_original_program(report=MAIN_REPORT) -> str:
+    """
+    Retrieves the original version of the Submission's main code, ignoring all subsitutions.
+    Args:
+        report:
+
+    Returns:
+
+    """
+    return report[TOOL_NAME]['substitutions'][0].code
+
+
+def set_source_file(filename: str, sections=False, independent=False, report=MAIN_REPORT):
+    """
+    Uses the given `filename` on the filesystem as the new main file.
+
+    Args:
+        filename:
+        sections:
+        independent:
+        report:
+
+    Returns:
+
+    """
     try:
         with open(filename, 'r') as student_file:
             set_source(student_file.read(), filename=filename,
@@ -89,4 +158,4 @@ def set_source_file(filename, sections=False, independent=False, report=MAIN_REP
                        report=report)
     except IOError:
         source_file_not_found(filename, sections, report)
-        report['source']['success'] = False
+        report[TOOL_NAME]['success'] = False

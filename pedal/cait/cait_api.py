@@ -40,7 +40,7 @@ def _parse_source(code, cait_report):
     return parsed
 
 
-def _load_cait(student_code, report):
+def reset(student_code, report=MAIN_REPORT):
     """
     Retrieves the current report for CAIT. If there is no CAIT report, it will
     generate one. If source code is given, that will be used instead of the

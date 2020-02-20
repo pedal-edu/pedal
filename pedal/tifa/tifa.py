@@ -1,8 +1,10 @@
 import ast
 from pprint import pprint
 
+from pedal.core.commands import system_error
 from pedal.core.report import MAIN_REPORT
 from pedal.core.location import Location
+from pedal.tifa.constants import TOOL_NAME
 from pedal.tifa.type_definitions import (UnknownType, RecursedType,
                                          FunctionType, ClassType, InstanceType,
                                          NumType, NoneType, BoolType, TupleType,
@@ -106,22 +108,14 @@ class Tifa(ast.NodeVisitor):
         except Exception as error:
             self.report['tifa']['success'] = False
             self.report['tifa']['error'] = error
-            self.report.attach('tifa_error', category='Analyzer', tool='TIFA',
-                               mistake={
-                                   'message': "Could not parse code",
-                                   'error': error
-                               })
+            system_error(TOOL_NAME, "Could not parse code: " + str(error), report=self.report)
             return self.report['tifa']
         try:
             return self.process_ast(ast_tree)
         except Exception as error:
             self.report['tifa']['success'] = False
             self.report['tifa']['error'] = error
-            self.report.attach('tifa_error', category='Analyzer', tool='TIFA',
-                               mistake={
-                                   'message': "Could not process code: "+str(error),
-                                   'error': error
-                               })
+            system_error(TOOL_NAME, "Successfully parsed but could not process AST: "+str(error), report=self.report)
             return self.report['tifa']
 
     def process_ast(self, ast_tree):

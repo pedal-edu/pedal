@@ -5,13 +5,15 @@ Uses a global report object (MAIN_REPORT).
 
 __all__ = ['feedback', 'set_success', 'compliment', 'give_partial', 'explain',
            'gently', 'hide_correctness', 'suppress', 'log', 'debug',
-           'clear_report', 'get_all_feedback', 'guidance']
+           'clear_report', 'get_all_feedback', 'guidance', 'contextualize_report']
 
 from pedal.core.feedback import Feedback, FeedbackKind, FeedbackCategory, PEDAL_DEVELOPERS, AtomicFeedbackFunction
 from pedal.core.report import MAIN_REPORT
 
 
 #: Lowercase "function" version that works like other Core Feedback Functions.
+from pedal.core.submission import Submission
+
 feedback = Feedback
 
 
@@ -79,6 +81,15 @@ def give_partial(value, justification=None, tool=None, group=None, report=MAIN_R
                     report=report)
 
 
+@AtomicFeedbackFunction(title="System Error")
+def system_error(tool, explanation, author=PEDAL_DEVELOPERS, report=MAIN_REPORT):
+    return feedback("system_error", tool=tool, category=Feedback.CATEGORIES.SYSTEM,
+                    kind=FeedbackKind.META, justification=explanation,
+                    valence=Feedback.NEUTRAL_VALENCE,
+                    title=system_error.title, message=explanation, text=explanation,
+                    muted=True, author=author, report=report)
+
+
 # TODO: Fix the rest
 
 def explain(message, priority='medium', line=None, label='explain'):
@@ -121,6 +132,28 @@ def debug(message, report=MAIN_REPORT):
 
 def clear_report(report=MAIN_REPORT):
     report.clear()
+
+
+def contextualize_report(submission, filename='answer.py', clear=True, report=MAIN_REPORT):
+    """
+    Updates the report with the submission. By default, clears out any old information in the report.
+    You can pass in either an actual :py:class:`~pedal.core.submission.Submission` or a string representing
+    the code of the submission.
+
+    Args:
+        submission (str or Submission):
+        filename (str or None): If the `submission` was not a :py:class:`~pedal.core.submission.Submission`,
+            then this will be used as the filename for the code given in `submission`.
+        report:
+
+    Returns:
+
+    """
+    if not isinstance(submission, Submission):
+        submission = Submission(files={filename: submission})
+    if clear:
+        report.clear()
+    report.contextualize(submission)
 
 
 def get_all_feedback(report=MAIN_REPORT):

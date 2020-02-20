@@ -1,4 +1,5 @@
-from pedal.core.report import MAIN_REPORT
+from pedal.core.report import MAIN_REPORT, Report
+from pedal.sandbox.constants import TOOL_NAME
 from pedal.sandbox.sandbox import Sandbox, DataSandbox
 
 # Compatibility API
@@ -10,17 +11,20 @@ get_output
 '''
 
 
-def reset(report=None):
-    if report is None:
-        report = MAIN_REPORT
-    report['sandbox']['run'] = Sandbox(filename=report['source']['filename'])
+def reset(report=MAIN_REPORT):
+    report[TOOL_NAME] = {
+        'run': Sandbox()
+    }
+
+
+Report.register_tool(TOOL_NAME, reset)
 
 
 def run(raise_exceptions=True, report=None, coverage=False, threaded=False, inputs=None):
     if report is None:
         report = MAIN_REPORT
     if 'run' not in report['sandbox']:
-        report['sandbox']['run'] = Sandbox(filename=report['source']['filename'], threaded=threaded)
+        report['sandbox']['run'] = Sandbox(threaded=threaded, report=report)
     sandbox = report['sandbox']['run']
     source_code = report['source']['code']
     sandbox.record_coverage = coverage

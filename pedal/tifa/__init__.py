@@ -68,9 +68,9 @@ Important concepts:
     Name Map
         (Path x Fully Qualified Names) => States
 """
-
+from pedal.tifa.constants import TOOL_NAME
 from pedal.tifa.tifa import Tifa
-from pedal.core.report import MAIN_REPORT
+from pedal.core.report import MAIN_REPORT, Report
 
 NAME = 'TIFA'
 SHORT_DESCRIPTION = "Finds common issues caused by students."
@@ -95,8 +95,15 @@ def tifa_analysis(python_3=True, report=None):
     if report is None:
         report = MAIN_REPORT
     t = Tifa(python_3=python_3, report=report)
-    t.process_code(report['source']['code'])
+    t.process_code(report.submission.main_code)
     return t
+
+def reset(report=MAIN_REPORT):
+    # TODO
+    pass
+
+
+Report.register_tool(TOOL_NAME, reset)
 
 
 __all__ = ['NAME', 'DESCRIPTION', 'SHORT_DESCRIPTION',

@@ -63,7 +63,7 @@ messages:
 """
 from pedal.core.commands import set_success, give_partial
 
-from pedal.sandbox.compatibility import _check_sandbox
+from pedal.sandbox.compatibility import get_sandbox
 from pedal.toolkit.functions import *
 from pedal.utilities.comparisons import equality_test
 
@@ -255,7 +255,7 @@ def check_case(function, case, student_function):
     function_name = function['name']
     test_case = TestCase(function_name, case.get('name'))
     # Get callable
-    sandbox = _check_sandbox(MAIN_REPORT)
+    sandbox = get_sandbox(MAIN_REPORT)
     sandbox.set_output(None)
     # Potential bonus message
     if 'message' in case:

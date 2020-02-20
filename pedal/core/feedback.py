@@ -89,6 +89,7 @@ class FeedbackKind:
     PERFORMANCE = "Performance"
     # Neutral
     INSTRUCTIONAL = "Instructional"
+    META = "Meta"
 
 
 class Feedback:
@@ -176,8 +177,8 @@ class Feedback:
         self.text = text
         self.fields = fields
         if isinstance(locations, int):
-            locations = Location(locations)
-        if isinstance(locations, Location):
+            locations = [Location(locations)]
+        elif isinstance(locations, Location):
             locations = [locations]
         # TODO: Handle tuples (Line, Col) and (Filename, Line, Col), and possibly lists thereof
         self.locations = locations
