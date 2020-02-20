@@ -2,7 +2,7 @@
 Simple data classes for storing feedback to present to learners.
 """
 
-__all__ = ['Feedback', 'FeedbackKind', 'FeedbackCategory']
+__all__ = ['Feedback', 'FeedbackKind', 'FeedbackCategory', "AtomicFeedbackFunction"]
 
 from pedal.core.location import Location
 from pedal.core.report import MAIN_REPORT
@@ -144,6 +144,7 @@ class Feedback:
             digit should be incremented for small bug fixes/changes. The middle (second) digit should be used for more
             serious and intense changes. The first digit should be incremented when changes are made on exposure to
             learners or some other evidence-based motivation.
+        tags (List[str]): Any tags that you want to attach to this feedback.
 
         group (int or str): Information about what logical grouping within the submission this belongs to. Various
             tools can chunk up a submission (e.g., by section), they can use this field to keep track of how that
@@ -159,7 +160,7 @@ class Feedback:
 
     def __init__(self, label, tool=None, category='instructor', kind='mistake', justification=None,
                  priority=None, valence=-1, title=None, message=None, text=None, fields=None,
-                 locations=None, score=None, correct=None, muted=None, version=None, author=None,
+                 locations=None, score=None, correct=None, muted=None, version=None, author=None, tags=None,
                  group=None, report=MAIN_REPORT):
         # Model
         self.label = label
@@ -176,6 +177,8 @@ class Feedback:
         self.fields = fields
         if isinstance(locations, int):
             locations = Location(locations)
+        if isinstance(locations, Location):
+            locations = [locations]
         # TODO: Handle tuples (Line, Col) and (Filename, Line, Col), and possibly lists thereof
         self.locations = locations
         # Result
@@ -185,12 +188,12 @@ class Feedback:
         # Metadata
         self.version = version
         self.author = author
+        self.tags = tags
         # Organizational
         self.group = group
         # Self-attach to a given report?
         if report is not None:
             report.add_feedback(self)
-
 
     def __str__(self):
         """
@@ -216,6 +219,51 @@ class Feedback:
         if self.group is not None:
             metadata += ", group=" + str(self.group)
         return "Feedback({}{})".format(self.label, metadata)
+
+
+def _process_template(template, backup):
+    if template is None:
+        if backup is None:
+            return "".format
+        if isinstance(backup, str):
+            return backup.format
+        return backup
+    elif isinstance(template, str):
+        return template.format
+    return template
+
+
+def AtomicFeedbackFunction(title=None, version='0.0.1', message_template=None, text_template=None,
+                           justification=None, tags=None):
+    """
+    Decorator for feedback functions to indicate their intent.
+
+    Args:
+        tags:
+        title:
+        text_template:
+        message_template:
+        version:
+        justification:
+
+    Returns:
+
+    """
+    def AtomicFeedbackFunction_with_attrs(function):
+        function.title = title if title is not None else function.__name__
+        function.tags = tags if tags is not None else []
+        function.version = version
+        function.justification = justification.format if isinstance(justification, str) else justification
+        function.message_template = _process_template(message_template, text_template)
+        function.text_template = _process_template(text_template, message_template)
+        return function
+    return AtomicFeedbackFunction_with_attrs
+
+
+def CompositeFeedbackFunction():
+    def CompositeFeedbackFunction_with_attrs(function):
+        return function
+    return CompositeFeedbackFunction_with_attrs
 
 
 PEDAL_DEVELOPERS = ["Austin Cory Bart <acbart@udel.edu>", "Luke Gusukuma <lukesg08@vt.edu>"]

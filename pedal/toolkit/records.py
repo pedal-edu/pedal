@@ -1,4 +1,4 @@
-from pedal.core.imperative import gently, explain, gently_r, explain_r, MAIN_REPORT
+from pedal.core.commands import gently, explain, gently_r, explain_r, MAIN_REPORT
 from pedal.sandbox import compatibility
 
 

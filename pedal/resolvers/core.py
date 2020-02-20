@@ -1,4 +1,4 @@
-from pedal.core.imperative import MAIN_REPORT
+from pedal.core.report import MAIN_REPORT
 
 
 def make_resolver(func, report=None):
@@ -16,7 +16,7 @@ def make_resolver(func, report=None):
         report = MAIN_REPORT
 
     def resolver_wrapper():
-        report.execute_hooks("pedal.resolvers.resolve")
+        report.execute_hooks('resolvers', 'resolve')
         return func()
 
     return resolver_wrapper

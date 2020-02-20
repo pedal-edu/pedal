@@ -3,18 +3,17 @@ import sys
 from pedal.sandbox.sandbox import Sandbox
 from pedal.sandbox.messages import EXTENDED_ERROR_EXPLANATION
 
-from pedal.core import MAIN_REPORT, Feedback
+from pedal.core.report import MAIN_REPORT
+from pedal.core.commands import Feedback
 
 
-def _check_sandbox(report):
+def _check_sandbox(report=MAIN_REPORT):
     if 'run' not in report['sandbox']:
         report['sandbox']['run'] = Sandbox()
     return report['sandbox']['run']
 
 
-def run_student(raise_exceptions=False, report=None, old_style_messages=False):
-    if report is None:
-        report = MAIN_REPORT
+def run_student(raise_exceptions=False, report=MAIN_REPORT, old_style_messages=False):
     sandbox = _check_sandbox(report)
     source_code = report['source']['code']
     filename = report['source']['filename']
@@ -34,23 +33,17 @@ def queue_input(*inputs, **kwargs):
     sandbox.set_input(inputs)
 
 
-def reset_output(report=None):
-    if report is None:
-        report = MAIN_REPORT
+def reset_output(report=MAIN_REPORT):
     sandbox = _check_sandbox(report)
     sandbox.set_output(None)
 
 
-def get_output(report=None):
-    if report is None:
-        report = MAIN_REPORT
+def get_output(report=MAIN_REPORT):
     sandbox = _check_sandbox(report)
     return sandbox.output
 
 
-def get_plots(report=None):
-    if report is None:
-        report = MAIN_REPORT
+def get_plots(report=MAIN_REPORT):
     sandbox = _check_sandbox(report)
     if 'matplotlib.pyplot' in sandbox.modules:
         mock_plt = sandbox.modules['matplotlib.pyplot']
@@ -70,16 +63,12 @@ def capture_output(function, *args, **kwargs):
     return sandbox.output
 
 
-def get_sandbox(report=None):
-    if report is None:
-        report = MAIN_REPORT
+def get_sandbox(report=MAIN_REPORT):
     sandbox = _check_sandbox(report)
     return sandbox
 
 
-def raise_exception(exception, position=None, report=None, message=None):
-    if report is None:
-        report = MAIN_REPORT
+def raise_exception(exception, position=None, report=MAIN_REPORT, message=None):
     sandbox = _check_sandbox(report)
     if exception is None:
         return
@@ -96,27 +85,21 @@ def raise_exception(exception, position=None, report=None, message=None):
     sandbox.exception = exception
 
 
-def get_student_data(report=None):
-    if report is None:
-        report = MAIN_REPORT
+def get_student_data(report=MAIN_REPORT):
     sandbox = _check_sandbox(report)
     return sandbox
 
 
-def set_sandbox(sandbox, report=None):
+def set_sandbox(sandbox, report=MAIN_REPORT):
     """
     Update the sandbox to hold the new sandbox instance. Particularly useful
     for Skulpt, which needs to set the sandbox in an unusual way.
     """
-    if report is None:
-        report = MAIN_REPORT
     report['sandbox']['run'] = sandbox
     return sandbox
 
 
-def trace_lines(report=None):
-    if report is None:
-        report = MAIN_REPORT
+def trace_lines(report=MAIN_REPORT):
     sandbox = _check_sandbox(report)
     if sandbox.tracer_style == 'coverage':
         return sandbox.trace.lines - sandbox.trace.missing

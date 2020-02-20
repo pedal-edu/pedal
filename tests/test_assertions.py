@@ -19,15 +19,18 @@ class TestAssertions(unittest.TestCase):
         with Execution('a = 0') as e:
             set_assertion_mode(exceptions=True)
             self.assertRaises(AssertionException, assertEqual, 1, 3)
+
+    def assertFeedback(self, execution, feedback_string):
+        return self.assertEqual(dedent(feedback_string).lstrip(), execution.feedback)
         
     def test_primitive_assertions(self):
         with Execution(dedent("0")) as e:
             @phase('1')
             def part1():
                 assertEqual(5, 0)
-        self.assertEqual(e.feedback, dedent("""
+        self.assertFeedback(e, """
         Instructor Test<br>Student code failed instructor test.<br>
-        5 != 0""").lstrip())
+        5 != 0""")
     
     def test_sandbox_assertions(self):
         with Execution(dedent('''

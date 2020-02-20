@@ -1,9 +1,19 @@
 from pedal.cait.cait_api import parse_program
-from pedal.core.imperative import explain
+from pedal.core.commands import explain, feedback
+from pedal.core.feedback import AtomicFeedbackFunction, CompositeFeedbackFunction, Feedback
 from pedal.toolkit.utilities import ensure_literal
 
 
-def files_not_handled_correctly(*filenames):
+@AtomicFeedbackFunction(title="Opened Without Arguments",
+                        message_template=("You have called the <code>open</code> function "
+                                          "without any arguments. It needs a filename.").format)
+def open_without_arguments():
+    return feedback(open_without_arguments.__name__, "toolkit", Feedback.CATEGORIES.INSTRUCTOR,
+                    message=open_without_arguments.message_template())
+
+
+@CompositeFeedbackFunction()
+def files_not_handled_correctly(*filenames, muted=False):
     """
     Statically detect if files have been opened and closed correctly.
     This is only useful in the case of very simplistic file handling.
@@ -22,8 +32,7 @@ def files_not_handled_correctly(*filenames):
         if a_call.func.ast_name == 'Name':
             if a_call.func.id == 'open':
                 if not a_call.args:
-                    explain("You have called the <code>open</code> function "
-                            "without any arguments. It needs a filename.")
+                    open_without_arguments(muted)
                     return True
                 called_open.append(a_call)
             elif a_call.func.id == 'close':

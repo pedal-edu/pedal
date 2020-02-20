@@ -4,6 +4,9 @@ from pedal.core.report import MAIN_REPORT
 from pedal.sandbox.exceptions import SandboxStudentCodeException
 
 
+TOOL_NAME_ASSERTIONS = "assertions"
+
+
 class AssertionException(Exception):
     def __str__(self):
         return self.args[0]
@@ -27,10 +30,7 @@ def _topological_sort(names, orderings):
     return stack
     
 
-def resolve_all(set_success=False, report=None):
-    from pprint import pprint
-    if report is None:
-        report = MAIN_REPORT
+def resolve_all(set_success=False, report=MAIN_REPORT):
     _setup_assertions(report)
     orderings = report['assertions']['relationships']
     phase_functions = report['assertions']['phase_functions']
@@ -58,9 +58,7 @@ def resolve_all(set_success=False, report=None):
     _reset_phases(report)
 
 
-def _add_phase(phase_name, function, report=None):
-    if report is None:
-        report = MAIN_REPORT
+def _add_phase(phase_name, function, report=MAIN_REPORT):
     phase_functions = report['assertions']['phase_functions']
     phases = report['assertions']['phases']
     if phase_name not in phase_functions:
@@ -69,9 +67,7 @@ def _add_phase(phase_name, function, report=None):
     phase_functions[phase_name].append(function)
 
 
-def _add_relationships(befores, afters, report=None):
-    if report is None:
-        report = MAIN_REPORT
+def _add_relationships(befores, afters, report=MAIN_REPORT):
     relationships = report['assertions']['relationships']
     if None in (befores, afters):
         return
@@ -114,3 +110,7 @@ def _setup_assertions(report):
         }
         report.add_hook('source.next_section.before', resolve_all)
         report.add_hook('pedal.resolvers.resolve', resolve_all)
+
+def set_assertion_mode(exceptions=True, report=MAIN_REPORT):
+    _setup_assertions(report)
+    report['assertions']['exceptions'] = exceptions

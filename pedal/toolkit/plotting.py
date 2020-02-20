@@ -1,6 +1,6 @@
 from pedal.toolkit.utilities import function_is_called
 from pedal.cait.cait_api import parse_program, def_use_error
-from pedal.core.imperative import gently, explain_r, gently_r
+from pedal.core.commands import gently, explain_r, gently_r
 from pedal.sandbox import compatibility
 
 PLOT_LABEL = {'plot': 'line plot',

@@ -3,11 +3,11 @@ Imperative style commands for constructing feedback in a convenient way.
 Uses a global report object (MAIN_REPORT).
 """
 
-__all__ = ['set_success', 'compliment', 'give_partial', 'explain',
+__all__ = ['feedback', 'set_success', 'compliment', 'give_partial', 'explain',
            'gently', 'hide_correctness', 'suppress', 'log', 'debug',
            'clear_report', 'get_all_feedback', 'guidance']
 
-from pedal.core.feedback import Feedback, FeedbackKind, FeedbackCategory, PEDAL_DEVELOPERS
+from pedal.core.feedback import Feedback, FeedbackKind, FeedbackCategory, PEDAL_DEVELOPERS, AtomicFeedbackFunction
 from pedal.core.report import MAIN_REPORT
 
 
@@ -15,6 +15,8 @@ from pedal.core.report import MAIN_REPORT
 feedback = Feedback
 
 
+@AtomicFeedbackFunction(title="Success",
+                        text_template="Great work!".format)
 def set_success(score=1, justification=None, tool=None, group=None, report=MAIN_REPORT):
     """
     **(Feedback Function)**
@@ -29,15 +31,14 @@ def set_success(score=1, justification=None, tool=None, group=None, report=MAIN_
     return feedback("set_success",
                     tool=tool, category=FeedbackCategory.INSTRUCTOR, kind=FeedbackKind.RESULT,
                     justification=justification, valence=Feedback.POSITIVE_VALENCE,
-                    title="Success", message=set_success.MESSAGE, template=set_success.MESSAGE,
+                    title=set_success.title, message=set_success.text_template(),
+                    text=set_success.text_template(),
                     score=score, correct=True,
                     muted=False, version='1.0.0', author=PEDAL_DEVELOPERS, group=group,
                     report=report)
 
 
-set_success.MESSAGE = {'text': "Great work!"}
-
-
+@AtomicFeedbackFunction(title="Compliment")
 def compliment(message, value=0, justification=None, locations=None, tool=None, group=None, report=MAIN_REPORT):
     """
     Create a positive feedback for the user, potentially on a specific line of
@@ -53,12 +54,14 @@ def compliment(message, value=0, justification=None, locations=None, tool=None, 
                     category=FeedbackCategory.INSTRUCTOR, kind=FeedbackKind.ENCOURAGEMENT,
                     justification=justification, locations=locations,
                     valence=Feedback.POSITIVE_VALENCE,
-                    title="Compliment", message=message, template=message,
+                    title=compliment.title, message=message, text=message,
                     score=value, correct=False, muted=False, version='1.0.0',
                     author=PEDAL_DEVELOPERS, group=group, report=report
                     )
 
 
+@AtomicFeedbackFunction(title="Partial Credit",
+                        text_template="Partial credit".format)
 def give_partial(value, justification=None, tool=None, group=None, report=MAIN_REPORT):
     """
     Increases the user's current score by the `value`.
@@ -70,12 +73,10 @@ def give_partial(value, justification=None, tool=None, group=None, report=MAIN_R
     return feedback("give_partial", tool=tool, category=FeedbackCategory.INSTRUCTOR,
                     kind=FeedbackKind.RESULT,
                     justification=justification, valence=Feedback.POSITIVE_VALENCE,
-                    title="Partial Credit", message=give_partial.TEMPLATE, template=give_partial.TEMPLATE,
+                    title=give_partial.title, message=give_partial.text_template(),
+                    text=give_partial.text_template(),
                     score=value, correct=False, muted=True, version='1.0.0', author=PEDAL_DEVELOPERS, group=group,
                     report=report)
-
-
-give_partial.TEMPLATE = "Partial credit"
 
 
 # TODO: Fix the rest
@@ -102,28 +103,28 @@ def explain_r(message, code, priority='medium', line=None, label="explain"):
     return message
 
 
-def hide_correctness():
-    MAIN_REPORT.hide_correctness()
+def hide_correctness(report=MAIN_REPORT):
+    report.hide_correctness()
 
 
-def suppress(category, label=True):
-    MAIN_REPORT.suppress(category, label)
+def suppress(category, label=True, report=MAIN_REPORT):
+    report.suppress(category, label)
 
 
-def log(message):
-    MAIN_REPORT.log(message)
+def log(message, report=MAIN_REPORT):
+    report.log(message)
 
 
-def debug(message):
-    MAIN_REPORT.debug(message)
+def debug(message, report=MAIN_REPORT):
+    report.debug(message)
 
 
-def clear_report():
-    MAIN_REPORT.clear()
+def clear_report(report=MAIN_REPORT):
+    report.clear()
 
 
-def get_all_feedback():
-    return MAIN_REPORT.feedback
+def get_all_feedback(report=MAIN_REPORT):
+    return report.feedback
 
 
 def explain(self, message, priority='medium', line=None, group=None,

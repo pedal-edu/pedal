@@ -1,7 +1,7 @@
 import ast
 from pedal.cait.ast_helpers import dump
 from types import MethodType
-from pedal.core import MAIN_REPORT
+from pedal.core.report import MAIN_REPORT
 
 
 class CaitNode:

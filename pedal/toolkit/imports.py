@@ -1,5 +1,5 @@
 from pedal.cait.cait_api import parse_program
-from pedal.core.imperative import explain
+from pedal.core.commands import explain
 
 
 def ensure_imports(*modules):

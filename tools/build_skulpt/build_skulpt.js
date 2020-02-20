@@ -16,6 +16,7 @@ function buildPythonFile(ret, fullname, contents) {
     }
     internalName = "src/lib/"+internalName;
     try {
+        // TODO: Support compile mode where we remove type annotations and docstrings
         co = Sk.compile(contents, internalName, "exec", true, false);
         console.log("Compiled: "+internalName);
     } catch (e) {

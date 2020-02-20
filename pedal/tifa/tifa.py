@@ -1,8 +1,8 @@
 import ast
 from pprint import pprint
 
-from pedal.core import MAIN_REPORT
-
+from pedal.core.report import MAIN_REPORT
+from pedal.core.location import Location
 from pedal.tifa.type_definitions import (UnknownType, RecursedType,
                                          FunctionType, ClassType, InstanceType,
                                          NumType, NoneType, BoolType, TupleType,
@@ -19,7 +19,11 @@ from pedal.tifa.type_operations import (merge_types, are_types_equal,
                                         ORDERABLE_TYPES, INDEXABLE_TYPES)
 from pedal.tifa.identifier import Identifier
 from pedal.tifa.state import State
-from pedal.tifa.messages import _format_message
+from pedal.tifa.messages import (action_after_return, return_outside_function, write_out_of_scope,
+                                 unconnected_blocks, iteration_problem, possible_initialization_problem,
+                                 initialization_problem, unused_variable, overwritten_variable, iterating_over_non_list,
+                                 iterating_over_empty_list, incompatible_types, parameter_type_mismatch,
+                                 read_out_of_scope, type_changes, unnecessary_second_branch)
 
 __all__ = ['Tifa']
 
@@ -35,9 +39,7 @@ class Tifa(ast.NodeVisitor):
                          left None, defaults to the global MAIN_REPORT.
     """
 
-    def __init__(self, python_3=True, report=None):
-        if report is None:
-            report = MAIN_REPORT
+    def __init__(self, python_3=True, report=MAIN_REPORT):
         self.report = report
         self._initialize_report()
 
@@ -69,21 +71,20 @@ class Tifa(ast.NodeVisitor):
             self.report.attach(issue, category='Analyzer', tool='TIFA',
                                mistake=data)
 
-    def locate(self, node=None):
+    def locate(self, node: ast.AST = None):
         """
         Return a dictionary representing the current location within the
         AST.
 
         Returns:
-            Position dict: A dictionary with the fields 'column' and 'line',
-                           indicating the current position in the source code.
+            Location: The line and column of the current or given node.
         """
         if node is None:
             if self.node_chain:
                 node = self.node_chain[-1]
             else:
                 node = self.final_node
-        return {'column': node.col_offset, 'line': node.lineno}
+        return Location(node.lineno, col=node.col_offset)
 
     def process_code(self, code, filename="__main__"):
         """
@@ -245,12 +246,9 @@ class Tifa(ast.NodeVisitor):
                 state = self.name_map[path_id][name]
                 if state.over == 'yes':
                     position = state.over_position
-                    self.report_issue('Overwritten Variable',
-                                      {'name': state.name, 'position': position})
+                    overwritten_variable(position, state.name)
                 if state.read == 'no':
-                    self.report_issue('Unused Variable',
-                                      {'name': state.name, 'type': state.type,
-                                       'position': state.position})
+                    unused_variable(state.position, state.name, state.type, report=self.report)
 
     def visit(self, node):
         """
@@ -270,6 +268,7 @@ class Tifa(ast.NodeVisitor):
             return_state = self.find_variable_scope("*return")
             if return_state.exists and return_state.in_scope:
                 if return_state.state.set == "yes":
+                    action_after_return(self.locate(), report=self.report)
                     self.report_issue("Action after return")
 
         # No? All good, let's enter the node
@@ -385,9 +384,7 @@ class Tifa(ast.NodeVisitor):
                         left_hand_type.update_key(literal, type.clone())
                     elif not are_types_equal(original_type, type):
                         # TODO: Fix "Dictionary" to be the name of the variable
-                        self.report_issue("Type changes",
-                                          {'name': "Dictionary", 'old': original_type,
-                                           'new': type})
+                        type_changes(self.locate(), 'Dictionary', original_type, type)
         elif isinstance(target, ast.Attribute):
             left_hand_type = self.visit(target.value)
             if isinstance(left_hand_type, InstanceType):
@@ -416,10 +413,7 @@ class Tifa(ast.NodeVisitor):
                     result_type = op_lookup(left, right)
                     self.assign_target(node.target, result_type)
                     return result_type
-
-        self.report_issue("Incompatible types",
-                          {"left": left, "right": right,
-                           "operation": node.op})
+        incompatible_types(self.locate(), node.op, left, right, report=self.report)
 
     def visit_Attribute(self, node):
         # Handle value
@@ -445,9 +439,7 @@ class Tifa(ast.NodeVisitor):
                     op_lookup = op_lookup[type(right)]
                     return op_lookup(left, right)
 
-        self.report_issue("Incompatible types",
-                          {"left": left, "right": right,
-                           "operation": node.op})
+        incompatible_types(self.locate(), node.op, left, right, report=self.report)
         return UnknownType()
 
     def visit_Bool(self, node):
@@ -531,9 +523,7 @@ class Tifa(ast.NodeVisitor):
             elif isinstance(op, (ast.In, ast.NotIn)):
                 if isinstance(right, INDEXABLE_TYPES):
                     continue
-            self.report_issue("Incompatible types",
-                              {"left": left, "right": right,
-                               "operation": op})
+            incompatible_types(self.locate(), op, left, right, report=self.report)
         return BoolType()
 
     def _visit_collection_loop(self, node):
@@ -543,8 +533,7 @@ class Tifa(ast.NodeVisitor):
         if isinstance(iter, ast.Name):
             iter_list_name = iter.id
             if iter_list_name == "___":
-                self.report_issue("Unconnected blocks",
-                                  {"position": self.locate(iter)})
+                unconnected_blocks(self.locate(iter), report=self.report)
             state = self.iterate_variable(iter_list_name, self.locate(iter))
             iter_type = state.type
         else:
@@ -554,14 +543,10 @@ class Tifa(ast.NodeVisitor):
             # TODO: It should check if its ONLY ever iterating over an empty list.
             # For now, only reports if we are NOT in a function
             if len(self.scope_chain) == 1:
-                self.report_issue("Iterating over empty list",
-                                  {"name": iter_list_name,
-                                   "position": self.locate(iter)})
+                iterating_over_empty_list(self.locate(iter), iter_list_name)
 
         if not isinstance(iter_type, INDEXABLE_TYPES):
-            self.report_issue("Iterating over Non-list",
-                              {"name": iter_list_name,
-                               "position": self.locate(iter)})
+            iterating_over_non_list(self.locate(iter), iter_list_name, report=self.report)
 
         iter_subtype = iter_type.index(LiteralNum(0))
 
@@ -570,9 +555,7 @@ class Tifa(ast.NodeVisitor):
 
         if iter_variable_name and iter_list_name:
             if iter_variable_name == iter_list_name:
-                self.report_issue("Iteration Problem",
-                                  {"name": iter_variable_name,
-                                   "position": self.locate(node.target)})
+                iteration_problem(self.locate(node.target), iter_variable_name)
 
     def visit_comprehension(self, node):
         self._visit_collection_loop(node)
@@ -652,9 +635,7 @@ class Tifa(ast.NodeVisitor):
                                 parameter.subtype = annotation.subtype
                         # TODO: Check that arg.type and parameter type match!
                         if not are_types_equal(annotation, parameter, True):
-                            self.report_issue("Parameter Type Mismatch",
-                                              {"parameter": annotation, "parameter_name": name,
-                                               "argument": parameter})
+                            parameter_type_mismatch(self.locate(), name, annotation, parameter)
                     if parameter is not None:
                         parameter = parameter.clone_mutably()
                         self.store_variable(name, parameter, position)
@@ -694,10 +675,10 @@ class Tifa(ast.NodeVisitor):
         self.visit(node.test)
 
         if len(node.orelse) == 1 and isinstance(node.orelse[0], ast.Pass):
-            self.report_issue("Malformed Conditional")
+            unnecessary_second_branch(self.locate())
         elif len(node.body) == 1 and isinstance(node.body[0], ast.Pass):
             if node.orelse:
-                self.report_issue("Malformed Conditional")
+                unnecessary_second_branch(self.locate())
 
         # Visit the bodies
         this_path_id = self.path_chain[0]
@@ -806,7 +787,7 @@ class Tifa(ast.NodeVisitor):
     def visit_Name(self, node):
         name = node.id
         if name == "___":
-            self.report_issue("Unconnected blocks")
+            unconnected_blocks(self.locate())
         if isinstance(node.ctx, ast.Load):
             if name == "True" or name == "False":
                 return BoolType()
@@ -832,7 +813,7 @@ class Tifa(ast.NodeVisitor):
 
     def visit_Return(self, node):
         if len(self.scope_chain) == 1:
-            self.report_issue("Return outside function")
+            return_outside_function(self.locate(), report=self.report)
         # TODO: Unconditional return inside loop
         if node.value is not None:
             self.return_variable(self.visit(node.value))
@@ -1016,12 +997,10 @@ class Tifa(ast.NodeVisitor):
         else:
             new_state = self.trace_state(variable.state, "store", position)
             if not variable.in_scope:
-                self.report_issue("Write out of scope", {'name': name})
+                write_out_of_scope(self.locate(), name, report=self.report)
             # Type change?
             if not are_types_equal(type, variable.state.type):
-                self.report_issue("Type changes",
-                                  {'name': name, 'old': variable.state.type,
-                                   'new': type, 'position': position})
+                type_changes(position, name, variable.state.type, type)
             new_state.type = type
             # Overwritten?
             if variable.state.set == 'yes' and variable.state.read == 'no':
@@ -1058,18 +1037,19 @@ class Tifa(ast.NodeVisitor):
             out_of_scope_var = self.find_variable_out_of_scope(name)
             # Create a new instance of the variable on the current path
             if out_of_scope_var.exists:
-                self.report_issue("Read out of scope", {'name': name})
+                read_out_of_scope(self.locate(), name)
             else:
-                self.report_issue("Initialization Problem", {'name': name})
+                initialization_problem(self.locate(), name)
             new_state = State(name, [], UnknownType(), 'load', position,
                               read='yes', set='no', over='no')
             self.name_map[current_path][full_name] = new_state
         else:
             new_state = self.trace_state(variable.state, "load", position)
             if variable.state.set == 'no':
-                self.report_issue("Initialization Problem", {'name': name})
+                initialization_problem(self.locate(), name)
             if variable.state.set == 'maybe':
-                self.report_issue("Possible Initialization Problem", {'name': name})
+                if name != '*return':
+                    possible_initialization_problem(self.locate(), name)
             new_state.read = 'yes'
             if not variable.in_scope:
                 self.name_map[current_path][variable.scoped_name] = new_state
@@ -1119,9 +1099,7 @@ class Tifa(ast.NodeVisitor):
             state.over = 'no' if left.over == 'no' else 'maybe'
         else:
             if not are_types_equal(left.type, right.type):
-                self.report_issue("Type changes", {'name': left.name,
-                                                   'old': left.type,
-                                                   'new': right.type})
+                type_changes(self.locate(), left.name, left.type, right.type)
             state.read = Tifa.match_rso(left.read, right.read)
             state.set = Tifa.match_rso(left.set, right.set)
             state.over = Tifa.match_rso(left.over, right.over)

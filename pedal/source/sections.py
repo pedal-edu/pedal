@@ -1,13 +1,12 @@
-from pedal.core.commands import feedback
-from pedal.core.report import MAIN_REPORT
-from pedal.source.constants import TOOL_NAME_SOURCE, not_enough_sections, syntax_error
 import ast
 import re
+from pedal.core.report import MAIN_REPORT
+from pedal.source.constants import TOOL_NAME_SOURCE, not_enough_sections, syntax_error
 
 DEFAULT_SECTION_PATTERN = r'^(##### Part .+)$'
 
 
-def separate_into_sections(pattern= DEFAULT_SECTION_PATTERN, report=MAIN_REPORT):
+def separate_into_sections(pattern=DEFAULT_SECTION_PATTERN, report=MAIN_REPORT):
     if report['source']['sections']:
         # TODO: System constraint violated: separating into sections multiple times
         pass
@@ -69,13 +68,7 @@ def verify_section(report=MAIN_REPORT):
         parsed = ast.parse(code, source['filename'])
         source['ast'] = parsed
     except SyntaxError as e:
-        syntax_error()
-        report.attach('Syntax error', category='Syntax', tool='Source',
-                      group=source['section'],
-                      mistake={'message': "Invalid syntax on line "
-                                          + str(e.lineno+source['line_offset'])+"\n",
-                               'error': e,
-                               'position': {"line": e.lineno}})
+        syntax_error(e.lineno, e.filename, e.offset, e.text, e.__traceback__, e, report)
         source['success'] = False
         if 'ast' in source:
             del source['ast']
@@ -109,15 +102,15 @@ class _finish_section:
 
 def finish_section(number, *functions, **kwargs):
     if 'next_section' in kwargs:
-        next_section = kwargs['next_section']
+        ns = kwargs['next_section']
     else:
-        next_section = False
+        ns = False
     if len(functions) == 0:
         x = _finish_section(number, *functions)
         x()
     else:
         result = _finish_section(number, *functions)
-        if next_section:
+        if ns:
             print("\tNEXT SECTION")
         return result
 

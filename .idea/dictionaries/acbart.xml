@@ -2,9 +2,13 @@
   <dictionary name="acbart">
     <words>
       <w>chunking</w>
+      <w>classmethod</w>
+      <w>feedbacks</w>
       <w>metacognitive</w>
+      <w>postcondition</w>
       <w>sandboxed</w>
       <w>showable</w>
+      <w>suppressions</w>
       <w>tifa</w>
       <w>uncategorized</w>
     </words>

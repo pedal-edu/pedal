@@ -7,12 +7,13 @@ import os
 import string
 from unittest.mock import patch
 
-from pedal.core import MAIN_REPORT
+from pedal.core.report import MAIN_REPORT
 from pedal.core.commands import feedback
+from pedal.utilities.exceptions import ExpandedTraceback, add_context_to_error
 from pedal.sandbox import mocked
-from pedal.sandbox.exceptions import (SandboxTraceback, SandboxHasNoFunction,
+from pedal.sandbox.exceptions import (SandboxHasNoFunction,
                                       SandboxStudentCodeException,
-                                      SandboxHasNoVariable, _add_context_to_error)
+                                      SandboxHasNoVariable)
 from pedal.sandbox.timeout import timeout
 from pedal.sandbox.messages import EXTENDED_ERROR_EXPLANATION
 from pedal.sandbox.result import SandboxResult
@@ -566,18 +567,18 @@ class Sandbox(DataSandbox):
                     context += "\n"+self.INPUT_CONTEXT_MESSAGE.format(inputs=inputs)
             else:
                 context = self.FILE_CONTEXT_MESSAGE.format(filename=self.report['source']['filename'])
-            self.exception = _add_context_to_error(self.exception, context)
+            self.exception = add_context_to_error(self.exception, context)
         line_offset = self.report['source'].get('line_offset', 0)
         student_filename = self.report['source'].get('filename', as_filename)
         if 'lines' in self.report['source']:
             lines = self.report['source']['lines']
         else:
             lines = code.split("\n")
-        traceback = SandboxTraceback(self.exception, exc_info,
-                                     self.full_traceback,
-                                     self.instructor_filename,
-                                     line_offset, student_filename,
-                                     lines)
+        traceback = ExpandedTraceback(self.exception, exc_info,
+                                      self.full_traceback,
+                                      self.instructor_filename,
+                                      line_offset, student_filename,
+                                      lines)
         self.exception_position = {'line': traceback.line_number}
         self.exception_formatted = traceback.format_exception()
         self.exception_name = str(self.exception.__class__)[8:-2]

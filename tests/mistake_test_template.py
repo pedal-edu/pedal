@@ -1,6 +1,6 @@
 import unittest
 from pedal.cait.cait_api import *
-from pedal.core import MAIN_REPORT
+from pedal.core.report import MAIN_REPORT
 from pedal.source import set_source
 from pedal.tifa import tifa_analysis
 

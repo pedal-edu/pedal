@@ -12,8 +12,8 @@ here = "" if os.path.basename(os.getcwd()) == "tests" else "tests/"
 
 from pedal.environments.vpl import resolve, strip_tags
 from pedal.source import next_section, verify_section, check_section_exists, set_source_file
-from pedal.core import MAIN_REPORT
-from pedal.core.imperative import compliment, clear_report
+from pedal.core.report import MAIN_REPORT
+from pedal.core.commands import compliment, clear_report
 
 
 class TestVPL(unittest.TestCase):

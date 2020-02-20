@@ -1,7 +1,7 @@
 import re
 from pedal.source import get_program
 from pedal.sandbox.compatibility import get_output
-from pedal.core.imperative import gently_r, explain_r
+from pedal.core.commands import gently_r, explain_r
 
 
 # Feedback for author's name

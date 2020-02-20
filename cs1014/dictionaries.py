@@ -1,6 +1,6 @@
-from pedal.core.imperative import gently_r, explain_r
+from pedal.core.commands import gently_r, explain_r
 from pedal.cait.cait_api import *
-from pedal.mistakes.instructor_append import app_assign
+from CS1014.mistakes.instructor_append import app_assign
 
 
 # dict_acc_group

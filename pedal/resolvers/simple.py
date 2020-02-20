@@ -1,25 +1,18 @@
-from pedal.core import MAIN_REPORT, Feedback
+from pedal.core.report import MAIN_REPORT
+from pedal.core.feedback import Feedback
 from pedal.resolvers.core import make_resolver
 
 DEFAULT_CATEGORY_PRIORITY = [
-    'syntax',
-    'mistakes',
-    'instructor',
-    'analyzer',
-    'runtime',
-    'student',
-    'positive',
-    'instructions',
-    'uncategorized',
+    Feedback.CATEGORIES.SYNTAX,
+    Feedback.CATEGORIES.MISTAKES,
+    Feedback.CATEGORIES.INSTRUCTOR,
+    Feedback.CATEGORIES.ALGORITHMIC,
+    Feedback.CATEGORIES.RUNTIME,
+    Feedback.CATEGORIES.STUDENT,
+    Feedback.CATEGORIES.POSITIVE,
+    Feedback.CATEGORIES.INSTRUCTIONS,
+    Feedback.CATEGORIES.UNKNOWN
 ]
-
-# For compatibility with the old feedback API
-LEGACY_CATEGORIZATIONS = {
-    # 'student': 'runtime',
-    'parser': 'syntax',
-    'verifier': 'syntax',
-    'instructor': 'instructor'
-}
 
 
 def by_priority(feedback):
@@ -31,89 +24,50 @@ def by_priority(feedback):
     Returns:
         float: A decimal number representing the feedback's relative priority.
     """
-    category = 'uncategorized'
+    category = Feedback.CATEGORIES.UNKNOWN
     if feedback.category is not None:
         category = feedback.category.lower()
     priority = 'medium'
     if feedback.priority is not None:
         priority = feedback.priority.lower()
-        priority = LEGACY_CATEGORIZATIONS.get(priority, priority)
+        priority = Feedback.CATEGORIES.ALIASES.get(priority, priority)
     if category in DEFAULT_CATEGORY_PRIORITY:
         value = DEFAULT_CATEGORY_PRIORITY.index(category)
     else:
         value = len(DEFAULT_CATEGORY_PRIORITY)
-    offset = .5
-    if priority == 'low':
-        offset = .7
-    elif priority == 'high':
-        offset = .3
-    elif priority not in ('low', 'medium', 'high'):
-        if priority in DEFAULT_CATEGORY_PRIORITY:
-            value = DEFAULT_CATEGORY_PRIORITY.index(priority)
-            offset = .1
+    if priority in DEFAULT_CATEGORY_PRIORITY:
+        value = DEFAULT_CATEGORY_PRIORITY.index(priority)
+    offset = priority_offset(priority)
     return value + offset
 
 
-def parse_message(component):
-    if isinstance(component, str):
-        return component
-    elif isinstance(component, list):
-        return '<br>\n'.join(parse_message(c) for c in component)
-    elif isinstance(component, dict):
-        if "html" in component:
-            return component["html"]
-        elif "message" in component:
-            return component["message"]
-        else:
-            raise ValueError("Component has no message field: " + str(component))
+def priority_offset(priority):
+    if priority == 'low':
+        return .7
+    elif priority == 'medium':
+        return .5
+    elif priority == 'high':
+        return .3
     else:
-        raise ValueError("Invalid component type: " + str(type(component)))
-
-
-def parse_data(component):
-    if isinstance(component, str):
-        return [{'message': component}]
-    elif isinstance(component, list):
-        return component
-    elif isinstance(component, dict):
-        return [component]
+        return .1
 
 
 def parse_feedback(feedback):
-    # Default returns
-    success = False
-    performance = 0
-    message = None
-    data = []
-    # Actual processing
-    for feedback_type in Feedback.MESSAGE_TYPES:
-        feedback_value = getattr(feedback, feedback_type)
-        if feedback_value is not None:
-            data.extend(parse_data(feedback_value))
-            parsed_message = parse_message(feedback_value)
-            if parsed_message is not None:
-                message = parsed_message
-    if feedback.result is not None:
-        success = feedback.result
-    if feedback.performance is not None:
-        performance = feedback.performance
-    return success, performance, message, data
+    message = feedback.message or feedback.text
+    return feedback.correct, feedback.score, message, feedback.fields
 
 
 @make_resolver
-def resolve(report=None, priority_key=None):
+def resolve(report=MAIN_REPORT, priority_key=by_priority):
     """
     Args:
+        priority_key: The key function to sort feedbacks by
         report (Report): The report object to resolve down. Defaults to the
                          global MAIN_REPORT
 
     Returns
         str: A string of HTML feedback to be delivered
     """
-    if report is None:
-        report = MAIN_REPORT
-    if priority_key is None:
-        priority_key = by_priority
     # Prepare feedbacks
     feedbacks = report.feedback
     feedbacks.sort(key=priority_key)
@@ -135,9 +89,7 @@ def resolve(report=None, priority_key=None):
         success, partial, message, data = parse_feedback(feedback)
         final_success = success or final_success
         final_score += partial
-        if (message is not None and
-                final_message is None and
-                feedback.priority != 'positive'):
+        if message is not None and final_message is None and feedback.priority != 'positive':
             final_message = message
             final_category = feedback.category
             final_label = feedback.label

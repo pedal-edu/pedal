@@ -10,7 +10,8 @@ from pedal.cait.stretchy_tree_matching import *
 from pedal.cait.cait_node import *
 from pedal.source import set_source
 from pedal.tifa import tifa_analysis
-from pedal.core import MAIN_REPORT, clear_report
+from pedal.core.report import MAIN_REPORT
+from pedal.core.commands import clear_report
 from pedal.cait.cait_api import *
 
 '''

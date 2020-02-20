@@ -70,7 +70,7 @@ Important concepts:
 """
 
 from pedal.tifa.tifa import Tifa
-from pedal.core import MAIN_REPORT
+from pedal.core.report import MAIN_REPORT
 
 NAME = 'TIFA'
 SHORT_DESCRIPTION = "Finds common issues caused by students."

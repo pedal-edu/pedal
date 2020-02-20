@@ -64,10 +64,8 @@ messages:
 from pedal.core.commands import set_success, give_partial
 
 from pedal.sandbox.compatibility import _check_sandbox
-from pedal.toolkit.printing import *
-from pedal.toolkit.utilities import *
 from pedal.toolkit.functions import *
-from pedal.assertions.tests import equality_test
+from pedal.utilities.comparisons import equality_test
 
 SETTING_SHOW_CASE_DETAILS = "show case details"
 DEFAULT_SETTINGS = {
