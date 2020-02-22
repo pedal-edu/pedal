@@ -15,6 +15,7 @@ class Execution:
         self.tracer_style = tracer_style
         self.old_style_messages = old_style_messages
         self.report=report
+        self.final = None
 
     def __enter__(self):
         clear_report(report=self.report)
@@ -30,9 +31,8 @@ class Execution:
 
     def __exit__(self, *args):
         suppress("runtime", "FileNotFoundError", report=self.report)
-        (self.success, self.score, self.category, self.label,
-         self.message, self.data, self.hide) = simple.resolve()
-        self.feedback = """{label}<br>{message}""".format(
-            label=self.label,
-            message=self.message
+        self.final = simple.resolve()
+        self.feedback = """{title}\n{message}""".format(
+            title=self.final.title,
+            message=self.final.message
         )

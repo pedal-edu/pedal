@@ -72,7 +72,7 @@ def raise_exception(exception, position=None, report=MAIN_REPORT, message=None):
         message = "<pre>{}</pre>\n{}".format(str(exception), extended)
     # Skulpt compatible name lookup
     name = str(exception.__class__)[8:-2]
-    runtime_error(message, exception, position, report=report)
+    runtime_error(message, name, exception, position, report=report)
     sandbox.exception = exception
 
 

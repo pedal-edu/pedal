@@ -31,6 +31,8 @@ class FeedbackCategory:
     SYSTEM = 'system'
     #: A category for feedback that are not actually errors, but is positive information.
     POSITIVE = 'positive'
+    #: A special category recognizing a completed submission
+    COMPLETE = 'complete'
     #: A category for feedback that are not actually errors, but is neutral.
     INSTRUCTIONS = 'instructions'
     #: A category for unknown feedback. Ideally, never used.

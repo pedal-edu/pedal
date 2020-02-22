@@ -1,6 +1,11 @@
 from pedal.core.report import MAIN_REPORT
+from pedal.core.commands import set_success
 from pedal.core.feedback import Feedback
 from pedal.resolvers.core import make_resolver
+
+DEFAULT_NO_FEEDBACK_MESSAGE = "No errors reported."
+DEFAULT_NO_FEEDBACK_TITLE = "No Errors"
+
 
 DEFAULT_CATEGORY_PRIORITY = [
     "highest",
@@ -15,6 +20,39 @@ DEFAULT_CATEGORY_PRIORITY = [
     Feedback.CATEGORIES.UNKNOWN,
     "lowest"
 ]
+
+
+class FinalFeedback:
+    """
+    Internal class used for organizing the feedback into one place. Dumpable into a simple dictionary.
+    """
+    def __init__(self, success=None, score=None, category=None, label=None, title=None,
+                 message=None, data=None, hide_correctness=None):
+        self.success = success
+        self.score = score
+        self.category = category
+        self.label = label
+        self.title = title
+        self.message = message
+        self.data = data
+        self.hide_correctness = hide_correctness
+
+    def __str__(self) -> str:
+        return "FinalFeedback({label!r}, {title!r}, {message!r})".format(label=self.label,
+                                                                         title=self.title,
+                                                                         message=self.message[:50])
+
+    def to_json(self) -> dict:
+        return {
+            'success': self.success,
+            'score': self.score,
+            'category': self.category,
+            'label': self.label,
+            'title': self.title,
+            'message': self.message,
+            'data': self.data,
+            'hide_correctness': self.hide_correctness
+        }
 
 
 def by_priority(feedback):
@@ -56,7 +94,8 @@ def priority_offset(priority):
 
 def parse_feedback(feedback):
     message = feedback.message or feedback.text
-    return feedback.correct, feedback.score, message, feedback.fields
+    title = feedback.title or feedback.label
+    return feedback.correct, feedback.score, message, title, feedback.fields
 
 
 @make_resolver
@@ -75,12 +114,10 @@ def resolve(report=MAIN_REPORT, priority_key=by_priority):
     feedbacks.sort(key=priority_key)
     suppressions = report.suppressions
     # Process
-    final_success = False
-    final_score = 0
-    final_message = None
-    final_category = 'Instructor'
-    final_label = 'No errors'
-    final_data = []
+    final = FinalFeedback(success=False, score=0,
+                          title=None, message=None,
+                          category=Feedback.CATEGORIES.COMPLETE, label='set_success_no_errors',
+                          data=[], hide_correctness=False)
     for feedback in feedbacks:
         category = feedback.category.lower()
         if category in suppressions:
@@ -90,23 +127,24 @@ def resolve(report=MAIN_REPORT, priority_key=by_priority):
                 continue
         if feedback.label in report.suppressed_labels:
             continue
-        success, partial, message, data = parse_feedback(feedback)
-        final_success = success or final_success
-        final_score += partial if partial is not None else 0
-        if message is not None and final_message is None and feedback.priority != 'positive':
-            final_message = message
-            final_category = feedback.category
-            final_label = feedback.label
-            final_data = data
-    if final_message is None:
-        final_message = "No errors reported."
-    final_hide_correctness = suppressions.get('success', False)
-    if (not final_hide_correctness and final_success and
-            final_label == 'No errors' and
-            final_category == 'Instructor'):
-        final_category = 'Complete'
-        final_label = 'Complete'
-        final_message = "Great work!"
-    return (final_success, final_score, final_category,
-            final_label, final_message, final_data,
-            final_hide_correctness)
+        success, partial, message, title, data = parse_feedback(feedback)
+        final.score += partial if partial is not None else 0
+        if feedback.muted:
+            continue
+        final.success = success or final.success
+        if message is not None and final.message is None and feedback.priority != 'positive':
+            final.message = message
+            final.title = title
+            final.category = feedback.category
+            final.label = feedback.label
+            final.data = data
+    if final.message is None:
+        final.title = DEFAULT_NO_FEEDBACK_TITLE
+        final.message = DEFAULT_NO_FEEDBACK_MESSAGE
+    final.hide_correctness = suppressions.get('success', False)
+    if (not final.hide_correctness and final.success and
+            final.label == 'set_success_no_errors' and final.category == Feedback.CATEGORIES.COMPLETE):
+        # TODO: Promote to be its own atomic feedback function
+        final.title = set_success.title
+        final.message = set_success.text_template()
+    return final

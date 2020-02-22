@@ -270,9 +270,16 @@ def multiple_return_types(location, expected, actual, report=MAIN_REPORT):
                         text_template="",
                         justification="")
 def module_not_found(location, name, is_dynamic=False, error=None, report=MAIN_REPORT):
-    fields = {"name": name, "is_dynamic": is_dynamic, "error": error}
+    fields = {"location": location, "name": name, "is_dynamic": is_dynamic, "error": error}
     return _generic_tifa_feedback_function(module_not_found, fields, report=report, muted=True)
 
+
+@AtomicFeedbackFunction(title="Append to non-list",
+                        text_template="",
+                        justification="")
+def append_to_non_list(location, name, type, report=MAIN_REPORT):
+    fields = {'location': location, "name": name, "type": type }
+    return _generic_tifa_feedback_function(append_to_non_list, fields, report=report, muted=True)
 
 '''
 TODO: Finish these checks

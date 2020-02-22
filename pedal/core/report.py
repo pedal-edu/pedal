@@ -90,6 +90,8 @@ class Report:
             category = category.lower()
             if isinstance(label, str):
                 label = label.lower()
+            if category in FeedbackCategory.ALIASES:
+                category = FeedbackCategory.ALIASES[category]
             if category not in self.suppressions:
                 self.suppressions[category] = []
             self.suppressions[category].append(label)

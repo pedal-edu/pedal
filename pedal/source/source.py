@@ -31,7 +31,8 @@ def reset(report=MAIN_REPORT):
         'sections': None,
         'section': None,
         'section_pattern': None,
-        'line_offset': None
+        # TODO: Consider moving line_offset into Submission
+        'line_offset': 0
     }
     return report[TOOL_NAME]
 

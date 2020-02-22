@@ -54,7 +54,8 @@ class Feedback:
         muted (bool): Whether this piece of feedback is something that should be shown to a student. There are
             various use cases for muted feedback: they can serve as flags for later conditionals, suppressed
             default kinds of feedback, or perhaps feedback that is interesting for analysis but not pedagogically
-            helpful to give to the student.
+            helpful to give to the student. They will still contribute to overall score, but not to the correcntess
+            of the submission.
 
         author (List[str]): A list of names/emails that indicate who created this piece of feedback. They can be
             either names, emails, or combinations in the style of `"Cory Bart <acbart@udel.edu>"`.

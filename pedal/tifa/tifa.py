@@ -1052,6 +1052,7 @@ class Tifa(ast.NodeVisitor):
                         module in base_module.submodules):
                     base_module = base_module.submodules[module]
                 else:
+                    print("Checking", chain, module)
                     module_not_found(self.locate(), chain, False, None, report=self.report)
             return base_module
         else:

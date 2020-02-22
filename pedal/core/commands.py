@@ -17,7 +17,10 @@ from pedal.core.submission import Submission
 feedback = Feedback
 
 
-@AtomicFeedbackFunction(title="Success",
+# TODO: force_success function, which ignores errors to give the points.
+
+
+@AtomicFeedbackFunction(title="Complete",
                         text_template="Great work!".format)
 def set_success(score=1, justification=None, tool=None, group=None, report=MAIN_REPORT):
     """
@@ -27,11 +30,14 @@ def set_success(score=1, justification=None, tool=None, group=None, report=MAIN_
     assignment is done.
 
     Args:
+        tool:
+        group:
+        report:
         justification (str): Internal message that explains why this function was used.
         score (number): Arbitrary value to set the user's score to. Defaults to 1.
     """
     return feedback("set_success",
-                    tool=tool, category=FeedbackCategory.INSTRUCTOR, kind=FeedbackKind.RESULT,
+                    tool=tool, category=FeedbackCategory.COMPLETE, kind=FeedbackKind.RESULT,
                     justification=justification, valence=Feedback.POSITIVE_VALENCE,
                     title=set_success.title, message=set_success.text_template(),
                     text=set_success.text_template(),

@@ -1,5 +1,7 @@
 import ast
 
+from pedal.tifa.feedbacks import append_to_non_list
+
 
 def are_literals_equal(first, second):
     if first is None or second is None:
@@ -122,9 +124,7 @@ class Type:
             return self.fields[attr]
         # TODO: Handle more kinds of common mistakes
         if attr == "append":
-            tifa.report_issue('Append to non-list',
-                              {'name': tifa.identify_caller(callee),
-                               'position': callee_position, 'type': self})
+            append_to_non_list(callee_position, tifa.identify_caller(callee), self, report=tifa.report)
         return UnknownType()
 
     def is_empty(self):
