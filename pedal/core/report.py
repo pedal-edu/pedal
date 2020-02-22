@@ -1,5 +1,7 @@
 __all__ = ['Report', 'MAIN_REPORT']
 
+from pedal.core.feedback_category import FeedbackCategory
+
 
 class Report:
     """
@@ -46,6 +48,7 @@ class Report:
     def clear(self):
         self.feedback = []
         self.suppressions = {}
+        self.suppressed_labels = []
         self._tool_data = {}
         self.group = None
         self.group_names = {}
@@ -56,7 +59,7 @@ class Report:
         self.submission = submission
 
     def hide_correctness(self):
-        self.suppressions['success'] = []
+        self.suppressions[FeedbackCategory.RESULT] = []
 
     def add_feedback(self, feedback):
         """
@@ -71,22 +74,25 @@ class Report:
         self.feedback.append(feedback)
         return feedback
 
-    def suppress(self, category, label=True, where=True):
+    def suppress(self, category=None, label=True, where=True):
         """
         Args:
             category (str): The category of feedback to suppress.
-            label (str): A specific label to match against and suppress.
+            label (bool or str): A specific label to match against and suppress.
             where (bool or group): Which group of report to localize the
                 suppression to. If instead `True` is passed, the suppression
                 occurs in every group globally.
                 TODO: Currently, only global suppression is supported.
         """
-        category = category.lower()
-        if isinstance(label, str):
-            label = label.lower()
-        if category not in self.suppressions:
-            self.suppressions[category] = []
-        self.suppressions[category].append(label)
+        if category is None:
+            self.suppressed_labels.append(label)
+        else:
+            category = category.lower()
+            if isinstance(label, str):
+                label = label.lower()
+            if category not in self.suppressions:
+                self.suppressions[category] = []
+            self.suppressions[category].append(label)
 
     def add_hook(self, event, function):
         """

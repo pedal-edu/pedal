@@ -41,12 +41,14 @@ def set_success(score=1, justification=None, tool=None, group=None, report=MAIN_
 
 
 @AtomicFeedbackFunction(title="Compliment")
-def compliment(message, value=0, justification=None, locations=None, tool=None, group=None, report=MAIN_REPORT):
+def compliment(message, value=0, title=None,
+               justification=None, locations=None, tool=None, group=None, report=MAIN_REPORT):
     """
     Create a positive feedback for the user, potentially on a specific line of
     code.
 
     Args:
+        title (str): If None, defaults to "Compliment"
         message (str): The message to display to the user.
         locations (int): The relevant line of code to reference.
         value (float): The number to increase the user's score by.
@@ -56,7 +58,7 @@ def compliment(message, value=0, justification=None, locations=None, tool=None, 
                     category=FeedbackCategory.INSTRUCTOR, kind=FeedbackKind.ENCOURAGEMENT,
                     justification=justification, locations=locations,
                     valence=Feedback.POSITIVE_VALENCE,
-                    title=compliment.title, message=message, text=message,
+                    title=title or compliment.title, message=message, text=message,
                     score=value, correct=False, muted=False, version='1.0.0',
                     author=PEDAL_DEVELOPERS, group=group, report=report
                     )
@@ -64,7 +66,7 @@ def compliment(message, value=0, justification=None, locations=None, tool=None, 
 
 @AtomicFeedbackFunction(title="Partial Credit",
                         text_template="Partial credit".format)
-def give_partial(value, justification=None, tool=None, group=None, report=MAIN_REPORT):
+def give_partial(value, justification=None, title=None, tool=None, group=None, report=MAIN_REPORT):
     """
     Increases the user's current score by the `value`.
 
@@ -75,7 +77,7 @@ def give_partial(value, justification=None, tool=None, group=None, report=MAIN_R
     return feedback("give_partial", tool=tool, category=FeedbackCategory.INSTRUCTOR,
                     kind=FeedbackKind.RESULT,
                     justification=justification, valence=Feedback.POSITIVE_VALENCE,
-                    title=give_partial.title, message=give_partial.text_template(),
+                    title=title or give_partial.title, message=give_partial.text_template(),
                     text=give_partial.text_template(),
                     score=value, correct=False, muted=True, version='1.0.0', author=PEDAL_DEVELOPERS, group=group,
                     report=report)
@@ -90,47 +92,68 @@ def system_error(tool, explanation, author=PEDAL_DEVELOPERS, report=MAIN_REPORT)
                     muted=True, author=author, report=report)
 
 
-# TODO: Fix the rest
-
-def explain(message, priority='medium', line=None, label='explain'):
-    MAIN_REPORT.explain(message, priority, line, label=label)
-
-
-def guidance(message, priority='medium', line=None, label='Guidance'):
-    MAIN_REPORT.guidance(message, priority, line, label=label)
-
-
-def gently(message, line=None, label='explain'):
-    MAIN_REPORT.gently(message, line, label=label)
+@AtomicFeedbackFunction(title="Instructor Feedback")
+def explain(message, label='explain', title=None, fields=None,
+            justification=None, priority=None, line=None, text=None, score=None, muted=False,
+            version='0.0.1', author=None, tags=None, group=None, report=MAIN_REPORT):
+    return feedback(label, category=Feedback.CATEGORIES.INSTRUCTOR,
+                    kind=FeedbackKind.MISTAKE, justification=justification, priority=priority,
+                    valence=Feedback.NEGATIVE_VALENCE, title=title or explain.title,
+                    message=message or text, text=text or message,
+                    fields=fields or {}, locations=line, score=score, muted=muted, version=version,
+                    author=author, tags=tags, group=group or report.group, report=report)
 
 
-def gently_r(message, code, line=None, label="explain"):
-    gently(message + "<br><br><i>({})<i></br></br>".format(code), line, label=label)
-    return message
+@AtomicFeedbackFunction(title="Instructor Feedback")
+def gently(message, label='gently', title=None, fields=None,
+           justification=None, priority=Feedback.CATEGORIES.STUDENT, line=None, text=None, score=None, muted=False,
+           version='0.0.1', author=None, tags=None, group=None, report=MAIN_REPORT):
+    return feedback(label, category=Feedback.CATEGORIES.INSTRUCTOR,
+                    kind=FeedbackKind.MISTAKE, justification=justification, priority=priority,
+                    valence=Feedback.NEGATIVE_VALENCE, title=title or gently.title,
+                    message=message or text, text=text or message,
+                    fields=fields or {}, locations=line, score=score, muted=muted, version=version,
+                    author=author, tags=tags, group=group or report.group, report=report)
 
 
-def explain_r(message, code, priority='medium', line=None, label="explain"):
-    explain(message + "<br><br><i>({})<i></br></br>".format(code), priority, line, label=label)
-    return message
+@AtomicFeedbackFunction(title="Instructor Guidance")
+def guidance(message, label="guidance", title=None, fields=None,
+             justification=None, priority=None, line=None, text=None, score=None,
+             muted=False, version='0.0.1', author=None, tags=None, group=None, report=MAIN_REPORT):
+    return feedback(label, category=Feedback.CATEGORIES.INSTRUCTIONS,
+                    kind=FeedbackKind.INSTRUCTIONAL, justification=justification, priority=priority,
+                    valence=Feedback.NEUTRAL_VALENCE, title=title or guidance.title,
+                    message=message or text, text=text or message,
+                    fields=fields or {}, locations=line, score=score, muted=muted, version=version,
+                    author=author, tags=tags, group=group or report.group, report=report)
 
 
 def hide_correctness(report=MAIN_REPORT):
     report.hide_correctness()
 
 
-def suppress(category, label=True, report=MAIN_REPORT):
+def suppress(category=None, label=True, report=MAIN_REPORT):
     report.suppress(category, label)
 
 
 def log(message, report=MAIN_REPORT):
-    report.log(message)
+    return feedback("log", category=Feedback.CATEGORIES.SYSTEM, muted=True, text=message,
+                    valence=Feedback.NEUTRAL_VALENCE)
 
 
 def debug(message, report=MAIN_REPORT):
-    report.debug(message)
+    return feedback("debug", category=Feedback.CATEGORIES.SYSTEM, muted=True, text=message,
+                    valence=Feedback.NEGATIVE_VALENCE, priority='high')
 
 
 def clear_report(report=MAIN_REPORT):
+    """
+    Removes all existing data from the report, including any submissions, suppressions, feedback,
+    and Tool data.
+
+    Args:
+        report: The report to clear (defaults to the :py:ref:`pedal.core.report.MAIN_REPORT`).
+    """
     report.clear()
 
 
@@ -144,10 +167,7 @@ def contextualize_report(submission, filename='answer.py', clear=True, report=MA
         submission (str or Submission):
         filename (str or None): If the `submission` was not a :py:class:`~pedal.core.submission.Submission`,
             then this will be used as the filename for the code given in `submission`.
-        report:
-
-    Returns:
-
+        report: The report to attach this feedback to (defaults to the :py:ref:`pedal.core.report.MAIN_REPORT`).
     """
     if not isinstance(submission, Submission):
         submission = Submission(files={filename: submission})
@@ -156,28 +176,15 @@ def contextualize_report(submission, filename='answer.py', clear=True, report=MA
     report.contextualize(submission)
 
 
-def get_all_feedback(report=MAIN_REPORT):
+def get_all_feedback(report=MAIN_REPORT) -> [Feedback]:
+    """
+    Gives access to the list of feedback from the report. Usually, you won't need this; but if you want
+    to build on the results of earlier tools, it can be a useful mechanism.
+
+    Args:
+        report: The report to attach this feedback to (defaults to the :py:ref:`pedal.core.report.MAIN_REPORT`).
+
+    Returns:
+        List[pedal.core.feedback.Feedback]: A list of feedback objects.
+    """
     return report.feedback
-
-
-def explain(self, message, priority='medium', line=None, group=None,
-            label='explain'):
-    misconception = {'message': message}
-    if line is not None:
-        misconception['line'] = line
-    if group is None:
-        group = self.group
-    self.attach(label, priority=priority, category='instructor',
-                group=group, misconception=misconception)
-
-def gently(self, message, line=None, group=None, label='explain'):
-    self.explain(message, priority='student', line=line, group=group,
-                 label=label)
-
-def guidance(self, message, line=None, group=None, label='guidance'):
-    hint = {'message': message}
-    if line is not None:
-        hint['line'] = line
-    if group is None:
-        group = self.group
-    self.attach(label, priority='instructions', category='instructions', group=group, hint=hint)

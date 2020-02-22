@@ -1,5 +1,5 @@
 from pedal.cait.cait_api import find_match, find_matches
-from pedal.core.commands import gently_r, explain_r
+from pedal.core.commands import gently, explain
 
 
 def filter_group():
@@ -27,7 +27,7 @@ def missing_if_in_for():
                            "    if __expr__:\n"
                            "        pass")
     if not matches:
-        return explain_r(message, code, label=tldr)
+        return explain(message, label=code, title=tldr)
     return False
 
 
@@ -49,5 +49,5 @@ def append_not_in_if():
     match = find_match("if ___:\n"
                        "    ___.append(___)")
     if not match:
-        return explain_r(message, code, label=tldr)
+        return explain(message, label=code, title=tldr)
     return False

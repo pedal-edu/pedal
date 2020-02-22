@@ -1,5 +1,5 @@
 from pedal.cait.cait_api import find_match, find_matches, data_state
-from pedal.core.commands import gently_r, explain_r
+from pedal.core.commands import gently, explain
 
 
 def histogram_group():
@@ -26,7 +26,7 @@ def histogram_missing():
     tldr = "Missing Histogram"
     match = find_match("plt.hist(___)")
     if not match:
-        return explain_r(message, code, label=tldr)
+        return explain(message, label=code, title=tldr)
     return False
 
 
@@ -46,7 +46,7 @@ def plot_show_missing():
     tldr = "No Plot Shown"
     match = find_match("plt.show()")
     if not match:
-        return explain_r(message, code, label=tldr)
+        return explain(message, label=code, title=tldr)
     return False
 
 
@@ -71,7 +71,7 @@ def histogram_argument_not_list():
         for match in matches:
             _argument_ = match["_argument_"].astNode
             if not _argument_.get_data_state() or not _argument_.get_data_state().was_type('list'):
-                return explain_r(message.format(_argument_.id), code, label=tldr)
+                return explain(message.format(_argument_.id), label=code, title=tldr)
     return False
 
 
@@ -104,7 +104,7 @@ def histogram_wrong_list():
             submatches = __expr__.find_matches("_list_.append(___)")
             if submatches:
                 return False
-        return explain_r(message, code, label=tldr)
+        return explain(message, label=code, title=tldr)
     return False
 
 
@@ -121,4 +121,4 @@ def histogram_wrong_placement():
                 for match02 in matches02:
                     if match02.match_lineno > match.match_lineno:
                         return False
-    return explain_r(message, code, label=tldr)
+    return explain(message, label=code, title=tldr)

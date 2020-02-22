@@ -5,7 +5,7 @@ from pedal.core.commands import explain, gently
 import CS1014.mistakes.instructor_append as append_api
 from pedal.toolkit.utilities import *
 from pedal.sandbox.compatibility import get_output, get_plots
-from pedal.core.commands import gently_r, explain_r
+from pedal.core.commands import gently, explain
 
 
 # ################8.2 Start#######################
@@ -18,7 +18,7 @@ def wrong_list_length_8_2():
         for match in matches:
             __expr__ = match["__expr__"]
             if __expr__.ast_name == "List" and len(__expr__.elts) < 3:
-                return explain_r(message, code, label=tldr)
+                return explain(message, label=code, title=tldr)
     return False
 
 
@@ -32,7 +32,7 @@ def missing_list_initialization_8_2():
         __expr__ = match["__expr__"]
         if __expr__.ast_name == "List":
             return False
-    return explain_r(message, code, label=tldr)
+    return explain(message, label=code, title=tldr)
 
 
 def wrong_list_is_constant_8_2():
@@ -43,7 +43,7 @@ def wrong_list_is_constant_8_2():
     for match in matches:
         __expr__ = match["__expr__"]
         if __expr__.ast_name == "Num":
-            return explain_r(message, code, label=tldr)
+            return explain(message, label=code, title=tldr)
     return False
 
 
@@ -62,7 +62,7 @@ def list_all_zeros_8_2():
                 all_zeros = False
                 break
         if all_zeros:
-            return explain_r(message, code, label=tldr)
+            return explain(message, label=code, title=tldr)
     return False
 
 # ################8.2 End#######################
@@ -82,7 +82,7 @@ def wrong_list_initialization_placement_8_3():
             for_lineno = for_match.match_lineno
             for init_match in init_matches:
                 if init_match.match_lineno > for_lineno:
-                    return explain_r(message, code, label=tldr)
+                    return explain(message, label=code, title=tldr)
     return False
 
 
@@ -99,7 +99,7 @@ def wrong_accumulator_initialization_placement_8_3():
             for_lineno = for_match.match_lineno
             for init_match in init_matches:
                 if init_match.match_lineno > for_lineno:
-                    return explain_r(message, code, label=tldr)
+                    return explain(message, label=code, title=tldr)
     return False
 
 
@@ -110,7 +110,7 @@ def wrong_iteration_body_8_3():
     match = find_match("for _item_ in _list_:\n"
                        "    sum_length = ___ + ___\n")
     if not match:
-        return explain_r(message, code, label=tldr)
+        return explain(message, label=code, title=tldr)
     return False
 
 
@@ -123,7 +123,7 @@ def wrong_print_8_3():
                        "    pass\n"
                        "print(_total_)")
     if not match:
-        return explain_r(message, code, label=tldr)
+        return explain(message, label=code, title=tldr)
     return False
 
 
@@ -141,7 +141,7 @@ def missing_target_slot_empty_8_4():
         for match in matches:
             _item_ = match["_item_"][0]
             if _item_.id == "___":
-                return explain_r(message, code, tldr)
+                return explain(message, label=code, title=tldr)
     return False
 
 
@@ -154,7 +154,7 @@ def missing_addition_slot_empty_8_4():
         for match in matches:
             _item_ = match["_item_"][0]
             if _item_.id == "___":
-                return explain_r(message, code, label=tldr)
+                return explain(message, label=code, title=tldr)
     return False
 
 
@@ -170,7 +170,7 @@ def wrong_names_not_agree_8_4():
             _item1_ = match["_item1_"][0]
             _item2_ = match["_item2_"][0]
             if _item1_.id != _item2_.id:
-                return explain_r(message.format(_item1_.id, _item2_.id), code, label=tldr)
+                return explain(message.format(_item1_.id, _item2_.id), label=code, title=tldr)
     return False
 
 
@@ -196,7 +196,7 @@ def wrong_modifying_list_8_5():
     code = "mod_list_8.5"
     match = find_match("[20473, 27630, 17849, 19032, 16378]")
     if not match:
-        return explain_r(message, code)
+        return explain(message, label=code)
     return False
 
 
@@ -215,7 +215,7 @@ def wrong_modifying_list_8_6():
     code = "mod_list_8.6"
     match = find_match("_list_ = [2.9, 1.5, 2.3, 6.1]")
     if not match:
-        return explain_r(message, code)
+        return explain(message, label=code)
     return False
 
 
@@ -245,7 +245,7 @@ def wrong_should_be_counting():
             __expr__ = match["__expr__"]
             submatches = __expr__.find_matches("___ = ___ + _item_")
             if submatches:
-                return explain_r(message, code, label=tldr)
+                return explain(message, label=code, title=tldr)
     return False
 
 
@@ -272,7 +272,7 @@ def wrong_should_be_summing():
             __expr__ = match["__expr__"]
             submatches = __expr__.find_matches("___ = 1 + ___", )
             if submatches:
-                return explain_r(message, code, label=tldr)
+                return explain(message, label=code, title=tldr)
     return False
 
 
@@ -302,7 +302,7 @@ def missing_addition_slot_empty():
         for match in matches:
             _item_ = match["_item_"][0]
             if _item_.id == "___":
-                return explain_r(message, code, tldr)
+                return explain(message, label=code, title=tldr)
     return False
 
 
@@ -334,7 +334,7 @@ def wrong_cannot_sum_list():
             # submatches = __expr__.find_matches("___ = ___ + {}".format(_list_.id), )
             submatches = __expr__.find_matches("___ = ___ + _list_")
             if submatches:
-                return explain_r(message, code, label=tldr)
+                return explain(message, label=code, title=tldr)
     return False
 
 
@@ -344,7 +344,7 @@ def missing_no_print():
     tldr = "Missing Output"
     prints = find_match('print(___)', cut=True)
     if not prints:
-        return explain_r(message, code, label=tldr)
+        return explain(message, label=code, title=tldr)
     return False
 
 
@@ -381,7 +381,7 @@ def missing_counting_list():
             submatches = __expr__.find_matches("_sum_ = _sum_ + 1", )
             if submatches:
                 return False
-    return explain_r(message, code, label=tldr)
+    return explain(message, label=code, title=tldr)
 
 
 def missing_summing_list():
@@ -419,7 +419,7 @@ def missing_summing_list():
             submatches = __expr__.find_matches("_sum_ = _sum_ + _item_")
             if submatches:
                 return False
-    return explain_r(message, code, label=tldr)
+    return explain(message, label=code, title=tldr)
 
 
 def missing_zero_initialization():
@@ -475,7 +475,7 @@ def missing_zero_initialization():
                                               "for ___ in ___:\n"
                                               "    __expr__").format(_sum_.id))
                     if not matches02:
-                        return explain_r(message.format(_sum_.id), code, label=tldr)
+                        return explain(message.format(_sum_.id), label=code, title=tldr)
     return False
 
 
@@ -489,7 +489,7 @@ def wrong_printing_list():
         for match in matches:
             __expr__ = match["__expr__"]
             if __expr__.find_matches("print(___)", ):
-                return explain_r(message, code, label=tldr)
+                return explain(message, label=code, title=tldr)
     return False
 
 
@@ -513,7 +513,7 @@ def missing_average():
                     if _total_.id != _count_.id:
                         matches.append(match)
     if not len(matches) > 0:
-        return explain_r(message, code, label=tldr)
+        return explain(message, label=code, title=tldr)
     return False
 
 
@@ -534,7 +534,7 @@ def warning_average_in_iteration():
                     _count_ = submatch["_count_"][0]
                     _average_ = submatch["_average_"][0]
                     if _total_.id != _count_.id != _average_.id and _total_.id != _average_.id:
-                        return explain_r(message.format(_total_.id, _count_.id), code, label=tldr)
+                        return explain(message.format(_total_.id, _count_.id), label=code, title=tldr)
 
     return False
 
@@ -560,7 +560,7 @@ def wrong_average_denominator():
                         _count_ = submatch["_count_"][0]
                         _value_ = submatch02["_value_"][0]
                         if _count_.id != _value_.id:
-                            return explain_r(message, code, label=tldr)
+                            return explain(message, label=code, title=tldr)
     return False
 
 
@@ -586,7 +586,7 @@ def wrong_average_numerator():
                         _value_ = submatch02["_value_"][0]
                         _total_ = submatch["_total_"][0]
                         if _total_.id != _value_.id:
-                            return explain_r(message, code, label=tldr)
+                            return explain(message, label=code, title=tldr)
     return False
 
 
@@ -603,7 +603,7 @@ def wrong_compare_list():
             _list_ = match["_list_"][0]
             __expr__ = match["__expr__"]
             if __expr__.has(_list_.astNode):
-                return explain_r(message.format(_list_.id), code, label=tldr)
+                return explain(message.format(_list_.id), label=code, title=tldr)
     return False
 
 
@@ -615,7 +615,7 @@ def wrong_for_inside_if():
                        "    for ___ in ___:\n"
                        "        pass")
     if match:
-        return explain_r(message, code, label=tldr)
+        return explain(message, label=code, title=tldr)
     return False
 
 
@@ -630,7 +630,7 @@ def iterator_is_function():
         for loop in for_loops:
             list_prop = loop.iter
             if list_prop.ast_name == 'Call':
-                return explain_r(message, code, label=tldr)
+                return explain(message, label=code, title=tldr)
     except Exception:
         return False
     return False
@@ -643,7 +643,7 @@ def wrong_list_initialization_9_1():
     tldr = "Incorrect List Initialization"
     match = find_match('rainfall_list = weather.get("Data.Precipitation","Station.Location","Blacksburg, VA")')
     if not match:
-        return explain_r(message, code, label=tldr)
+        return explain(message, label=code, title=tldr)
     return False
 
 
@@ -654,7 +654,7 @@ def wrong_accumulator_initialization_9_1():
     tldr = "Incorrect Accumulation Variable initialization"
     match = find_match("rainfall_sum = 0")
     if not match:
-        return explain_r(message, code, label=tldr)
+        return explain(message, label=code, title=tldr)
     return False
 
 
@@ -667,7 +667,7 @@ def wrong_accumulation_9_1():
         for match in matches:
             _item_ = match["_item_"][0]
             if _item_.id != "rainfall_sum":
-                return explain_r(message, code, label=tldr)
+                return explain(message, label=code, title=tldr)
     return False
 
 
@@ -680,7 +680,7 @@ def wrong_list_initialization_placement_9_1():
                        "for _item_ in _list_:\n"
                        "    pass")
     if not match:
-        return explain_r(message, code, label=tldr)
+        return explain(message, label=code, title=tldr)
     return False
 
 
@@ -693,7 +693,7 @@ def wrong_accumulator_initialization_placement_9_1():
                            "for _item_ in _list_:\n"
                            "    pass")
     if not matches:
-        return explain_r(message, code, label=tldr)
+        return explain(message, label=code, title=tldr)
     return False
 
 
@@ -704,7 +704,7 @@ def wrong_iteration_body_9_1():
     matches = find_matches("for _item_ in _list_:\n"
                            "    rainfall_sum = ___")
     if not matches:
-        return explain_r(message, code, label=tldr)
+        return explain(message, label=code, title=tldr)
     return False
 
 
@@ -720,7 +720,7 @@ def wrong_print_9_1():
                        "    pass\n"
                        "print(_total_)")
     if not match:
-        return explain_r(message, code, label=tldr)
+        return explain(message, label=code, title=tldr)
     return False
 
 
@@ -734,7 +734,7 @@ def wrong_list_initialization_9_2():
     tldr = "Incorrect List Initialization"
     matches = find_matches('rainfall_list = weather.get("Data.Precipitation","Station.Location","Blacksburg, VA")')
     if not matches:
-        return explain_r(message, code, label=tldr)
+        return explain(message, label=code, title=tldr)
     return False
 
 
@@ -744,7 +744,7 @@ def wrong_accumulator_initialization_9_2():
     code = "accu_init_9.2"
     tldr = "Incorrect Initialization"
     if not find_matches("rainfall_count = 0"):
-        return explain_r(message, code, label=tldr)
+        return explain(message, label=code, title=tldr)
     return False
 
 
@@ -758,7 +758,7 @@ def wrong_accumulation_9_2():
         for match in matches:
             _item_ = match["_item_"][0]
             if _item_.id != "rainfall_count":
-                return explain_r(message, code, label=tldr)
+                return explain(message, label=code, title=tldr)
     return False
 
 
@@ -771,7 +771,7 @@ def wrong_list_initialization_placement_9_2():
                            "for _item_ in _list_:\n"
                            "    pass")
     if not matches:
-        return explain_r(message, code, label=tldr)
+        return explain(message, label=code, title=tldr)
     return False
 
 
@@ -784,7 +784,7 @@ def wrong_accumulator_initialization_placement_9_2():
                            "for _item_ in _list_:\n"
                            "    pass")
     if not matches:
-        return explain_r(message, code, label=tldr)
+        return explain(message, label=code, title=tldr)
     return False
 
 
@@ -801,7 +801,7 @@ def wrong_iteration_body_9_2():
             __expr__ = match["__expr__"]
             if __expr__.numeric_logic_check(1, 'var > 0'):
                 return False
-    return explain_r(message, code, label=tldr)
+    return explain(message, label=code, title=tldr)
 
 
 def wrong_decision_body_9_2():
@@ -816,7 +816,7 @@ def wrong_decision_body_9_2():
             __expr__ = match["__expr__"]
             if __expr__.numeric_logic_check(1, 'var > 0'):
                 return False
-    return explain_r(message, code, label=tldr)
+    return explain(message, label=code, title=tldr)
 
 
 def wrong_print_9_2():
@@ -828,7 +828,7 @@ def wrong_print_9_2():
                        "    pass\n"
                        "print(_total_)")
     if not match:
-        return explain_r(message, code, label=tldr)
+        return explain(message, label=code, title=tldr)
     return False
 
 
@@ -846,7 +846,7 @@ def wrong_comparison_9_6():
         for match in matches:
             __comp__ = match["__comp__"]
             if not __comp__.numeric_logic_check(1, 'var > 80'):
-                return explain_r(message, code, label=tldr)
+                return explain(message, label=code, title=tldr)
     return False
 
 
@@ -874,7 +874,7 @@ def wrong_conversion_10_2():
         matches02 = __expr__.find_matches("_target_*0.04".format(_target_.id))
         if matches02:
             return False
-        return explain_r(message.format(_target_.id), code, label=tldr)
+        return explain(message.format(_target_.id), label=code, title=tldr)
     return False
 
 
@@ -893,7 +893,7 @@ def wrong_filter_condition_10_3():
             __expr__ = match["__expr__"]
             if __expr__.numeric_logic_check(1, "var > 0") or __expr__.numeric_logic_check(1, "var != 0"):
                 return False
-        return explain_r(message, code, label=tldr)
+        return explain(message, label=code, title=tldr)
     return False
 
 
@@ -915,7 +915,7 @@ def wrong_and_filter_condition_10_4():
             __expr__ = match["__expr__"]
             if (__expr__.has(_temp_.astNode) and
                     not __expr__.numeric_logic_check(1, "32 <= temp <= 50")):
-                return explain_r(message, code, label=tldr)
+                return explain(message, label=code, title=tldr)
     return False
 
 
@@ -937,7 +937,7 @@ def wrong_nested_filter_condition_10_4():
                     __cond1__.numeric_logic_check(1, "32 <= temp") and __cond2__.numeric_logic_check(1, "temp <= 50") or
                     __cond2__.numeric_logic_check(1, "32 <= temp") and
                     __cond1__.numeric_logic_check(1, "temp <= 50"))):
-                return explain_r(message, code, label=tldr)
+                return explain(message, label=code, title=tldr)
     return False
 
 
@@ -958,7 +958,7 @@ def wrong_conversion_problem_10_5():
             matches02 = __expr__.find_matches("_item_*0.62")
             if matches02:
                 return False
-        return explain_r(message, code, label=tldr)
+        return explain(message, label=code, title=tldr)
     return False
 
 
@@ -985,7 +985,7 @@ def wrong_filter_problem_atl1_10_5():
                 for match02 in matches02:
                     if (__cond__.has(_item_) and
                             not __cond__.numeric_logic_check(0.1, "item > 16.1290322580645")):
-                        return explain_r(message, code, label=tldr)
+                        return explain(message, label=code, title=tldr)
     return False
 
 
@@ -1007,7 +1007,7 @@ def wrong_filter_problem_atl2_10_5():
             for _ in matches02:
                 if not (__cond__.has(_miles_) and
                         __cond__.numeric_logic_check(1, "_item_ > 10")):
-                    return explain_r(message, code, label=tldr)
+                    return explain(message, label=code, title=tldr)
     return False
 
 
@@ -1029,7 +1029,7 @@ def wrong_append_problem_atl1_10_5():
                 new_code = "_item_*0.62"
                 matches02 = __expr__.find_matches(new_code)
                 if not matches02:
-                    return explain_r(message, code, label=tldr)
+                    return explain(message, label=code, title=tldr)
     return False
 
 
@@ -1047,7 +1047,7 @@ def wrong_append_problem_atl2_10_5():
         _var_ = match["_var_"][0]
         if __cond__.has(_miles_) and __cond__.numeric_logic_check(1, "_miles_ > 10"):
             if _var_.id != _miles_.id:
-                return explain_r(message, code, label=tldr)
+                return explain(message, label=code, title=tldr)
     return False
 
 
@@ -1077,7 +1077,7 @@ def wrong_debug_10_6():
                 name1 != "quakes_in_miles" and name2 != "quakes" and
                 (name1 != "quake" or name2 != "quake")):
             return False
-    return explain_r(message, code, label=tldr)
+    return explain(message, label=code, title=tldr)
 
 
 def wrong_debug_10_7():
@@ -1096,7 +1096,7 @@ def wrong_debug_10_7():
                        "plt.show()\n")
 
     if not match:
-        return explain_r(message, code, label=tldr)
+        return explain(message, label=code, title=tldr)
     return False
 
 
@@ -1117,7 +1117,7 @@ def wrong_initialization_in_iteration():
                     __expr__sub = submatch["__expr__"]
                     _assign_ = submatch["_assign_"][0].astNode
                     if len(__expr__sub.find_all("Name")) == 0:
-                        return explain_r(message.format(_assign_.id), code, label=tldr)
+                        return explain(message.format(_assign_.id), label=code, title=tldr)
     return False
 
 
@@ -1127,7 +1127,7 @@ def wrong_duplicate_var_in_add():
     tldr = "Duplicate Division"
     match = find_match("_item_ + _item_")
     if match:
-        return explain_r(message, code, label=tldr)
+        return explain(message, label=code, title=tldr)
     return False
 
 
@@ -1138,16 +1138,16 @@ def plot_group_error(output=None, plots=None):
     if plots is None:
         plots = get_plots()
     if len(plots) > 1:
-        explain_r('You should only be plotting one thing!', "print_one", "Multiple Calls to plot")
+        explain('You should only be plotting one thing!', label="print_one", title="Multiple Calls to plot")
         return True
     elif len(plots) == 0:
-        explain_r('The algorithm is plotting an empty list. Check your logic.', 'blank_plot', "Blank Plot")
+        explain('The algorithm is plotting an empty list. Check your logic.', label='blank_plot', title="Blank Plot")
         return True
     elif output:
-        explain('You should be plotting, not printing!', 'printing', "Printing instead of Plotting")
+        explain('You should be plotting, not printing!', label='printing', title="Printing instead of Plotting")
         return True
     elif len(plots[0]['data']) != 1:
-        explain('You should only be plotting one thing!', 'one_plot', "Too Many Plots")
+        explain('You should only be plotting one thing!', label='one_plot', title="Too Many Plots")
         return True
 
 
@@ -1167,7 +1167,7 @@ def all_labels_present():  # TODO: make sure it's before the show, maybe check f
     match03 = find_match("plt.ylabel(___)\nplt.show()")
 
     if (not match) or (not match02) or (not match03):
-        return gently_r(message, code, label=tldr)
+        return gently(message, label=code, title=tldr)
     return False
 
 
@@ -1176,7 +1176,7 @@ def show_parens():
     code = "show_parens"
     tldr = "Incorrect Show"
     if not find_match("plt.show"):
-        return gently_r()
+        return gently(message, label=code, title=tldr)
     return False
 
 
@@ -1189,5 +1189,5 @@ def hard_code_8_5():  # TODO: This one's weird
         for m in match:
             __num__ = m["__num__"]
             if len(__num__.find_all("Num")) > 0:
-                return explain_r(message, code, label=tldr)
+                return explain(message, label=code, title=tldr)
     return False
