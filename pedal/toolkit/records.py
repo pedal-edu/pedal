@@ -1,5 +1,4 @@
-from pedal.core.commands import gently, explain, gently_r, explain_r, MAIN_REPORT
-from pedal.sandbox import compatibility
+from pedal.core.commands import explain
 
 
 def check_record_instance(record_instance, record_type, instance_identifier, type_identifier):

@@ -3,6 +3,7 @@ from pedal.core.feedback import Feedback
 from pedal.resolvers.core import make_resolver
 
 DEFAULT_CATEGORY_PRIORITY = [
+    "highest",
     Feedback.CATEGORIES.SYNTAX,
     Feedback.CATEGORIES.MISTAKES,
     Feedback.CATEGORIES.INSTRUCTOR,
@@ -11,7 +12,8 @@ DEFAULT_CATEGORY_PRIORITY = [
     Feedback.CATEGORIES.STUDENT,
     Feedback.CATEGORIES.POSITIVE,
     Feedback.CATEGORIES.INSTRUCTIONS,
-    Feedback.CATEGORIES.UNKNOWN
+    Feedback.CATEGORIES.UNKNOWN,
+    "lowest"
 ]
 
 

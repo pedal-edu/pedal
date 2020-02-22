@@ -1,6 +1,6 @@
 from pedal.toolkit.utilities import function_is_called
 from pedal.cait.cait_api import parse_program, def_use_error
-from pedal.core.commands import gently, explain_r, gently_r
+from pedal.core.commands import gently, explain
 from pedal.sandbox import compatibility
 
 PLOT_LABEL = {'plot': 'line plot',
@@ -16,11 +16,11 @@ def prevent_incorrect_plt():
         # explain("You have imported the <code>matplotlib.pyplot</code> module, "
         #         "but you did not rename it to <code>plt</code> using "
         #         "<code>import matplotlib.pyplot as plt</code>.<br><br><i>(plt_rename_err)<i></br></br>", 'verifier')
-        explain_r("You have imported the <code>matplotlib.pyplot</code> module, "
+        explain("You have imported the <code>matplotlib.pyplot</code> module, "
                   "but you did not rename it to <code>plt</code> using "
                   "<code>import matplotlib.pyplot as plt</code>.",
-                  "plt_rename_err",
-                  priority='verifier')
+                  label="plt_rename_err",
+                  priority='syntax')
         return True
     matplotlib_names = ['plot', 'hist', 'scatter',
                         'title', 'xlabel', 'ylabel', 'show']
@@ -35,15 +35,15 @@ def prevent_incorrect_plt():
                     #          "recommend you use <code>plt.{0}</code> instead, "
                     #          "after you use <code>import matplotlib.pyplot as "
                     #          "plt</code>.<br><br><i>(plt_wrong_import)<i></br></br>").format(name), 'verifier')
-                    explain_r(("You have attempted to use the MatPlotLib "
+                    explain(("You have attempted to use the MatPlotLib "
                                "function named <code>{0}</code>. However, you "
                                "imported MatPlotLib in a way that does not "
                                "allow you to use the function directly. I "
                                "recommend you use <code>plt.{0}</code> instead, "
                                "after you use <code>import matplotlib.pyplot as "
                                "plt</code>.").format(name),
-                              "plt_wrong_import",
-                              priority='verifier')
+                              label="plt_wrong_import",
+                              priority='syntax')
                     return True
     return False
 
@@ -52,20 +52,22 @@ def ensure_correct_plot(function_name):
     for a_plot, label in PLOT_LABEL.items():
         if function_name == a_plot:
             if not function_is_called(function_name):
-                gently_r("You are not calling the <code>{func_name}</code> function.".format(func_name=function_name),
-                         "no_{func_name}_call".format(func_name=function_name))
+                gently("You are not calling the <code>{func_name}</code> function.".format(func_name=function_name),
+                       title="Not calling {func_name}".format(func_name=function_name),
+                       fields={'func_name': function_name},
+                       label="no_{func_name}_call".format(func_name=function_name))
                 return True
         elif function_is_called(a_plot):
-            gently_r("You have called the <code>{}</code> function, which makes a {}.".format(a_plot, label),
-                     "wrong_plt")
+            gently("You have called the <code>{}</code> function, which makes a {}.".format(a_plot, label),
+                     label="wrong_plt")
             return True
     return False
 
 
 def ensure_show():
     if not function_is_called("show"):
-        gently_r("You have not called <code>show</code> function, which "
-                 "actually creates the graph.", "no_show")
+        gently("You have not called <code>show</code> function, which "
+                 "actually creates the graph.", label="no_show")
         return True
     return False
 

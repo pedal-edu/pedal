@@ -84,9 +84,9 @@ def match_parameters(name, *types, returns=None, root=None):
                 expected = parse_type_value(expected, True)
                 actual_type = parse_type(actual.annotation)
                 if not test_type_equality(expected, actual_type):
-                    gently_r("Error in definition of function `{}` parameter `{}`. Expected `{}`, "
+                    gently("Error in definition of function `{}` parameter `{}`. Expected `{}`, "
                              "instead found `{}`.".format(name, actual.arg, expected, actual_type),
-                             "wrong_parameter_type")
+                             label="wrong_parameter_type", title="Wrong Parameter Type")
                     return None
         else:
             if returns is not None:
@@ -95,14 +95,14 @@ def match_parameters(name, *types, returns=None, root=None):
                 if defn.returns:
                     actual_type = parse_type(defn.returns)
                     if not type_check(returns, actual_type):
-                        gently_r("Error in definition of function `{}` return type. Expected `{}`, "
+                        gently("Error in definition of function `{}` return type. Expected `{}`, "
                                  "instead found {}.".format(name, returns, actual_type),
-                                 "wrong_return_type")
+                                 label="wrong_return_type")
                         return None
                 else:
-                    gently_r("Error in definition of function `{}` return type. Expected `{}`, "
+                    gently("Error in definition of function `{}` return type. Expected `{}`, "
                              "but there was no return type specified.".format(name, returns),
-                             "missing_return_type")
+                             label="missing_return_type")
                     return None
             return defn
 
@@ -114,25 +114,25 @@ def match_signature(name, length, *parameters):
         if a_def._name == name:
             found_length = len(a_def.args.args)
             if found_length < length:
-                gently_r("The function named <code>{}</code> has fewer parameters ({}) "
-                         "than expected ({}). ".format(name, found_length, length), "insuff_args")
+                gently("The function named <code>{}</code> has fewer parameters ({}) "
+                         "than expected ({}). ".format(name, found_length, length), label="insuff_args")
             elif found_length > length:
-                gently_r("The function named <code>{}</code> has more parameters ({}) "
-                         "than expected ({}). ".format(name, found_length, length), "excess_args")
+                gently("The function named <code>{}</code> has more parameters ({}) "
+                         "than expected ({}). ".format(name, found_length, length), label="excess_args")
             elif parameters:
                 for parameter, arg in zip(parameters, a_def.args.args):
                     arg_name = get_arg_name(arg)
                     if arg_name != parameter:
-                        gently_r("Error in definition of <code>{}</code>. Expected a parameter named {}, "
-                                 "instead found {}.".format(name, parameter, arg_name), "name_missing")
+                        gently("Error in definition of <code>{}</code>. Expected a parameter named {}, "
+                                 "instead found {}.".format(name, parameter, arg_name), label="name_missing")
                         return None
                 else:
                     return a_def
             else:
                 return a_def
     else:
-        gently_r("No function named <code>{name}</code> was found.".format(name=name),
-                 "missing_func_{name}".format(name=name))
+        gently("No function named <code>{name}</code> was found.".format(name=name),
+                 label="missing_func", title="Missing Function", fields={'name': name})
     return None
 
 
@@ -207,13 +207,13 @@ def output_test(name, *tests):
             else:
                 result = ("I ran your function <code>{}</code> on some new arguments, and it gave the wrong output "
                           "{}/{} times.".format(name, len(tests) - success_count, len(tests)) + result)
-                gently_r(result + "</table>", "wrong_output")
+                gently(result + "</table>", label="wrong_output")
                 return None
         else:
-            gently_r("You defined {}, but did not define it as a function.".format(name), "not_func_def")
+            gently("You defined {}, but did not define it as a function.".format(name), label="not_func_def")
             return None
     else:
-        gently_r("The function <code>{}</code> was not defined.".format(name), "no_func_def")
+        gently("The function <code>{}</code> was not defined.".format(name), label="no_func_def")
         return None
 
 
@@ -272,7 +272,7 @@ def unit_test(name, *tests):
             else:
                 result = "I ran your function <code>{}</code> on some new arguments, " \
                          "and it failed {}/{} tests.".format(name, len(tests) - success_count, len(tests)) + result
-                gently_r(result + "</table>", "tests_failed")
+                gently(result + "</table>", label="tests_failed")
                 return None
         else:
             gently("You defined {}, but did not define it as a function.".format(name))
