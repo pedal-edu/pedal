@@ -8,10 +8,10 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 
 from pedal.cait.stretchy_tree_matching import *
 from pedal.cait.cait_node import *
-from pedal.source import set_source
+from pedal.source import set_source, verify
 from pedal.tifa import tifa_analysis
 from pedal.core.report import MAIN_REPORT
-from pedal.core.commands import clear_report
+from pedal.core.commands import clear_report, contextualize_report
 from pedal.cait.cait_api import *
 
 '''
@@ -446,13 +446,13 @@ class CaitTests(unittest.TestCase):
             self.assertTrue(False, "Program did not throw exception")
         except Exception:
             self.assertTrue(True, "Should NOT FAIL")
-        set_source("fun = 1 + 0")
+        contextualize_report("fun = 1 + 0")
         parse_program()
         self.assertTrue('cait' in MAIN_REPORT, "No parsing happened")
 
     """
     def test_def_use_error(self):
-        set_source("fun = fun + 1")
+        contextualize_report("fun = fun + 1")
         parse_program()
         name_node = MAIN_REPORT["source"]["ast"].body[0].cait_node.target
         self.assertTrue(def_use_error(name_node), "def_use error should have been found but wasn't")
@@ -460,27 +460,27 @@ class CaitTests(unittest.TestCase):
         self.assertFalse(def_use_error("gitax"), "variable doesn't exist")
 
     def test_data_type(self):
-        set_source("fun = 1 + 1")
+        contextualize_report("fun = 1 + 1")
         parse_program()
         name_node = MAIN_REPORT["source"]["ast"].body[0].cait_node.target
         self.assertTrue(data_type(name_node).is_equal(int), "Data type not successfully found from name node")
         self.assertTrue(data_type("fun").is_equal(int), "Data type not successfully found from str name")"""
 
     def test_find_match(self):
-        set_source("fun = 1 + 1")
+        contextualize_report("fun = 1 + 1")
         parse_program()
         match = find_match("_var_ = __expr__")
         self.assertIsInstance(match, AstMap, "Match not found")
 
     def test_find_matches(self):
-        set_source("fun = 1 + 1\nfun2 = 2 + 2")
+        contextualize_report("fun = 1 + 1\nfun2 = 2 + 2")
         parse_program()
         matches = find_matches("_var_ = __expr__")
         self.assertIsInstance(matches, list, "find_matches did not return a list")
         self.assertIsInstance(matches[0], AstMap, "find_matches does not contain an AstMap")
         self.assertEqual(len(matches), 2, "find_matches does not return the correct number of matches")
 
-        set_source("for 'fun' in ___:"
+        contextualize_report("for 'fun' in ___:"
                    "if ___:\n"
                    "    pass")
         matches = find_matches("for ___ in ___:\n"
@@ -488,13 +488,13 @@ class CaitTests(unittest.TestCase):
         self.assertFalse(matches, "find matches should have misparsed and returned False, but returned True instead")
 
     def test_invalid_code(self):
-        set_source("float('0') + 1")
+        contextualize_report("float('0') + 1")
         parse_program()
         matches = find_match("_var_ = __expr__")
         self.assertIsNone(matches)
 
     def test_old_style_api(self):
-        set_source("a = open('file.txt')")
+        contextualize_report("a = open('file.txt')")
         std_ast = parse_program()
         calls = std_ast.find_all("Call")
         self.assertEqual(len(calls), 1)
@@ -503,19 +503,19 @@ class CaitTests(unittest.TestCase):
         self.assertEqual(len(calls[0].args), 1)
 
         clear_report()
-        set_source("def a():\n  pass\na()")
+        contextualize_report("def a():\n  pass\na()")
         std_ast = parse_program()
         defs = std_ast.find_all("FunctionDef")
         self.assertEqual(len(defs), 1)
 
         clear_report()
-        set_source("1 < 1")
+        contextualize_report("1 < 1")
         std_ast = parse_program()
         compares = std_ast.find_all("Compare")
         self.assertEqual(len(compares), 1)
 
         clear_report()
-        set_source("for x in y:\n  x")
+        contextualize_report("for x in y:\n  x")
         std_ast = parse_program()
         loops = std_ast.find_all("For")
         self.assertEqual(len(loops), 1)
@@ -523,7 +523,7 @@ class CaitTests(unittest.TestCase):
 
         # Multiple assignment
         clear_report()
-        set_source("a, b = 0, 1")
+        contextualize_report("a, b = 0, 1")
         std_ast = parse_program()
         assigns = std_ast.find_all("Assign")
         self.assertEqual(len(assigns), 1)
@@ -532,7 +532,7 @@ class CaitTests(unittest.TestCase):
         self.assertEqual(assigns[0].targets[0].elts[0].id, 'a')
 
         clear_report()
-        set_source('from pprint import *')
+        contextualize_report('from pprint import *')
         parse_program()
 
     def test_matches_in_matches(self):
@@ -653,7 +653,7 @@ class CaitTests(unittest.TestCase):
                         "Incorrect symbol name, expected 'dunky' but got '{}' instead".format(match03['_funky_'].id))
 
     def test_cait_node_is_method(self):
-        set_source("class Dog:\n def bark(self):\n  pass\ndef dogs_bark(alod):\n pass")
+        contextualize_report("class Dog:\n def bark(self):\n  pass\ndef dogs_bark(alod):\n pass")
         ast = parse_program()
         functions = ast.find_all('FunctionDef')
         self.assertTrue(functions[0].is_method())
@@ -665,14 +665,14 @@ class CaitTests(unittest.TestCase):
         self.assertFalse(passes[1].is_method())
 
     def test_ast_map_symbols(self):
-        set_source("fun = 0\nfun = 1")
+        contextualize_report("fun = 0\nfun = 1")
         parse_program()
         my_match = find_match("_fun_ = ___")
         self.assertTrue(my_match["_fun_"].id == "fun")
         self.assertTrue(my_match["_fun_"][0].id == "fun")
 
     def test_function_Names(self):
-        set_source("import weather\n"
+        contextualize_report("import weather\n"
                    "weather_reports = get_weather('Data')\n"
                    "weather_reports = weather.get_weather('Data')\n"
                    "total = 0\n"
@@ -695,20 +695,20 @@ class CaitTests(unittest.TestCase):
         self.assertTrue(len(my_match4) == 1, "couldn't find attr func access")
 
         MAIN_REPORT.clear()
-        set_source('book = {"number_of_pages":285, "price":99.23, "discount":0.1}\n'
+        contextualize_report('book = {"number_of_pages":285, "price":99.23, "discount":0.1}\n'
                    'print(["price"])')
         parse_program()
         match = find_match("_var_([__str1__])")
         self.assertTrue(match["_var_"].id == "print", "couldn't find attr func access")
 
-        set_source('print("fun")')
+        contextualize_report('print("fun")')
         parse_program()
         matches = find_matches("_var_")
         var = matches[0]["_var_"]
         self.assertTrue(var.ast_name == "Name", "is: '{}' instead of Name".format(var.ast_name))
 
     def test_attribute_names(self):
-        set_source("import weather\n"
+        contextualize_report("import weather\n"
                    "weather_reports = get_weather('Data')\n"
                    "weather_reports = weather.get_weather['Data']\n"
                    "total = 0\n"
@@ -726,12 +726,13 @@ class CaitTests(unittest.TestCase):
         self.assertTrue(len(my_match2) == 1, "couldn't wild card attribute access")
 
     def test_broken_traversal(self):
-        set_source("user entered gobblydegook")
+        contextualize_report("user entered gobblydegook")
+        verify()
         parse = parse_program()
         self.assertFalse(parse.find_all('For'))
 
     def test_aug_assignment(self):
-        set_source("magnitudes = [1.5, 1.9, 4.3, 2.1, 2.0, 3.6, 0.5, 2.5, 1.9, 4.0, 3.8, 0.7, 2.2, 5.1, 1.6]\n"
+        contextualize_report("magnitudes = [1.5, 1.9, 4.3, 2.1, 2.0, 3.6, 0.5, 2.5, 1.9, 4.0, 3.8, 0.7, 2.2, 5.1, 1.6]\n"
                    "count = 0\n"
                    "for item in magnitudes:\n"
                    "    if item > 2.0:\n"
@@ -742,7 +743,7 @@ class CaitTests(unittest.TestCase):
                              "print(_var_)")[0]
         self.assertTrue(match["__exp__"].find_matches(match["_var_"].id))
 
-        set_source("magnitudes = [1.5, 1.9, 4.3, 2.1, 2.0, 3.6, 0.5, 2.5, 1.9, 4.0, 3.8, 0.7, 2.2, 5.1, 1.6]\n"
+        contextualize_report("magnitudes = [1.5, 1.9, 4.3, 2.1, 2.0, 3.6, 0.5, 2.5, 1.9, 4.0, 3.8, 0.7, 2.2, 5.1, 1.6]\n"
                    "count = 0\n"
                    "for item in magnitudes:\n"
                    "    if item > 2.0:\n"
@@ -756,7 +757,7 @@ class CaitTests(unittest.TestCase):
         self.assertTrue(submatches)
 
     def test_function_recursion(self):
-        set_source("def recursive(item):\n"
+        contextualize_report("def recursive(item):\n"
                    "    if item < 0:\n"
                    "        return 0\n"
                    "    else:"
@@ -771,7 +772,7 @@ class CaitTests(unittest.TestCase):
                             "couldn't find recursive function call")
 
     def test_use_previous(self):
-        set_source('for reports in weather_reports:\n'
+        contextualize_report('for reports in weather_reports:\n'
                    '    if report["Station"]["City"] == "Chicago":\n'
                    '        trend.append(reports["Data"]["Precipitation"])')
         matches = find_matches("for _var_ in ___:\n"
@@ -782,7 +783,7 @@ class CaitTests(unittest.TestCase):
             submatch = __expr__.find_matches("_var2_[__expr__]")
             self.assertTrue(submatch)
 
-        set_source('for reports in weather_reports:\n'
+        contextualize_report('for reports in weather_reports:\n'
                    '    if report["Station"]["City"] == "Chicago":\n'
                    '        trend.append(reports["Data"]["Precipitation"])')
         matches = find_matches("for _var_ in ___:\n"
@@ -793,7 +794,7 @@ class CaitTests(unittest.TestCase):
             submatch = __expr__.find_matches("_var_[__expr__]", use_previous=True)
             self.assertFalse(submatch)
 
-        set_source('for reports in weather_reports:\n'
+        contextualize_report('for reports in weather_reports:\n'
                    '    if report["Station"]["City"] == "Chicago":\n'
                    '        trend.append(reports["Data"]["Precipitation"])')
         matches = find_matches("for _var_ in ___:\n"

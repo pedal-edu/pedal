@@ -225,6 +225,55 @@ def unnecessary_second_branch(location, report=MAIN_REPORT):
     fields = {'location': location}
     return _generic_tifa_feedback_function(unnecessary_second_branch, fields, report=report, muted=True)
 
+
+@AtomicFeedbackFunction(title="Else on Loop Body",
+                        message_template="",
+                        justification="")
+def else_on_loop_body(location, report=MAIN_REPORT):
+    fields = {'location': location}
+    return _generic_tifa_feedback_function(else_on_loop_body, fields, report=report, muted=True)
+
+
+@AtomicFeedbackFunction(title="Recursive Call",
+                        message_template="",
+                        justification="")
+def recursive_call(location, name, report=MAIN_REPORT):
+    fields = {'location': location, 'name': name}
+    return _generic_tifa_feedback_function(recursive_call, fields, report=report, muted=True)
+
+
+@AtomicFeedbackFunction(title="Not a Function",
+                        message_template="",
+                        justification="")
+def not_a_function(location, name, report=MAIN_REPORT):
+    fields = {'location': location, 'name': name}
+    return _generic_tifa_feedback_function(not_a_function, fields, report=report, muted=True)
+
+
+@AtomicFeedbackFunction(title="Incorrect Arity",
+                        message_template="",
+                        justification="")
+def incorrect_arity(location, function_name, report=MAIN_REPORT):
+    fields = {'location': location, 'function_name': function_name}
+    return _generic_tifa_feedback_function(incorrect_arity, fields, report=report, muted=True)
+
+
+@AtomicFeedbackFunction(title="Multiple Return Types",
+                        message_template="",
+                        justification="")
+def multiple_return_types(location, expected, actual, report=MAIN_REPORT):
+    fields = {"location": location, "expected": expected, "actual": actual}
+    return _generic_tifa_feedback_function(multiple_return_types, fields, report=report, muted=True)
+
+
+@AtomicFeedbackFunction(title="Module Not Found",
+                        text_template="",
+                        justification="")
+def module_not_found(location, name, is_dynamic=False, error=None, report=MAIN_REPORT):
+    fields = {"name": name, "is_dynamic": is_dynamic, "error": error}
+    return _generic_tifa_feedback_function(module_not_found, fields, report=report, muted=True)
+
+
 '''
 TODO: Finish these checks
 "Empty Body": [], # Any use of pass on its own

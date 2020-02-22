@@ -33,6 +33,7 @@ def reset(report=MAIN_REPORT):
         'section_pattern': None,
         'line_offset': None
     }
+    return report[TOOL_NAME]
 
 
 Report.register_tool(TOOL_NAME, reset)

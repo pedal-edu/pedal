@@ -142,7 +142,7 @@ def _builtin_zip(tifa, function_type, callee, args, position):
     if args:
         tupled_types = TupleType(subtypes=[])
         for arg in args:
-            tupled_types.append(arg.index(0))
+            tupled_types.subtypes.append(arg.index(0))
         return ListType(tupled_types, empty=False)
     return ListType(empty=True)
 

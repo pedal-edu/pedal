@@ -1,81 +1,97 @@
 """
-CaitReport:
-    A collection of information from the latest CAIT run.
 
-    Attrs:
-        ast: The CaitNode tree that was most recently parsed out.
-        cache[str:CaitNode]: A dictionary mapping student code (str) to
-            parsed representations.
-        success: Whether there have been any errors so far.
-        error: The exception that occurred, or None if no exception so far.
+.. csv-table:: Cait Report Data
+    :header: "Field", "Type", "Initial", "Description"
+    :widths: 20, 20, 20, 40
+
+    "ast", "CaitNode", "None", "The CaitNode tree that was most recently parsed out."
+    "cache", "{str: CaitNode}", "{}", "A dictionary mapping previously parsed code to CaitNode trees."
+    "success", "bool", "True", "Whether the most recent parsing was successful."
+    "error", "Exception", "None", "The most recent exception, or None."
+
 """
-
-from pedal.core.report import MAIN_REPORT
+from pedal.cait.constants import TOOL_NAME
+from pedal.core.commands import system_error
+from pedal.core.report import Report, MAIN_REPORT
 from pedal.cait.stretchy_tree_matching import StretchyTreeMatcher
 from pedal.cait.cait_node import CaitNode
 import ast
+
+# TODO: Decide if we want the imports; seems like overkill?
+SOURCE_TOOL_NAME = 'source'
+TIFA_TOOL_NAME = 'tifa'
 
 
 class CaitException(Exception):
     pass
 
 
-def _parse_source(code, cait_report):
+def _parse_source(code, report=MAIN_REPORT):
     """
     Parses the given code and returns its Cait representation. If the parse was
     unsuccessful, it attaches the error to the report.
 
     Args:
         code (str): A string of Python code.
-        cait_report (dict): A Cait Report to store information in.
+        report (Report): A Report to store information in.
     Returns:
         AstNode: The parsed AST reprensetation, or None
     """
     try:
         parsed = ast.parse(code)
     except SyntaxError as e:
-        cait_report['success'] = False
-        cait_report['error'] = e
+        system_error(TOOL_NAME, "Could not parse code:" + str(e), report=report)
+        report[TOOL_NAME]['success'] = False
+        report[TOOL_NAME]['error'] = e
         return ast.parse("")
     return parsed
 
 
-def reset(student_code, report=MAIN_REPORT):
+def reset(report=MAIN_REPORT):
+    report[TOOL_NAME] = {
+        'success': True,
+        'error': None,
+        'ast': None,
+        'cache': {}
+    }
+    return report[TOOL_NAME]
+
+
+Report.register_tool(TOOL_NAME, reset)
+
+
+def reparse_if_needed(student_code=None, report=MAIN_REPORT):
     """
     Retrieves the current report for CAIT. If there is no CAIT report, it will
     generate one. If source code is given, that will be used instead of the
-    report's source code.
+    report's submission.
 
     Args:
         student_code (str): The code to parse into the a CaitNode tree. If
-            None, then it will use the code in the report's Source tool.
+            None, then it will use the code in the report's submission.
         report (Report): The report to attach data to.
 
     Returns:
         dict: Returns the Cait Report
     """
-    if 'cait' not in report:
-        report['cait'] = {'success': True, 'error': None,
-                          'ast': None, 'cache': {}}
-    cait = report['cait']
+    cait = report[TOOL_NAME]
     if student_code is not None:
         if student_code in cait['cache']:
             cait['ast'] = cait['cache'][student_code]
             return cait
         else:
-            student_ast = _parse_source(student_code, cait)
-    elif report['source']['success']:
-        student_code = report['source']['code']
+            student_ast = _parse_source(student_code, report=report)
+    # Try to steal parse from Source module, if available
+    elif report[SOURCE_TOOL_NAME]['success']:
+        student_code = report[SOURCE_TOOL_NAME]['code']
         if student_code in cait['cache']:
             cait['ast'] = cait['cache'][student_code]
             return cait
         else:
-            student_ast = report['source']['ast']
+            student_ast = report[SOURCE_TOOL_NAME]['ast']
     else:
-        report.attach("Unparsable Source", tool='cait',
-                      category='analyzer')
-        cait['success'] = False
-        cait['ast'] = CaitNode(ast.parse(""), report=report)
+        student_ast = _parse_source(report.submission.main_code, report=report)
+        cait['ast'] = CaitNode(student_ast, report=report)
         return cait
     cait['ast'] = cait['cache'][student_code] = CaitNode(student_ast, report=report)
     return cait
@@ -85,13 +101,16 @@ def require_tifa(self):
     """
     Confirms that TIFA was run successfully, otherwise raises a
     CaitException.
+
+    TODO: Is this deprecated?
     """
-    if not self.report['tifa']['success']:
+    if not self.report[TIFA_TOOL_NAME]['success']:
+        system_error(TOOL_NAME, "TIFA was not successfully run prior to CAIT.")
         raise CaitException("TIFA was not run prior to CAIT.")
 
 
 # noinspection PyBroadException
-def parse_program(student_code=None, report=None):
+def parse_program(student_code=None, report=MAIN_REPORT):
     """
     Parses student code and produces a CAIT representation.
 
@@ -103,26 +122,22 @@ def parse_program(student_code=None, report=None):
     Returns:
         CaitNode: A CAIT-enhanced representation of the root Node.
     """
-    if report is None:
-        report = MAIN_REPORT
-    cait_report = _load_cait(student_code, report)
+    cait_report = reparse_if_needed(student_code, report=report)
     return cait_report['ast']
 
 
-def expire_cait_cache(report=None):
+def expire_cait_cache(report=MAIN_REPORT):
     """
     Deletes the most recent CAIT run and any cached CAIT parses.
 
     Args:
         report (Report): The report to attach data to. Defaults to MAIN_REPORT.
     """
-    if report is None:
-        report = MAIN_REPORT
     report['cait']['ast'] = None
     report['cait']['cache'] = {}
 
 
-def def_use_error(node, report=None):
+def def_use_error(node, report=MAIN_REPORT):
     """
     Checks if node is a name and has a def_use_error
 
@@ -132,8 +147,6 @@ def def_use_error(node, report=None):
     Returns:
         True if the given name has a def_use_error
     """
-    if report is None:
-        report = MAIN_REPORT
     if not isinstance(node, str) and node.ast_name != "Name":
         raise TypeError
     try:
@@ -154,7 +167,7 @@ def def_use_error(node, report=None):
 
 
 # noinspection PyBroadException
-def data_state(node, report=None):
+def data_state(node, report=MAIN_REPORT):
     """
     Determines the Tifa State of the given node.
 
@@ -164,8 +177,6 @@ def data_state(node, report=None):
     Returns:
         The State of the object (Tifa State) or None if it doesn't exist
     """
-    if report is None:
-        report = MAIN_REPORT
     if not isinstance(node, str) and node.ast_name != "Name":
         raise TypeError
     if isinstance(node, str):
@@ -178,7 +189,7 @@ def data_state(node, report=None):
         return None
 
 
-def data_type(node, report=None):
+def data_type(node, report=MAIN_REPORT):
     """
     Looks up the type of the node using Tifa's analysis.
 
@@ -194,7 +205,7 @@ def data_type(node, report=None):
     return None
 
 
-def find_match(pattern, student_code=None, report=None, cut=False):
+def find_match(pattern, student_code=None, report=MAIN_REPORT, cut=False):
     """
     Apply Tree Inclusion and return the first match of the `pattern` in the
     `student_code`.
@@ -217,7 +228,7 @@ def find_match(pattern, student_code=None, report=None, cut=False):
         return None
 
 
-def find_matches(pattern, student_code=None, report=None, cut=False):
+def find_matches(pattern, student_code=None, cut=False, report=MAIN_REPORT):
     """
     Apply Tree Inclusion and return all matches of the `pattern` in the
     `student_code`.
@@ -230,9 +241,7 @@ def find_matches(pattern, student_code=None, report=None, cut=False):
     Returns:
         List[CaitNode]: All matching nodes for the given pattern.
     """
-    if report is None:
-        report = MAIN_REPORT
-    cait_report = _load_cait(student_code, report)
+    cait_report = reparse_if_needed(student_code, report)
     if not cait_report['success']:
         return []
     student_ast = cait_report['ast']
@@ -240,14 +249,14 @@ def find_matches(pattern, student_code=None, report=None, cut=False):
     return matcher.find_matches(student_ast)
 
 
-def find_submatches(pattern, student_code, is_mod=False):
+def find_submatches(pattern, student_code, is_mod=False, report=MAIN_REPORT):
     """
     Incomplete.
     """
-    return find_expr_sub_matches(pattern, student_code, is_mod)
+    return find_expr_sub_matches(pattern, student_code, is_mod, report=report)
 
 
-def find_expr_sub_matches(pattern, student_code, is_mod=False, report=None):
+def find_expr_sub_matches(pattern, student_code, is_mod=False, report=MAIN_REPORT):
     """
     Finds pattern in student_code
     # TODO: Add code to make pattern accept CaitNodes
@@ -260,8 +269,6 @@ def find_expr_sub_matches(pattern, student_code, is_mod=False, report=None):
     Returns:
         a list of matches or False if no matches found
     """
-    if report is None:
-        report = MAIN_REPORT
     is_node = isinstance(pattern, CaitNode)
     if not isinstance(pattern, str) and not is_node:
         raise TypeError("pattern expected str or CaitNode, found {0}".format(type(pattern)))

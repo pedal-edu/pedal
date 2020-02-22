@@ -5,12 +5,14 @@ from pedal.core.commands import system_error
 from pedal.core.report import MAIN_REPORT
 from pedal.core.location import Location
 from pedal.tifa.constants import TOOL_NAME
+from pedal.tifa.feedbacks import recursive_call, not_a_function, incorrect_arity, multiple_return_types, \
+    else_on_loop_body, module_not_found
 from pedal.tifa.type_definitions import (UnknownType, RecursedType,
                                          FunctionType, ClassType, InstanceType,
                                          NumType, NoneType, BoolType, TupleType,
                                          ListType, StrType, GeneratorType,
                                          DictType, ModuleType, SetType,
-                                         # FileType, DayType, TimeType,
+    # FileType, DayType, TimeType,
                                          type_from_json, type_to_literal, get_tifa_type,
                                          LiteralNum, LiteralBool,
                                          LiteralNone, LiteralStr,
@@ -21,11 +23,12 @@ from pedal.tifa.type_operations import (merge_types, are_types_equal,
                                         ORDERABLE_TYPES, INDEXABLE_TYPES)
 from pedal.tifa.identifier import Identifier
 from pedal.tifa.state import State
-from pedal.tifa.messages import (action_after_return, return_outside_function, write_out_of_scope,
-                                 unconnected_blocks, iteration_problem, possible_initialization_problem,
-                                 initialization_problem, unused_variable, overwritten_variable, iterating_over_non_list,
-                                 iterating_over_empty_list, incompatible_types, parameter_type_mismatch,
-                                 read_out_of_scope, type_changes, unnecessary_second_branch)
+from pedal.tifa.feedbacks import (action_after_return, return_outside_function, write_out_of_scope,
+                                  unconnected_blocks, iteration_problem, possible_initialization_problem,
+                                  initialization_problem, unused_variable, overwritten_variable,
+                                  iterating_over_non_list,
+                                  iterating_over_empty_list, incompatible_types, parameter_type_mismatch,
+                                  read_out_of_scope, type_changes, unnecessary_second_branch)
 
 __all__ = ['Tifa']
 
@@ -55,23 +58,6 @@ class Tifa(ast.NodeVisitor):
             'top_level_variables': {},
             'issues': {}
         }
-
-    def report_issue(self, issue, data=None):
-        """
-        Report the given issue with associated metadata, including the position
-        if not explicitly included.
-        """
-        if data is None:
-            data = {}
-        if 'position' not in data:
-            data['position'] = self.locate()
-        data['message'] = _format_message(issue, data)
-        if issue not in self.report['tifa']['issues']:
-            self.report['tifa']['issues'][issue] = []
-        self.report['tifa']['issues'][issue].append(data)
-        if data['message']:
-            self.report.attach(issue, category='Analyzer', tool='TIFA',
-                               mistake=data)
 
     def locate(self, node: ast.AST = None):
         """
@@ -115,7 +101,7 @@ class Tifa(ast.NodeVisitor):
         except Exception as error:
             self.report['tifa']['success'] = False
             self.report['tifa']['error'] = error
-            system_error(TOOL_NAME, "Successfully parsed but could not process AST: "+str(error), report=self.report)
+            system_error(TOOL_NAME, "Successfully parsed but could not process AST: " + str(error), report=self.report)
             return self.report['tifa']
 
     def process_ast(self, ast_tree):
@@ -172,8 +158,7 @@ class Tifa(ast.NodeVisitor):
         # Complete record of all Names
         self.scope_chain = [self.scope_id]
         self.path_chain = [self.path_id]
-        self.name_map = {}
-        self.name_map[self.path_id] = {}
+        self.name_map = {self.path_id: {}}
         self.definition_chain = []
         self.path_parents = {}
         self.final_node = None
@@ -263,7 +248,6 @@ class Tifa(ast.NodeVisitor):
             if return_state.exists and return_state.in_scope:
                 if return_state.state.set == "yes":
                     action_after_return(self.locate(), report=self.report)
-                    self.report_issue("Action after return")
 
         # No? All good, let's enter the node
         self.final_node = node
@@ -325,7 +309,7 @@ class Tifa(ast.NodeVisitor):
                 if potential_name is not None and result is None:
                     result = potential_name
             return result
-    
+
     def visit_AnnAssign(self, node):
         """
         TODO: Implement!
@@ -355,8 +339,8 @@ class Tifa(ast.NodeVisitor):
             self.store_variable(target.id, type)
         elif isinstance(target, (ast.Tuple, ast.List)):
             for i, elt in enumerate(target.elts):
-                eltType = type.index(LiteralNum(i))
-                self.assign_target(elt, eltType)
+                elt_type = type.index(LiteralNum(i))
+                self.assign_target(elt, elt_type)
         elif isinstance(target, ast.Subscript):
             left_hand_type = self.visit(target.value)
             if isinstance(left_hand_type, ListType):
@@ -473,7 +457,7 @@ class Tifa(ast.NodeVisitor):
                 self.definition_chain.pop()
                 return result
             else:
-                self.report_issue("Recursive Call", {"name": callee})
+                recursive_call(self.locate(), callee, report=self.report)
         elif isinstance(function_type, ClassType):
             constructor = function_type.get_constructor().definition
             self.definition_chain.append(constructor)
@@ -487,7 +471,7 @@ class Tifa(ast.NodeVisitor):
                     self.definition_chain.pop()
             return result
         else:
-            self.report_issue("Not a function", {"name": callee})
+            not_a_function(self.locate(), callee, report=self.report)
         return UnknownType()
 
     def visit_ClassDef(self, node):
@@ -522,25 +506,25 @@ class Tifa(ast.NodeVisitor):
 
     def _visit_collection_loop(self, node):
         # Handle the iteration list
-        iter = node.iter
+        iter_list = node.iter
         iter_list_name = None
-        if isinstance(iter, ast.Name):
-            iter_list_name = iter.id
+        if isinstance(iter_list, ast.Name):
+            iter_list_name = iter_list.id
             if iter_list_name == "___":
-                unconnected_blocks(self.locate(iter), report=self.report)
-            state = self.iterate_variable(iter_list_name, self.locate(iter))
+                unconnected_blocks(self.locate(iter_list), report=self.report)
+            state = self.iterate_variable(iter_list_name, self.locate(iter_list))
             iter_type = state.type
         else:
-            iter_type = self.visit(iter)
+            iter_type = self.visit(iter_list)
 
         if iter_type.is_empty():
             # TODO: It should check if its ONLY ever iterating over an empty list.
             # For now, only reports if we are NOT in a function
             if len(self.scope_chain) == 1:
-                iterating_over_empty_list(self.locate(iter), iter_list_name)
+                iterating_over_empty_list(self.locate(iter_list), iter_list_name)
 
         if not isinstance(iter_type, INDEXABLE_TYPES):
-            iterating_over_non_list(self.locate(iter), iter_list_name, report=self.report)
+            iterating_over_non_list(self.locate(iter_list), iter_list_name, report=self.report)
 
         iter_subtype = iter_type.index(LiteralNum(0))
 
@@ -616,7 +600,7 @@ class Tifa(ast.NodeVisitor):
                 # Process arguments
                 args = node.args.args
                 if len(args) != len(parameters):
-                    self.report_issue('Incorrect Arity', {"position": position})
+                    incorrect_arity(self.locate(), function_name, report=self.report)
                 # TODO: Handle special types of parameters
                 for arg, parameter in zip(args, parameters):
                     name = arg.arg
@@ -645,13 +629,13 @@ class Tifa(ast.NodeVisitor):
                     return_state = self.load_variable("*return", call_position)
                     return_value = return_state.type
                     if node.returns:
-                        #self.visit(node.returns)
+                        # self.visit(node.returns)
                         returns = get_tifa_type(node.returns, self)
                         if not are_types_equal(return_value, returns, True):
-                            self.report_issue("Multiple Return Types",
-                                              {"expected": returns.precise_description(),
-                                               "actual": return_value.precise_description(),
-                                               "position": return_state.position})
+                            multiple_return_types(return_state.position,
+                                                  returns.precise_description(),
+                                                  return_value.precise_description(),
+                                                  report=self.report)
             return return_value
 
         function = FunctionType(definition=definition, name=function_name)
@@ -737,7 +721,7 @@ class Tifa(ast.NodeVisitor):
                 # Process arguments
                 args = node.args.args
                 if len(args) != len(parameters):
-                    self.report_issue('Incorrect Arity', {"position": position})
+                    incorrect_arity(position, "lambda", report=self.report)
                 # TODO: Handle special types of parameters
                 for arg, parameter in zip(args, parameters):
                     name = arg.arg
@@ -769,14 +753,12 @@ class Tifa(ast.NodeVisitor):
             self.visit(generator)
         return ListType(self.visit(node.elt))
 
-
     def visit_NameConstant(self, node):
         value = node.value
         if isinstance(value, bool):
             return BoolType()
         else:
             return NoneType()
-
 
     def visit_Name(self, node):
         name = node.id
@@ -896,7 +878,7 @@ class Tifa(ast.NodeVisitor):
             self.visit(node.test)
         # If there's else bodies (WEIRD) then we should check them afterwards
         if node.orelse:
-            self.report_issue("Else on loop body")
+            else_on_loop_body(self.locate())
             for statement in node.orelse:
                 self.visit(statement)
 
@@ -960,21 +942,21 @@ class Tifa(ast.NodeVisitor):
         state.read = 'yes'
         return state
 
-    def return_variable(self, type):
+    def return_variable(self, return_type):
+        return self.store_variable("*return", return_type)
 
-        return self.store_variable("*return", type)
+    def append_variable(self, name, append_type, position=None):
+        return self.store_variable(name, append_type, position)
 
-    def append_variable(self, name, type, position=None):
-        return self.store_variable(name, type, position)
-
-    def store_variable(self, name, type, position=None):
+    def store_variable(self, name, store_type, position=None):
         """
         Update the variable with the given name to now have the new type.
 
         Args:
             name (str): The unqualified name of the variable. The variable will
                         be assumed to be in the current scope.
-            type (Type): The new type of this variable.
+            store_type (Type): The new type of this variable.
+            position: The location that this store occurred at
         Returns:
             State: The new state of the variable.
         """
@@ -985,7 +967,7 @@ class Tifa(ast.NodeVisitor):
         variable = self.find_variable_scope(name)
         if not variable.exists:
             # Create a new instance of the variable on the current path
-            new_state = State(name, [], type, 'store', position,
+            new_state = State(name, [], store_type, 'store', position,
                               read='no', set='yes', over='no')
             self.name_map[current_path][full_name] = new_state
         else:
@@ -993,9 +975,9 @@ class Tifa(ast.NodeVisitor):
             if not variable.in_scope:
                 write_out_of_scope(self.locate(), name, report=self.report)
             # Type change?
-            if not are_types_equal(type, variable.state.type):
-                type_changes(position, name, variable.state.type, type)
-            new_state.type = type
+            if not are_types_equal(store_type, variable.state.type):
+                type_changes(position, name, variable.state.type, store_type)
+            new_state.type = store_type
             # Overwritten?
             if variable.state.set == 'yes' and variable.state.read == 'no':
                 new_state.over_position = position
@@ -1070,7 +1052,7 @@ class Tifa(ast.NodeVisitor):
                         module in base_module.submodules):
                     base_module = base_module.submodules[module]
                 else:
-                    self.report_issue("Module not found", {"name": chain})
+                    module_not_found(self.locate(), chain, False, None, report=self.report)
             return base_module
         else:
             try:
@@ -1079,8 +1061,7 @@ class Tifa(ast.NodeVisitor):
                 definitions = actual_module._tifa_definitions()
                 return type_from_json(definitions)
             except Exception as e:
-                self.report_issue("Module not found",
-                                  {"name": chain, "error": str(e)})
+                module_not_found(self.locate(), chain, True, e, report=self.report)
                 return ModuleType()
 
     def combine_states(self, left, right):
