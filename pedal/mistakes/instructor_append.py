@@ -1,4 +1,4 @@
-from pedal.cait.cait_api import find_matches, find_expr_sub_matches, data_state
+from pedal.cait.cait_api import find_matches, data_state
 from pedal.report.imperative import gently_r, explain_r
 
 

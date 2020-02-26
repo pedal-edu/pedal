@@ -432,6 +432,14 @@ class SpecificMistakeTest(MistakeTest):
                        "    if fun:\n"
                        "        total = total + item\n"
                        "        count = count + 1\n"
+                       "average = total/count\n"
+                       "average = total/count\n")
+        self.assertFalse(wrong_average_denominator(), "false positive")
+
+        self.to_source("for item in items:\n"
+                       "    if fun:\n"
+                       "        total = total + item\n"
+                       "        count = count + 1\n"
                        "average = total/total\n")
         self.assertTrue(wrong_average_denominator(), "false negative")
 

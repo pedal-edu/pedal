@@ -1,6 +1,5 @@
 from pedal.cait.cait_api import (parse_program, find_match, find_matches,
-                                 find_expr_sub_matches, data_state,
-                                 def_use_error)
+                                 data_state, def_use_error)
 from pedal.report.imperative import gently_r, explain_r
 
 
