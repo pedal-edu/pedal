@@ -3,6 +3,14 @@ from pedal.core.commands import explain
 
 
 def ensure_imports(*modules):
+    """
+
+    Args:
+        *modules:
+
+    Returns:
+
+    """
     ast = parse_program()
     for module in modules:
         imports = ast.find_all("Import")

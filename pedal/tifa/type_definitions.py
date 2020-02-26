@@ -4,6 +4,15 @@ from pedal.tifa.feedbacks import append_to_non_list
 
 
 def are_literals_equal(first, second):
+    """
+
+    Args:
+        first:
+        second:
+
+    Returns:
+
+    """
     if first is None or second is None:
         return False
     elif not isinstance(first, type(second)):
@@ -38,30 +47,63 @@ class LiteralNum(LiteralValue):
     """
 
     def type(self):
+        """
+
+        Returns:
+
+        """
         return NumType()
 
 
 class LiteralBool(LiteralValue):
     def type(self):
+        """
+
+        Returns:
+
+        """
         return BoolType()
 
 
 class LiteralStr(LiteralValue):
     def type(self):
+        """
+
+        Returns:
+
+        """
         return StrType()
 
 
 class LiteralTuple(LiteralValue):
     def type(self):
+        """
+
+        Returns:
+
+        """
         return TupleType(self.value)
 
 
 class LiteralNone(LiteralValue):
     def type(self):
+        """
+
+        Returns:
+
+        """
         return LiteralNone()
 
 
 def literal_from_json(val):
+    """
+
+    Args:
+        val:
+
+    Returns:
+
+    """
     if val['type'] == 'LiteralStr':
         return LiteralStr(val['value'])
     elif val['type'] == 'LiteralNum':
@@ -102,27 +144,69 @@ class Type:
     singular_name = 'a type'
 
     def clone(self):
+        """
+
+        Returns:
+
+        """
         return self.__class__()
 
     def __str__(self):
         return str(self.__class__.__name__)
 
     def precise_description(self):
+        """
+
+        Returns:
+
+        """
         return self.singular_name
 
     def clone_mutably(self):
+        """
+
+        Returns:
+
+        """
         if self.immutable:
             return self.clone()
         else:
             return self
 
     def index(self, i):
+        """
+
+        Args:
+            i:
+
+        Returns:
+
+        """
         return self.clone()
 
     def iterate(self, i):
+        """
+
+        Args:
+            i:
+
+        Returns:
+
+        """
         return self.index(i)
 
     def load_attr(self, attr, tifa, callee=None, callee_position=None):
+        """
+
+        Args:
+            attr:
+            tifa:
+            callee:
+            callee_position:
+
+        Returns:
+
+        """
         if attr in self.fields:
             return self.fields[attr]
         # TODO: Handle more kinds of common mistakes
@@ -131,15 +215,36 @@ class Type:
         return UnknownType()
 
     def is_empty(self):
+        """
+
+        Returns:
+
+        """
         return True
 
     def is_equal(self, other):
+        """
+
+        Args:
+            other:
+
+        Returns:
+
+        """
         # TODO: Make this more sophisticated!
         if type(self) not in TYPE_LOOKUPS:
             return False
         return other in TYPE_LOOKUPS[type(self)]
 
     def is_instance(self, other):
+        """
+
+        Args:
+            other:
+
+        Returns:
+
+        """
         # TODO: Implement this correctly
         return self.is_equal(other)
 
@@ -172,25 +277,76 @@ class FunctionType(Type):
         if returns is not None and definition is None:
             if returns == 'identity':
                 def definition(ti, ty, na, args, ca):
+                    """
+
+                    Args:
+                        ti:
+                        ty:
+                        na:
+                        args:
+                        ca:
+
+                    Returns:
+
+                    """
                     if args:
                         return args[0].clone()
                     return UnknownType()
             elif returns == 'element':
                 def definition(ti, ty, na, args, ca):
+                    """
+
+                    Args:
+                        ti:
+                        ty:
+                        na:
+                        args:
+                        ca:
+
+                    Returns:
+
+                    """
                     if args:
                         return args[0].index(0)
                     return UnknownType()
             elif returns == 'void':
                 def definition(ti, ty, na, args, ca):
+                    """
+
+                    Args:
+                        ti:
+                        ty:
+                        na:
+                        args:
+                        ca:
+
+                    Returns:
+
+                    """
                     return NoneType()
             else:
                 def definition(ti, ty, na, args, ca):
+                    """
+
+                    Args:
+                        ti:
+                        ty:
+                        na:
+                        args:
+                        ca:
+
+                    Returns:
+
+                    """
                     return returns.clone()
         self.definition = definition
         self.name = name
 
 
 class ClassType(Type):
+    """
+
+    """
     singular_name = 'a class'
 
     def __init__(self, name):
@@ -199,17 +355,36 @@ class ClassType(Type):
         self.scope_id = None
 
     def add_attr(self, name, type):
+        """
+
+        Args:
+            name:
+            type:
+        """
         self.fields[name] = type
 
     def get_constructor(self):
+        """
+
+        Returns:
+
+        """
         i = InstanceType(self)
         return FunctionType(name='__init__', returns=i)
 
     def clone(self):
+        """
+
+        Returns:
+
+        """
         return ClassType(self.name)
 
 
 class InstanceType(Type):
+    """
+
+    """
     def __init__(self, parent):
         self.parent = parent
         self.fields = parent.fields
@@ -218,9 +393,20 @@ class InstanceType(Type):
         return "InstanceTypeOf" + str(self.parent.name)
 
     def clone(self):
+        """
+
+        Returns:
+
+        """
         return InstanceType(self.parent)
 
     def add_attr(self, name, type):
+        """
+
+        Args:
+            name:
+            type:
+        """
         # TODO: What if this is a type change?
         self.parent.add_attr(name, type)
 
@@ -230,6 +416,14 @@ class NumType(Type):
     immutable = True
 
     def index(self, i):
+        """
+
+        Args:
+            i:
+
+        Returns:
+
+        """
         return UnknownType()
 
 
@@ -254,18 +448,34 @@ class TupleType(Type):
         self.subtypes = subtypes
 
     def index(self, i):
+        """
+
+        Args:
+            i:
+
+        Returns:
+
+        """
         if isinstance(i, LiteralNum):
             return self.subtypes[i.value].clone()
         else:
             return self.subtypes[i].clone()
 
     def clone(self):
+        """
+
+        Returns:
+
+        """
         return TupleType([t.clone() for t in self.subtypes])
 
     immutable = True
 
 
 class ListType(Type):
+    """
+
+    """
     singular_name = 'a list'
 
     def __init__(self, subtype=None, empty=True):
@@ -275,12 +485,36 @@ class ListType(Type):
         self.empty = empty
 
     def index(self, i):
+        """
+
+        Args:
+            i:
+
+        Returns:
+
+        """
         return self.subtype.clone()
 
     def clone(self):
+        """
+
+        Returns:
+
+        """
         return ListType(self.subtype.clone(), self.empty)
 
     def load_attr(self, attr, tifa, callee=None, callee_position=None):
+        """
+
+        Args:
+            attr:
+            tifa:
+            callee:
+            callee_position:
+
+        Returns:
+
+        """
         if attr == 'append':
             def _append(tifa, function_type, callee, args, position):
                 if args:
@@ -295,19 +529,40 @@ class ListType(Type):
         return Type.load_attr(self, attr, tifa, callee, callee_position)
 
     def is_empty(self):
+        """
+
+        Returns:
+
+        """
         return self.empty
 
 
 class StrType(Type):
+    """
+
+    """
     singular_name = 'a string'
 
     def __init__(self, empty=False):
         self.empty = empty
 
     def index(self, i):
+        """
+
+        Args:
+            i:
+
+        Returns:
+
+        """
         return StrType()
 
     def is_empty(self):
+        """
+
+        Returns:
+
+        """
         return self.empty
 
     fields = _dict_extends(Type.fields, {})
@@ -359,6 +614,14 @@ class FileType(Type):
     singular_name = 'a file'
 
     def index(self, i):
+        """
+
+        Args:
+            i:
+
+        Returns:
+
+        """
         return StrType()
 
     fields = _dict_extends(Type.fields, {
@@ -368,13 +631,26 @@ class FileType(Type):
     })
 
     def is_empty(self):
+        """
+
+        Returns:
+
+        """
         return False
 
 
 class DictType(Type):
+    """
+
+    """
     singular_name = 'a dictionary'
 
     def precise_description(self):
+        """
+
+        Returns:
+
+        """
         base = "a dictionary"
         if self.literals:
             base += " mapping "
@@ -395,12 +671,30 @@ class DictType(Type):
         self.keys = keys
 
     def clone(self):
+        """
+
+        Returns:
+
+        """
         return DictType(self.empty, self.literals, self.keys, self.values)
 
     def is_empty(self):
+        """
+
+        Returns:
+
+        """
         return self.empty
 
     def has_literal(self, l):
+        """
+
+        Args:
+            l:
+
+        Returns:
+
+        """
         for literal, value in zip(self.literals, self.values):
             if are_literals_equal(literal, l):
                 return value
@@ -421,17 +715,50 @@ class DictType(Type):
             return self.values[0].clone()
 
     def index(self, i):
+        """
+
+        Args:
+            i:
+
+        Returns:
+
+        """
         return self._access_item(i, False)
 
     def iterate(self, i):
+        """
+
+        Args:
+            i:
+
+        Returns:
+
+        """
         return self._access_item(i, True)
 
     def update_key(self, literal_key, type):
+        """
+
+        Args:
+            literal_key:
+            type:
+        """
         self.literals.append(literal_key)
         self.values.append(type)
 
 
     def load_attr(self, attr, tifa, callee=None, callee_position=None):
+        """
+
+        Args:
+            attr:
+            tifa:
+            callee:
+            callee_position:
+
+        Returns:
+
+        """
         if attr == 'items':
             def _items(tifa, function_type, callee, args, position):
                 if self.literals is None:
@@ -463,6 +790,9 @@ class DictType(Type):
 
 
 class ModuleType(Type):
+    """
+
+    """
     singular_name = 'a module'
 
     def __init__(self, name="*UnknownModule", submodules=None, fields=None):
@@ -515,6 +845,14 @@ TYPE_LOOKUPS = {
 
 
 def type_from_json(val):
+    """
+
+    Args:
+        val:
+
+    Returns:
+
+    """
     if val['type'] == 'DictType':
         values = [type_from_json(v) for v in val['values']]
         empty = val.get('empty', None)
@@ -548,6 +886,14 @@ def type_from_json(val):
 
 
 def type_to_literal(type):
+    """
+
+    Args:
+        type:
+
+    Returns:
+
+    """
     if isinstance(type, NumType):
         return LiteralNum(0)
     elif isinstance(type, StrType):
@@ -574,6 +920,15 @@ TYPE_STRINGS = {
 
 
 def get_tifa_type_from_str(value, self):
+    """
+
+    Args:
+        value:
+        self:
+
+    Returns:
+
+    """
     #if value in custom_types:
     #    return custom_types[value]
     if value.lower() in TYPE_STRINGS:
@@ -589,6 +944,15 @@ def get_tifa_type_from_str(value, self):
 
 
 def get_tifa_type(v, self):
+    """
+
+    Args:
+        v:
+        self:
+
+    Returns:
+
+    """
     if isinstance(v, ast.Str):
         return get_tifa_type_from_str(v.s, self)
     elif isinstance(v, ast.Name):

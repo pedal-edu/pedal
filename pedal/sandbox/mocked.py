@@ -52,6 +52,14 @@ class FunctionNotAllowed(Exception):
 
 
 def disabled_builtin(name):
+    """
+
+    Args:
+        name:
+
+    Returns:
+
+    """
     def _disabled_version(*args, **kwargs):
         raise FunctionNotAllowed("You are not allowed to call '{}'.".format(name))
     return _disabled_version
@@ -121,6 +129,14 @@ def make_inputs(input_list, repeat=None):
     generator = iter(input_list)
 
     def mock_input(prompt=''):
+        """
+
+        Args:
+            prompt:
+
+        Returns:
+
+        """
         print(prompt)
         try:
             return next(generator)
@@ -153,6 +169,14 @@ def _override_builtins(namespace, custom_builtins):
 
 
 def create_module(module_name):
+    """
+
+    Args:
+        module_name:
+
+    Returns:
+
+    """
     submodule_names = module_name.split(".")
     modules = {}
     root = types.ModuleType(submodule_names[0])
@@ -183,6 +207,11 @@ class BlockedModule(MockModule):
         return {'__getattr__': self.prevent_module}
 
     def prevent_module(self, **kwargs):
+        """
+
+        Args:
+            **kwargs:
+        """
         raise SandboxPreventModule("You cannot import {module_name} from student code.".format(
             module_name=self.MODULE_NAME
         ))
@@ -255,10 +284,20 @@ class MockPlt(MockModule):
         self._reset_plots()
 
     def show(self, **kwargs):
+        """
+
+        Args:
+            **kwargs:
+        """
         self.plots.append(self.active_plot)
         self._reset_plot()
 
     def unshown_plots(self):
+        """
+
+        Returns:
+
+        """
         return self.active_plot['data']
 
     def __repr__(self):
@@ -277,11 +316,24 @@ class MockPlt(MockModule):
                             'title': None, 'legend': False}
 
     def hist(self, data, **kwargs):
+        """
+
+        Args:
+            data:
+            **kwargs:
+        """
         label = kwargs.get('label', None)
         self.active_plot['data'].append({'type': 'hist', 'values': data,
                                          'label': label})
 
     def plot(self, xs, ys=None, **kwargs):
+        """
+
+        Args:
+            xs:
+            ys:
+            **kwargs:
+        """
         label = kwargs.get('label', None)
         if ys is None:
             self.active_plot['data'].append({'type': 'line',
@@ -292,27 +344,68 @@ class MockPlt(MockModule):
                                              'y': ys, 'label': label})
 
     def scatter(self, xs, ys, **kwargs):
+        """
+
+        Args:
+            xs:
+            ys:
+            **kwargs:
+        """
         label = kwargs.get('label', None)
         self.active_plot['data'].append({'type': 'scatter', 'x': xs,
                                          'y': ys, 'label': label})
 
     def xlabel(self, label, **kwargs):
+        """
+
+        Args:
+            label:
+            **kwargs:
+        """
         self.active_plot['xlabel'] = label
 
     def title(self, label, **kwargs):
+        """
+
+        Args:
+            label:
+            **kwargs:
+        """
         self.active_plot['title'] = label
 
     def suptitle(self, label, **kwargs):
+        """
+
+        Args:
+            label:
+            **kwargs:
+        """
         self.title(label, **kwargs)
 
     def ylabel(self, label, **kwargs):
+        """
+
+        Args:
+            label:
+            **kwargs:
+        """
         self.active_plot['ylabel'] = label
 
     def legend(self, **kwargs):
+        """
+
+        Args:
+            **kwargs:
+        """
         self.active_plot['legend'] = True
 
     def _generate_patches(self):
         def dummy(**kwargs):
+            """
+
+            Args:
+                **kwargs:
+            """
             pass
 
         return dict(hist=self.hist, plot=self.plot,

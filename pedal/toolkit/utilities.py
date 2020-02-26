@@ -3,6 +3,14 @@ from pedal.core.commands import gently, explain
 
 
 def is_top_level(ast_node):
+    """
+
+    Args:
+        ast_node:
+
+    Returns:
+
+    """
     ast = parse_program()
     for element in ast.body:
         print(element.ast_name, ast_node.ast_name, element == ast_node)
@@ -15,6 +23,11 @@ def is_top_level(ast_node):
 
 
 def no_nested_function_definitions():
+    """
+
+    Returns:
+
+    """
     ast = parse_program()
     defs = ast.find_all('FunctionDef')
     for a_def in defs:
@@ -27,6 +40,11 @@ def no_nested_function_definitions():
 
 
 def function_prints():
+    """
+
+    Returns:
+
+    """
     ast = parse_program()
     defs = ast.find_all('FunctionDef')
     for a_def in defs:
@@ -39,6 +57,15 @@ def function_prints():
 
 
 def find_function_calls(name, root=None):
+    """
+
+    Args:
+        name:
+        root:
+
+    Returns:
+
+    """
     if root is None:
         root = parse_program()
     all_calls = root.find_all('Call')
@@ -54,14 +81,30 @@ def find_function_calls(name, root=None):
 
 
 def function_is_called(name):
+    """
+
+    Args:
+        name:
+
+    Returns:
+
+    """
     return len(find_function_calls(name))
 
 
 def no_nonlist_nums():
+    """
+
+    """
     pass
 
 
 def only_printing_variables():
+    """
+
+    Returns:
+
+    """
     ast = parse_program()
     all_calls = ast.find_all('Call')
     for a_call in all_calls:
@@ -75,6 +118,14 @@ def only_printing_variables():
 
 
 def find_prior_initializations(node):
+    """
+
+    Args:
+        node:
+
+    Returns:
+
+    """
     if node.ast_name != "Name":
         return None
     ast = parse_program()
@@ -89,6 +140,9 @@ def find_prior_initializations(node):
 
 
 def prevent_unused_result():
+    """
+
+    """
     ast = parse_program()
     exprs = ast.find_all('Expr')
     for expr in exprs:
@@ -103,6 +157,14 @@ def prevent_unused_result():
 
 
 def prevent_builtin_usage(function_names):
+    """
+
+    Args:
+        function_names:
+
+    Returns:
+
+    """
     message = "You cannot use the builtin function <code>{}</code>."
     label = "builtin_use"
     title = "Builtin Usage"
@@ -118,6 +180,14 @@ def prevent_builtin_usage(function_names):
 
 
 def find_negatives(root=None):
+    """
+
+    Args:
+        root:
+
+    Returns:
+
+    """
     if root is None:
         root = parse_program()
     return [-op.operand.n for op in root.find_all("UnaryOp")
@@ -204,6 +274,9 @@ def ensure_literal(*literals):
 
 
 def prevent_advanced_iteration():
+    """
+
+    """
     message = "You should not use a <code>while</code> loop to solve this problem."
     label = "while_usage"
     title = "Usage of <code>while</code>"
@@ -252,6 +325,15 @@ UNARY_OP_NAMES = {
 
 
 def ensure_operation(op_name, root=None):
+    """
+
+    Args:
+        op_name:
+        root:
+
+    Returns:
+
+    """
     message = "You are not using the <code>{}</code> operator.".format(op_name)
     label = "missing_op"
     title = "Missing <code>{}</code> Operator".format(op_name)
@@ -264,6 +346,15 @@ def ensure_operation(op_name, root=None):
 
 
 def prevent_operation(op_name, root=None):
+    """
+
+    Args:
+        op_name:
+        root:
+
+    Returns:
+
+    """
     message = "You may not use the <code>{}</code> operator.".format(op_name)
     label = "bad_op"
     title = "Bad Operator".format(op_name)
@@ -276,6 +367,15 @@ def prevent_operation(op_name, root=None):
 
 
 def find_operation(op_name, root):
+    """
+
+    Args:
+        op_name:
+        root:
+
+    Returns:
+
+    """
     if op_name in COMPARE_OP_NAMES:
         compares = root.find_all("Compare")
         for compare in compares:
@@ -301,6 +401,15 @@ def find_operation(op_name, root):
 
 
 def ensure_recursion(function_name, root=None):
+    """
+
+    Args:
+        function_name:
+        root:
+
+    Returns:
+
+    """
     if root is None:
         root = parse_program()
     all_calls = root.find_all('Call')
@@ -326,6 +435,10 @@ def ensure_assignment(variable_name, type=None, value=None, root=None):
                  assignment. Check GreenTreeSnakes (e.g., "Num", or "Str").
     :type type: str
     :return: False or str
+
+    Args:
+        root:
+        value:
     """
     if root is None:
         root = parse_program()

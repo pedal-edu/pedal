@@ -3,6 +3,9 @@ from pedal.core.commands import gently, explain
 
 
 def filter_group():
+    """
+
+    """
     missing_if_in_for()
     append_not_in_if()
 

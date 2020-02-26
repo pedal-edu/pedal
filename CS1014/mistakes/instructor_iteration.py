@@ -5,6 +5,9 @@ from pedal.core.commands import gently, explain
 
 
 def iteration_group():
+    """
+
+    """
     list_initialization_misplaced()
     wrong_target_is_list()
     wrong_list_repeated_in_for()
@@ -17,18 +20,31 @@ def iteration_group():
 
 
 def iteration_group_on_change():
+    """
+
+    """
     wrong_target_is_list()
     wrong_list_repeated_in_for()
     wrong_iterator_not_list()
 
 
 def all_for_loops():
+    """
+
+    Returns:
+
+    """
     std_ast = parse_program()
     return std_ast.find_all("For")
 
 
 # this conflics with list_repeated_in_for
 def wrong_target_is_list():
+    """
+
+    Returns:
+
+    """
     message = ('The variable <code>{0!s}</code> is a list and '
                'should not be placed in the iteration variable slot of the "for" block')
     code = "target_is_list"
@@ -43,6 +59,11 @@ def wrong_target_is_list():
 
 # this conflicts with list_in_wrong_slot_in_for
 def wrong_list_repeated_in_for():
+    """
+
+    Returns:
+
+    """
     message = 'The <code>{0!s}</code> variable can only appear once in the "for" block.'
     code = "list_repeat"
     tldr = "Duplicate Iteration Variable"
@@ -56,6 +77,11 @@ def wrong_list_repeated_in_for():
 
 # this isn't consistent with the pattern you wrote TODO: Fix this
 def missing_iterator_initialization():
+    """
+
+    Returns:
+
+    """
     message1 = "The slot to hold a list in the iteration is empty."
     code1 = "no_iter_init-blank"
     tldr1 = "Iteration Variable is Blank"
@@ -76,6 +102,11 @@ def missing_iterator_initialization():
 
 # TODO: We need to cover the different cases for these
 def wrong_iterator_not_list():
+    """
+
+    Returns:
+
+    """
     message = ("The variable <code>{0!s}</code> has been set to something that is not a list but is placed "
                "in the iteration block that must be a list.")
     code = "iter_not_list"
@@ -90,6 +121,11 @@ def wrong_iterator_not_list():
 
 
 def missing_target_slot_empty():
+    """
+
+    Returns:
+
+    """
     message = "You must fill in the empty slot in the iteration."
     code = "target_empty"
     tldr = "Missing Iteration Variable"
@@ -102,6 +138,11 @@ def missing_target_slot_empty():
 
 
 def list_not_initialized_on_run():
+    """
+
+    Returns:
+
+    """
     message = "The list in your for loop has not been initialized."
     code = "no_list_init"
     tldr = "List Variable Uninitialized"
@@ -114,6 +155,11 @@ def list_not_initialized_on_run():
 
 
 def list_initialization_misplaced():
+    """
+
+    Returns:
+
+    """
     message = "Initialization of <code>{0!s}</code> is a list but either in the wrong place or redefined"
     code = "list_init_misplaced"
     tldr = "Iterating over Non-list"
@@ -126,6 +172,11 @@ def list_initialization_misplaced():
 
 
 def missing_for_slot_empty():
+    """
+
+    Returns:
+
+    """
     message = "You must fill in the empty slot in the iteration."
     code = "for_incomplete"
     tldr = "Iteration Incomplete"
@@ -139,6 +190,11 @@ def missing_for_slot_empty():
 
 
 def wrong_target_reassigned():
+    """
+
+    Returns:
+
+    """
     message = "The variable <code>{0!s}</code> has been reassigned. The iteration variable shouldn't be reassigned"
     code = "target_reassign"
     tldr = "Iteration Variable has been Reassigned"

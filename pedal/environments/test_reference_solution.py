@@ -26,6 +26,16 @@ class TestReferenceSolutions(unittest.TestCase):
 
 
 def substitute_args(arg, student_path, seed):
+    """
+
+    Args:
+        arg:
+        student_path:
+        seed:
+
+    Returns:
+
+    """
     if arg == "$_STUDENT_MAIN":
         return student_path
     elif arg == "$_STUDENT_NAME":
@@ -36,6 +46,19 @@ def substitute_args(arg, student_path, seed):
 def add_test(class_, name, python_file,
              expected_output_path, expected_output,
              grader_code, grader_path, grader_args, student_path):
+    """
+
+    Args:
+        class_:
+        name:
+        python_file:
+        expected_output_path:
+        expected_output:
+        grader_code:
+        grader_path:
+        grader_args:
+        student_path:
+    """
     seed = find_seed(python_file)
     grader_args = [substitute_args(arg, student_path, seed) for arg in grader_args]
     def _inner_test(self):
@@ -61,6 +84,14 @@ def add_test(class_, name, python_file,
     setattr(class_, 'test_' + name, _inner_test)
 
 def find_seed(python_code):
+    """
+
+    Args:
+        python_code:
+
+    Returns:
+
+    """
     try:
         ast = parse_program(python_code)
         for assign in ast.find_all("Assign"):
@@ -79,6 +110,14 @@ def find_seed(python_code):
 
 # Load reference solutions
 def add_all_tests(grader_path, reference_solutions_dir, grader_args, limit):
+    """
+
+    Args:
+        grader_path:
+        reference_solutions_dir:
+        grader_args:
+        limit:
+    """
     # Load grader file
     with open(grader_path, 'r') as grader_file:
         grader_code = grader_file.read()
@@ -101,6 +140,9 @@ def add_all_tests(grader_path, reference_solutions_dir, grader_args, limit):
 
 
 def run_tests():
+    """
+
+    """
     unittest.main(argv=['first-arg-is-ignored'])
 
 

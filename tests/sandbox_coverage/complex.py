@@ -11,6 +11,9 @@ if False:
     if False:
         with open('a') as out:
             def x():
+                """
+
+                """
                 class Y:
                     import name
 a = 0

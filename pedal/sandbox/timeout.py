@@ -65,6 +65,9 @@ class InterruptableThread(threading.Thread):
                 return
 
     def terminate(self):
+        """
+
+        """
         self.exc_info = sys.exc_info()
         self.raise_exception(SystemExit)
 

@@ -7,6 +7,15 @@ from pedal.tifa.type_definitions import (UnknownType, NumType, BoolType,
 
 
 def merge_types(left, right):
+    """
+
+    Args:
+        left:
+        right:
+
+    Returns:
+
+    """
     # TODO: Check that lists/sets have the same subtypes
     if isinstance(left, (ListType, SetType, GeneratorType)):
         if left.empty:
@@ -18,22 +27,64 @@ def merge_types(left, right):
 
 
 def NumType_any(*x):
+    """
+
+    Args:
+        *x:
+
+    Returns:
+
+    """
     return NumType()
 
 
 def StrType_any(*x):
+    """
+
+    Args:
+        *x:
+
+    Returns:
+
+    """
     return StrType()
 
 
 def BoolType_any(*x):
+    """
+
+    Args:
+        *x:
+
+    Returns:
+
+    """
     return BoolType()
 
 
 def keep_left(left, right):
+    """
+
+    Args:
+        left:
+        right:
+
+    Returns:
+
+    """
     return left
 
 
 def keep_right(left, right):
+    """
+
+    Args:
+        left:
+        right:
+
+    Returns:
+
+    """
     return right
 
 
@@ -87,6 +138,8 @@ def are_types_equal(left, right, formal=False):
     its respective class instead.
 
     Args:
+        right:
+        left:
         formal (bool): Whether the left argument is formal, indicating that it can accept
             type names.
     """

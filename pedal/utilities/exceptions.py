@@ -29,6 +29,15 @@ class KeyError(BuiltinKeyError):
 
 
 def add_context_to_error(e, message):
+    """
+
+    Args:
+        e:
+        message:
+
+    Returns:
+
+    """
     if isinstance(e, BuiltinKeyError):
         new_args = repr(e.args[0]) + message
         e = KeyError(e, new_args)
@@ -76,6 +85,14 @@ class ExpandedTraceback:
         return line.replace(', in <module>', '', 1)
 
     def format_exception(self, preamble=""):
+        """
+
+        Args:
+            preamble:
+
+        Returns:
+
+        """
         if not self.exception:
             return ""
         if isinstance(self.exception, TimeoutError):

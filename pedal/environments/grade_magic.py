@@ -235,6 +235,11 @@ class GradeMagic(Magics):
 
     @line_magic
     def grade_logstart(self, line=""):
+        """
+
+        Args:
+            line:
+        """
         # ######Logging
         ts = time.time()
         logger = self.shell.logger  # logging
@@ -257,9 +262,17 @@ class GradeMagic(Magics):
 
     @line_magic
     def grade_logstop(self, line=""):
+        """
+
+        Args:
+            line:
+        """
         self.shell.logger.logstop()
 
     def logging(self):
+        """
+
+        """
         # ######Logging
         ts = time.time()
         logger = self.shell.logger  # logging
@@ -283,6 +296,15 @@ class GradeMagic(Magics):
 
     # noinspection PyMethodMayBeStatic
     def grade_parser(self, line, cell=None):
+        """
+
+        Args:
+            line:
+            cell:
+
+        Returns:
+
+        """
         if ',' in line:
             if cell is None:
                 assignment, line = line.split(",", maxsplit=1)
@@ -301,6 +323,15 @@ class GradeMagic(Magics):
 
     # noinspection PyMethodMayBeStatic
     def unified_helper(self, local_code, **kwargs):
+        """
+
+        Args:
+            local_code:
+            **kwargs:
+
+        Returns:
+
+        """
         code = EXTRACT_STUDENT_CODE
         code += ANIMATE_LAST_CELL
         code += local_code.format(**kwargs)
@@ -309,6 +340,15 @@ class GradeMagic(Magics):
 
     @cell_magic
     def grade(self, line="", cell=""):
+        """
+
+        Args:
+            line:
+            cell:
+
+        Returns:
+
+        """
         dump = self.grade_parser(line, cell)
         code = self.unified_helper(LOCAL_GRADE, on_run_code="INSTRUCTOR_CODE", inputs=dump['inputs'])
         cell = cell.replace("\\", "\\\\")
@@ -325,6 +365,12 @@ class GradeMagic(Magics):
 
     @line_cell_magic
     def usage_examples(self, line="", cell="print('running cell')\nprint('running cell2')"):
+        """
+
+        Args:
+            line:
+            cell:
+        """
         # Runs code in the kernel's context
         self.shell.run_code("print('fun')")
 
@@ -361,6 +407,14 @@ class GradeMagic(Magics):
 
     @line_magic
     def grade_blockpy(self, line=""):
+        """
+
+        Args:
+            line:
+
+        Returns:
+
+        """
         dump = self.grade_parser(line)
         code = self.unified_helper(BLOCKPY_GRADE, assignment=dump["assignment"], inputs=dump["inputs"])
         return display(Javascript(code))

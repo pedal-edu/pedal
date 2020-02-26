@@ -23,6 +23,15 @@ def _generic_tifa_feedback_function(feedback_function, fields: dict, muted=False
                         justification=("TIFA visited a node not in the top scope when its "
                                        "*return variable was definitely set in this scope."))
 def action_after_return(location, report=MAIN_REPORT):
+    """
+
+    Args:
+        location:
+        report:
+
+    Returns:
+
+    """
     fields = {'location': location}
     return _generic_tifa_feedback_function(action_after_return, fields, report)
 
@@ -32,6 +41,15 @@ def action_after_return(location, report=MAIN_REPORT):
                                        " But you can only return from within a function.").format,
                         justification="TIFA visited a return node at the top level.")
 def return_outside_function(location, report=MAIN_REPORT):
+    """
+
+    Args:
+        location:
+        report:
+
+    Returns:
+
+    """
     fields = {'location': location}
     return _generic_tifa_feedback_function(return_outside_function, fields, report)
 
@@ -43,6 +61,17 @@ def return_outside_function(location, report=MAIN_REPORT):
                         ).format,
                         justification="TIFA visited a function definition with multiple returns that unequal types.")
 def multiple_return_types(location, expected, actual, report=MAIN_REPORT):
+    """
+
+    Args:
+        location:
+        expected:
+        actual:
+        report:
+
+    Returns:
+
+    """
     fields = {'location': location, 'expected': expected, 'actual': actual}
     return _generic_tifa_feedback_function(multiple_return_types, fields, report)
 
@@ -54,6 +83,16 @@ def multiple_return_types(location, expected, actual, report=MAIN_REPORT):
                                           ).format,
                         justification="TIFA stored to an existing variable not in this scope")
 def write_out_of_scope(location, name, report=MAIN_REPORT):
+    """
+
+    Args:
+        location:
+        name:
+        report:
+
+    Returns:
+
+    """
     fields = {'location': location, 'name': name}
     return _generic_tifa_feedback_function(write_out_of_scope, fields, report=report, muted=True)
 
@@ -65,6 +104,15 @@ def write_out_of_scope(location, name, report=MAIN_REPORT):
                                        "holes.").format,
                         justification="TIFA found a name equal to ___")
 def unconnected_blocks(location, report=MAIN_REPORT):
+    """
+
+    Args:
+        location:
+        report:
+
+    Returns:
+
+    """
     fields = {'location': location}
     return _generic_tifa_feedback_function(unconnected_blocks, fields, report=report)
 
@@ -78,6 +126,16 @@ def unconnected_blocks(location, report=MAIN_REPORT):
                                           "`for a_dog in dogs:`).").format,
                         justification="TIFA visited a loop where the iteration list and target were the same.")
 def iteration_problem(location, name, report=MAIN_REPORT):
+    """
+
+    Args:
+        location:
+        name:
+        report:
+
+    Returns:
+
+    """
     fields = {'location': location, 'name': name}
     return _generic_tifa_feedback_function(iteration_problem, fields, report=report)
 
@@ -89,6 +147,16 @@ def iteration_problem(location, name, report=MAIN_REPORT):
                                           ).format,
                         justification="TIFA read a variable that did not exist or was not previously set in this branch.")
 def initialization_problem(location, name, report=MAIN_REPORT):
+    """
+
+    Args:
+        location:
+        name:
+        report:
+
+    Returns:
+
+    """
     fields = {'location': location, 'name': name}
     return _generic_tifa_feedback_function(initialization_problem, fields, report=report)
 
@@ -102,6 +170,16 @@ def initialization_problem(location, name, report=MAIN_REPORT):
                                           ).format,
                         justification="TIFA read a variable that was maybe set but not definitely set in this branch.")
 def possible_initialization_problem(location, name, report=MAIN_REPORT):
+    """
+
+    Args:
+        location:
+        name:
+        report:
+
+    Returns:
+
+    """
     fields = {'location': location, 'name': name}
     return _generic_tifa_feedback_function(possible_initialization_problem, fields, report=report)
 
@@ -112,6 +190,17 @@ def possible_initialization_problem(location, name, report=MAIN_REPORT):
                                           ).format,
                         justification="TIFA stored a variable but it was not read any other time in the program.")
 def unused_variable(location, name, type, report=MAIN_REPORT):
+    """
+
+    Args:
+        location:
+        name:
+        type:
+        report:
+
+    Returns:
+
+    """
     if type.is_equal('function'):
         kind, initialization = 'function', 'definition'
     else:
@@ -129,6 +218,16 @@ def unused_variable(location, name, type, report=MAIN_REPORT):
                                           ).format,
                         justification="TIFA attempted to store to a variable that was previously stored but not read.")
 def overwritten_variable(location, name, report=MAIN_REPORT):
+    """
+
+    Args:
+        location:
+        name:
+        report:
+
+    Returns:
+
+    """
     fields = {'location': location, 'name': name}
     return _generic_tifa_feedback_function(overwritten_variable, fields, report=report)
 
@@ -140,6 +239,16 @@ def overwritten_variable(location, name, report=MAIN_REPORT):
                                           ).format,
                         justification="TIFA visited a loop's iteration list whose type was not indexable.")
 def iterating_over_non_list(location, iter_name, report=MAIN_REPORT):
+    """
+
+    Args:
+        location:
+        iter_name:
+        report:
+
+    Returns:
+
+    """
     if iter_name is None:
         iter_list = "expression"
     else:
@@ -155,6 +264,16 @@ def iterating_over_non_list(location, iter_name, report=MAIN_REPORT):
                                           ).format,
                         justification="TIFA visited a loop's iteration list that was empty.")
 def iterating_over_empty_list(location, iter_name, report=MAIN_REPORT):
+    """
+
+    Args:
+        location:
+        iter_name:
+        report:
+
+    Returns:
+
+    """
     if iter_name is None:
         iter_list = "expression"
     else:
@@ -170,6 +289,18 @@ def iterating_over_empty_list(location, iter_name, report=MAIN_REPORT):
                                        ).format,
                         justification="TIFA visited an operation with operands of the wrong type.")
 def incompatible_types(location, operation, left, right, report=MAIN_REPORT):
+    """
+
+    Args:
+        location:
+        operation:
+        left:
+        right:
+        report:
+
+    Returns:
+
+    """
     op_name = OPERATION_DESCRIPTION.get(operation.__class__,
                                         str(operation))
     left_name = left.singular_name
@@ -187,6 +318,18 @@ def incompatible_types(location, operation, left, right, report=MAIN_REPORT):
                                           ).format,
                         justification="TIFA visited a function definition where a parameter type and argument type were not equal.")
 def parameter_type_mismatch(location, parameter_name, parameter, argument, report=MAIN_REPORT):
+    """
+
+    Args:
+        location:
+        parameter_name:
+        parameter:
+        argument:
+        report:
+
+    Returns:
+
+    """
     parameter_type_name = parameter.singular_name
     argument_type_name = argument.singular_name
     fields = {'location': location,
@@ -205,6 +348,16 @@ def parameter_type_mismatch(location, parameter_name, parameter, argument, repor
                                           ).format,
                         justification="TIFA read a variable that did not exist in this scope but existed in another.")
 def read_out_of_scope(location, name, report=MAIN_REPORT):
+    """
+
+    Args:
+        location:
+        name:
+        report:
+
+    Returns:
+
+    """
     fields = {'location': location, 'name': name}
     return _generic_tifa_feedback_function(read_out_of_scope, fields, report=report)
 
@@ -214,6 +367,18 @@ def read_out_of_scope(location, name, report=MAIN_REPORT):
                         message_template="",
                         justification="")
 def type_changes(location, name, old, new, report=MAIN_REPORT):
+    """
+
+    Args:
+        location:
+        name:
+        old:
+        new:
+        report:
+
+    Returns:
+
+    """
     fields = {'location': location, 'name': name, 'old': old, 'new': new}
     return _generic_tifa_feedback_function(type_changes, fields, report=report, muted=True)
 
@@ -222,6 +387,15 @@ def type_changes(location, name, old, new, report=MAIN_REPORT):
                         message_template="",
                         justification="")
 def unnecessary_second_branch(location, report=MAIN_REPORT):
+    """
+
+    Args:
+        location:
+        report:
+
+    Returns:
+
+    """
     fields = {'location': location}
     return _generic_tifa_feedback_function(unnecessary_second_branch, fields, report=report, muted=True)
 
@@ -230,6 +404,15 @@ def unnecessary_second_branch(location, report=MAIN_REPORT):
                         message_template="",
                         justification="")
 def else_on_loop_body(location, report=MAIN_REPORT):
+    """
+
+    Args:
+        location:
+        report:
+
+    Returns:
+
+    """
     fields = {'location': location}
     return _generic_tifa_feedback_function(else_on_loop_body, fields, report=report, muted=True)
 
@@ -238,6 +421,16 @@ def else_on_loop_body(location, report=MAIN_REPORT):
                         message_template="",
                         justification="")
 def recursive_call(location, name, report=MAIN_REPORT):
+    """
+
+    Args:
+        location:
+        name:
+        report:
+
+    Returns:
+
+    """
     fields = {'location': location, 'name': name}
     return _generic_tifa_feedback_function(recursive_call, fields, report=report, muted=True)
 
@@ -246,6 +439,16 @@ def recursive_call(location, name, report=MAIN_REPORT):
                         message_template="",
                         justification="")
 def not_a_function(location, name, report=MAIN_REPORT):
+    """
+
+    Args:
+        location:
+        name:
+        report:
+
+    Returns:
+
+    """
     fields = {'location': location, 'name': name}
     return _generic_tifa_feedback_function(not_a_function, fields, report=report, muted=True)
 
@@ -254,6 +457,16 @@ def not_a_function(location, name, report=MAIN_REPORT):
                         message_template="",
                         justification="")
 def incorrect_arity(location, function_name, report=MAIN_REPORT):
+    """
+
+    Args:
+        location:
+        function_name:
+        report:
+
+    Returns:
+
+    """
     fields = {'location': location, 'function_name': function_name}
     return _generic_tifa_feedback_function(incorrect_arity, fields, report=report, muted=True)
 
@@ -262,6 +475,17 @@ def incorrect_arity(location, function_name, report=MAIN_REPORT):
                         message_template="",
                         justification="")
 def multiple_return_types(location, expected, actual, report=MAIN_REPORT):
+    """
+
+    Args:
+        location:
+        expected:
+        actual:
+        report:
+
+    Returns:
+
+    """
     fields = {"location": location, "expected": expected, "actual": actual}
     return _generic_tifa_feedback_function(multiple_return_types, fields, report=report, muted=True)
 
@@ -270,6 +494,18 @@ def multiple_return_types(location, expected, actual, report=MAIN_REPORT):
                         text_template="",
                         justification="")
 def module_not_found(location, name, is_dynamic=False, error=None, report=MAIN_REPORT):
+    """
+
+    Args:
+        location:
+        name:
+        is_dynamic:
+        error:
+        report:
+
+    Returns:
+
+    """
     fields = {"location": location, "name": name, "is_dynamic": is_dynamic, "error": error}
     return _generic_tifa_feedback_function(module_not_found, fields, report=report, muted=True)
 
@@ -278,6 +514,17 @@ def module_not_found(location, name, is_dynamic=False, error=None, report=MAIN_R
                         text_template="",
                         justification="")
 def append_to_non_list(location, name, type, report=MAIN_REPORT):
+    """
+
+    Args:
+        location:
+        name:
+        type:
+        report:
+
+    Returns:
+
+    """
     fields = {'location': location, "name": name, "type": type }
     return _generic_tifa_feedback_function(append_to_non_list, fields, report=report, muted=True)
 

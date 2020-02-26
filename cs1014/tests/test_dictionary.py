@@ -15,6 +15,9 @@ from pedal.toolkit.utilities import *
 
 class DictionaryMistakeTest(MistakeTest):
     def setUp(self):
+        """
+
+        """
         self._dict_str = ("[{'City': 'Birmingham',  'Precipitation':  0.0, 'Temperature': 46},"
                           "{'City': 'Fairbanks' ,  'Precipitation': 1.37, 'Temperature': 57},"
                           "{'City': 'Miami',       'Precipitation': 1.86, 'Temperature': 80},"
@@ -541,6 +544,9 @@ class DictionaryMistakeTest(MistakeTest):
         self.assertFalse(ret, "Expected False, got {} instead".format(ret))
 
     def func_filter(self):
+        """
+
+        """
         keys = ['Data', 'Date', "Station", "Temperature", "Precipitation", "Wind", "Min Temp", "Max Temp", "Avg Temp",
                 "Direction", "Speed", "Month", "Year", "Week of", "Full", "State", "Code", "City", "Location"]
         self.to_source('import weather\n'

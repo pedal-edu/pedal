@@ -14,9 +14,21 @@ from pedal.cait.cait_api import parse_program
 
 class ExecutionTestCase(unittest.TestCase):
     def assertFeedback(self, execution, feedback_string):
+        """
+
+        Args:
+            execution:
+            feedback_string:
+
+        Returns:
+
+        """
         return self.assertEqual(dedent(feedback_string).lstrip(), execution.feedback)
 
 class Execution:
+    """
+
+    """
     def __init__(self, code, tracer_style='none', old_style_messages=False, report=MAIN_REPORT):
         self.code = code
         self.tracer_style = tracer_style

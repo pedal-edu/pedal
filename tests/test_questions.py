@@ -64,6 +64,11 @@ class TestQuestions(unittest.TestCase):
         question_D = Question("QD", "Create a beta variable.", [test_second_variable])
         pool_3 = Pool("P3", [question_D])
         def make_exam(code):
+            """
+
+            Args:
+                code:
+            """
             clear_report()
             set_seed(0)
             set_source(code)

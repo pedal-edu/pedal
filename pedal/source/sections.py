@@ -42,12 +42,23 @@ def _calculate_section_number(section_index):
 
 
 def stop_sections(report=MAIN_REPORT):
+    """
+
+    Args:
+        report:
+    """
     # TODO: If no substitutions, then throw error that we haven't separated into sections
     old_submission = report[TOOL_NAME]['substitutions'].pop()
     report.submission.replace_main(old_submission.code, old_submission.filename)
 
 
 def next_section(name="", report=MAIN_REPORT):
+    """
+
+    Args:
+        name:
+        report:
+    """
     report.execute_hooks(TOOL_NAME, 'next_section.before')
     source = report[TOOL_NAME]
     old_submission = report[TOOL_NAME]['substitutions'][-1]
@@ -114,6 +125,16 @@ class _finish_section:
 
 
 def finish_section(number, *functions, **kwargs):
+    """
+
+    Args:
+        number:
+        *functions:
+        **kwargs:
+
+    Returns:
+
+    """
     if 'next_section' in kwargs:
         ns = kwargs['next_section']
     else:
@@ -136,8 +157,18 @@ def section(number):
 
 
 def precondition(function):
+    """
+
+    Args:
+        function:
+    """
     pass
 
 
 def postcondition(function):
+    """
+
+    Args:
+        function:
+    """
     pass

@@ -27,12 +27,18 @@ student = next_section()
 
 @section(1)
 def problem_1_factorial_defined():
+    """
+
+    """
     assertHasFunction(student, 'factorial')
     assertSignature(student.data.factorial, args=["int"], returns="int")
 
 @precondition(problem_1_factorial_defined)
 @try_all()
 def problem_1_factorial_unit_tests():
+    """
+
+    """
     # Using student.call ensures that the call is safely sandboxed
     # The function call actually returns a SandboxResult object which has
     #   several useful functions
@@ -53,18 +59,27 @@ def problem_1_factorial_unit_tests():
     
 @precondition(problem_1_factorial_unit_tests)
 def problem_1_factorial_recursive():
+    """
+
+    """
     # Ensure that they called it recursively
     if student.call('factorial', 5).calls <= 5:
         explain("factorial(5) did not execute 5 times recursively.")
 
 @precondition(problem_1_factorial_defined)
 def problem_1_factorial_does_not_start_at_zero():
+    """
+
+    """
     assertHasFunction(student, 'factorial')
     assertNotEqual(student.call('factorial', 0), 0,
                    message="factorial(0) is not 0.")
                    
 @precondition(problem_1_factorial_defined)
 def problem_1_prevent_illegal_iteration():
+    """
+
+    """
     factorial_definition = find_definition('factorial')
     if factorial_definition.is_method():
         explain("factorial should be a function, not a method.")
@@ -78,6 +93,9 @@ def problem_1_prevent_illegal_iteration():
         
 @finish_section(1)
 def problem_1_factorial_complete():
+    """
+
+    """
     compliment("You completed the factorial function")
     
 # Alternatively, you can explicitly list all the functions for this section
@@ -104,6 +122,9 @@ student = next_section()
 
 @section(2)
 def problem_2_sum_numbers_defined():
+    """
+
+    """
     assertHasFunction(student, 'sum_numbers')
     assertSignature(student.data.sum_numbers, args=[], 
                     returns=None, input=True, prints=True)
@@ -111,6 +132,9 @@ def problem_2_sum_numbers_defined():
 @precondition(problem_2_sum_numbers_defined)
 @try_all()
 def problem_2_sum_numbers_unit_tests():
+    """
+
+    """
     # input can take a string or a list of strings
     #   If the user has an argument named input, you can use _input for it.
     #   Otherwise, positional and keyword arguments are passed to the call.
@@ -126,6 +150,9 @@ def problem_2_sum_numbers_unit_tests():
 @precondition(problem_2_sum_numbers_defined)
 @try_all()
 def problem_2_sum_numbers_bad_input():
+    """
+
+    """
     assertPrints(student.call.sum_numbers(input=["A", "???", "1"]), "1", score=.25)
     assertPrints(student.call.sum_numbers(input=["1+A", "XY+YZ", "!", "1+2"]), "3", score=.25)
     
@@ -136,6 +163,9 @@ student = next_section()
 
 @section(3)
 def problem_3_make_string_variable():
+    """
+
+    """
     assertHas(student, 'poem')
     assertIsInstance(student.data.poem, str)
 
@@ -143,6 +173,9 @@ import string
 @precondition(problem_3_make_string_variable)
 @try_all()
 def problem_3_string_has_characters():
+    """
+
+    """
     assertRegex(student.data.poem, '[{}]'.format(string.digits),
                 message="Your poem must have a digit in it.")
     assertRegex(student.data.poem, '[{}]'.format(string.punctuation),
@@ -157,11 +190,17 @@ student = next_section()
 
 @section(4)
 def problem_4_defined_account():
+    """
+
+    """
     assertHasClass(student, 'Account')
     assertSignature(student.data.Account, args=['str'], attrs={'name': 'str'})
 
 @precondition(problem_4_defined_account)
 def problem_4_account_attrs():
+    """
+
+    """
     student.call('Account', 'My Checking', target="checking_account")
     assertHasAttr(student.data.checking_account, 'balance', (int, float))
     # Can do the comparison separately, if you need a special comparison
@@ -174,6 +213,9 @@ student = next_section()
 ''' Add a method `deposit` '''
 @section(5)
 def problem_5_defined_deposit():
+    """
+
+    """
     assertHasFunction(student, 'Account.deposit')
     assertSignature(student.data.Account.deposit, args=['int'],
                     returns='int')
@@ -181,6 +223,9 @@ def problem_5_defined_deposit():
 @precondition(problem_5_defined_deposit)
 @contextualize_calls()
 def problem_5_unit_tests():
+    """
+
+    """
     # By default, the context list gets reset each time we enter the function.
     student.call('Account', 'My Checking', target="checking_account")
     assertEqual(student.call('checking_account.deposit', 400), 400)
@@ -212,6 +257,9 @@ student = execute(modules={'matplotlib': True})
     
 @section(6)
 def problem_6_make_graph():
+    """
+
+    """
     plt = student.modules['matplotlib.pyplot']
     # Check if they madea  graph of the wrong type?
     assertGraphCount(plt, 1)

@@ -3,6 +3,14 @@ from pedal.toolkit.utilities import find_function_calls, is_top_level
 
 
 def ensure_prints(count):
+    """
+
+    Args:
+        count:
+
+    Returns:
+
+    """
     prints = find_function_calls('print')
     if not prints:
         gently("You are not using the print function!", label="no_print", title="Missing Print")

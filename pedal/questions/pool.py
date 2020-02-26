@@ -4,6 +4,9 @@ from pedal.questions.questions import show_question
 
 
 class Pool:
+    """
+
+    """
     _POOL_TRACKER = 0
 
     def __init__(self, name, choices, seed=None, report=MAIN_REPORT, position=None):
@@ -17,6 +20,14 @@ class Pool:
         self.position = position
 
     def choose(self, force=None):
+        """
+
+        Args:
+            force:
+
+        Returns:
+
+        """
         _setup_questions(self.report)
         if force is None:
             if self.seed is None:
@@ -32,6 +43,11 @@ class Pool:
 
     @property
     def answered(self):
+        """
+
+        Returns:
+
+        """
         for choice in self.choices:
             if choice.answered:
                 return True
@@ -39,6 +55,15 @@ class Pool:
 
 
 def check_pool_exam(name, questions, force=None, seed=None, report=MAIN_REPORT):
+    """
+
+    Args:
+        name:
+        questions:
+        force:
+        seed:
+        report:
+    """
     _setup_questions(report)
     # Choose a question
     if force is None:

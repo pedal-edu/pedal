@@ -33,6 +33,9 @@ def parse_code(student_code):
 class CaitTests(unittest.TestCase):
 
     def setUp(self):
+        """
+
+        """
         MAIN_REPORT.clear()
 
     def test_var_match(self):

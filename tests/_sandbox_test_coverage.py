@@ -5,9 +5,17 @@ if True:
 else:
     print("Skipped")
 def x():
+    """
+
+    Returns:
+
+    """
     b = 0
     return b
 def z():
+    """
+
+    """
     a = 0
 z()
 print(a)

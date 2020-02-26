@@ -10,6 +10,11 @@ from pedal.tifa import tifa_analysis
 class MistakeTest(unittest.TestCase):
     @staticmethod
     def to_source(source):
+        """
+
+        Args:
+            source:
+        """
         MAIN_REPORT.clear()
         contextualize_report(source)
         verify()

@@ -23,12 +23,24 @@ class TestAssertions(unittest.TestCase):
             self.assertRaises(AssertionException, assertEqual, 1, 3)
 
     def assertFeedback(self, execution, feedback_string):
+        """
+
+        Args:
+            execution:
+            feedback_string:
+
+        Returns:
+
+        """
         return self.assertEqual(dedent(feedback_string).lstrip(), execution.feedback)
         
     def test_primitive_assertions(self):
         with Execution(dedent("0")) as e:
             @phase('1')
             def part1():
+                """
+
+                """
                 assertEqual(5, 0)
         self.assertFeedback(e, """
         Instructor Test\nStudent code failed instructor test.<br>
@@ -41,6 +53,9 @@ class TestAssertions(unittest.TestCase):
         ''')) as e:
             @phase('1')
             def part1():
+                """
+
+                """
                 assertEqual(e.student.call('add', 1, 6, 3), 10)
             suppress("analyzer")
         self.assertEqual(e.feedback, dedent("""
@@ -58,6 +73,9 @@ class TestAssertions(unittest.TestCase):
         ''')) as e:
             @phase('1')
             def part2():
+                """
+
+                """
                 assertEqual(10, e.student.call('add', 1, 6, 3))
             suppress("analyzer")
         self.assertEqual(e.feedback, dedent("""
@@ -77,6 +95,9 @@ class TestAssertions(unittest.TestCase):
         ''')) as e:
             @phase('1')
             def part2():
+                """
+
+                """
                 assertEqual(10, e.student.call('add', 1, 6, 3))
                 assertEqual(8, e.student.call('add', -1, 6, 3))
             suppress("analyzer")
@@ -97,6 +118,9 @@ class TestAssertions(unittest.TestCase):
         ''')) as e:
             @phase('1')
             def part3():
+                """
+
+                """
                 assertEqual(e.student.call('expected_answer', target='expect'),
                             e.student.call('add', 1, 6, 3, target='actual'))
             suppress("analyzer")
@@ -117,6 +141,9 @@ class TestAssertions(unittest.TestCase):
         ''')) as e:
             @phase('1')
             def part4():
+                """
+
+                """
                 assertIn(e.student.call('make_color'), ('red', 'blue', 'green'))
             suppress("analyzer")
         self.assertEqual(e.feedback, dedent("""
@@ -134,6 +161,9 @@ class TestAssertions(unittest.TestCase):
         ''')) as e:
             @phase('1')
             def part1():
+                """
+
+                """
                 assertIn('blue', e.student.call('make_colors'))
             suppress("analyzer")
         self.assertEqual(e.feedback, dedent("""
@@ -151,6 +181,9 @@ class TestAssertions(unittest.TestCase):
         ''')) as e:
             @phase('1')
             def part1():
+                """
+
+                """
                 assertNotIn('purple', e.student.call('make_colors'))
             suppress("analyzer")
         self.assertEqual(e.feedback, dedent("""
@@ -170,6 +203,9 @@ class TestAssertions(unittest.TestCase):
         ''')) as e:
             @phase('1')
             def part1():
+                """
+
+                """
                 assertIn(e.student.call('make_color', target="color"),
                          e.student.call('make_colors', target="colors"))
             suppress("analyzer")
@@ -192,6 +228,9 @@ class TestAssertions(unittest.TestCase):
         ''')) as e:
             @phase('1')
             def part1():
+                """
+
+                """
                 assertIn(e.student.call('make_color'),
                          e.student.call('make_colors'))
             suppress("analyzer")
@@ -212,6 +251,9 @@ class TestAssertions(unittest.TestCase):
         ''')) as e:
             @phase('1')
             def part1():
+                """
+
+                """
                 assertTrue(e.student.call('make_color'))
             suppress("analyzer")
         self.assertEqual(e.feedback, dedent("""
@@ -230,6 +272,9 @@ class TestAssertions(unittest.TestCase):
         ''')) as e:
             @phase('1')
             def part1():
+                """
+
+                """
                 assertEqual(e.student.call('add_from_input', 4, inputs="6"), 10)
             suppress("analyzer")
         self.assertEqual(e.feedback, dedent("""
@@ -249,6 +294,9 @@ class TestAssertions(unittest.TestCase):
         ''')) as e:
             @phase('1')
             def part1():
+                """
+
+                """
                 assertEqual(e.student.call('make_brackets'), "[]",
                             exact=True)
             suppress("analyzer")
@@ -270,6 +318,9 @@ class TestAssertions(unittest.TestCase):
         ''')) as e:
             @phase('1')
             def part1():
+                """
+
+                """
                 assertEqual(e.student.call('fail_on_3', 1, keep_context=True), True)
                 assertEqual(e.student.call('fail_on_3', 2, keep_context=True), True)
                 assertEqual(e.student.call('fail_on_3', 3, keep_context=True), True)
@@ -297,6 +348,9 @@ class TestAssertions(unittest.TestCase):
         ''')) as e:
             @phase('1')
             def part1():
+                """
+
+                """
                 assertPrints(e.student.call("print_rating", 9),
                              ["banana cream pudding", "alphabet soup", "raktajino"])
 

@@ -3,10 +3,16 @@ from pedal.core.commands import gently, explain
 
 
 def append_group_on_change():
+    """
+
+    """
     wrong_not_append_to_list()
 
 
 def append_group():
+    """
+
+    """
     missing_append_in_iteration()
     missing_append_list_initialization()
     wrong_append_list_initialization()
@@ -17,6 +23,14 @@ def append_group():
 
 
 def find_append_in(node):
+    """
+
+    Args:
+        node:
+
+    Returns:
+
+    """
     append_list = []
     calls = node.find_all("Call")
     for node in calls:
@@ -38,6 +52,11 @@ def missing_append_in_iteration():
 
 
 def missing_append_in_iteration():
+    """
+
+    Returns:
+
+    """
     message = "You must construct a list by appending values one at a time to the list."
     code = "app_in_iter"
     tldr = "For Loop Append Not Found"
@@ -54,6 +73,11 @@ def missing_append_in_iteration():
 
 
 def wrong_not_append_to_list():
+    """
+
+    Returns:
+
+    """
     message = ("Values can only be appended to a list. The variable <code>{0!s}</code> is either not initialized, "
                "not initialized correctly, or is confused with another variable.")
     code = "app_not_list"
@@ -71,6 +95,11 @@ def wrong_not_append_to_list():
 
 
 def missing_append_list_initialization():
+    """
+
+    Returns:
+
+    """
     message = "The list variable <code>{0!s}</code> must be initialized."
     code = "no_app_list_init"
     tldr = "List Not Initialized"
@@ -91,6 +120,11 @@ def missing_append_list_initialization():
 
 
 def wrong_append_list_initialization():
+    """
+
+    Returns:
+
+    """
     message = ("The list variable <code>{0!s}</code> is either not initialized "
                "correctly or mistaken for another variable. "
                "The list you append to should be initialized to an empty list.")
@@ -112,6 +146,11 @@ def wrong_append_list_initialization():
 
 
 def append_list_wrong_slot():
+    """
+
+    Returns:
+
+    """
     message = "You should not append a list (<code>{0!s}</code>) to <code>{1!s}</code>."
     code = "app_list_slot"
     tldr = "Appending List Error"
@@ -126,6 +165,11 @@ def append_list_wrong_slot():
 
 
 def app_assign():
+    """
+
+    Returns:
+
+    """
     message = ("Appending modifies the list, so unlike addition,"
                " an assignment statement is not needed when using append.")
     code = "app_asgn"

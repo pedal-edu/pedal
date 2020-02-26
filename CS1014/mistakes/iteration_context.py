@@ -10,6 +10,11 @@ from pedal.core.commands import gently, explain
 
 # ################8.2 Start#######################
 def wrong_list_length_8_2():
+    """
+
+    Returns:
+
+    """
     message = "You must have at least three pieces"
     code = "list length_8.2"
     tldr = "List too short"
@@ -23,6 +28,11 @@ def wrong_list_length_8_2():
 
 
 def missing_list_initialization_8_2():
+    """
+
+    Returns:
+
+    """
     message = ('You must set the variable <code>shopping_cart</code>'
                'to a list containing the prices of items in the shopping cart.')
     code = "missing_list_init_8.2"
@@ -36,6 +46,11 @@ def missing_list_initialization_8_2():
 
 
 def wrong_list_is_constant_8_2():
+    """
+
+    Returns:
+
+    """
     message = 'You must set <code>shoppping_cart</code> to a list of values not to a single number.'
     code = "list_is_const_8.2"
     tldr = "Shopping Cart not set to list"
@@ -48,6 +63,11 @@ def wrong_list_is_constant_8_2():
 
 
 def list_all_zeros_8_2():
+    """
+
+    Returns:
+
+    """
     message = 'Try seeing what happens when you change the numbers in the list.'
     code = 'default_list_8.2'
     tldr = 'Use different numbers'
@@ -70,6 +90,11 @@ def list_all_zeros_8_2():
 
 # ################8.3 Start#######################
 def wrong_list_initialization_placement_8_3():
+    """
+
+    Returns:
+
+    """
     message = ('The list of episode lengths (<code>episode_length_list</code>)'
                ' must be initialized before the iteration which uses this list.')
     code = "init_place_8.3"
@@ -87,6 +112,11 @@ def wrong_list_initialization_placement_8_3():
 
 
 def wrong_accumulator_initialization_placement_8_3():
+    """
+
+    Returns:
+
+    """
     message = ('The variable to hold the sum of the episode lengths (<code>sum_length</code>) '
                'must be initialized before the iteration which uses this variable.')
     code = "accu_init_place_8.3"
@@ -104,6 +134,11 @@ def wrong_accumulator_initialization_placement_8_3():
 
 
 def wrong_iteration_body_8_3():
+    """
+
+    Returns:
+
+    """
     message = "The addition of each episode length to the total length is not in the correct place."
     code = "iter_body_8.3"
     tldr = "Accumulation Misplaced"
@@ -115,6 +150,11 @@ def wrong_iteration_body_8_3():
 
 
 def wrong_print_8_3():
+    """
+
+    Returns:
+
+    """
     message = ('The output of the total length of time is not in the correct place. The total length of time should be'
                ' output only once after the total length of time has been computed.')
     code = "print_8.3"
@@ -132,6 +172,11 @@ def wrong_print_8_3():
 
 # ################8.4 Start#######################
 def missing_target_slot_empty_8_4():
+    """
+
+    Returns:
+
+    """
     message = 'You must fill in the empty slot in the iteration.'
     code = 'target_empty_8.4'
     tldr = "Iteration Variable Empty"
@@ -146,6 +191,11 @@ def missing_target_slot_empty_8_4():
 
 
 def missing_addition_slot_empty_8_4():
+    """
+
+    Returns:
+
+    """
     message = "You must fill in the empty slot in the addition."
     code = "add_empty_8.4"
     tldr = "Addition Blank"
@@ -159,6 +209,11 @@ def missing_addition_slot_empty_8_4():
 
 
 def wrong_names_not_agree_8_4():
+    """
+
+    Returns:
+
+    """
     message = "Each value of <code>{0!s}</code> must be added to <code>{1!s}</code>."
     code = "name_agree_8.4"
     tldr = "Iteration Variable and Accumulation Mismatch"
@@ -339,6 +394,11 @@ def wrong_cannot_sum_list():
 
 
 def missing_no_print():
+    """
+
+    Returns:
+
+    """
     message = "Program does not output anything."
     code = "no_print"
     tldr = "Missing Output"
@@ -480,6 +540,11 @@ def missing_zero_initialization():
 
 
 def wrong_printing_list():
+    """
+
+    Returns:
+
+    """
     message = 'You should be printing a single value.'
     code = "list_print"
     tldr = "Printing in Iteration"
@@ -495,6 +560,11 @@ def wrong_printing_list():
 
 # TODO: This might be reason to rethink letting instructor symbols map to multiple items
 def missing_average():
+    """
+
+    Returns:
+
+    """
     message = "An average value is not computed.<"
     code = "no_avg"
     tldr = "Missing Computation"
@@ -518,6 +588,11 @@ def missing_average():
 
 
 def warning_average_in_iteration():
+    """
+
+    Returns:
+
+    """
     message = ('An average value is best computed after the properties name <code>{0!s}</code>(total) and '
                '<code>{1!s}</code> are completely known rather than recomputing the average on each iteration.')
     code = "avg_in_iter"
@@ -540,6 +615,11 @@ def warning_average_in_iteration():
 
 
 def wrong_average_denominator():
+    """
+
+    Returns:
+
+    """
     message = "The average is not calculated correctly."
     code = "avg_denom"
     tldr = "Incorrect Average Calculation"
@@ -565,6 +645,11 @@ def wrong_average_denominator():
 
 
 def wrong_average_numerator():
+    """
+
+    Returns:
+
+    """
     message = "The average is not calculated correctly."
     code = "avg_numer"
     tldr = "Incorrect Average Calculation"
@@ -592,6 +677,11 @@ def wrong_average_numerator():
 
 # #######################AVERAGE END###########################
 def wrong_compare_list():
+    """
+
+    Returns:
+
+    """
     message = "Each item in the list <code>{0!s}</code> must be compared one item at a time."
     code = "comp_list"
     tldr = "Not Comparing Each Item"
@@ -608,6 +698,11 @@ def wrong_compare_list():
 
 
 def wrong_for_inside_if():
+    """
+
+    Returns:
+
+    """
     message = "The iteration should not be inside the decision block."
     code = "for_in_if"
     tldr = "For inside if"
@@ -620,6 +715,11 @@ def wrong_for_inside_if():
 
 
 def iterator_is_function():
+    """
+
+    Returns:
+
+    """
     message = "You should make a variable for the list instead of using a function call for the list"
     code = "iter_is_func"
     tldr = "Using Function Call instead of List"
@@ -638,6 +738,11 @@ def iterator_is_function():
 
 # ##########################9.1 START############################
 def wrong_list_initialization_9_1():
+    """
+
+    Returns:
+
+    """
     message = "The list of rainfall amounts (<code>rainfall_list</code>) is not initialized properly."
     code = "list_init_9.1"
     tldr = "Incorrect List Initialization"
@@ -648,6 +753,11 @@ def wrong_list_initialization_9_1():
 
 
 def wrong_accumulator_initialization_9_1():
+    """
+
+    Returns:
+
+    """
     message = ("The variable to hold the total value of the rainfall amounts (<code>rainfall_sum</code>) "
                "is not initialized properly.")
     code = "accu_init_9.1"
@@ -659,6 +769,11 @@ def wrong_accumulator_initialization_9_1():
 
 
 def wrong_accumulation_9_1():
+    """
+
+    Returns:
+
+    """
     message = "The addition of each rainfall amount to <code>rainfall_sum</code> is not correct."
     code = "accu_9.1"
     tldr = "Incorrect Accumulation Statement"
@@ -672,6 +787,11 @@ def wrong_accumulation_9_1():
 
 
 def wrong_list_initialization_placement_9_1():
+    """
+
+    Returns:
+
+    """
     message = ("The list of rainfall amount (<code>rainfall_list</code>) "
                "must be initialized before the iteration that uses this list.")
     code = "list_init_place_9.1"
@@ -685,6 +805,11 @@ def wrong_list_initialization_placement_9_1():
 
 
 def wrong_accumulator_initialization_placement_9_1():
+    """
+
+    Returns:
+
+    """
     message = ("The variable for the sum of all the rainfall amounts (<code>rainfall_sum</code>) "
                "must be initialized before the iteration which uses this variable.")
     code = "accu_init_place_9.1"
@@ -698,6 +823,11 @@ def wrong_accumulator_initialization_placement_9_1():
 
 
 def wrong_iteration_body_9_1():
+    """
+
+    Returns:
+
+    """
     message = "The addition of each rainfall amount to the total rainfall is not in the correct place."
     code = "iter_body_9.1"
     tldr = "Accumulation Statement Misplaced or Missing"
@@ -729,6 +859,11 @@ def wrong_print_9_1():
 
 # ##########################9.2 START############################
 def wrong_list_initialization_9_2():
+    """
+
+    Returns:
+
+    """
     message = "The list of rainfall amounts (<code>rainfall_list</code>) is not initialized properly."
     code = "list_init_9.2"
     tldr = "Incorrect List Initialization"
@@ -739,6 +874,11 @@ def wrong_list_initialization_9_2():
 
 
 def wrong_accumulator_initialization_9_2():
+    """
+
+    Returns:
+
+    """
     message = ("The variable to hold the total value of the rainfall amounts "
                "(<code>rainfall_count</code>) is not initialized properly.")
     code = "accu_init_9.2"
@@ -749,6 +889,11 @@ def wrong_accumulator_initialization_9_2():
 
 
 def wrong_accumulation_9_2():
+    """
+
+    Returns:
+
+    """
     message = ('The adding of another day with rainfall to the total '
                'count of days with rainfall (<code>rainfall_count</code>) is not correct.')
     code = "accu_9.2"
@@ -763,6 +908,11 @@ def wrong_accumulation_9_2():
 
 
 def wrong_list_initialization_placement_9_2():
+    """
+
+    Returns:
+
+    """
     message = ("The list of rainfall amount (<code>rainfall_list</code>) "
                "must be initialized before the iteration that uses this list.")
     code = "list_init_place_9.2"
@@ -776,6 +926,11 @@ def wrong_list_initialization_placement_9_2():
 
 
 def wrong_accumulator_initialization_placement_9_2():
+    """
+
+    Returns:
+
+    """
     message = ("The variable for the count of the number of days having rain (<code>rainfall_count</code>) "
                "must be initialized before the iteration which uses this variable.")
     code = "accu_init_place_9.2"
@@ -789,6 +944,11 @@ def wrong_accumulator_initialization_placement_9_2():
 
 
 def wrong_iteration_body_9_2():
+    """
+
+    Returns:
+
+    """
     message = ("The test (if) to determine if a given amount "
                "of rainfall is greater than (>) zero is not in the correct place.")
     code = "iter_body_9.2"
@@ -805,6 +965,11 @@ def wrong_iteration_body_9_2():
 
 
 def wrong_decision_body_9_2():
+    """
+
+    Returns:
+
+    """
     message = ("The increase by 1 in the number of days having rainfall "
                "(<code>rainfall_count</code>) is not in the correct place.")
     code = "dec_body_9.2"
@@ -820,6 +985,11 @@ def wrong_decision_body_9_2():
 
 
 def wrong_print_9_2():
+    """
+
+    Returns:
+
+    """
     message = ("The output of the total number of days with rainfall is not in the correct place. The total number of "
                "days should be output only once after the total number of days has been computed.")
     code = "print_9.2"
@@ -837,6 +1007,11 @@ def wrong_print_9_2():
 
 # ##########################9.6 START############################
 def wrong_comparison_9_6():
+    """
+
+    Returns:
+
+    """
     message = "In this problem you should be finding temperatures above 80 degrees."
     code = "comp_9.6"
     tldr = "Incorrect Comparison Statement"
@@ -883,6 +1058,11 @@ def wrong_conversion_10_2():
 
 # ##########################10.3 START############################
 def wrong_filter_condition_10_3():
+    """
+
+    Returns:
+
+    """
     message = "The condition used to filter the year when artists died is not correct."
     code = "filt_10.3"
     tldr = "Incorrect Condition"
@@ -902,6 +1082,11 @@ def wrong_filter_condition_10_3():
 
 # ##########################10.4 START############################
 def wrong_and_filter_condition_10_4():
+    """
+
+    Returns:
+
+    """
     message = ("The condition used to filter the temperatures "
                "into the specified range of temperatures is not correct.")
     code = "filt_and_10.4"
@@ -920,6 +1105,11 @@ def wrong_and_filter_condition_10_4():
 
 
 def wrong_nested_filter_condition_10_4():
+    """
+
+    Returns:
+
+    """
     message = ("The decisions used to filter the temperatures into "
                "the specified range of temperatures is not correct.")
     code = "nest_filt_10.4"
@@ -946,6 +1136,11 @@ def wrong_nested_filter_condition_10_4():
 
 # ########################10.5 START###############################
 def wrong_conversion_problem_10_5():
+    """
+
+    Returns:
+
+    """
     message = "The conversion from kilometers to miles is not correct."
     code = "conv_10.5"
     tldr = "Incorrect Conversion"
@@ -990,6 +1185,11 @@ def wrong_filter_problem_atl1_10_5():
 
 
 def wrong_filter_problem_atl2_10_5():
+    """
+
+    Returns:
+
+    """
     message = "You are not correctly filtering out values from the list."
     code = "filt_alt2_10.5"
     tldr = "Incorrect Filter Statement"
@@ -1012,6 +1212,11 @@ def wrong_filter_problem_atl2_10_5():
 
 
 def wrong_append_problem_atl1_10_5():
+    """
+
+    Returns:
+
+    """
     message = "You are not appending the correct values.<br><br><i>(app_alt1_10.5"
     code = "app_alt1_10.5"
     tldr = "Incorrect Value Appended"
@@ -1034,6 +1239,11 @@ def wrong_append_problem_atl1_10_5():
 
 
 def wrong_append_problem_atl2_10_5():
+    """
+
+    Returns:
+
+    """
     message = "You are not appending the correct values."
     code = "app_alt2_10.5"
     tldr = "Incorrect Value Appended"
@@ -1081,6 +1291,11 @@ def wrong_debug_10_6():
 
 
 def wrong_debug_10_7():
+    """
+
+    Returns:
+
+    """
     message = "This is not the change needed. Undo the change and try again."
     code = "debug_10.7"
     tldr = "At least one unnecessary change"
@@ -1102,6 +1317,11 @@ def wrong_debug_10_7():
 
 # ########################.....###############################
 def wrong_initialization_in_iteration():
+    """
+
+    Returns:
+
+    """
     message = ("You only need to initialize <code>{0!s}</code> once. "
                "Remember that statements in an iteration block happens multiple times")
     code = "wrong_init_in_iter"
@@ -1122,6 +1342,11 @@ def wrong_initialization_in_iteration():
 
 
 def wrong_duplicate_var_in_add():
+    """
+
+    Returns:
+
+    """
     message = "You are adding the same variable twice; you need two different variables in your addition."
     code = "dup_var"
     tldr = "Duplicate Division"
@@ -1133,6 +1358,15 @@ def wrong_duplicate_var_in_add():
 
 # ########################PLOTTING###############################
 def plot_group_error(output=None, plots=None):
+    """
+
+    Args:
+        output:
+        plots:
+
+    Returns:
+
+    """
     if output is None:
         output = get_output()
     if plots is None:
@@ -1172,6 +1406,11 @@ def all_labels_present():  # TODO: make sure it's before the show, maybe check f
 
 
 def show_parens():
+    """
+
+    Returns:
+
+    """
     message = "Make sure you add parenthesis to <code>plt.show</code>"
     code = "show_parens"
     tldr = "Incorrect Show"
@@ -1181,6 +1420,11 @@ def show_parens():
 
 
 def hard_code_8_5():  # TODO: This one's weird
+    """
+
+    Returns:
+
+    """
     message = "Use iteration to calculate the sum."
     code = "hard_code_8.5"
     tldr = "Hard Coded Answer"

@@ -169,6 +169,14 @@ def AtomicFeedbackFunction(title=None, version='0.0.1', message_template=None, t
 
     """
     def AtomicFeedbackFunction_with_attrs(function):
+        """
+
+        Args:
+            function:
+
+        Returns:
+
+        """
         function.title = title if title is not None else function.__name__
         function.tags = tags if tags is not None else []
         function.version = version
@@ -180,7 +188,20 @@ def AtomicFeedbackFunction(title=None, version='0.0.1', message_template=None, t
 
 
 def CompositeFeedbackFunction():
+    """
+
+    Returns:
+
+    """
     def CompositeFeedbackFunction_with_attrs(function):
+        """
+
+        Args:
+            function:
+
+        Returns:
+
+        """
         return function
     return CompositeFeedbackFunction_with_attrs
 

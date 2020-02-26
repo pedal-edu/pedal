@@ -43,6 +43,11 @@ class FinalFeedback:
                                                                          message=self.message[:50])
 
     def to_json(self) -> dict:
+        """
+
+        Returns:
+
+        """
         return {
             'success': self.success,
             'score': self.score,
@@ -82,6 +87,14 @@ def by_priority(feedback):
 
 
 def priority_offset(priority):
+    """
+
+    Args:
+        priority:
+
+    Returns:
+
+    """
     if priority == 'low':
         return .7
     elif priority == 'medium':
@@ -93,6 +106,14 @@ def priority_offset(priority):
 
 
 def parse_feedback(feedback):
+    """
+
+    Args:
+        feedback:
+
+    Returns:
+
+    """
     message = feedback.message or feedback.text
     title = feedback.title or feedback.label
     return feedback.correct, feedback.score, message, title, feedback.fields

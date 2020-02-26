@@ -24,6 +24,15 @@ class Sandbox:
     instructor_filename = "instructor_tests.py"
     
     def start_coverage(self, code=None, filename=None):
+        """
+
+        Args:
+            code:
+            filename:
+
+        Returns:
+
+        """
         if code is None:
             code = self.report['source']['code']
         if filename is None:
@@ -35,6 +44,14 @@ class Sandbox:
         dir_path = os.getcwd()
         self._coverage_file = os.path.join(dir_path, filename)
         def get_python_source(reading_filename):
+            """
+
+            Args:
+                reading_filename:
+
+            Returns:
+
+            """
             if reading_filename == self._coverage_file:
                 return code
             else:
@@ -45,6 +62,11 @@ class Sandbox:
         self.cov.start()
     
     def stop_coverage(self):
+        """
+
+        Returns:
+
+        """
         self.cov.stop()
         self.cov.save()
         
@@ -62,6 +84,14 @@ class Sandbox:
     
     
     def check_code(self, code):
+        """
+
+        Args:
+            code:
+
+        Returns:
+
+        """
         self.run(code, _as_filename=self.instructor_filename)
         if self.exception is not None:
             name = str(self.exception.__class__)[8:-2]
@@ -76,6 +106,19 @@ class Sandbox:
                            mistakes={'message': defns+message})
     
     def tests(self, function, test_runs, points, compliment, test_output=False, defns=""):
+        """
+
+        Args:
+            function:
+            test_runs:
+            points:
+            compliment:
+            test_output:
+            defns:
+
+        Returns:
+
+        """
         all_passed = True
         results = []
         for test in test_runs:
@@ -112,6 +155,17 @@ class Sandbox:
             return False
     
     def test(self, function, expected, *args, **kwargs):
+        """
+
+        Args:
+            function:
+            expected:
+            *args:
+            **kwargs:
+
+        Returns:
+
+        """
         if function not in self.data and '.' not in function:
             # TODO: Hackish, allow methods through for now
             message = "I could not find a top-level definition of {function}!\n"
@@ -166,6 +220,9 @@ class Sandbox:
         return False, message
     
     def raise_any_exceptions(self):
+        """
+
+        """
         if self.exception is not None:
             name = str(self.exception.__class__)[8:-2]
             self.report.attach(name, category='Runtime', tool='Sandbox',

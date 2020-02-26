@@ -96,6 +96,15 @@ class CaitNode:
         """
 
         def eval_unop(unop_num, unop_node):
+            """
+
+            Args:
+                unop_num:
+                unop_node:
+
+            Returns:
+
+            """
             operand = eval_selector(unop_num, unop_node.operand)
             op = unop_node.op_name
 
@@ -103,6 +112,15 @@ class CaitNode:
                     "Not": not operand}[op]
 
         def eval_binop(binop_num, binop_node):
+            """
+
+            Args:
+                binop_num:
+                binop_node:
+
+            Returns:
+
+            """
             left = eval_selector(binop_num, binop_node.left)
             right = eval_selector(binop_num, binop_node.right)
             op = binop_node.op_name
@@ -114,6 +132,15 @@ class CaitNode:
                 "Div": left / right}[op]
 
         def eval_selector(op_num, op_expr):
+            """
+
+            Args:
+                op_num:
+                op_expr:
+
+            Returns:
+
+            """
             op_expr = op_num if op_expr.ast_name == "Name" else op_expr
             if isinstance(op_expr, (int, float)):
                 return op_expr
@@ -126,6 +153,15 @@ class CaitNode:
             raise NotImplementedError
 
         def eval_bool_comp(num_list, comp_ast):
+            """
+
+            Args:
+                num_list:
+                comp_ast:
+
+            Returns:
+
+            """
             ops = comp_ast.ops_names
             comps = comp_ast.comparators
             results = []
@@ -155,6 +191,15 @@ class CaitNode:
             return results
 
         def eval_boolop(num_list, boolop_ast):
+            """
+
+            Args:
+                num_list:
+                boolop_ast:
+
+            Returns:
+
+            """
             boolop = boolop_ast.op_name
             values = boolop_ast.values
             results_c = None
@@ -222,6 +267,12 @@ class CaitNode:
 
         # adding function to track tree ids
         def visit_counter(self, node):
+            """
+
+            Args:
+                self:
+                node:
+            """
             self.counter += 1
             self.generic_visit(node)
 
@@ -256,9 +307,25 @@ class CaitNode:
 
     @staticmethod
     def get_ast_name(node):
+        """
+
+        Args:
+            node:
+
+        Returns:
+
+        """
         return type(node).__name__
 
     def get_clashing_attr(self, key):
+        """
+
+        Args:
+            key:
+
+        Returns:
+
+        """
         if key == "value":
             return self.get_value()
 
@@ -353,6 +420,17 @@ class CaitNode:
         return matcher.find_matches(self, check_meta=check_meta, pre_match=prev_match)
 
     def find_match(self, pattern, is_mod=False, check_meta=True, use_previous=True):
+        """
+
+        Args:
+            pattern:
+            is_mod:
+            check_meta:
+            use_previous:
+
+        Returns:
+
+        """
         matches = self.find_matches(pattern, is_mod, check_meta=check_meta, use_previous=use_previous)
         if len(matches) != 0:
             return matches[0]
@@ -375,6 +453,15 @@ class CaitNode:
         func_name = 'visit_' + node_type
 
         def main_visit(self, node):
+            """
+
+            Args:
+                self:
+                node:
+
+            Returns:
+
+            """
             self.items.append(node.cait_node)
             return self.generic_visit(node)
 
@@ -392,6 +479,15 @@ class CaitNode:
             has_num = []
 
             def visit_Num(self, potential):
+                """
+
+                Args:
+                    self:
+                    potential:
+
+                Returns:
+
+                """
                 has_num.append(node == potential.n)
                 return self.generic_visit(potential)
 
@@ -404,6 +500,15 @@ class CaitNode:
         has_name = []
 
         def visit_Name(self, potential):
+            """
+
+            Args:
+                self:
+                potential:
+
+            Returns:
+
+            """
             has_name.append(node.id == potential.id)
             return self.generic_visit(potential)
 

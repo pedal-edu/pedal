@@ -43,6 +43,11 @@ class AstSymbolList:
         return self.my_list.__getitem__(item)
 
     def append(self, item):
+        """
+
+        Args:
+            item:
+        """
         self.my_list.append(item)
 
     def __getattr__(self, attr):
@@ -53,6 +58,9 @@ class AstSymbolList:
 
 
 class AstMap:
+    """
+
+    """
     def __init__(self):
         self.mappings = {}
         self.symbol_table = {}

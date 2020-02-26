@@ -3,6 +3,9 @@ from pedal.core.commands import gently, explain
 
 
 def histogram_group():
+    """
+
+    """
     histogram_argument_not_list()
     histogram_wrong_list()
     histogram_missing()
@@ -109,6 +112,11 @@ def histogram_wrong_list():
 
 
 def histogram_wrong_placement():
+    """
+
+    Returns:
+
+    """
     message = "The histogram should be plotted only once, after the new list has been created"
     code = "histo_wrong_place"
     tldr = "Histogram Plot Placed Incorrectly"

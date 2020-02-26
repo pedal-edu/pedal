@@ -54,6 +54,9 @@ def compliment(message, value=0, title=None,
     code.
 
     Args:
+        report:
+        group:
+        tool:
         title (str): If None, defaults to "Compliment"
         message (str): The message to display to the user.
         locations (int): The relevant line of code to reference.
@@ -77,6 +80,10 @@ def give_partial(value, justification=None, title=None, tool=None, group=None, r
     Increases the user's current score by the `value`.
 
     Args:
+        report:
+        group:
+        tool:
+        title:
         value (number): The number to increase the user's score by.
         justification (str): A justification for why this partial credit was given.
     """
@@ -91,6 +98,17 @@ def give_partial(value, justification=None, title=None, tool=None, group=None, r
 
 @AtomicFeedbackFunction(title="System Error")
 def system_error(tool, explanation, author=PEDAL_DEVELOPERS, report=MAIN_REPORT):
+    """
+
+    Args:
+        tool:
+        explanation:
+        author:
+        report:
+
+    Returns:
+
+    """
     return feedback("system_error", tool=tool, category=Feedback.CATEGORIES.SYSTEM,
                     kind=FeedbackKind.META, justification=explanation,
                     valence=Feedback.NEUTRAL_VALENCE,
@@ -102,6 +120,28 @@ def system_error(tool, explanation, author=PEDAL_DEVELOPERS, report=MAIN_REPORT)
 def explain(message, label='explain', title=None, fields=None,
             justification=None, priority=None, line=None, text=None, score=None, muted=False,
             version='0.0.1', author=None, tags=None, group=None, report=MAIN_REPORT):
+    """
+
+    Args:
+        message:
+        label:
+        title:
+        fields:
+        justification:
+        priority:
+        line:
+        text:
+        score:
+        muted:
+        version:
+        author:
+        tags:
+        group:
+        report:
+
+    Returns:
+
+    """
     return feedback(label, category=Feedback.CATEGORIES.INSTRUCTOR,
                     kind=FeedbackKind.MISTAKE, justification=justification, priority=priority,
                     valence=Feedback.NEGATIVE_VALENCE, title=title or explain.title,
@@ -114,6 +154,28 @@ def explain(message, label='explain', title=None, fields=None,
 def gently(message, label='gently', title=None, fields=None,
            justification=None, priority=Feedback.CATEGORIES.STUDENT, line=None, text=None, score=None, muted=False,
            version='0.0.1', author=None, tags=None, group=None, report=MAIN_REPORT):
+    """
+
+    Args:
+        message:
+        label:
+        title:
+        fields:
+        justification:
+        priority:
+        line:
+        text:
+        score:
+        muted:
+        version:
+        author:
+        tags:
+        group:
+        report:
+
+    Returns:
+
+    """
     return feedback(label, category=Feedback.CATEGORIES.INSTRUCTOR,
                     kind=FeedbackKind.MISTAKE, justification=justification, priority=priority,
                     valence=Feedback.NEGATIVE_VALENCE, title=title or gently.title,
@@ -126,6 +188,28 @@ def gently(message, label='gently', title=None, fields=None,
 def guidance(message, label="guidance", title=None, fields=None,
              justification=None, priority=None, line=None, text=None, score=None,
              muted=False, version='0.0.1', author=None, tags=None, group=None, report=MAIN_REPORT):
+    """
+
+    Args:
+        message:
+        label:
+        title:
+        fields:
+        justification:
+        priority:
+        line:
+        text:
+        score:
+        muted:
+        version:
+        author:
+        tags:
+        group:
+        report:
+
+    Returns:
+
+    """
     return feedback(label, category=Feedback.CATEGORIES.INSTRUCTIONS,
                     kind=FeedbackKind.INSTRUCTIONAL, justification=justification, priority=priority,
                     valence=Feedback.NEUTRAL_VALENCE, title=title or guidance.title,
@@ -135,19 +219,49 @@ def guidance(message, label="guidance", title=None, fields=None,
 
 
 def hide_correctness(report=MAIN_REPORT):
+    """
+
+    Args:
+        report:
+    """
     report.hide_correctness()
 
 
 def suppress(category=None, label=True, report=MAIN_REPORT):
+    """
+
+    Args:
+        category:
+        label:
+        report:
+    """
     report.suppress(category, label)
 
 
 def log(message, report=MAIN_REPORT):
+    """
+
+    Args:
+        message:
+        report:
+
+    Returns:
+
+    """
     return feedback("log", category=Feedback.CATEGORIES.SYSTEM, muted=True, text=message,
                     valence=Feedback.NEUTRAL_VALENCE)
 
 
 def debug(message, report=MAIN_REPORT):
+    """
+
+    Args:
+        message:
+        report:
+
+    Returns:
+
+    """
     return feedback("debug", category=Feedback.CATEGORIES.SYSTEM, muted=True, text=message,
                     valence=Feedback.NEGATIVE_VALENCE, priority='high')
 
@@ -170,6 +284,7 @@ def contextualize_report(submission, filename='answer.py', clear=True, report=MA
     the code of the submission.
 
     Args:
+        clear:
         submission (str or Submission):
         filename (str or None): If the `submission` was not a :py:class:`~pedal.core.submission.Submission`,
             then this will be used as the filename for the code given in `submission`.

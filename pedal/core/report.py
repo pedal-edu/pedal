@@ -46,6 +46,9 @@ class Report:
         self.clear()
 
     def clear(self):
+        """
+
+        """
         self.feedback = []
         self.suppressions = {}
         self.suppressed_labels = []
@@ -56,9 +59,17 @@ class Report:
         self.submission = None
 
     def contextualize(self, submission):
+        """
+
+        Args:
+            submission:
+        """
         self.submission = submission
 
     def hide_correctness(self):
+        """
+
+        """
         self.suppressions[FeedbackCategory.RESULT] = []
 
     def add_feedback(self, feedback):

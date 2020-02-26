@@ -9,6 +9,15 @@ from pedal.source.constants import TOOL_NAME
                         text_template="Source code file is blank.".format,
                         justification="After stripping the code, there were no characters.")
 def blank_source(group=None, report=MAIN_REPORT):
+    """
+
+    Args:
+        group:
+        report:
+
+    Returns:
+
+    """
     return feedback(blank_source.__name__, category=feedback.CATEGORIES.SYNTAX, tool=TOOL_NAME,
                     title=blank_source.title, version=blank_source.version,
                     group=group, message=blank_source.text_template(), report=report)
@@ -20,6 +29,16 @@ def blank_source(group=None, report=MAIN_REPORT):
                                        "{count}, but there were only {found} sections.").format,
                         justification="Section index exceeded the length of the separated sections list.")
 def not_enough_sections(section_number, found, report=MAIN_REPORT):
+    """
+
+    Args:
+        section_number:
+        found:
+        report:
+
+    Returns:
+
+    """
     fields = {'count': section_number, 'found': found}
     return feedback(not_enough_sections.__name__, category=feedback.CATEGORIES.SYNTAX, tool=TOOL_NAME,
                     title=not_enough_sections.title, version=not_enough_sections.version,
@@ -34,6 +53,16 @@ def not_enough_sections(section_number, found, report=MAIN_REPORT):
                         version='0.0.1',
                         justification="IOError while opening file to set_source")
 def source_file_not_found(filename, sections, report=MAIN_REPORT):
+    """
+
+    Args:
+        filename:
+        sections:
+        report:
+
+    Returns:
+
+    """
     fields = {'filename': filename, 'sections': sections}
     return feedback(source_file_not_found.__name__, category=feedback.CATEGORIES.SYNTAX, tool=TOOL_NAME,
                     title=source_file_not_found.title, version=source_file_not_found.version,
@@ -49,6 +78,23 @@ def source_file_not_found(filename, sections, report=MAIN_REPORT):
                         version='0.0.1',
                         justification="Syntax error was triggered while calling ast.parse")
 def syntax_error(line, filename, code, offset, text, traceback, exception, exc_info, report=MAIN_REPORT, muted=False):
+    """
+
+    Args:
+        line:
+        filename:
+        code:
+        offset:
+        text:
+        traceback:
+        exception:
+        exc_info:
+        report:
+        muted:
+
+    Returns:
+
+    """
     traceback = ExpandedTraceback(exception, exc_info, traceback, report.submission.instructor_file,
                                   line, filename, code)
     context = traceback.format_exception()
@@ -68,6 +114,17 @@ def syntax_error(line, filename, code, offset, text, traceback, exception, exc_i
                                        "Expected {count}, but only found {found}").format,
                         justification="")
 def incorrect_number_of_sections(count, found, group, report=MAIN_REPORT):
+    """
+
+    Args:
+        count:
+        found:
+        group:
+        report:
+
+    Returns:
+
+    """
     fields = {'count': count, 'found': found}
     return feedback(incorrect_number_of_sections.__name__, category=feedback.CATEGORIES.SYNTAX, tool=TOOL_NAME,
                     title=incorrect_number_of_sections.title, fields=fields, group=group,

@@ -6,6 +6,9 @@ from pedal.core.commands import gently, explain
 
 # Feedback for author's name
 def check_author_name_on_header():
+    """
+
+    """
     code = get_program()
     m_author = re.search('Author: \\w+', code)
     if not m_author:
@@ -14,16 +17,38 @@ def check_author_name_on_header():
 
 
 def get_plots(output):
+    """
+
+    Args:
+        output:
+
+    Returns:
+
+    """
     # The p[0] is the first plot in a graph/show
     return [p[0] for p in output if isinstance(p[0], dict)]
 
 
 def find_plot_of_type(plot_list, plot_type):
+    """
+
+    Args:
+        plot_list:
+        plot_type:
+
+    Returns:
+
+    """
     return [p['data'] for p in plot_list if p['type'] == plot_type]
 
 
 # Feedback for copying output of the program in the documentation
 def check_output_on_header(expected_output):
+    """
+
+    Args:
+        expected_output:
+    """
     code = get_program()
     expected_output = str(expected_output)
     between_stars = code.split("*****")[2].strip()
@@ -39,6 +64,14 @@ def check_output_on_header(expected_output):
 
 
 def check_problem_submission(prob_id):
+    """
+
+    Args:
+        prob_id:
+
+    Returns:
+
+    """
     if prob_id not in get_program():
         explain("Make sure that you are turning in {}</br>".format(prob_id),
                 label="wrong_problem", title="Wrong Problem")
@@ -46,6 +79,14 @@ def check_problem_submission(prob_id):
 
 
 def check_print_output(multiple_lines):
+    """
+
+    Args:
+        multiple_lines:
+
+    Returns:
+
+    """
     for line in multiple_lines:
         if line not in get_output():
             gently("You are not doing the correct calculation</br>", label="catch_all", title="Wrong Output")
@@ -53,5 +94,13 @@ def check_print_output(multiple_lines):
 
 
 def find_in_code(regex):
+    """
+
+    Args:
+        regex:
+
+    Returns:
+
+    """
     code = get_program()
     return re.search(regex, code)

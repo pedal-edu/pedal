@@ -48,6 +48,14 @@ def _parse_source(code, report=MAIN_REPORT):
 
 
 def reset(report=MAIN_REPORT):
+    """
+
+    Args:
+        report:
+
+    Returns:
+
+    """
     report[TOOL_NAME] = {
         'success': True,
         'error': None,

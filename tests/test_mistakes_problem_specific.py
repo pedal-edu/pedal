@@ -687,6 +687,9 @@ class SpecificMistakeTest(MistakeTest):
         self.assertTrue(wrong_decision_body_9_2(), "false negative")
 
     def wrong_print_9_2(self):
+        """
+
+        """
         self.to_source("for item in items:\n"
                        "    print(total)")
         self.assertTrue(wrong_print_9_2(), "false negative")

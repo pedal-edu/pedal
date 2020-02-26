@@ -9,6 +9,9 @@ from pedal.resolvers import simple
 
 
 class SimpleEnvironment(Environment):
+    """
+
+    """
     def __init__(self, code):
         set_submission(Submission({'answer.py': code}))
         verify()
@@ -17,4 +20,9 @@ class SimpleEnvironment(Environment):
         self.student = run()
 
     def resolve(self):
+        """
+
+        Returns:
+
+        """
         return simple.resolve()

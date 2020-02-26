@@ -211,6 +211,15 @@ class Tifa(ast.NodeVisitor):
         return Identifier(False)
 
     def find_path_parent(self, path_id, name):
+        """
+
+        Args:
+            path_id:
+            name:
+
+        Returns:
+
+        """
         if name in self.name_map[path_id]:
             return Identifier(True, state=self.name_map[path_id][name])
         else:
@@ -341,6 +350,15 @@ class Tifa(ast.NodeVisitor):
 
     # TODO: Properly handle assignments with subscripts
     def assign_target(self, target, type):
+        """
+
+        Args:
+            target:
+            type:
+
+        Returns:
+
+        """
         if isinstance(target, ast.Name):
             self.store_variable(target.id, type)
         elif isinstance(target, (ast.Tuple, ast.List)):
@@ -377,6 +395,14 @@ class Tifa(ast.NodeVisitor):
             # TODO: Handle minor type changes (e.g., appending to an inner list)
 
     def visit_AugAssign(self, node):
+        """
+
+        Args:
+            node:
+
+        Returns:
+
+        """
         # Handle value
         right = self.visit(node.value)
         # Handle target
@@ -400,6 +426,14 @@ class Tifa(ast.NodeVisitor):
         self._issue(incompatible_types(self.locate(), node.op, left, right, report=self.report))
 
     def visit_Attribute(self, node):
+        """
+
+        Args:
+            node:
+
+        Returns:
+
+        """
         # Handle value
         value_type = self.visit(node.value)
         # Handle ctx
@@ -408,6 +442,14 @@ class Tifa(ast.NodeVisitor):
         return value_type.load_attr(node.attr, self, node.value, self.locate())
 
     def visit_BinOp(self, node):
+        """
+
+        Args:
+            node:
+
+        Returns:
+
+        """
         # Handle left and right
         left = self.visit(node.left)
         right = self.visit(node.right)
@@ -426,9 +468,25 @@ class Tifa(ast.NodeVisitor):
         return UnknownType()
 
     def visit_Bool(self, node):
+        """
+
+        Args:
+            node:
+
+        Returns:
+
+        """
         return BoolType()
 
     def visit_BoolOp(self, node):
+        """
+
+        Args:
+            node:
+
+        Returns:
+
+        """
         # Handle left and right
         values = []
         for value in node.values:
@@ -441,6 +499,14 @@ class Tifa(ast.NodeVisitor):
         return BoolType()
 
     def visit_Call(self, node):
+        """
+
+        Args:
+            node:
+
+        Returns:
+
+        """
         # Handle func part (Name or Attribute)
         function_type = self.visit(node.func)
         # TODO: Need to grab the actual type in some situations
@@ -480,6 +546,11 @@ class Tifa(ast.NodeVisitor):
         return UnknownType()
 
     def visit_ClassDef(self, node):
+        """
+
+        Args:
+            node:
+        """
         class_name = node.name
         new_class_type = ClassType(class_name)
         self.store_variable(class_name, new_class_type)
@@ -491,6 +562,14 @@ class Tifa(ast.NodeVisitor):
             self.generic_visit(node)
 
     def visit_Compare(self, node):
+        """
+
+        Args:
+            node:
+
+        Returns:
+
+        """
         # Handle left and right
         left = self.visit(node.left)
         comparators = [self.visit(compare) for compare in node.comparators]
@@ -541,6 +620,11 @@ class Tifa(ast.NodeVisitor):
                 self._issue(iteration_problem(self.locate(node.target), iter_variable_name))
 
     def visit_comprehension(self, node):
+        """
+
+        Args:
+            node:
+        """
         self._visit_collection_loop(node)
         # Handle ifs, unless they're blank (None in Skulpt :)
         if node.ifs:
@@ -580,6 +664,14 @@ class Tifa(ast.NodeVisitor):
         return type
 
     def visit_DictComp(self, node):
+        """
+
+        Args:
+            node:
+
+        Returns:
+
+        """
         # TODO: Handle comprehension scope
         for generator in node.generators:
             self.visit(generator)
@@ -588,18 +680,43 @@ class Tifa(ast.NodeVisitor):
         return DictType(keys=keys, values=values)
 
     def visit_For(self, node):
+        """
+
+        Args:
+            node:
+        """
         self._visit_collection_loop(node)
         # Handle the bodies
         self.visit_statements(node.body)
         self.visit_statements(node.orelse)
 
     def visit_FunctionDef(self, node):
+        """
+
+        Args:
+            node:
+
+        Returns:
+
+        """
         # Name
         function_name = node.name
         position = self.locate()
         definitions_scope = self.scope_chain[:]
 
         def definition(tifa, call_type, call_name, parameters, call_position):
+            """
+
+            Args:
+                tifa:
+                call_type:
+                call_name:
+                parameters:
+                call_position:
+
+            Returns:
+
+            """
             function_scope = Tifa.NewScope(self, definitions_scope)
             with function_scope:
                 # Process arguments
@@ -648,12 +765,25 @@ class Tifa(ast.NodeVisitor):
         return function
 
     def visit_GeneratorExp(self, node):
+        """
+
+        Args:
+            node:
+
+        Returns:
+
+        """
         # TODO: Handle comprehension scope
         for generator in node.generators:
             self.visit(generator)
         return GeneratorType(self.visit(node.elt))
 
     def visit_If(self, node):
+        """
+
+        Args:
+            node:
+        """
         # Visit the conditional
         self.visit(node.test)
 
@@ -679,6 +809,14 @@ class Tifa(ast.NodeVisitor):
         self.merge_paths(this_path_id, if_path.id, else_path.id)
 
     def visit_IfExp(self, node):
+        """
+
+        Args:
+            node:
+
+        Returns:
+
+        """
         # Visit the conditional
         self.visit(node.test)
 
@@ -695,6 +833,11 @@ class Tifa(ast.NodeVisitor):
         return UnknownType()
 
     def visit_Import(self, node):
+        """
+
+        Args:
+            node:
+        """
         # Handle names
         for alias in node.names:
             asname = alias.asname or alias.name
@@ -702,6 +845,11 @@ class Tifa(ast.NodeVisitor):
             self.store_variable(asname, module_type)
 
     def visit_ImportFrom(self, node):
+        """
+
+        Args:
+            node:
+        """
         # Handle names
         for alias in node.names:
             if node.module is None:
@@ -716,11 +864,31 @@ class Tifa(ast.NodeVisitor):
             self.store_variable(asname, name_type)
 
     def visit_Lambda(self, node):
+        """
+
+        Args:
+            node:
+
+        Returns:
+
+        """
         # Name
         position = self.locate()
         definitions_scope = self.scope_chain[:]
 
         def definition(tifa, call_type, call_name, parameters, call_position):
+            """
+
+            Args:
+                tifa:
+                call_type:
+                call_name:
+                parameters:
+                call_position:
+
+            Returns:
+
+            """
             function_scope = Tifa.NewScope(self, definitions_scope)
             with function_scope:
                 # Process arguments
@@ -742,6 +910,14 @@ class Tifa(ast.NodeVisitor):
         return FunctionType(definition=definition)
 
     def visit_List(self, node):
+        """
+
+        Args:
+            node:
+
+        Returns:
+
+        """
         type = ListType()
         if node.elts:
             type.empty = False
@@ -753,12 +929,28 @@ class Tifa(ast.NodeVisitor):
         return type
 
     def visit_ListComp(self, node):
+        """
+
+        Args:
+            node:
+
+        Returns:
+
+        """
         # TODO: Handle comprehension scope
         for generator in node.generators:
             self.visit(generator)
         return ListType(self.visit(node.elt))
 
     def visit_NameConstant(self, node):
+        """
+
+        Args:
+            node:
+
+        Returns:
+
+        """
         value = node.value
         if isinstance(value, bool):
             return BoolType()
@@ -766,6 +958,14 @@ class Tifa(ast.NodeVisitor):
             return NoneType()
 
     def visit_Name(self, node):
+        """
+
+        Args:
+            node:
+
+        Returns:
+
+        """
         name = node.id
         if name == "___":
             self._issue(unconnected_blocks(self.locate()))
@@ -790,9 +990,22 @@ class Tifa(ast.NodeVisitor):
                 return UnknownType()
 
     def visit_Num(self, node):
+        """
+
+        Args:
+            node:
+
+        Returns:
+
+        """
         return NumType()
 
     def visit_Return(self, node):
+        """
+
+        Args:
+            node:
+        """
         if len(self.scope_chain) == 1:
             self._issue(return_outside_function(self.locate(), report=self.report))
         # TODO: Unconditional return inside loop
@@ -802,24 +1015,56 @@ class Tifa(ast.NodeVisitor):
             self.return_variable(NoneType())
 
     def visit_SetComp(self, node):
+        """
+
+        Args:
+            node:
+
+        Returns:
+
+        """
         # TODO: Handle comprehension scope
         for generator in node.generators:
             self.visit(generator)
         return SetType(self.visit(node.elt))
 
     def visit_statements(self, nodes):
+        """
+
+        Args:
+            nodes:
+
+        Returns:
+
+        """
         # TODO: Check for pass in the middle of a series of statement
         if any(isinstance(node, ast.Pass) for node in nodes):
             pass
         return [self.visit(statement) for statement in nodes]
 
     def visit_Str(self, node):
+        """
+
+        Args:
+            node:
+
+        Returns:
+
+        """
         if node.s == "":
             return StrType(True)
         else:
             return StrType(False)
 
     def visit_Subscript(self, node):
+        """
+
+        Args:
+            node:
+
+        Returns:
+
+        """
         # Handle value
         value_type = self.visit(node.value)
         # Handle slice
@@ -840,6 +1085,14 @@ class Tifa(ast.NodeVisitor):
             return value_type
 
     def visit_Tuple(self, node):
+        """
+
+        Args:
+            node:
+
+        Returns:
+
+        """
         type = TupleType()
         if not node.elts:
             type.empty = True
@@ -851,6 +1104,14 @@ class Tifa(ast.NodeVisitor):
         return type
 
     def visit_UnaryOp(self, node):
+        """
+
+        Args:
+            node:
+
+        Returns:
+
+        """
         # Handle operand
         operand = self.visit(node.operand)
 
@@ -865,6 +1126,11 @@ class Tifa(ast.NodeVisitor):
         return UnknownType()
 
     def visit_While(self, node):
+        """
+
+        Args:
+            node:
+        """
         # Visit conditional
         self.visit(node.test)
 
@@ -892,6 +1158,11 @@ class Tifa(ast.NodeVisitor):
         self.merge_paths(this_path_id, body_path.id, empty_path.id)
 
     def visit_With(self, node):
+        """
+
+        Args:
+            node:
+        """
         for item in node.items:
             type_value = self.visit(item.context_expr)
             self.visit(item.optional_vars)
@@ -943,14 +1214,42 @@ class Tifa(ast.NodeVisitor):
         return self.load_variable(name, position)
 
     def store_iter_variable(self, name, type, position=None):
+        """
+
+        Args:
+            name:
+            type:
+            position:
+
+        Returns:
+
+        """
         state = self.store_variable(name, type, position)
         state.read = 'yes'
         return state
 
     def return_variable(self, return_type):
+        """
+
+        Args:
+            return_type:
+
+        Returns:
+
+        """
         return self.store_variable("*return", return_type)
 
     def append_variable(self, name, append_type, position=None):
+        """
+
+        Args:
+            name:
+            append_type:
+            position:
+
+        Returns:
+
+        """
         return self.store_variable(name, append_type, position)
 
     def store_variable(self, name, store_type, position=None):
@@ -1002,6 +1301,7 @@ class Tifa(ast.NodeVisitor):
         Retrieve the variable with the given name.
 
         Args:
+            position:
             name (str): The unqualified name of the variable. If the variable is
                         not found in the current scope or an enclosing sope, all
                         other scopes will be searched to see if it was read out
@@ -1070,6 +1370,15 @@ class Tifa(ast.NodeVisitor):
                 return ModuleType()
 
     def combine_states(self, left, right):
+        """
+
+        Args:
+            left:
+            right:
+
+        Returns:
+
+        """
         state = State(left.name, [left], left.type, 'branch', self.locate(),
                       read=left.read, set=left.set, over=left.over,
                       over_position=left.over_position)
@@ -1125,6 +1434,7 @@ class Tifa(ast.NodeVisitor):
         Makes a copy of the given state with the given method type.
 
         Args:
+            position:
             state (State): The state to copy (as in, we trace a copy of it!)
             method (str): The operation being applied to the state.
         Returns:
@@ -1152,12 +1462,29 @@ class Tifa(ast.NodeVisitor):
 
     @staticmethod
     def match_rso(left, right):
+        """
+
+        Args:
+            left:
+            right:
+
+        Returns:
+
+        """
         if left == right:
             return left
         else:
             return "maybe"
 
     def get_literal(self, node):
+        """
+
+        Args:
+            node:
+
+        Returns:
+
+        """
         if isinstance(node, ast.Num):
             return LiteralNum(node.n)
         elif isinstance(node, ast.Str):

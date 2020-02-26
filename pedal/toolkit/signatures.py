@@ -85,6 +85,14 @@ Type validation:
 
 
 def parse_type_slice(slice):
+    """
+
+    Args:
+        slice:
+
+    Returns:
+
+    """
     if slice.ast_name == "Index":
         return parse_type(slice.value)
     elif slice.ast_name == "Slice":
@@ -94,7 +102,15 @@ def parse_type_slice(slice):
 
 
 def parse_type(node):
-    if node == None:
+    """
+
+    Args:
+        node:
+
+    Returns:
+
+    """
+    if node is None:
         return "Any"
     if node.ast_name == "Str":
         try:
@@ -119,6 +135,15 @@ def parse_type(node):
 
 
 def parse_type_value(value, parse_strings=False):
+    """
+
+    Args:
+        value:
+        parse_strings:
+
+    Returns:
+
+    """
     if isinstance(value, str):
         if parse_strings:
             return parse_type(CaitNode(ast.parse(value).body[0].value))
@@ -129,10 +154,10 @@ def parse_type_value(value, parse_strings=False):
     elif value is None:
         return "None"
     elif isinstance(value, list):
-        if value == []:
-            return "[]"
-        else:
+        if value:
             return "[{}]".format(parse_type_value(value[0]))
+        else:
+            return "[]"
     elif isinstance(value, tuple):
         if value == ():
             return "()"
@@ -156,11 +181,19 @@ class SignatureException(Exception):
 
 
 class Stack:
+    """
+
+    """
     def __init__(self, identifier="union"):
         self.body = []
         self.identifier = identifier
 
     def append(self, value):
+        """
+
+        Args:
+            value:
+        """
         self.body.append(value)
 
     def __repr__(self):
@@ -248,12 +281,28 @@ def _parse_tokens(tokens):
 
 
 def sort_stacks(s):
+    """
+
+    Args:
+        s:
+
+    Returns:
+
+    """
     if isinstance(s, Stack):
         return (True, (s.identifier, s.body))
     return (False, s)
 
 
 def normalize_type(t):
+    """
+
+    Args:
+        t:
+
+    Returns:
+
+    """
     t = t.strip()
     tokens = re.split(SPECIAL_SYMBOLS, t)
     tokens = [token for token in tokens if token]
@@ -262,6 +311,16 @@ def normalize_type(t):
 
 
 def check_piece(left, right, indent=1):
+    """
+
+    Args:
+        left:
+        right:
+        indent:
+
+    Returns:
+
+    """
     if type(left) != type(right):
         return False
     elif isinstance(left, Stack):
@@ -283,11 +342,28 @@ def check_piece(left, right, indent=1):
 
 
 def type_check(left, right):
+    """
+
+    Args:
+        left:
+        right:
+
+    Returns:
+
+    """
     left = normalize_type(left)
     right = normalize_type(right)
     return check_piece(left, right)
     
 def find_colon(str):
+    """
+
+    Args:
+        str:
+
+    Returns:
+
+    """
     parens_stack = []
     for i, character in enumerate(str):
         if character in '[(':
@@ -303,6 +379,14 @@ ARGS = ('args:', 'arg:', 'argument:', 'arguments:',
 ARG_PATTERN = r'(.+)\s*\((.+)\)\s*:(.+)'
 RETURNS = ('returns:', 'return:')
 def parse_docstring(doc):
+    """
+
+    Args:
+        doc:
+
+    Returns:
+
+    """
     # First line's indentation may be different from rest - trust first
     # non empty line after the first one.
     # Remove taht number of spaces from subsequent lines

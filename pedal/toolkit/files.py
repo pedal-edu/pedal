@@ -9,6 +9,14 @@ from pedal.toolkit.utilities import ensure_literal
                         message_template=("You have called the <code>open</code> function "
                                           "without any arguments. It needs a filename.").format)
 def open_without_arguments(muted=False):
+    """
+
+    Args:
+        muted:
+
+    Returns:
+
+    """
     return feedback(open_without_arguments.__name__, "toolkit", Feedback.CATEGORIES.INSTRUCTOR,
                     message=open_without_arguments.message_template(), muted=muted)
 

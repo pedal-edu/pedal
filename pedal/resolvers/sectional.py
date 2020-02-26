@@ -7,6 +7,7 @@ from pedal.core.report import MAIN_REPORT
 def resolve(report=None, priority_key=None):
     """
     Args:
+        priority_key:
         report (Report): The report object to resolve down. Defaults to the
                          global MAIN_REPORT
 

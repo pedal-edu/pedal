@@ -2,10 +2,18 @@ from pedal.tifa.type_definitions import (UnknownType, FunctionType,
                                          NumType, NoneType, BoolType,
                                          TupleType, ListType, StrType,
                                          FileType, DictType, ModuleType,
-                                         SetType, DayType, TimeType, ClassType,
+                                         SetType, DayType, TimeType,
                                          LiteralNum)
 
 def get_builtin_module(name):
+    """
+
+    Args:
+        name:
+
+    Returns:
+
+    """
     if name == 'matplotlib':
         return ModuleType('matplotlib',
                           submodules={
@@ -123,6 +131,18 @@ def _builtin_sequence_constructor(sequence_type):
     """
 
     def sequence_call(tifa, function_type, callee, args, position):
+        """
+
+        Args:
+            tifa:
+            function_type:
+            callee:
+            args:
+            position:
+
+        Returns:
+
+        """
         # TODO: Should inherit the emptiness too
         return_type = sequence_type(empty=True)
         if args:
@@ -150,6 +170,14 @@ def _builtin_zip(tifa, function_type, callee, args, position):
 # TODO: Exceptions
 
 def get_builtin_function(name):
+    """
+
+    Args:
+        name:
+
+    Returns:
+
+    """
     # Void Functions
     if name == "print":
         return FunctionType(name="print", returns=NoneType())

@@ -2,6 +2,17 @@ from pedal.core.commands import explain
 
 
 def check_record_instance(record_instance, record_type, instance_identifier, type_identifier):
+    """
+
+    Args:
+        record_instance:
+        record_type:
+        instance_identifier:
+        type_identifier:
+
+    Returns:
+
+    """
     if not isinstance(record_instance, dict):
         explain("{} was not a {} because it is not a dictionary.".format(instance_identifier, type_identifier))
         return False

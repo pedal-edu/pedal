@@ -10,6 +10,11 @@ DELTA = 0.001
 
 
 def all_documented():
+    """
+
+    Returns:
+
+    """
     ast = parse_program()
     defs = ast.find_all('FunctionDef') + ast.find_all("ClassDef")
     for a_def in defs:
@@ -27,6 +32,14 @@ def all_documented():
 
 
 def get_arg_name(node):
+    """
+
+    Args:
+        node:
+
+    Returns:
+
+    """
     name = node.id
     if name is None:
         return node.arg
@@ -35,6 +48,15 @@ def get_arg_name(node):
 
 
 def match_function(name, root=None):
+    """
+
+    Args:
+        name:
+        root:
+
+    Returns:
+
+    """
     if root is None:
         ast = parse_program()
     else:
@@ -47,6 +69,16 @@ def match_function(name, root=None):
 
 
 def match_signature_muted(name, length, *parameters):
+    """
+
+    Args:
+        name:
+        length:
+        *parameters:
+
+    Returns:
+
+    """
     ast = parse_program()
     defs = ast.find_all('FunctionDef')
     for a_def in defs:
@@ -67,6 +99,15 @@ def match_signature_muted(name, length, *parameters):
 
 
 def find_def_by_name(name, root=None):
+    """
+
+    Args:
+        name:
+        root:
+
+    Returns:
+
+    """
     if root is None:
         root = parse_program()
     defs = root.find_all('FunctionDef')
@@ -77,6 +118,17 @@ def find_def_by_name(name, root=None):
 
 
 def match_parameters(name, *types, returns=None, root=None):
+    """
+
+    Args:
+        name:
+        *types:
+        returns:
+        root:
+
+    Returns:
+
+    """
     defn = find_def_by_name(name, root)
     if defn:
         for expected, actual in zip(types, defn.args.args):
@@ -108,6 +160,16 @@ def match_parameters(name, *types, returns=None, root=None):
 
 
 def match_signature(name, length, *parameters):
+    """
+
+    Args:
+        name:
+        length:
+        *parameters:
+
+    Returns:
+
+    """
     ast = parse_program()
     defs = ast.find_all('FunctionDef')
     for a_def in defs:
@@ -148,6 +210,15 @@ RED_X = "<td>&#10060;</td>"
 
 
 def output_test(name, *tests):
+    """
+
+    Args:
+        name:
+        *tests:
+
+    Returns:
+
+    """
     student = compatibility.get_student_data()
     if name in student.data:
         the_function = student.data[name]
@@ -366,6 +437,8 @@ def ensure_coverage(percentage=.5, destructive=False, report=None):
     report, if there is one present.
     
     Args:
+        report:
+        percentage:
         destructive (bool): Whether or not to remove the sandbox.
     """
     if report is None:
@@ -380,6 +453,15 @@ def ensure_coverage(percentage=.5, destructive=False, report=None):
 
 
 def ensure_cisc108_tests(test_count, report=None):
+    """
+
+    Args:
+        test_count:
+        report:
+
+    Returns:
+
+    """
     student = compatibility.get_student_data()
     if 'assert_equal' not in student.data:
         gently("You have not imported assert_equal from the cisc108 module.")

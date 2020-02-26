@@ -13,6 +13,9 @@ student = next_section()
 
 @section(1)
 def q1_1():
+    """
+
+    """
     assertHasFunction(student, 'add_5', args=["num"]*5, returns="str")
     with try_all():
         assertEqual(student.call('add_5', 1,2,3,4,5), "12345", score=.25)
@@ -23,6 +26,9 @@ def q1_1():
 @section(1)
 # Does not require them to complete q1_1 because it's not a precondition
 def q1_2():
+    """
+
+    """
     assertHasFunction(student, 'third', args=["list[any]"], returns="any")
     with try_all():
         assertEqual(student.call("third", [1, 3, 5]), 5, score=.25)
@@ -34,6 +40,9 @@ def q1_2():
 
 @section(1)
 def q1_3():
+    """
+
+    """
     assertHasFunction(student, 'is_question', args=["str"], returns="bool")
     with try_all():
         assertEqual(student.call("is_question", "Huh?"), True, score=.25)
@@ -52,7 +61,11 @@ class Lab12(SectionalAssignment):
     sections = 5
     
     def test_part_1(self):
-        
+        """
+
+        Returns:
+
+        """
         reset()
         student = run(threaded=True)
         
@@ -98,7 +111,11 @@ class Lab12(SectionalAssignment):
         return all_done >= 4
     
     def test_part_2(self):
-        
+        """
+
+        Returns:
+
+        """
         reset()
         student = run()
         
@@ -184,7 +201,11 @@ class Lab12(SectionalAssignment):
         return all_done >= 5
     
     def test_part_3(self):
-        
+        """
+
+        Returns:
+
+        """
         reset()
         student = run()
         
@@ -237,7 +258,11 @@ class Lab12(SectionalAssignment):
         return all_done >= 4
     
     def test_part_4(self):
-        
+        """
+
+        Returns:
+
+        """
         reset()
         student = run()
         
@@ -252,6 +277,14 @@ class Lab12(SectionalAssignment):
             else:
                 input_number = student.data['input_number']
                 def call_test(inputs):
+                    """
+
+                    Args:
+                        inputs:
+
+                    Returns:
+
+                    """
                     student.call('input_number', _inputs=inputs, _threaded=True, _raise_exceptions=True)
                     if student.exception:
                         return False
@@ -284,6 +317,15 @@ class Lab12(SectionalAssignment):
             else:
                 letter_per_line = student.data['letter_per_line']
                 def call_test(input, output):
+                    """
+
+                    Args:
+                        input:
+                        output:
+
+                    Returns:
+
+                    """
                     student.set_output(None)
                     student.call('letter_per_line', _inputs=[input], _threaded=True, _raise_exceptions=True)
                     if student.exception:
@@ -316,6 +358,15 @@ class Lab12(SectionalAssignment):
                 explain("The summate_while function was not callable.")
             else:
                 def call_test(given, expected):
+                    """
+
+                    Args:
+                        given:
+                        expected:
+
+                    Returns:
+
+                    """
                     student.set_output(None)
                     student.call('summate_while', given, _threaded=True, _raise_exceptions=True)
                     if student.exception:

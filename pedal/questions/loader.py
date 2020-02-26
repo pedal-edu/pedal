@@ -84,16 +84,34 @@ EXAMPLE_DATA = {
 
 
 class FeedbackException(Exception):
+    """
+
+    """
     def __init__(self, category, label, **fields):
         self.category = category
         self.label = label
         self.fields = fields
 
     def as_message(self):
+        """
+
+        Returns:
+
+        """
         return FEEDBACK_MESSAGES[self.category][self.label].format(**self.fields)
 
 
 def check_function_defined(function, function_definitions, settings=None):
+    """
+
+    Args:
+        function:
+        function_definitions:
+        settings:
+
+    Returns:
+
+    """
     # 1. Is the function defined syntactically?
     # 1.1. With the right name?
     function_name = function['name']
@@ -104,6 +122,16 @@ def check_function_defined(function, function_definitions, settings=None):
 
 
 def check_function_signature(function, definition, settings=None):
+    """
+
+    Args:
+        function:
+        definition:
+        settings:
+
+    Returns:
+
+    """
     function_name = function['name']
     # 1.2. With the right parameters and return type?
     # 1.2.1 'arity' style - simply checks number of parameters
@@ -190,6 +218,9 @@ def check_function_value(function, values, settings):
 
 
 class TestCase:
+    """
+
+    """
     CASE_COUNT = 0
     def __init__(self, function_name, case_name):
         self.function_name = function_name
@@ -209,39 +240,78 @@ class TestCase:
         self.success = True
 
     def add_message(self, message):
+        """
+
+        Args:
+            message:
+        """
         self.message = message
         self.has_message = True
 
     def add_inputs(self, inputs):
+        """
+
+        Args:
+            inputs:
+        """
         if not isinstance(inputs, list):
             inputs = [inputs]
         self.inputs = inputs
         self.has_inputs = True
 
     def add_arguments(self, arguments):
+        """
+
+        Args:
+            arguments:
+        """
         if not isinstance(arguments, list):
             arguments = [arguments]
         self.arguments = arguments
         self.has_arguments = True
 
     def add_error(self, error):
+        """
+
+        Args:
+            error:
+        """
         self.error = error
         self.has_error = True
         self.success = False
 
     def add_expected_prints(self, prints):
+        """
+
+        Args:
+            prints:
+        """
         self.expected_prints = prints
         self.has_expected_prints = True
 
     def add_expected_returns(self, returns):
+        """
+
+        Args:
+            returns:
+        """
         self.expected_returns = returns
         self.has_expected_returns = True
 
     def add_prints_returns(self, prints, returns):
+        """
+
+        Args:
+            prints:
+            returns:
+        """
         self.prints = prints
         self.returns = returns
 
     def fail(self):
+        """
+
+        """
         self.success = False
 
 def check_case(function, case, student_function):
@@ -313,6 +383,14 @@ COLUMN_TITLES = ["", "Arguments", "Inputs", "Errors", "Expected", "Expected", "R
 
 
 def make_table(cases):
+    """
+
+    Args:
+        cases:
+
+    Returns:
+
+    """
     body = []
     for case in cases:
         body.append("    <tr>")
@@ -369,6 +447,13 @@ def make_table(cases):
 
 
 def check_cases(function, student_function, settings):
+    """
+
+    Args:
+        function:
+        student_function:
+        settings:
+    """
     function_name = function['name']
     if 'cases' in function:
         cases = function['cases']
@@ -388,6 +473,14 @@ def check_cases(function, student_function, settings):
 
 
 def get_arg_name(node):
+    """
+
+    Args:
+        node:
+
+    Returns:
+
+    """
     name = node.id
     if name is None:
         return node.arg
@@ -444,6 +537,11 @@ def load_question(data):
 
 
 def check_question(data):
+    """
+
+    Args:
+        data:
+    """
     results = list(load_question(data))
     if results:
         message, label = results[0]
@@ -451,10 +549,20 @@ def check_question(data):
 
 
 def check_pool(questions):
+    """
+
+    Args:
+        questions:
+    """
     pass
 
 
 def load_file(filename):
+    """
+
+    Args:
+        filename:
+    """
     pass
 
 

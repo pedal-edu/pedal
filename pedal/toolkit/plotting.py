@@ -9,6 +9,11 @@ PLOT_LABEL = {'plot': 'line plot',
 
 
 def prevent_incorrect_plt():
+    """
+
+    Returns:
+
+    """
     ast = parse_program()
     plts = [n for n in ast.find_all("Name") if n.id == 'plt']
     if plts and def_use_error(plts[0]):
@@ -49,6 +54,14 @@ def prevent_incorrect_plt():
 
 
 def ensure_correct_plot(function_name):
+    """
+
+    Args:
+        function_name:
+
+    Returns:
+
+    """
     for a_plot, label in PLOT_LABEL.items():
         if function_name == a_plot:
             if not function_is_called(function_name):
@@ -65,6 +78,11 @@ def ensure_correct_plot(function_name):
 
 
 def ensure_show():
+    """
+
+    Returns:
+
+    """
     if not function_is_called("show"):
         gently("You have not called <code>show</code> function, which "
                  "actually creates the graph.", label="no_show")

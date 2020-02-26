@@ -16,6 +16,11 @@ def make_resolver(func, report=None):
         report = MAIN_REPORT
 
     def resolver_wrapper():
+        """
+
+        Returns:
+
+        """
         report.execute_hooks('resolvers', 'resolve')
         return func()
 

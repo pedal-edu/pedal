@@ -99,6 +99,11 @@ def tifa_analysis(python_3=True, report=None):
     return t
 
 def reset(report=MAIN_REPORT):
+    """
+
+    Args:
+        report:
+    """
     # TODO
     pass
 

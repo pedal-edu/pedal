@@ -18,6 +18,9 @@ except Exception:
 
 
 class SandboxBasicTracer:
+    """
+
+    """
     def __init__(self):
         super().__init__()
         self.filename = "student.py"
@@ -38,6 +41,9 @@ class SandboxBasicTracer:
 
 
 class SandboxCoverageTracer(SandboxBasicTracer):
+    """
+
+    """
     def __init__(self):
         super().__init__()
         if coverage is None:
@@ -81,15 +87,29 @@ class SandboxCoverageTracer(SandboxBasicTracer):
     
     @property
     def percent_covered(self):
+        """
+
+        Returns:
+
+        """
         return self.pc_covered
 
 
 class SandboxCallTracer(SandboxBasicTracer, Bdb):
+    """
+
+    """
     def __init__(self):
         super().__init__()
         self.calls = {}
 
     def user_call(self, frame, argument_list):
+        """
+
+        Args:
+            frame:
+            argument_list:
+        """
         code = frame.f_code
         name = code.co_name
         if name not in self.calls:

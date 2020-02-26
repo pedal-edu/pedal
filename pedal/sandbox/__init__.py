@@ -12,6 +12,11 @@ get_output
 
 
 def reset(report=MAIN_REPORT):
+    """
+
+    Args:
+        report:
+    """
     report[TOOL_NAME] = {
         'run': Sandbox()
     }
@@ -21,6 +26,18 @@ Report.register_tool(TOOL_NAME, reset)
 
 
 def run(raise_exceptions=True, report=None, coverage=False, threaded=False, inputs=None):
+    """
+
+    Args:
+        raise_exceptions:
+        report:
+        coverage:
+        threaded:
+        inputs:
+
+    Returns:
+
+    """
     if report is None:
         report = MAIN_REPORT
     if 'run' not in report['sandbox']:

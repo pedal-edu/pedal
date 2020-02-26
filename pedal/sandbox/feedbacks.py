@@ -5,6 +5,21 @@ from pedal.sandbox import TOOL_NAME
 
 @CompositeFeedbackFunction()
 def runtime_error(message, name, exception, position, text=None, muted=False, group=None, report=MAIN_REPORT):
+    """
+
+    Args:
+        message:
+        name:
+        exception:
+        position:
+        text:
+        muted:
+        group:
+        report:
+
+    Returns:
+
+    """
     fields = {'message': message,
               'name': name,
               'error': exception,

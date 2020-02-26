@@ -17,6 +17,11 @@ def _topological_sort(names, orderings):
     stack = []
     
     def dfs(name):
+        """
+
+        Args:
+            name:
+        """
         visited.add(name)
         if name in orderings:
             for neighbor in orderings[name]:
@@ -31,6 +36,12 @@ def _topological_sort(names, orderings):
     
 
 def resolve_all(set_success=False, report=MAIN_REPORT):
+    """
+
+    Args:
+        set_success:
+        report:
+    """
     _setup_assertions(report)
     orderings = report['assertions']['relationships']
     phase_functions = report['assertions']['phase_functions']
@@ -112,5 +123,11 @@ def _setup_assertions(report):
         report.add_hook('pedal.resolvers.resolve', resolve_all)
 
 def set_assertion_mode(exceptions=True, report=MAIN_REPORT):
+    """
+
+    Args:
+        exceptions:
+        report:
+    """
     _setup_assertions(report)
     report['assertions']['exceptions'] = exceptions

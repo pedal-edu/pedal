@@ -33,6 +33,9 @@ def _name_regex(name_id):
 
 
 class StretchyTreeMatcher:
+    """
+
+    """
     def __init__(self, ast_or_code, report, filename="__main__"):
         """
         The StretchyTreeMatcher is used to compare a pattern against some
@@ -62,6 +65,7 @@ class StretchyTreeMatcher:
     def find_matches(self, ast_or_code, filename="__main__", check_meta=True, pre_match=None):
         """
         Args:
+            pre_match:
             ast_or_code (str or AstNode): The students' code or a valid AstNode from
                 `ast.parse`. If the code has invalid syntax, a SyntaxError
                 will be raised.
@@ -107,6 +111,7 @@ class StretchyTreeMatcher:
         Finds whether ins_node can be matched to some node in the tree std_node
 
         Args:
+            pre_match:
             ins_node:
             std_node:
             check_meta:
@@ -161,6 +166,17 @@ class StretchyTreeMatcher:
 
     # noinspection PyPep8Naming
     def deep_find_match_Name(self, ins_node, std_node, check_meta=True, pre_match=None):
+        """
+
+        Args:
+            ins_node:
+            std_node:
+            check_meta:
+            pre_match:
+
+        Returns:
+
+        """
         name_id = ins_node.astNode.id
         match = _name_regex(name_id)
         mapping = AstMap()
@@ -189,6 +205,17 @@ class StretchyTreeMatcher:
 
     # noinspection PyPep8Naming
     def deep_find_match_BinOp(self, ins_node, std_node, check_meta=True, pre_match=None):
+        """
+
+        Args:
+            ins_node:
+            std_node:
+            check_meta:
+            pre_match:
+
+        Returns:
+
+        """
         op = ins_node.astNode.op
         op = type(op).__name__
         is_generic = not (op == "Mult" or op == "Add")
@@ -220,6 +247,17 @@ class StretchyTreeMatcher:
                         new_mappings.append(both)
 
     def deep_find_match_binflex(self, ins_node, std_node, check_meta=False, pre_match=None):
+        """
+
+        Args:
+            ins_node:
+            std_node:
+            check_meta:
+            pre_match:
+
+        Returns:
+
+        """
         base_mappings = self.shallow_match(ins_node, std_node, check_meta)
         if not base_mappings:
             return []
@@ -449,23 +487,63 @@ class StretchyTreeMatcher:
 
     # noinspection PyPep8Naming,PyMethodMayBeStatic
     def shallow_match_arg(self, ins_node, std_node, check_meta=True):
+        """
+
+        Args:
+            ins_node:
+            std_node:
+            check_meta:
+
+        Returns:
+
+        """
         ins_node.astNode._id = ins_node.arg
         # TODO: annotations are currently ignored because shallow_symbol_handler doesn't handle them, feature? or
         #  should we fix this. Although this should actually be toggleable?
         return self.shallow_symbol_handler(ins_node, std_node, "arg", check_meta=check_meta)
 
     def shallow_match_arguments(self, ins_node, std_node, check_meta=True):
+        """
+
+        Args:
+            ins_node:
+            std_node:
+            check_meta:
+
+        Returns:
+
+        """
         # TODO: do we ignore default values? Currently not ignored
         return self.shallow_match_generic(ins_node, std_node, check_meta=check_meta)
 
     # noinspection PyPep8Naming,PyMethodMayBeStatic
     def shallow_func_handle(self, ins_node, std_node, check_meta=True):
+        """
+
+        Args:
+            ins_node:
+            std_node:
+            check_meta:
+
+        Returns:
+
+        """
         if ins_node.field == "func" and std_node.field == "func":
             ins_node.astNode._id = ins_node.astNode.attr
             return self.shallow_symbol_handler(ins_node, std_node, "attr", check_meta)
         return self.shallow_match_generic(ins_node, std_node, check_meta)
 
     def shallow_match_Attribute(self, ins_node, std_node, check_meta=True):
+        """
+
+        Args:
+            ins_node:
+            std_node:
+            check_meta:
+
+        Returns:
+
+        """
         if ins_node.field == "func" and std_node.ast_name == "Attribute":
             return self.shallow_func_handle(ins_node, std_node, check_meta)
         elif std_node.ast_name == "Attribute":
@@ -535,6 +613,16 @@ class StretchyTreeMatcher:
         return [mapping]
 
     def shallow_match_Call(self, ins_node, std_node, check_meta=True):
+        """
+
+        Args:
+            ins_node:
+            std_node:
+            check_meta:
+
+        Returns:
+
+        """
         return self.shallow_match_main(ins_node, std_node, check_meta, ignores=None)
         # matches = self.shallow_match_main(ins_node, std_node, check_meta, ignores=["func"])
         # if matches:
@@ -544,6 +632,16 @@ class StretchyTreeMatcher:
 
     # noinspection PyPep8Naming
     def shallow_match_FunctionDef(self, ins_node, std_node, check_meta=True):
+        """
+
+        Args:
+            ins_node:
+            std_node:
+            check_meta:
+
+        Returns:
+
+        """
         ins = ins_node.astNode
         std = std_node.astNode
         meta_matched = self.metas_match(ins_node, std_node, check_meta)
@@ -645,6 +743,16 @@ class StretchyTreeMatcher:
 
     # filter function for various types of nodes
     def shallow_match(self, ins_node, std_node, check_meta=True):
+        """
+
+        Args:
+            ins_node:
+            std_node:
+            check_meta:
+
+        Returns:
+
+        """
         method_name = 'shallow_match_' + type(ins_node.astNode).__name__
         target_func = getattr(self, method_name, self.shallow_match_generic)
         return target_func(ins_node, std_node, check_meta=check_meta)

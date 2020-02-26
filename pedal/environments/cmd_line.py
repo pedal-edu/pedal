@@ -1,5 +1,5 @@
 from pedal.cait.cait_api import *
-from pedal.core import MAIN_REPORT
+from pedal.core.report import MAIN_REPORT
 from pedal.source import set_source
 from pedal.tifa import tifa_analysis
 from pedal.sandbox.compatibility import *
@@ -31,6 +31,17 @@ def setup(student_code, input_vals):
 
 
 def process(file, module, ins_code, report):
+    """
+
+    Args:
+        file:
+        module:
+        ins_code:
+        report:
+
+    Returns:
+
+    """
     student_code1 = file.read()
     setup(student_code1, inputs)  # setup returns a sandbox object
     module.loader.exec_module(ins_code)

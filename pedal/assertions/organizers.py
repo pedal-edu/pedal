@@ -38,6 +38,9 @@ from pedal.assertions.setup import (_setup_assertions, AssertionException,
 from functools import wraps
 
 def contextualize_calls():
+    """
+
+    """
     pass
 
 
@@ -67,6 +70,16 @@ class _finish_section:
 
 
 def finish_section(number, *functions, next_section=False):
+    """
+
+    Args:
+        number:
+        *functions:
+        next_section:
+
+    Returns:
+
+    """
     if len(functions) == 0:
         x = _finish_section(number, *functions)
         x()
@@ -82,6 +95,14 @@ def section(*args):
     '''
     _setup_assertions(MAIN_REPORT)
     def wrap(f):
+        """
+
+        Args:
+            f:
+
+        Returns:
+
+        """
         _add_phase(phase_name, _handle_entry)
         MAIN_REPORT['assertions']['phases'].append((section_number, f))
         return f
@@ -106,6 +127,14 @@ def phase(phase_name, before=None, after=None):
     '''
     _setup_assertions(MAIN_REPORT)
     def wrap(f):
+        """
+
+        Args:
+            f:
+
+        Returns:
+
+        """
         @wraps(f)
         def _handle_entry(*args, **kwargs):
             old_exception_state = MAIN_REPORT['assertions']['exceptions']
@@ -120,9 +149,26 @@ def phase(phase_name, before=None, after=None):
     return wrap
     
 def stop_on_failure(f):
+    """
+
+    Args:
+        f:
+
+    Returns:
+
+    """
     _setup_assertions(MAIN_REPORT)
     @wraps(f)
     def wrapped(*args, **kwargs):
+        """
+
+        Args:
+            *args:
+            **kwargs:
+
+        Returns:
+
+        """
         old_exception_state = MAIN_REPORT['assertions']['exceptions']
         MAIN_REPORT['assertions']['exceptions'] = True
         value = None
@@ -136,9 +182,26 @@ def stop_on_failure(f):
 
 
 def try_all(f):
+    """
+
+    Args:
+        f:
+
+    Returns:
+
+    """
     _setup_assertions(MAIN_REPORT)
     @wraps(f)
     def wrapped(*args, **kwargs):
+        """
+
+        Args:
+            *args:
+            **kwargs:
+
+        Returns:
+
+        """
         old_exception_state = MAIN_REPORT['assertions']['exceptions']
         MAIN_REPORT['assertions']['exceptions'] = False
         value = f(*args, **kwargs)
@@ -148,8 +211,18 @@ def try_all(f):
 
 
 def precondition(function):
+    """
+
+    Args:
+        function:
+    """
     pass
 
 
 def postcondition(function):
+    """
+
+    Args:
+        function:
+    """
     pass

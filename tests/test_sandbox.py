@@ -15,6 +15,9 @@ here = "" if os.path.basename(os.getcwd()) == "tests" else "tests/"
 
 class TestCode(unittest.TestCase):
     def setUp(self):
+        """
+
+        """
         pass
 
     def test_normal_run(self):

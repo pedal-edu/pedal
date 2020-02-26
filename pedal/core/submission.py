@@ -43,6 +43,11 @@ class Submission:
 
     @property
     def lines(self):
+        """
+
+        Returns:
+
+        """
         if self.main_code not in self._lines_cache:
             self._lines_cache[self.main_code] = self.main_code.split("\n")
         return self._lines_cache[self.main_code]

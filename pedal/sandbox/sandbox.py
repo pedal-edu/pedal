@@ -45,6 +45,9 @@ def _dict_extends(d1, d2):
 
 
 class SandboxVariable:
+    """
+
+    """
     def __init__(self, name, value):
         self.name = name
         self.value = value
@@ -61,6 +64,15 @@ class DataSandbox:
         self.data = {}
 
     def get_names_by_type(self, type, exclude_builtins=True):
+        """
+
+        Args:
+            type:
+            exclude_builtins:
+
+        Returns:
+
+        """
         result = []
         for name, value in self.data.items():
             if isinstance(value, type):
@@ -70,10 +82,28 @@ class DataSandbox:
         return result
 
     def get_values_by_type(self, type, exclude_builtins=True):
+        """
+
+        Args:
+            type:
+            exclude_builtins:
+
+        Returns:
+
+        """
         names = self.get_names_by_type(type, exclude_builtins)
         return [self.data[name] for name in names]
 
     def get_variables_by_type(self, type, exclude_builtins=True):
+        """
+
+        Args:
+            type:
+            exclude_builtins:
+
+        Returns:
+
+        """
         names = self.get_names_by_type(type, exclude_builtins)
         return [(name, self.data[name]) for name in names]
 
@@ -90,6 +120,11 @@ class DataSandbox:
 
     @property
     def var(self):
+        """
+
+        Returns:
+
+        """
         return {k: SandboxVariable(k, v) for k, v in self.data.items()}
 
     def __repr__(self):
@@ -402,6 +437,13 @@ class Sandbox(DataSandbox):
         Load the given filename and execute it within the current namespace.
         
         Args:
+            raise_exceptions:
+            report_exceptions:
+            threaded:
+            inputs:
+            modules:
+            as_filename:
+            filename:
             context (False, None, or list[str]): The context to give any
                 exceptions. If None, then the recorded context will be used. If
                 a string, tracebacks will be shown with the given context. If
@@ -415,6 +457,11 @@ class Sandbox(DataSandbox):
                  context, report_exceptions, raise_exceptions)
 
     def list(self, *args):
+        """
+
+        Args:
+            *args:
+        """
         pass
 
     def call(self, function, *args, **kwargs):
@@ -422,27 +469,6 @@ class Sandbox(DataSandbox):
         Args:
             function (str): The name of the function to call that was defined
                 by the user.
-            as_filename (str): The filename to use when calling this function.
-                Defaults to the instructor filename, since you are calling
-                code on the student's behalf.
-            target (str): The new variable in the namespace to assign to. By
-                default this will be "_". If you use None, then no variable
-                will be assigned to. Note that this could overwrite a variable
-                in the user namespace.
-                TODO: Add a feature to prevent user namespace overwriting.
-            input (list of str): The strings to send in to calls to input.
-                You can also pass in a generator to construct strings
-                dynamically.
-            threaded (bool): Whether or not the function execution should be
-                executed in a separate thread. Defaults to True. This prevents
-                timeouts from occuring in the students' code (a TimeOutError
-                will be thrown after 3 seconds).
-            context (False, None, or list[str]): The context to give any
-                exceptions. If None, then the recorded context will be used. If
-                a string, tracebacks will be shown with the given context. If
-                False, no context will be given.
-            keep_context (bool): Whether or not to stay in the current context,
-                or to start a new one. Defaults to False.
         Returns:
             If the call was successful, returns the result of executing the
             code. Otherwise, it will return an Exception relevant to the
@@ -600,6 +626,8 @@ class Sandbox(DataSandbox):
         Execute the given string of code in this sandbox.
         
         Args:
+            keep_context:
+            raise_exceptions:
             code (str): The string of code to be executed.
             as_filename (str): The filename to use when executing the code -
                 this is cosmetic, technically speaking, it has no relation
@@ -697,6 +725,30 @@ def run(initial_data=None, initial_raw_output=None, initial_exception=None,
         result_proxy=SandboxResult,
         instructor_filename="instructor_tests.py",
         code=None, as_filename=None, report=None):
+    """
+
+    Args:
+        initial_data:
+        initial_raw_output:
+        initial_exception:
+        allowed_functions:
+        modules:
+        inputs:
+        report_exceptions:
+        raise_exceptions:
+        context:
+        full_traceback:
+        tracer_style:
+        threaded:
+        result_proxy:
+        instructor_filename:
+        code:
+        as_filename:
+        report:
+
+    Returns:
+
+    """
     if report is None:
         report = MAIN_REPORT
     if 'run' not in report['sandbox']:
@@ -716,6 +768,11 @@ def run(initial_data=None, initial_raw_output=None, initial_exception=None,
 
 
 def reset(report=None):
+    """
+
+    Args:
+        report:
+    """
     if report is None:
         report = MAIN_REPORT
     if 'settings' in report['sandbox']:

@@ -18,6 +18,9 @@ class QuestionGrader:
 
 
 class FunctionGrader(QuestionGrader):
+    """
+
+    """
     MAX_POINTS = 10
     DEFINITION_POINTS = 3
     COMPONENTS_POINTS = 1
@@ -50,12 +53,30 @@ class FunctionGrader(QuestionGrader):
         self.report_success(question)
 
     def report_status(self, question):
+        """
+
+        Args:
+            question:
+        """
         pass
 
     def report_success(self, question):
+        """
+
+        Args:
+            question:
+        """
         question.answer()
 
     def grade_definition(self, question):
+        """
+
+        Args:
+            question:
+
+        Returns:
+
+        """
         self.student = run(raise_exceptions=True, context=False)
         self.student.report_exceptions_mode = False
 
@@ -74,6 +95,11 @@ class FunctionGrader(QuestionGrader):
         return True
 
     def grade_components(self, question):
+        """
+
+        Args:
+            question:
+        """
         self.component_points = 0
         components = self._get_functions_with_filter('grade_component_')
         for component in components:
@@ -82,9 +108,25 @@ class FunctionGrader(QuestionGrader):
         self.points += self.component_points
 
     def assertEqual(self, *parameters):
+        """
+
+        Args:
+            *parameters:
+
+        Returns:
+
+        """
         return assertEqual(*parameters)
 
     def grade_unit_tests(self, question):
+        """
+
+        Args:
+            question:
+
+        Returns:
+
+        """
         all_good = True
         if self.UNIT_TEST_TOTAL_POINTS is None:
             TYPE_POINT_ADD = self.UNIT_TEST_TYPE_POINTS

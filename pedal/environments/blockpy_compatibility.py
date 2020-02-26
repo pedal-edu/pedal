@@ -3,13 +3,28 @@ class GracefulExit(Exception):
 
 
 class StudentData:
+    """
+
+    """
     def __init__(self):
         pass
 
     def get_names_by_type(self, type, exclude_builtins):
+        """
+
+        Args:
+            type:
+            exclude_builtins:
+        """
         pass
 
     def get_values_by_type(self, type, exclude_builtins):
+        """
+
+        Args:
+            type:
+            exclude_builtins:
+        """
         pass
 
 
@@ -17,70 +32,133 @@ student = StudentData()
 
 
 def get_output():
+    """
+
+    """
     pass
 
 
 def reset_output():
+    """
+
+    """
     pass
 
 
 def queue_input(*inputs):
+    """
+
+    Args:
+        *inputs:
+    """
     pass
 
 
 def get_program():
+    """
+
+    """
     pass
 
 
 def parse_program():
+    """
+
+    """
     pass
 
 
 def had_execution_time_error():
+    """
+
+    """
     pass
 
 
 def limit_execution_time():
+    """
+
+    """
     pass
 
 
 def unlimit_execution_time():
+    """
+
+    """
     pass
 
 
 def analyze_program():
+    """
+
+    """
     pass
 
 
 def def_use_error(AstNode):
+    """
+
+    Args:
+        AstNode:
+    """
     pass
 
 
 class CorruptedAstNode:
+    """
+
+    """
     def __init__(self):
         pass
 
 
 def find_match(instructor_code):
+    """
+
+    Args:
+        instructor_code:
+    """
     pass
 
 
 def find_matches(instructor_code):
+    """
+
+    Args:
+        instructor_code:
+    """
     pass
 
 
 class ASTMap:
+    """
+
+    """
     def __init__(self, JSAstMap):
         pass
 
     def get_std_name(self, id):
+        """
+
+        Args:
+            id:
+        """
         pass
 
     def get_std_exp(self, id):
+        """
+
+        Args:
+            id:
+        """
         pass
 
 
 class AstNode:
+    """
+
+    """
     def __init__(self, id):
         pass
 
@@ -88,6 +166,12 @@ class AstNode:
         pass
 
     def numeric_logic_check(self, mag, expr):
+        """
+
+        Args:
+            mag:
+            expr:
+        """
         pass
 
     def __str__(self):
@@ -100,7 +184,17 @@ class AstNode:
         pass
 
     def has(self, AstNode):
+        """
+
+        Args:
+            AstNode:
+        """
         pass
 
     def find_all(self, type):
+        """
+
+        Args:
+            type:
+        """
         pass

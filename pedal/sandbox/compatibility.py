@@ -9,6 +9,16 @@ from pedal.core.report import MAIN_REPORT
 
 
 def run_student(raise_exceptions=False, report=MAIN_REPORT, old_style_messages=False):
+    """
+
+    Args:
+        raise_exceptions:
+        report:
+        old_style_messages:
+
+    Returns:
+
+    """
     sandbox = report[TOOL_NAME]['run']
     source_code = report.submission.main_code
     filename = report.submission.main_file
@@ -20,6 +30,12 @@ def run_student(raise_exceptions=False, report=MAIN_REPORT, old_style_messages=F
 
 
 def queue_input(*inputs, **kwargs):
+    """
+
+    Args:
+        *inputs:
+        **kwargs:
+    """
     if 'report' not in kwargs:
         report = MAIN_REPORT
     else:
@@ -29,16 +45,37 @@ def queue_input(*inputs, **kwargs):
 
 
 def reset_output(report=MAIN_REPORT):
+    """
+
+    Args:
+        report:
+    """
     sandbox = report[TOOL_NAME]['run']
     sandbox.set_output(None)
 
 
 def get_output(report=MAIN_REPORT):
+    """
+
+    Args:
+        report:
+
+    Returns:
+
+    """
     sandbox = report[TOOL_NAME]['run']
     return sandbox.output
 
 
 def get_plots(report=MAIN_REPORT):
+    """
+
+    Args:
+        report:
+
+    Returns:
+
+    """
     sandbox = report[TOOL_NAME]['run']
     if 'matplotlib.pyplot' in sandbox.modules:
         mock_plt = sandbox.modules['matplotlib.pyplot']
@@ -48,6 +85,16 @@ def get_plots(report=MAIN_REPORT):
 
 
 def capture_output(function, *args, **kwargs):
+    """
+
+    Args:
+        function:
+        *args:
+        **kwargs:
+
+    Returns:
+
+    """
     if 'report' in kwargs:
         report = kwargs['report']
     else:
@@ -59,11 +106,30 @@ def capture_output(function, *args, **kwargs):
 
 
 def get_sandbox(report=MAIN_REPORT):
+    """
+
+    Args:
+        report:
+
+    Returns:
+
+    """
     sandbox = report[TOOL_NAME]['run']
     return sandbox
 
 
 def raise_exception(exception, position=None, report=MAIN_REPORT, message=None):
+    """
+
+    Args:
+        exception:
+        position:
+        report:
+        message:
+
+    Returns:
+
+    """
     sandbox = report[TOOL_NAME]['run']
     if exception is None:
         return
@@ -77,6 +143,14 @@ def raise_exception(exception, position=None, report=MAIN_REPORT, message=None):
 
 
 def get_student_data(report=MAIN_REPORT):
+    """
+
+    Args:
+        report:
+
+    Returns:
+
+    """
     return get_sandbox(report)
 
 
@@ -90,6 +164,14 @@ def set_sandbox(sandbox, report=MAIN_REPORT):
 
 
 def trace_lines(report=MAIN_REPORT):
+    """
+
+    Args:
+        report:
+
+    Returns:
+
+    """
     sandbox = report[TOOL_NAME]['run']
     if sandbox.tracer_style == 'coverage':
         return sandbox.trace.lines - sandbox.trace.missing

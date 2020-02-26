@@ -24,9 +24,25 @@ except AttributeError:
 
 if punctuation_table is None:
     def strip_punctuation(a_string):
+        """
+
+        Args:
+            a_string:
+
+        Returns:
+
+        """
         return ''.join(ch for ch in a_string if ch not in set(string.punctuation))
 else:
     def strip_punctuation(a_string):
+        """
+
+        Args:
+            a_string:
+
+        Returns:
+
+        """
         return a_string.translate(punctuation_table)
 
 SET_GENERATOR_TYPES = (type({}.keys()), type({}.values()), type({}.items()))
@@ -54,6 +70,16 @@ def _normalize_string(a_string, numeric_endings=False):
 
 
 def output_test(actual, expected, _exact_strings):
+    """
+
+    Args:
+        actual:
+        expected:
+        _exact_strings:
+
+    Returns:
+
+    """
     normalized_actual = [_normalize_string(line) for line in actual]
     if isinstance(expected, (str, bytes)):
         return _normalize_string(expected) in normalized_actual
@@ -63,6 +89,17 @@ def output_test(actual, expected, _exact_strings):
 
 
 def equality_test(actual, expected, _exact_strings, _delta):
+    """
+
+    Args:
+        actual:
+        expected:
+        _exact_strings:
+        _delta:
+
+    Returns:
+
+    """
     # Check if generators
     if isinstance(expected, LIST_GENERATOR_TYPES):
         expected = list(expected)

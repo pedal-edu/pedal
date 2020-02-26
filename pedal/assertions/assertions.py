@@ -12,6 +12,14 @@ from pedal.utilities.types import humanize_types
 
 
 def iterable(obj):
+    """
+
+    Args:
+        obj:
+
+    Returns:
+
+    """
     return hasattr(obj, '__iter__') or hasattr(obj, '__getitem__')
 
 
@@ -24,6 +32,15 @@ def _escape_curly_braces(result):
 
 
 def safe_repr(obj, short=False):
+    """
+
+    Args:
+        obj:
+        short:
+
+    Returns:
+
+    """
     try:
         result = repr(obj)
     except Exception:
@@ -109,6 +126,14 @@ def _build_context(sandboxed_results, actual_message, expected_message,
 
 
 def is_sandbox_result(value):
+    """
+
+    Args:
+        value:
+
+    Returns:
+
+    """
     if hasattr(value, "__actual_class__"):
         if value.__actual_class__ == SandboxResult:
             return True
@@ -153,6 +178,22 @@ def _basic_assertion(unit_test_name, justification, left, right, operator, code_
 
 def assertEqual(left, right, score=None, message=None, report=MAIN_REPORT,
                 contextualize=True, exact=False, compare_lengths=None, muted=False):
+    """
+
+    Args:
+        left:
+        right:
+        score:
+        message:
+        report:
+        contextualize:
+        exact:
+        compare_lengths:
+        muted:
+
+    Returns:
+
+    """
     if compare_lengths is None:
         compare_lengths = (iterable(left) and isinstance(right, (int, float)))
     return _basic_assertion("assert_equal", "Left and right were not equal", left, right,
@@ -169,6 +210,20 @@ def assertEqual(left, right, score=None, message=None, report=MAIN_REPORT,
 
 def assertNotEqual(left, right, score=None, message=None, report=MAIN_REPORT,
                    contextualize=True, exact=False):
+    """
+
+    Args:
+        left:
+        right:
+        score:
+        message:
+        report:
+        contextualize:
+        exact:
+
+    Returns:
+
+    """
     if _basic_assertion(left, right,
                         lambda l, r: not equality_test(l, r, exact, DELTA),
                         "{} == {}",
@@ -182,6 +237,18 @@ def assertNotEqual(left, right, score=None, message=None, report=MAIN_REPORT,
 
 def assertTrue(something, score=None, message=None, report=MAIN_REPORT,
                contextualize=True):
+    """
+
+    Args:
+        something:
+        score:
+        message:
+        report:
+        contextualize:
+
+    Returns:
+
+    """
     if _basic_assertion(something, True,
                         lambda l, r: bool(l),
                         "{} is true",
@@ -196,6 +263,18 @@ def assertTrue(something, score=None, message=None, report=MAIN_REPORT,
 
 def assertFalse(something, score=None, message=None, report=MAIN_REPORT,
                 contextualize=True):
+    """
+
+    Args:
+        something:
+        score:
+        message:
+        report:
+        contextualize:
+
+    Returns:
+
+    """
     if _basic_assertion(something, False,
                         lambda l, r: not bool(l),
                         "{} is false",
@@ -209,10 +288,28 @@ def assertFalse(something, score=None, message=None, report=MAIN_REPORT,
 
 
 def assertIs(left, right, score=None, message=None, report=MAIN_REPORT, contextualize=True):
+    """
+
+    Args:
+        left:
+        right:
+        score:
+        message:
+        report:
+        contextualize:
+    """
     pass
 
 
 def assertIsNot(left, right, score=None, message=None):
+    """
+
+    Args:
+        left:
+        right:
+        score:
+        message:
+    """
     pass
 
 
@@ -224,6 +321,18 @@ def _actually_is_none(l, r):
 
 def assertIsNone(something, score=None, message=None, report=MAIN_REPORT,
                  contextualize=True):
+    """
+
+    Args:
+        something:
+        score:
+        message:
+        report:
+        contextualize:
+
+    Returns:
+
+    """
     if _basic_assertion(something, None,
                         _actually_is_none,
                         "{} is none",
@@ -244,6 +353,18 @@ def _actually_is_not_none(l, r):
 
 def assertIsNotNone(something, score=None, message=None, report=MAIN_REPORT,
                     contextualize=True):
+    """
+
+    Args:
+        something:
+        score:
+        message:
+        report:
+        contextualize:
+
+    Returns:
+
+    """
     if _basic_assertion(something, None,
                         _actually_is_not_none,
                         "{} is not none",
@@ -258,6 +379,19 @@ def assertIsNotNone(something, score=None, message=None, report=MAIN_REPORT,
 
 def assertIn(needle, haystack, score=None, message=None, report=MAIN_REPORT,
              contextualize=True):
+    """
+
+    Args:
+        needle:
+        haystack:
+        score:
+        message:
+        report:
+        contextualize:
+
+    Returns:
+
+    """
     expected_message = "to be in"
     if not is_sandbox_result(needle) and is_sandbox_result(haystack):
         expected_message = "to contain"
@@ -274,6 +408,19 @@ def assertIn(needle, haystack, score=None, message=None, report=MAIN_REPORT,
 
 def assertNotIn(needle, haystack, score=None, message=None, report=MAIN_REPORT,
                 contextualize=True):
+    """
+
+    Args:
+        needle:
+        haystack:
+        score:
+        message:
+        report:
+        contextualize:
+
+    Returns:
+
+    """
     expected_message = "to not be in"
     if not is_sandbox_result(needle) and is_sandbox_result(haystack):
         expected_message = "to not contain"
@@ -290,6 +437,19 @@ def assertNotIn(needle, haystack, score=None, message=None, report=MAIN_REPORT,
 
 def assertIsInstance(value, types, score=None, message=None, report=MAIN_REPORT,
                      contextualize=True):
+    """
+
+    Args:
+        value:
+        types:
+        score:
+        message:
+        report:
+        contextualize:
+
+    Returns:
+
+    """
     if _basic_assertion(value, types,
                         lambda v, t: isinstance(v, t),
                         "isinstance({}, {})",
@@ -303,27 +463,69 @@ def assertIsInstance(value, types, score=None, message=None, report=MAIN_REPORT,
 
 
 def assertNotIsInstance(value, types):
+    """
+
+    Args:
+        value:
+        types:
+    """
     pass
 
 
 def assertRaises(exception):
+    """
+
+    Args:
+        exception:
+    """
     pass
 
 
 def assertRaisesRegexp(exception):
+    """
+
+    Args:
+        exception:
+    """
     pass
 
 
 def assertAlmostEqual(left, right):
+    """
+
+    Args:
+        left:
+        right:
+    """
     pass
 
 
 def assertNotAlmostEqual(left, right):
+    """
+
+    Args:
+        left:
+        right:
+    """
     pass
 
 
 def assertGreater(left, right, score=None, message=None, report=MAIN_REPORT,
                   contextualize=True, compare_lengths=None):
+    """
+
+    Args:
+        left:
+        right:
+        score:
+        message:
+        report:
+        contextualize:
+        compare_lengths:
+
+    Returns:
+
+    """
     if compare_lengths is None:
         compare_lengths = (iterable(left) and isinstance(right, (int, float)))
     if _basic_assertion(left, right,
@@ -344,6 +546,20 @@ def assertGreater(left, right, score=None, message=None, report=MAIN_REPORT,
 
 def assertGreaterEqual(left, right, score=None, message=None, report=MAIN_REPORT,
                        contextualize=True, compare_lengths=None):
+    """
+
+    Args:
+        left:
+        right:
+        score:
+        message:
+        report:
+        contextualize:
+        compare_lengths:
+
+    Returns:
+
+    """
     if compare_lengths is None:
         compare_lengths = (iterable(left) and isinstance(right, (int, float)))
     if _basic_assertion(left, right,
@@ -363,6 +579,20 @@ def assertGreaterEqual(left, right, score=None, message=None, report=MAIN_REPORT
 
 def assertLess(left, right, score=None, message=None, report=MAIN_REPORT,
                contextualize=True, compare_lengths=None):
+    """
+
+    Args:
+        left:
+        right:
+        score:
+        message:
+        report:
+        contextualize:
+        compare_lengths:
+
+    Returns:
+
+    """
     if compare_lengths is None:
         compare_lengths = (iterable(left) and isinstance(right, (int, float)))
     if _basic_assertion(left, right,
@@ -383,6 +613,20 @@ def assertLess(left, right, score=None, message=None, report=MAIN_REPORT,
 
 def assertLessEqual(left, right, score=None, message=None, report=MAIN_REPORT,
                     contextualize=True, compare_lengths=None):
+    """
+
+    Args:
+        left:
+        right:
+        score:
+        message:
+        report:
+        contextualize:
+        compare_lengths:
+
+    Returns:
+
+    """
     if compare_lengths is None:
         compare_lengths = (iterable(left) and isinstance(right, (int, float)))
     if _basic_assertion(left, right,
@@ -401,26 +645,62 @@ def assertLessEqual(left, right, score=None, message=None, report=MAIN_REPORT,
 
 
 def assertRegexpMatches(text, pattern):
+    """
+
+    Args:
+        text:
+        pattern:
+    """
     pass
 
 
 def assertNotRegexpMatches(text, pattern):
+    """
+
+    Args:
+        text:
+        pattern:
+    """
     pass
 
 
 def assertItemsEqual(left, right):
+    """
+
+    Args:
+        left:
+        right:
+    """
     pass
 
 
 def assertDictContainsSubset(left, right):
+    """
+
+    Args:
+        left:
+        right:
+    """
     pass
 
 
 def assertMultiLineEqual(left, right):
+    """
+
+    Args:
+        left:
+        right:
+    """
     pass
 
 
 def assertSequenceEqual(left, right):
+    """
+
+    Args:
+        left:
+        right:
+    """
     pass
 
 
@@ -430,6 +710,22 @@ def assertSequenceEqual(left, right):
 def assertPrints(result, expected_output, args=None, returns=None,
                  score=None, message=None, report=MAIN_REPORT,
                  contextualize=True, exact=False):
+    """
+
+    Args:
+        result:
+        expected_output:
+        args:
+        returns:
+        score:
+        message:
+        report:
+        contextualize:
+        exact:
+
+    Returns:
+
+    """
     if not isinstance(result, SandboxResult):
         return False
         raise TypeError("You must pass in a SandboxResult (e.g., using `call`) to assertPrints")
@@ -473,12 +769,37 @@ def assertPrints(result, expected_output, args=None, returns=None,
 def assertHasFunction(obj, function, args=None, returns=None,
                       score=None, message=None, report=MAIN_REPORT,
                       contextualize=True, exact=False):
+    """
+
+    Args:
+        obj:
+        function:
+        args:
+        returns:
+        score:
+        message:
+        report:
+        contextualize:
+        exact:
+
+    Returns:
+
+    """
     # If object is a sandbox, will check the .data[variable] attribute
     # Otherwise, check it directly
     if isinstance(obj, DataSandbox):
         comparison = lambda o, f: f in o.data
     else:
         def comparison(o, f):
+            """
+
+            Args:
+                o:
+                f:
+
+            Returns:
+
+            """
             try:
                 return f in o
             except:
@@ -511,6 +832,21 @@ def assertHasFunction(obj, function, args=None, returns=None,
 
 def assertHas(obj, variable, types=None, value=None, score=None,
               message=None, report=MAIN_REPORT, contextualize=True):
+    """
+
+    Args:
+        obj:
+        variable:
+        types:
+        value:
+        score:
+        message:
+        report:
+        contextualize:
+
+    Returns:
+
+    """
     # If object is a sandbox, will check the .data[variable] attribute
     # Otherwise, check it directly
     if isinstance(obj, DataSandbox):
@@ -554,6 +890,18 @@ def assertHas(obj, variable, types=None, value=None, score=None,
 
 def assertGenerally(expression, score=None, message=None, report=MAIN_REPORT,
                     contextualize=True):
+    """
+
+    Args:
+        expression:
+        score:
+        message:
+        report:
+        contextualize:
+
+    Returns:
+
+    """
     _setup_assertions(report)
     if expression:
         report.give_partial(score)

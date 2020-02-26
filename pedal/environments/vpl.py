@@ -14,6 +14,9 @@ from pedal.cait.cait_api import expire_cait_cache
 
 
 class VPLStyler(HTMLParser):
+    """
+
+    """
     HEADERS = ("h1", "h2", "h3", "h4", "h5")
 
     def __init__(self):
@@ -23,21 +26,48 @@ class VPLStyler(HTMLParser):
         self.inside_pre = False
 
     def convert(self, html):
+        """
+
+        Args:
+            html:
+
+        Returns:
+
+        """
         self.feed(html)
         return self.get_data()
 
     @property
     def text(self):
+        """
+
+        Returns:
+
+        """
         return ''.join(self.fed)
 
     def get_data(self):
+        """
+
+        Returns:
+
+        """
         return self.text
 
     def force_new_line(self):
+        """
+
+        """
         if self.text and self.text[-1] not in ("\n", "\r"):
             self.fed.append("\n")
 
     def handle_starttag(self, tag, attrs):
+        """
+
+        Args:
+            tag:
+            attrs:
+        """
         if tag in self.HEADERS:
             self.force_new_line()
             self.fed.append("-")
@@ -47,6 +77,11 @@ class VPLStyler(HTMLParser):
             self.inside_pre = True
 
     def handle_data(self, data):
+        """
+
+        Args:
+            data:
+        """
         if self.inside_pre:
             # Need to prepend ">" to the start of new lines.
             self.fed.append(data.replace("\n", "\n>"))
@@ -54,6 +89,11 @@ class VPLStyler(HTMLParser):
             self.fed.append(data)
 
     def handle_endtag(self, tag):
+        """
+
+        Args:
+            tag:
+        """
         if tag in self.HEADERS:
             self.fed.append("")
         elif tag in ("pre",):
@@ -62,10 +102,25 @@ class VPLStyler(HTMLParser):
 
 
 def strip_tags(html):
+    """
+
+    Args:
+        html:
+
+    Returns:
+
+    """
     return VPLStyler().convert(html)
 
 
 def set_maximum_score(number, cap=True, report=None):
+    """
+
+    Args:
+        number:
+        cap:
+        report:
+    """
     if report is None:
         report = MAIN_REPORT
     report['vpl']['score_maximum'] = number
@@ -73,6 +128,12 @@ def set_maximum_score(number, cap=True, report=None):
 
 
 def resolve(report=None, custom_success_message=None):
+    """
+
+    Args:
+        report:
+        custom_success_message:
+    """
     if report is None:
         report = MAIN_REPORT
     print("<|--")
@@ -103,6 +164,9 @@ def resolve(report=None, custom_success_message=None):
 
 
 class SectionalAssignment:
+    """
+
+    """
     max_points = 1
     sections = None
 
@@ -115,15 +179,28 @@ class SectionalAssignment:
         source.check_section_exists(self.sections)
 
     def pre_test(self):
+        """
+
+        Returns:
+
+        """
         source.next_section()
         verified = source.verify_section()
         expire_cait_cache()
         return verified
 
     def post_test(self):
+        """
+
+        Returns:
+
+        """
         return True
 
     def resolve(self):
+        """
+
+        """
         checks = ((self.pre_test() and
                    getattr(self, attr)() and
                    self.post_test())
@@ -139,6 +216,13 @@ from pedal.environments.vpl_unittest import UnitTestedAssignment
 
 
 def unittest_resolver(phases, report=None, custom_success_message=None):
+    """
+
+    Args:
+        phases:
+        report:
+        custom_success_message:
+    """
     success = True
     for title, phase in phases:
         outcome = phase()._run_all_tests()

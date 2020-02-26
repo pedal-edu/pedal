@@ -1,4 +1,12 @@
 def check_trace(state):
+    """
+
+    Args:
+        state:
+
+    Returns:
+
+    """
     past_types = [state.type]
     for past_state in state.trace:
         past_types.extend(check_trace(past_state))

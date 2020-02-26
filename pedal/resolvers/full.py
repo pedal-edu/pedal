@@ -16,11 +16,27 @@ DEFAULT_CATEGORY_PRIORITY = [
 
 
 def resolve_feedback(feedback):
+    """
+
+    Args:
+        feedback:
+
+    Returns:
+
+    """
     return "{title}\n{body}".format(title=feedback.title, body=feedback.message or feedback.text)
 
 
 @make_resolver
 def resolve(report=MAIN_REPORT):
+    """
+
+    Args:
+        report:
+
+    Returns:
+
+    """
     grouped = {}
     for feedback in report.feedback:
         if feedback.category not in grouped:

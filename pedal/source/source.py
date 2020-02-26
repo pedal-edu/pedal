@@ -22,6 +22,14 @@ from pedal.source.substitutions import Substitution
 
 
 def reset(report=MAIN_REPORT):
+    """
+
+    Args:
+        report:
+
+    Returns:
+
+    """
     report[TOOL_NAME] = {
         'substitutions': [],
 
@@ -80,6 +88,11 @@ def set_source(code, filename=DEFAULT_STUDENT_FILENAME, sections=False, independ
 
 
 def restore_code(report=MAIN_REPORT):
+    """
+
+    Args:
+        report:
+    """
     if TOOL_NAME in report:
         old_submission = report[TOOL_NAME]['substitutions'].pop()
         report.submission.replace_main(old_submission.code, old_submission.filename)
@@ -92,6 +105,7 @@ def verify(code=None, filename=DEFAULT_STUDENT_FILENAME, report=MAIN_REPORT, mut
     current Main file of the submission.
 
     Args:
+        muted:
         code (str): Some code to parse and syntax check.
         filename: An optional filename to use
         report:

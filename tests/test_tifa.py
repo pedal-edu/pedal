@@ -427,6 +427,16 @@ SILENCE_EXCEPT = None  # 'read_not_out_of_scope'
 
 
 def make_tester(code, nones, somes):
+    """
+
+    Args:
+        code:
+        nones:
+        somes:
+
+    Returns:
+
+    """
     def test_code(self):
         tifa = pedal.tifa.Tifa()
         try:

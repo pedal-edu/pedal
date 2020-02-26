@@ -3,6 +3,9 @@ from pedal.questions.graders import QuestionGrader
 
 
 class Question:
+    """
+
+    """
     def __init__(self, name, instructions, tests, seed=None, report=MAIN_REPORT):
         self.name = name
         self.instructions = instructions
@@ -12,9 +15,15 @@ class Question:
         self.answered = False
 
     def answer(self):
+        """
+
+        """
         self.answered = True
 
     def ask(self):
+        """
+
+        """
         if isinstance(self.tests, QuestionGrader):
             self.tests._test(self)
         else:
@@ -25,5 +34,11 @@ class Question:
 
 
 def show_question(instructions, report=MAIN_REPORT):
+    """
+
+    Args:
+        instructions:
+        report:
+    """
     report.attach('Question', category='Instructions', tool='Questions',
                   group=report.group, priority='instructions', hint=instructions)
