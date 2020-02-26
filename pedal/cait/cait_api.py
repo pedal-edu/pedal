@@ -195,7 +195,7 @@ def data_type(node, report=None):
     return None
 
 
-def find_match(pattern, student_code=None, report=None, cut=False):
+def find_match(pattern, student_code=None, report=None, cut=False, prev_match=None):
     """
     Apply Tree Inclusion and return the first match of the `pattern` in the
     `student_code`.
@@ -206,19 +206,20 @@ def find_match(pattern, student_code=None, report=None, cut=False):
             Defaults to the code of the Source tool in the Report.
         report (Report): The report to attach data to.
         cut (bool): Set to true to trim root to first branch
+        prev_match (AstMap): If user wants to continue off of a previously found match
     Returns:
         CaitNode or None: The first matching node for the given pattern, or
             None if nothing was found.
     """
     matches = find_matches(pattern=pattern, student_code=student_code,
-                           report=report, cut=cut)
+                           report=report, cut=cut, prev_match=prev_match)
     if matches:
         return matches[0]
     else:
         return None
 
 
-def find_matches(pattern, student_code=None, report=None, cut=False):
+def find_matches(pattern, student_code=None, report=None, cut=False, prev_match=None):
     """
     Apply Tree Inclusion and return all matches of the `pattern` in the
     `student_code`.
@@ -228,6 +229,7 @@ def find_matches(pattern, student_code=None, report=None, cut=False):
         student_code (str): The string of student code to check against.
         report (Report): The report to attach data to.
         cut (bool): Set to true to trim root to first branch
+        prev_match (AstMap): If user wants to continue off of a previously found match
     Returns:
         List[CaitNode]: All matching nodes for the given pattern.
     """
@@ -238,7 +240,7 @@ def find_matches(pattern, student_code=None, report=None, cut=False):
         return []
     student_ast = cait_report['ast']
     matcher = StretchyTreeMatcher(pattern, report=report)
-    return matcher.find_matches(student_ast)
+    return matcher.find_matches(student_ast, pre_match=prev_match)
 
 
 def find_submatches(pattern, student_code, is_mod=False):
