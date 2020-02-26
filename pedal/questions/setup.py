@@ -17,7 +17,7 @@ def _setup_questions(report):
             'seed': 0
         }
 
-def set_seed(seed_value, report=None):
+def set_seed(seed_value, report=MAIN_REPORT):
     '''
     Sets the seed that will be used in selecting questions.
     
@@ -34,6 +34,4 @@ def set_seed(seed_value, report=None):
         report (Report): The report object to store data and feedback in. If
             left None, defaults to the global MAIN_REPORT.
     '''
-    if report is None:
-        report = MAIN_REPORT
     report['questions']['seed'] = seed_value

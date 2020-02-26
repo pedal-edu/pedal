@@ -4,7 +4,7 @@ Uses a global report object (MAIN_REPORT).
 """
 
 __all__ = ['feedback', 'set_success', 'compliment', 'give_partial', 'explain',
-           'gently', 'hide_correctness', 'suppress', 'log', 'debug',
+           'gently', 'hide_correctness', 'suppress', 'log', 'debug', 'system_error',
            'clear_report', 'get_all_feedback', 'guidance', 'contextualize_report']
 
 from pedal.core.feedback import Feedback, FeedbackKind, FeedbackCategory, PEDAL_DEVELOPERS, AtomicFeedbackFunction

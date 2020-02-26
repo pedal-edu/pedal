@@ -4,6 +4,11 @@ import sys
 from textwrap import dedent
 from pprint import pprint
 
+from pedal.source import set_source
+
+from pedal.cait import parse_program
+from pedal.sandbox import run
+
 pedal_library = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.insert(0, pedal_library)
 

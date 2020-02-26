@@ -68,13 +68,13 @@ class TestCode(unittest.TestCase):
         self.assertIsNotNone(student.exception)
         self.assertIsInstance(student.exception, TypeError)
         self.assertEqual(student.exception_position, {'line': 1})
-        self.assertEqual(student.exception_formatted, dedent(
+        self.assertEqual(dedent(
             """
             Traceback:
               File "{filename}", line 1
                 1+'0'
             TypeError: unsupported operand type(s) for +: 'int' and 'str'
-            """.format(filename=TEST_FILENAME)).strip() + "\n")
+            """.format(filename=TEST_FILENAME)).strip() + "\n", student.exception_formatted)
 
     def test_error_context(self):
         student_code = dedent('''
@@ -85,8 +85,8 @@ class TestCode(unittest.TestCase):
         student = Sandbox()
         student.run(student_code, as_filename='student.py')
         result = student.call("get_input", inputs="Banana")
-        self.assertEqual(student.exception_position, {'line': 3})
-        self.assertEqual(student.exception_formatted, dedent(
+        self.assertEqual({'line': 3}, student.exception_position)
+        self.assertEqual(dedent(
             """
             Traceback:
               File "student.py", line 3, in get_input
@@ -100,7 +100,7 @@ class TestCode(unittest.TestCase):
             Banana
             ```
 
-            """).strip() + "\n")
+            """).strip() + "\n", student.exception_formatted)
 
     def test_call(self):
         student_code = "def average(a,b):\n return (a+b)/2"

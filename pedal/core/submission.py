@@ -39,6 +39,13 @@ class Submission:
         self.course = course
         self.execution = execution
         self.instructor_file = instructor_file
+        self._lines_cache = {}
+
+    @property
+    def lines(self):
+        if self.main_code not in self._lines_cache:
+            self._lines_cache[self.main_code] = self.main_code.split("\n")
+        return self._lines_cache[self.main_code]
 
     def replace_main(self, code: str, file: str = None):
         """

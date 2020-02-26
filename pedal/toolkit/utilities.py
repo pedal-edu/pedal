@@ -5,6 +5,7 @@ from pedal.core.commands import gently, explain
 def is_top_level(ast_node):
     ast = parse_program()
     for element in ast.body:
+        print(element.ast_name, ast_node.ast_name, element == ast_node)
         if element.ast_name == 'Expr':
             if element.value == ast_node:
                 return True

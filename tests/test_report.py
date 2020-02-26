@@ -4,7 +4,7 @@ import sys
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from pedal.core import *
+from pedal.core.commands import *
 
 
 class TestCode(unittest.TestCase):

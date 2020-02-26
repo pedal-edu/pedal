@@ -9,6 +9,7 @@ from unittest.mock import patch
 
 from pedal.core.report import MAIN_REPORT
 from pedal.core.commands import feedback
+from pedal.sandbox.feedbacks import runtime_error
 from pedal.utilities.exceptions import ExpandedTraceback, add_context_to_error
 from pedal.sandbox import mocked
 from pedal.sandbox.exceptions import (SandboxHasNoFunction,
@@ -554,6 +555,7 @@ class Sandbox(DataSandbox):
                            raise_exceptions, context, keep_context,
                            as_filename="", code=""):
         self.exception = exception
+        student_filename = as_filename or self.report.submission.main_file
         if context is not False:
             if context is None or keep_context:
                 contexts = self.call_contexts[self.call_id]
@@ -567,18 +569,15 @@ class Sandbox(DataSandbox):
                     inputs = "\n".join(inputs)
                     context += "\n"+self.INPUT_CONTEXT_MESSAGE.format(inputs=inputs)
             else:
-                context = self.FILE_CONTEXT_MESSAGE.format(filename=self.report['source']['filename'])
+                context = self.FILE_CONTEXT_MESSAGE.format(filename=student_filename)
             self.exception = add_context_to_error(self.exception, context)
         line_offset = self.report['source'].get('line_offset', 0)
-        student_filename = self.report['source'].get('filename', as_filename)
-        if 'lines' in self.report['source']:
-            lines = self.report['source']['lines']
-        else:
-            lines = code.split("\n")
+        lines = code.split("\n") if self.report.submission is None else self.report.submission.lines
+        filename = as_filename if self.report.submission is None else self.report.submission.main_file
         traceback = ExpandedTraceback(self.exception, exc_info,
                                       self.full_traceback,
                                       self.instructor_filename,
-                                      line_offset, student_filename,
+                                      line_offset, filename,
                                       lines)
         self.exception_position = {'line': traceback.line_number}
         self.exception_formatted = traceback.format_exception()
@@ -588,11 +587,8 @@ class Sandbox(DataSandbox):
             return True
         if report_exceptions is None and not self.report_exceptions_mode:
             return True
-        self.report.attach(self.exception_name,
-                           group=self.report.group,
-                           category='Runtime', tool='Sandbox',
-                           mistake={'message': self.exception_formatted,
-                                    'error': self.exception})
+        runtime_error(self.exception_formatted, self.exception_name, self.exception, traceback.line_number,
+                      group=self.report.group, report=self.report)
         if raise_exceptions is True:
             raise SandboxStudentCodeException(self.exception)
         return False
@@ -641,7 +637,7 @@ class Sandbox(DataSandbox):
                 return self
         
         if as_filename is None:
-            as_filename = os.path.basename(self.report['source']['filename'])
+            as_filename = os.path.basename(self.report.submission.main_file)
             # todo: earlier version of inputs being made?
         if inputs is not None:
             self.set_input(inputs)
@@ -713,7 +709,7 @@ def run(initial_data=None, initial_raw_output=None, initial_exception=None,
 
     sandbox = report['sandbox']['run']
     if code is None:
-        code = report['source']['code']
+        code = report.submission.main_code
     sandbox.run(code, as_filename, modules, inputs, threaded,
                 report_exceptions, raise_exceptions, context=context, keep_context=False)
     return sandbox

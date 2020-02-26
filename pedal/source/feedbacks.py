@@ -36,9 +36,9 @@ def not_enough_sections(section_number, found, report=MAIN_REPORT):
 def source_file_not_found(filename, sections, report=MAIN_REPORT):
     fields = {'filename': filename, 'sections': sections}
     return feedback(source_file_not_found.__name__, category=feedback.CATEGORIES.SYNTAX, tool=TOOL_NAME,
-                    title=source_file_not_found.TITLE, version=source_file_not_found.VERSION,
+                    title=source_file_not_found.title, version=source_file_not_found.version,
                     fields=fields,
-                    text=source_file_not_found.TEXT_TEMPLATE(**fields),
+                    text=source_file_not_found.text_template(**fields),
                     group=0 if sections else None,
                     report=report)
 

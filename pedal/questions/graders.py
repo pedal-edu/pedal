@@ -56,7 +56,7 @@ class FunctionGrader(QuestionGrader):
         question.answer()
 
     def grade_definition(self, question):
-        self.student = run(report_exceptions=True, context=False)
+        self.student = run(raise_exceptions=True, context=False)
         self.student.report_exceptions_mode = False
 
         self.definition = match_signature_muted(self.function_name, *self.signature)

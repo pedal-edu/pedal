@@ -36,10 +36,9 @@ class TestCode(unittest.TestCase):
 
         with Execution('a=0\nb b b\nc = 0') as e:
             pass
-        self.assertFalse(e.success)
-        print(e.feedback)
-        self.assertEqual(e.label, 'syntax_error')
-        self.assertIn("Bad syntax on line 2", e.message)
+        self.assertFalse(e.final.success)
+        self.assertEqual(e.final.label, 'syntax_error')
+        self.assertIn("Bad syntax on line 2", e.final.message)
 
     def test_sections_syntax_errors(self):
         contextualize_report(dedent('''

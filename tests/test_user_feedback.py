@@ -15,17 +15,17 @@ class TestFeedback(unittest.TestCase):
     def test_no_errors(self):
         with Execution('a=0\na') as e:
             pass
-        self.assertEqual(e.feedback, "No errors<br>No errors reported.")
+        self.assertEqual(e.feedback, "No Errors\nNo errors reported.")
 
     def test_success(self):
         with Execution('a=0\na') as e:
             set_success()
-        self.assertEqual(e.feedback, "Complete<br>Great work!")
+        self.assertEqual(e.feedback, "Complete\nGreat work!")
 
     def test_runtime(self):
         with Execution('0+"A"', old_style_messages=True) as e:
             suppress("analyzer")
-        self.assertEqual(e.feedback, "TypeError<br><pre>unsupported operand "
+        self.assertEqual(e.feedback, "TypeError\n<pre>unsupported operand "
                                      "type(s) for +: 'int' and 'str'</pre>\n"
                                      "Type errors most often occur when an expression "
                                      "tries to combine two objects with types that should "

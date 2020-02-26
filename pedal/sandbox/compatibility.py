@@ -24,22 +24,22 @@ def queue_input(*inputs, **kwargs):
         report = MAIN_REPORT
     else:
         report = kwargs['report']
-    sandbox = _check_sandbox(report)
+    sandbox = report[TOOL_NAME]['run']
     sandbox.set_input(inputs)
 
 
 def reset_output(report=MAIN_REPORT):
-    sandbox = _check_sandbox(report)
+    sandbox = report[TOOL_NAME]['run']
     sandbox.set_output(None)
 
 
 def get_output(report=MAIN_REPORT):
-    sandbox = _check_sandbox(report)
+    sandbox = report[TOOL_NAME]['run']
     return sandbox.output
 
 
 def get_plots(report=MAIN_REPORT):
-    sandbox = _check_sandbox(report)
+    sandbox = report[TOOL_NAME]['run']
     if 'matplotlib.pyplot' in sandbox.modules:
         mock_plt = sandbox.modules['matplotlib.pyplot']
         if hasattr(mock_plt, 'plots'):
@@ -52,7 +52,7 @@ def capture_output(function, *args, **kwargs):
         report = kwargs['report']
     else:
         report = MAIN_REPORT
-    sandbox = _check_sandbox(report)
+    sandbox = report[TOOL_NAME]['run']
     sandbox.set_output(None)
     sandbox.call(function.__name__, *args)
     return sandbox.output
@@ -90,7 +90,7 @@ def set_sandbox(sandbox, report=MAIN_REPORT):
 
 
 def trace_lines(report=MAIN_REPORT):
-    sandbox = _check_sandbox(report)
+    sandbox = report[TOOL_NAME]['run']
     if sandbox.tracer_style == 'coverage':
         return sandbox.trace.lines - sandbox.trace.missing
     else:

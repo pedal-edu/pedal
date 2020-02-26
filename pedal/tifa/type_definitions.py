@@ -119,12 +119,15 @@ class Type:
     def index(self, i):
         return self.clone()
 
+    def iterate(self, i):
+        return self.index(i)
+
     def load_attr(self, attr, tifa, callee=None, callee_position=None):
         if attr in self.fields:
             return self.fields[attr]
         # TODO: Handle more kinds of common mistakes
         if attr == "append":
-            append_to_non_list(callee_position, tifa.identify_caller(callee), self, report=tifa.report)
+            tifa._issue(append_to_non_list(callee_position, tifa.identify_caller(callee), self, report=tifa.report))
         return UnknownType()
 
     def is_empty(self):
@@ -403,7 +406,7 @@ class DictType(Type):
                 return value
         return None
 
-    def index(self, i):
+    def _access_item(self, i, get_keys=False):
         if self.empty:
             return UnknownType()
         elif self.literals is not None:
@@ -411,8 +414,17 @@ class DictType(Type):
                 if are_literals_equal(literal, i):
                     return value.clone()
             return UnknownType()
+        elif get_keys:
+            # TODO: Handle multiple keys/values
+            return self.keys[0].clone()
         else:
-            return self.keys.clone()
+            return self.values[0].clone()
+
+    def index(self, i):
+        return self._access_item(i, False)
+
+    def iterate(self, i):
+        return self._access_item(i, True)
 
     def update_key(self, literal_key, type):
         self.literals.append(literal_key)

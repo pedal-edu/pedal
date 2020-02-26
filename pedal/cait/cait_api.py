@@ -90,9 +90,11 @@ def reparse_if_needed(student_code=None, report=MAIN_REPORT):
         else:
             student_ast = report[SOURCE_TOOL_NAME]['ast']
     else:
-        student_ast = _parse_source(report.submission.main_code, report=report)
-        cait['ast'] = CaitNode(student_ast, report=report)
-        return cait
+        student_code = report.submission.main_code
+        if student_code in cait['cache']:
+            cait['ast'] = cait['cache'][student_code]
+            return cait
+        student_ast = _parse_source(student_code, report=report)
     cait['ast'] = cait['cache'][student_code] = CaitNode(student_ast, report=report)
     return cait
 
@@ -150,7 +152,7 @@ def def_use_error(node, report=MAIN_REPORT):
     if not isinstance(node, str) and node.ast_name != "Name":
         raise TypeError
     try:
-        def_use_vars = report['tifa']['issues']['Initialization Problem']
+        def_use_vars = report[TIFA_TOOL_NAME]['issues']['initialization_problem']
     except KeyError:
         return False
     if not isinstance(node, str):
@@ -159,7 +161,7 @@ def def_use_error(node, report=MAIN_REPORT):
         node_id = node
     has_error = False
     for issue in def_use_vars:
-        name = issue['name']
+        name = issue.fields['name']
         if name == node_id:
             has_error = True
             break
@@ -184,7 +186,7 @@ def data_state(node, report=MAIN_REPORT):
     else:
         node_id = node.id
     try:
-        return report['tifa']["top_level_variables"][node_id]
+        return report[TIFA_TOOL_NAME]["top_level_variables"][node_id]
     except KeyError:
         return None
 

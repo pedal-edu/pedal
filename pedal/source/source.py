@@ -14,6 +14,7 @@ import sys
 import ast
 
 from pedal.core.report import Report, MAIN_REPORT
+from pedal.core.submission import Submission
 from pedal.source.constants import TOOL_NAME, DEFAULT_STUDENT_FILENAME
 from pedal.source.sections import separate_into_sections
 from pedal.source.feedbacks import blank_source, syntax_error, source_file_not_found
@@ -61,16 +62,19 @@ def set_source(code, filename=DEFAULT_STUDENT_FILENAME, sections=False, independ
         report (Report): The report object to store data and feedback in. If
                          left None, defaults to the global MAIN_REPORT.
     """
-    backup = Substitution(report.submission.main_code, report.submission.main_file)
-    report[TOOL_NAME]['substitutions'].append(backup)
-    report.submission.replace_main(code, filename)
+    if report.submission is None:
+        report.contextualize(Submission({filename: code}, filename, code))
+    else:
+        backup = Substitution(report.submission.main_code, report.submission.main_file)
+        report[TOOL_NAME]['substitutions'].append(backup)
+        report.submission.replace_main(code, filename)
 
     report[TOOL_NAME]['independent'] = independent
     report[TOOL_NAME]['success'] = True
     if not sections:
         report[TOOL_NAME]['sections'] = None
         report[TOOL_NAME]['section'] = None
-        verify(code, report)
+        verify(code, report=report)
     else:
         separate_into_sections(report=report)
 

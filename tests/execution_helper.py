@@ -1,3 +1,6 @@
+import unittest
+from textwrap import dedent
+
 from pedal.core import *
 from pedal.core.report import MAIN_REPORT
 from pedal.core.commands import clear_report, suppress, contextualize_report
@@ -8,6 +11,10 @@ from pedal.resolvers import simple
 from pedal.sandbox import compatibility
 from pedal.cait.cait_api import parse_program
 
+
+class ExecutionTestCase(unittest.TestCase):
+    def assertFeedback(self, execution, feedback_string):
+        return self.assertEqual(dedent(feedback_string).lstrip(), execution.feedback)
 
 class Execution:
     def __init__(self, code, tracer_style='none', old_style_messages=False, report=MAIN_REPORT):

@@ -74,19 +74,19 @@ class TestQuestionsLoader(unittest.TestCase):
     def test_loading_simple_question(self):
         with Execution('def undefined():\n pass\nundefined()') as e:
             check_question(ADD5_QUESTION)
-        self.assertEqual(e.message, "No function named `add5` was found.")
+        self.assertEqual(e.final.message, "No function named `add5` was found.")
 
         with Execution('def add5():\n pass\nadd5()') as e:
             check_question(ADD5_QUESTION)
-        self.assertEqual(e.message, "The function named `add5` has fewer parameters (0) than expected (1).")
+        self.assertEqual(e.final.message, "The function named `add5` has fewer parameters (0) than expected (1).")
 
         with Execution('def add5(a, b):\n pass\nadd5(1, 2)') as e:
             check_question(ADD5_QUESTION)
-        self.assertEqual(e.message, "The function named `add5` has more parameters (2) than expected (1).")
+        self.assertEqual(e.final.message, "The function named `add5` has more parameters (2) than expected (1).")
 
         with Execution('def add5(a):\n return 7\nadd5(1)') as e:
             check_question(ADD5_QUESTION)
-        self.assertEqual(e.message, """I ran your function <code>add5</code> on my own test cases. It failed 2/2 of my tests.
+        self.assertEqual(e.final.message, """I ran your function <code>add5</code> on my own test cases. It failed 2/2 of my tests.
 <table class='pedal-test-cases table table-sm table-bordered table-hover'>
     <tr class='table-active'>
         <th></th>
@@ -110,7 +110,7 @@ class TestQuestionsLoader(unittest.TestCase):
 
         with Execution('def add5(a):\n a+""\nadd5("1")') as e:
             check_question(ADD5_QUESTION)
-        self.assertEqual(e.message, """I ran your function <code>add5</code> on my own test cases. It failed 2/2 of my tests.
+        self.assertEqual(e.final.message, """I ran your function <code>add5</code> on my own test cases. It failed 2/2 of my tests.
 <table class='pedal-test-cases table table-sm table-bordered table-hover'>
     <tr class='table-active'>
         <th></th>
@@ -132,25 +132,25 @@ class TestQuestionsLoader(unittest.TestCase):
 
         with Execution('def add5(a):\n return a+5\nadd5(3)') as e:
             check_question(ADD5_QUESTION)
-        self.assertEqual(e.message, "Great work!")
+        self.assertEqual(e.final.message, "Great work!")
 
     def test_loading_signature_question(self):
         with Execution('def add5(a):\n return a+5\nadd5(3)') as e:
             check_question(ADD5_QUESTION_SIGNATURE)
-        self.assertEqual(e.message, "Error in definition of function `add5` signature. Expected `int -> int`, instead found `Any -> Any`.")
+        self.assertEqual(e.final.message, "Error in definition of function `add5` signature. Expected `int -> int`, instead found `Any -> Any`.")
 
         with Execution('def add5(a: int):\n return a+5\nadd5(3)') as e:
             check_question(ADD5_QUESTION_SIGNATURE)
-        self.assertEqual(e.message, "Error in definition of function `add5` signature. Expected `int -> int`, instead found `int -> Any`.")
+        self.assertEqual(e.final.message, "Error in definition of function `add5` signature. Expected `int -> int`, instead found `int -> Any`.")
 
         with Execution('def add5(a: int) -> int:\n return a+5\nadd5(3)') as e:
             check_question(ADD5_QUESTION_SIGNATURE)
-        self.assertEqual(e.message, "Great work!")
+        self.assertEqual(e.final.message, "Great work!")
 
     def test_loading_list_question(self):
         with Execution('def summate(vals: [int]) -> int:\n return sum(vals)\nsummate([1,2,3])') as e:
             check_question(LIST_SIGNATURE)
-        self.assertEqual(e.message, "Great work!")
+        self.assertEqual(e.final.message, "Great work!")
 
 if __name__ == '__main__':
     unittest.main(buffer=False)
