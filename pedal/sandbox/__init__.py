@@ -25,7 +25,7 @@ def reset(report=MAIN_REPORT):
 Report.register_tool(TOOL_NAME, reset)
 
 
-def run(raise_exceptions=True, report=None, coverage=False, threaded=False, inputs=None):
+def run(raise_exceptions=True, report=None, coverage=False, threaded=False, inputs=None) -> Sandbox:
     """
 
     Args:

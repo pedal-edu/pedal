@@ -272,7 +272,7 @@ def clear_report(report=MAIN_REPORT):
     and Tool data.
 
     Args:
-        report: The report to clear (defaults to the :py:ref:`pedal.core.report.MAIN_REPORT`).
+        report: The report to clear (defaults to the :py:data:`pedal.core.report.MAIN_REPORT`).
     """
     report.clear()
 
@@ -288,7 +288,7 @@ def contextualize_report(submission, filename='answer.py', clear=True, report=MA
         submission (str or Submission):
         filename (str or None): If the `submission` was not a :py:class:`~pedal.core.submission.Submission`,
             then this will be used as the filename for the code given in `submission`.
-        report: The report to attach this feedback to (defaults to the :py:ref:`pedal.core.report.MAIN_REPORT`).
+        report: The report to attach this feedback to (defaults to the :py:data:`pedal.core.report.MAIN_REPORT`).
     """
     if not isinstance(submission, Submission):
         submission = Submission(files={filename: submission})
@@ -303,7 +303,7 @@ def get_all_feedback(report=MAIN_REPORT) -> [Feedback]:
     to build on the results of earlier tools, it can be a useful mechanism.
 
     Args:
-        report: The report to attach this feedback to (defaults to the :py:ref:`pedal.core.report.MAIN_REPORT`).
+        report: The report to attach this feedback to (defaults to the :py:data:`pedal.core.report.MAIN_REPORT`).
 
     Returns:
         List[pedal.core.feedback.Feedback]: A list of feedback objects.

@@ -1,0 +1,498 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Teacher Quick Start Guide &mdash; Pedal 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Teacher Examples" href="examples.html" />
+    <link rel="prev" title="Installation" href="../everyone/installation.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Pedal
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../everyone/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../everyone/installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Teacher Quick Start Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#command-line-usage">Command Line Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#simple-environment">Simple Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#core-feedback-functions">Core Feedback Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#finding-ast-elements">Finding AST Elements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#finding-ast-patterns">Finding AST Patterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#checking-execution-results">Checking Execution Results</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#checking-execution-output">Checking Execution Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#calling-students-functions">Calling Students’ Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#simple-assertions">Simple Assertions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#simple-unit-testing">Simple Unit Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#other-toolkit-tools">Other Toolkit Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#resolver-the-feedback">Resolver the Feedback</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Teacher Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html#single-problem">Single Problem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">Teacher Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Teacher Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers/guide.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers/api.html">Developer API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers/integrations.html">Developer Integrations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers/tools.html">Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../everyone/glossary.html">Glossary</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Pedal</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Teacher Quick Start Guide</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/teachers/quickstart.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="teacher-quick-start-guide">
+<h1>Teacher Quick Start Guide<a class="headerlink" href="#teacher-quick-start-guide" title="Permalink to this headline">¶</a></h1>
+<p>Pedal is composed of <cite>Tools</cite> that write <cite>Feedback</cite> to a centralized <cite>Report</cite>
+by detecting <cite>Conditions</cite> in your learners’ <cite>Submission</cite> and providing an appropriate <cite>Response</cite>.
+As a grader, you just have to write the Instructor Control Script (or “Grading Script”).
+In this Quick Start Guide, we’ll show you how you can make this happen in just a few lines of code.
+Once you’ve got the basics, you can check out the <a class="reference internal" href="tutorial.html"><span class="doc">Teacher Tutorial</span></a> for a more in-depth coverage.</p>
+<div class="section" id="command-line-usage">
+<h2>Command Line Usage<a class="headerlink" href="#command-line-usage" title="Permalink to this headline">¶</a></h2>
+<p>Pedal is meant to be integrated into existing autograders (see integrations), but works perfectly fine
+on its own through the command line. For example, after you create a grading script named
+<cite>grade_assignment.py</cite>, you can run a single student submission through it to get the recommended feedback:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span>&gt; pedal feedback grade_assignment.py student_submission.py
+<span class="go">You created a variable on line 3 named `sum`, but never ended up using it.</span>
+</pre></div>
+</div>
+<p>Or you could regrade a folder of student submissions:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span>&gt; ls submissions/
+<span class="go">Ada Bart.py</span>
+<span class="go">Babbage Bart.py</span>
+<span class="go">Reese Trexler.py</span>
+
+<span class="gp">$</span>&gt; pedal score grade_assignment.py submissions/
+<span class="go">Ada Bart, 100</span>
+<span class="go">Babbage Bart, 0</span>
+<span class="go">Reese Trexler, 63</span>
+</pre></div>
+</div>
+<p>There are many settings for the command line version. Check the Integrations for more info.</p>
+<p>Let’s turn to look at what you might put inside that <cite>grade_assignment.py</cite> script.</p>
+</div>
+<div class="section" id="simple-environment">
+<h2>Simple Environment<a class="headerlink" href="#simple-environment" title="Permalink to this headline">¶</a></h2>
+<p>Although Pedal can be configured in a lot of ways, you may want to begin by using our default
+“Simple Environment”, which immediately sets up some of core Tools for a submission of learners’ code.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.environments.simple</span> <span class="kn">import</span> <span class="n">SimpleEnvironment</span>
+<span class="n">student_code</span> <span class="o">=</span> <span class="s2">&quot;print(&#39;Hello world!&#39;)&quot;</span>
+<span class="n">ast</span><span class="p">,</span> <span class="n">student</span><span class="p">,</span> <span class="n">resolve</span> <span class="o">=</span> <span class="n">SimpleEnvironment</span><span class="p">(</span><span class="n">student_code</span><span class="p">)</span>
+
+<span class="c1"># ... More instructor logic can go here ...</span>
+
+<span class="n">resolve</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>After just the lines above, the learners’ submission will have been:</p>
+<ul class="simple">
+<li><p>Checked for <cite>Source</cite> code errors that prevent parsing, with relevant syntax error messages generated.</p></li>
+<li><p>Parsed into a traversable AST by <cite>CAIT</cite>, to enable structural checks.</p></li>
+<li><p>Executed in our <cite>Sandbox</cite> (relatively safely), with relevant runtime error messages generated.</p></li>
+<li><p>Reviewed by <cite>TIFA</cite>, which detects and provides feedback on common algorithmic errors (e.g., unused variables).</p></li>
+<li><p>A default <cite>Resolver</cite> is provided to be called at the end of your script.</p></li>
+</ul>
+<p>We’ll talk about what you get from the features above, but first, let’s talk about how you provide
+custom feedback.</p>
+</div>
+<div class="section" id="core-feedback-functions">
+<h2>Core Feedback Functions<a class="headerlink" href="#core-feedback-functions" title="Permalink to this headline">¶</a></h2>
+<p>There are a few core feedback commands that provide simple Responses to students.
+Most likely, these will be called within the body of <cite>if</cite> statements throughout your instructor control script.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal</span> <span class="kn">import</span> <span class="n">gently</span><span class="p">,</span> <span class="n">set_success</span><span class="p">,</span> <span class="n">give_partial</span><span class="p">,</span> <span class="n">compliment</span>
+</pre></div>
+</div>
+<p>The first is <cite>gently</cite>, which allows you to present the learner with a simple textual message.
+This might be a hint, or a description of the mistake they made, or something else.
+However, it should be used to deliver negative feedback.
+There are other Feedback Functions to deliver negative feedback; the name <cite>gently</cite> refers to the
+fact that most Resolvers will prioritize this feedback lower than runtime errors, syntax errors, etc.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">gently</span><span class="p">(</span><span class="s2">&quot;You failed to solve the question correctly!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The next is <cite>set_success</cite>, which allows you to establish that the learner has completed the problem
+successfully. The default resolver will prioritize this feedback above all others.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">set_success</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Along the way, you can give students partial credit with <cite>give_partial</cite>. You’ll need to check whether
+your autograder expects the sum to be 1 or 100.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">give_partial</span><span class="p">(</span><span class="mi">45</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Finally, you can give the student compliments on things that are going well.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">compliment</span><span class="p">(</span><span class="s2">&quot;You&#39;ve almost got it!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>There are several other core commands, so check out the <a class="reference internal" href="reference.html"><span class="doc">Teacher Reference</span></a> for more.</p>
+</div>
+<div class="section" id="finding-ast-elements">
+<h2>Finding AST Elements<a class="headerlink" href="#finding-ast-elements" title="Permalink to this headline">¶</a></h2>
+<p><cite>CAIT</cite> is a “Capturer for AST Inclusion Trees”, a fancy way of saying it can be used to access the
+AST of the learners’ code. If the code failed to parse, <cite>CAIT</cite> functions are still safe to run - they
+will not cause exceptions, just return no results. <cite>CAIT</cite> has almost no <cite>Feedback Functions</cite>; instead, it
+supports <cite>Feedback Condition</cite> authoring through two mechanisms.</p>
+<p>The first major feature is <cite>find_all</cite>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;For&quot;</span><span class="p">):</span>
+    <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;It looks like your code is using a `for` loop; don&#39;t do that!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The <cite>find_all</cite> function returns a list of <cite>CaitNodes</cite>, which represent elements of the AST.
+You can access attributes of these nodes; we recommend you refer to the
+<a class="reference external" href="https://greentreesnakes.readthedocs.io/en/latest/nodes.html">GreenTreeSnakes</a> documentation
+for more information about what is available.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">loops</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;For&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">loop</span> <span class="ow">in</span> <span class="n">loops</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">loop</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;Tuple&quot;</span><span class="p">:</span>
+        <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;You have a `for` loop with multiple targets, don&#39;t do that!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="finding-ast-patterns">
+<h2>Finding AST Patterns<a class="headerlink" href="#finding-ast-patterns" title="Permalink to this headline">¶</a></h2>
+<p>CAIT can also be used to declaratively identify regions of source using a Regular-expression style
+function named <cite>find_matches</cite> (or <cite>find_match</cite> to get the first result):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">matches</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_matches</span><span class="p">(</span><span class="s2">&quot;answer = 5&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">matches</span><span class="p">:</span>
+    <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;The variable `answer` should not be assigned the value `5`.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The <cite>find_matches</cite> function supports several kinds of wildcards, and gives you access to
+identifiers in the learners’ code.</p>
+<p><strong>Wild Card Match</strong>:  The triple underscore is used as a wild match card.
+It will match to any node or subtree.
+If you wish to access such data, you should use expressions instead.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_matches</span><span class="p">(</span><span class="s2">&quot;answer = ___&quot;</span><span class="p">):</span>
+    <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;You assigned something to the variable `answer`&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Variable Name Match</strong>: A place holder for variables, denoted by single underscores on both sides.
+Many instructor variables are allowed to map to one variable in student code,
+but each variable in student code can only map to one instructor variable.
+You can get a variable’s name via its <cite>id</cite> attribute.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">match</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_match</span><span class="p">(</span><span class="s2">&quot;_accumulator_ = 0&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">match</span><span class="p">[</span><span class="s2">&quot;_accumulator_&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="s2">&quot;sum&quot;</span><span class="p">:</span>
+    <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;Do not name your accumulating variable `sum`, since that is a reserved word.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Subtree Expressions Match</strong>: A place holder for subtree expressions.
+An expression is denoted by a double underscore before and after the name of the expression.
+You can get the expression’s AST node name via the <cite>name</cite> attribute.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">match</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_match</span><span class="p">(</span><span class="s2">&quot;_accumulator_ = __initial__&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">match</span><span class="p">[</span><span class="s2">&quot;__initial__&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;List&quot;</span><span class="p">:</span>
+    <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;You initialized your accumulator as a list literal.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="checking-execution-results">
+<h2>Checking Execution Results<a class="headerlink" href="#checking-execution-results" title="Permalink to this headline">¶</a></h2>
+<p>The <cite>Sandbox</cite> module is responsible for running student code as safely as possible,
+preventing access to the instructor control script and the grading functionality.
+Once run, you can get access to students’ final variables’ values via the <cite>data</cite> attribute:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="s1">&#39;sum&#39;</span> <span class="ow">in</span> <span class="n">student</span><span class="o">.</span><span class="n">data</span> <span class="ow">and</span> <span class="n">student</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;sum&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">47</span><span class="p">:</span>
+    <span class="n">set_success</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>You can also check for variable’s in a few other ways:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">integer_variables</span> <span class="o">=</span> <span class="n">student</span><span class="o">.</span><span class="n">get_variables_by_type</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">integer_variables</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="mi">47</span><span class="p">:</span>
+        <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;You should not have assigned the value 47 to the variable &quot;</span><span class="o">+</span><span class="n">name</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>However, you should be aware that true sandboxing is impossible in a dynamic language like Python
+We recommend setting course policies that disincentivize cheating and ensuring your autograding environment
+has multiple lines of defense, such as proper file system permissions.</p>
+</div>
+<div class="section" id="checking-execution-output">
+<h2>Checking Execution Output<a class="headerlink" href="#checking-execution-output" title="Permalink to this headline">¶</a></h2>
+<p>The <cite>output</cite> attribute provides a list of strings representation of all the lines printed by the students’
+code, minus the trailing newlines.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="s2">&quot;Hello world!&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">student</span><span class="o">.</span><span class="n">output</span><span class="p">:</span>
+    <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;You need to print the string &#39;Hello world!&#39;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>There is also <cite>raw_output</cite> to get a single string, including newline characters.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="s2">&quot;Complex</span><span class="se">\n</span><span class="s2">Text&quot;</span> <span class="ow">in</span> <span class="n">student</span><span class="o">.</span><span class="n">raw_output</span><span class="p">:</span>
+    <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;You should have the precise text we gave you in there.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="calling-students-functions">
+<h2>Calling Students’ Functions<a class="headerlink" href="#calling-students-functions" title="Permalink to this headline">¶</a></h2>
+<p>You can call students’ functions and pass in arguments.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">student</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s2">&quot;add_numbers&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">result</span> <span class="o">==</span> <span class="mi">13</span><span class="p">:</span>
+    <span class="n">set_success</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>If you inspect the result of calling a student function, it will appear to be a simple Python
+value - in the case above, if the students’ code returned an integer, you could add or divide
+the result normally. However, it’s secretly a heavily-proxied wrapper object that pretends to be
+the value - the payoff of that complexity is additional metadata for how that value is produced,
+which you can see in the Assertions.</p>
+</div>
+<div class="section" id="simple-assertions">
+<h2>Simple Assertions<a class="headerlink" href="#simple-assertions" title="Permalink to this headline">¶</a></h2>
+<p>Most instructors will already be comfortable with writing assertions, as they would with a
+unit testing framework.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.assertions</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">assert_equal</span><span class="p">(</span><span class="n">student</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;add&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">),</span> <span class="mi">13</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The <cite>assert_*</cite> functions have a large amount of extra machinery to produce vastly improved error messages.
+When a students’ code causes an error, the traceback will not show any instructor lines.</p>
+<div class="admonition-todo admonition" id="id1">
+<p class="admonition-title">Todo</p>
+<p>produce an example feedback message.</p>
+</div>
+<p>There are also some more advanced assertions:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">assert_prints</span><span class="p">(</span><span class="n">student</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s2">&quot;print_values&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span> <span class="p">[</span><span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="s2">&quot;2&quot;</span><span class="p">,</span> <span class="s2">&quot;3&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="simple-unit-testing">
+<h2>Simple Unit Testing<a class="headerlink" href="#simple-unit-testing" title="Permalink to this headline">¶</a></h2>
+<p>Assertions are a convenient way to check an individual aspect of code, but sometimes you want to
+bundle up a series of input/output tests (whether that means stdin/stdout or arguments/return values).
+The <cite>Toolkit</cite> module is a collection of useful functions, including <cite>unit_test</cite> and <cite>output_test</cite>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.toolkit.functions</span> <span class="kn">import</span> <span class="n">unit_test</span><span class="p">,</span> <span class="n">output_test</span>
+
+<span class="k">if</span> <span class="n">unit_test</span><span class="p">(</span><span class="s1">&#39;add&#39;</span><span class="p">,</span> <span class="p">[</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">7</span><span class="p">),</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">6</span><span class="p">)</span> <span class="p">]):</span>
+    <span class="n">set_success</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>These Feedback Functions return True if all unit tests pass, but generate Responses depending on how
+they failed. The results of failed tests are placed into an HTML table.</p>
+</div>
+<div class="section" id="other-toolkit-tools">
+<h2>Other Toolkit Tools<a class="headerlink" href="#other-toolkit-tools" title="Permalink to this headline">¶</a></h2>
+<p>There are a large number of other tools in the toolkit. For example, you can quickly perform
+a check of the source code that a function has the appropriate signature:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.toolkit.functions</span> <span class="kn">import</span> <span class="n">match_signature</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">match_signature</span><span class="p">(</span><span class="s1">&#39;add&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
+    <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;The `add` function should have 2 parameters.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Or assert that all functions must have a docstring:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.toolkit.functions</span> <span class="kn">import</span> <span class="n">all_documented</span>
+
+<span class="n">all_documented</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Worried that students are printing out a literal value instead of relying on variables?</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.toolkit.utilities</span> <span class="kn">import</span> <span class="n">only_printing_variables</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">only_printing_variables</span><span class="p">():</span>
+    <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;You should only be printing variables&#39; values, not literal values.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Are they not allowed to use certain operators for this question?</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.toolkit.utilities</span> <span class="kn">import</span> <span class="n">prevent_operation</span>
+
+<span class="n">prevent_operation</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+<span class="n">prevent_operation</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The toolkit is rich and extensive, although somewhat situational. Refer to the complete
+<a class="reference internal" href="reference.html"><span class="doc">Teacher Reference</span></a> for more information.</p>
+</div>
+<div class="section" id="resolver-the-feedback">
+<h2>Resolver the Feedback<a class="headerlink" href="#resolver-the-feedback" title="Permalink to this headline">¶</a></h2>
+<p>Ultimately, when you’re done detecting conditions and generating responses, you need to
+resolve the feedback into some output. The Simple Environment provides access to the
+Simple Resolver, which has a prioritization scheme to choose a single, most important piece of feedback.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">resolve</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="examples.html" class="btn btn-neutral float-right" title="Teacher Examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../everyone/installation.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, acbart, lukesg08
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

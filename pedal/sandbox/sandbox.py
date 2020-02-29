@@ -466,6 +466,8 @@ class Sandbox(DataSandbox):
 
     def call(self, function, *args, **kwargs):
         """
+        Executes the given function with the specified arguments, from the student's code.
+
         Args:
             function (str): The name of the function to call that was defined
                 by the user.

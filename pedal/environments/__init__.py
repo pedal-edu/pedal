@@ -12,11 +12,7 @@ Environments
     GradeScope
     WebCAT
     ...
-./pedal command line interface
-    simple example (single ICS, single student file)
-    unit test a given curriculum
-    regrade some assignments, spit out subject/assignment/context
-    get summary stats from ProgSnap file
+
 """
 
 

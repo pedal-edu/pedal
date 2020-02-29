@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Installation" href="usage/installation.html" /> 
+    <link rel="next" title="Introduction" href="everyone/introduction.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -83,16 +83,20 @@
               
             
             
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption"><span class="caption-text">Contents</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="usage/installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage/quickstart.html">Quick Start Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage/examples.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage/quickreference.html">Quick Reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="concepts.html">Important Concepts</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage/tutorial.html">Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="integrations.html">Integrations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api.html">Developer API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="everyone/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="everyone/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="teachers/quickstart.html">Teacher Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="teachers/examples.html">Teacher Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="teachers/examples.html#single-problem">Single Problem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="teachers/reference.html">Teacher Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="teachers/tutorial.html">Teacher Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developers/guide.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developers/api.html">Developer API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developers/integrations.html">Developer Integrations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developers/tools.html">Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="everyone/glossary.html">Glossary</a></li>
 </ul>
 
             
@@ -161,103 +165,84 @@
 <h1>Welcome to Pedal’s documentation!<a class="headerlink" href="#welcome-to-pedal-s-documentation" title="Permalink to this headline">¶</a></h1>
 <p>Pedal is a framework to analyze student’s code and provide feedback.
 Pedal is not only a collection of powerful program analysis tools, but
-is also built to give a model for what Feedback should be.</p>
-<img alt="_images/pedal-overview.png" src="_images/pedal-overview.png" />
-<p>We believe that autograding feedback should be <em>more</em> than just unit tests. Program analysis can give us deep insight into students’ problems - if they declare a variable and its never used it, shouldn’t we address that with feedback? Research has shown that many existing error messages are unhelpful - can’t we provide more context, details, and pedagogically-friendly language when students get a TypeError because they added a string and a number? Our goal is to make it easier for instructors to leverage these tools and start making measurable progress towards helping learners.</p>
-<div class="literal-block-wrapper docutils container" id="id1">
-<div class="code-block-caption"><span class="caption-text">student.py</span><a class="headerlink" href="#id1" title="Permalink to this code">¶</a></div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">add_prices</span><span class="p">(</span><span class="n">books</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">book</span> <span class="ow">in</span> <span class="n">books</span><span class="p">:</span>
-        <span class="n">total</span> <span class="o">=</span> <span class="n">book</span> <span class="o">+</span> <span class="n">books</span>
-        <span class="k">return</span> <span class="n">total</span>
-</pre></div>
-</div>
-</div>
-<p>The student’s code above has a number of errors - they failed to initialize a variable, they used the list instead of the iteration target, they returned inside of a loop, etc. Pedal could detect many of these scenarios and provide different kinds of feedback.</p>
-<div class="literal-block-wrapper docutils container" id="id2">
-<div class="code-block-caption"><span class="caption-text">instructor.py</span><a class="headerlink" href="#id2" title="Permalink to this code">¶</a></div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal</span> <span class="kn">import</span> <span class="n">set_source</span>
-<span class="n">set_source</span><span class="p">(</span><span class="s2">&quot;student.py&quot;</span><span class="p">)</span>
-
-<span class="c1"># Generic, friendly feedback on undeclared variables, among others</span>
-<span class="kn">from</span> <span class="nn">pedal.tifa</span> <span class="kn">import</span> <span class="n">tifa_analysis</span>
-<span class="n">tifa_analysis</span><span class="p">()</span>
-
-<span class="c1"># Partial credit for good progress</span>
-<span class="kn">from</span> <span class="nn">pedal</span> <span class="kn">import</span> <span class="n">give_partial</span>
-<span class="kn">from</span> <span class="nn">pedal.cait</span> <span class="kn">import</span> <span class="n">parse_program</span>
-<span class="n">ast</span> <span class="o">=</span> <span class="n">parse_program</span><span class="p">()</span>
-<span class="k">if</span> <span class="n">ast</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;For&quot;</span><span class="p">):</span>
-    <span class="n">give_partial</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">10</span><span class="p">,</span> <span class="s2">&quot;Right, you need a `for` loop!&quot;</span><span class="p">)</span>
-
-<span class="c1"># Give feedback by finding a common problem-specific mistake</span>
-<span class="kn">from</span> <span class="nn">pedal</span> <span class="kn">import</span> <span class="n">explain</span>
-<span class="kn">from</span> <span class="nn">pedal.cait</span> <span class="kn">import</span> <span class="n">find_matches</span>
-<span class="n">matches</span> <span class="o">=</span> <span class="n">find_matches</span><span class="p">(</span><span class="s2">&quot;for _expr_ in _list_:</span><span class="se">\n</span><span class="s2"> ___ = ____ + _list_&quot;</span><span class="p">)</span>
-<span class="k">if</span> <span class="n">matches</span><span class="p">:</span>
-    <span class="n">explain</span><span class="p">(</span><span class="s2">&quot;You shouldn&#39;t use the list inside the for loop.&quot;</span><span class="p">)</span>
-
-<span class="c1"># Unit test, with enhanced tracebacks and safe execution!</span>
-<span class="kn">from</span> <span class="nn">pedal.sandbox</span> <span class="kn">import</span> <span class="n">run</span>
-<span class="kn">from</span> <span class="nn">pedal.assertions</span> <span class="kn">import</span> <span class="n">assert_equal</span><span class="p">,</span> <span class="n">assert_has_function</span>
-<span class="n">student</span> <span class="o">=</span> <span class="n">run</span><span class="p">()</span>
-<span class="n">assert_has_function</span><span class="p">(</span><span class="n">student</span><span class="p">,</span> <span class="s1">&#39;add_prices&#39;</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
-<span class="n">assert_equal</span><span class="p">(</span><span class="n">student</span><span class="o">.</span><span class="n">add_prices</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span> <span class="mi">6</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<p>This only briefly summarizes some of our features, read some of the sections below to find out more!</p>
+is also built to give a model for what Feedback should be.
+Our goal is to elevate Feedback with Software Engineering and Instructional
+Design practices, to make it a central part of your course’s development
+rather than an afterthought.</p>
 <div class="toctree-wrapper compound">
-<p class="caption"><span class="caption-text">Contents:</span></p>
+<p class="caption"><span class="caption-text">Contents</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="usage/installation.html">Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="usage/installation.html#pypi">PyPi</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage/installation.html#github">GitHub</a></li>
+<li class="toctree-l1"><a class="reference internal" href="everyone/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="everyone/installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="everyone/installation.html#pypi">PyPi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="everyone/installation.html#github">GitHub</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="usage/quickstart.html">Quick Start Guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="usage/quickstart.html#simple-environment">Simple Environment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage/quickstart.html#core-feedback-functions">Core Feedback Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage/quickstart.html#finding-ast-elements">Finding AST Elements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage/quickstart.html#finding-ast-patterns">Finding AST Patterns</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage/quickstart.html#checking-execution-results">Checking Execution Results</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage/quickstart.html#checking-execution-output">Checking Execution Output</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage/quickstart.html#calling-students-functions">Calling Students’ Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage/quickstart.html#simple-assertions">Simple Assertions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage/quickstart.html#simple-unit-testing">Simple Unit Testing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage/quickstart.html#other-toolkit-tools">Other Toolkit Tools</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage/quickstart.html#resolver-the-feedback">Resolver the Feedback</a></li>
+<li class="toctree-l1"><a class="reference internal" href="teachers/quickstart.html">Teacher Quick Start Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="teachers/quickstart.html#command-line-usage">Command Line Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="teachers/quickstart.html#simple-environment">Simple Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="teachers/quickstart.html#core-feedback-functions">Core Feedback Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="teachers/quickstart.html#finding-ast-elements">Finding AST Elements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="teachers/quickstart.html#finding-ast-patterns">Finding AST Patterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="teachers/quickstart.html#checking-execution-results">Checking Execution Results</a></li>
+<li class="toctree-l2"><a class="reference internal" href="teachers/quickstart.html#checking-execution-output">Checking Execution Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="teachers/quickstart.html#calling-students-functions">Calling Students’ Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="teachers/quickstart.html#simple-assertions">Simple Assertions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="teachers/quickstart.html#simple-unit-testing">Simple Unit Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="teachers/quickstart.html#other-toolkit-tools">Other Toolkit Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="teachers/quickstart.html#resolver-the-feedback">Resolver the Feedback</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="usage/examples.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage/quickreference.html">Quick Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="usage/quickreference.html#core-commands">Core Commands</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage/quickreference.html#cait">CAIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="teachers/examples.html">Teacher Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="teachers/examples.html#single-problem">Single Problem</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="teachers/examples.html#lab-with-sequential-sections">Lab with Sequential Sections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="teachers/examples.html#exam-with-independent-sections">Exam with Independent Sections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="teachers/examples.html#large-project">Large Project</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="concepts.html">Important Concepts</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage/tutorial.html">Tutorial</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="usage/tutorial.html#using-pedal">Using Pedal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="teachers/reference.html">Teacher Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="teachers/reference.html#core-commands">Core Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="teachers/reference.html#cait">CAIT</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="integrations.html">Integrations</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="integrations.html#vpl">VPL</a></li>
-<li class="toctree-l2"><a class="reference internal" href="integrations.html#jupyter-notebooks">Jupyter Notebooks</a></li>
-<li class="toctree-l2"><a class="reference internal" href="integrations.html#blockpy">BlockPy</a></li>
-<li class="toctree-l2"><a class="reference internal" href="integrations.html#web-cat">Web-CAT</a></li>
-<li class="toctree-l2"><a class="reference internal" href="integrations.html#reference-checks">Reference Checks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="teachers/tutorial.html">Teacher Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="teachers/tutorial.html#using-pedal">Using Pedal</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="api.html">Developer API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="api.html#important-concepts">Important Concepts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#module-pedal.core.commands">Core Commands</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#module-pedal.core.report">Report</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#module-pedal.core.location">Location</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#module-pedal.core.feedback">Feedback</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#module-pedal.core.environment">Environment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#module-pedal.core.submission">Submission</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developers/guide.html">Developer Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="developers/guide.html#feedback-functions">Feedback Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developers/guide.html#tools">Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developers/guide.html#pedal-core">Pedal Core</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="developers/api.html">Developer API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="developers/api.html#important-concepts">Important Concepts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developers/api.html#module-pedal.core.commands">Core Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developers/api.html#module-pedal.core.report">Report</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developers/api.html#module-pedal.core.location">Location</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developers/api.html#module-pedal.core.feedback">Feedback</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developers/api.html#module-pedal.core.environment">Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developers/api.html#module-pedal.core.submission">Submission</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="developers/integrations.html">Developer Integrations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="developers/integrations.html#vpl">VPL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developers/integrations.html#jupyter-notebooks">Jupyter Notebooks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developers/integrations.html#blockpy">BlockPy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developers/integrations.html#web-cat">Web-CAT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developers/integrations.html#reference-checks">Reference Checks</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="developers/tools.html">Tools</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="developers/tools/source.html">Source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developers/tools/tifa.html">TIFA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developers/tools/cait.html">CAIT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developers/tools/sandbox.html">Sandbox</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developers/tools/assertions.html">Assertions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developers/tools/toolkit.html">Toolkit</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="everyone/glossary.html">Glossary</a></li>
 </ul>
 </div>
 </div>
@@ -278,7 +263,7 @@ is also built to give a model for what Feedback should be.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="usage/installation.html" class="btn btn-neutral float-right" title="Installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="everyone/introduction.html" class="btn btn-neutral float-right" title="Introduction" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
     </div>

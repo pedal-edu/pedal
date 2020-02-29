@@ -82,16 +82,20 @@
               
             
             
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption"><span class="caption-text">Contents</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../usage/installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../usage/quickstart.html">Quick Start Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../usage/examples.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../usage/quickreference.html">Quick Reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../concepts.html">Important Concepts</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../usage/tutorial.html">Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../integrations.html">Integrations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../api.html">Developer API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../everyone/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../everyone/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../teachers/quickstart.html">Teacher Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../teachers/examples.html">Teacher Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../teachers/examples.html#single-problem">Single Problem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../teachers/reference.html">Teacher Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../teachers/tutorial.html">Teacher Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers/guide.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers/api.html">Developer API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers/integrations.html">Developer Integrations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers/tools.html">Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../everyone/glossary.html">Glossary</a></li>
 </ul>
 
             
@@ -159,7 +163,7 @@
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Submission&#39;</span><span class="p">]</span>
 
 
-<div class="viewcode-block" id="Submission"><a class="viewcode-back" href="../../../api.html#pedal.core.submission.Submission">[docs]</a><span class="k">class</span> <span class="nc">Submission</span><span class="p">:</span>
+<div class="viewcode-block" id="Submission"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.submission.Submission">[docs]</a><span class="k">class</span> <span class="nc">Submission</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Simple class for holding information about the student&#39;s submission.</span>
 
@@ -182,7 +186,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">files</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">main_file</span><span class="o">=</span><span class="s1">&#39;answer.py&#39;</span><span class="p">,</span> <span class="n">main_code</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">user</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">assignment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">course</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">execution</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                 <span class="n">user</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">assignment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">course</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">execution</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">instructor_file</span><span class="o">=</span><span class="s1">&#39;on_run.py&#39;</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">files</span> <span class="o">=</span> <span class="n">files</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_file</span> <span class="o">=</span> <span class="n">main_file</span>
         <span class="k">if</span> <span class="n">main_code</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -193,7 +198,34 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">user</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assignment</span> <span class="o">=</span> <span class="n">assignment</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">course</span> <span class="o">=</span> <span class="n">course</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">execution</span> <span class="o">=</span> <span class="n">execution</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">execution</span> <span class="o">=</span> <span class="n">execution</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instructor_file</span> <span class="o">=</span> <span class="n">instructor_file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lines_cache</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">lines</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Returns:</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_code</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lines_cache</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_lines_cache</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">main_code</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_code</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lines_cache</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">main_code</span><span class="p">]</span>
+
+<div class="viewcode-block" id="Submission.replace_main"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.submission.Submission.replace_main">[docs]</a>    <span class="k">def</span> <span class="nf">replace_main</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Substitutes the current main code and filename with the given arguments.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            code:</span>
+<span class="sd">            file:</span>
+
+<span class="sd">        Returns:</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">main_code</span> <span class="o">=</span> <span class="n">code</span>
+        <span class="k">if</span> <span class="n">file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">main_file</span> <span class="o">=</span> <span class="n">file</span></div></div>
 </pre></div>
 
            </div>

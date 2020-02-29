@@ -82,16 +82,20 @@
               
             
             
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption"><span class="caption-text">Contents</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../usage/installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../usage/quickstart.html">Quick Start Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../usage/examples.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../usage/quickreference.html">Quick Reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../concepts.html">Important Concepts</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../usage/tutorial.html">Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../integrations.html">Integrations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../api.html">Developer API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../everyone/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../everyone/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../teachers/quickstart.html">Teacher Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../teachers/examples.html">Teacher Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../teachers/examples.html#single-problem">Single Problem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../teachers/reference.html">Teacher Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../teachers/tutorial.html">Teacher Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers/guide.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers/api.html">Developer API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers/integrations.html">Developer Integrations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers/tools.html">Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../everyone/glossary.html">Glossary</a></li>
 </ul>
 
             
@@ -159,96 +163,14 @@
 <span class="sd">Simple data classes for storing feedback to present to learners.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Feedback&#39;</span><span class="p">,</span> <span class="s1">&#39;FeedbackKind&#39;</span><span class="p">,</span> <span class="s1">&#39;FeedbackCategory&#39;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Feedback&#39;</span><span class="p">,</span> <span class="s1">&#39;FeedbackKind&#39;</span><span class="p">,</span> <span class="s1">&#39;FeedbackCategory&#39;</span><span class="p">,</span> <span class="s2">&quot;AtomicFeedbackFunction&quot;</span><span class="p">]</span>
 
 <span class="kn">from</span> <span class="nn">pedal.core.location</span> <span class="k">import</span> <span class="n">Location</span>
 <span class="kn">from</span> <span class="nn">pedal.core.report</span> <span class="k">import</span> <span class="n">MAIN_REPORT</span>
+<span class="kn">from</span> <span class="nn">pedal.core.feedback_category</span> <span class="k">import</span> <span class="n">FeedbackKind</span><span class="p">,</span> <span class="n">FeedbackCategory</span>
 
 
-<div class="viewcode-block" id="FeedbackCategory"><a class="viewcode-back" href="../../../api.html#pedal.core.feedback.FeedbackCategory">[docs]</a><span class="k">class</span> <span class="nc">FeedbackCategory</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    An Enumeration of feedback condition categories.</span>
-<span class="sd">    These categories represent distinct types of feedback conditions based on their</span>
-<span class="sd">    presence within the students&#39; submission.</span>
-<span class="sd">    Notice that these explain the condition, not the feedback response (which would</span>
-<span class="sd">    fall under Kind).</span>
-
-<span class="sd">    Some are contextualized to instruction (&quot;mistakes&quot;, &quot;specification&quot;, &quot;instructor&quot;)</span>
-<span class="sd">    and some are generic (&quot;syntax&quot;, &quot;runtime&quot;, &quot;algorithmic&quot;). One category is also</span>
-<span class="sd">    available for errors identified by the student.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="c1">#: Grammatical and typographical errors that prevent parsing.</span>
-    <span class="n">SYNTAX</span> <span class="o">=</span> <span class="s1">&#39;syntax&#39;</span>
-    <span class="c1">#: Execution errors triggered during runtime by an invalid Python operation</span>
-    <span class="n">RUNTIME</span> <span class="o">=</span> <span class="s1">&#39;runtime&#39;</span>
-    <span class="c1">#: Errors that do not prevent functioning code but are generically wrong.</span>
-    <span class="n">ALGORITHMIC</span> <span class="o">=</span> <span class="s1">&#39;algorithmic&#39;</span>
-    <span class="c1">#: Errors that do not prevent functioning code but are specifically wrong.</span>
-    <span class="n">MISTAKES</span> <span class="o">=</span> <span class="s1">&#39;mistakes&#39;</span>
-    <span class="c1">#: Errors suggested because the code failed to meet specified behavior.</span>
-    <span class="n">SPECIFICATION</span> <span class="o">=</span> <span class="s1">&#39;specification&#39;</span>
-    <span class="c1">#: Errors marked by the instructor in a one-off fashion.</span>
-    <span class="n">INSTRUCTOR</span> <span class="o">=</span> <span class="s1">&#39;instructor&#39;</span>
-    <span class="c1">#: Errors marked by the students&#39; own code, such as failing test cases.</span>
-    <span class="n">STUDENT</span> <span class="o">=</span> <span class="s1">&#39;student&#39;</span>
-    <span class="c1">#: Stylistic errors that do not prevent correct behavior but are otherwise undesirable</span>
-    <span class="n">STYLE</span> <span class="o">=</span> <span class="s1">&#39;style&#39;</span>
-    <span class="c1">#: Errors caused by the Pedal grading infrastructure or the surrounding infrastructure.</span>
-    <span class="n">SYSTEM</span> <span class="o">=</span> <span class="s1">&#39;system&#39;</span>
-    <span class="c1">#: A category for feedback that are not actually errors, but is positive information.</span>
-    <span class="n">POSITIVE</span> <span class="o">=</span> <span class="s1">&#39;positive&#39;</span>
-    <span class="c1">#: A category for feedback that are not actually errors, but is neutral.</span>
-    <span class="n">INSTRUCTIONS</span> <span class="o">=</span> <span class="s1">&#39;instructions&#39;</span>
-    <span class="c1">#: A category for unknown feedback. Ideally, never used.</span>
-    <span class="n">UNKNOWN</span> <span class="o">=</span> <span class="s1">&#39;uncategorized&#39;</span>
-
-    <span class="n">ALIASES</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">&#39;parser&#39;</span><span class="p">:</span> <span class="n">SYNTAX</span><span class="p">,</span>
-        <span class="s1">&#39;verifier&#39;</span><span class="p">:</span> <span class="n">SYNTAX</span><span class="p">,</span>
-        <span class="s1">&#39;instructor&#39;</span><span class="p">:</span> <span class="n">INSTRUCTOR</span><span class="p">,</span>
-        <span class="s1">&#39;analyzer&#39;</span><span class="p">:</span> <span class="n">ALGORITHMIC</span>
-    <span class="p">}</span></div>
-
-
-<div class="viewcode-block" id="FeedbackKind"><a class="viewcode-back" href="../../../api.html#pedal.core.feedback.FeedbackKind">[docs]</a><span class="k">class</span> <span class="nc">FeedbackKind</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    An enumeration of the possible kinds of feedback responses, based on their pedagogical role.</span>
-<span class="sd">    Valence can vary between specific instances of a kind of feedback, but some tend to</span>
-<span class="sd">    have a specific valence.</span>
-
-<span class="sd">    TODO: Rewrite the documentation below in the #: alternate style.</span>
-
-<span class="sd">    Attributes:</span>
-<span class="sd">        MISCONCEPTION (str): A description of the misconception that</span>
-<span class="sd">            is believed to be in the student&#39;s mind, or perhaps the relevant concept from the</span>
-<span class="sd">            material that should be associated with this. (&quot;Variables must be initialized before they are used&quot;).</span>
-<span class="sd">        MISTAKE (str): A description of the error or bug that the student has created (&quot;NameError on line 5: sum</span>
-<span class="sd">            has not been defined&quot;).</span>
-<span class="sd">        HINT (str): A suggestion for what the student can do (&quot;Initialize the sum variable on line 2&quot;).</span>
-<span class="sd">        CONSTRAINT (str): A description of the task requirements or task type that the student has violated</span>
-<span class="sd">            (&quot;You used a for loop, but this question expected you to use recursion.&quot;).</span>
-<span class="sd">        METACOGNITIVE (str): A suggestion for more regulative strategies (&quot;You have been working for 5</span>
-<span class="sd">            hours, perhaps it is time to take a break?&quot;).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># Negative</span>
-    <span class="n">MISCONCEPTION</span> <span class="o">=</span> <span class="s2">&quot;Misconception&quot;</span>
-    <span class="n">MISTAKE</span> <span class="o">=</span> <span class="s2">&quot;Mistake&quot;</span>
-    <span class="n">HINT</span> <span class="o">=</span> <span class="s2">&quot;Hint&quot;</span>
-    <span class="n">CONSTRAINT</span> <span class="o">=</span> <span class="s2">&quot;Constraint&quot;</span>
-    <span class="n">METACOGNITIVE</span> <span class="o">=</span> <span class="s2">&quot;Metacognitive&quot;</span>
-    <span class="n">REINFORCEMENT</span> <span class="o">=</span> <span class="s2">&quot;Reinforcement&quot;</span>
-    <span class="c1"># Positive</span>
-    <span class="n">COMPLIMENT</span> <span class="o">=</span> <span class="s2">&quot;Compliment&quot;</span>
-    <span class="n">ENCOURAGEMENT</span> <span class="o">=</span> <span class="s2">&quot;Encouragement&quot;</span>
-    <span class="c1"># Variable</span>
-    <span class="n">RESULT</span> <span class="o">=</span> <span class="s2">&quot;Result&quot;</span>
-    <span class="n">PERFORMANCE</span> <span class="o">=</span> <span class="s2">&quot;Performance&quot;</span>
-    <span class="c1"># Neutral</span>
-    <span class="n">INSTRUCTIONAL</span> <span class="o">=</span> <span class="s2">&quot;Instructional&quot;</span></div>
-
-
-<div class="viewcode-block" id="Feedback"><a class="viewcode-back" href="../../../api.html#pedal.core.feedback.Feedback">[docs]</a><span class="k">class</span> <span class="nc">Feedback</span><span class="p">:</span>
+<div class="viewcode-block" id="Feedback"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.Feedback">[docs]</a><span class="k">class</span> <span class="nc">Feedback</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A class for storing raw feedback.</span>
 
@@ -293,7 +215,8 @@
 <span class="sd">        muted (bool): Whether this piece of feedback is something that should be shown to a student. There are</span>
 <span class="sd">            various use cases for muted feedback: they can serve as flags for later conditionals, suppressed</span>
 <span class="sd">            default kinds of feedback, or perhaps feedback that is interesting for analysis but not pedagogically</span>
-<span class="sd">            helpful to give to the student.</span>
+<span class="sd">            helpful to give to the student. They will still contribute to overall score, but not to the correcntess</span>
+<span class="sd">            of the submission.</span>
 
 <span class="sd">        author (List[str]): A list of names/emails that indicate who created this piece of feedback. They can be</span>
 <span class="sd">            either names, emails, or combinations in the style of `&quot;Cory Bart &lt;acbart@udel.edu&gt;&quot;`.</span>
@@ -301,6 +224,7 @@
 <span class="sd">            digit should be incremented for small bug fixes/changes. The middle (second) digit should be used for more</span>
 <span class="sd">            serious and intense changes. The first digit should be incremented when changes are made on exposure to</span>
 <span class="sd">            learners or some other evidence-based motivation.</span>
+<span class="sd">        tags (List[str]): Any tags that you want to attach to this feedback.</span>
 
 <span class="sd">        group (int or str): Information about what logical grouping within the submission this belongs to. Various</span>
 <span class="sd">            tools can chunk up a submission (e.g., by section), they can use this field to keep track of how that</span>
@@ -315,8 +239,8 @@
     <span class="n">KINDS</span> <span class="o">=</span> <span class="n">FeedbackKind</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">tool</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="s1">&#39;instructor&#39;</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;mistake&#39;</span><span class="p">,</span> <span class="n">justification</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">priority</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">valence</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">template</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">locations</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">score</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">correct</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">muted</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">author</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">priority</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">valence</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">locations</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">score</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">correct</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">muted</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">author</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">group</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
         <span class="c1"># Model</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="n">label</span>
@@ -329,10 +253,12 @@
         <span class="c1"># Presentation</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="n">title</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="n">message</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">template</span> <span class="o">=</span> <span class="n">template</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">text</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fields</span> <span class="o">=</span> <span class="n">fields</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">locations</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
-            <span class="n">locations</span> <span class="o">=</span> <span class="n">Location</span><span class="p">(</span><span class="n">locations</span><span class="p">)</span>
+            <span class="n">locations</span> <span class="o">=</span> <span class="p">[</span><span class="n">Location</span><span class="p">(</span><span class="n">locations</span><span class="p">)]</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">locations</span><span class="p">,</span> <span class="n">Location</span><span class="p">):</span>
+            <span class="n">locations</span> <span class="o">=</span> <span class="p">[</span><span class="n">locations</span><span class="p">]</span>
         <span class="c1"># TODO: Handle tuples (Line, Col) and (Filename, Line, Col), and possibly lists thereof</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">locations</span> <span class="o">=</span> <span class="n">locations</span>
         <span class="c1"># Result</span>
@@ -342,12 +268,12 @@
         <span class="c1"># Metadata</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">version</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">author</span> <span class="o">=</span> <span class="n">author</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tags</span> <span class="o">=</span> <span class="n">tags</span>
         <span class="c1"># Organizational</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">group</span> <span class="o">=</span> <span class="n">group</span>
         <span class="c1"># Self-attach to a given report?</span>
         <span class="k">if</span> <span class="n">report</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">report</span><span class="o">.</span><span class="n">add_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -373,6 +299,72 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">group</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">metadata</span> <span class="o">+=</span> <span class="s2">&quot;, group=&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">group</span><span class="p">)</span>
         <span class="k">return</span> <span class="s2">&quot;Feedback(</span><span class="si">{}{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">_process_template</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="n">backup</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">template</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">backup</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">backup</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">backup</span><span class="o">.</span><span class="n">format</span>
+        <span class="k">return</span> <span class="n">backup</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">template</span><span class="o">.</span><span class="n">format</span>
+    <span class="k">return</span> <span class="n">template</span>
+
+
+<div class="viewcode-block" id="AtomicFeedbackFunction"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.AtomicFeedbackFunction">[docs]</a><span class="k">def</span> <span class="nf">AtomicFeedbackFunction</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="s1">&#39;0.0.1&#39;</span><span class="p">,</span> <span class="n">message_template</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">text_template</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                           <span class="n">justification</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Decorator for feedback functions to indicate their intent.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        tags:</span>
+<span class="sd">        title:</span>
+<span class="sd">        text_template:</span>
+<span class="sd">        message_template:</span>
+<span class="sd">        version:</span>
+<span class="sd">        justification:</span>
+
+<span class="sd">    Returns:</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">AtomicFeedbackFunction_with_attrs</span><span class="p">(</span><span class="n">function</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            function:</span>
+
+<span class="sd">        Returns:</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">function</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="n">title</span> <span class="k">if</span> <span class="n">title</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">function</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="n">function</span><span class="o">.</span><span class="n">tags</span> <span class="o">=</span> <span class="n">tags</span> <span class="k">if</span> <span class="n">tags</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[]</span>
+        <span class="n">function</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">version</span>
+        <span class="n">function</span><span class="o">.</span><span class="n">justification</span> <span class="o">=</span> <span class="n">justification</span><span class="o">.</span><span class="n">format</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">justification</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">justification</span>
+        <span class="n">function</span><span class="o">.</span><span class="n">message_template</span> <span class="o">=</span> <span class="n">_process_template</span><span class="p">(</span><span class="n">message_template</span><span class="p">,</span> <span class="n">text_template</span><span class="p">)</span>
+        <span class="n">function</span><span class="o">.</span><span class="n">text_template</span> <span class="o">=</span> <span class="n">_process_template</span><span class="p">(</span><span class="n">text_template</span><span class="p">,</span> <span class="n">message_template</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">function</span>
+    <span class="k">return</span> <span class="n">AtomicFeedbackFunction_with_attrs</span></div>
+
+
+<span class="k">def</span> <span class="nf">CompositeFeedbackFunction</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    Returns:</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">CompositeFeedbackFunction_with_attrs</span><span class="p">(</span><span class="n">function</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            function:</span>
+
+<span class="sd">        Returns:</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">function</span>
+    <span class="k">return</span> <span class="n">CompositeFeedbackFunction_with_attrs</span>
 
 
 <span class="n">PEDAL_DEVELOPERS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Austin Cory Bart &lt;acbart@udel.edu&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot;Luke Gusukuma &lt;lukesg08@vt.edu&gt;&quot;</span><span class="p">]</span>
