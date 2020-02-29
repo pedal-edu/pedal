@@ -1,20 +1,31 @@
 import setuptools
 
 setuptools.setup(
-    name='Pedal',
-    version='0.1.61',
+    name='pedal',
+    version='2.0.0',
+    python_requires='>=3.5',
     author='acbart,lukesg08',
-    author_email='acbart9@gmail.com',
-    description='Tools for analyzing student code.',
-    packages=['pedal', 'pedal.report', 'pedal.plugins', 'pedal.resolvers',
-              'pedal.source', 'pedal.tifa', 'pedal.questions',
-              'pedal.cait', 'pedal.mistakes', 'pedal.toolkit',
-              'pedal.assertions', 'pedal.sandbox', 'cs1014'],
+    author_email='acbart@udel.edu',
+    description='Tools to provide feedback on student code.',
+    keywords='feedback education teaching program analysis tifa cait sandbox pedal grading grader grade',
+    packages=['pedal', 'pedal.core', 'pedal.utilities', 'pedal.environments',
+              'pedal.resolvers', 'pedal.command_line',
+              'pedal.source', 'pedal.cait', 'pedal.tifa',
+              'pedal.sandbox', 'pedal.assertions',
+              'pedal.questions', 'pedal.toolkit',
+              ],
     license='Creative Commons Attribution-Noncommercial-Share Alike license',
     long_description=open('README.rst').read(),
-    url='https://github.com/pedal-edu/pedal/',
-    classifiers=(
+    install_requires=[],
+    entry_points={
+          'console_scripts': [
+              'pedal = pedal.command_line.command_line:main'
+          ]
+      },
+    url='https://pedal-edu.github.io/pedal',
+    classifiers=[
         "Programming Language :: Python :: 3",
-
-    )
+        "Intended Audience :: Education",
+        "Topic :: Education",
+    ]
 )

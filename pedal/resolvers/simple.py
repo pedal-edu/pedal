@@ -42,6 +42,12 @@ class FinalFeedback:
                                                                          title=self.title,
                                                                          message=self.message[:50])
 
+    def for_console(self) -> str:
+        return "{label}\n{score}\n{title}\n{message}".format(label=self.label,
+                                                             score=self.score,
+                                                             title=self.title,
+                                                             message=self.message)
+
     def to_json(self) -> dict:
         """
 
@@ -168,4 +174,5 @@ def resolve(report=MAIN_REPORT, priority_key=by_priority):
         # TODO: Promote to be its own atomic feedback function
         final.title = set_success.title
         final.message = set_success.text_template()
+    report.result = final
     return final

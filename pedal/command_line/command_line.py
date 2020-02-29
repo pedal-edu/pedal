@@ -50,8 +50,10 @@ import sys
 from contextlib import redirect_stdout
 
 from io import StringIO
+from textwrap import indent
 
 from pedal import clear_report
+from pedal.core.report import MAIN_REPORT
 from pedal.cait import parse_program
 from pedal.command_line.mocks import MockOpen
 from unittest.mock import patch
@@ -66,7 +68,8 @@ class FORMAT_OPTIONS:
     DEBUG = 'debug'
     VERIFY = 'verify'
     STATS = 'stats'
-    ALL_OPTIONS = [FEEDBACK, GRADE, DEBUG, VERIFY, STATS]
+    SANDBOX = 'sandbox'
+    ALL_OPTIONS = [FEEDBACK, GRADE, DEBUG, VERIFY, STATS, SANDBOX]
 
 
 def normalize_path(first: str, second: str):
@@ -153,9 +156,13 @@ def run_ics_on_submission(ics_filename: str, ics_contents: str, ics_args: str,
 
     """
     seed = find_seed(submission_contents)
-    ics_args = list(substitute_args(ics_args, submission_filename, seed))
+    # TODO: figure out args
+    #ics_args = list(substitute_args(ics_args, submission_filename, seed))
+    ics_args = [{submission_filename: submission_contents},
+                submission_filename, submission_contents,
+                student, assignment, course, None, ics_filename]
     captured_output = StringIO()
-    global_data = globals()
+    global_data = {}
     with redirect_stdout(captured_output):
         with patch('builtins.open', MockOpen(read_data=submission_contents),
                    create=True):
@@ -164,10 +171,10 @@ def run_ics_on_submission(ics_filename: str, ics_contents: str, ics_args: str,
                 grader_exec = compile(ics_contents, ics_filename, 'exec')
                 exec(grader_exec, global_data)
     actual_output = captured_output.getvalue()
-    return {"output": actual_output, "data": global_data}
+    return {"output": actual_output, "data": global_data, "report": MAIN_REPORT}
 
 
-def main(args):
+def main(args=None):
     """
     Actually runs Pedal from the command line.
 
@@ -177,6 +184,8 @@ def main(args):
     Returns:
 
     """
+    if args is None:
+        args = parse_args()
     results = []
     if os.path.isfile(args.script):
         script_file_name, script_file_extension = os.path.splitext(args.script)
@@ -187,58 +196,63 @@ def main(args):
             else:
                 submission_paths = [normalize_path(sub, submissions) for sub in os.listdir(submissions)]
             for submission_path in submission_paths:
+                submission_file_name, submission_file_extension = os.path.splitext(submission_path)
+                if submission_file_extension != ".py":
+                    continue
                 # TODO: add in student/course/assignment info
                 with open(args.script, 'r') as scripts_file:
                     scripts_contents = scripts_file.read()
                 with open(submission_path, 'r') as submission_file:
                     submission_contents = submission_file.read()
-                result = run_ics_on_submission("instructor.py", scripts_contents, args.args,
+                result = run_ics_on_submission(args.script, scripts_contents, args.args,
                                                "answer.py", submission_contents,
                                                args.format,
-                                               {'name': submission_path}, {}, {})
-                results.append(result)
+                                               {'filename': submission_path}, {}, {})
+                result['filename'] = submission_path
+                if args.format == FORMAT_OPTIONS.FEEDBACK:
+                    print(result['filename'])
+                    print(indent(result['report'].result.for_console(), " " * 4))
+                elif args.format == FORMAT_OPTIONS.GRADE:
+                    print(result['report'].result.score)
+                elif args.format == FORMAT_OPTIONS.DEBUG:
+                    pass
+                elif args.format == FORMAT_OPTIONS.VERIFY:
+                    assert "TODO: Unit test style verification not yet supported"
+                elif args.format == FORMAT_OPTIONS.STATS:
+                    assert "TODO: Aggregation of feedback into stats file is not yet supported"
         elif script_file_extension in ('.db',):
             assert "TODO: ProgSnap DB files not yet supported"
         elif script_file_extension in ('.zip', ):
             assert "TODO: Zip files not yet supported"
     else:
         assert "TODO: Folders of grading scripts not yet supported"
-    if args.format == FORMAT_OPTIONS.FEEDBACK:
-        for result in results:
-            print(result.message)
-    elif args.format == FORMAT_OPTIONS.GRADE:
-        for result in results:
-            print(100 if result.correct else result.score)
-    elif args.format == FORMAT_OPTIONS.DEBUG:
-        for result in results:
-            print(result)
-    elif args.format == FORMAT_OPTIONS.VERIFY:
-        assert "TODO: Unit test style verification not yet supported"
-    elif args.format == FORMAT_OPTIONS.STATS:
-        assert "TODO: Aggregation of feedback into stats file is not yet supported"
 
 
-parser = argparse.ArgumentParser(description='Run instructor control script on student submissions.')
-parser.add_argument('script', help='The path to the instructor control script, or multiple scripts.')
-parser.add_argument('--submissions', "-s", help='The path to the student submissions. Defaults to a folder named '
-                                                'submissions adjacent to the instructor control script.',
-                    default='submissions')
-parser.add_argument('output', help='The output path for the result')
-parser.add_argument('format', help='The format for the results',
-                    choices=FORMAT_OPTIONS.ALL_OPTIONS)
-parser.add_argument('--args', '-a',
-                    help='Pass in arguments that the grading script will use. '
-                         'Variable substitutions include "$_STUDENT_MAIN".',
-                    default='$_STUDENT_MAIN,$_STUDENT_NAME')
-parser.add_argument('include_submissions', help='An optional REGEX filter to only include certain submissions')
-parser.add_argument('exclude_submissions', help='An optional REGEX filter to remove certain submissions')
-parser.add_argument('include_scripts', help='An optional REGEX filter to only include certain scripts')
-parser.add_argument('exclude_scripts', help='An optional REGEX filter to remove certain scripts')
-parser.add_argument('parallel_scripts', help="Which style to use for running scripts in parallel.",
-                    choices=["threads", "processes", "none"])
-args = parser.parse_args()
+def parse_args():
+    parser = argparse.ArgumentParser(description='Run instructor control script on student submissions.')
+    parser.add_argument('format', help='The format for the results',
+                        choices=FORMAT_OPTIONS.ALL_OPTIONS)
+    parser.add_argument('script', help='The path to the instructor control script, or multiple scripts.')
+    parser.add_argument('submissions', help='The path to the student submissions. Defaults to a folder named '
+                                            'submissions adjacent to the instructor control script.',
+                        default='submissions')
+    parser.add_argument('output', help='The output path for the result',
+                        nargs='?', default=None)
+    parser.add_argument('--args', '-a',
+                        help='Pass in arguments that the grading script will use. '
+                             'Variable substitutions include "$_STUDENT_MAIN".',
+                        default='$_STUDENT_MAIN,$_STUDENT_NAME')
+    parser.add_argument('--include_submissions', help='An optional REGEX filter to only include certain submissions')
+    parser.add_argument('--exclude_submissions', help='An optional REGEX filter to remove certain submissions')
+    parser.add_argument('--include_scripts', help='An optional REGEX filter to only include certain scripts')
+    parser.add_argument('--exclude_scripts', help='An optional REGEX filter to remove certain scripts')
+    parser.add_argument('--parallel_scripts', help="Which style to use for running scripts in parallel.",
+                        choices=["threads", "processes", "none"])
+    args = parser.parse_args()
+    return args
 
-main(args)
+if __name__ == '__main__':
+    main()
 
 # If scripts is a single python file
 # If scripts is a folder

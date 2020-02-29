@@ -1,5 +1,6 @@
 from pedal.core.report import MAIN_REPORT, Report
 from pedal.sandbox.constants import TOOL_NAME
+from pedal.sandbox.feedbacks import runtime_error
 from pedal.sandbox.sandbox import Sandbox, DataSandbox
 
 # Compatibility API
@@ -25,7 +26,7 @@ def reset(report=MAIN_REPORT):
 Report.register_tool(TOOL_NAME, reset)
 
 
-def run(raise_exceptions=True, report=None, coverage=False, threaded=False, inputs=None) -> Sandbox:
+def run(raise_exceptions=True, report=MAIN_REPORT, coverage=False, threaded=False, inputs=None) -> Sandbox:
     """
 
     Args:
@@ -38,18 +39,13 @@ def run(raise_exceptions=True, report=None, coverage=False, threaded=False, inpu
     Returns:
 
     """
-    if report is None:
-        report = MAIN_REPORT
-    if 'run' not in report['sandbox']:
-        report['sandbox']['run'] = Sandbox(threaded=threaded, report=report)
-    sandbox = report['sandbox']['run']
-    source_code = report['source']['code']
+    sandbox = report[TOOL_NAME]['run']
+    source_code = report.submission.main_code
     sandbox.record_coverage = coverage
-    sandbox.run(source_code, _as_filename=report['source']['filename'], _inputs=inputs)
+    sandbox.run(source_code, as_filename=report.submission.main_file, inputs=inputs)
     if raise_exceptions and sandbox.exception is not None:
         name = str(sandbox.exception.__class__)[8:-2]
-        report.attach(name, category='Runtime', tool='Sandbox',
-                      section=report['source']['section'],
-                      mistakes={'message': sandbox.format_exception(),
-                                'error': sandbox.exception})
+
+        runtime_error(sandbox.exception_formatted, name, sandbox.exception, sandbox.exception_position,
+                      group=report['source']['section'], report=report)
     return sandbox

@@ -57,6 +57,7 @@ class Report:
         self.group_names = {}
         self.hooks = {}
         self.submission = None
+        self.result = None
 
     def contextualize(self, submission):
         """
