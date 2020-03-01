@@ -1,8 +1,6 @@
 from pedal.cait.cait_api import (parse_program,
                                  find_matches, find_match,
                                  find_expr_sub_matches)
-from pedal.core.commands import explain, gently
-import CS1014.mistakes.instructor_append as append_api
 from pedal.toolkit.utilities import *
 from pedal.sandbox.compatibility import get_output, get_plots
 from pedal.core.commands import gently, explain
@@ -378,7 +376,7 @@ def wrong_cannot_sum_list():
                             ' time.<br><br><i>(sum_list)<i></br>')
     Returns:
     """
-    message = 'Addition can only be done with a single value at a time, not with an entire list at one'
+    message = 'Addition can only be done with a single value at a time, not with an entire list at once'
     code = "sum_list"
     tldr = "Cannot Sum a List"
     matches = find_matches("for ___ in _list_ :\n"
@@ -628,20 +626,19 @@ def wrong_average_denominator():
                            "    __expr__\n"  # where expr contains _count_ = _count_ + 1
                            "__expr2__")  # where expr2 contains ___/_value_
     # where _value_.id != _count_.id
-    if matches:
-        for match in matches:
-            __expr__ = match["__expr__"]
-            __expr2__ = match["__expr2__"]
-            # _value_ = match["_value_"][0]
-            submatches = __expr__.find_matches("_count_ = _count_ + 1", )
-            submatches02 = find_expr_sub_matches("___/_value_", __expr2__)
-            if submatches and submatches02:
-                for submatch in submatches:
-                    for submatch02 in submatches02:
-                        _count_ = submatch["_count_"][0]
-                        _value_ = submatch02["_value_"][0]
-                        if _count_.id != _value_.id:
-                            return explain(message, label=code, title=tldr)
+    for match in matches:
+        __expr__ = match["__expr__"]
+        __expr2__ = match["__expr2__"]
+        # _value_ = match["_value_"][0]
+        submatches = __expr__.find_matches("_count_ = _count_ + 1", )
+        submatches02 = __expr2__.find_matches("___/_value_")
+        if submatches and submatches02:
+            for submatch in submatches:
+                for submatch02 in submatches02:
+                    _count_ = submatch["_count_"]
+                    _value_ = submatch02["_value_"]
+                    if _count_.id != _value_.id:
+                        return explain(message, label=code, title=tldr)
     return False
 
 
@@ -664,7 +661,6 @@ def wrong_average_numerator():
             _item_ = match["_item_"][0]
             # TODO: In theory, we could merge these matches to match variables...
             submatches = __expr__.find_matches("_total_ = _total_ + _item_")
-            # submatches02 = find_expr_sub_matches("_value_/___", __expr2__)
             submatches02 = __expr2__.find_matches("_value_/___")
             if submatches and submatches02:
                 for submatch in submatches:

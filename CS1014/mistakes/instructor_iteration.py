@@ -38,7 +38,7 @@ def all_for_loops():
     return std_ast.find_all("For")
 
 
-# this conflics with list_repeated_in_for
+# this conflicts with list_repeated_in_for
 def wrong_target_is_list():
     """
 

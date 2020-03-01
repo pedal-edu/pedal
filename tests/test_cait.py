@@ -808,6 +808,16 @@ class CaitTests(unittest.TestCase):
             submatch = __expr__.find_matches("_var_[__expr__]")
             self.assertFalse(submatch)
 
+        set_source("for item in item_list:\n"
+                   "    if item < 0:\n"
+                   "        n = n + item")
+        matches = find_matches("for _var_ in ___:\n"
+                               "    __expr__")
+        for match in matches:
+            __expr__ = match["__expr__"]
+            submatch = __expr__.find_matches("_sum_ = _sum_ + _var_", use_previous=True)
+            self.assertTrue(submatch)
+
 
 if __name__ == '__main__':
     unittest.main(buffer=False)
