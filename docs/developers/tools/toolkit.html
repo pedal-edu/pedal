@@ -1,0 +1,1011 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Toolkit &mdash; Pedal 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Glossary" href="../../everyone/glossary.html" />
+    <link rel="prev" title="Assertions" href="assertions.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Pedal
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../everyone/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../everyone/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../teachers/quickstart.html">Teacher Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../teachers/examples.html">Teacher Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../teachers/reference.html">Teacher Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../teachers/tutorial.html">Teacher Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">Developer API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrations.html">Developer Integrations</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../tools.html">Tools</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="source.html">Source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tifa.html">TIFA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cait.html">CAIT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sandbox.html">Sandbox</a></li>
+<li class="toctree-l2"><a class="reference internal" href="assertions.html">Assertions</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Toolkit</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-pedal.toolkit.utilities">Utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-pedal.toolkit.functions">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-pedal.toolkit.signatures">Signatures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-pedal.toolkit.imports">Imports</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-pedal.toolkit.files">Files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-pedal.toolkit.plotting">Plotting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-pedal.toolkit.printing">Printing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-pedal.toolkit.records">Records</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-pedal.toolkit.upload">Upload</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../everyone/glossary.html">Glossary</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Pedal</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../tools.html">Tools</a> &raquo;</li>
+        
+      <li>Toolkit</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/developers/tools/toolkit.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="toolkit">
+<h1>Toolkit<a class="headerlink" href="#toolkit" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-pedal.toolkit.utilities">
+<span id="utilities"></span><h2>Utilities<a class="headerlink" href="#module-pedal.toolkit.utilities" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pedal.toolkit.utilities.ensure_assignment">
+<code class="sig-name descname">ensure_assignment</code><span class="sig-paren">(</span><em class="sig-param">variable_name</em>, <em class="sig-param">type=None</em>, <em class="sig-param">value=None</em>, <em class="sig-param">root=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#ensure_assignment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.ensure_assignment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Consumes a variable name
+TODO: Implement the value parameter</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>variable_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The variable name the student is expected to define.</p></li>
+<li><p><strong>type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The string type of the node on the right side of the
+assignment. Check GreenTreeSnakes (e.g., “Num”, or “Str”).</p></li>
+<li><p><strong>root</strong> – </p></li>
+<li><p><strong>value</strong> – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>False or str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.toolkit.utilities.ensure_literal">
+<code class="sig-name descname">ensure_literal</code><span class="sig-paren">(</span><em class="sig-param">*literals</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#ensure_literal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.ensure_literal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Confirms that the literal IS in the code, returning False if it is not.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>*literals</strong> (<em>Any...</em>) – A series of literal values to look for.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>If the literal is found in the code, then it is returned.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>AstNode or False</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.toolkit.utilities.ensure_operation">
+<code class="sig-name descname">ensure_operation</code><span class="sig-paren">(</span><em class="sig-param">op_name</em>, <em class="sig-param">root=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#ensure_operation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.ensure_operation" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>op_name</strong> – </p></li>
+<li><p><strong>root</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+<p>Returns:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.toolkit.utilities.ensure_recursion">
+<code class="sig-name descname">ensure_recursion</code><span class="sig-paren">(</span><em class="sig-param">function_name</em>, <em class="sig-param">root=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#ensure_recursion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.ensure_recursion" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>function_name</strong> – </p></li>
+<li><p><strong>root</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+<p>Returns:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.toolkit.utilities.find_function_calls">
+<code class="sig-name descname">find_function_calls</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">root=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#find_function_calls"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.find_function_calls" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – </p></li>
+<li><p><strong>root</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+<p>Returns:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.toolkit.utilities.find_negatives">
+<code class="sig-name descname">find_negatives</code><span class="sig-paren">(</span><em class="sig-param">root=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#find_negatives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.find_negatives" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>root</strong> – </p>
+</dd>
+</dl>
+<p>Returns:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.toolkit.utilities.find_operation">
+<code class="sig-name descname">find_operation</code><span class="sig-paren">(</span><em class="sig-param">op_name</em>, <em class="sig-param">root</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#find_operation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.find_operation" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>op_name</strong> – </p></li>
+<li><p><strong>root</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+<p>Returns:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.toolkit.utilities.find_prior_initializations">
+<code class="sig-name descname">find_prior_initializations</code><span class="sig-paren">(</span><em class="sig-param">node</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#find_prior_initializations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.find_prior_initializations" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>node</strong> – </p>
+</dd>
+</dl>
+<p>Returns:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.toolkit.utilities.function_is_called">
+<code class="sig-name descname">function_is_called</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#function_is_called"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.function_is_called" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> – </p>
+</dd>
+</dl>
+<p>Returns:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.toolkit.utilities.function_prints">
+<code class="sig-name descname">function_prints</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#function_prints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.function_prints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.toolkit.utilities.is_top_level">
+<code class="sig-name descname">is_top_level</code><span class="sig-paren">(</span><em class="sig-param">ast_node</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#is_top_level"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.is_top_level" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ast_node</strong> – </p>
+</dd>
+</dl>
+<p>Returns:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.toolkit.utilities.no_nested_function_definitions">
+<code class="sig-name descname">no_nested_function_definitions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#no_nested_function_definitions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.no_nested_function_definitions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.toolkit.utilities.no_nonlist_nums">
+<code class="sig-name descname">no_nonlist_nums</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#no_nonlist_nums"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.no_nonlist_nums" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="pedal.toolkit.utilities.only_printing_variables">
+<code class="sig-name descname">only_printing_variables</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#only_printing_variables"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.only_printing_variables" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.toolkit.utilities.prevent_advanced_iteration">
+<code class="sig-name descname">prevent_advanced_iteration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#prevent_advanced_iteration"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.prevent_advanced_iteration" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="pedal.toolkit.utilities.prevent_builtin_usage">
+<code class="sig-name descname">prevent_builtin_usage</code><span class="sig-paren">(</span><em class="sig-param">function_names</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#prevent_builtin_usage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.prevent_builtin_usage" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>function_names</strong> – </p>
+</dd>
+</dl>
+<p>Returns:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.toolkit.utilities.prevent_literal">
+<code class="sig-name descname">prevent_literal</code><span class="sig-paren">(</span><em class="sig-param">*literals</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#prevent_literal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.prevent_literal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Confirms that the literal is not in the code, returning False if it is not.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>*literals</strong> (<em>Any...</em>) – A series of literal values to look for.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>If the literal is found in the code, then it is returned.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>AstNode or False</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.toolkit.utilities.prevent_operation">
+<code class="sig-name descname">prevent_operation</code><span class="sig-paren">(</span><em class="sig-param">op_name</em>, <em class="sig-param">root=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#prevent_operation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.prevent_operation" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>op_name</strong> – </p></li>
+<li><p><strong>root</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+<p>Returns:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.toolkit.utilities.prevent_unused_result">
+<code class="sig-name descname">prevent_unused_result</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#prevent_unused_result"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.prevent_unused_result" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-pedal.toolkit.functions">
+<span id="functions"></span><h2>Functions<a class="headerlink" href="#module-pedal.toolkit.functions" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pedal.toolkit.functions.all_documented">
+<code class="sig-name descname">all_documented</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/functions.html#all_documented"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.functions.all_documented" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.toolkit.functions.check_coverage">
+<code class="sig-name descname">check_coverage</code><span class="sig-paren">(</span><em class="sig-param">report=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/functions.html#check_coverage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.functions.check_coverage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks that all the statements in the program have been executed.
+This function only works when a tracer_style has been set in the sandbox,
+or you are using an environment that automatically traces calls (e.g.,
+BlockPy).</p>
+<p>TODO: Make compatible with tracer_style=’coverage’</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>report</strong> (<a class="reference internal" href="../api.html#pedal.core.report.Report" title="pedal.core.report.Report"><em>Report</em></a>) – The Report to draw source code from; if not given,
+defaults to MAIN_REPORT.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>If the source file was not parsed, None is returned.</dt><dd><p>If there were fewer lines traced in execution than are found in
+the AST, then the set of unexecuted lines are returned. Otherwise,
+False is returned.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)">bool</a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.8)">set</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.toolkit.functions.ensure_cisc108_tests">
+<code class="sig-name descname">ensure_cisc108_tests</code><span class="sig-paren">(</span><em class="sig-param">test_count</em>, <em class="sig-param">report=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/functions.html#ensure_cisc108_tests"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.functions.ensure_cisc108_tests" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>test_count</strong> – </p></li>
+<li><p><strong>report</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+<p>Returns:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.toolkit.functions.ensure_coverage">
+<code class="sig-name descname">ensure_coverage</code><span class="sig-paren">(</span><em class="sig-param">percentage=0.5</em>, <em class="sig-param">destructive=False</em>, <em class="sig-param">report=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/functions.html#ensure_coverage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.functions.ensure_coverage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Note that this avoids destroying the current sandbox instance stored on the
+report, if there is one present.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>report</strong> – </p></li>
+<li><p><strong>percentage</strong> – </p></li>
+<li><p><strong>destructive</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Whether or not to remove the sandbox.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.toolkit.functions.find_def_by_name">
+<code class="sig-name descname">find_def_by_name</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">root=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/functions.html#find_def_by_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.functions.find_def_by_name" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – </p></li>
+<li><p><strong>root</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+<p>Returns:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.toolkit.functions.get_arg_name">
+<code class="sig-name descname">get_arg_name</code><span class="sig-paren">(</span><em class="sig-param">node</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/functions.html#get_arg_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.functions.get_arg_name" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>node</strong> – </p>
+</dd>
+</dl>
+<p>Returns:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.toolkit.functions.match_function">
+<code class="sig-name descname">match_function</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">root=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/functions.html#match_function"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.functions.match_function" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – </p></li>
+<li><p><strong>root</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+<p>Returns:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.toolkit.functions.match_parameters">
+<code class="sig-name descname">match_parameters</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">*types</em>, <em class="sig-param">returns=None</em>, <em class="sig-param">root=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/functions.html#match_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.functions.match_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – </p></li>
+<li><p><strong>*types</strong> – </p></li>
+<li><p><strong>returns</strong> – </p></li>
+<li><p><strong>root</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+<p>Returns:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.toolkit.functions.match_signature">
+<code class="sig-name descname">match_signature</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">length</em>, <em class="sig-param">*parameters</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/functions.html#match_signature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.functions.match_signature" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – </p></li>
+<li><p><strong>length</strong> – </p></li>
+<li><p><strong>*parameters</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+<p>Returns:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.toolkit.functions.match_signature_muted">
+<code class="sig-name descname">match_signature_muted</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">length</em>, <em class="sig-param">*parameters</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/functions.html#match_signature_muted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.functions.match_signature_muted" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – </p></li>
+<li><p><strong>length</strong> – </p></li>
+<li><p><strong>*parameters</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+<p>Returns:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.toolkit.functions.output_test">
+<code class="sig-name descname">output_test</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">*tests</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/functions.html#output_test"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.functions.output_test" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – </p></li>
+<li><p><strong>*tests</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+<p>Returns:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.toolkit.functions.unit_test">
+<code class="sig-name descname">unit_test</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">*tests</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/functions.html#unit_test"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.functions.unit_test" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show a table
+:param name:
+:param tests:
+:return:</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-pedal.toolkit.signatures">
+<span id="signatures"></span><h2>Signatures<a class="headerlink" href="#module-pedal.toolkit.signatures" title="Permalink to this headline">¶</a></h2>
+<dl class="data">
+<dt id="pedal.toolkit.signatures.SPECIAL_PARAMETERS">
+<code class="sig-name descname">SPECIAL_PARAMETERS</code><em class="property"> = ['_returns', 'yields', 'prints', '_raises', '_report', '_root']</em><a class="headerlink" href="#pedal.toolkit.signatures.SPECIAL_PARAMETERS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type validation:
+Caps does not matter
+Primitives:
+Containers
+Unions</p>
+<blockquote>
+<div><p>X or Y
+X, Y, or Z
+X, Y, Z</p>
+</div></blockquote>
+<dl class="simple">
+<dt>Function</dt><dd><p>(X -&gt; Y)</p>
+</dd>
+</dl>
+<p>list[int, str, or bool], dict[int: str], or bool or int</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="pedal.toolkit.signatures.SignatureException">
+<em class="property">exception </em><code class="sig-name descname">SignatureException</code><a class="reference internal" href="../../_modules/pedal/toolkit/signatures.html#SignatureException"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.signatures.SignatureException" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="pedal.toolkit.signatures.Stack">
+<em class="property">class </em><code class="sig-name descname">Stack</code><span class="sig-paren">(</span><em class="sig-param">identifier='union'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/signatures.html#Stack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.signatures.Stack" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="pedal.toolkit.signatures.Stack.append">
+<code class="sig-name descname">append</code><span class="sig-paren">(</span><em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/signatures.html#Stack.append"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.signatures.Stack.append" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>value</strong> – </p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.toolkit.signatures.check_piece">
+<code class="sig-name descname">check_piece</code><span class="sig-paren">(</span><em class="sig-param">left</em>, <em class="sig-param">right</em>, <em class="sig-param">indent=1</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/signatures.html#check_piece"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.signatures.check_piece" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>left</strong> – </p></li>
+<li><p><strong>right</strong> – </p></li>
+<li><p><strong>indent</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+<p>Returns:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.toolkit.signatures.class_signature">
+<code class="sig-name descname">class_signature</code><span class="sig-paren">(</span><em class="sig-param">class_name</em>, <em class="sig-param">report=None</em>, <em class="sig-param">root=None</em>, <em class="sig-param">**attributes</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/signatures.html#class_signature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.signatures.class_signature" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>class_name</strong> – </p></li>
+<li><p><strong>**attributes</strong> – </p></li>
+<li><p><strong>report</strong> – </p></li>
+<li><p><strong>root</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+<p>Returns:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.toolkit.signatures.find_colon">
+<code class="sig-name descname">find_colon</code><span class="sig-paren">(</span><em class="sig-param">str</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/signatures.html#find_colon"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.signatures.find_colon" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>str</strong> – </p>
+</dd>
+</dl>
+<p>Returns:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.toolkit.signatures.function_signature">
+<code class="sig-name descname">function_signature</code><span class="sig-paren">(</span><em class="sig-param">function_name</em>, <em class="sig-param">returns=None</em>, <em class="sig-param">yields=None</em>, <em class="sig-param">prints=None</em>, <em class="sig-param">raises=None</em>, <em class="sig-param">report=None</em>, <em class="sig-param">root=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/signatures.html#function_signature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.signatures.function_signature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determines whether the function with this signature is in the AST.</p>
+<p>TODO: Implement raises, prints, yields</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.toolkit.signatures.normalize_type">
+<code class="sig-name descname">normalize_type</code><span class="sig-paren">(</span><em class="sig-param">t</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/signatures.html#normalize_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.signatures.normalize_type" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>t</strong> – </p>
+</dd>
+</dl>
+<p>Returns:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.toolkit.signatures.parse_docstring">
+<code class="sig-name descname">parse_docstring</code><span class="sig-paren">(</span><em class="sig-param">doc</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/signatures.html#parse_docstring"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.signatures.parse_docstring" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> – </p>
+</dd>
+</dl>
+<p>Returns:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.toolkit.signatures.parse_type">
+<code class="sig-name descname">parse_type</code><span class="sig-paren">(</span><em class="sig-param">node</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/signatures.html#parse_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.signatures.parse_type" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>node</strong> – </p>
+</dd>
+</dl>
+<p>Returns:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.toolkit.signatures.parse_type_slice">
+<code class="sig-name descname">parse_type_slice</code><span class="sig-paren">(</span><em class="sig-param">slice</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/signatures.html#parse_type_slice"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.signatures.parse_type_slice" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>slice</strong> – </p>
+</dd>
+</dl>
+<p>Returns:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.toolkit.signatures.parse_type_value">
+<code class="sig-name descname">parse_type_value</code><span class="sig-paren">(</span><em class="sig-param">value</em>, <em class="sig-param">parse_strings=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/signatures.html#parse_type_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.signatures.parse_type_value" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> – </p></li>
+<li><p><strong>parse_strings</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+<p>Returns:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.toolkit.signatures.sort_stacks">
+<code class="sig-name descname">sort_stacks</code><span class="sig-paren">(</span><em class="sig-param">s</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/signatures.html#sort_stacks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.signatures.sort_stacks" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>s</strong> – </p>
+</dd>
+</dl>
+<p>Returns:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.toolkit.signatures.type_check">
+<code class="sig-name descname">type_check</code><span class="sig-paren">(</span><em class="sig-param">left</em>, <em class="sig-param">right</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/signatures.html#type_check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.signatures.type_check" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>left</strong> – </p></li>
+<li><p><strong>right</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+<p>Returns:</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-pedal.toolkit.imports">
+<span id="imports"></span><h2>Imports<a class="headerlink" href="#module-pedal.toolkit.imports" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pedal.toolkit.imports.ensure_imports">
+<code class="sig-name descname">ensure_imports</code><span class="sig-paren">(</span><em class="sig-param">*modules</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/imports.html#ensure_imports"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.imports.ensure_imports" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>*modules</strong> – </p>
+</dd>
+</dl>
+<p>Returns:</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-pedal.toolkit.files">
+<span id="files"></span><h2>Files<a class="headerlink" href="#module-pedal.toolkit.files" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pedal.toolkit.files.files_not_handled_correctly">
+<code class="sig-name descname">files_not_handled_correctly</code><span class="sig-paren">(</span><em class="sig-param">*filenames</em>, <em class="sig-param">muted=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/files.html#files_not_handled_correctly"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.files.files_not_handled_correctly" title="Permalink to this definition">¶</a></dt>
+<dd><p>Statically detect if files have been opened and closed correctly.
+This is only useful in the case of very simplistic file handling.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.toolkit.files.open_without_arguments">
+<code class="sig-name descname">open_without_arguments</code><span class="sig-paren">(</span><em class="sig-param">muted=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/files.html#open_without_arguments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.files.open_without_arguments" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>muted</strong> – </p>
+</dd>
+</dl>
+<p>Returns:</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-pedal.toolkit.plotting">
+<span id="plotting"></span><h2>Plotting<a class="headerlink" href="#module-pedal.toolkit.plotting" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pedal.toolkit.plotting.check_for_plot">
+<code class="sig-name descname">check_for_plot</code><span class="sig-paren">(</span><em class="sig-param">plt_type</em>, <em class="sig-param">data</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/plotting.html#check_for_plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.plotting.check_for_plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns any errors found for this plot type and data.
+In other words, if it returns False, the plot was found correctly.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.toolkit.plotting.check_for_plot_r">
+<code class="sig-name descname">check_for_plot_r</code><span class="sig-paren">(</span><em class="sig-param">plt_type</em>, <em class="sig-param">data</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/plotting.html#check_for_plot_r"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.plotting.check_for_plot_r" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns any errors found for this plot type and data.
+In other words, if it returns False, the plot was found correctly.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.toolkit.plotting.compare_data">
+<code class="sig-name descname">compare_data</code><span class="sig-paren">(</span><em class="sig-param">plt_type</em>, <em class="sig-param">correct</em>, <em class="sig-param">given</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/plotting.html#compare_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.plotting.compare_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determines whether the given data matches any of the data found in the
+correct data. This handles plots of different types: if a histogram
+was plotted with the expected data for a line plot, it will return True.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>plt_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The expected type of this plot</p></li>
+<li><p><strong>correct</strong> (<em>List of Int</em><em> or </em><em>List of List of Int</em>) – The expected data.</p></li>
+<li><p><strong>given</strong> (<em>Dict</em>) – The actual plotted data and information</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Whether the correct data was found in the given plot.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.toolkit.plotting.ensure_correct_plot">
+<code class="sig-name descname">ensure_correct_plot</code><span class="sig-paren">(</span><em class="sig-param">function_name</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/plotting.html#ensure_correct_plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.plotting.ensure_correct_plot" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>function_name</strong> – </p>
+</dd>
+</dl>
+<p>Returns:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.toolkit.plotting.ensure_show">
+<code class="sig-name descname">ensure_show</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/plotting.html#ensure_show"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.plotting.ensure_show" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.toolkit.plotting.prevent_incorrect_plt">
+<code class="sig-name descname">prevent_incorrect_plt</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/plotting.html#prevent_incorrect_plt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.plotting.prevent_incorrect_plt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns:</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-pedal.toolkit.printing">
+<span id="printing"></span><h2>Printing<a class="headerlink" href="#module-pedal.toolkit.printing" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pedal.toolkit.printing.ensure_prints">
+<code class="sig-name descname">ensure_prints</code><span class="sig-paren">(</span><em class="sig-param">count</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/printing.html#ensure_prints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.printing.ensure_prints" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>count</strong> – </p>
+</dd>
+</dl>
+<p>Returns:</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-pedal.toolkit.records">
+<span id="records"></span><h2>Records<a class="headerlink" href="#module-pedal.toolkit.records" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pedal.toolkit.records.check_record_instance">
+<code class="sig-name descname">check_record_instance</code><span class="sig-paren">(</span><em class="sig-param">record_instance</em>, <em class="sig-param">record_type</em>, <em class="sig-param">instance_identifier</em>, <em class="sig-param">type_identifier</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/records.html#check_record_instance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.records.check_record_instance" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>record_instance</strong> – </p></li>
+<li><p><strong>record_type</strong> – </p></li>
+<li><p><strong>instance_identifier</strong> – </p></li>
+<li><p><strong>type_identifier</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+<p>Returns:</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-pedal.toolkit.upload">
+<span id="upload"></span><h2>Upload<a class="headerlink" href="#module-pedal.toolkit.upload" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pedal.toolkit.upload.check_author_name_on_header">
+<code class="sig-name descname">check_author_name_on_header</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/upload.html#check_author_name_on_header"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.upload.check_author_name_on_header" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="pedal.toolkit.upload.check_output_on_header">
+<code class="sig-name descname">check_output_on_header</code><span class="sig-paren">(</span><em class="sig-param">expected_output</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/upload.html#check_output_on_header"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.upload.check_output_on_header" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>expected_output</strong> – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.toolkit.upload.check_print_output">
+<code class="sig-name descname">check_print_output</code><span class="sig-paren">(</span><em class="sig-param">multiple_lines</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/upload.html#check_print_output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.upload.check_print_output" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>multiple_lines</strong> – </p>
+</dd>
+</dl>
+<p>Returns:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.toolkit.upload.check_problem_submission">
+<code class="sig-name descname">check_problem_submission</code><span class="sig-paren">(</span><em class="sig-param">prob_id</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/upload.html#check_problem_submission"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.upload.check_problem_submission" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>prob_id</strong> – </p>
+</dd>
+</dl>
+<p>Returns:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.toolkit.upload.find_in_code">
+<code class="sig-name descname">find_in_code</code><span class="sig-paren">(</span><em class="sig-param">regex</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/upload.html#find_in_code"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.upload.find_in_code" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>regex</strong> – </p>
+</dd>
+</dl>
+<p>Returns:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.toolkit.upload.find_plot_of_type">
+<code class="sig-name descname">find_plot_of_type</code><span class="sig-paren">(</span><em class="sig-param">plot_list</em>, <em class="sig-param">plot_type</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/upload.html#find_plot_of_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.upload.find_plot_of_type" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>plot_list</strong> – </p></li>
+<li><p><strong>plot_type</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+<p>Returns:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.toolkit.upload.get_plots">
+<code class="sig-name descname">get_plots</code><span class="sig-paren">(</span><em class="sig-param">output</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/upload.html#get_plots"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.upload.get_plots" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>output</strong> – </p>
+</dd>
+</dl>
+<p>Returns:</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../../everyone/glossary.html" class="btn btn-neutral float-right" title="Glossary" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="assertions.html" class="btn btn-neutral float-left" title="Assertions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, acbart, lukesg08
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

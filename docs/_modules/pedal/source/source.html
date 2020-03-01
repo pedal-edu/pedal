@@ -1,0 +1,383 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pedal.source.source &mdash; Pedal 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Pedal
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../everyone/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../everyone/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../teachers/quickstart.html">Teacher Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../teachers/examples.html">Teacher Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../teachers/reference.html">Teacher Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../teachers/tutorial.html">Teacher Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers/guide.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers/api.html">Developer API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers/integrations.html">Developer Integrations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers/tools.html">Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../everyone/glossary.html">Glossary</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Pedal</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>pedal.source.source</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pedal.source.source</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">.. csv-table:: Source Report Data</span>
+<span class="sd">    :header: &quot;Field&quot;, &quot;Type&quot;, &quot;Initial&quot;, &quot;Description&quot;</span>
+<span class="sd">    :widths: 20, 20, 20, 40</span>
+
+<span class="sd">    &quot;substitutions&quot;, &quot;List[Substitution]&quot;, &quot;[]&quot;, &quot;The history of previous source codes before the latest substitutions.&quot;</span>
+<span class="sd">    &quot;success&quot;, &quot;bool&quot;, &quot;None&quot;, &quot;Whether the current file has been parsed successfully.&quot;</span>
+<span class="sd">    &quot;ast&quot;, &quot;ast.Ast&quot;, &quot;None&quot;, &quot;The root node of the latest successfully parsed chunk of code.&quot;</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">ast</span>
+
+<span class="kn">from</span> <span class="nn">pedal.core.report</span> <span class="k">import</span> <span class="n">Report</span><span class="p">,</span> <span class="n">MAIN_REPORT</span>
+<span class="kn">from</span> <span class="nn">pedal.core.submission</span> <span class="k">import</span> <span class="n">Submission</span>
+<span class="kn">from</span> <span class="nn">pedal.source.constants</span> <span class="k">import</span> <span class="n">TOOL_NAME</span><span class="p">,</span> <span class="n">DEFAULT_STUDENT_FILENAME</span>
+<span class="kn">from</span> <span class="nn">pedal.source.sections</span> <span class="k">import</span> <span class="n">separate_into_sections</span>
+<span class="kn">from</span> <span class="nn">pedal.source.feedbacks</span> <span class="k">import</span> <span class="n">blank_source</span><span class="p">,</span> <span class="n">syntax_error</span><span class="p">,</span> <span class="n">source_file_not_found</span>
+<span class="kn">from</span> <span class="nn">pedal.source.substitutions</span> <span class="k">import</span> <span class="n">Substitution</span>
+
+
+<div class="viewcode-block" id="reset"><a class="viewcode-back" href="../../../developers/tools/source.html#pedal.source.source.reset">[docs]</a><span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        report:</span>
+
+<span class="sd">    Returns:</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;substitutions&#39;</span><span class="p">:</span> <span class="p">[],</span>
+
+        <span class="s1">&#39;success&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s1">&#39;ast&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+
+        <span class="s1">&#39;independent&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s1">&#39;sections&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s1">&#39;section&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s1">&#39;section_pattern&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="c1"># TODO: Consider moving line_offset into Submission</span>
+        <span class="s1">&#39;line_offset&#39;</span><span class="p">:</span> <span class="mi">0</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">]</span></div>
+
+
+<span class="n">Report</span><span class="o">.</span><span class="n">register_tool</span><span class="p">(</span><span class="n">TOOL_NAME</span><span class="p">,</span> <span class="n">reset</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="set_source"><a class="viewcode-back" href="../../../developers/tools/source.html#pedal.source.source.set_source">[docs]</a><span class="k">def</span> <span class="nf">set_source</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">DEFAULT_STUDENT_FILENAME</span><span class="p">,</span> <span class="n">sections</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">independent</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+               <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sets the contents of the Source to be the given code. Can also be</span>
+<span class="sd">    optionally given a filename.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        code (str): The contents of the source file.</span>
+<span class="sd">        filename (str): The filename of the students&#39; code. Defaults to</span>
+<span class="sd">                        `answer.py`.</span>
+<span class="sd">        sections (str or bool): Whether or not the file should be divided into</span>
+<span class="sd">                                sections. If a str, then it should be a</span>
+<span class="sd">                                Python regular expression for how the sections</span>
+<span class="sd">                                are separated. If False, there will be no</span>
+<span class="sd">                                sections. If True, then the default pattern</span>
+<span class="sd">                                will be used: &#39;^##### Part (\\d+)$&#39;</span>
+<span class="sd">        independent (bool): Whether the separate sections should be considered</span>
+<span class="sd">            separate or all existing in an accumulating namespace.</span>
+<span class="sd">        report (Report): The report object to store data and feedback in. If</span>
+<span class="sd">                         left None, defaults to the global MAIN_REPORT.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">report</span><span class="o">.</span><span class="n">submission</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">report</span><span class="o">.</span><span class="n">contextualize</span><span class="p">(</span><span class="n">Submission</span><span class="p">({</span><span class="n">filename</span><span class="p">:</span> <span class="n">code</span><span class="p">},</span> <span class="n">filename</span><span class="p">,</span> <span class="n">code</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">backup</span> <span class="o">=</span> <span class="n">Substitution</span><span class="p">(</span><span class="n">report</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">main_code</span><span class="p">,</span> <span class="n">report</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">main_file</span><span class="p">)</span>
+        <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;substitutions&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">backup</span><span class="p">)</span>
+        <span class="n">report</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">replace_main</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+
+    <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;independent&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">independent</span>
+    <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;success&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">sections</span><span class="p">:</span>
+        <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;sections&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;section&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">verify</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">separate_into_sections</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="restore_code"><a class="viewcode-back" href="../../../developers/tools/source.html#pedal.source.source.restore_code">[docs]</a><span class="k">def</span> <span class="nf">restore_code</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        report:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">TOOL_NAME</span> <span class="ow">in</span> <span class="n">report</span><span class="p">:</span>
+        <span class="n">old_submission</span> <span class="o">=</span> <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;substitutions&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+        <span class="n">report</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">replace_main</span><span class="p">(</span><span class="n">old_submission</span><span class="o">.</span><span class="n">code</span><span class="p">,</span> <span class="n">old_submission</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span>
+        <span class="n">verify</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="verify"><a class="viewcode-back" href="../../../developers/tools/source.html#pedal.source.source.verify">[docs]</a><span class="k">def</span> <span class="nf">verify</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">DEFAULT_STUDENT_FILENAME</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">,</span> <span class="n">muted</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parses the given source code and checks for syntax errors; if no code is given, defaults to the</span>
+<span class="sd">    current Main file of the submission.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        muted:</span>
+<span class="sd">        code (str): Some code to parse and syntax check.</span>
+<span class="sd">        filename: An optional filename to use</span>
+<span class="sd">        report:</span>
+
+<span class="sd">    Returns:</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">code</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">code</span> <span class="o">=</span> <span class="n">report</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">main_code</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">report</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">main_file</span>
+    <span class="k">if</span> <span class="n">code</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+        <span class="n">blank_source</span><span class="p">()</span>
+        <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;success&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">parsed</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+        <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;ast&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">parsed</span>
+    <span class="k">except</span> <span class="ne">SyntaxError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">syntax_error</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">lineno</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">offset</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">__traceback__</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">(),</span> <span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">,</span>
+                     <span class="n">muted</span><span class="o">=</span><span class="n">muted</span><span class="p">)</span>
+        <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;success&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;ast&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;success&#39;</span><span class="p">]</span></div>
+
+
+<span class="c1"># Legacy verify_section; now done by verify since its aware of sections</span>
+<span class="n">verify_section</span> <span class="o">=</span> <span class="n">verify</span>
+
+
+<div class="viewcode-block" id="get_program"><a class="viewcode-back" href="../../../developers/tools/source.html#pedal.source.source.get_program">[docs]</a><span class="k">def</span> <span class="nf">get_program</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Retrieves the current main file.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        report:</span>
+
+<span class="sd">    Returns:</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">report</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">main_code</span></div>
+
+
+<div class="viewcode-block" id="get_original_program"><a class="viewcode-back" href="../../../developers/tools/source.html#pedal.source.source.get_original_program">[docs]</a><span class="k">def</span> <span class="nf">get_original_program</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Retrieves the original version of the Submission&#39;s main code, ignoring all subsitutions.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        report:</span>
+
+<span class="sd">    Returns:</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;substitutions&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">code</span></div>
+
+
+<div class="viewcode-block" id="set_source_file"><a class="viewcode-back" href="../../../developers/tools/source.html#pedal.source.source.set_source_file">[docs]</a><span class="k">def</span> <span class="nf">set_source_file</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">sections</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">independent</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Uses the given `filename` on the filesystem as the new main file.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        filename:</span>
+<span class="sd">        sections:</span>
+<span class="sd">        independent:</span>
+<span class="sd">        report:</span>
+
+<span class="sd">    Returns:</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">student_file</span><span class="p">:</span>
+            <span class="n">set_source</span><span class="p">(</span><span class="n">student_file</span><span class="o">.</span><span class="n">read</span><span class="p">(),</span> <span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span>
+                       <span class="n">sections</span><span class="o">=</span><span class="n">sections</span><span class="p">,</span> <span class="n">independent</span><span class="o">=</span><span class="n">independent</span><span class="p">,</span>
+                       <span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
+        <span class="n">source_file_not_found</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">sections</span><span class="p">,</span> <span class="n">report</span><span class="p">)</span>
+        <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;success&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, acbart, lukesg08
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

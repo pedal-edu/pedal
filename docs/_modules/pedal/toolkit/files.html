@@ -1,0 +1,277 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pedal.toolkit.files &mdash; Pedal 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Pedal
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../everyone/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../everyone/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../teachers/quickstart.html">Teacher Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../teachers/examples.html">Teacher Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../teachers/reference.html">Teacher Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../teachers/tutorial.html">Teacher Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers/guide.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers/api.html">Developer API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers/integrations.html">Developer Integrations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers/tools.html">Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../everyone/glossary.html">Glossary</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Pedal</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>pedal.toolkit.files</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pedal.toolkit.files</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">pedal.cait.cait_api</span> <span class="k">import</span> <span class="n">parse_program</span>
+<span class="kn">from</span> <span class="nn">pedal.core.commands</span> <span class="k">import</span> <span class="n">explain</span><span class="p">,</span> <span class="n">feedback</span>
+<span class="kn">from</span> <span class="nn">pedal.core.feedback</span> <span class="k">import</span> <span class="n">AtomicFeedbackFunction</span><span class="p">,</span> <span class="n">CompositeFeedbackFunction</span><span class="p">,</span> <span class="n">Feedback</span>
+<span class="kn">from</span> <span class="nn">pedal.toolkit.utilities</span> <span class="k">import</span> <span class="n">ensure_literal</span>
+
+
+<span class="c1"># TODO</span>
+<div class="viewcode-block" id="open_without_arguments"><a class="viewcode-back" href="../../../developers/tools/toolkit.html#pedal.toolkit.files.open_without_arguments">[docs]</a><span class="nd">@AtomicFeedbackFunction</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Opened Without Arguments&quot;</span><span class="p">,</span>
+                        <span class="n">message_template</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;You have called the &lt;code&gt;open&lt;/code&gt; function &quot;</span>
+                                          <span class="s2">&quot;without any arguments. It needs a filename.&quot;</span><span class="p">))</span>
+<span class="k">def</span> <span class="nf">open_without_arguments</span><span class="p">(</span><span class="n">muted</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        muted:</span>
+
+<span class="sd">    Returns:</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">feedback</span><span class="p">(</span><span class="n">open_without_arguments</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="s2">&quot;toolkit&quot;</span><span class="p">,</span> <span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">INSTRUCTOR</span><span class="p">,</span>
+                    <span class="n">message</span><span class="o">=</span><span class="n">open_without_arguments</span><span class="o">.</span><span class="n">message_template</span><span class="p">(),</span> <span class="n">muted</span><span class="o">=</span><span class="n">muted</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="files_not_handled_correctly"><a class="viewcode-back" href="../../../developers/tools/toolkit.html#pedal.toolkit.files.files_not_handled_correctly">[docs]</a><span class="nd">@CompositeFeedbackFunction</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">files_not_handled_correctly</span><span class="p">(</span><span class="o">*</span><span class="n">filenames</span><span class="p">,</span> <span class="n">muted</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Statically detect if files have been opened and closed correctly.</span>
+<span class="sd">    This is only useful in the case of very simplistic file handling.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">filenames</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filenames</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="n">num_filenames</span> <span class="o">=</span> <span class="n">filenames</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">actual_filenames</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">num_filenames</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">filenames</span><span class="p">)</span>
+        <span class="n">actual_filenames</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">ast</span> <span class="o">=</span> <span class="n">parse_program</span><span class="p">()</span>
+    <span class="n">calls</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;Call&quot;</span><span class="p">)</span>
+    <span class="n">called_open</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">closed</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">a_call</span> <span class="ow">in</span> <span class="n">calls</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">ast_name</span> <span class="o">==</span> <span class="s1">&#39;Name&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="s1">&#39;open&#39;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">a_call</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
+                    <span class="n">open_without_arguments</span><span class="p">(</span><span class="n">muted</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="kc">True</span>
+                <span class="n">called_open</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a_call</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="s1">&#39;close&#39;</span><span class="p">:</span>
+                <span class="n">explain</span><span class="p">(</span><span class="s2">&quot;You have attempted to call &lt;code&gt;close&lt;/code&gt; as a &quot;</span>
+                        <span class="s2">&quot;function, but it is actually a method of the &quot;</span>
+                        <span class="s2">&quot;file object.&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;used_close_as_function&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Close Is a Method&quot;</span><span class="p">,</span> <span class="n">priority</span><span class="o">=</span><span class="s1">&#39;verifier&#39;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">ast_name</span> <span class="o">==</span> <span class="s1">&#39;Attribute&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">attr</span> <span class="o">==</span> <span class="s1">&#39;open&#39;</span><span class="p">:</span>
+                <span class="n">explain</span><span class="p">(</span><span class="s2">&quot;You have attempted to call &lt;code&gt;open&lt;/code&gt; as a &quot;</span>
+                        <span class="s2">&quot;method, but it is actually a built-in function.&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;used_open_as_method&quot;</span><span class="p">,</span>
+                        <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Open Is a Function&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">elif</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">attr</span> <span class="o">==</span> <span class="s1">&#39;close&#39;</span><span class="p">:</span>
+                <span class="n">closed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a_call</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">called_open</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">num_filenames</span><span class="p">:</span>
+        <span class="n">explain</span><span class="p">(</span><span class="s2">&quot;You have not opened all the files you were supposed to.&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;unopened_files&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Unopened Files&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">called_open</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">num_filenames</span><span class="p">:</span>
+        <span class="n">explain</span><span class="p">(</span><span class="s2">&quot;You have opened more files than you were supposed to.&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;extra_open_files&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Extra Opened Files&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="n">withs</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;With&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">withs</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">closed</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">num_filenames</span><span class="p">:</span>
+        <span class="n">explain</span><span class="p">(</span><span class="s2">&quot;You have not closed all the files you were supposed to.&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;unclosed_files&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Unclosed Files&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">withs</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">closed</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">num_filenames</span><span class="p">:</span>
+        <span class="n">explain</span><span class="p">(</span><span class="s2">&quot;You have closed more files than you were supposed to.&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;extra_closed_files&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Extra Closed Files&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">if</span> <span class="n">actual_filenames</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ensure_literal</span><span class="p">(</span><span class="o">*</span><span class="n">filenames</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">False</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, acbart, lukesg08
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

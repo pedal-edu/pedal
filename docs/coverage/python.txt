@@ -1,0 +1,17 @@
+Undocumented Python objects
+===========================
+pedal.core.feedback
+-------------------
+Functions:
+ * CompositeFeedbackFunction
+
+pedal.tifa
+----------
+Functions:
+ * reset
+
+pedal.toolkit.signatures
+------------------------
+Functions:
+ * test_type_equality
+
