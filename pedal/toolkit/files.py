@@ -7,7 +7,7 @@ from pedal.toolkit.utilities import ensure_literal
 # TODO
 @AtomicFeedbackFunction(title="Opened Without Arguments",
                         message_template=("You have called the <code>open</code> function "
-                                          "without any arguments. It needs a filename.").format)
+                                          "without any arguments. It needs a filename."))
 def open_without_arguments(muted=False):
     """
 

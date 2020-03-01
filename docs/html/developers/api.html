@@ -90,7 +90,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../everyone/installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../teachers/quickstart.html">Teacher Quick Start Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../teachers/examples.html">Teacher Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../teachers/examples.html#single-problem">Single Problem</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../teachers/reference.html">Teacher Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../teachers/tutorial.html">Teacher Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="guide.html">Developer Guide</a></li>
@@ -238,7 +237,7 @@ Uses a global report object (MAIN_REPORT).</p>
 
 <dl class="function">
 <dt id="pedal.core.commands.set_success">
-<code class="sig-name descname">set_success</code><span class="sig-paren">(</span><em class="sig-param">score=1</em>, <em class="sig-param">justification=None</em>, <em class="sig-param">tool=None</em>, <em class="sig-param">group=None</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pedal/core/commands.html#set_success"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.commands.set_success" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">set_success</code><span class="sig-paren">(</span><em class="sig-param">score: float = 1</em>, <em class="sig-param">justification: str = None</em>, <em class="sig-param">tool: str = None</em>, <em class="sig-param">group=None</em>, <em class="sig-param">report: pedal.core.report.Report = &lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pedal/core/commands.html#set_success"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.commands.set_success" title="Permalink to this definition">¶</a></dt>
 <dd><p><strong>(Feedback Function)</strong></p>
 <p>Creates Successful feedback for the user, indicating that the entire
 assignment is done.</p>
@@ -257,7 +256,7 @@ assignment is done.</p>
 
 <dl class="function">
 <dt id="pedal.core.commands.compliment">
-<code class="sig-name descname">compliment</code><span class="sig-paren">(</span><em class="sig-param">message</em>, <em class="sig-param">value=0</em>, <em class="sig-param">title=None</em>, <em class="sig-param">justification=None</em>, <em class="sig-param">locations=None</em>, <em class="sig-param">tool=None</em>, <em class="sig-param">group=None</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pedal/core/commands.html#compliment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.commands.compliment" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">compliment</code><span class="sig-paren">(</span><em class="sig-param">message: str</em>, <em class="sig-param">value: float = 0</em>, <em class="sig-param">title=None</em>, <em class="sig-param">justification: str = None</em>, <em class="sig-param">locations: pedal.core.location.Location = None</em>, <em class="sig-param">tool: str = None</em>, <em class="sig-param">group=None</em>, <em class="sig-param">report: pedal.core.report.Report = &lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pedal/core/commands.html#compliment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.commands.compliment" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a positive feedback for the user, potentially on a specific line of
 code.</p>
 <dl class="field-list simple">
@@ -278,7 +277,7 @@ code.</p>
 
 <dl class="function">
 <dt id="pedal.core.commands.give_partial">
-<code class="sig-name descname">give_partial</code><span class="sig-paren">(</span><em class="sig-param">value</em>, <em class="sig-param">justification=None</em>, <em class="sig-param">title=None</em>, <em class="sig-param">tool=None</em>, <em class="sig-param">group=None</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pedal/core/commands.html#give_partial"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.commands.give_partial" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">give_partial</code><span class="sig-paren">(</span><em class="sig-param">value: float</em>, <em class="sig-param">justification: str = None</em>, <em class="sig-param">title: str = None</em>, <em class="sig-param">tool: str = None</em>, <em class="sig-param">group=None</em>, <em class="sig-param">report: pedal.core.report.Report = &lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pedal/core/commands.html#give_partial"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.commands.give_partial" title="Permalink to this definition">¶</a></dt>
 <dd><p>Increases the user’s current score by the <cite>value</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -375,7 +374,8 @@ code.</p>
 <dl class="function">
 <dt id="pedal.core.commands.log">
 <code class="sig-name descname">log</code><span class="sig-paren">(</span><em class="sig-param">message</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pedal/core/commands.html#log"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.commands.log" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>TODO: Consider making this accept star args, like print would.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>message</strong> – </p></li>
@@ -402,8 +402,11 @@ code.</p>
 
 <dl class="function">
 <dt id="pedal.core.commands.system_error">
-<code class="sig-name descname">system_error</code><span class="sig-paren">(</span><em class="sig-param">tool, explanation, author=['Austin Cory Bart &lt;acbart&#64;udel.edu&gt;', 'Luke Gusukuma &lt;lukesg08&#64;vt.edu&gt;'], report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pedal/core/commands.html#system_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.commands.system_error" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
+<code class="sig-name descname">system_error</code><span class="sig-paren">(</span><em class="sig-param">tool: str, explanation: str, author: str = ['Austin Cory Bart &lt;acbart&#64;udel.edu&gt;', 'Luke Gusukuma &lt;lukesg08&#64;vt.edu&gt;'], report: pedal.core.report.Report = &lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pedal/core/commands.html#system_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.commands.system_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call this function to indicate that something has gone wrong at the system level with Pedal.
+Ideally, this doesn’t happen, but sometimes errors cascade and its polite for tools to suggest
+that they are not working correctly. These will not usually be reported to the student.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>tool</strong> – </p></li>
@@ -433,6 +436,7 @@ and Tool data.</p>
 <code class="sig-name descname">get_all_feedback</code><span class="sig-paren">(</span><em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span> &#x2192; [&lt;class 'pedal.core.feedback.Feedback'&gt;]<a class="reference internal" href="../_modules/pedal/core/commands.html#get_all_feedback"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.commands.get_all_feedback" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gives access to the list of feedback from the report. Usually, you won’t need this; but if you want
 to build on the results of earlier tools, it can be a useful mechanism.</p>
+<p>TODO: Provide mechanisms for conveniently searching feedback</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>report</strong> – The report to attach this feedback to (defaults to the <a class="reference internal" href="#pedal.core.report.MAIN_REPORT" title="pedal.core.report.MAIN_REPORT"><code class="xref py py-data docutils literal notranslate"><span class="pre">pedal.core.report.MAIN_REPORT</span></code></a>).</p>
@@ -1215,7 +1219,7 @@ available for errors identified by the student.</p>
 
 <dl class="function">
 <dt id="pedal.core.feedback.AtomicFeedbackFunction">
-<code class="sig-name descname">AtomicFeedbackFunction</code><span class="sig-paren">(</span><em class="sig-param">title=None</em>, <em class="sig-param">version='0.0.1'</em>, <em class="sig-param">message_template=None</em>, <em class="sig-param">text_template=None</em>, <em class="sig-param">justification=None</em>, <em class="sig-param">tags=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pedal/core/feedback.html#AtomicFeedbackFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.feedback.AtomicFeedbackFunction" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">AtomicFeedbackFunction</code><span class="sig-paren">(</span><em class="sig-param">title=None</em>, <em class="sig-param">version='0.0.1'</em>, <em class="sig-param">message_template=None</em>, <em class="sig-param">text_template=None</em>, <em class="sig-param">justification=None</em>, <em class="sig-param">tags=None</em>, <em class="sig-param">muted=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pedal/core/feedback.html#AtomicFeedbackFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.feedback.AtomicFeedbackFunction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Decorator for feedback functions to indicate their intent.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>

@@ -142,7 +142,7 @@ def is_sandbox_result(value):
 
 @AtomicFeedbackFunction(title="Instructor Test",
                         message_template=("Student code failed instructor test.\n"
-                                          "{context}{failure}{message}").format)
+                                          "{context}{failure}{message}"))
 def _basic_assertion(unit_test_name, justification, left, right, operator, code_comparison_message,
                      hc_message, hc_message_past, message, contextualize, report=MAIN_REPORT,
                      show_expected_value=True, modify_right=None, partial_score=0, muted=False):

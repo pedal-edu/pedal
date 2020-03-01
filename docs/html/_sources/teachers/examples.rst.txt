@@ -4,7 +4,7 @@ Teacher Examples
 This document goes over some common scenarios that you might have.
 
 Single Problem
-==============
+--------------
 
 
 

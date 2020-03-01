@@ -37,17 +37,17 @@ There are many settings for the command line version. Check the Integrations for
 
 Let's turn to look at what you might put inside that `grade_assignment.py` script.
 
-Simple Environment
-^^^^^^^^^^^^^^^^^^
+Standard Environment
+^^^^^^^^^^^^^^^^^^^^
 
 Although Pedal can be configured in a lot of ways, you may want to begin by using our default
-"Simple Environment", which immediately sets up some of core Tools for a submission of learners' code.
+"Standard Environment", which immediately sets up some of core Tools for a submission of learners' code.
 
 .. code:: python
 
-    from pedal.environments.simple import SimpleEnvironment
+    from pedal.environments.standard import StandardEnvironment
     student_code = "print('Hello world!')"
-    ast, student, resolve = SimpleEnvironment(student_code)
+    ast, student, resolve = StandardEnvironment(student_code)
 
     # ... More instructor logic can go here ...
 

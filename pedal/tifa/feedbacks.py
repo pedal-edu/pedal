@@ -7,19 +7,19 @@ from pedal.core.report import MAIN_REPORT
 
 def _generic_tifa_feedback_function(feedback_function, fields: dict, muted=False, report=MAIN_REPORT):
     return feedback(feedback_function.__name__, category=feedback.CATEGORIES.ALGORITHMIC,
-                    message=feedback_function.message_template(**fields),
-                    text=feedback_function.text_template(**fields),
+                    message=feedback_function.message_template.format(**fields),
+                    text=feedback_function.text_template.format(**fields),
                     fields=fields, kind=feedback.KINDS.MISTAKE, justification=feedback_function.justification,
                     tags=feedback_function.tags,
                     title=feedback_function.title, locations=fields['location'],
-                    muted=muted,
+                    muted=muted or feedback_function.muted,
                     version=feedback_function.version, report=report)
 
 
 @AtomicFeedbackFunction(title="Action after Return",
                         text_template=("You performed an action after already returning from a "
                                        "function, on line {location.line}. You can only return on a path "
-                                       "once.").format,
+                                       "once."),
                         justification=("TIFA visited a node not in the top scope when its "
                                        "*return variable was definitely set in this scope."))
 def action_after_return(location, report=MAIN_REPORT):
@@ -38,7 +38,7 @@ def action_after_return(location, report=MAIN_REPORT):
 
 @AtomicFeedbackFunction(title="Return outside Function",
                         text_template=("You attempted to return outside of a function on line {location.line}."
-                                       " But you can only return from within a function.").format,
+                                       " But you can only return from within a function."),
                         justification="TIFA visited a return node at the top level.")
 def return_outside_function(location, report=MAIN_REPORT):
     """
@@ -58,7 +58,7 @@ def return_outside_function(location, report=MAIN_REPORT):
                         text_template=(
                                 "Your function returned {actual} on line {location.line}, even though you defined it to"
                                 " return {expected}. Your function should return values consistently."
-                        ).format,
+                        ),
                         justification="TIFA visited a function definition with multiple returns that unequal types.")
 def multiple_return_types(location, expected, actual, report=MAIN_REPORT):
     """
@@ -80,7 +80,7 @@ def multiple_return_types(location, expected, actual, report=MAIN_REPORT):
                         message_template=("You attempted to write the variable `{name}` from a higher scope "
                                           "(outside the function) on line {location.line}. You should only "
                                           "use variables inside the function they were declared in."
-                                          ).format,
+                                          ),
                         justification="TIFA stored to an existing variable not in this scope")
 def write_out_of_scope(location, name, report=MAIN_REPORT):
     """
@@ -101,7 +101,7 @@ def write_out_of_scope(location, name, report=MAIN_REPORT):
                         text_template=("It looks like you have unconnected blocks on line {location.line}. "
                                        "Before you run your program, you must make sure that all "
                                        "of your blocks are connected that there are no unfilled "
-                                       "holes.").format,
+                                       "holes."),
                         justification="TIFA found a name equal to ___")
 def unconnected_blocks(location, report=MAIN_REPORT):
     """
@@ -123,7 +123,7 @@ def unconnected_blocks(location, report=MAIN_REPORT):
                                           "variable. You should choose a different variable name "
                                           "for the iteration variable. Usually, the iteration variable "
                                           "is the singular form of the iteration list (e.g., "
-                                          "`for a_dog in dogs:`).").format,
+                                          "`for a_dog in dogs:`)."),
                         justification="TIFA visited a loop where the iteration list and target were the same.")
 def iteration_problem(location, name, report=MAIN_REPORT):
     """
@@ -144,7 +144,7 @@ def iteration_problem(location, name, report=MAIN_REPORT):
                         message_template=("The variable `{name}` was used on line {location.line}, "
                                           "but it was not given a value on a previous line. "
                                           "You cannot use a variable until it has been given a value."
-                                          ).format,
+                                          ),
                         justification="TIFA read a variable that did not exist or was not previously set in this branch.")
 def initialization_problem(location, name, report=MAIN_REPORT):
     """
@@ -167,7 +167,7 @@ def initialization_problem(location, name, report=MAIN_REPORT):
                                           "line. You cannot use a variable until it has been given "
                                           "a value. Check to make sure that this variable was "
                                           "declared in all of the branches of your decision."
-                                          ).format,
+                                          ),
                         justification="TIFA read a variable that was maybe set but not definitely set in this branch.")
 def possible_initialization_problem(location, name, report=MAIN_REPORT):
     """
@@ -187,7 +187,7 @@ def possible_initialization_problem(location, name, report=MAIN_REPORT):
 @AtomicFeedbackFunction(title="Unused Variable",
                         message_template=("The {kind} `{name}` was given a {initialization} on line {location.line}, but "
                                           "was never used after that."
-                                          ).format,
+                                          ),
                         justification="TIFA stored a variable but it was not read any other time in the program.")
 def unused_variable(location, name, type, report=MAIN_REPORT):
     """
@@ -215,7 +215,7 @@ def unused_variable(location, name, type, report=MAIN_REPORT):
                                           "`{name}` was changed on line {location.line} before it "
                                           "was used. One of the times that you gave `{name}` "
                                           "a value was incorrect."
-                                          ).format,
+                                          ),
                         justification="TIFA attempted to store to a variable that was previously stored but not read.")
 def overwritten_variable(location, name, report=MAIN_REPORT):
     """
@@ -236,7 +236,7 @@ def overwritten_variable(location, name, report=MAIN_REPORT):
                         message_template=("The {iter} is not a list, but you used "
                                           "it in the iteration on line {location.line}. You should only iterate "
                                           "over sequences like lists."
-                                          ).format,
+                                          ),
                         justification="TIFA visited a loop's iteration list whose type was not indexable.")
 def iterating_over_non_list(location, iter_name, report=MAIN_REPORT):
     """
@@ -261,7 +261,7 @@ def iterating_over_non_list(location, iter_name, report=MAIN_REPORT):
                         message_template=("The {iter} was set as an empty list, "
                                           "and then you attempted to use it in an iteration on line "
                                           "{location.line}. You should only iterate over non-empty lists."
-                                          ).format,
+                                          ),
                         justification="TIFA visited a loop's iteration list that was empty.")
 def iterating_over_empty_list(location, iter_name, report=MAIN_REPORT):
     """
@@ -286,7 +286,7 @@ def iterating_over_empty_list(location, iter_name, report=MAIN_REPORT):
                         text_template=("You used {op_name} operation with {left_name} and {right_name} on line "
                                        "{location.line}. But you can't do that with that operator. Make "
                                        "sure both sides of the operator are the right type."
-                                       ).format,
+                                       ),
                         justification="TIFA visited an operation with operands of the wrong type.")
 def incompatible_types(location, operation, left, right, report=MAIN_REPORT):
     """
@@ -315,7 +315,7 @@ def incompatible_types(location, operation, left, right, report=MAIN_REPORT):
                         message_template=("You defined the parameter `{parameter_name}` on line {location.line} "
                                           "as {parameter_type_name}. However, the argument passed to that parameter "
                                           "was {argument_type_name}. The formal parameter type must match the argument's type."
-                                          ).format,
+                                          ),
                         justification="TIFA visited a function definition where a parameter type and argument type were not equal.")
 def parameter_type_mismatch(location, parameter_name, parameter, argument, report=MAIN_REPORT):
     """
@@ -345,7 +345,7 @@ def parameter_type_mismatch(location, parameter_name, parameter, argument, repor
                         message_template=("You attempted to read the variable `{name}` from a different scope on "
                                           "line {location.line}. You should only use variables inside the "
                                           "function they were declared in."
-                                          ).format,
+                                          ),
                         justification="TIFA read a variable that did not exist in this scope but existed in another.")
 def read_out_of_scope(location, name, report=MAIN_REPORT):
     """
@@ -365,7 +365,8 @@ def read_out_of_scope(location, name, report=MAIN_REPORT):
 # TODO: Complete these
 @AtomicFeedbackFunction(title="Type Changes",
                         message_template="",
-                        justification="")
+                        justification="",
+                        muted=True)
 def type_changes(location, name, old, new, report=MAIN_REPORT):
     """
 
@@ -380,7 +381,7 @@ def type_changes(location, name, old, new, report=MAIN_REPORT):
 
     """
     fields = {'location': location, 'name': name, 'old': old, 'new': new}
-    return _generic_tifa_feedback_function(type_changes, fields, report=report, muted=True)
+    return _generic_tifa_feedback_function(type_changes, fields, report=report)
 
 
 @AtomicFeedbackFunction(title="Unnecessary Second Branch",
@@ -512,7 +513,8 @@ def module_not_found(location, name, is_dynamic=False, error=None, report=MAIN_R
 
 @AtomicFeedbackFunction(title="Append to non-list",
                         text_template="",
-                        justification="")
+                        justification="",
+                        muted=True)
 def append_to_non_list(location, name, type, report=MAIN_REPORT):
     """
 
@@ -526,7 +528,7 @@ def append_to_non_list(location, name, type, report=MAIN_REPORT):
 
     """
     fields = {'location': location, "name": name, "type": type }
-    return _generic_tifa_feedback_function(append_to_non_list, fields, report=report, muted=True)
+    return _generic_tifa_feedback_function(append_to_non_list, fields, report=report)
 
 '''
 TODO: Finish these checks

@@ -88,7 +88,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../everyone/installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../teachers/quickstart.html">Teacher Quick Start Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../teachers/examples.html">Teacher Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../teachers/examples.html#single-problem">Single Problem</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../teachers/reference.html">Teacher Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../teachers/tutorial.html">Teacher Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers/guide.html">Developer Guide</a></li>
@@ -168,13 +167,15 @@
            <span class="s1">&#39;gently&#39;</span><span class="p">,</span> <span class="s1">&#39;hide_correctness&#39;</span><span class="p">,</span> <span class="s1">&#39;suppress&#39;</span><span class="p">,</span> <span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="s1">&#39;debug&#39;</span><span class="p">,</span> <span class="s1">&#39;system_error&#39;</span><span class="p">,</span>
            <span class="s1">&#39;clear_report&#39;</span><span class="p">,</span> <span class="s1">&#39;get_all_feedback&#39;</span><span class="p">,</span> <span class="s1">&#39;guidance&#39;</span><span class="p">,</span> <span class="s1">&#39;contextualize_report&#39;</span><span class="p">]</span>
 
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span>
+
 <span class="kn">from</span> <span class="nn">pedal.core.feedback</span> <span class="k">import</span> <span class="n">Feedback</span><span class="p">,</span> <span class="n">FeedbackKind</span><span class="p">,</span> <span class="n">FeedbackCategory</span><span class="p">,</span> <span class="n">PEDAL_DEVELOPERS</span><span class="p">,</span> <span class="n">AtomicFeedbackFunction</span>
-<span class="kn">from</span> <span class="nn">pedal.core.report</span> <span class="k">import</span> <span class="n">MAIN_REPORT</span>
+<span class="kn">from</span> <span class="nn">pedal.core.location</span> <span class="k">import</span> <span class="n">Location</span>
+<span class="kn">from</span> <span class="nn">pedal.core.report</span> <span class="k">import</span> <span class="n">MAIN_REPORT</span><span class="p">,</span> <span class="n">Report</span>
 
-
-<span class="c1">#: Lowercase &quot;function&quot; version that works like other Core Feedback Functions.</span>
 <span class="kn">from</span> <span class="nn">pedal.core.submission</span> <span class="k">import</span> <span class="n">Submission</span>
 
+<span class="c1">#: Lowercase &quot;function&quot; version that works like other Core Feedback Functions.</span>
 <span class="n">feedback</span> <span class="o">=</span> <span class="n">Feedback</span>
 
 
@@ -182,8 +183,9 @@
 
 
 <div class="viewcode-block" id="set_success"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.set_success">[docs]</a><span class="nd">@AtomicFeedbackFunction</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Complete&quot;</span><span class="p">,</span>
-                        <span class="n">text_template</span><span class="o">=</span><span class="s2">&quot;Great work!&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">set_success</span><span class="p">(</span><span class="n">score</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">justification</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tool</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+                        <span class="n">text_template</span><span class="o">=</span><span class="s2">&quot;Great work!&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">set_success</span><span class="p">(</span><span class="n">score</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">justification</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">tool</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">report</span><span class="p">:</span> <span class="n">Report</span> <span class="o">=</span> <span class="n">MAIN_REPORT</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    **(Feedback Function)**</span>
 
@@ -208,8 +210,9 @@
 
 
 <div class="viewcode-block" id="compliment"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.compliment">[docs]</a><span class="nd">@AtomicFeedbackFunction</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Compliment&quot;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">compliment</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-               <span class="n">justification</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">locations</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tool</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">compliment</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+               <span class="n">justification</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">locations</span><span class="p">:</span> <span class="n">Location</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">tool</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+               <span class="n">report</span><span class="p">:</span> <span class="n">Report</span> <span class="o">=</span> <span class="n">MAIN_REPORT</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Create a positive feedback for the user, potentially on a specific line of</span>
 <span class="sd">    code.</span>
@@ -235,8 +238,9 @@
 
 
 <div class="viewcode-block" id="give_partial"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.give_partial">[docs]</a><span class="nd">@AtomicFeedbackFunction</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Partial Credit&quot;</span><span class="p">,</span>
-                        <span class="n">text_template</span><span class="o">=</span><span class="s2">&quot;Partial credit&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">give_partial</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">justification</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tool</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+                        <span class="n">text_template</span><span class="o">=</span><span class="s2">&quot;Partial credit&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">give_partial</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">justification</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">tool</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">report</span><span class="p">:</span> <span class="n">Report</span> <span class="o">=</span> <span class="n">MAIN_REPORT</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Increases the user&#39;s current score by the `value`.</span>
 
@@ -255,26 +259,6 @@
                     <span class="n">text</span><span class="o">=</span><span class="n">give_partial</span><span class="o">.</span><span class="n">text_template</span><span class="p">(),</span>
                     <span class="n">score</span><span class="o">=</span><span class="n">value</span><span class="p">,</span> <span class="n">correct</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">muted</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="s1">&#39;1.0.0&#39;</span><span class="p">,</span> <span class="n">author</span><span class="o">=</span><span class="n">PEDAL_DEVELOPERS</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="n">group</span><span class="p">,</span>
                     <span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="system_error"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.system_error">[docs]</a><span class="nd">@AtomicFeedbackFunction</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;System Error&quot;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">system_error</span><span class="p">(</span><span class="n">tool</span><span class="p">,</span> <span class="n">explanation</span><span class="p">,</span> <span class="n">author</span><span class="o">=</span><span class="n">PEDAL_DEVELOPERS</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        tool:</span>
-<span class="sd">        explanation:</span>
-<span class="sd">        author:</span>
-<span class="sd">        report:</span>
-
-<span class="sd">    Returns:</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">feedback</span><span class="p">(</span><span class="s2">&quot;system_error&quot;</span><span class="p">,</span> <span class="n">tool</span><span class="o">=</span><span class="n">tool</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">SYSTEM</span><span class="p">,</span>
-                    <span class="n">kind</span><span class="o">=</span><span class="n">FeedbackKind</span><span class="o">.</span><span class="n">META</span><span class="p">,</span> <span class="n">justification</span><span class="o">=</span><span class="n">explanation</span><span class="p">,</span>
-                    <span class="n">valence</span><span class="o">=</span><span class="n">Feedback</span><span class="o">.</span><span class="n">NEUTRAL_VALENCE</span><span class="p">,</span>
-                    <span class="n">title</span><span class="o">=</span><span class="n">system_error</span><span class="o">.</span><span class="n">title</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="n">explanation</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">explanation</span><span class="p">,</span>
-                    <span class="n">muted</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">author</span><span class="o">=</span><span class="n">author</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="explain"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.explain">[docs]</a><span class="nd">@AtomicFeedbackFunction</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Instructor Feedback&quot;</span><span class="p">)</span>
@@ -402,6 +386,8 @@
 <div class="viewcode-block" id="log"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.log">[docs]</a><span class="k">def</span> <span class="nf">log</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="sd">    TODO: Consider making this accept star args, like print would.</span>
+
 <span class="sd">    Args:</span>
 <span class="sd">        message:</span>
 <span class="sd">        report:</span>
@@ -463,6 +449,8 @@
 <span class="sd">    Gives access to the list of feedback from the report. Usually, you won&#39;t need this; but if you want</span>
 <span class="sd">    to build on the results of earlier tools, it can be a useful mechanism.</span>
 
+<span class="sd">    TODO: Provide mechanisms for conveniently searching feedback</span>
+
 <span class="sd">    Args:</span>
 <span class="sd">        report: The report to attach this feedback to (defaults to the :py:data:`pedal.core.report.MAIN_REPORT`).</span>
 
@@ -470,6 +458,28 @@
 <span class="sd">        List[pedal.core.feedback.Feedback]: A list of feedback objects.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">report</span><span class="o">.</span><span class="n">feedback</span></div>
+
+<div class="viewcode-block" id="system_error"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.system_error">[docs]</a><span class="nd">@AtomicFeedbackFunction</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;System Error&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">system_error</span><span class="p">(</span><span class="n">tool</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">explanation</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">author</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">PEDAL_DEVELOPERS</span><span class="p">,</span> <span class="n">report</span><span class="p">:</span> <span class="n">Report</span> <span class="o">=</span> <span class="n">MAIN_REPORT</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Call this function to indicate that something has gone wrong at the system level with Pedal.</span>
+<span class="sd">    Ideally, this doesn&#39;t happen, but sometimes errors cascade and its polite for tools to suggest</span>
+<span class="sd">    that they are not working correctly. These will not usually be reported to the student.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        tool:</span>
+<span class="sd">        explanation:</span>
+<span class="sd">        author:</span>
+<span class="sd">        report:</span>
+
+<span class="sd">    Returns:</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">feedback</span><span class="p">(</span><span class="s2">&quot;system_error&quot;</span><span class="p">,</span> <span class="n">tool</span><span class="o">=</span><span class="n">tool</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">SYSTEM</span><span class="p">,</span>
+                    <span class="n">kind</span><span class="o">=</span><span class="n">FeedbackKind</span><span class="o">.</span><span class="n">META</span><span class="p">,</span> <span class="n">justification</span><span class="o">=</span><span class="n">explanation</span><span class="p">,</span>
+                    <span class="n">valence</span><span class="o">=</span><span class="n">Feedback</span><span class="o">.</span><span class="n">NEUTRAL_VALENCE</span><span class="p">,</span>
+                    <span class="n">title</span><span class="o">=</span><span class="n">system_error</span><span class="o">.</span><span class="n">title</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="n">explanation</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">explanation</span><span class="p">,</span>
+                    <span class="n">muted</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">author</span><span class="o">=</span><span class="n">author</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

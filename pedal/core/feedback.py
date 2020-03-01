@@ -140,20 +140,8 @@ class Feedback:
         return "Feedback({}{})".format(self.label, metadata)
 
 
-def _process_template(template, backup):
-    if template is None:
-        if backup is None:
-            return "".format
-        if isinstance(backup, str):
-            return backup.format
-        return backup
-    elif isinstance(template, str):
-        return template.format
-    return template
-
-
 def AtomicFeedbackFunction(title=None, version='0.0.1', message_template=None, text_template=None,
-                           justification=None, tags=None):
+                           justification=None, tags=None, muted=None):
     """
     Decorator for feedback functions to indicate their intent.
 
@@ -180,9 +168,10 @@ def AtomicFeedbackFunction(title=None, version='0.0.1', message_template=None, t
         function.title = title if title is not None else function.__name__
         function.tags = tags if tags is not None else []
         function.version = version
-        function.justification = justification.format if isinstance(justification, str) else justification
-        function.message_template = _process_template(message_template, text_template)
-        function.text_template = _process_template(text_template, message_template)
+        function.justification = justification
+        function.message_template = message_template or text_template
+        function.text_template = text_template or message_template
+        function.muted = muted
         return function
     return AtomicFeedbackFunction_with_attrs
 

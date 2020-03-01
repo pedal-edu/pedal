@@ -88,7 +88,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../everyone/installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../teachers/quickstart.html">Teacher Quick Start Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../teachers/examples.html">Teacher Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../teachers/examples.html#single-problem">Single Problem</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../teachers/reference.html">Teacher Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../teachers/tutorial.html">Teacher Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers/guide.html">Developer Guide</a></li>
@@ -301,20 +300,8 @@
         <span class="k">return</span> <span class="s2">&quot;Feedback(</span><span class="si">{}{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span></div>
 
 
-<span class="k">def</span> <span class="nf">_process_template</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="n">backup</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">template</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">backup</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">backup</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">backup</span><span class="o">.</span><span class="n">format</span>
-        <span class="k">return</span> <span class="n">backup</span>
-    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">template</span><span class="o">.</span><span class="n">format</span>
-    <span class="k">return</span> <span class="n">template</span>
-
-
 <div class="viewcode-block" id="AtomicFeedbackFunction"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.AtomicFeedbackFunction">[docs]</a><span class="k">def</span> <span class="nf">AtomicFeedbackFunction</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="s1">&#39;0.0.1&#39;</span><span class="p">,</span> <span class="n">message_template</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">text_template</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                           <span class="n">justification</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                           <span class="n">justification</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">muted</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Decorator for feedback functions to indicate their intent.</span>
 
@@ -341,9 +328,10 @@
         <span class="n">function</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="n">title</span> <span class="k">if</span> <span class="n">title</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">function</span><span class="o">.</span><span class="vm">__name__</span>
         <span class="n">function</span><span class="o">.</span><span class="n">tags</span> <span class="o">=</span> <span class="n">tags</span> <span class="k">if</span> <span class="n">tags</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[]</span>
         <span class="n">function</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">version</span>
-        <span class="n">function</span><span class="o">.</span><span class="n">justification</span> <span class="o">=</span> <span class="n">justification</span><span class="o">.</span><span class="n">format</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">justification</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">justification</span>
-        <span class="n">function</span><span class="o">.</span><span class="n">message_template</span> <span class="o">=</span> <span class="n">_process_template</span><span class="p">(</span><span class="n">message_template</span><span class="p">,</span> <span class="n">text_template</span><span class="p">)</span>
-        <span class="n">function</span><span class="o">.</span><span class="n">text_template</span> <span class="o">=</span> <span class="n">_process_template</span><span class="p">(</span><span class="n">text_template</span><span class="p">,</span> <span class="n">message_template</span><span class="p">)</span>
+        <span class="n">function</span><span class="o">.</span><span class="n">justification</span> <span class="o">=</span> <span class="n">justification</span>
+        <span class="n">function</span><span class="o">.</span><span class="n">message_template</span> <span class="o">=</span> <span class="n">message_template</span> <span class="ow">or</span> <span class="n">text_template</span>
+        <span class="n">function</span><span class="o">.</span><span class="n">text_template</span> <span class="o">=</span> <span class="n">text_template</span> <span class="ow">or</span> <span class="n">message_template</span>
+        <span class="n">function</span><span class="o">.</span><span class="n">muted</span> <span class="o">=</span> <span class="n">muted</span>
         <span class="k">return</span> <span class="n">function</span>
     <span class="k">return</span> <span class="n">AtomicFeedbackFunction_with_attrs</span></div>
 

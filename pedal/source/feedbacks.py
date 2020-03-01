@@ -6,7 +6,7 @@ from pedal.source.constants import TOOL_NAME
 
 
 @AtomicFeedbackFunction(title="No Source Code",
-                        text_template="Source code file is blank.".format,
+                        text_template="Source code file is blank.",
                         justification="After stripping the code, there were no characters.")
 def blank_source(group=None, report=MAIN_REPORT):
     """
@@ -26,7 +26,7 @@ def blank_source(group=None, report=MAIN_REPORT):
 @AtomicFeedbackFunction(title="Not Enough Sections",
                         text_template=("Tried to advance to next section but the "
                                        "section was not found. Tried to load section "
-                                       "{count}, but there were only {found} sections.").format,
+                                       "{count}, but there were only {found} sections."),
                         justification="Section index exceeded the length of the separated sections list.")
 def not_enough_sections(section_number, found, report=MAIN_REPORT):
     """
@@ -49,7 +49,7 @@ def not_enough_sections(section_number, found, report=MAIN_REPORT):
 @AtomicFeedbackFunction(title='Source File Not Found',
                         text_template=("The given filename ('{filename}') was either not found"
                                        " or could not be opened. Please make sure the file is"
-                                       " available.").format,
+                                       " available."),
                         version='0.0.1',
                         justification="IOError while opening file to set_source")
 def source_file_not_found(filename, sections, report=MAIN_REPORT):
@@ -73,8 +73,8 @@ def source_file_not_found(filename, sections, report=MAIN_REPORT):
 
 
 @AtomicFeedbackFunction(title="Syntax Error",
-                        message_template="```\n{context}\n```\nBad syntax on line {lineno}".format,
-                        text_template="{context}\nBad syntax on line {lineno}".format,
+                        message_template="```\n{context}\n```\nBad syntax on line {lineno}",
+                        text_template="{context}\nBad syntax on line {lineno}",
                         version='0.0.1',
                         justification="Syntax error was triggered while calling ast.parse")
 def syntax_error(line, filename, code, offset, text, traceback, exception, exc_info, report=MAIN_REPORT, muted=False):
@@ -111,7 +111,7 @@ def syntax_error(line, filename, code, offset, text, traceback, exception, exc_i
 
 @AtomicFeedbackFunction(title="Incorrect Number of Sections",
                         text_template=("Incorrect number of sections in your file. "
-                                       "Expected {count}, but only found {found}").format,
+                                       "Expected {count}, but only found {found}"),
                         justification="")
 def incorrect_number_of_sections(count, found, group, report=MAIN_REPORT):
     """

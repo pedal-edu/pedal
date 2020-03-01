@@ -90,7 +90,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../everyone/installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Teacher Quick Start Guide</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#command-line-usage">Command Line Usage</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#simple-environment">Simple Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#standard-environment">Standard Environment</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#core-feedback-functions">Core Feedback Functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#finding-ast-elements">Finding AST Elements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#finding-ast-patterns">Finding AST Patterns</a></li>
@@ -104,7 +104,6 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Teacher Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html#single-problem">Single Problem</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference.html">Teacher Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">Teacher Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers/guide.html">Developer Guide</a></li>
@@ -207,13 +206,13 @@ on its own through the command line. For example, after you create a grading scr
 <p>There are many settings for the command line version. Check the Integrations for more info.</p>
 <p>Let’s turn to look at what you might put inside that <cite>grade_assignment.py</cite> script.</p>
 </div>
-<div class="section" id="simple-environment">
-<h2>Simple Environment<a class="headerlink" href="#simple-environment" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="standard-environment">
+<h2>Standard Environment<a class="headerlink" href="#standard-environment" title="Permalink to this headline">¶</a></h2>
 <p>Although Pedal can be configured in a lot of ways, you may want to begin by using our default
-“Simple Environment”, which immediately sets up some of core Tools for a submission of learners’ code.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.environments.simple</span> <span class="kn">import</span> <span class="n">SimpleEnvironment</span>
+“Standard Environment”, which immediately sets up some of core Tools for a submission of learners’ code.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.environments.standard</span> <span class="kn">import</span> <span class="n">StandardEnvironment</span>
 <span class="n">student_code</span> <span class="o">=</span> <span class="s2">&quot;print(&#39;Hello world!&#39;)&quot;</span>
-<span class="n">ast</span><span class="p">,</span> <span class="n">student</span><span class="p">,</span> <span class="n">resolve</span> <span class="o">=</span> <span class="n">SimpleEnvironment</span><span class="p">(</span><span class="n">student_code</span><span class="p">)</span>
+<span class="n">ast</span><span class="p">,</span> <span class="n">student</span><span class="p">,</span> <span class="n">resolve</span> <span class="o">=</span> <span class="n">StandardEnvironment</span><span class="p">(</span><span class="n">student_code</span><span class="p">)</span>
 
 <span class="c1"># ... More instructor logic can go here ...</span>
 

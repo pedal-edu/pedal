@@ -7,13 +7,15 @@ __all__ = ['feedback', 'set_success', 'compliment', 'give_partial', 'explain',
            'gently', 'hide_correctness', 'suppress', 'log', 'debug', 'system_error',
            'clear_report', 'get_all_feedback', 'guidance', 'contextualize_report']
 
+from typing import List
+
 from pedal.core.feedback import Feedback, FeedbackKind, FeedbackCategory, PEDAL_DEVELOPERS, AtomicFeedbackFunction
-from pedal.core.report import MAIN_REPORT
+from pedal.core.location import Location
+from pedal.core.report import MAIN_REPORT, Report
 
-
-#: Lowercase "function" version that works like other Core Feedback Functions.
 from pedal.core.submission import Submission
 
+#: Lowercase "function" version that works like other Core Feedback Functions.
 feedback = Feedback
 
 
@@ -21,8 +23,9 @@ feedback = Feedback
 
 
 @AtomicFeedbackFunction(title="Complete",
-                        text_template="Great work!".format)
-def set_success(score=1, justification=None, tool=None, group=None, report=MAIN_REPORT):
+                        text_template="Great work!")
+def set_success(score: float = 1, justification: str = None, tool: str = None, group=None,
+                report: Report = MAIN_REPORT):
     """
     **(Feedback Function)**
 
@@ -47,8 +50,9 @@ def set_success(score=1, justification=None, tool=None, group=None, report=MAIN_
 
 
 @AtomicFeedbackFunction(title="Compliment")
-def compliment(message, value=0, title=None,
-               justification=None, locations=None, tool=None, group=None, report=MAIN_REPORT):
+def compliment(message: str, value: float = 0, title=None,
+               justification: str = None, locations: Location = None, tool: str = None, group=None,
+               report: Report = MAIN_REPORT):
     """
     Create a positive feedback for the user, potentially on a specific line of
     code.
@@ -74,8 +78,9 @@ def compliment(message, value=0, title=None,
 
 
 @AtomicFeedbackFunction(title="Partial Credit",
-                        text_template="Partial credit".format)
-def give_partial(value, justification=None, title=None, tool=None, group=None, report=MAIN_REPORT):
+                        text_template="Partial credit")
+def give_partial(value: float, justification: str = None, title: str = None, tool: str = None, group=None,
+                 report: Report = MAIN_REPORT):
     """
     Increases the user's current score by the `value`.
 
@@ -94,26 +99,6 @@ def give_partial(value, justification=None, title=None, tool=None, group=None, r
                     text=give_partial.text_template(),
                     score=value, correct=False, muted=True, version='1.0.0', author=PEDAL_DEVELOPERS, group=group,
                     report=report)
-
-
-@AtomicFeedbackFunction(title="System Error")
-def system_error(tool, explanation, author=PEDAL_DEVELOPERS, report=MAIN_REPORT):
-    """
-
-    Args:
-        tool:
-        explanation:
-        author:
-        report:
-
-    Returns:
-
-    """
-    return feedback("system_error", tool=tool, category=Feedback.CATEGORIES.SYSTEM,
-                    kind=FeedbackKind.META, justification=explanation,
-                    valence=Feedback.NEUTRAL_VALENCE,
-                    title=system_error.title, message=explanation, text=explanation,
-                    muted=True, author=author, report=report)
 
 
 @AtomicFeedbackFunction(title="Instructor Feedback")
@@ -241,6 +226,8 @@ def suppress(category=None, label=True, report=MAIN_REPORT):
 def log(message, report=MAIN_REPORT):
     """
 
+    TODO: Consider making this accept star args, like print would.
+
     Args:
         message:
         report:
@@ -302,6 +289,8 @@ def get_all_feedback(report=MAIN_REPORT) -> [Feedback]:
     Gives access to the list of feedback from the report. Usually, you won't need this; but if you want
     to build on the results of earlier tools, it can be a useful mechanism.
 
+    TODO: Provide mechanisms for conveniently searching feedback
+
     Args:
         report: The report to attach this feedback to (defaults to the :py:data:`pedal.core.report.MAIN_REPORT`).
 
@@ -309,3 +298,25 @@ def get_all_feedback(report=MAIN_REPORT) -> [Feedback]:
         List[pedal.core.feedback.Feedback]: A list of feedback objects.
     """
     return report.feedback
+
+@AtomicFeedbackFunction(title="System Error")
+def system_error(tool: str, explanation: str, author: str = PEDAL_DEVELOPERS, report: Report = MAIN_REPORT):
+    """
+    Call this function to indicate that something has gone wrong at the system level with Pedal.
+    Ideally, this doesn't happen, but sometimes errors cascade and its polite for tools to suggest
+    that they are not working correctly. These will not usually be reported to the student.
+
+    Args:
+        tool:
+        explanation:
+        author:
+        report:
+
+    Returns:
+
+    """
+    return feedback("system_error", tool=tool, category=Feedback.CATEGORIES.SYSTEM,
+                    kind=FeedbackKind.META, justification=explanation,
+                    valence=Feedback.NEUTRAL_VALENCE,
+                    title=system_error.title, message=explanation, text=explanation,
+                    muted=True, author=author, report=report)

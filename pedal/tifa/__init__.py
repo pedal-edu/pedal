@@ -87,7 +87,7 @@ def tifa_analysis(python_3=True, report=None):
     Perform the TIFA analysis and attach the results to the Report.
 
     Args:
-        python_3 (bool): Whether to expect a Python3 formated file, or Python
+        python_3 (bool): Whether to expect a Python3 formatted file, or Python
             2. This has slight nuance on certain AST elements.
         report (:class:`Report`): The Report object to attach results to.
             Defaults to :data:`MAIN_REPORT`.
