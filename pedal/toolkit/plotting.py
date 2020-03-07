@@ -131,8 +131,10 @@ GRAPH_TYPES = {'line': 'line plot',
                'scatter': 'scatter plot'}
 
 
-def check_for_plot(plt_type, data):
+def check_for_plot(plt_type, data, muted=True):
     """
+    TODO: Convert to be feedback function!
+
     Returns any errors found for this plot type and data.
     In other words, if it returns False, the plot was found correctly.
     """

@@ -3,6 +3,7 @@ A package for analyzing student code.
 
 TODO: Statistics
 TODO: Output checking for folder of submissions
+TODO: Handle tabular output for unit tests
 TODO: Big annotated example
 TODO: Fix sections example
 TODO: Set up "Unit Test" environment

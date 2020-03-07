@@ -433,6 +433,8 @@ def check_coverage(report=None):
 
 def ensure_coverage(percentage=.5, destructive=False, report=None):
     """
+    Provides some feedback if the students' code has coverage below the
+    given percentage.
     Note that this avoids destroying the current sandbox instance stored on the
     report, if there is one present.
     
@@ -454,6 +456,8 @@ def ensure_coverage(percentage=.5, destructive=False, report=None):
 
 def ensure_cisc108_tests(test_count, report=None):
     """
+
+    TODO: This should be moved out of pedal, or generalized for environments.
 
     Args:
         test_count:

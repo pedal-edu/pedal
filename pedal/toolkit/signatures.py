@@ -70,17 +70,16 @@ SPECIAL_PARAMETERS = ["_returns", "yields", "prints", "_raises",
 
 '''
 Type validation:
-    Caps does not matter
-    Primitives:
-    Containers
-    Unions
-        X or Y
-        X, Y, or Z
-        X, Y, Z
-    Function
-        (X -> Y)
-    
-    list[int, str, or bool], dict[int: str], or bool or int
+
+* Caps does not matter
+* Primitives:
+* Containers
+* Unions:
+  * X or Y
+  * X, Y, or Z
+  * X, Y, Z
+* Function: (X -> Y)
+* list[int, str, or bool], dict[int: str], or bool or int
 '''
 
 
@@ -437,6 +436,7 @@ def parse_docstring(doc):
                     return_type, comment = line[:position], line[position:]
                     returns.append(return_type.strip())
     return body, args, ' or '.join(returns)
+
 
 def function_signature(function_name, returns=None, yields=None,
                        prints=None, raises=None, report=None, root=None,

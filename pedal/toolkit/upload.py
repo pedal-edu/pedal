@@ -3,6 +3,8 @@ from pedal.source import get_program
 from pedal.sandbox.compatibility import get_output
 from pedal.core.commands import gently, explain
 
+# TODO: Move this into the CS1014 package!
+
 
 # Feedback for author's name
 def check_author_name_on_header():
