@@ -26,3 +26,38 @@ OPERATION_DESCRIPTION = {
     ast.In: "an in",
     ast.NotIn: "an not in",
 }
+
+COMPARE_OP_NAMES = {
+    "==": "Eq",
+    "<": "Lt",
+    "<=": "Lte",
+    ">=": "Gte",
+    ">": "Gt",
+    "!=": "NotEq",
+    "is": "Is",
+    "is not": "IsNot",
+    "in": "In",
+    "not in": "NotIn",
+}
+BOOL_OP_NAMES = {"and": "And", "or": "Or"}
+BIN_OP_NAMES = {
+    "+": "Add",
+    "-": "Sub",
+    "*": "Mult",
+    "/": "Div",
+    "//": "FloorDiv",
+    "%": "Mod",
+    "**": "Pow",
+    ">>": "LShift",
+    "<<": "RShift",
+    "|": "BitOr",
+    "^": "BitXor",
+    "&": "BitAnd",
+    "@": "MatMult",
+}
+UNARY_OP_NAMES = {
+    # "+": "UAdd",
+    # "-": "USub",
+    "not": "Not",
+    "~": "Invert",
+}

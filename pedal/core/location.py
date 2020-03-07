@@ -28,6 +28,20 @@ class Location:
         self.end_col = end_col
         self.filename = filename
 
+    @classmethod
+    def from_ast(cls, node):
+        """
+        Creates a new Location object from the AST node. Should work
+        for both built-in AST nodes and CaitNodes.
+
+        Args:
+            node (Node):
+
+        Returns:
+            Location
+        """
+        return Location(node.lineno, col=node.col_offset)
+
     def to_json(self):
         """
         Creates a JSON version of this object, with all the fields.

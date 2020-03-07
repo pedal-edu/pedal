@@ -1,0 +1,44 @@
+Toolkit
+=======
+
+
+The Toolkit is composed of several collections of useful functions. They are loosely related within their
+collections, but distinctive in their purpose. Some are Feedback Functions, and some are simply useful
+utility functions.
+
+Utility
+-------
+
+The biggest category of Toolkit functions is the Utility submodule. Most of the utility functions
+allow you to make statements about the students' source code.
+
+Imported as::
+
+    from pedal.toolkit.utility import *
+
+.. function:: is_top_level(ast_node: CaitNode) -> bool
+
+    Determines if the `ast_node` is at the top-level of the program.
+    Correctly handles expression statements (so a print call on its own will be
+    considered a statement, even though its technically an expression).
+
+
+.. function:: no_nested_function_definitions(muted=False) -> bool
+
+    Returns `True` if there are any functions defined inside of other functions.
+    Also attaches feedback, although that can be muted.
+
+    .. feedback_function:: pedal.toolkit.utilities.no_nested_function_definitions
+
+.. function:: function_prints(function_name: str = None) -> bool
+
+    Determines if there is a print statement inside of any functions. If `function_name` is given,
+    then only that function will be checked.
+
+.. function:: find_function_calls(name: str, root = None) -> List[CaitNode]
+
+    Returns a list of CaitNodes representing all of the function calls that
+    were found. This includes both methods and regular functions. You can
+    filter by the given `name`.
+
+.. autofunction:: pedal.toolkit.utilities.find_function_calls

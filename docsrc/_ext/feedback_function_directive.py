@@ -31,7 +31,7 @@ class FeedbackFunctionDirective(Directive):
         else:
             text = getattr(member_data, 'text_template', "")
 
-        result = [addnodes.desc_classname(text=title)]
+        result = [addnodes.desc_classname(text="Feedback Function: "+title)]
         lst = nodes.bullet_list()
         item = nodes.list_item()
         lst += item

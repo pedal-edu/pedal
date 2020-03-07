@@ -210,9 +210,9 @@ on its own through the command line. For example, after you create a grading scr
 <h2>Standard Environment<a class="headerlink" href="#standard-environment" title="Permalink to this headline">¶</a></h2>
 <p>Although Pedal can be configured in a lot of ways, you may want to begin by using our default
 “Standard Environment”, which immediately sets up some of core Tools for a submission of learners’ code.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.environments.standard</span> <span class="kn">import</span> <span class="n">StandardEnvironment</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.environments</span> <span class="kn">import</span> <span class="n">setup_pedal</span>
 <span class="n">student_code</span> <span class="o">=</span> <span class="s2">&quot;print(&#39;Hello world!&#39;)&quot;</span>
-<span class="n">ast</span><span class="p">,</span> <span class="n">student</span><span class="p">,</span> <span class="n">resolve</span> <span class="o">=</span> <span class="n">StandardEnvironment</span><span class="p">(</span><span class="n">student_code</span><span class="p">)</span>
+<span class="n">ast</span><span class="p">,</span> <span class="n">student</span><span class="p">,</span> <span class="n">resolve</span> <span class="o">=</span> <span class="n">setup_pedal</span><span class="p">(</span><span class="n">student_code</span><span class="p">)</span>
 
 <span class="c1"># ... More instructor logic can go here ...</span>
 
@@ -242,7 +242,9 @@ This might be a hint, or a description of the mistake they made, or something el
 However, it should be used to deliver negative feedback.
 There are other Feedback Functions to deliver negative feedback; the name <cite>gently</cite> refers to the
 fact that most Resolvers will prioritize this feedback lower than runtime errors, syntax errors, etc.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">gently</span><span class="p">(</span><span class="s2">&quot;You failed to solve the question correctly!&quot;</span><span class="p">)</span>
+<p>Notice that we provide a label as a second argument.
+Although optional, we encourage you to label feedback to enhance your subsequent analysis.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">gently</span><span class="p">(</span><span class="s2">&quot;You failed to solve the question correctly!&quot;</span><span class="p">,</span> <span class="s2">&quot;incorrect_answer&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The next is <cite>set_success</cite>, which allows you to establish that the learner has completed the problem
@@ -269,7 +271,7 @@ will not cause exceptions, just return no results. <cite>CAIT</cite> has almost 
 supports <cite>Feedback Condition</cite> authoring through two mechanisms.</p>
 <p>The first major feature is <cite>find_all</cite>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;For&quot;</span><span class="p">):</span>
-    <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;It looks like your code is using a `for` loop; don&#39;t do that!&quot;</span><span class="p">)</span>
+    <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;It looks like your code is using a `for` loop; don&#39;t do that!&quot;</span><span class="p">,</span> <span class="s2">&quot;used_for_loop&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The <cite>find_all</cite> function returns a list of <cite>CaitNodes</cite>, which represent elements of the AST.
@@ -279,7 +281,7 @@ for more information about what is available.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">loops</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;For&quot;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">loop</span> <span class="ow">in</span> <span class="n">loops</span><span class="p">:</span>
     <span class="k">if</span> <span class="n">loop</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;Tuple&quot;</span><span class="p">:</span>
-        <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;You have a `for` loop with multiple targets, don&#39;t do that!&quot;</span><span class="p">)</span>
+        <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;You have a `for` loop with multiple targets, don&#39;t do that!&quot;</span><span class="p">,</span> <span class="s2">&quot;for_loop_multiple_targets&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -289,7 +291,7 @@ for more information about what is available.</p>
 function named <cite>find_matches</cite> (or <cite>find_match</cite> to get the first result):</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">matches</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_matches</span><span class="p">(</span><span class="s2">&quot;answer = 5&quot;</span><span class="p">)</span>
 <span class="k">if</span> <span class="n">matches</span><span class="p">:</span>
-    <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;The variable `answer` should not be assigned the value `5`.&quot;</span><span class="p">)</span>
+    <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;The variable `answer` should not be assigned the value `5`.&quot;</span><span class="p">,</span> <span class="s2">&quot;assigned_literal_value_to_answer&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The <cite>find_matches</cite> function supports several kinds of wildcards, and gives you access to
@@ -298,7 +300,7 @@ identifiers in the learners’ code.</p>
 It will match to any node or subtree.
 If you wish to access such data, you should use expressions instead.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_matches</span><span class="p">(</span><span class="s2">&quot;answer = ___&quot;</span><span class="p">):</span>
-    <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;You assigned something to the variable `answer`&quot;</span><span class="p">)</span>
+    <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;You assigned something to the variable `answer`&quot;</span><span class="p">,</span> <span class="s2">&quot;assigned_to_answer&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><strong>Variable Name Match</strong>: A place holder for variables, denoted by single underscores on both sides.
@@ -307,7 +309,7 @@ but each variable in student code can only map to one instructor variable.
 You can get a variable’s name via its <cite>id</cite> attribute.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">match</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_match</span><span class="p">(</span><span class="s2">&quot;_accumulator_ = 0&quot;</span><span class="p">)</span>
 <span class="k">if</span> <span class="n">match</span><span class="p">[</span><span class="s2">&quot;_accumulator_&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="s2">&quot;sum&quot;</span><span class="p">:</span>
-    <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;Do not name your accumulating variable `sum`, since that is a reserved word.&quot;</span><span class="p">)</span>
+    <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;Do not name your accumulating variable `sum`, since that is a reserved word.&quot;</span><span class="p">,</span> <span class="s2">&quot;shadowed_builtin&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><strong>Subtree Expressions Match</strong>: A place holder for subtree expressions.
@@ -315,7 +317,7 @@ An expression is denoted by a double underscore before and after the name of the
 You can get the expression’s AST node name via the <cite>name</cite> attribute.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">match</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_match</span><span class="p">(</span><span class="s2">&quot;_accumulator_ = __initial__&quot;</span><span class="p">)</span>
 <span class="k">if</span> <span class="n">match</span><span class="p">[</span><span class="s2">&quot;__initial__&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;List&quot;</span><span class="p">:</span>
-    <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;You initialized your accumulator as a list literal.&quot;</span><span class="p">)</span>
+    <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;You initialized your accumulator as a list literal.&quot;</span><span class="p">,</span> <span class="s2">&quot;initialized_accumulator&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>

@@ -159,22 +159,27 @@
             
   <h1>Source code for pedal.toolkit.utilities</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">pedal.cait.cait_api</span> <span class="k">import</span> <span class="n">parse_program</span>
+<span class="kn">from</span> <span class="nn">pedal.cait.cait_node</span> <span class="k">import</span> <span class="n">CaitNode</span>
 <span class="kn">from</span> <span class="nn">pedal.core.commands</span> <span class="k">import</span> <span class="n">gently</span><span class="p">,</span> <span class="n">explain</span>
+<span class="kn">from</span> <span class="nn">pedal.core.feedback</span> <span class="k">import</span> <span class="n">AtomicFeedbackFunction</span>
+<span class="kn">from</span> <span class="nn">pedal.core.report</span> <span class="k">import</span> <span class="n">MAIN_REPORT</span>
 
 
-<div class="viewcode-block" id="is_top_level"><a class="viewcode-back" href="../../../developers/tools/toolkit.html#pedal.toolkit.utilities.is_top_level">[docs]</a><span class="k">def</span> <span class="nf">is_top_level</span><span class="p">(</span><span class="n">ast_node</span><span class="p">):</span>
+<div class="viewcode-block" id="is_top_level"><a class="viewcode-back" href="../../../developers/tools/toolkit.html#pedal.toolkit.utilities.is_top_level">[docs]</a><span class="k">def</span> <span class="nf">is_top_level</span><span class="p">(</span><span class="n">ast_node</span><span class="p">:</span> <span class="n">CaitNode</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Determines if the `ast_node` is at the top-level of the program.</span>
+<span class="sd">    Correctly handles expression statements (so a print call on its own will be</span>
+<span class="sd">    considered a statement, even though its technically an expression).</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        ast_node:</span>
+<span class="sd">        ast_node (CaitNode): The CaitNode to check</span>
 
 <span class="sd">    Returns:</span>
-
+<span class="sd">        bool: Whether the node is from the top level</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">ast</span> <span class="o">=</span> <span class="n">parse_program</span><span class="p">()</span>
+    <span class="n">ast</span> <span class="o">=</span> <span class="n">parse_program</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">ast</span><span class="o">.</span><span class="n">body</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">ast_name</span><span class="p">,</span> <span class="n">ast_node</span><span class="o">.</span><span class="n">ast_name</span><span class="p">,</span> <span class="n">element</span> <span class="o">==</span> <span class="n">ast_node</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">element</span><span class="o">.</span><span class="n">ast_name</span> <span class="o">==</span> <span class="s1">&#39;Expr&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">element</span><span class="o">.</span><span class="n">ast_name</span> <span class="o">==</span> <span class="s2">&quot;Expr&quot;</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">element</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="n">ast_node</span><span class="p">:</span>
                 <span class="k">return</span> <span class="kc">True</span>
         <span class="k">elif</span> <span class="n">element</span> <span class="o">==</span> <span class="n">ast_node</span><span class="p">:</span>
@@ -182,59 +187,76 @@
     <span class="k">return</span> <span class="kc">False</span></div>
 
 
-<div class="viewcode-block" id="no_nested_function_definitions"><a class="viewcode-back" href="../../../developers/tools/toolkit.html#pedal.toolkit.utilities.no_nested_function_definitions">[docs]</a><span class="k">def</span> <span class="nf">no_nested_function_definitions</span><span class="p">():</span>
+<div class="viewcode-block" id="no_nested_function_definitions"><a class="viewcode-back" href="../../../developers/tools/toolkit.html#pedal.toolkit.utilities.no_nested_function_definitions">[docs]</a><span class="nd">@AtomicFeedbackFunction</span><span class="p">(</span>
+    <span class="n">message_template</span><span class="o">=</span><span class="s2">&quot;You have defined a function inside of another block. For instance, you may &quot;</span>
+    <span class="s2">&quot;have placed it inside another function definition, or inside of a loop. Do not nest your function &quot;</span>
+    <span class="s2">&quot;definition!&quot;</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Don&#39;t Nest Functions&quot;</span><span class="p">,</span>
+    <span class="n">justification</span><span class="o">=</span><span class="s2">&quot;Found a FunctionDef that was not at the top-level.&quot;</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">no_nested_function_definitions</span><span class="p">(</span><span class="n">muted</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Returns:</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">ast</span> <span class="o">=</span> <span class="n">parse_program</span><span class="p">()</span>
-    <span class="n">defs</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">&#39;FunctionDef&#39;</span><span class="p">)</span>
+    <span class="n">ast</span> <span class="o">=</span> <span class="n">parse_program</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">)</span>
+    <span class="n">defs</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;FunctionDef&quot;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">a_def</span> <span class="ow">in</span> <span class="n">defs</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">is_top_level</span><span class="p">(</span><span class="n">a_def</span><span class="p">):</span>
-            <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;You have defined a function inside of another block. For instance, you may have placed it inside &quot;</span>
-                   <span class="s2">&quot;another function definition, or inside of a loop. Do not nest your function definition!&quot;</span><span class="p">,</span>
-                   <span class="n">label</span><span class="o">=</span><span class="s2">&quot;no_nested_function_definitions&quot;</span><span class="p">)</span>
+            <span class="n">gently</span><span class="p">(</span>
+                <span class="n">no_nested_function_definitions</span><span class="o">.</span><span class="n">text_template</span><span class="p">,</span>
+                <span class="n">label</span><span class="o">=</span><span class="s2">&quot;no_nested_function_definitions&quot;</span><span class="p">,</span>
+                <span class="n">muted</span><span class="o">=</span><span class="n">muted</span><span class="p">,</span>
+                <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">,</span>
+            <span class="p">)</span>
             <span class="k">return</span> <span class="kc">False</span>
     <span class="k">return</span> <span class="kc">True</span></div>
 
 
-<div class="viewcode-block" id="function_prints"><a class="viewcode-back" href="../../../developers/tools/toolkit.html#pedal.toolkit.utilities.function_prints">[docs]</a><span class="k">def</span> <span class="nf">function_prints</span><span class="p">():</span>
+<div class="viewcode-block" id="function_prints"><a class="viewcode-back" href="../../../developers/tools/toolkit.html#pedal.toolkit.utilities.function_prints">[docs]</a><span class="k">def</span> <span class="nf">function_prints</span><span class="p">(</span><span class="n">function_name</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Determines if there is a print statement inside of any functions. If `function_name` is given,</span>
+<span class="sd">    then only that function will be checked.</span>
 
 <span class="sd">    Returns:</span>
-
+<span class="sd">        bool: Whether there is a print inside the function.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">ast</span> <span class="o">=</span> <span class="n">parse_program</span><span class="p">()</span>
-    <span class="n">defs</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">&#39;FunctionDef&#39;</span><span class="p">)</span>
+    <span class="n">ast</span> <span class="o">=</span> <span class="n">parse_program</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span>
+    <span class="n">defs</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;FunctionDef&quot;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">a_def</span> <span class="ow">in</span> <span class="n">defs</span><span class="p">:</span>
-        <span class="n">all_calls</span> <span class="o">=</span> <span class="n">a_def</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">&#39;Call&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">function_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">a_def</span><span class="o">.</span><span class="n">name</span> <span class="o">!=</span> <span class="n">function_name</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">all_calls</span> <span class="o">=</span> <span class="n">a_def</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;Call&quot;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">a_call</span> <span class="ow">in</span> <span class="n">all_calls</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">ast_name</span> <span class="o">==</span> <span class="s1">&#39;Name&#39;</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="s1">&#39;print&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">ast_name</span> <span class="o">==</span> <span class="s2">&quot;Name&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="s2">&quot;print&quot;</span><span class="p">:</span>
                     <span class="k">return</span> <span class="kc">True</span>
     <span class="k">return</span> <span class="kc">False</span></div>
 
 
-<div class="viewcode-block" id="find_function_calls"><a class="viewcode-back" href="../../../developers/tools/toolkit.html#pedal.toolkit.utilities.find_function_calls">[docs]</a><span class="k">def</span> <span class="nf">find_function_calls</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="find_function_calls"><a class="viewcode-back" href="../../../teachers/tools/toolkit.html#pedal.toolkit.utilities.find_function_calls">[docs]</a><span class="k">def</span> <span class="nf">find_function_calls</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a list of CaitNodes representing all of the function calls that</span>
+<span class="sd">    were found. This includes both methods and regular functions.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        name:</span>
-<span class="sd">        root:</span>
+<span class="sd">        name (str): The name of the function to search.</span>
+<span class="sd">        root: A subtree of a parse tree to revert to.</span>
+<span class="sd">        report (Report): The name of the Report to refer to.</span>
 
 <span class="sd">    Returns:</span>
-
+<span class="sd">        List[CaitNode]: Relevant call nodes.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">root</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">root</span> <span class="o">=</span> <span class="n">parse_program</span><span class="p">()</span>
-    <span class="n">all_calls</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">&#39;Call&#39;</span><span class="p">)</span>
+        <span class="n">root</span> <span class="o">=</span> <span class="n">parse_program</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span>
+    <span class="n">all_calls</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;Call&quot;</span><span class="p">)</span>
     <span class="n">calls</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">a_call</span> <span class="ow">in</span> <span class="n">all_calls</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">ast_name</span> <span class="o">==</span> <span class="s1">&#39;Attribute&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">ast_name</span> <span class="o">==</span> <span class="s2">&quot;Attribute&quot;</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">attr</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
                 <span class="n">calls</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a_call</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">ast_name</span> <span class="o">==</span> <span class="s1">&#39;Name&#39;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">ast_name</span> <span class="o">==</span> <span class="s2">&quot;Name&quot;</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
                 <span class="n">calls</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a_call</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">calls</span></div>
@@ -266,13 +288,13 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">ast</span> <span class="o">=</span> <span class="n">parse_program</span><span class="p">()</span>
-    <span class="n">all_calls</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">&#39;Call&#39;</span><span class="p">)</span>
+    <span class="n">all_calls</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;Call&quot;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">a_call</span> <span class="ow">in</span> <span class="n">all_calls</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">ast_name</span> <span class="o">==</span> <span class="s1">&#39;Name&#39;</span> <span class="ow">and</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="s2">&quot;print&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">ast_name</span> <span class="o">==</span> <span class="s2">&quot;Name&quot;</span> <span class="ow">and</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="s2">&quot;print&quot;</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">a_call</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">arg</span><span class="o">.</span><span class="n">ast_name</span> <span class="o">!=</span> <span class="s2">&quot;Name&quot;</span><span class="p">:</span>
                     <span class="k">return</span> <span class="kc">False</span>
-                <span class="k">elif</span> <span class="n">arg</span><span class="o">.</span><span class="n">id</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;True&#39;</span><span class="p">,</span> <span class="s1">&#39;False&#39;</span><span class="p">,</span> <span class="s1">&#39;None&#39;</span><span class="p">):</span>
+                <span class="k">elif</span> <span class="n">arg</span><span class="o">.</span><span class="n">id</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;True&quot;</span><span class="p">,</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span> <span class="s2">&quot;None&quot;</span><span class="p">):</span>
                     <span class="k">return</span> <span class="kc">False</span>
     <span class="k">return</span> <span class="kc">True</span></div>
 
@@ -304,16 +326,25 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">ast</span> <span class="o">=</span> <span class="n">parse_program</span><span class="p">()</span>
-    <span class="n">exprs</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">&#39;Expr&#39;</span><span class="p">)</span>
+    <span class="n">exprs</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;Expr&quot;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">expr</span> <span class="ow">in</span> <span class="n">exprs</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">expr</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">ast_name</span> <span class="o">==</span> <span class="s2">&quot;Call&quot;</span><span class="p">:</span>
             <span class="n">a_call</span> <span class="o">=</span> <span class="n">expr</span><span class="o">.</span><span class="n">value</span>
-            <span class="k">if</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">ast_name</span> <span class="o">==</span> <span class="s1">&#39;Attribute&#39;</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">attr</span> <span class="o">==</span> <span class="s1">&#39;append&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">ast_name</span> <span class="o">==</span> <span class="s2">&quot;Attribute&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">attr</span> <span class="o">==</span> <span class="s2">&quot;append&quot;</span><span class="p">:</span>
                     <span class="k">pass</span>
-                <span class="k">elif</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">attr</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;replace&#39;</span><span class="p">,</span> <span class="s1">&#39;strip&#39;</span><span class="p">,</span> <span class="s1">&#39;lstrip&#39;</span><span class="p">,</span> <span class="s1">&#39;rstrip&#39;</span><span class="p">,</span> <span class="s1">&#39;split&#39;</span><span class="p">):</span>
-                    <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;Remember! You cannot modify a string directly. Instead, you should assign the result back &quot;</span>
-                           <span class="s2">&quot;to the string variable.&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;attempted_string_mutate&quot;</span><span class="p">)</span></div>
+                <span class="k">elif</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">attr</span> <span class="ow">in</span> <span class="p">(</span>
+                    <span class="s2">&quot;replace&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;strip&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;lstrip&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;rstrip&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;split&quot;</span><span class="p">,</span>
+                <span class="p">):</span>
+                    <span class="n">gently</span><span class="p">(</span>
+                        <span class="s2">&quot;Remember! You cannot modify a string directly. Instead, you should assign the result back &quot;</span>
+                        <span class="s2">&quot;to the string variable.&quot;</span><span class="p">,</span>
+                        <span class="n">label</span><span class="o">=</span><span class="s2">&quot;attempted_string_mutate&quot;</span><span class="p">,</span>
+                    <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="prevent_builtin_usage"><a class="viewcode-back" href="../../../developers/tools/toolkit.html#pedal.toolkit.utilities.prevent_builtin_usage">[docs]</a><span class="k">def</span> <span class="nf">prevent_builtin_usage</span><span class="p">(</span><span class="n">function_names</span><span class="p">):</span>
@@ -330,9 +361,9 @@
     <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Builtin Usage&quot;</span>
     <span class="c1"># Prevent direction calls</span>
     <span class="n">ast</span> <span class="o">=</span> <span class="n">parse_program</span><span class="p">()</span>
-    <span class="n">all_calls</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">&#39;Call&#39;</span><span class="p">)</span>
+    <span class="n">all_calls</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;Call&quot;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">a_call</span> <span class="ow">in</span> <span class="n">all_calls</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">ast_name</span> <span class="o">==</span> <span class="s1">&#39;Name&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">ast_name</span> <span class="o">==</span> <span class="s2">&quot;Name&quot;</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">id</span> <span class="ow">in</span> <span class="n">function_names</span><span class="p">:</span>
                 <span class="n">explain</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">id</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">)</span>
                 <span class="k">return</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">id</span>
@@ -350,8 +381,11 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">root</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">root</span> <span class="o">=</span> <span class="n">parse_program</span><span class="p">()</span>
-    <span class="k">return</span> <span class="p">[</span><span class="o">-</span><span class="n">op</span><span class="o">.</span><span class="n">operand</span><span class="o">.</span><span class="n">n</span> <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="n">root</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;UnaryOp&quot;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">op</span><span class="o">.</span><span class="n">op</span><span class="o">.</span><span class="n">ast_name</span> <span class="o">==</span> <span class="s2">&quot;USub&quot;</span> <span class="ow">and</span> <span class="n">op</span><span class="o">.</span><span class="n">operand</span><span class="o">.</span><span class="n">ast_name</span> <span class="o">==</span> <span class="s2">&quot;Num&quot;</span><span class="p">]</span></div>
+    <span class="k">return</span> <span class="p">[</span>
+        <span class="o">-</span><span class="n">op</span><span class="o">.</span><span class="n">operand</span><span class="o">.</span><span class="n">n</span>
+        <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="n">root</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;UnaryOp&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">op</span><span class="o">.</span><span class="n">op</span><span class="o">.</span><span class="n">ast_name</span> <span class="o">==</span> <span class="s2">&quot;USub&quot;</span> <span class="ow">and</span> <span class="n">op</span><span class="o">.</span><span class="n">operand</span><span class="o">.</span><span class="n">ast_name</span> <span class="o">==</span> <span class="s2">&quot;Num&quot;</span>
+    <span class="p">]</span></div>
 
 
 <span class="c1"># TODO: UGLY HACK. This is to avoid muted=False kwargs in the following</span>
@@ -375,8 +409,9 @@
     <span class="n">str_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;Str&quot;</span><span class="p">)]</span>
     <span class="n">num_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">n</span><span class="o">.</span><span class="n">n</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;Num&quot;</span><span class="p">)]</span>
     <span class="n">negative_values</span> <span class="o">=</span> <span class="n">find_negatives</span><span class="p">(</span><span class="n">ast</span><span class="p">)</span>
-    <span class="n">name_values</span> <span class="o">=</span> <span class="p">([</span><span class="n">name</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;Name&quot;</span><span class="p">)]</span><span class="o">+</span>
-                   <span class="p">[</span><span class="n">name</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;NameConstant&quot;</span><span class="p">)])</span>
+    <span class="n">name_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">name</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;Name&quot;</span><span class="p">)]</span> <span class="o">+</span> <span class="p">[</span>
+        <span class="n">name</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;NameConstant&quot;</span><span class="p">)</span>
+    <span class="p">]</span>
     <span class="k">for</span> <span class="n">literal</span> <span class="ow">in</span> <span class="n">literals</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">literal</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
             <span class="k">if</span> <span class="n">literal</span> <span class="ow">in</span> <span class="n">num_values</span> <span class="ow">or</span> <span class="n">literal</span> <span class="ow">in</span> <span class="n">negative_values</span><span class="p">:</span>
@@ -412,8 +447,9 @@
     <span class="n">str_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;Str&quot;</span><span class="p">)]</span>
     <span class="n">num_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">n</span><span class="o">.</span><span class="n">n</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;Num&quot;</span><span class="p">)]</span>
     <span class="n">negative_values</span> <span class="o">=</span> <span class="n">find_negatives</span><span class="p">(</span><span class="n">ast</span><span class="p">)</span>
-    <span class="n">name_values</span> <span class="o">=</span> <span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">id</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;Name&quot;</span><span class="p">)]</span><span class="o">+</span>
-                   <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;NameConstant&quot;</span><span class="p">)])</span>
+    <span class="n">name_values</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">id</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;Name&quot;</span><span class="p">)]</span> <span class="o">+</span> <span class="p">[</span>
+        <span class="nb">str</span><span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;NameConstant&quot;</span><span class="p">)</span>
+    <span class="p">]</span>
     <span class="k">for</span> <span class="n">literal</span> <span class="ow">in</span> <span class="n">literals</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">literal</span> <span class="ow">in</span> <span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
             <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">literal</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">name_values</span><span class="p">:</span>
@@ -441,11 +477,28 @@
     <span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;while_usage&quot;</span>
     <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Usage of &lt;code&gt;while&lt;/code&gt;&quot;</span>
     <span class="n">ast</span> <span class="o">=</span> <span class="n">parse_program</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">&#39;While&#39;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;While&quot;</span><span class="p">):</span>
         <span class="n">explain</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">)</span>
-    <span class="n">prevent_builtin_usage</span><span class="p">([</span><span class="s1">&#39;sum&#39;</span><span class="p">,</span> <span class="s1">&#39;map&#39;</span><span class="p">,</span> <span class="s1">&#39;filter&#39;</span><span class="p">,</span> <span class="s1">&#39;reduce&#39;</span><span class="p">,</span> <span class="s1">&#39;len&#39;</span><span class="p">,</span> <span class="s1">&#39;max&#39;</span><span class="p">,</span> <span class="s1">&#39;min&#39;</span><span class="p">,</span>
-                           <span class="s1">&#39;max&#39;</span><span class="p">,</span> <span class="s1">&#39;sorted&#39;</span><span class="p">,</span> <span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="s1">&#39;any&#39;</span><span class="p">,</span> <span class="s1">&#39;getattr&#39;</span><span class="p">,</span> <span class="s1">&#39;setattr&#39;</span><span class="p">,</span>
-                           <span class="s1">&#39;eval&#39;</span><span class="p">,</span> <span class="s1">&#39;exec&#39;</span><span class="p">,</span> <span class="s1">&#39;iter&#39;</span><span class="p">])</span></div>
+    <span class="n">prevent_builtin_usage</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="s2">&quot;sum&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;map&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;filter&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;reduce&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;len&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;max&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;min&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;max&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;sorted&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;all&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;any&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;getattr&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;setattr&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;eval&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;exec&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;iter&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="p">)</span></div>
 
 
 <span class="n">COMPARE_OP_NAMES</span> <span class="o">=</span> <span class="p">{</span>
@@ -458,10 +511,9 @@
     <span class="s2">&quot;is&quot;</span><span class="p">:</span> <span class="s2">&quot;Is&quot;</span><span class="p">,</span>
     <span class="s2">&quot;is not&quot;</span><span class="p">:</span> <span class="s2">&quot;IsNot&quot;</span><span class="p">,</span>
     <span class="s2">&quot;in&quot;</span><span class="p">:</span> <span class="s2">&quot;In&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;not in&quot;</span><span class="p">:</span> <span class="s2">&quot;NotIn&quot;</span><span class="p">}</span>
-<span class="n">BOOL_OP_NAMES</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;and&quot;</span><span class="p">:</span> <span class="s2">&quot;And&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;or&quot;</span><span class="p">:</span> <span class="s2">&quot;Or&quot;</span><span class="p">}</span>
+    <span class="s2">&quot;not in&quot;</span><span class="p">:</span> <span class="s2">&quot;NotIn&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">BOOL_OP_NAMES</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;and&quot;</span><span class="p">:</span> <span class="s2">&quot;And&quot;</span><span class="p">,</span> <span class="s2">&quot;or&quot;</span><span class="p">:</span> <span class="s2">&quot;Or&quot;</span><span class="p">}</span>
 <span class="n">BIN_OP_NAMES</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;+&quot;</span><span class="p">:</span> <span class="s2">&quot;Add&quot;</span><span class="p">,</span>
     <span class="s2">&quot;-&quot;</span><span class="p">:</span> <span class="s2">&quot;Sub&quot;</span><span class="p">,</span>
@@ -475,12 +527,13 @@
     <span class="s2">&quot;|&quot;</span><span class="p">:</span> <span class="s2">&quot;BitOr&quot;</span><span class="p">,</span>
     <span class="s2">&quot;^&quot;</span><span class="p">:</span> <span class="s2">&quot;BitXor&quot;</span><span class="p">,</span>
     <span class="s2">&quot;&amp;&quot;</span><span class="p">:</span> <span class="s2">&quot;BitAnd&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;@&quot;</span><span class="p">:</span> <span class="s2">&quot;MatMult&quot;</span><span class="p">}</span>
+    <span class="s2">&quot;@&quot;</span><span class="p">:</span> <span class="s2">&quot;MatMult&quot;</span><span class="p">,</span>
+<span class="p">}</span>
 <span class="n">UNARY_OP_NAMES</span> <span class="o">=</span> <span class="p">{</span>
     <span class="c1"># &quot;+&quot;: &quot;UAdd&quot;,</span>
     <span class="c1"># &quot;-&quot;: &quot;USub&quot;,</span>
     <span class="s2">&quot;not&quot;</span><span class="p">:</span> <span class="s2">&quot;Not&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;~&quot;</span><span class="p">:</span> <span class="s2">&quot;Invert&quot;</span>
+    <span class="s2">&quot;~&quot;</span><span class="p">:</span> <span class="s2">&quot;Invert&quot;</span><span class="p">,</span>
 <span class="p">}</span>
 
 
@@ -572,13 +625,13 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">root</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">root</span> <span class="o">=</span> <span class="n">parse_program</span><span class="p">()</span>
-    <span class="n">all_calls</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">&#39;Call&#39;</span><span class="p">)</span>
+    <span class="n">all_calls</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;Call&quot;</span><span class="p">)</span>
     <span class="n">calls</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">a_call</span> <span class="ow">in</span> <span class="n">all_calls</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">ast_name</span> <span class="o">==</span> <span class="s1">&#39;Attribute&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">ast_name</span> <span class="o">==</span> <span class="s2">&quot;Attribute&quot;</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">attr</span> <span class="o">==</span> <span class="n">function_name</span><span class="p">:</span>
                 <span class="n">calls</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a_call</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">ast_name</span> <span class="o">==</span> <span class="s1">&#39;Name&#39;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">ast_name</span> <span class="o">==</span> <span class="s2">&quot;Name&quot;</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">function_name</span><span class="p">:</span>
                 <span class="n">calls</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a_call</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">calls</span></div>
@@ -611,26 +664,51 @@
             <span class="n">potentials</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">assign</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">type</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">assign</span>
-            <span class="k">elif</span> <span class="p">(</span><span class="nb">type</span> <span class="o">==</span> <span class="s1">&#39;Bool&#39;</span> <span class="ow">and</span>
-                  <span class="n">assign</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">ast_name</span> <span class="o">==</span> <span class="s1">&#39;Name&#39;</span> <span class="ow">and</span>
-                  <span class="n">assign</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">id</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;True&#39;</span><span class="p">,</span> <span class="s1">&#39;False&#39;</span><span class="p">)):</span>
+            <span class="k">elif</span> <span class="p">(</span>
+                <span class="nb">type</span> <span class="o">==</span> <span class="s2">&quot;Bool&quot;</span>
+                <span class="ow">and</span> <span class="n">assign</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">ast_name</span> <span class="o">==</span> <span class="s2">&quot;Name&quot;</span>
+                <span class="ow">and</span> <span class="n">assign</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">id</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;True&quot;</span><span class="p">,</span> <span class="s2">&quot;False&quot;</span><span class="p">)</span>
+            <span class="p">):</span>
                 <span class="k">return</span> <span class="n">assign</span>
-            <span class="k">elif</span> <span class="p">(</span><span class="nb">type</span> <span class="o">==</span> <span class="s1">&#39;Bool&#39;</span> <span class="ow">and</span>
-                  <span class="n">assign</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">ast_name</span> <span class="o">==</span> <span class="s1">&#39;NameConstant&#39;</span> <span class="ow">and</span>
-                  <span class="n">assign</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">value</span> <span class="ow">in</span> <span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">)):</span>
+            <span class="k">elif</span> <span class="p">(</span>
+                <span class="nb">type</span> <span class="o">==</span> <span class="s2">&quot;Bool&quot;</span>
+                <span class="ow">and</span> <span class="n">assign</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">ast_name</span> <span class="o">==</span> <span class="s2">&quot;NameConstant&quot;</span>
+                <span class="ow">and</span> <span class="n">assign</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">value</span> <span class="ow">in</span> <span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+            <span class="p">):</span>
                 <span class="k">return</span> <span class="n">assign</span>
             <span class="k">elif</span> <span class="n">assign</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">ast_name</span> <span class="o">==</span> <span class="nb">type</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">assign</span>
-    <span class="k">if</span> <span class="n">potentials</span> <span class="ow">and</span> <span class="n">potentials</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">ast_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;Str&quot;</span><span class="p">,</span> <span class="s2">&quot;Bool&quot;</span><span class="p">,</span> <span class="s2">&quot;Num&quot;</span><span class="p">,</span> <span class="s2">&quot;List&quot;</span><span class="p">,</span> <span class="s2">&quot;Tuple&quot;</span><span class="p">):</span>
-        <span class="n">explain</span><span class="p">((</span><span class="s2">&quot;You needed to assign a literal value to </span><span class="si">{variable}</span><span class="s2">, but you &quot;</span>
-                   <span class="s2">&quot;created an expression instead.&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="n">variable_name</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;exp_vs_lit&quot;</span><span class="p">,</span>
-                  <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Expression Instead of Literal&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">potentials</span> <span class="ow">and</span> <span class="n">potentials</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">ast_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span>
+        <span class="s2">&quot;Str&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Bool&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Num&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;List&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Tuple&quot;</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="n">explain</span><span class="p">(</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;You needed to assign a literal value to </span><span class="si">{variable}</span><span class="s2">, but you &quot;</span>
+                <span class="s2">&quot;created an expression instead.&quot;</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="n">variable_name</span><span class="p">),</span>
+            <span class="n">label</span><span class="o">=</span><span class="s2">&quot;exp_vs_lit&quot;</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Expression Instead of Literal&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
     <span class="k">elif</span> <span class="nb">type</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">explain</span><span class="p">((</span><span class="s2">&quot;You have not properly assigned anything to the variable &quot;</span>
-                   <span class="s2">&quot;</span><span class="si">{variable}</span><span class="s2">.&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="n">variable_name</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;no_assign&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;No Proper Assignment&quot;</span><span class="p">)</span>
+        <span class="n">explain</span><span class="p">(</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;You have not properly assigned anything to the variable &quot;</span> <span class="s2">&quot;</span><span class="si">{variable}</span><span class="s2">.&quot;</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="n">variable_name</span><span class="p">),</span>
+            <span class="n">label</span><span class="o">=</span><span class="s2">&quot;no_assign&quot;</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;No Proper Assignment&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">explain</span><span class="p">((</span><span class="s2">&quot;You have not assigned a </span><span class="si">{type}</span><span class="s2"> to the variable </span><span class="si">{variable}</span><span class="s2">.&quot;</span>
-                   <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="nb">type</span><span class="p">,</span> <span class="n">variable</span><span class="o">=</span><span class="n">variable_name</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;type_assign&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Unexpected Variable Type&quot;</span><span class="p">)</span>
+        <span class="n">explain</span><span class="p">(</span>
+            <span class="p">(</span><span class="s2">&quot;You have not assigned a </span><span class="si">{type}</span><span class="s2"> to the variable </span><span class="si">{variable}</span><span class="s2">.&quot;</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="nb">type</span><span class="o">=</span><span class="nb">type</span><span class="p">,</span> <span class="n">variable</span><span class="o">=</span><span class="n">variable_name</span>
+            <span class="p">),</span>
+            <span class="n">label</span><span class="o">=</span><span class="s2">&quot;type_assign&quot;</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Unexpected Variable Type&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
     <span class="k">return</span> <span class="kc">False</span></div>
 </pre></div>
 

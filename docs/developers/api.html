@@ -779,6 +779,21 @@ If missing, then defaults to the student’s submission’s main file.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="pedal.core.location.Location.from_ast">
+<em class="property">classmethod </em><code class="sig-name descname">from_ast</code><span class="sig-paren">(</span><em class="sig-param">node</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pedal/core/location.html#Location.from_ast"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.location.Location.from_ast" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new Location object from the AST node. Should work
+for both built-in AST nodes and CaitNodes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>node</strong> (<em>Node</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Location</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="pedal.core.location.Location.to_json">
 <code class="sig-name descname">to_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pedal/core/location.html#Location.to_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.location.Location.to_json" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a JSON version of this object, with all the fields.</p>

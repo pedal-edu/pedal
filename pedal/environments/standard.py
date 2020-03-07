@@ -48,24 +48,22 @@ def parse_argv():
         main_file = sys.argv[1]
         with open(main_file) as main_file_handle:
             main_code = main_file_handle.read()
-        return {main_file: main_code}, main_file, main_code, None, None, None, None, sys.argv[0]
+        return sys.argv[0], {main_file: main_code}, main_file, main_code, None, None, None, None
     #elif len(sys.argv) == 3:
     else:
         return sys.argv
     # TODO: Finish handling arguments intelligently
-    return [""] * 8
 
 
-def StandardEnvironment(files=None, main_file='answer.py', main_code=None,
+def setup_pedal(files=None, main_file='answer.py', main_code=None,
                         user=None, assignment=None, course=None, execution=None,
                         instructor_file='on_run.py'):
     if files is None and main_code is None:
-        files, main_file, main_code, user, assignment, course, execution, instructor_file = parse_argv()
+        instructor_file, files, main_file, main_code, user, assignment, course, execution = parse_argv()
     elif files is None:
         files = {main_file: main_code}
     elif main_code is None:
         main_code = files[main_file]
-    print(files, main_file, main_code)
     contextualize_report(Submission(files, main_file, main_code, user, assignment, course, execution,
                                     instructor_file))
     verify()

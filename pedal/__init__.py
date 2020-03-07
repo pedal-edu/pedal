@@ -1,8 +1,12 @@
 """
 A package for analyzing student code.
 
-TODO: Fix up all the tool's imports
-TODO: Add documentation for each one
+TODO: Statistics
+TODO: Output checking for folder of submissions
+TODO: Big annotated example
+TODO: Fix sections example
+TODO: Set up "Unit Test" environment
+TODO: Add documentation for each one, particularly toolkit
 TODO: Set up command line and other environments
 TODO: Improve feedback tracking for all the tools
 TODO: Fix up imports everywhere to be consistent, particularly for the modules themselves

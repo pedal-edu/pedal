@@ -18,7 +18,7 @@ def open_without_arguments(muted=False):
 
     """
     return feedback(open_without_arguments.__name__, "toolkit", Feedback.CATEGORIES.INSTRUCTOR,
-                    message=open_without_arguments.message_template(), muted=muted)
+                    message=open_without_arguments.message_template.format(), muted=muted)
 
 
 @CompositeFeedbackFunction()

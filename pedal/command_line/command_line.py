@@ -158,9 +158,9 @@ def run_ics_on_submission(ics_filename: str, ics_contents: str, ics_args: str,
     seed = find_seed(submission_contents)
     # TODO: figure out args
     #ics_args = list(substitute_args(ics_args, submission_filename, seed))
-    ics_args = [{submission_filename: submission_contents},
+    ics_args = [ics_filename, {submission_filename: submission_contents},
                 submission_filename, submission_contents,
-                student, assignment, course, None, ics_filename]
+                student, assignment, course, None]
     captured_output = StringIO()
     global_data = {}
     with redirect_stdout(captured_output):

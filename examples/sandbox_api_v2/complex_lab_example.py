@@ -223,7 +223,7 @@ def problem_5_unit_tests():
     # > checking_account = Account('My Checking')
     # > checking_account.deposit(400)
     # Then I called:
-    # > checking_account.deposite(100)
+    # > checking_account.deposit(100)
     # I expected it to produce
     # > 500
     # Instead, it produced:

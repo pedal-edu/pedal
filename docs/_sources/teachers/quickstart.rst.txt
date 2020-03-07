@@ -45,9 +45,9 @@ Although Pedal can be configured in a lot of ways, you may want to begin by usin
 
 .. code:: python
 
-    from pedal.environments.standard import StandardEnvironment
+    from pedal.environments import setup_pedal
     student_code = "print('Hello world!')"
-    ast, student, resolve = StandardEnvironment(student_code)
+    ast, student, resolve = setup_pedal(student_code)
 
     # ... More instructor logic can go here ...
 
@@ -80,9 +80,12 @@ However, it should be used to deliver negative feedback.
 There are other Feedback Functions to deliver negative feedback; the name `gently` refers to the
 fact that most Resolvers will prioritize this feedback lower than runtime errors, syntax errors, etc.
 
+Notice that we provide a label as a second argument.
+Although optional, we encourage you to label feedback to enhance your subsequent analysis.
+
 .. code:: python
 
-    gently("You failed to solve the question correctly!")
+    gently("You failed to solve the question correctly!", "incorrect_answer")
 
 The next is `set_success`, which allows you to establish that the learner has completed the problem
 successfully. The default resolver will prioritize this feedback above all others.
@@ -119,7 +122,7 @@ The first major feature is `find_all`:
 .. code:: python
 
     if ast.find_all("For"):
-        gently("It looks like your code is using a `for` loop; don't do that!")
+        gently("It looks like your code is using a `for` loop; don't do that!", "used_for_loop")
 
 The `find_all` function returns a list of `CaitNodes`, which represent elements of the AST.
 You can access attributes of these nodes; we recommend you refer to the
@@ -131,7 +134,7 @@ for more information about what is available.
     loops = ast.find_all("For")
     for loop in loops:
         if loop.target.name == "Tuple":
-            gently("You have a `for` loop with multiple targets, don't do that!")
+            gently("You have a `for` loop with multiple targets, don't do that!", "for_loop_multiple_targets")
 
 Finding AST Patterns
 ^^^^^^^^^^^^^^^^^^^^
@@ -143,7 +146,7 @@ function named `find_matches` (or `find_match` to get the first result):
 
     matches = ast.find_matches("answer = 5")
     if matches:
-        gently("The variable `answer` should not be assigned the value `5`.")
+        gently("The variable `answer` should not be assigned the value `5`.", "assigned_literal_value_to_answer")
 
 The `find_matches` function supports several kinds of wildcards, and gives you access to
 identifiers in the learners' code.
@@ -155,7 +158,7 @@ If you wish to access such data, you should use expressions instead.
 .. code:: python
 
     if ast.find_matches("answer = ___"):
-        gently("You assigned something to the variable `answer`")
+        gently("You assigned something to the variable `answer`", "assigned_to_answer")
 
 **Variable Name Match**: A place holder for variables, denoted by single underscores on both sides.
 Many instructor variables are allowed to map to one variable in student code,
@@ -166,7 +169,7 @@ You can get a variable's name via its `id` attribute.
 
     match = ast.find_match("_accumulator_ = 0")
     if match["_accumulator_"].id == "sum":
-        gently("Do not name your accumulating variable `sum`, since that is a reserved word.")
+        gently("Do not name your accumulating variable `sum`, since that is a reserved word.", "shadowed_builtin")
 
 **Subtree Expressions Match**: A place holder for subtree expressions.
 An expression is denoted by a double underscore before and after the name of the expression.
@@ -176,7 +179,7 @@ You can get the expression's AST node name via the `name` attribute.
 
     match = ast.find_match("_accumulator_ = __initial__")
     if match["__initial__"].name == "List":
-        gently("You initialized your accumulator as a list literal.")
+        gently("You initialized your accumulator as a list literal.", "initialized_accumulator")
 
 Checking Execution Results
 ^^^^^^^^^^^^^^^^^^^^^^^^^^

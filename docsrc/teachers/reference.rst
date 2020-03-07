@@ -15,6 +15,7 @@ document all the features available - for that, you should refer to the :ref:`fu
     tools/tifa
     tools/cait
     tools/source
+    tools/toolkit
 
 tools/source
 tools/sandbox

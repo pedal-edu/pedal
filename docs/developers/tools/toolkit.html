@@ -188,7 +188,7 @@
 <span id="utilities"></span><h2>Utilities<a class="headerlink" href="#module-pedal.toolkit.utilities" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="pedal.toolkit.utilities.ensure_assignment">
-<code class="sig-name descname">ensure_assignment</code><span class="sig-paren">(</span><em class="sig-param">variable_name</em>, <em class="sig-param">type=None</em>, <em class="sig-param">value=None</em>, <em class="sig-param">root=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#ensure_assignment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.ensure_assignment" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">ensure_assignment</code><span class="sig-paren">(</span><em class="sig-param">variable_name</em>, <em class="sig-param">type=None</em>, <em class="sig-param">value=None</em>, <em class="sig-param">root=None</em>, <em class="sig-param">muted=False</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#ensure_assignment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.ensure_assignment" title="Permalink to this definition">¶</a></dt>
 <dd><p>Consumes a variable name
 TODO: Implement the value parameter</p>
 <dl class="field-list simple">
@@ -209,7 +209,7 @@ assignment. Check GreenTreeSnakes (e.g., “Num”, or “Str”).</p></li>
 
 <dl class="function">
 <dt id="pedal.toolkit.utilities.ensure_literal">
-<code class="sig-name descname">ensure_literal</code><span class="sig-paren">(</span><em class="sig-param">*literals</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#ensure_literal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.ensure_literal" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">ensure_literal</code><span class="sig-paren">(</span><em class="sig-param">*literals</em>, <em class="sig-param">muted=False</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#ensure_literal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.ensure_literal" title="Permalink to this definition">¶</a></dt>
 <dd><p>Confirms that the literal IS in the code, returning False if it is not.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -226,146 +226,134 @@ assignment. Check GreenTreeSnakes (e.g., “Num”, or “Str”).</p></li>
 
 <dl class="function">
 <dt id="pedal.toolkit.utilities.ensure_operation">
-<code class="sig-name descname">ensure_operation</code><span class="sig-paren">(</span><em class="sig-param">op_name</em>, <em class="sig-param">root=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#ensure_operation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.ensure_operation" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>op_name</strong> – </p></li>
-<li><p><strong>root</strong> – </p></li>
-</ul>
-</dd>
-</dl>
-<p>Returns:</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="pedal.toolkit.utilities.ensure_recursion">
-<code class="sig-name descname">ensure_recursion</code><span class="sig-paren">(</span><em class="sig-param">function_name</em>, <em class="sig-param">root=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#ensure_recursion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.ensure_recursion" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>function_name</strong> – </p></li>
-<li><p><strong>root</strong> – </p></li>
-</ul>
-</dd>
-</dl>
-<p>Returns:</p>
+<code class="sig-name descname">ensure_operation</code><span class="sig-paren">(</span><em class="sig-param">op_name</em>, <em class="sig-param">root=None</em>, <em class="sig-param">muted=False</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#ensure_operation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.ensure_operation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determines if the given operator <cite>op_name</cite> is used anywhere, returning the
+node of it if it is. Otherwise, returns <cite>None</cite>. You can specify the operator
+as a string like <cite>“+”</cite> or <cite>“&lt;&lt;”</cite>. Supports all comparison, boolean, binary, and unary operators.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="pedal.toolkit.utilities.find_function_calls">
-<code class="sig-name descname">find_function_calls</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">root=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#find_function_calls"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.find_function_calls" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
+<code class="sig-name descname">find_function_calls</code><span class="sig-paren">(</span><em class="sig-param">name: str</em>, <em class="sig-param">root=None</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#find_function_calls"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.find_function_calls" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of CaitNodes representing all of the function calls that
+were found. This includes both methods and regular functions.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> – </p></li>
-<li><p><strong>root</strong> – </p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The name of the function to search.</p></li>
+<li><p><strong>root</strong> – A subtree of a parse tree to revert to.</p></li>
+<li><p><strong>report</strong> (<a class="reference internal" href="../api.html#pedal.core.report.Report" title="pedal.core.report.Report"><em>Report</em></a>) – The name of the Report to refer to.</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Relevant call nodes.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[CaitNode]</p>
+</dd>
 </dl>
-<p>Returns:</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="pedal.toolkit.utilities.find_negatives">
-<code class="sig-name descname">find_negatives</code><span class="sig-paren">(</span><em class="sig-param">root=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#find_negatives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.find_negatives" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>root</strong> – </p>
-</dd>
-</dl>
-<p>Returns:</p>
+<code class="sig-name descname">find_negatives</code><span class="sig-paren">(</span><em class="sig-param">root=None</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#find_negatives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.find_negatives" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all the occurrences of the given literal negative number in the source
+code. Can optionally filter at the given subtree.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="pedal.toolkit.utilities.find_operation">
-<code class="sig-name descname">find_operation</code><span class="sig-paren">(</span><em class="sig-param">op_name</em>, <em class="sig-param">root</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#find_operation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.find_operation" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>op_name</strong> – </p></li>
-<li><p><strong>root</strong> – </p></li>
-</ul>
-</dd>
-</dl>
-<p>Returns:</p>
+<code class="sig-name descname">find_operation</code><span class="sig-paren">(</span><em class="sig-param">op_name</em>, <em class="sig-param">root=None</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#find_operation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.find_operation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the first occurrence of the operator <cite>op_name</cite> in the source code.
+Otherwise returns <cite>False</cite>. You can specify the operator
+as a string like <cite>“+”</cite> or <cite>“&lt;&lt;”</cite>. Supports all comparison, boolean, binary, and unary operators.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="pedal.toolkit.utilities.find_prior_initializations">
-<code class="sig-name descname">find_prior_initializations</code><span class="sig-paren">(</span><em class="sig-param">node</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#find_prior_initializations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.find_prior_initializations" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>node</strong> – </p>
-</dd>
-</dl>
-<p>Returns:</p>
+<code class="sig-name descname">find_prior_initializations</code><span class="sig-paren">(</span><em class="sig-param">node</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span> &#x2192; [&lt;class 'pedal.cait.cait_node.CaitNode'&gt;]<a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#find_prior_initializations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.find_prior_initializations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a Name node, returns a list of all the assignment
+statements that incorporate that Name node prior to that line. Returns
+None if no Name is given.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="pedal.toolkit.utilities.function_is_called">
-<code class="sig-name descname">function_is_called</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#function_is_called"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.function_is_called" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>name</strong> – </p>
-</dd>
-</dl>
-<p>Returns:</p>
+<code class="sig-name descname">function_is_called</code><span class="sig-paren">(</span><em class="sig-param">name: str</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#function_is_called"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.function_is_called" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the number of times that the given function name is called.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="pedal.toolkit.utilities.function_prints">
-<code class="sig-name descname">function_prints</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#function_prints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.function_prints" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns:</p>
+<code class="sig-name descname">function_prints</code><span class="sig-paren">(</span><em class="sig-param">function_name: str = None</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#function_prints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.function_prints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determines if there is a print statement inside of any functions. If <cite>function_name</cite> is given,
+then only that function will be checked.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Whether there is a print inside the function.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)">bool</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
 <dt id="pedal.toolkit.utilities.is_top_level">
-<code class="sig-name descname">is_top_level</code><span class="sig-paren">(</span><em class="sig-param">ast_node</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#is_top_level"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.is_top_level" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
+<code class="sig-name descname">is_top_level</code><span class="sig-paren">(</span><em class="sig-param">ast_node: pedal.cait.cait_node.CaitNode</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#is_top_level"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.is_top_level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determines if the <cite>ast_node</cite> is at the top-level of the program.
+Correctly handles expression statements (so a print call on its own will be
+considered a statement, even though its technically an expression).</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>ast_node</strong> – </p>
+<dd class="field-odd"><p><strong>ast_node</strong> (<em>CaitNode</em>) – The CaitNode to check</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Whether the node is from the top level</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)">bool</a></p>
 </dd>
 </dl>
-<p>Returns:</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="pedal.toolkit.utilities.no_nested_function_definitions">
-<code class="sig-name descname">no_nested_function_definitions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#no_nested_function_definitions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.no_nested_function_definitions" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns:</p>
+<code class="sig-name descname">no_nested_function_definitions</code><span class="sig-paren">(</span><em class="sig-param">muted=False</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#no_nested_function_definitions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.no_nested_function_definitions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns <cite>True</cite> if there are any functions defined inside of other functions.
+Also attaches feedback, although that can be muted.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Returns whether there is a nested definition</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)">bool</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
-<dt id="pedal.toolkit.utilities.no_nonlist_nums">
-<code class="sig-name descname">no_nonlist_nums</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#no_nonlist_nums"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.no_nonlist_nums" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
 <dt id="pedal.toolkit.utilities.only_printing_variables">
-<code class="sig-name descname">only_printing_variables</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#only_printing_variables"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.only_printing_variables" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns:</p>
+<code class="sig-name descname">only_printing_variables</code><span class="sig-paren">(</span><em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#only_printing_variables"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.only_printing_variables" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determines whether the user is only printing variables, as opposed to
+literal values.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="pedal.toolkit.utilities.prevent_advanced_iteration">
-<code class="sig-name descname">prevent_advanced_iteration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#prevent_advanced_iteration"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.prevent_advanced_iteration" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">prevent_advanced_iteration</code><span class="sig-paren">(</span><em class="sig-param">muted=False</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#prevent_advanced_iteration"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.prevent_advanced_iteration" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
 <dt id="pedal.toolkit.utilities.prevent_builtin_usage">
-<code class="sig-name descname">prevent_builtin_usage</code><span class="sig-paren">(</span><em class="sig-param">function_names</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#prevent_builtin_usage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.prevent_builtin_usage" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>function_names</strong> – </p>
-</dd>
-</dl>
-<p>Returns:</p>
+<code class="sig-name descname">prevent_builtin_usage</code><span class="sig-paren">(</span><em class="sig-param">function_names: [&lt;class 'str'&gt;], muted: bool = False, report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#prevent_builtin_usage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.prevent_builtin_usage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determines the name of the first function in <cite>function_names</cite> that is
+called, or returns <cite>None</cite>; also attaches feedback.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="pedal.toolkit.utilities.prevent_literal">
-<code class="sig-name descname">prevent_literal</code><span class="sig-paren">(</span><em class="sig-param">*literals</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#prevent_literal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.prevent_literal" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">prevent_literal</code><span class="sig-paren">(</span><em class="sig-param">*literals</em>, <em class="sig-param">muted=False</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#prevent_literal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.prevent_literal" title="Permalink to this definition">¶</a></dt>
 <dd><p>Confirms that the literal is not in the code, returning False if it is not.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -382,22 +370,19 @@ assignment. Check GreenTreeSnakes (e.g., “Num”, or “Str”).</p></li>
 
 <dl class="function">
 <dt id="pedal.toolkit.utilities.prevent_operation">
-<code class="sig-name descname">prevent_operation</code><span class="sig-paren">(</span><em class="sig-param">op_name</em>, <em class="sig-param">root=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#prevent_operation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.prevent_operation" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>op_name</strong> – </p></li>
-<li><p><strong>root</strong> – </p></li>
-</ul>
-</dd>
-</dl>
-<p>Returns:</p>
+<code class="sig-name descname">prevent_operation</code><span class="sig-paren">(</span><em class="sig-param">op_name</em>, <em class="sig-param">root=None</em>, <em class="sig-param">muted=False</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#prevent_operation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.prevent_operation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determines if the given operator <cite>op_name</cite> is not used anywhere, returning the
+node of it if it is. Otherwise, returns <cite>None</cite>. You can specify the operator
+as a string like <cite>“+”</cite> or <cite>“&lt;&lt;”</cite>. Supports all comparison, boolean, binary, and unary operators.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="pedal.toolkit.utilities.prevent_unused_result">
-<code class="sig-name descname">prevent_unused_result</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#prevent_unused_result"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.prevent_unused_result" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-name descname">prevent_unused_result</code><span class="sig-paren">(</span><em class="sig-param">muted=False</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em>, <em class="sig-param">returning_methods=('replace'</em>, <em class="sig-param">'strip'</em>, <em class="sig-param">'lstrip'</em>, <em class="sig-param">'rstrip'</em>, <em class="sig-param">'split'</em>, <em class="sig-param">'upper'</em>, <em class="sig-param">'lower'</em>, <em class="sig-param">'title')</em><span class="sig-paren">)</span> &#x2192; [&lt;class 'pedal.cait.cait_node.CaitNode'&gt;]<a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#prevent_unused_result"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.prevent_unused_result" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of any function calls where the function being called
+typically has a return value that should be assigned or used in an
+expression, but was instead thrown away.</p>
+</dd></dl>
 
 </div>
 <div class="section" id="module-pedal.toolkit.functions">

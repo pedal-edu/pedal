@@ -254,16 +254,24 @@ assignment. Check GreenTreeSnakes (e.g., “Num”, or “Str”).</p></li>
 
 <dl class="function">
 <dt id="pedal.toolkit.utilities.find_function_calls">
-<code class="sig-name descname">find_function_calls</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">root=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#find_function_calls"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.find_function_calls" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
+<code class="sig-name descname">find_function_calls</code><span class="sig-paren">(</span><em class="sig-param">name: str</em>, <em class="sig-param">root=None</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#find_function_calls"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.find_function_calls" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of CaitNodes representing all of the function calls that
+were found. This includes both methods and regular functions.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> – </p></li>
-<li><p><strong>root</strong> – </p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The name of the function to search.</p></li>
+<li><p><strong>root</strong> – A subtree of a parse tree to revert to.</p></li>
+<li><p><strong>report</strong> (<a class="reference internal" href="../api.html#pedal.core.report.Report" title="pedal.core.report.Report"><em>Report</em></a>) – The name of the Report to refer to.</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Relevant call nodes.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[CaitNode]</p>
+</dd>
 </dl>
-<p>Returns:</p>
 </dd></dl>
 
 <dl class="function">
@@ -315,24 +323,41 @@ assignment. Check GreenTreeSnakes (e.g., “Num”, or “Str”).</p></li>
 
 <dl class="function">
 <dt id="pedal.toolkit.utilities.function_prints">
-<code class="sig-name descname">function_prints</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#function_prints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.function_prints" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns:</p>
+<code class="sig-name descname">function_prints</code><span class="sig-paren">(</span><em class="sig-param">function_name: str = None</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#function_prints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.function_prints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determines if there is a print statement inside of any functions. If <cite>function_name</cite> is given,
+then only that function will be checked.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Whether there is a print inside the function.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)">bool</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
 <dt id="pedal.toolkit.utilities.is_top_level">
-<code class="sig-name descname">is_top_level</code><span class="sig-paren">(</span><em class="sig-param">ast_node</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#is_top_level"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.is_top_level" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
+<code class="sig-name descname">is_top_level</code><span class="sig-paren">(</span><em class="sig-param">ast_node: pedal.cait.cait_node.CaitNode</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#is_top_level"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.is_top_level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determines if the <cite>ast_node</cite> is at the top-level of the program.
+Correctly handles expression statements (so a print call on its own will be
+considered a statement, even though its technically an expression).</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>ast_node</strong> – </p>
+<dd class="field-odd"><p><strong>ast_node</strong> (<em>CaitNode</em>) – The CaitNode to check</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Whether the node is from the top level</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)">bool</a></p>
 </dd>
 </dl>
-<p>Returns:</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="pedal.toolkit.utilities.no_nested_function_definitions">
-<code class="sig-name descname">no_nested_function_definitions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#no_nested_function_definitions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.no_nested_function_definitions" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">no_nested_function_definitions</code><span class="sig-paren">(</span><em class="sig-param">muted=False</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/toolkit/utilities.html#no_nested_function_definitions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.toolkit.utilities.no_nested_function_definitions" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns:</p>
 </dd></dl>
 
