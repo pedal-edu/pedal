@@ -32,8 +32,6 @@ Provide Output
 """
 
 import sys
-
-from pedal.core.environment import Environment
 from pedal.core.commands import contextualize_report
 from pedal.core.submission import Submission
 from pedal.source import verify
