@@ -1,0 +1,10 @@
+assert_is_instance
+2
+Instructor Test
+Student code failed instructor test.
+I ran:
+<pre>render_introduction()</pre>
+The result was:
+<pre>None</pre>
+But I expected the result to be of type:
+<pre>'str'</pre>

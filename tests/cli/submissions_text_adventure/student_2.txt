@@ -1,0 +1,13 @@
+KeyError
+6
+KeyError
+Traceback:
+  File "answer.py", line 182, in render
+    render_player(world) +
+  File "answer.py", line 187, in render_location
+    here = world['map'][location]
+KeyError: 'house'
+
+The error above occurred when I ran:<br>
+<pre>world = create_world()
+message = render(world)</pre>

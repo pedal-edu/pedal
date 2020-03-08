@@ -1,0 +1,10 @@
+NameError
+4
+NameError
+Traceback:
+  File "answer.py", line 84, in create_world
+    'map': create_map(),
+NameError: name 'create_map' is not defined
+
+The error above occurred when I ran:<br>
+<pre>create_world()</pre>

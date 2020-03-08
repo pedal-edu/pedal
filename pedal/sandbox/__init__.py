@@ -40,12 +40,15 @@ def run(raise_exceptions=True, report=MAIN_REPORT, coverage=False, threaded=Fals
 
     """
     sandbox = report[TOOL_NAME]['run']
+    sandbox.threaded = threaded
     source_code = report.submission.main_code
     sandbox.record_coverage = coverage
-    sandbox.run(source_code, as_filename=report.submission.main_file, inputs=inputs)
+    sandbox.run(source_code, as_filename=report.submission.main_file, inputs=inputs, threaded=threaded)
+    sandbox.raise_exceptions_mode = raise_exceptions
     if raise_exceptions and sandbox.exception is not None:
         name = str(sandbox.exception.__class__)[8:-2]
 
         runtime_error(sandbox.exception_formatted, name, sandbox.exception, sandbox.exception_position,
                       group=report['source']['section'], report=report)
+
     return sandbox

@@ -1,0 +1,12 @@
+assert_greater
+8
+Instructor Test
+Student code failed instructor test.
+I ran:
+<pre>world = create_world()
+options = get_options(world)</pre>
+The value of <code>options</code> was:
+<pre>[]</pre>
+But I expected <code>options</code> to have its length greater than:
+<pre>0</pre>
+I expected there to be more than one option.

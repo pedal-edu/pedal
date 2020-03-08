@@ -42,8 +42,8 @@ def set_success(score: float = 1, justification: str = None, tool: str = None, g
     return feedback("set_success",
                     tool=tool, category=FeedbackCategory.COMPLETE, kind=FeedbackKind.RESULT,
                     justification=justification, valence=Feedback.POSITIVE_VALENCE,
-                    title=set_success.title, message=set_success.text_template(),
-                    text=set_success.text_template(),
+                    title=set_success.title, message=set_success.text_template.format(),
+                    text=set_success.text_template.format(),
                     score=score, correct=True,
                     muted=False, version='1.0.0', author=PEDAL_DEVELOPERS, group=group,
                     report=report)
@@ -95,8 +95,8 @@ def give_partial(value: float, justification: str = None, title: str = None, too
     return feedback("give_partial", tool=tool, category=FeedbackCategory.INSTRUCTOR,
                     kind=FeedbackKind.RESULT,
                     justification=justification, valence=Feedback.POSITIVE_VALENCE,
-                    title=title or give_partial.title, message=give_partial.text_template(),
-                    text=give_partial.text_template(),
+                    title=title or give_partial.title, message=give_partial.text_template.format(),
+                    text=give_partial.text_template.format(),
                     score=value, correct=False, muted=True, version='1.0.0', author=PEDAL_DEVELOPERS, group=group,
                     report=report)
 

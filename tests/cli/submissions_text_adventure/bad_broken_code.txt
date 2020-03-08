@@ -1,0 +1,7 @@
+TypeError
+0
+TypeError
+Traceback:
+  File "answer.py", line 3
+    1+""
+TypeError: unsupported operand type(s) for +: 'int' and 'str'

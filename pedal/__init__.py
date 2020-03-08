@@ -19,4 +19,4 @@ DONE: Rework MAIN_REPORT keyword arg for all tools
 
 # Core Commands
 from pedal.core.commands import *
-
+from pedal.source import *

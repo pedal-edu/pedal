@@ -1,0 +1,10 @@
+TypeError
+2
+TypeError
+Traceback:
+  File "answer.py", line 64, in render_introduction
+    1+""
+TypeError: unsupported operand type(s) for +: 'int' and 'str'
+
+The error above occurred when I ran:<br>
+<pre>render_introduction()</pre>

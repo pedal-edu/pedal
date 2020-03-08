@@ -52,24 +52,13 @@ from contextlib import redirect_stdout
 from io import StringIO
 from textwrap import indent
 
+import unittest
+from unittest.mock import patch
+
 from pedal import clear_report
 from pedal.core.report import MAIN_REPORT
 from pedal.cait import parse_program
 from pedal.command_line.mocks import MockOpen
-from unittest.mock import patch
-
-
-class FORMAT_OPTIONS:
-    """
-    The possible valid output options
-    """
-    FEEDBACK = 'feedback'
-    GRADE = 'grade'
-    DEBUG = 'debug'
-    VERIFY = 'verify'
-    STATS = 'stats'
-    SANDBOX = 'sandbox'
-    ALL_OPTIONS = [FEEDBACK, GRADE, DEBUG, VERIFY, STATS, SANDBOX]
 
 
 def normalize_path(first: str, second: str):
@@ -174,6 +163,69 @@ def run_ics_on_submission(ics_filename: str, ics_contents: str, ics_args: str,
     return {"output": actual_output, "data": global_data, "report": MAIN_REPORT}
 
 
+class Result:
+    def __init__(self):
+        self.results = []
+
+    def add_case(self, submission_file_name, contents, result):
+        self.results.append((submission_file_name, contents, result))
+        if format == FORMAT_OPTIONS.FEEDBACK:
+            print(result['filename'])
+            print(indent(result['report'].result.for_console(), " " * 4))
+        elif format == FORMAT_OPTIONS.GRADE:
+            print(result['report'].result.score)
+        elif format == FORMAT_OPTIONS.DEBUG:
+            pass
+        elif format == FORMAT_OPTIONS.STATS:
+            assert "TODO: Aggregation of feedback into stats file is not yet supported"
+
+
+class VerifyResults(Result):
+    def __init__(self):
+        super().__init__()
+
+        class TestReferenceSolutions(unittest.TestCase):
+            maxDiff = None
+
+        self.TestReferenceSolutions = TestReferenceSolutions
+        self.tests = []
+
+    def add_case(self, submission_file_name, contents, result):
+        with open(submission_file_name + ".txt", "r") as output_file:
+            output_contents = output_file.read()
+
+        if result and result[-1] == "\n":
+            result = result[:-1]
+
+        def new_test(self):
+            self.assertEqual(result, output_contents)
+        test_name = os.path.basename(submission_file_name)
+        setattr(self.TestReferenceSolutions, "test_"+test_name, new_test)
+        self.tests.append("test_"+test_name)
+        # assert "TODO: Unit test style verification not yet supported"
+
+    def run_cases(self):
+        suite = unittest.defaultTestLoader.loadTestsFromTestCase(self.TestReferenceSolutions)
+        runner = unittest.TextTestRunner()
+        runner.run(suite)
+
+
+class FORMAT_OPTIONS:
+    """
+    The possible valid output options
+    """
+    FEEDBACK = 'feedback'
+    GRADE = 'grade'
+    DEBUG = 'debug'
+    VERIFY = 'verify'
+    STATS = 'stats'
+    SANDBOX = 'sandbox'
+    ALL_OPTIONS = [FEEDBACK, GRADE, DEBUG, VERIFY, STATS, SANDBOX]
+    CONSTRUCTORS = {
+        VERIFY: VerifyResults
+    }
+
+
 def main(args=None):
     """
     Actually runs Pedal from the command line.
@@ -186,10 +238,10 @@ def main(args=None):
     """
     if args is None:
         args = parse_args()
-    results = []
+    result = FORMAT_OPTIONS.CONSTRUCTORS[args.format]()
     if os.path.isfile(args.script):
         script_file_name, script_file_extension = os.path.splitext(args.script)
-        if script_file_extension in ('.py'):
+        if script_file_extension in ('.py',):
             submissions = normalize_path(args.submissions, args.script)
             if os.path.isfile(submissions):
                 submission_paths = [submissions]
@@ -204,22 +256,14 @@ def main(args=None):
                     scripts_contents = scripts_file.read()
                 with open(submission_path, 'r') as submission_file:
                     submission_contents = submission_file.read()
-                result = run_ics_on_submission(args.script, scripts_contents, args.args,
+                print(submission_file_name)
+                single_result = run_ics_on_submission(args.script, scripts_contents, args.args,
                                                "answer.py", submission_contents,
                                                args.format,
                                                {'filename': submission_path}, {}, {})
-                result['filename'] = submission_path
-                if args.format == FORMAT_OPTIONS.FEEDBACK:
-                    print(result['filename'])
-                    print(indent(result['report'].result.for_console(), " " * 4))
-                elif args.format == FORMAT_OPTIONS.GRADE:
-                    print(result['report'].result.score)
-                elif args.format == FORMAT_OPTIONS.DEBUG:
-                    pass
-                elif args.format == FORMAT_OPTIONS.VERIFY:
-                    assert "TODO: Unit test style verification not yet supported"
-                elif args.format == FORMAT_OPTIONS.STATS:
-                    assert "TODO: Aggregation of feedback into stats file is not yet supported"
+                single_result['filename'] = submission_path
+                result.add_case(submission_file_name, submission_contents, single_result['output'])
+            result.run_cases()
         elif script_file_extension in ('.db',):
             assert "TODO: ProgSnap DB files not yet supported"
         elif script_file_extension in ('.zip', ):

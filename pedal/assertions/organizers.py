@@ -90,6 +90,7 @@ def finish_section(number, *functions, next_section=False):
             print("\tNEXT SECTION")
         return result
 
+
 def section(*args):
     '''
     TODO: Deprecate?
@@ -115,6 +116,7 @@ def section(*args):
     elif len(args) >= 1:
         section_number = args[0]
     return wrap
+
 
 def phase(phase_name, before=None, after=None):
     '''
@@ -148,7 +150,8 @@ def phase(phase_name, before=None, after=None):
         _add_relationships(after, phase_name)
         return _handle_entry
     return wrap
-    
+
+
 def stop_on_failure(f):
     """
 

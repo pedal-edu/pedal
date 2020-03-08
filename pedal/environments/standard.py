@@ -54,8 +54,8 @@ def parse_argv():
 
 
 def setup_pedal(files=None, main_file='answer.py', main_code=None,
-                        user=None, assignment=None, course=None, execution=None,
-                        instructor_file='on_run.py'):
+                user=None, assignment=None, course=None, execution=None,
+                instructor_file='on_run.py', skip_tifa=False):
     if files is None and main_code is None:
         instructor_file, files, main_file, main_code, user, assignment, course, execution = parse_argv()
     elif files is None:
@@ -66,8 +66,10 @@ def setup_pedal(files=None, main_file='answer.py', main_code=None,
                                     instructor_file))
     verify()
     ast = parse_program()
-    tifa = tifa_analysis()
-    student = run()
+    if not skip_tifa:
+        tifa = tifa_analysis()
+    student = run(threaded=True, raise_exceptions=True)
+    student.report_exceptions_mode = True
 
     def print_resolve(*args, **kwargs):
         result = simple.resolve(*args, **kwargs)

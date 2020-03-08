@@ -1,0 +1,6 @@
+assert_equal
+16
+Instructor Test
+Student code failed instructor test.
+'playing' != 'won'
+I tried your WIN_PATH path, but your world's status ended as 'playing' instead of 'won'.

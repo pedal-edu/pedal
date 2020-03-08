@@ -1,0 +1,7 @@
+TimeoutError
+2
+TimeoutError
+Your code took too long to run (it was given 3 seconds); maybe you have an infinite loop?
+
+The error above occurred when I ran:<br>
+<pre>render_introduction()</pre>

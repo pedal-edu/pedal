@@ -1,0 +1,11 @@
+assert_greater_equal
+4
+Instructor Test
+Student code failed instructor test.
+I ran:
+<pre>world = create_world()</pre>
+The value of <code>world</code> was:
+<pre>{}</pre>
+But I expected <code>world</code> to have its length greater than or equal to:
+<pre>1</pre>
+I expected there to be more than one location in your world.

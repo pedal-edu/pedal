@@ -1,0 +1,11 @@
+assert_is_instance
+6
+Instructor Test
+Student code failed instructor test.
+I ran:
+<pre>world = create_world()
+message = render(world)</pre>
+The value of <code>message</code> was:
+<pre>None</pre>
+But I expected <code>message</code> to be of type:
+<pre>'str'</pre>

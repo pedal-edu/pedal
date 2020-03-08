@@ -1,0 +1,10 @@
+TypeError
+4
+TypeError
+Traceback:
+  File "answer.py", line 84, in create_world
+    'items': create_items()
+TypeError: create_items() missing 1 required positional argument: 'location'
+
+The error above occurred when I ran:<br>
+<pre>create_world()</pre>

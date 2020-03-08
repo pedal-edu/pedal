@@ -28,3 +28,5 @@ def default_pipeline(tifa=False, cait=True, sandbox=True):
         results.append(execute())
     return tuple(results)
 '''
+
+from pedal.environments.standard import setup_pedal

@@ -1,6 +1,7 @@
 import sys
 
 from pedal.core.report import MAIN_REPORT
+from pedal.core.commands import set_success
 from pedal.sandbox.exceptions import SandboxStudentCodeException
 
 
@@ -35,7 +36,7 @@ def _topological_sort(names, orderings):
     return stack
     
 
-def resolve_all(set_success=False, report=MAIN_REPORT):
+def resolve_all(set_successful=False, report=MAIN_REPORT):
     """
 
     Args:
@@ -63,8 +64,8 @@ def resolve_all(set_success=False, report=MAIN_REPORT):
         
     #for f in report.feedback:
     #    print("\t", f, f.mistake, f.misconception)
-    if not report['assertions']['failures'] and phase_success and set_success:
-        report.set_success()
+    if not report['assertions']['failures'] and phase_success and set_successful:
+        set_success()
     
     _reset_phases(report)
 
@@ -121,6 +122,7 @@ def _setup_assertions(report):
         }
         report.add_hook('source.next_section.before', resolve_all)
         report.add_hook('pedal.resolvers.resolve', resolve_all)
+
 
 def set_assertion_mode(exceptions=True, report=MAIN_REPORT):
     """
