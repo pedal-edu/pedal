@@ -200,14 +200,17 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">sandbox</span> <span class="o">=</span> <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;run&#39;</span><span class="p">]</span>
+    <span class="n">sandbox</span><span class="o">.</span><span class="n">threaded</span> <span class="o">=</span> <span class="n">threaded</span>
     <span class="n">source_code</span> <span class="o">=</span> <span class="n">report</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">main_code</span>
     <span class="n">sandbox</span><span class="o">.</span><span class="n">record_coverage</span> <span class="o">=</span> <span class="n">coverage</span>
-    <span class="n">sandbox</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">source_code</span><span class="p">,</span> <span class="n">as_filename</span><span class="o">=</span><span class="n">report</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">main_file</span><span class="p">,</span> <span class="n">inputs</span><span class="o">=</span><span class="n">inputs</span><span class="p">)</span>
+    <span class="n">sandbox</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">source_code</span><span class="p">,</span> <span class="n">as_filename</span><span class="o">=</span><span class="n">report</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">main_file</span><span class="p">,</span> <span class="n">inputs</span><span class="o">=</span><span class="n">inputs</span><span class="p">,</span> <span class="n">threaded</span><span class="o">=</span><span class="n">threaded</span><span class="p">)</span>
+    <span class="n">sandbox</span><span class="o">.</span><span class="n">raise_exceptions_mode</span> <span class="o">=</span> <span class="n">raise_exceptions</span>
     <span class="k">if</span> <span class="n">raise_exceptions</span> <span class="ow">and</span> <span class="n">sandbox</span><span class="o">.</span><span class="n">exception</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">sandbox</span><span class="o">.</span><span class="n">exception</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)[</span><span class="mi">8</span><span class="p">:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
 
         <span class="n">runtime_error</span><span class="p">(</span><span class="n">sandbox</span><span class="o">.</span><span class="n">exception_formatted</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">sandbox</span><span class="o">.</span><span class="n">exception</span><span class="p">,</span> <span class="n">sandbox</span><span class="o">.</span><span class="n">exception_position</span><span class="p">,</span>
                       <span class="n">group</span><span class="o">=</span><span class="n">report</span><span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">][</span><span class="s1">&#39;section&#39;</span><span class="p">],</span> <span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span>
+
     <span class="k">return</span> <span class="n">sandbox</span></div>
 </pre></div>
 

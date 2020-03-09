@@ -3,6 +3,7 @@
 Teacher Tutorial
 ================
 
+.. warning:: This document is out of date, please refer to the QuickStart and Reference pages for now.
 
 Using Pedal
 ###########
@@ -183,6 +184,33 @@ Finally, for subtree matching, you can use the `find_matches` function of the ex
 In the example above, `__expr1__` will match to the inner body of the for loops in source 1 and source 2. The `submatches` variable would then in both cases, extract the `summer = summer + item` from both sources, returning the same type of list as `find_matches`.
 
 A final note for that example, note that some operations are expected to be commutative. Currently only addition and multiplication are supported as commutative operators. This commutativity currently unintelligently allows either ordering for the subtrees of the addition or multiplication ast nodes, and in the case as above, would return two matches, one for `_var1_ = _var2_ + _var1_` and one for `_var1 = _var1_ + _var2_`. If they are not commutative (e.g. because of a function call that changes state), Cait currently doesn't detect such cases
+
+Finding AST Elements
+^^^^^^^^^^^^^^^^^^^^
+
+`CAIT` is a "Capturer for AST Inclusion Trees", a fancy way of saying it can be used to access the
+AST of the learners' code. If the code failed to parse, `CAIT` functions are still safe to run - they
+will not cause exceptions, just return no results. `CAIT` has almost no `Feedback Functions`; instead, it
+supports `Feedback Condition` authoring through two mechanisms.
+
+The first major feature is `find_all`:
+
+.. code:: python
+
+    if ast.find_all("For"):
+        gently("It looks like your code is using a `for` loop; don't do that!", "used_for_loop")
+
+The `find_all` function returns a list of `CaitNodes`, which represent elements of the AST.
+You can access attributes of these nodes; we recommend you refer to the
+`GreenTreeSnakes <https://greentreesnakes.readthedocs.io/en/latest/nodes.html>`_ documentation
+for more information about what is available.
+
+.. code:: python
+
+    loops = ast.find_all("For")
+    for loop in loops:
+        if loop.target.name == "Tuple":
+            gently("You have a `for` loop with multiple targets, don't do that!", "for_loop_multiple_targets")
 
 Mistakes
 ^^^^^^^^

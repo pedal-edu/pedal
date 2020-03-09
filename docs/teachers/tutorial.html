@@ -36,7 +36,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Developer Guide" href="../developers/guide.html" />
-    <link rel="prev" title="Source" href="tools/source.html" /> 
+    <link rel="prev" title="Sandbox" href="tools/sandbox.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -97,6 +97,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#source">Source</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#tifa">TIFA</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#cait">CAIT</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#finding-ast-elements">Finding AST Elements</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#mistakes">Mistakes</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#toolkit">Toolkit</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#sandbox">Sandbox</a></li>
@@ -178,6 +179,10 @@
             
   <div class="section" id="teacher-tutorial">
 <span id="tutorial"></span><h1>Teacher Tutorial<a class="headerlink" href="#teacher-tutorial" title="Permalink to this headline">¶</a></h1>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This document is out of date, please refer to the QuickStart and Reference pages for now.</p>
+</div>
 <div class="section" id="using-pedal">
 <h2>Using Pedal<a class="headerlink" href="#using-pedal" title="Permalink to this headline">¶</a></h2>
 <p>Pedal is a collection of tools to analyze student’s work in a pipeline.
@@ -324,6 +329,28 @@ and then give practical examples of how to use Pedal.</p>
 <p>In the example above, <cite>__expr1__</cite> will match to the inner body of the for loops in source 1 and source 2. The <cite>submatches</cite> variable would then in both cases, extract the <cite>summer = summer + item</cite> from both sources, returning the same type of list as <cite>find_matches</cite>.</p>
 <p>A final note for that example, note that some operations are expected to be commutative. Currently only addition and multiplication are supported as commutative operators. This commutativity currently unintelligently allows either ordering for the subtrees of the addition or multiplication ast nodes, and in the case as above, would return two matches, one for <cite>_var1_ = _var2_ + _var1_</cite> and one for <cite>_var1 = _var1_ + _var2_</cite>. If they are not commutative (e.g. because of a function call that changes state), Cait currently doesn’t detect such cases</p>
 </div>
+<div class="section" id="finding-ast-elements">
+<h4>Finding AST Elements<a class="headerlink" href="#finding-ast-elements" title="Permalink to this headline">¶</a></h4>
+<p><cite>CAIT</cite> is a “Capturer for AST Inclusion Trees”, a fancy way of saying it can be used to access the
+AST of the learners’ code. If the code failed to parse, <cite>CAIT</cite> functions are still safe to run - they
+will not cause exceptions, just return no results. <cite>CAIT</cite> has almost no <cite>Feedback Functions</cite>; instead, it
+supports <cite>Feedback Condition</cite> authoring through two mechanisms.</p>
+<p>The first major feature is <cite>find_all</cite>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;For&quot;</span><span class="p">):</span>
+    <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;It looks like your code is using a `for` loop; don&#39;t do that!&quot;</span><span class="p">,</span> <span class="s2">&quot;used_for_loop&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The <cite>find_all</cite> function returns a list of <cite>CaitNodes</cite>, which represent elements of the AST.
+You can access attributes of these nodes; we recommend you refer to the
+<a class="reference external" href="https://greentreesnakes.readthedocs.io/en/latest/nodes.html">GreenTreeSnakes</a> documentation
+for more information about what is available.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">loops</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;For&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">loop</span> <span class="ow">in</span> <span class="n">loops</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">loop</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;Tuple&quot;</span><span class="p">:</span>
+        <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;You have a `for` loop with multiple targets, don&#39;t do that!&quot;</span><span class="p">,</span> <span class="s2">&quot;for_loop_multiple_targets&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="mistakes">
 <h4>Mistakes<a class="headerlink" href="#mistakes" title="Permalink to this headline">¶</a></h4>
 <p>A collection of code configuration patterns that represent common mistakes for students. These mistakes are grouped together by topics.</p>
@@ -360,7 +387,7 @@ and then give practical examples of how to use Pedal.</p>
         <a href="../developers/guide.html" class="btn btn-neutral float-right" title="Developer Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="tools/source.html" class="btn btn-neutral float-left" title="Source" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="tools/sandbox.html" class="btn btn-neutral float-left" title="Sandbox" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

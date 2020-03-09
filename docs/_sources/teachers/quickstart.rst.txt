@@ -109,33 +109,6 @@ Finally, you can give the student compliments on things that are going well.
 
 There are several other core commands, so check out the :doc:`reference` for more.
 
-Finding AST Elements
-^^^^^^^^^^^^^^^^^^^^
-
-`CAIT` is a "Capturer for AST Inclusion Trees", a fancy way of saying it can be used to access the
-AST of the learners' code. If the code failed to parse, `CAIT` functions are still safe to run - they
-will not cause exceptions, just return no results. `CAIT` has almost no `Feedback Functions`; instead, it
-supports `Feedback Condition` authoring through two mechanisms.
-
-The first major feature is `find_all`:
-
-.. code:: python
-
-    if ast.find_all("For"):
-        gently("It looks like your code is using a `for` loop; don't do that!", "used_for_loop")
-
-The `find_all` function returns a list of `CaitNodes`, which represent elements of the AST.
-You can access attributes of these nodes; we recommend you refer to the
-`GreenTreeSnakes <https://greentreesnakes.readthedocs.io/en/latest/nodes.html>`_ documentation
-for more information about what is available.
-
-.. code:: python
-
-    loops = ast.find_all("For")
-    for loop in loops:
-        if loop.target.name == "Tuple":
-            gently("You have a `for` loop with multiple targets, don't do that!", "for_loop_multiple_targets")
-
 Finding AST Patterns
 ^^^^^^^^^^^^^^^^^^^^
 
@@ -144,7 +117,7 @@ function named `find_matches` (or `find_match` to get the first result):
 
 .. code:: python
 
-    matches = ast.find_matches("answer = 5")
+    matches = find_matches("answer = 5")
     if matches:
         gently("The variable `answer` should not be assigned the value `5`.", "assigned_literal_value_to_answer")
 
@@ -157,7 +130,7 @@ If you wish to access such data, you should use expressions instead.
 
 .. code:: python
 
-    if ast.find_matches("answer = ___"):
+    if find_matches("answer = ___"):
         gently("You assigned something to the variable `answer`", "assigned_to_answer")
 
 **Variable Name Match**: A place holder for variables, denoted by single underscores on both sides.
@@ -167,7 +140,7 @@ You can get a variable's name via its `id` attribute.
 
 .. code:: python
 
-    match = ast.find_match("_accumulator_ = 0")
+    match = find_match("_accumulator_ = 0")
     if match["_accumulator_"].id == "sum":
         gently("Do not name your accumulating variable `sum`, since that is a reserved word.", "shadowed_builtin")
 
@@ -177,7 +150,7 @@ You can get the expression's AST node name via the `name` attribute.
 
 .. code:: python
 
-    match = ast.find_match("_accumulator_ = __initial__")
+    match = find_match("_accumulator_ = __initial__")
     if match["__initial__"].name == "List":
         gently("You initialized your accumulator as a list literal.", "initialized_accumulator")
 
