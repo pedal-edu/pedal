@@ -167,9 +167,112 @@
             
   <div class="section" id="teacher-examples">
 <h1>Teacher Examples<a class="headerlink" href="#teacher-examples" title="Permalink to this headline">¶</a></h1>
-<p>This document goes over some common scenarios that you might have.</p>
+<p>This document goes over some common scenarios that you might have. Or more accurately right now, it’s showing off
+some random examples I grabbed from our courses.</p>
 <div class="section" id="single-problem">
 <h2>Single Problem<a class="headerlink" href="#single-problem" title="Permalink to this headline">¶</a></h2>
+<p>Here’s a random simple example grading script for a problem where students use the <cite>round</cite> function to convert a
+dollar amount stored as a string literal without a dollar sign, and then print the result. It’s trivial, but we
+do use it in one of courses.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.toolkit.printing</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pedal.toolkit.utilities</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="k">if</span> <span class="s2">&quot;$&quot;</span> <span class="ow">in</span> <span class="n">get_program</span><span class="p">():</span>
+    <span class="n">explain</span><span class="p">(</span><span class="s2">&quot;You should not use the dollar sign ($) anywhere in your code!&quot;</span><span class="p">,</span>
+            <span class="n">priority</span><span class="o">=</span><span class="s1">&#39;verifier&#39;</span><span class="p">)</span>
+
+<span class="n">ast</span> <span class="o">=</span> <span class="n">parse_program</span><span class="p">()</span>
+<span class="k">if</span> <span class="n">function_is_called</span><span class="p">(</span><span class="s1">&#39;round&#39;</span><span class="p">):</span>
+    <span class="n">prints</span> <span class="o">=</span> <span class="n">ensure_prints</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">prints</span><span class="p">:</span>
+        <span class="n">nums</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">&#39;Num&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">nums</span> <span class="ow">and</span> <span class="n">nums</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">n</span> <span class="o">==</span> <span class="mf">9.50</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;You should only have one literal number in your code.&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;Str&quot;</span><span class="p">):</span>
+                <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;You should have no literal strings in your code.&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">get_output</span><span class="p">())</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">get_output</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;10&quot;</span><span class="p">,</span> <span class="s2">&quot;10.0&quot;</span><span class="p">):</span>
+                    <span class="n">set_success</span><span class="p">()</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;Incorrect output&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;You should only be printing one thing.&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;You need to make sure you have 9.50 in your code&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;Make sure you are using the &lt;code&gt;round&lt;/code&gt; function!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Here’s a much more sophisicated problem where they have to read open two files and mangle their contents to
+make MadLibs.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.toolkit.utilities</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pedal.toolkit.files</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">ast</span> <span class="o">=</span> <span class="n">parse_program</span><span class="p">()</span>
+<span class="n">suppress</span><span class="p">(</span><span class="s2">&quot;analyzer&quot;</span><span class="p">,</span> <span class="s2">&quot;Iterating over non-list&quot;</span><span class="p">)</span>
+<span class="n">suppress</span><span class="p">(</span><span class="s2">&quot;analyzer&quot;</span><span class="p">,</span> <span class="s2">&quot;Iterating over empty list&quot;</span><span class="p">)</span>
+
+<span class="n">words_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;words.txt&quot;</span><span class="p">)</span>
+<span class="n">story_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;story.txt&quot;</span><span class="p">)</span>
+<span class="n">words</span> <span class="o">=</span> <span class="p">[</span><span class="n">w</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">words_file</span><span class="p">]</span>
+<span class="n">story</span> <span class="o">=</span> <span class="p">[</span><span class="n">l</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">story_file</span><span class="p">]</span>
+<span class="n">correct_story</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">story</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">words</span><span class="p">:</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="s1">&#39;____&#39;</span><span class="p">)</span>
+    <span class="n">correct_story</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">get_output</span><span class="p">()</span>
+
+<span class="n">exprs</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">&#39;Expr&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">expr</span> <span class="ow">in</span> <span class="n">exprs</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">expr</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">ast_name</span> <span class="o">==</span> <span class="s2">&quot;Call&quot;</span><span class="p">:</span>
+        <span class="n">a_call</span> <span class="o">=</span> <span class="n">expr</span><span class="o">.</span><span class="n">value</span>
+        <span class="k">if</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">ast_name</span> <span class="o">==</span> <span class="s1">&#39;Attribute&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">attr</span> <span class="o">==</span> <span class="s1">&#39;append&#39;</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">attr</span> <span class="o">==</span> <span class="s1">&#39;replace&#39;</span><span class="p">:</span>
+                <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;Remember! You cannot modify a string directly. Instead, you should assign the result back to the string variable.&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">attr</span> <span class="o">==</span> <span class="s1">&#39;strip&#39;</span><span class="p">:</span>
+                <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;Remember! You cannot modify a string directly. Instead, you should assign the result back to the string variable.&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">files_not_handled_correctly</span><span class="p">(</span><span class="s1">&#39;words.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;story.txt&#39;</span><span class="p">):</span>
+    <span class="k">pass</span>
+<span class="k">elif</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;If&quot;</span><span class="p">):</span>
+    <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;You do not need any &lt;code&gt;if&lt;/code&gt; statements. The &lt;code&gt;replace&lt;/code&gt; method works regardless of whether the text contains the string.&quot;</span><span class="p">)</span>
+<span class="k">elif</span> <span class="ow">not</span> <span class="n">function_is_called</span><span class="p">(</span><span class="s2">&quot;replace&quot;</span><span class="p">):</span>
+    <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;You will need to use the &lt;code&gt;replace&lt;/code&gt; method!&quot;</span><span class="p">)</span>
+<span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">output</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span> <span class="ow">and</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">correct_story</span><span class="p">)</span> <span class="o">==</span> <span class="n">output</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+    <span class="n">set_success</span><span class="p">()</span>
+<span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;comprehension&quot;</span><span class="p">))</span><span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;For&quot;</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+    <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;You will need at least two loops.&quot;</span><span class="p">)</span>
+<span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;comprehension&quot;</span><span class="p">))</span><span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;For&quot;</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">:</span>
+    <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;You need no more than five loops.&quot;</span><span class="p">)</span>
+<span class="k">elif</span> <span class="n">function_is_called</span><span class="p">(</span><span class="s2">&quot;read&quot;</span><span class="p">):</span>
+    <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;You should not use the built-in &lt;code&gt;read&lt;/code&gt; method.&quot;</span><span class="p">)</span>
+<span class="k">elif</span> <span class="n">function_is_called</span><span class="p">(</span><span class="s2">&quot;readlines&quot;</span><span class="p">):</span>
+    <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;You should not use the built-in &lt;code&gt;readlines&lt;/code&gt; method.&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">function_is_called</span><span class="p">(</span><span class="s1">&#39;strip&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">function_is_called</span><span class="p">(</span><span class="s1">&#39;rstrip&#39;</span><span class="p">):</span>
+        <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;Make sure you are stripping the new lines before you print!&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">any</span><span class="p">(</span><span class="n">l</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">output</span><span class="p">):</span>
+        <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;Make sure you are stripping the new lines before you print!&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="ow">not</span> <span class="n">output</span><span class="p">:</span>
+        <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;You are not printing anything.&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">output</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">correct_story</span><span class="p">):</span>
+        <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;You have printed too many things. Remember, each line of the story should only be printed once!&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">output</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">correct_story</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">output</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;You have not printed enough things. Is it possible you&#39;re printing everything on one line?&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;You have not printed enough things.&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">story</span> <span class="o">==</span> <span class="n">output</span><span class="p">:</span>
+        <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;You have not replaced the words in the story with underscores!&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">output</span> <span class="o">==</span> <span class="n">correct_story</span><span class="p">:</span>
+        <span class="n">set_success</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;You are not printing the right result.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="large-project">
 <h2>Large Project<a class="headerlink" href="#large-project" title="Permalink to this headline">¶</a></h2>

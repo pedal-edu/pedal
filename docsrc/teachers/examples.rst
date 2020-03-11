@@ -1,34 +1,117 @@
 Teacher Examples
 ================
 
-This document goes over some common scenarios that you might have.
+This document goes over some common scenarios that you might have. Or more accurately right now, it's showing off
+some random examples I grabbed from our courses.
 
 Single Problem
 --------------
 
+Here's a random simple example grading script for a problem where students use the `round` function to convert a
+dollar amount stored as a string literal without a dollar sign, and then print the result. It's trivial, but we
+do use it in one of courses.
 
+.. code:: python
 
-.. comment::
+    from pedal.toolkit.printing import *
+    from pedal.toolkit.utilities import *
 
-    Instructor Control Script
+    if "$" in get_program():
+        explain("You should not use the dollar sign ($) anywhere in your code!",
+                priority='verifier')
 
-    Submission 1
+    ast = parse_program()
+    if function_is_called('round'):
+        prints = ensure_prints(1)
+        if prints:
+            nums = ast.find_all('Num')
+            if nums and nums[0].n == 9.50:
+                if len(nums) > 1:
+                    gently("You should only have one literal number in your code.")
+                elif ast.find_all("Str"):
+                    gently("You should have no literal strings in your code.")
+                elif len(get_output()) == 1:
+                    if get_output()[0] in ("10", "10.0"):
+                        set_success()
+                    else:
+                        gently("Incorrect output")
+                else:
+                    gently("You should only be printing one thing.")
+            else:
+                gently("You need to make sure you have 9.50 in your code")
+    else:
+        gently("Make sure you are using the <code>round</code> function!")
 
-    Feedback generated
+Here's a much more sophisicated problem where they have to read open two files and mangle their contents to
+make MadLibs.
 
-    Submission 2
+.. code:: python
 
-    Feedback generated
+    from pedal.toolkit.utilities import *
+    from pedal.toolkit.files import *
 
-    Submission 3
+    ast = parse_program()
+    suppress("analyzer", "Iterating over non-list")
+    suppress("analyzer", "Iterating over empty list")
 
-    Feedback generated
+    words_file = open("words.txt")
+    story_file = open("story.txt")
+    words = [w.strip() for w in words_file]
+    story = [l.strip() for l in story_file]
+    correct_story = []
+    for line in story:
+        for w in words:
+            line = line.replace(w, '____')
+        correct_story.append(line)
+    output = get_output()
 
-    Lab with Sequential Sections
-    ----------------------------
-
-    Exam with Independent Sections
-    ------------------------------
+    exprs = ast.find_all('Expr')
+    for expr in exprs:
+        if expr.value.ast_name == "Call":
+            a_call = expr.value
+            if a_call.func.ast_name == 'Attribute':
+                if a_call.func.attr == 'append':
+                    pass
+                elif a_call.func.attr == 'replace':
+                    gently("Remember! You cannot modify a string directly. Instead, you should assign the result back to the string variable.")
+                elif a_call.func.attr == 'strip':
+                    gently("Remember! You cannot modify a string directly. Instead, you should assign the result back to the string variable.")
+    if files_not_handled_correctly('words.txt', 'story.txt'):
+        pass
+    elif ast.find_all("If"):
+        gently("You do not need any <code>if</code> statements. The <code>replace</code> method works regardless of whether the text contains the string.")
+    elif not function_is_called("replace"):
+        gently("You will need to use the <code>replace</code> method!")
+    elif len(output)==1 and "\n".join(correct_story) == output[0]:
+        set_success()
+    elif len(ast.find_all("comprehension"))+ len(ast.find_all("For")) < 2:
+        gently("You will need at least two loops.")
+    elif len(ast.find_all("comprehension"))+ len(ast.find_all("For")) > 5:
+        gently("You need no more than five loops.")
+    elif function_is_called("read"):
+        gently("You should not use the built-in <code>read</code> method.")
+    elif function_is_called("readlines"):
+        gently("You should not use the built-in <code>readlines</code> method.")
+    else:
+        if not function_is_called('strip') and not function_is_called('rstrip'):
+            gently("Make sure you are stripping the new lines before you print!")
+        elif any(l.endswith('\n') for l in output):
+            gently("Make sure you are stripping the new lines before you print!")
+        elif not output:
+            gently("You are not printing anything.")
+        elif len(output) > len(correct_story):
+            gently("You have printed too many things. Remember, each line of the story should only be printed once!")
+        elif len(output) < len(correct_story):
+            if len(output) == 1:
+                gently("You have not printed enough things. Is it possible you're printing everything on one line?")
+            else:
+                gently("You have not printed enough things.")
+        elif story == output:
+            gently("You have not replaced the words in the story with underscores!")
+        elif output == correct_story:
+            set_success()
+        else:
+            gently("You are not printing the right result.")
 
 Large Project
 -------------

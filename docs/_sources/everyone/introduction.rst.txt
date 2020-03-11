@@ -25,7 +25,11 @@ detect many of these scenarios and provide different kinds of feedback.
 .. code-block:: python
     :caption: instructor.py
 
-    from pedal import verify
+    from pedal.quick import setup_pedal
+
+    setup_pedal()
+
+    from pedal.source import verify
     verify()
 
     # Generic, friendly feedback on undeclared variables, among others
@@ -33,14 +37,14 @@ detect many of these scenarios and provide different kinds of feedback.
     tifa_analysis()
 
     # Partial credit for good progress
-    from pedal import give_partial
+    from pedal.commands import give_partial
     from pedal.cait import parse_program
     ast = parse_program()
     if ast.find("For"):
         give_partial(1/10, "Right, you need a `for` loop!")
 
     # Give feedback by finding a common problem-specific mistake
-    from pedal import explain
+    from pedal.commands import explain
     from pedal.cait import find_matches
     matches = find_matches("for _expr_ in _list_:\n ___ = ____ + _list_")
     if matches:
@@ -52,5 +56,7 @@ detect many of these scenarios and provide different kinds of feedback.
     student = run()
     assert_has_function(student, 'add_prices', list)
     assert_equal(student.add_prices([1,2,3]), 6)
+
+    resolve()
 
 This only briefly summarizes some of our features, read some of the sections below to find out more!
