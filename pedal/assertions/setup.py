@@ -36,7 +36,7 @@ def _topological_sort(names, orderings):
     return stack
     
 
-def resolve_all(set_successful=False, report=MAIN_REPORT):
+def resolve_all(set_successful=False, no_phases_is_success=False, report=MAIN_REPORT):
     """
 
     Args:
@@ -49,7 +49,7 @@ def resolve_all(set_successful=False, report=MAIN_REPORT):
     phase_names = report['assertions']['phases']
     phase_names = _topological_sort(phase_names, orderings)
     #pprint(orderings)
-    phase_success = False
+    phase_success = no_phases_is_success
     for phase_name in phase_names:
         phase_success = True
         for function in phase_functions[phase_name]:

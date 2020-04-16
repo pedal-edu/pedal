@@ -32,6 +32,8 @@ Provide Output
 """
 
 import sys
+
+from pedal.assertions import resolve_all
 from pedal.core.commands import contextualize_report
 from pedal.core.submission import Submission
 from pedal.source import verify
@@ -55,7 +57,7 @@ def parse_argv():
 
 def setup_pedal(files=None, main_file='answer.py', main_code=None,
                 user=None, assignment=None, course=None, execution=None,
-                instructor_file='on_run.py', skip_tifa=False):
+                instructor_file='on_run.py', skip_tifa=False, set_success=True):
     if files is None and main_code is None:
         instructor_file, files, main_file, main_code, user, assignment, course, execution = parse_argv()
     elif files is None:
@@ -72,6 +74,7 @@ def setup_pedal(files=None, main_file='answer.py', main_code=None,
     student.report_exceptions_mode = True
 
     def print_resolve(*args, **kwargs):
+        resolve_all(set_successful=set_success, no_phases_is_success=True)
         result = simple.resolve(*args, **kwargs)
         print("Feedback Label:", result.label)
         print("Score:", result.score)
