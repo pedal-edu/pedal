@@ -364,7 +364,7 @@ def read_out_of_scope(location, name, report=MAIN_REPORT):
 
 # TODO: Complete these
 @AtomicFeedbackFunction(title="Type Changes",
-                        message_template="",
+                        message_template="The variable `{name}` changed type from `{old}` to `{new}` on line {location.line}.",
                         justification="",
                         muted=True)
 def type_changes(location, name, old, new, report=MAIN_REPORT):
@@ -385,7 +385,7 @@ def type_changes(location, name, old, new, report=MAIN_REPORT):
 
 
 @AtomicFeedbackFunction(title="Unnecessary Second Branch",
-                        message_template="",
+                        message_template="TODO",
                         justification="")
 def unnecessary_second_branch(location, report=MAIN_REPORT):
     """
@@ -402,7 +402,7 @@ def unnecessary_second_branch(location, report=MAIN_REPORT):
 
 
 @AtomicFeedbackFunction(title="Else on Loop Body",
-                        message_template="",
+                        message_template="TODO",
                         justification="")
 def else_on_loop_body(location, report=MAIN_REPORT):
     """
@@ -419,7 +419,7 @@ def else_on_loop_body(location, report=MAIN_REPORT):
 
 
 @AtomicFeedbackFunction(title="Recursive Call",
-                        message_template="",
+                        message_template="TODO",
                         justification="")
 def recursive_call(location, name, report=MAIN_REPORT):
     """
@@ -437,7 +437,7 @@ def recursive_call(location, name, report=MAIN_REPORT):
 
 
 @AtomicFeedbackFunction(title="Not a Function",
-                        message_template="",
+                        message_template="TODO",
                         justification="")
 def not_a_function(location, name, report=MAIN_REPORT):
     """
@@ -455,7 +455,7 @@ def not_a_function(location, name, report=MAIN_REPORT):
 
 
 @AtomicFeedbackFunction(title="Incorrect Arity",
-                        message_template="",
+                        message_template="The function `{function_name}` was given the wrong number of arguments.",
                         justification="")
 def incorrect_arity(location, function_name, report=MAIN_REPORT):
     """
@@ -469,11 +469,11 @@ def incorrect_arity(location, function_name, report=MAIN_REPORT):
 
     """
     fields = {'location': location, 'function_name': function_name}
-    return _generic_tifa_feedback_function(incorrect_arity, fields, report=report, muted=True)
+    return _generic_tifa_feedback_function(incorrect_arity, fields, report=report)
 
 
 @AtomicFeedbackFunction(title="Multiple Return Types",
-                        message_template="",
+                        message_template="TODO",
                         justification="")
 def multiple_return_types(location, expected, actual, report=MAIN_REPORT):
     """
@@ -492,7 +492,7 @@ def multiple_return_types(location, expected, actual, report=MAIN_REPORT):
 
 
 @AtomicFeedbackFunction(title="Module Not Found",
-                        text_template="",
+                        text_template="TODO",
                         justification="")
 def module_not_found(location, name, is_dynamic=False, error=None, report=MAIN_REPORT):
     """
@@ -512,7 +512,7 @@ def module_not_found(location, name, is_dynamic=False, error=None, report=MAIN_R
 
 
 @AtomicFeedbackFunction(title="Append to non-list",
-                        text_template="",
+                        text_template="TODO",
                         justification="",
                         muted=True)
 def append_to_non_list(location, name, type, report=MAIN_REPORT):

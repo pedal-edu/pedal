@@ -739,9 +739,19 @@ class Tifa(ast.NodeVisitor):
                     if parameter is not None:
                         parameter = parameter.clone_mutably()
                         self.store_variable(name, parameter, position)
+                # Too many arguments
                 if len(args) < len(parameters):
                     for undefined_parameter in parameters[len(args):]:
                         self.store_variable(name, UnknownType(), position)
+                # Not enough arguments
+                if len(args) > len(parameters):
+                    for arg in args[len(parameters):]:
+                        if arg.annotation:
+                            self.visit(arg.annotation)
+                            annotation = get_tifa_type(arg.annotation, self)
+                        else:
+                            annotation = UnknownType()
+                        self.store_variable(arg.arg, annotation, position)
                 self.visit_statements(node.body)
                 return_state = self.find_variable_scope("*return")
                 return_value = NoneType()
@@ -1457,7 +1467,7 @@ class Tifa(ast.NodeVisitor):
         # Get this entity's full scope chain
         name_scopes = full_name.split("/")[:-1]
         # against the reverse scope chain
-        checking_scopes = [str(s) for s in scope_chain[::-1]]
+        checking_scopes = [str(s) for s in scope_chain]
         return name_scopes == checking_scopes
 
     @staticmethod

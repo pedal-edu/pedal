@@ -147,6 +147,10 @@ unit_tests = {
         ['def int_func(x):\n\treturn 5\nint_func(10)', [], []],
     'called_constant_function':
         ['def x():\n    return 4\nx()', ['unused_variable'], []],
+    'overwritten_parameter':
+        ['def x(v):\n  v = 0\n  return v\nx()', [], ['overwritten_variable']],
+    'overwritten_variable_in_function':
+        ['def x():\n  v = 0\n  v = 7\n  return v\nx()', [], ['overwritten_variable']],
     # Actions after returning
     'return_after_return':
         ['def x():\n    return 5\n    return 4\nx()', [], ['action_after_return']],
