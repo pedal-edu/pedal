@@ -5,3 +5,4 @@ from pedal.sandbox import *
 from pedal.assertions import *
 from pedal.environments.standard import *
 from pedal.source import *
+from pedal.resolvers import simple

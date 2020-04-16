@@ -166,6 +166,7 @@ def AtomicFeedbackFunction(title=None, version='0.0.1', message_template=None, t
 
         """
         function.title = title if title is not None else function.__name__
+        function.label = function.__name__
         function.tags = tags if tags is not None else []
         function.version = version
         function.justification = justification

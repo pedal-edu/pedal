@@ -1,5 +1,15 @@
-Version 1
----------
+Version 2.0.1
+-------------
+
+* Added in `pedal.quick` to allow easy mass importing of all "core" modules.
+
+Version 2.0.0
+-------------
+
+Massive rewrite to internals, formalizing certain system components and adding more metadata across the board.
+
+Version 1.0.0
+-------------
 
 Operator's names can now be accessed with "op_name" instead of "op".
 

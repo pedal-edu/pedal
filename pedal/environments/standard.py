@@ -73,10 +73,10 @@ def setup_pedal(files=None, main_file='answer.py', main_code=None,
 
     def print_resolve(*args, **kwargs):
         result = simple.resolve(*args, **kwargs)
-        print(result.label)
-        print(result.score)
-        print(result.title)
-        print(result.message)
+        print("Feedback Label:", result.label)
+        print("Score:", result.score)
+        print("Feedback Title:", result.title)
+        print("Feedback Message:", result.message)
         return result
 
     return ast, student, print_resolve
