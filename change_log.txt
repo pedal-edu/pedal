@@ -1,9 +1,12 @@
+Version 2.0.2
+-------------
+* Minor bug fixes in TIFA, and some other tools
+* Added `printed` method for Sandbox
+
 Version 2.0.1
 -------------
 
 * Added in `pedal.quick` to allow easy mass importing of all "core" modules.
-* Minor bug fixes in TIFA, and some other tools
-* Added `printed` method for Sandbox
 
 Version 2.0.0
 -------------
