@@ -52,6 +52,18 @@ LIST_GENERATOR_TYPES = (type(map(bool, [])), type(filter(bool, [])),
                         type(enumerate([])))
 
 
+def _split_into_lolos(a_string) -> 'List[List[str]]':
+    """
+    Splits the given string into a list of list of strings, based on new lines.
+
+    Args:
+        a_string: The string to split
+
+    Returns: The list of list of strings
+    """
+    return [list(line) for line in s.split("\n")]
+
+
 def _normalize_string(a_string, numeric_endings=False):
     # Lower case
     a_string = a_string.lower()
@@ -75,16 +87,17 @@ def output_test(actual, expected, _exact_strings):
     Args:
         actual:
         expected:
-        _exact_strings:
+        _exact_strings: Force capitalization/whitespace/symbols to match exactly.
 
     Returns:
 
     """
-    normalized_actual = [_normalize_string(line) for line in actual]
+    normalizer = _normalize_string if not _exact_strings else _split_into_lolos
+    normalized_actual = [normalizer(line) for line in actual]
     if isinstance(expected, (str, bytes)):
-        return _normalize_string(expected) in normalized_actual
+        return normalizer(expected) in normalized_actual
     else:
-        normalized_expected = [_normalize_string(line) for line in expected]
+        normalized_expected = [normalizer(line) for line in expected]
         return all(each_actual in normalized_expected for each_actual in normalized_actual)
 
 

@@ -1,0 +1,11 @@
+Title: Syntax Error
+Label: syntax_error
+Score: 1
+Message: ```
+Traceback:
+    print(hello world)
+                    ^
+SyntaxError: invalid syntax
+
+```
+Bad syntax on line 1

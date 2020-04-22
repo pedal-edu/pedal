@@ -1,0 +1,4 @@
+Title: Builtin Usage
+Label: prevent_builtin_usage
+Score: 1
+Message: You cannot use the builtin function `sum`.

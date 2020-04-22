@@ -15,6 +15,7 @@ from unittest.mock import patch
 from pedal.core.report import MAIN_REPORT
 from pedal.core.commands import feedback
 from pedal.sandbox.feedbacks import runtime_error
+from pedal.utilities.comparisons import output_test
 from pedal.utilities.exceptions import ExpandedTraceback, add_context_to_error
 from pedal.sandbox import mocked
 from pedal.sandbox.exceptions import (SandboxHasNoFunction,
@@ -53,6 +54,7 @@ class SandboxVariable:
     """
 
     """
+
     def __init__(self, name, value):
         self.name = name
         self.value = value
@@ -469,6 +471,18 @@ class Sandbox(DataSandbox):
         """
         pass
 
+    def printed(self, actual: str, exact=False) -> bool:
+        """
+        Determines if the student has printed the given string on its own line.
+
+        Args:
+            actual: The string to check, or a list of strings to match (all of which must match)
+            exact: Whether or not to use an exact match, or ignore whitespace/capitals/symbols
+
+        Returns: Whether or not the text matched
+        """
+        return bool(output_test(self.output, actual, exact))
+
     def call(self, function, *args, **kwargs):
         """
         Executes the given function with the specified arguments, from the student's code.
@@ -594,13 +608,13 @@ class Sandbox(DataSandbox):
                 contexts = self.call_contexts[self.call_id]
                 if context is not None:
                     contexts.append(context)
-                context = '\n'.join(contexts)#[1:])
+                context = '\n'.join(contexts)  # [1:])
             if context.strip():
                 context = self.CONTEXT_MESSAGE.format(context=context)
                 inputs = self.input_contexts[self.call_id]
                 if inputs is not None and inputs:
                     inputs = "\n".join(inputs)
-                    context += "\n"+self.INPUT_CONTEXT_MESSAGE.format(inputs=inputs)
+                    context += "\n" + self.INPUT_CONTEXT_MESSAGE.format(inputs=inputs)
             else:
                 context = self.FILE_CONTEXT_MESSAGE.format(filename=student_filename)
             self.exception = add_context_to_error(self.exception, context)
@@ -670,7 +684,7 @@ class Sandbox(DataSandbox):
                                         context, keep_context, as_filename,
                                         code)
                 return self
-        
+
         if as_filename is None:
             as_filename = os.path.basename(self.report.submission.main_file)
             # todo: earlier version of inputs being made?

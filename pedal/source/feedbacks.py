@@ -20,7 +20,7 @@ def blank_source(group=None, report=MAIN_REPORT):
     """
     return feedback(blank_source.__name__, category=feedback.CATEGORIES.SYNTAX, tool=TOOL_NAME,
                     title=blank_source.title, version=blank_source.version,
-                    group=group, message=blank_source.text_template(), report=report)
+                    group=group, message=blank_source.text_template.format(), report=report)
 
 
 @AtomicFeedbackFunction(title="Not Enough Sections",
@@ -43,7 +43,7 @@ def not_enough_sections(section_number, found, report=MAIN_REPORT):
     return feedback(not_enough_sections.__name__, category=feedback.CATEGORIES.SYNTAX, tool=TOOL_NAME,
                     title=not_enough_sections.title, version=not_enough_sections.version,
                     fields=fields,
-                    message=not_enough_sections.text_template(**fields), report=report)
+                    message=not_enough_sections.text_template.format(**fields), report=report)
 
 
 @AtomicFeedbackFunction(title='Source File Not Found',
@@ -67,7 +67,7 @@ def source_file_not_found(filename, sections, report=MAIN_REPORT):
     return feedback(source_file_not_found.__name__, category=feedback.CATEGORIES.SYNTAX, tool=TOOL_NAME,
                     title=source_file_not_found.title, version=source_file_not_found.version,
                     fields=fields,
-                    text=source_file_not_found.text_template(**fields),
+                    text=source_file_not_found.text_template.format(**fields),
                     group=0 if sections else None,
                     report=report)
 
@@ -95,7 +95,7 @@ def syntax_error(line, filename, code, offset, text, traceback, exception, exc_i
     Returns:
 
     """
-    traceback = ExpandedTraceback(exception, exc_info, traceback, report.submission.instructor_file,
+    traceback = ExpandedTraceback(exception, exc_info, False, report.submission.instructor_file,
                                   line, filename, code)
     context = traceback.format_exception()
     fields = {'lineno': line, 'filename': filename, 'offset': offset, 'text': text,
@@ -103,8 +103,8 @@ def syntax_error(line, filename, code, offset, text, traceback, exception, exc_i
     return feedback(syntax_error.__name__, category=feedback.CATEGORIES.SYNTAX, tool=TOOL_NAME,
                     title=syntax_error.title, version=syntax_error.version,
                     fields=fields,
-                    message=syntax_error.message_template(**fields),
-                    text=syntax_error.text_template(**fields), muted=muted,
+                    message=syntax_error.message_template.format(**fields),
+                    text=syntax_error.text_template.format(**fields), muted=muted,
                     locations=line,
                     report=report)
 
@@ -128,7 +128,7 @@ def incorrect_number_of_sections(count, found, group, report=MAIN_REPORT):
     fields = {'count': count, 'found': found}
     return feedback(incorrect_number_of_sections.__name__, category=feedback.CATEGORIES.SYNTAX, tool=TOOL_NAME,
                     title=incorrect_number_of_sections.title, fields=fields, group=group,
-                    text=incorrect_number_of_sections.text_template(**fields), report=report)
+                    text=incorrect_number_of_sections.text_template.format(**fields), report=report)
 
 
 # TODO: IndentationError

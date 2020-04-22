@@ -1,0 +1,10 @@
+Title: Instructor Test
+Label: assert_equal
+Score: 0
+Message: Student code failed instructor test.
+I ran:
+<pre>summate([1, 3, 5])</pre>
+The result was:
+<pre>3</pre>
+But I expected the result to be equal to:
+<pre>9</pre>

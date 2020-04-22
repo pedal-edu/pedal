@@ -1,0 +1,4 @@
+Title: Overwritten Variable
+Label: overwritten_variable
+Score: 1
+Message: The variable `numbers` was given a value, but `numbers` was changed on line 2 before it was used. One of the times that you gave `numbers` a value was incorrect.

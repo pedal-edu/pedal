@@ -704,7 +704,7 @@ def assertPrints(result, expected_output, args=None, returns=None,
     """
     if not isinstance(result, SandboxResult):
         return False
-        raise TypeError("You must pass in a SandboxResult (e.g., using `call`) to assertPrints")
+        #raise TypeError("You must pass in a SandboxResult (e.g., using `call`) to assertPrints")
     _setup_assertions(report)
     call_id = result._actual_call_id
     sandbox = result._actual_sandbox
