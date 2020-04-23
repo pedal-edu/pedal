@@ -2,7 +2,7 @@ import setuptools
 
 setuptools.setup(
     name='pedal',
-    version='2.0.1',
+    version='2.0.2',
     python_requires='>=3.5',
     author='acbart,lukesg08',
     author_email='acbart@udel.edu',

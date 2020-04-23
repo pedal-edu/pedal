@@ -1,4 +1,4 @@
 Title: Instructor Feedback
 Label: function_missing
 Score: 1
-Message: You have not defined the function
+Message: You have not defined the function summate.

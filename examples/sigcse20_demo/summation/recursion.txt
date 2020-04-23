@@ -1,4 +1,4 @@
 Title: Instructor Feedback
 Label: used_recursion
 Score: 1
-Message: You are doing recursion, don't do that!
+Message: You are doing recursion, don't do that.
