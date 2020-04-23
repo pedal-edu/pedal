@@ -15,7 +15,7 @@ rather than an afterthought.
 
 .. raw:: html
 
-   <iframe width="1263" height="480"
+   <iframe width="100%" height="480"
            src="https://www.youtube.com/embed/Xy6Gn5KSZ6k" frameborder="0"
            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
            allowfullscreen>
