@@ -95,7 +95,8 @@
 <li class="toctree-l2"><a class="reference internal" href="tifa.html">TIFA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cait.html">CAIT</a></li>
 <li class="toctree-l2"><a class="reference internal" href="source.html">Source</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../reference.html#getting-output">Getting Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="toolkit.html">Toolkit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sandbox.html">Sandbox</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Teacher Tutorial</a></li>
@@ -217,6 +218,8 @@ always including a <a class="reference internal" href="../../everyone/glossary.h
 text to give some debug information about the justification for this feedback. By default,
 this feedback’s priority tends to override almost any other kind besides syntax errors.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">explain</span><span class="p">(</span><span class="s2">&quot;You need to use a For loop for this problem!&quot;</span><span class="p">)</span>
+
+<span class="n">explain</span><span class="p">(</span><span class="s2">&quot;You need to use a For loop for this problem!&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;do_not_use_for_loop&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -226,8 +229,14 @@ this feedback’s priority tends to override almost any other kind besides synta
 <code class="sig-name descname">gently</code><span class="sig-paren">(</span><em class="sig-param">message: str</em>, <em class="sig-param">label: str</em>, <em class="sig-param">justification: str = None</em><span class="sig-paren">)</span><a class="headerlink" href="#gently" title="Permalink to this definition">¶</a></dt>
 <dd><p>A core feedback function, used to display a specific feedback <cite>message</cite> to the learner.
 Basically the same as the <a class="reference internal" href="#explain" title="explain"><code class="xref py py-func docutils literal notranslate"><span class="pre">explain()</span></code></a>, except the priority is much lower. This will not
-override runtime or <a class="reference internal" href="../../developers/tools/tifa.html#tifa"><span class="std std-ref">algorithmic</span></a> errors.</p>
+override runtime or <a class="reference internal" href="../../developers/tools/tifa.html#tifa"><span class="std std-ref">algorithmic</span></a> errors.
+The <cite>label</cite> can be given to help track this piece of feedback; we strongly recommend
+always including a <a class="reference internal" href="../../everyone/glossary.html#term-feedback-label"><span class="xref std std-term">Feedback Label</span></a> when you can! You can also provide the internal <cite>justification</cite>
+text to give some debug information about the justification for this feedback.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gently</span><span class="p">(</span><span class="s2">&quot;Your solution looks close, but you haven&#39;t incorporated any multiplication.&quot;</span><span class="p">)</span>
+
+<span class="n">gently</span><span class="p">(</span><span class="s2">&quot;Your solution looks close, but you haven&#39;t incorporated any multiplication.&quot;</span><span class="p">,</span>
+       <span class="n">label</span><span class="o">=</span><span class="s2">&quot;need_multiplication&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -239,6 +248,9 @@ override runtime or <a class="reference internal" href="../../developers/tools/t
 You are recommended to include a <a class="reference internal" href="../../everyone/glossary.html#term-feedback-label"><span class="xref std std-term">Feedback Label</span></a>, but not obligated. You can also optionally
 include a justification.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">guidance</span><span class="p">(</span><span class="s2">&quot;Great work so far - now try incorporating a variable!&quot;</span><span class="p">)</span>
+
+<span class="n">guidance</span><span class="p">(</span><span class="s2">&quot;Great work so far - now try incorporating a variable!&quot;</span><span class="p">,</span>
+         <span class="n">label</span><span class="o">=</span><span class="s2">&quot;incorporate_variable&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>

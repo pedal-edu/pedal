@@ -16,18 +16,7 @@ document all the features available - for that, you should refer to the :ref:`fu
     tools/cait
     tools/source
     tools/toolkit
+    tools/sandbox
 
-tools/source
-tools/sandbox
 tools/assertions
-tools/toolkit
 
-
-Getting Output
-^^^^^^^^^^^^^^
-.. code:: python
-
-    from pedal.sandbox.compatibility import get_output
-    output = get_output()
-    for item in output:
-        print(item)  # Each line of output is given as a separate item in the list.

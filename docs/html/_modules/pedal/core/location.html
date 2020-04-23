@@ -188,6 +188,20 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">end_col</span> <span class="o">=</span> <span class="n">end_col</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">filename</span>
 
+<div class="viewcode-block" id="Location.from_ast"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.location.Location.from_ast">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_ast</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a new Location object from the AST node. Should work</span>
+<span class="sd">        for both built-in AST nodes and CaitNodes.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            node (Node):</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Location</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Location</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">lineno</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="n">node</span><span class="o">.</span><span class="n">col_offset</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="Location.to_json"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.location.Location.to_json">[docs]</a>    <span class="k">def</span> <span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates a JSON version of this object, with all the fields.</span>

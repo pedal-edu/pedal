@@ -46,15 +46,23 @@ Imported as::
 
         explain("You need to use a For loop for this problem!")
 
+        explain("You need to use a For loop for this problem!", label="do_not_use_for_loop")
+
 .. function:: gently(message: str, label: str, justification: str = None)
 
     A core feedback function, used to display a specific feedback `message` to the learner.
     Basically the same as the :py:func:`explain`, except the priority is much lower. This will not
     override runtime or :ref:`algorithmic <tifa>` errors.
+    The `label` can be given to help track this piece of feedback; we strongly recommend
+    always including a :term:`Feedback Label` when you can! You can also provide the internal `justification`
+    text to give some debug information about the justification for this feedback.
 
     ::
 
         gently("Your solution looks close, but you haven't incorporated any multiplication.")
+
+        gently("Your solution looks close, but you haven't incorporated any multiplication.",
+               label="need_multiplication")
 
 .. function:: guidance(message: str, label: str = "guidance", justification: str = None)
 
@@ -65,6 +73,9 @@ Imported as::
     ::
 
         guidance("Great work so far - now try incorporating a variable!")
+
+        guidance("Great work so far - now try incorporating a variable!",
+                 label="incorporate_variable")
 
 .. function:: hide_correctness()
 
