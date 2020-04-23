@@ -13,11 +13,13 @@ Our goal is to elevate Feedback with Software Engineering and Instructional
 Design practices, to make it a central part of your course's development
 rather than an afterthought.
 
-<iframe width="1263" height="480"
-        src="https://www.youtube.com/embed/Xy6Gn5KSZ6k" frameborder="0"
-        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-        allowfullscreen>
-</iframe>
+.. raw:: html
+
+   <iframe width="1263" height="480"
+           src="https://www.youtube.com/embed/Xy6Gn5KSZ6k" frameborder="0"
+           allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+           allowfullscreen>
+   </iframe>
 
 .. toctree::
     :maxdepth: 2

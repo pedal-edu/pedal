@@ -177,6 +177,7 @@
 <span class="kn">from</span> <span class="nn">pedal.core.report</span> <span class="k">import</span> <span class="n">MAIN_REPORT</span>
 <span class="kn">from</span> <span class="nn">pedal.core.commands</span> <span class="k">import</span> <span class="n">feedback</span>
 <span class="kn">from</span> <span class="nn">pedal.sandbox.feedbacks</span> <span class="k">import</span> <span class="n">runtime_error</span>
+<span class="kn">from</span> <span class="nn">pedal.utilities.comparisons</span> <span class="k">import</span> <span class="n">output_test</span>
 <span class="kn">from</span> <span class="nn">pedal.utilities.exceptions</span> <span class="k">import</span> <span class="n">ExpandedTraceback</span><span class="p">,</span> <span class="n">add_context_to_error</span>
 <span class="kn">from</span> <span class="nn">pedal.sandbox</span> <span class="k">import</span> <span class="n">mocked</span>
 <span class="kn">from</span> <span class="nn">pedal.sandbox.exceptions</span> <span class="k">import</span> <span class="p">(</span><span class="n">SandboxHasNoFunction</span><span class="p">,</span>
@@ -215,6 +216,7 @@
     <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span></div>
@@ -631,6 +633,18 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
+<div class="viewcode-block" id="Sandbox.printed"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.printed">[docs]</a>    <span class="k">def</span> <span class="nf">printed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actual</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">exact</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Determines if the student has printed the given string on its own line.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            actual: The string to check, or a list of strings to match (all of which must match)</span>
+<span class="sd">            exact: Whether or not to use an exact match, or ignore whitespace/capitals/symbols</span>
+
+<span class="sd">        Returns: Whether or not the text matched</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">output_test</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">actual</span><span class="p">,</span> <span class="n">exact</span><span class="p">))</span></div>
+
 <div class="viewcode-block" id="Sandbox.call"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.call">[docs]</a>    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Executes the given function with the specified arguments, from the student&#39;s code.</span>
@@ -756,13 +770,13 @@
                 <span class="n">contexts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_contexts</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">call_id</span><span class="p">]</span>
                 <span class="k">if</span> <span class="n">context</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">contexts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
-                <span class="n">context</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">contexts</span><span class="p">)</span><span class="c1">#[1:])</span>
+                <span class="n">context</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">contexts</span><span class="p">)</span>  <span class="c1"># [1:])</span>
             <span class="k">if</span> <span class="n">context</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
                 <span class="n">context</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">CONTEXT_MESSAGE</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">context</span><span class="o">=</span><span class="n">context</span><span class="p">)</span>
                 <span class="n">inputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_contexts</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">call_id</span><span class="p">]</span>
                 <span class="k">if</span> <span class="n">inputs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">inputs</span><span class="p">:</span>
                     <span class="n">inputs</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
-                    <span class="n">context</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">INPUT_CONTEXT_MESSAGE</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="n">inputs</span><span class="p">)</span>
+                    <span class="n">context</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">INPUT_CONTEXT_MESSAGE</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="n">inputs</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">context</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">FILE_CONTEXT_MESSAGE</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">student_filename</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">exception</span> <span class="o">=</span> <span class="n">add_context_to_error</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exception</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
@@ -832,7 +846,7 @@
                                         <span class="n">context</span><span class="p">,</span> <span class="n">keep_context</span><span class="p">,</span> <span class="n">as_filename</span><span class="p">,</span>
                                         <span class="n">code</span><span class="p">)</span>
                 <span class="k">return</span> <span class="bp">self</span>
-        
+
         <span class="k">if</span> <span class="n">as_filename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">as_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">main_file</span><span class="p">)</span>
             <span class="c1"># todo: earlier version of inputs being made?</span>
