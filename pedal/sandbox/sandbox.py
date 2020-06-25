@@ -583,7 +583,7 @@ class Sandbox(DataSandbox):
             actual = call
         else:
             actual = "{} = {}".format(target, call)
-        student_call = call if target is "_" else actual
+        student_call = call if target == "_" else actual
         return actual, student_call
 
     def _start_patches(self, *patches):
