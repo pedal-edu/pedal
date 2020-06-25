@@ -47,7 +47,8 @@ class Report:
 
     def clear(self):
         """
-
+        Completely resets the entire report back to its starting form,
+        including deleting any attached submissions, tool data, and feedbacks/
         """
         self.feedback = []
         self.suppressions = {}

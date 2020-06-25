@@ -2,9 +2,14 @@ __all__ = ['Resolver']
 
 
 class Resolver:
+    """
+    A resolver is responsible for filtering, ordering, and choosing Feedback.
+
+    Ideally, it is not responsible for transforming - that is a job for the Environment.
+    """
     def resolve(self):
         """
-
+        Actually choose the feedback that will be returned
         """
         pass
 

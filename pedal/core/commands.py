@@ -223,20 +223,21 @@ def suppress(category=None, label=True, report=MAIN_REPORT):
     report.suppress(category, label)
 
 
-def log(message, report=MAIN_REPORT):
+def log(*items, report=MAIN_REPORT):
     """
 
-    TODO: Consider making this accept star args, like print would.
-
     Args:
-        message:
+        items (Any): Any set of values to log information about. Will be converted to strings using
+                     `str` if not already strings.
         report:
 
     Returns:
 
     """
-    return feedback("log", category=Feedback.CATEGORIES.SYSTEM, muted=True, text=message,
-                    valence=Feedback.NEUTRAL_VALENCE)
+    for item in items:
+        item = item if isinstance(item, str) else str(item)
+        return feedback("log", category=Feedback.CATEGORIES.SYSTEM, muted=True, text=item,
+                        valence=Feedback.NEUTRAL_VALENCE)
 
 
 def debug(message, report=MAIN_REPORT):
@@ -298,6 +299,7 @@ def get_all_feedback(report=MAIN_REPORT) -> [Feedback]:
         List[pedal.core.feedback.Feedback]: A list of feedback objects.
     """
     return report.feedback
+
 
 @AtomicFeedbackFunction(title="System Error")
 def system_error(tool: str, explanation: str, author: str = PEDAL_DEVELOPERS, report: Report = MAIN_REPORT):
