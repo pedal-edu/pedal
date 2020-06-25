@@ -1,9 +1,9 @@
 '''
 
-Sections are a way to separate the pieces of a file such that the pieces do not
+**Sections** are a way to separate the pieces of a file such that the pieces do not
 interfere with each other.
 
-Phases are a way to chunk a collection of functions together. If one of these
+**Phases** are a way to chunk a collection of functions together. If one of these
 functions fails, the other functions in the phase will continue to be evaluated.
 However, that phase will still have failed. You can establish that one phase
 comes before or after another phase; if a precondition phase fails, then the
@@ -28,6 +28,9 @@ Example:
     @phase('create_world_returns', after='create_world_exists')
     
 Phases are reset between sections.
+
+**Subtests** are a way to combine multiple assertions into a single cohesive test.
+TODO: Rename? And expand on.
 
 '''
 

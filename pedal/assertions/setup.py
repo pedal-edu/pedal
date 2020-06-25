@@ -1,4 +1,6 @@
-import sys
+"""
+Helper functions and basic setup routines for the entire module.
+"""
 
 from pedal.core.report import MAIN_REPORT
 from pedal.core.commands import set_success

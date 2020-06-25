@@ -10,6 +10,7 @@ from pedal.utilities.types import humanize_types
 
 
 # TODO: Allow bundling of assertions to make a table
+# ^ This will be "subtests" or something similar.
 
 
 def iterable(obj):
