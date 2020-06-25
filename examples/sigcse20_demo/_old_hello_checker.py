@@ -1,4 +1,4 @@
-from pedal.quick import *
+from pedal.environments.quick import *
 
 ast, student, resolve = setup_pedal()
 
