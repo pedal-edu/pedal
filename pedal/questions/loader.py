@@ -62,6 +62,7 @@ messages:
     FUNCTION_NOT_DEFINED: "Oops you missed a function"
 """
 from pedal.core.commands import set_success, give_partial
+from pedal.core.feedback_category import FeedbackCategory
 
 from pedal.sandbox.compatibility import get_sandbox
 from pedal.toolkit.functions import *
@@ -116,7 +117,7 @@ def check_function_defined(function, function_definitions, settings=None):
     # 1.1. With the right name?
     function_name = function['name']
     if function_name not in function_definitions:
-        raise FeedbackException('toolkit', 'missing_function', function_name=function_name)
+        raise FeedbackException(FeedbackCategory.SPECIFICATION, 'missing_function', function_name=function_name)
     definition = function_definitions[function_name]
     return definition
 
@@ -139,11 +140,11 @@ def check_function_signature(function, definition, settings=None):
         expected_arity = function['arity'] if 'arity' in function else len(function['parameters'])
         actual_arity = len(definition.args.args)
         if actual_arity < expected_arity:
-            raise FeedbackException('toolkit', 'insufficient_args',
+            raise FeedbackException(FeedbackCategory.SPECIFICATION, 'insufficient_args',
                                     function_name=function_name, expected_arity=expected_arity,
                                     actual_arity=actual_arity)
         elif actual_arity > expected_arity:
-            raise FeedbackException('toolkit', 'excessive_args',
+            raise FeedbackException(FeedbackCategory.SPECIFICATION, 'excessive_args',
                                     function_name=function_name, expected_arity=expected_arity,
                                     actual_arity=actual_arity)
     # 1.2.2 'parameters' style - checks each parameter's name and type
@@ -154,7 +155,7 @@ def check_function_signature(function, definition, settings=None):
             actual_parameter_name = get_arg_name(actual_parameter)
             if 'name' in expected_parameter:
                 if actual_parameter_name != expected_parameter['name']:
-                    raise FeedbackException('toolkit', 'wrong_parameter_name',
+                    raise FeedbackException(FeedbackCategory.SPECIFICATION, 'wrong_parameter_name',
                                             function_name=function_name,
                                             expected_parameter_name=expected_parameter['name'],
                                             actual_parameter_name=actual_parameter_name
@@ -164,7 +165,7 @@ def check_function_signature(function, definition, settings=None):
                 # TODO: Handle non-string expected_parameter types (dict)
                 expected_parameter_type = parse_type_value(expected_parameter['type'], True)
                 if not type_check(expected_parameter_type, actual_parameter_type):
-                    raise FeedbackException('toolkit', 'wrong_parameter_type',
+                    raise FeedbackException(FeedbackCategory.SPECIFICATION, 'wrong_parameter_type',
                                             function_name=function_name,
                                             parameter_name=actual_parameter_name,
                                             expected_parameter_type=expected_parameter_type,
@@ -175,11 +176,11 @@ def check_function_signature(function, definition, settings=None):
         actual_returns = parse_type(definition.returns)
         if actual_returns != "None":
             if not type_check(expected_returns, actual_returns):
-                raise FeedbackException("toolkit", "wrong_returns",
+                raise FeedbackException(FeedbackCategory.SPECIFICATION, "wrong_returns",
                                         function_name=function_name, expected_returns=expected_returns,
                                         actual_returns=actual_returns)
         elif expected_returns != "None":
-            raise FeedbackException("toolkit", "missing_returns",
+            raise FeedbackException(FeedbackCategory.SPECIFICATION, "missing_returns",
                                     function_name=function_name, expected_returns=expected_returns)
     # 1.2.4. 'signature' style - shortcut for specifying the types
     if 'signature' in function:
@@ -189,7 +190,7 @@ def check_function_signature(function, definition, settings=None):
                                       for actual_parameter in definition.args.args)
         actual_signature = "{} -> {}".format(actual_parameters, actual_returns)
         if not type_check(expected_signature, actual_signature):
-            raise FeedbackException("toolkit", "wrong_signature",
+            raise FeedbackException(FeedbackCategory.SPECIFICATION, "wrong_signature",
                                     function_name=function_name, expected_signature=expected_signature,
                                     actual_signature=actual_signature)
     # All good here!
@@ -208,11 +209,11 @@ def check_function_value(function, values, settings):
     function_name = function['name']
     # 2.1. Does the name exist in the values?
     if function_name not in values:
-        raise FeedbackException("toolkit", "function_not_available", function_name=function_name)
+        raise FeedbackException(FeedbackCategory.SPECIFICATION, "function_not_available", function_name=function_name)
     function_value = values[function_name]
     # 2.2. Is the name bound to a callable?
     if not callable(function_value):
-        raise FeedbackException("toolkit", "name_is_not_function", function_name=function_name)
+        raise FeedbackException(FeedbackCategory.SPECIFICATION, "name_is_not_function", function_name=function_name)
     # All good here
     return function_value
 
@@ -462,12 +463,12 @@ def check_cases(function, student_function, settings):
         if success_cases < len(cases):
             if settings[SETTING_SHOW_CASE_DETAILS]:
                 table = make_table(test_cases)
-                raise FeedbackException("toolkit", "failed_test_cases",
+                raise FeedbackException(FeedbackCategory.SPECIFICATION, "failed_test_cases",
                                         function_name=function_name,
                                         cases_count=len(cases), failure_count=len(cases)-success_cases,
                                         table=table)
             else:
-                raise FeedbackException("toolkit", "failed_test_cases_count",
+                raise FeedbackException(FeedbackCategory.SPECIFICATION, "failed_test_cases_count",
                                         function_name=function_name,
                                         cases_count=len(cases), failure_count=len(cases) - success_cases)
 
@@ -567,7 +568,7 @@ def load_file(filename):
 
 
 FEEDBACK_MESSAGES = {
-    "toolkit": {
+    FeedbackCategory.SPECIFICATION: {
         "missing_function": "No function named `{function_name}` was found.",
         "insufficient_args": ("The function named `{function_name}` "
                               "has fewer parameters ({actual_arity}) "

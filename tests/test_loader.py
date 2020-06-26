@@ -33,8 +33,7 @@ from pedal.toolkit.imports import ensure_imports
 from pedal.toolkit.printing import ensure_prints
 from pedal.toolkit.plotting import check_for_plot, prevent_incorrect_plt
 from pedal.questions.loader import check_question
-from tests.execution_helper import Execution
-
+from tests.execution_helper import Execution, ExecutionTestCase
 
 ADD5_QUESTION = {'functions': [{
     'name': 'add5',
@@ -69,24 +68,28 @@ LIST_SIGNATURE = {'functions': [{
     }]
 }]}
 
-class TestQuestionsLoader(unittest.TestCase):
+class TestQuestionsLoader(ExecutionTestCase):
 
-    def test_loading_simple_question(self):
-        with Execution('def undefined():\n pass\nundefined()') as e:
+    def test_loader_missing_function(self):
+        with Execution('def undefined():\n pass\nundefined()', run_tifa=False) as e:
             check_question(ADD5_QUESTION)
-        self.assertEqual(e.final.message, "No function named `add5` was found.")
+        self.assertFeedback(e, "Instructor Feedback\nNo function named `add5` was found.")
 
+    def test_loader_fewer_parameters(self):
         with Execution('def add5():\n pass\nadd5()') as e:
             check_question(ADD5_QUESTION)
-        self.assertEqual(e.final.message, "The function named `add5` has fewer parameters (0) than expected (1).")
+        self.assertFeedback(e, "Instructor Feedback\nThe function named `add5` has fewer parameters (0) than expected (1).")
 
-        with Execution('def add5(a, b):\n pass\nadd5(1, 2)') as e:
+    def test_loader_more_parameters(self):
+        with Execution('def add5(a, b):\n a\n b\nadd5(1, 2)') as e:
             check_question(ADD5_QUESTION)
-        self.assertEqual(e.final.message, "The function named `add5` has more parameters (2) than expected (1).")
+        self.assertFeedback(e, "Instructor Feedback\nThe function named `add5` has more parameters (2) than expected (1).")
 
-        with Execution('def add5(a):\n return 7\nadd5(1)') as e:
+    def test_loader_failing_tests(self):
+        with Execution('def add5(a):\n return 7+a-a\nadd5(1)') as e:
             check_question(ADD5_QUESTION)
-        self.assertEqual(e.final.message, """I ran your function <code>add5</code> on my own test cases. It failed 2/2 of my tests.
+        self.assertFeedback(e, """Instructor Feedback
+I ran your function <code>add5</code> on my own test cases. It failed 2/2 of my tests.
 <table class='pedal-test-cases table table-sm table-bordered table-hover'>
     <tr class='table-active'>
         <th></th>
@@ -108,9 +111,11 @@ class TestQuestionsLoader(unittest.TestCase):
     </tr>
 </table>""")
 
+    def test_loader_error_tests(self):
         with Execution('def add5(a):\n a+""\nadd5("1")') as e:
             check_question(ADD5_QUESTION)
-        self.assertEqual(e.final.message, """I ran your function <code>add5</code> on my own test cases. It failed 2/2 of my tests.
+        self.assertFeedback(e, """Instructor Feedback
+I ran your function <code>add5</code> on my own test cases. It failed 2/2 of my tests.
 <table class='pedal-test-cases table table-sm table-bordered table-hover'>
     <tr class='table-active'>
         <th></th>
@@ -130,27 +135,30 @@ class TestQuestionsLoader(unittest.TestCase):
     </tr>
 </table>""")
 
+    def test_loader_success(self):
         with Execution('def add5(a):\n return a+5\nadd5(3)') as e:
             check_question(ADD5_QUESTION)
-        self.assertEqual(e.final.message, "Great work!")
+        self.assertFeedback(e, "Complete\nGreat work!")
 
-    def test_loading_signature_question(self):
+    def test_loading_signature_no_parameter_type(self):
         with Execution('def add5(a):\n return a+5\nadd5(3)') as e:
             check_question(ADD5_QUESTION_SIGNATURE)
-        self.assertEqual(e.final.message, "Error in definition of function `add5` signature. Expected `int -> int`, instead found `Any -> Any`.")
+        self.assertFeedback(e, "Instructor Feedback\nError in definition of function `add5` signature. Expected `int -> int`, instead found `Any -> Any`.")
 
+    def test_loading_signature_no_return_type(self):
         with Execution('def add5(a: int):\n return a+5\nadd5(3)') as e:
             check_question(ADD5_QUESTION_SIGNATURE)
-        self.assertEqual(e.final.message, "Error in definition of function `add5` signature. Expected `int -> int`, instead found `int -> Any`.")
+        self.assertFeedback(e, "Instructor Feedback\nError in definition of function `add5` signature. Expected `int -> int`, instead found `int -> Any`.")
 
+    def test_loading_signature_correct_type(self):
         with Execution('def add5(a: int) -> int:\n return a+5\nadd5(3)') as e:
             check_question(ADD5_QUESTION_SIGNATURE)
-        self.assertEqual(e.final.message, "Great work!")
+        self.assertFeedback(e, "Complete\nGreat work!")
 
     def test_loading_list_question(self):
         with Execution('def summate(vals: [int]) -> int:\n return sum(vals)\nsummate([1,2,3])') as e:
             check_question(LIST_SIGNATURE)
-        self.assertEqual(e.final.message, "Great work!")
+        self.assertFeedback(e, "Complete\nGreat work!")
 
 if __name__ == '__main__':
     unittest.main(buffer=False)
