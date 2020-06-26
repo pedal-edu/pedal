@@ -45,13 +45,13 @@ def files_not_handled_correctly(*filenames, muted=False):
                     return True
                 called_open.append(a_call)
             elif a_call.func.id == 'close':
-                explain("You have attempted to call <code>close</code> as a "
+                explain("You have attempted to call `close` as a "
                         "function, but it is actually a method of the "
                         "file object.", label="used_close_as_function", title="Close Is a Method", priority='verifier')
                 return True
         elif a_call.func.ast_name == 'Attribute':
             if a_call.func.attr == 'open':
-                explain("You have attempted to call <code>open</code> as a "
+                explain("You have attempted to call `open` as a "
                         "method, but it is actually a built-in function.", label="used_open_as_method",
                         title="Open Is a Function")
                 return True

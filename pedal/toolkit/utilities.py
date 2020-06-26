@@ -306,7 +306,7 @@ def ensure_literal(*literals, muted=False, report=MAIN_REPORT):
     Returns:
         AstNode or False: If the literal is found in the code, then it is returned.
     """
-    message = "You need the literal value <code>{}</code> in your code."
+    message = "You need the literal value `{}` in your code."
     ast = parse_program(report=report)
     str_values = [s.s for s in ast.find_all("Str")]
     num_values = [n.n for n in ast.find_all("Num")]
@@ -337,9 +337,9 @@ def prevent_advanced_iteration(muted=False, report=MAIN_REPORT):
     """
 
     """
-    message = "You should not use a <code>while</code> loop to solve this problem."
+    message = "You should not use a `while` loop to solve this problem."
     label = "while_usage"
-    title = "Usage of <code>while</code>"
+    title = "Usage of `while`"
     ast = parse_program()
     if ast.find_all("While"):
         explain(message, label=label, title=title, muted=muted, report=report)
