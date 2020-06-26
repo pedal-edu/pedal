@@ -66,7 +66,8 @@ class TestAssertions(ExecutionTestCase):
                 assertEqual(10, e.student.call('add', 1, 6, 3))
             suppress("analyzer")
         self.assertEqual(e.feedback, dedent("""
-        Instructor Test\nStudent code failed instructor test.<br>
+        Instructor Test
+        Student code failed instructor test.
         I ran:
         <pre>add(1, 6, 3)</pre>
         The result was:
@@ -89,7 +90,8 @@ class TestAssertions(ExecutionTestCase):
                 assertEqual(8, e.student.call('add', -1, 6, 3))
             suppress("analyzer")
         self.assertEqual(e.feedback, dedent("""
-        Instructor Test\nStudent code failed instructor test.<br>
+        Instructor Test
+        Student code failed instructor test.
         I ran:
         <pre>add(-1, 6, 3)</pre>
         The result was:
@@ -112,7 +114,8 @@ class TestAssertions(ExecutionTestCase):
                             e.student.call('add', 1, 6, 3, target='actual'))
             suppress("analyzer")
         self.assertEqual(e.feedback, dedent("""
-        Instructor Test\nStudent code failed instructor test.<br>
+        Instructor Test
+        Student code failed instructor test.
         I ran:
         <pre>expect = expected_answer()
         actual = add(1, 6, 3)</pre>
@@ -134,7 +137,8 @@ class TestAssertions(ExecutionTestCase):
                 assertIn(e.student.call('make_color'), ('red', 'blue', 'green'))
             suppress("analyzer")
         self.assertEqual(e.feedback, dedent("""
-        Instructor Test\nStudent code failed instructor test.<br>
+        Instructor Test
+        Student code failed instructor test.
         I ran:
         <pre>make_color()</pre>
         The result was:
@@ -154,7 +158,8 @@ class TestAssertions(ExecutionTestCase):
                 assertIn('blue', e.student.call('make_colors'))
             suppress("analyzer")
         self.assertEqual(e.feedback, dedent("""
-        Instructor Test\nStudent code failed instructor test.<br>
+        Instructor Test
+        Student code failed instructor test.
         I ran:
         <pre>make_colors()</pre>
         The result was:
@@ -174,7 +179,8 @@ class TestAssertions(ExecutionTestCase):
                 assertNotIn('purple', e.student.call('make_colors'))
             suppress("analyzer")
         self.assertEqual(e.feedback, dedent("""
-        Instructor Test\nStudent code failed instructor test.<br>
+        Instructor Test
+        Student code failed instructor test.
         I ran:
         <pre>make_colors()</pre>
         The result was:
@@ -197,7 +203,8 @@ class TestAssertions(ExecutionTestCase):
                          e.student.call('make_colors', target="colors"))
             suppress("analyzer")
         self.assertEqual(e.feedback, dedent("""
-        Instructor Test\nStudent code failed instructor test.<br>
+        Instructor Test
+        Student code failed instructor test.
         I ran:
         <pre>color = make_color()
         colors = make_colors()</pre>
@@ -222,7 +229,8 @@ class TestAssertions(ExecutionTestCase):
                          e.student.call('make_colors'))
             suppress("analyzer")
         self.assertEqual(e.feedback, dedent("""
-        Instructor Test\nStudent code failed instructor test.<br>
+        Instructor Test
+        Student code failed instructor test.
         I ran:
         <pre>make_color()
         make_colors()</pre>
@@ -244,7 +252,8 @@ class TestAssertions(ExecutionTestCase):
                 assertTrue(e.student.call('make_color'))
             suppress("analyzer")
         self.assertEqual(e.feedback, dedent("""
-        Instructor Test\nStudent code failed instructor test.<br>
+        Instructor Test
+        Student code failed instructor test.
         I ran:
         <pre>make_color()</pre>
         The result was false:
@@ -265,7 +274,8 @@ class TestAssertions(ExecutionTestCase):
                 assertEqual(e.student.call('add_from_input', 4, inputs="6"), 10)
             suppress("analyzer")
         self.assertEqual(e.feedback, dedent("""
-        Instructor Test\nStudent code failed instructor test.<br>
+        Instructor Test
+        Student code failed instructor test.
         I ran:
         <pre>add_from_input(4)</pre>
         I entered as input:
@@ -288,7 +298,8 @@ class TestAssertions(ExecutionTestCase):
                             exact=True)
             suppress("analyzer")
         self.assertEqual(e.feedback, dedent("""
-        Instructor Test\nStudent code failed instructor test.<br>
+        Instructor Test
+        Student code failed instructor test.
         I ran:
         <pre>make_brackets()</pre>
         The result was:
