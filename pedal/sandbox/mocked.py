@@ -207,8 +207,10 @@ class BlockedModule(MockModule):
         return {'__getattr__': self.getter}
 
     def getter(self, key):
+        " If anything asks, we prevent the module. Except for __file__. "
+        # Needed to support coverage - it's okay to ask who I am.
         if key == '__file__':
-            return 'pedal'
+            return self.MODULE_NAME
         else:
             self.prevent_module()
 
