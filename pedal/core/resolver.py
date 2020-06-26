@@ -1,3 +1,8 @@
+"""
+Resolvers are called at the end of the grading script in order to determine
+what pieces of feedback should actually be delivered.
+"""
+
 __all__ = ['Resolver']
 
 
@@ -11,7 +16,6 @@ class Resolver:
         """
         Actually choose the feedback that will be returned
         """
-        pass
 
     def _on_pre_resolve(self):
         """

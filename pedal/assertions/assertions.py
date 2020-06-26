@@ -12,6 +12,8 @@ from pedal.utilities.types import humanize_types
 # TODO: Allow bundling of assertions to make a table
 # ^ This will be "subtests" or something similar.
 
+# TODO: Setup __all__ and make sure that DELTA is not included
+
 
 def iterable(obj):
     """
@@ -898,3 +900,4 @@ def assertGenerally(expression, score=None, message=None, report=MAIN_REPORT, mu
 assert_equal = assertEqual
 assert_not_equal = assertNotEqual
 assert_prints = assertPrints
+# TODO: Finish adding in all the other assert variants
