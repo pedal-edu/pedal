@@ -18,11 +18,10 @@ def wrong_list_length_8_2():
     tldr = "List too short"
     matches = find_matches("_list_ = __expr__")
 
-    if matches:
-        for match in matches:
-            __expr__ = match["__expr__"]
-            if __expr__.ast_name == "List" and len(__expr__.elts) < 3:
-                return explain(message, label=code, title=tldr)
+    for match in matches:
+        __expr__ = match["__expr__"]
+        if __expr__.ast_name == "List" and len(__expr__.elts) < 3:
+            return explain(message, label=code, title=tldr)
     return False
 
 
