@@ -204,7 +204,13 @@ class BlockedModule(MockModule):
     MODULE_NAME = "this module"
 
     def _generate_patches(self):
-        return {'__getattr__': self.prevent_module}
+        return {'__getattr__': self.getter}
+
+    def getter(self, key):
+        if key == '__file__':
+            return 'pedal'
+        else:
+            self.prevent_module()
 
     def prevent_module(self, *args, **kwargs):
         """
