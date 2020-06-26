@@ -21,7 +21,7 @@ def make_resolver(func, report=None):
         Returns:
 
         """
-        report.execute_hooks('resolvers', 'resolve')
+        report.execute_hooks('pedal.resolvers', 'resolve')
         return func()
 
     return resolver_wrapper
