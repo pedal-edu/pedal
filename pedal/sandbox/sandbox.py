@@ -280,6 +280,8 @@ class Sandbox(DataSandbox):
         self.allowed_time = 3
 
     def _set_tracer_style(self, tracer_style):
+        if tracer_style is None:
+            tracer_style = 'none'
         self._tracer_style = tracer_style.lower()
         self.trace = self.TRACER_STYLES[tracer_style.lower()]()
 
