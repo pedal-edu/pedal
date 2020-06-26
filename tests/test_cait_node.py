@@ -57,13 +57,13 @@ class CaitNodeTest(unittest.TestCase):
         self.assertFalse(line3.has(1))
 
     def test___getattr__(self):
-        program = ast.parse("x = 0")
+        program = ast.parse("x = banana")
         program = CaitNode(program)
         self.assertTrue(program.ast_name == "Module", "Expected ast_name of 'Module', not{}".format(program.ast_name))
 
         assign = program.children[0]
         assign_value = assign.value
-        self.assertTrue(assign_value.ast_name == "Num", "__getattribute__ fallthrough failed")
+        self.assertTrue(assign_value.ast_name == "Name", "__getattribute__ fallthrough failed")
 
         assign_targets = assign.targets
         self.assertTrue(type(assign_targets) == list, "expected list, got {} instead".format(list))
