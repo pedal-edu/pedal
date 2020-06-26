@@ -10,11 +10,11 @@ from pedal.tifa.type_definitions import (UnknownType, RecursedType,
                                          NumType, NoneType, BoolType, TupleType,
                                          ListType, StrType, GeneratorType,
                                          DictType, ModuleType, SetType,
-                                         # FileType, DayType, TimeType,
+    # FileType, DayType, TimeType,
                                          type_from_json, type_to_literal, get_tifa_type,
                                          LiteralNum, LiteralBool,
                                          LiteralNone, LiteralStr,
-                                         LiteralTuple)
+                                         LiteralTuple, Type, get_tifa_type_from_value)
 from pedal.tifa.builtin_definitions import (get_builtin_module, get_builtin_function)
 from pedal.tifa.type_operations import (merge_types, are_types_equal,
                                         VALID_UNARYOP_TYPES, VALID_BINOP_TYPES,
@@ -1009,6 +1009,9 @@ class Tifa(ast.NodeVisitor):
 
         """
         return NumType()
+
+    def visit_Constant(self, node) -> Type:
+        return get_tifa_type_from_value(node.value)
 
     def visit_Return(self, node):
         """

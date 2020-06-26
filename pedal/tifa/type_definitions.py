@@ -1,3 +1,11 @@
+"""
+A collection of types.
+
+TODO: Make the types all respect the type heirarchy properly.
+For example, SetType should not descend from ListType, that's just lazy.
+Instead, create a hierachy based on form and not just function.
+"""
+
 import ast
 
 from pedal.tifa.feedbacks import append_to_non_list
@@ -385,6 +393,7 @@ class InstanceType(Type):
     """
 
     """
+
     def __init__(self, parent):
         self.parent = parent
         self.fields = parent.fields
@@ -437,24 +446,33 @@ class BoolType(Type):
     immutable = True
 
 
-class TupleType(Type):
+class IndexableType(Type):
     """
+    An abstract base class to represent a type that can be accessed via
+    an integer index.
     """
-    singular_name = 'a tuple'
 
     def __init__(self, subtypes=None):
+        """
+        Create a new instance of this type.
+
+        Args:
+            subtypes (Iterable[Type]): An iterable of types.
+        """
         if subtypes is None:
             subtypes = []
         self.subtypes = subtypes
+        self.empty = bool(subtypes)
 
     def index(self, i):
         """
+        Retrieves the type at the given index of this indexable type.
 
         Args:
-            i:
+            i: Either a LiteralNum or an actual integer.
 
         Returns:
-
+            Type: Whatever type was at that index.
         """
         if isinstance(i, LiteralNum):
             return self.subtypes[i.value].clone()
@@ -463,12 +481,18 @@ class TupleType(Type):
 
     def clone(self):
         """
+        Makes a duplicate of this type by creating a new instance of
+        the type and passing in a list of cloned values.
 
         Returns:
-
+            IndexableType: A copy of this type.
         """
-        return TupleType([t.clone() for t in self.subtypes])
+        return type(self)(subtypes=[t.clone() for t in self.subtypes])
 
+
+class TupleType(IndexableType):
+    """ Type representing a tuple """
+    singular_name = 'a tuple'
     immutable = True
 
 
@@ -746,7 +770,6 @@ class DictType(Type):
         self.literals.append(literal_key)
         self.values.append(type)
 
-
     def load_attr(self, attr, tifa, callee=None, callee_position=None):
         """
 
@@ -807,6 +830,12 @@ class ModuleType(Type):
 
 class SetType(ListType):
     singular_name = 'a set'
+
+
+class FrozenSetType(SetType):
+    """ Type representing a frozenset """
+    singular_name = 'a frozen set'
+    immutable = True
 
 
 class GeneratorType(ListType):
@@ -919,58 +948,99 @@ TYPE_STRINGS = {
 }
 
 
-def get_tifa_type_from_str(value, self):
+def get_tifa_type_from_str(value, tifa_instance=None):
     """
 
     Args:
         value:
-        self:
+        tifa_instance:
 
     Returns:
 
     """
-    #if value in custom_types:
+    # if value in custom_types:
     #    return custom_types[value]
     if value.lower() in TYPE_STRINGS:
         return TYPE_STRINGS[value.lower()]()
-    else:
-        variable = self.find_variable_scope(value)
+    elif tifa_instance:
+        variable = tifa_instance.find_variable_scope(value)
         if variable.exists:
-            state = self.load_variable(value)
+            state = tifa_instance.load_variable(value)
             return state.type
-        #custom_types.add(value)
-        return UnknownType()
-        # TODO: handle custom types
+        # custom_types.add(value)
+    return UnknownType()
+    # TODO: handle custom types
 
 
-def get_tifa_type(v, self):
+def get_tifa_type(v, tifa_instance=None):
     """
+
+    Attempts to intelligently parse the type, which might be a variable or
+    a string node.
 
     Args:
         v:
-        self:
+        tifa_instance:
 
     Returns:
 
     """
     if isinstance(v, ast.Str):
-        return get_tifa_type_from_str(v.s, self)
+        return get_tifa_type_from_str(v.s, tifa_instance)
     elif isinstance(v, ast.Name):
-        return get_tifa_type_from_str(v.id, self)
-    elif isinstance(v, ast.List):
-        elements = v.elts
-        if elements:
-            return ListType(subtype=get_tifa_type(elements[0], self))
-        else:
-            return ListType(empty=True)
-    elif isinstance(v, ast.Dict):
-        if not v.keys:
+        return get_tifa_type_from_str(v.id, tifa_instance)
+    # Fall back to default AST behavior
+    return get_tifa_type_from_ast(v)
+
+
+def get_tifa_type_from_value(value: 'Any') -> Type:
+    """ Converts the Python value to a Tifa Type """
+    if isinstance(value, bool):
+        return BoolType()
+    if isinstance(value, (int, float, complex)):
+        return NumType()
+    if isinstance(value, str):
+        return StrType()
+    if isinstance(value, type(None)):
+        return NoneType()
+    if isinstance(value, tuple):
+        return TupleType((get_tifa_type_from_value(t) for t in value))
+    if isinstance(value, frozenset):
+        return FrozenSetType((get_tifa_type_from_value(t) for t in value))
+
+
+def get_tifa_type_from_ast(value: ast.AST) -> Type:
+    """
+    Determines the Tifa Type from this ast node.
+    Args:
+        value (ast.AST): An AST node.
+
+    Returns:
+        Type: A Tifa Type
+    """
+    try:
+        if isinstance(value, ast.Constant):
+            return get_tifa_type_from_value(value.value)
+    except AttributeError as e:
+        pass
+    if isinstance(value, ast.Str):
+        return StrType(bool(value.v))
+    elif isinstance(value, ast.List):
+        return ListType(subtype=(get_tifa_type_from_ast(value.elts[0])
+                                 if value.elts else None),
+                        empty=bool(value.elts))
+    elif isinstance(value, ast.Set):
+        return SetType(subtype=(get_tifa_type_from_ast(value.elts[0])
+                                if value.elts else None),
+                       empty=bool(value.elts))
+    elif isinstance(value, ast.Tuple):
+        return TupleType(subtypes=[get_tifa_type_from_ast(e) for e in value.elts])
+    elif isinstance(value, ast.Dict):
+        if not value.keys:
             return DictType(empty=True)
-        if all(isinstance(k, ast.Str) for k in v.keys):
-            return DictType(literals=[LiteralStr(s.s) for s in v.keys],
-                            values=[get_tifa_type(vv, self) for vv in v.values])
-        return DictType(keys=[get_tifa_type(k, self) for k in v.keys],
-                        values=[get_tifa_type(vv, self) for vv in v.values])
-    # TODO: Finish filling in static type system
-    else:
-        return UnknownType()
+        if all(isinstance(k, ast.Str) for k in value.keys):
+            return DictType(literals=[LiteralStr(s.s) for s in value.keys],
+                            values=[get_tifa_type_from_ast(vv) for vv in value.values])
+        return DictType(keys=[get_tifa_type_from_ast(k) for k in value.keys],
+                        values=[get_tifa_type_from_ast(vv) for vv in value.values])
+    return UnknownType()

@@ -137,6 +137,8 @@ def are_types_equal(left, right, formal=False):
     This could be more Polymorphic - move the code for each type into
     its respective class instead.
 
+    Unknown types are not equal to anything, even other unknowns.
+
     Args:
         right:
         left:

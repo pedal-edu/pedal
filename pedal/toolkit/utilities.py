@@ -4,6 +4,9 @@ from pedal.core.commands import gently, explain
 from pedal.core.feedback import AtomicFeedbackFunction, CompositeFeedbackFunction
 from pedal.core.location import Location
 from pedal.core.report import MAIN_REPORT
+from pedal.tifa.type_definitions import get_tifa_type, get_tifa_type_from_str, get_tifa_type_from_ast
+from pedal.tifa.type_operations import are_types_equal
+from pedal.utilities.ast import is_literal
 from pedal.utilities.operators import COMPARE_OP_NAMES, BIN_OP_NAMES, BOOL_OP_NAMES, UNARY_OP_NAMES
 
 
@@ -436,7 +439,8 @@ def find_operation(op_name, root=None, report=MAIN_REPORT):
 
 
 @CompositeFeedbackFunction()
-def ensure_assignment(variable_name, type=None, value=None, root=None, muted=False, report=MAIN_REPORT):
+def ensure_assignment(variable_name, type=None, value=None, root=None,
+                      muted=False, report=MAIN_REPORT):
     """
 
     Consumes a variable name
@@ -455,42 +459,26 @@ def ensure_assignment(variable_name, type=None, value=None, root=None, muted=Fal
     """
     if root is None:
         root = parse_program()
-    assignments = root.find_all("Assign")
+    # TODO: Tie in Tifa's custom types
+    expected_type = get_tifa_type_from_str(type)
+    # Find assignments matching the pattern
+    pattern = "{variable_name} = __expr__".format(variable_name=variable_name)
+    matches = root.find_matches(pattern)
     potentials = []
-    for assign in assignments:
-        if assign.targets[0].ast_name != "Name":
-            continue
-        if assign.targets[0].id == variable_name:
-            potentials.append(assign)
-            if type is None:
-                return assign
-            elif (
-                type == "Bool"
-                and assign.value.ast_name == "Name"
-                and assign.value.id in ("True", "False")
-            ):
-                return assign
-            elif (
-                type == "Bool"
-                and assign.value.ast_name == "NameConstant"
-                and assign.value.value in (True, False)
-            ):
-                return assign
-            elif assign.value.ast_name == type:
-                return assign
-    if potentials and potentials[0].value.ast_name not in (
-        "Str",
-        "Bool",
-        "Num",
-        "List",
-        "Tuple",
-    ):
+    for match in matches:
+        if type is None:
+            return match
+        assigned_type = get_tifa_type_from_ast(match["__expr__"].ast_node)
+        if are_types_equal(assigned_type, expected_type):
+            return match
+        potentials.append(match)
+    if all(is_literal(potential) for potential in potentials):
         explain(
             (
                 "You needed to assign a literal value to {variable}, but you "
                 "created an expression instead."
             ).format(variable=variable_name),
-            label="exp_vs_lit",
+            label="did_not_assign_literal",
             title="Expression Instead of Literal",
             report=report, muted=muted
         )
@@ -508,7 +496,7 @@ def ensure_assignment(variable_name, type=None, value=None, root=None, muted=Fal
             ("You have not assigned a {type} to the variable {variable}." "").format(
                 type=type, variable=variable_name
             ),
-            label="type_assign",
+            label="wrong_type_assign",
             title="Unexpected Variable Type",
             report=report, muted=muted
         )
