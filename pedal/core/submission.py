@@ -1,3 +1,7 @@
+"""
+Representation of a student's submission to pedal. Almost certainly contains their code,
+but may also contain other metadata.
+"""
 
 __all__ = ['Submission']
 

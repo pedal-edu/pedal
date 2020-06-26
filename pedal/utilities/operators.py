@@ -1,3 +1,6 @@
+"""
+Human-readable names for operators.
+"""
 import ast
 
 OPERATION_DESCRIPTION = {
@@ -39,7 +42,9 @@ COMPARE_OP_NAMES = {
     "in": "In",
     "not in": "NotIn",
 }
+
 BOOL_OP_NAMES = {"and": "And", "or": "Or"}
+
 BIN_OP_NAMES = {
     "+": "Add",
     "-": "Sub",
@@ -55,6 +60,7 @@ BIN_OP_NAMES = {
     "&": "BitAnd",
     "@": "MatMult",
 }
+
 UNARY_OP_NAMES = {
     # "+": "UAdd",
     # "-": "USub",
