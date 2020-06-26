@@ -734,9 +734,11 @@ def assertPrints(result, expected_output, args=None, returns=None,
         failure = AssertionException("\n".join(context))
         report['assertions']['collected'].append(failure)
         # TODO: Fix this!
-        report.attach('Instructor Test', category='student', tool='Assertions',
-                      mistake={'message': "Student code failed instructor test.<br>\n" +
-                                          str(failure)})
+        fields = {'context': "", 'failure': str(failure), 'message': message or ""}
+        feedback(label, tool=TOOL_NAME_ASSERTIONS, category=Feedback.CATEGORIES.INSTRUCTOR,
+                 justification="Printed the wrong value", title=_basic_assertion.title,
+                 message=_basic_assertion.message_template.format(**fields), fields=fields,
+                 score=score, correct=False, muted=muted, report=report)
         report['assertions']['failures'] += 1
         if report['assertions']['exceptions']:
             raise failure
