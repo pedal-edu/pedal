@@ -11,29 +11,17 @@ sys.path.insert(0, pedal_library)
 from pedal.core import *
 from pedal.source import set_source
 from pedal.assertions import *
-from tests.execution_helper import Execution
+from tests.execution_helper import Execution, ExecutionTestCase
 from pedal.assertions.setup import _topological_sort, set_assertion_mode
 
 
-class TestAssertions(unittest.TestCase):
+class TestAssertions(ExecutionTestCase):
 
     def test_exceptional_mode(self):
         with Execution('a = 0') as e:
             set_assertion_mode(exceptions=True)
             self.assertRaises(AssertionException, assertEqual, 1, 3)
 
-    def assertFeedback(self, execution, feedback_string):
-        """
-
-        Args:
-            execution:
-            feedback_string:
-
-        Returns:
-
-        """
-        return self.assertEqual(dedent(feedback_string).lstrip(), execution.feedback)
-        
     def test_primitive_assertions(self):
         with Execution(dedent("0")) as e:
             @phase('1')
