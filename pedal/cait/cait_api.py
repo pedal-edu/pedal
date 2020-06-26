@@ -89,20 +89,17 @@ def reparse_if_needed(student_code=None, report=MAIN_REPORT):
             return cait
         else:
             student_ast = _parse_source(student_code, report=report)
-    # Try to steal parse from Source module, if available
-    elif report[SOURCE_TOOL_NAME]['success']:
-        student_code = report.submission.main_code
-        if student_code in cait['cache']:
-            cait['ast'] = cait['cache'][student_code]
-            return cait
-        else:
-            student_ast = report[SOURCE_TOOL_NAME]['ast']
     else:
         student_code = report.submission.main_code
+        # Have we already parsed this code?
         if student_code in cait['cache']:
             cait['ast'] = cait['cache'][student_code]
             return cait
-        student_ast = _parse_source(student_code, report=report)
+        # Try to steal parse from Source module, if available
+        if report[SOURCE_TOOL_NAME]['success']:
+            student_ast = report[SOURCE_TOOL_NAME]['ast']
+        else:
+            student_ast = _parse_source(student_code, report=report)
     cait['ast'] = cait['cache'][student_code] = CaitNode(student_ast, report=report)
     return cait
 
