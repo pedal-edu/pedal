@@ -38,12 +38,10 @@ class TestAssertions(unittest.TestCase):
         with Execution(dedent("0")) as e:
             @phase('1')
             def part1():
-                """
-
-                """
                 assertEqual(5, 0)
         self.assertFeedback(e, """
-        Instructor Test\nStudent code failed instructor test.<br>
+        Instructor Test
+        Student code failed instructor test.
         5 != 0""")
     
     def test_sandbox_assertions(self):
@@ -59,7 +57,8 @@ class TestAssertions(unittest.TestCase):
                 assertEqual(e.student.call('add', 1, 6, 3), 10)
             suppress("analyzer")
         self.assertEqual(e.feedback, dedent("""
-        Instructor Test\nStudent code failed instructor test.<br>
+        Instructor Test
+        Student code failed instructor test.
         I ran:
         <pre>add(1, 6, 3)</pre>
         The result was:
@@ -326,7 +325,8 @@ class TestAssertions(unittest.TestCase):
                 assertEqual(e.student.call('fail_on_3', 3, keep_context=True), True)
             suppress("analyzer")
         self.assertEqual(e.feedback, dedent("""
-        Instructor Test\nStudent code failed instructor test.<br>
+        Instructor Test
+        Student code failed instructor test.
         I ran:
         <pre>fail_on_3(1)
         fail_on_3(2)
@@ -355,8 +355,9 @@ class TestAssertions(unittest.TestCase):
                              ["banana cream pudding", "alphabet soup", "raktajino"])
 
             suppress("analyzer")
-        self.assertEqual(e.feedback, dedent("""
-        Instructor Test\nStudent code failed instructor test.<br>
+        self.assertFeedback(e, """
+        Instructor Test
+        Student code failed instructor test.
         I ran:
         <pre>print_rating(9)</pre>
         The function printed:
@@ -367,7 +368,7 @@ class TestAssertions(unittest.TestCase):
         But I expected the output:
         <pre>banana cream pudding
         alphabet soup
-        raktajino</pre>""").lstrip())
+        raktajino</pre>""")
         
 class TestTopologicalSort(unittest.TestCase):
     def test_topological_sort(self):
