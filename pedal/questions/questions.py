@@ -1,5 +1,9 @@
+from pedal.core.feedback import AtomicFeedbackFunction
+from pedal.core.feedback_category import FeedbackCategory, FeedbackKind
 from pedal.core.report import MAIN_REPORT
 from pedal.questions.graders import QuestionGrader
+from pedal.core.commands import feedback
+from pedal.questions.constants import TOOL_NAME
 
 
 class Question:
@@ -33,6 +37,7 @@ class Question:
             show_question(self.instructions, self.report)
 
 
+@AtomicFeedbackFunction('show_question')
 def show_question(instructions, report=MAIN_REPORT):
     """
 
@@ -40,5 +45,8 @@ def show_question(instructions, report=MAIN_REPORT):
         instructions:
         report:
     """
-    report.attach('Question', category='Instructions', tool='Questions',
-                  group=report.group, priority='instructions', hint=instructions)
+    fields = {'instructions': instructions}
+    feedback(show_question.__name__, tool=TOOL_NAME, category=FeedbackCategory.INSTRUCTIONS,
+             kind=FeedbackKind.INSTRUCTIONAL, justification='Question was asked but not answered.',
+             priority='instructions', valence=0, title='Show Question', message=instructions,
+             text=instructions, fields=fields, report=report)

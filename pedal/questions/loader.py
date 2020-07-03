@@ -63,6 +63,7 @@ messages:
 """
 from pedal.core.commands import set_success, give_partial
 from pedal.core.feedback_category import FeedbackCategory
+from pedal.questions.constants import TOOL_NAME
 
 from pedal.sandbox.compatibility import get_sandbox
 from pedal.toolkit.functions import *
@@ -534,7 +535,8 @@ def load_question(data):
         if all(successes):
             set_success()
         else:
-            give_partial(function_points)
+            give_partial(function_points, tool=TOOL_NAME,
+                         justification="Passed some but not all unit tests")
 
 
 def check_question(data):
