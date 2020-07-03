@@ -168,7 +168,7 @@ def _basic_assertion(label, justification, left, right, operator, code_compariso
                         show_expected_value, modify_right, left, right)
         report[TOOL_NAME_ASSERTIONS]['collected'].append(failure)
         fields = {'context': context, 'failure': str(failure), 'message': message}
-        feedback(label, tool=TOOL_NAME_ASSERTIONS, category=Feedback.CATEGORIES.INSTRUCTOR,
+        feedback(label, tool=TOOL_NAME_ASSERTIONS, category=Feedback.CATEGORIES.SPECIFICATION,
                  justification=justification, title=_basic_assertion.title,
                  message=_basic_assertion.message_template.format(**fields), fields=fields,
                  score=partial_score, correct=False, muted=muted, report=report)
@@ -735,7 +735,7 @@ def assertPrints(result, expected_output, args=None, returns=None,
         report['assertions']['collected'].append(failure)
         # TODO: Fix this!
         fields = {'context': "", 'failure': str(failure), 'message': message or ""}
-        feedback(label, tool=TOOL_NAME_ASSERTIONS, category=Feedback.CATEGORIES.INSTRUCTOR,
+        feedback(label, tool=TOOL_NAME_ASSERTIONS, category=Feedback.CATEGORIES.SPECIFICATION,
                  justification="Printed the wrong value", title=_basic_assertion.title,
                  message=_basic_assertion.message_template.format(**fields), fields=fields,
                  score=score, correct=False, muted=muted, report=report)
@@ -903,3 +903,23 @@ assert_equal = assertEqual
 assert_not_equal = assertNotEqual
 assert_prints = assertPrints
 # TODO: Finish adding in all the other assert variants
+
+
+"""
+New assertions:
+
+assert_has_text(code: str, missing=False, minimum=2, maximum=3)
+assert_has_literal(literal_value: Any)
+assert_has_code(ast_name: str)
+# Whether it was detected statically
+assert_has_called(function_name: str)
+# Whether it was detected dynamically
+assert_has_traced(function_name: str)
+assert_has_name(variable_name: str)
+assert_has_operation(operator: str)
+assert_has_assignment(variable_name: str, type: str, value: Any)
+assert_has_import(module_name: str)
+
+assert_iteration(style: {"For", "While", "Functional", "Recursion"})
+
+"""
