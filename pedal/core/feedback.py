@@ -56,6 +56,7 @@ class Feedback:
             default kinds of feedback, or perhaps feedback that is interesting for analysis but not pedagogically
             helpful to give to the student. They will still contribute to overall score, but not to the correcntess
             of the submission.
+        TODO: unscored
 
         author (List[str]): A list of names/emails that indicate who created this piece of feedback. They can be
             either names, emails, or combinations in the style of `"Cory Bart <acbart@udel.edu>"`.
@@ -63,7 +64,7 @@ class Feedback:
             digit should be incremented for small bug fixes/changes. The middle (second) digit should be used for more
             serious and intense changes. The first digit should be incremented when changes are made on exposure to
             learners or some other evidence-based motivation.
-        tags (List[str]): Any tags that you want to attach to this feedback.
+        tags (List[Tag]): Any tags that you want to attach to this feedback.
 
         group (int or str): Information about what logical grouping within the submission this belongs to. Various
             tools can chunk up a submission (e.g., by section), they can use this field to keep track of how that
@@ -82,16 +83,17 @@ class Feedback:
                  locations=None, score=None, correct=None, muted=None, version=None, author=None, tags=None,
                  group=None, report=MAIN_REPORT):
         # Model
-        self.label = label
-        self.tool = tool
-        self.category = category
-        self.kind = kind
-        self.justification = justification
-        self.priority = priority
-        self.valence = valence
+        cff = report._current_feedback_function()
+        self.label = label or cff.label
+        self.tool = tool or cff.tool
+        self.category = category or cff.category
+        self.kind = kind or cff.kind
+        self.justification = justification or cff.justification
+        self.priority = priority or cff.priority
+        self.valence = valence or cff.valence
         # Presentation
-        self.title = title
-        self.message = message
+        self.title = title or cff.title
+        self.message = message or cff.message_template.format(**fields) # TODO: Make this correct
         self.text = text
         self.fields = fields
         if isinstance(locations, int):
@@ -140,7 +142,8 @@ class Feedback:
         return "Feedback({}{})".format(self.label, metadata)
 
 
-def AtomicFeedbackFunction(title=None, version='0.0.1', message_template=None, text_template=None,
+def AtomicFeedbackFunction(label=None, title=None, version='0.0.1',
+                           message_template=None, text_template=None,
                            justification=None, tags=None, muted=None):
     """
     Decorator for feedback functions to indicate their intent.
@@ -156,7 +159,7 @@ def AtomicFeedbackFunction(title=None, version='0.0.1', message_template=None, t
     Returns:
 
     """
-    def AtomicFeedbackFunction_with_attrs(function):
+    def AtomicFeedbackFunction_with_attrs(function, _label=None):
         """
 
         Args:
@@ -165,19 +168,36 @@ def AtomicFeedbackFunction(title=None, version='0.0.1', message_template=None, t
         Returns:
 
         """
-        function.title = title if title is not None else function.__name__
-        function.label = function.__name__
+        if _label is None:
+            _label = function.__name__
+        function.title = title if title is not None else _label
+        function.label = _label
         function.tags = tags if tags is not None else []
         function.version = version
         function.justification = justification
         function.message_template = message_template or text_template
         function.text_template = text_template or message_template
         function.muted = muted
-        return function
+        def called_function(*args, **kwargs):
+            if 'report' not in kwargs or kwargs['report'] is None:
+                kwargs['report'] = MAIN_REPORT
+            kwargs['report']._feedback_function_stack.append(function)
+            try:
+                result = function(*args, report=MAIN_REPORT, **kwargs)
+            finally:
+                kwargs['report']._feedback_function_stack.pop()
+            return result
+        return called_function
+    if label is not None:
+        @AtomicFeedbackFunction_with_attrs(_label=label)
+        def __new_function():
+            return Feedback(label)
+        __new_function.__name__ = label
+        return __new_function
     return AtomicFeedbackFunction_with_attrs
 
 
-def CompositeFeedbackFunction():
+def CompositeFeedbackFunction(*functions):
     """
 
     Returns:
@@ -192,6 +212,7 @@ def CompositeFeedbackFunction():
         Returns:
 
         """
+        CompositeFeedbackFunction_with_attrs.functions = functions
         return function
     return CompositeFeedbackFunction_with_attrs
 
