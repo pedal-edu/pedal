@@ -6,7 +6,7 @@ from pedal.core.location import Location
 from pedal.core.report import MAIN_REPORT
 from pedal.tifa.type_definitions import get_tifa_type, get_tifa_type_from_str, get_tifa_type_from_ast
 from pedal.tifa.type_operations import are_types_equal
-from pedal.utilities.ast import is_literal
+from pedal.utilities.ast_tools import is_literal
 from pedal.utilities.operators import COMPARE_OP_NAMES, BIN_OP_NAMES, BOOL_OP_NAMES, UNARY_OP_NAMES
 
 
