@@ -472,28 +472,35 @@ class CaitNode:
 
     def has(self, node):
         """
-        Determine if this node has the given `node`.
+        Determine if this node has the given `node`. Specifically, it checks if the ast has a given Constant or variable
+        This method does NOT check for equality of two asts. Use find_matches for that functionality
+        Args:
+            node (): A constant (int, float, str), or Name astnode
+
+        Returns: True if found, False otherwise
+
         """
-        if isinstance(node, (int, float)):
+        if isinstance(node, (int, float, str)):
             visitor = ast.NodeVisitor()
-            has_num = []
+            has_constant = []
+
+            def visit_Constant(self, potential):
+                has_constant.append(node == potential.value)
+                return self.generic_visit(potential)
 
             def visit_Num(self, potential):
-                """
+                has_constant.append(node == potential.n)
+                return self.generic_visit(potential)
 
-                Args:
-                    self:
-                    potential:
-
-                Returns:
-
-                """
-                has_num.append(node == potential.n)
+            def visit_Str(self, potential):
+                has_constant.append(node == potential.s)
                 return self.generic_visit(potential)
 
             visitor.visit_Num = MethodType(visit_Num, visitor)
+            visitor.visit_Constant = MethodType(visit_Constant, visitor)
+            visitor.visit_Str = MethodType(visit_Str, visitor)
             visitor.visit(self.astNode)
-            return any(has_num)
+            return any(has_constant)
         elif node.ast_name != "Name":
             return False
         visitor = ast.NodeVisitor()

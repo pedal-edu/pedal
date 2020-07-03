@@ -46,15 +46,20 @@ class CaitNodeTest(unittest.TestCase):
         self.assertTrue(len(if_set_if0) == 1, "Found {} ifs, when 1 should be found".format(len(if_set_if0)))
 
     def test_has(self):
-        program = ast.parse("x\ny\nx = 0")
+        program = ast.parse("x\n"
+                            "y\n"
+                            "x = 0\n"
+                            "y = 'fun'")
         program = CaitNode(program)
         x = program.body[0].value
         y = program.body[1].value
         line3 = program.body[2]
+        line4 = program.body[3]
         self.assertTrue(line3.has(x))
         self.assertFalse(line3.has(y))
         self.assertTrue(line3.has(0))
         self.assertFalse(line3.has(1))
+        self.assertTrue(line4.has("fun"))
 
     def test___getattr__(self):
         program = ast.parse("x = 0")
