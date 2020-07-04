@@ -48,9 +48,10 @@ class Submission:
     @property
     def lines(self):
         """
+        Retrieves the lines of code from this submission.
 
         Returns:
-
+            list[str]: The lines of code for this submission.
         """
         if self.main_code not in self._lines_cache:
             self._lines_cache[self.main_code] = self.main_code.split("\n")
@@ -60,11 +61,8 @@ class Submission:
         """
         Substitutes the current main code and filename with the given arguments.
         Args:
-            code:
-            file:
-
-        Returns:
-
+            code (str): The new code to substitute in.
+            file (str): An optional filename to use.
         """
         self.main_code = code
         if file is not None:

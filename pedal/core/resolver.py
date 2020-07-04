@@ -19,14 +19,12 @@ class Resolver:
 
     def _on_pre_resolve(self):
         """
-        Hook event.
-        Returns:
+        Hook event that is run before a resolver actually begins its process.
 
+        TODO: This doesn't do anything yet
         """
 
     def _on_post_resolve(self):
         """
-        Hook event.
-        Returns:
-
+        Hook event that is after a resolver actually begins its process.
         """
