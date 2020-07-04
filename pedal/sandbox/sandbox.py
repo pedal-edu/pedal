@@ -1,6 +1,8 @@
 """
+File containing the Sandbox class, reset, and run functions.
 
 TODO: Handle sys.argv
+
 """
 
 from pprint import pprint
@@ -148,10 +150,10 @@ class Sandbox(DataSandbox):
         data: The namespace produced by the students' code. This is basically
             a dictionary mapping valid python names to their values.
         raw_output (str): The exact literal results of all the `print` calls
-            made so far, including the "\n" characters.
-        output (list of str): The current lines of output, broken up by
-            distinct print calls (not "\n" characters). Note that this will
-            not have any "\n" characters unless you explicitly printed them.
+            made so far, including the newline characters.
+        output (list[str]): The current lines of output, broken up by
+            distinct print calls (not newline characters). Note that this will
+            not have any newline characters unless you explicitly printed them.
         output_contexts (dict[str:list[str]]): The output for each call context.
         call_id (int): The current call_id of the most recent call. Is
             initially 0, indicating the original sandbox creation.
@@ -667,7 +669,7 @@ class Sandbox(DataSandbox):
                 tracebacks will be shown with the given context. If False,
                 no context will be given (the default).
             threaded (bool): whether or not to run this code in a separate
-                thread. Defaults to :attribute:`Sandbox.threaded`.
+                thread. Defaults to :attr:`Sandbox.threaded`.
             report_exceptions (bool): Whether or not to capture exceptions.
         """
         # Handle any threading if necessary
