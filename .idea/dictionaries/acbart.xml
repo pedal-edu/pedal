@@ -6,6 +6,7 @@
       <w>classmethod</w>
       <w>elts</w>
       <w>feedbacks</w>
+      <w>hiddens</w>
       <w>indexable</w>
       <w>matplotlib</w>
       <w>metacognitive</w>
@@ -15,9 +16,11 @@
       <w>pyplot</w>
       <w>sandboxed</w>
       <w>showable</w>
+      <w>subsubmodules</w>
       <w>suppressions</w>
       <w>tifa</w>
       <w>uncategorized</w>
+      <w>unscored</w>
     </words>
   </dictionary>
 </component>
