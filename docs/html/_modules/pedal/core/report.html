@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,27 +11,29 @@
   
 
   
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
 </head>
@@ -48,7 +49,7 @@
           
 
           
-            <a href="../../../index.html" class="icon icon-home"> Pedal
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> Pedal
           
 
           
@@ -75,6 +76,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -100,6 +102,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -138,7 +141,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../../index.html">Module code</a> &raquo;</li>
         
@@ -158,9 +161,21 @@
            <div itemprop="articleBody">
             
   <h1>Source code for pedal.core.report</h1><div class="highlight"><pre>
-<span></span><span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Report&#39;</span><span class="p">,</span> <span class="s1">&#39;MAIN_REPORT&#39;</span><span class="p">]</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">File that holds the the Report class and the global MAIN_REPORT.</span>
 
-<span class="kn">from</span> <span class="nn">pedal.core.feedback_category</span> <span class="k">import</span> <span class="n">FeedbackCategory</span>
+<span class="sd">Note that you can make other Reports, but that doesn&#39;t actually seem to be</span>
+<span class="sd">useful very often. Usually you want to just rely on the global MAIN_REPORT.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Report&#39;</span><span class="p">,</span> <span class="s1">&#39;MAIN_REPORT&#39;</span><span class="p">]</span>
+
+<span class="kn">from</span> <span class="nn">pedal.core.errors</span> <span class="kn">import</span> <span class="n">PedalToolNotRegistered</span><span class="p">,</span> <span class="n">PedalToolAlreadyRegistered</span>
+<span class="kn">from</span> <span class="nn">pedal.core.feedback_category</span> <span class="kn">import</span> <span class="n">FeedbackCategory</span>
+
+
+<span class="c1"># TODO: Mechanism for checking whether a piece of feedback is in the report</span>
+<span class="kn">from</span> <span class="nn">pedal.core.tool</span> <span class="kn">import</span> <span class="n">ToolRegistration</span>
 
 
 <div class="viewcode-block" id="Report"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.report.Report">[docs]</a><span class="k">class</span> <span class="nc">Report</span><span class="p">:</span>
@@ -169,49 +184,59 @@
 <span class="sd">    data that the Tool might want to provide for other tools.</span>
 
 <span class="sd">    Attributes:</span>
-<span class="sd">        submission (:py:class:`~pedal.core.submission.Submission`): The contextualized submission information.</span>
-<span class="sd">        feedback (list of :py:class:`~pedal.core.feedback.Feedback`): The raw feedback generated for</span>
-<span class="sd">            this Report so far.</span>
-<span class="sd">        suppressions (list of tuple(str, str)): The categories and labels that have been suppressed so far.</span>
+<span class="sd">        submission (:py:class:`~pedal.core.submission.Submission`): The</span>
+<span class="sd">            contextualized submission information.</span>
+<span class="sd">        feedback (list of :py:class:`~pedal.core.feedback.Feedback`): The raw</span>
+<span class="sd">            feedback generated for this Report so far.</span>
+<span class="sd">        suppressions (list[tuple[str, str]]): The categories and labels that</span>
+<span class="sd">            have been suppressed so far.</span>
+<span class="sd">        hiddens (set of str): The parts of the final response that should be</span>
+<span class="sd">            hidden. This can globally hide the &#39;correct&#39;, &#39;score&#39;, etc.</span>
 <span class="sd">        group (int or str): The label for the current group. Feedback given</span>
 <span class="sd">            by a Tool will automatically receive the current `group`. This</span>
 <span class="sd">            is used by the Source tool, for example, in order to group feedback</span>
 <span class="sd">            by sections.</span>
-<span class="sd">        group_names (dict[group:str]): A printable, student-facing name for the</span>
+<span class="sd">        group_names (dict[group, str]): A printable, student-facing name for the</span>
 <span class="sd">            group. When a group needs to be rendered out to the user, this</span>
 <span class="sd">            will override whatever label was going to be presented instead.</span>
-<span class="sd">        group_order (sequence or callable or None): The mechanism to use to</span>
-<span class="sd">            order groups. If a sequence, the order will be inferred based on</span>
-<span class="sd">            the order of elements in the sequence. If a callable, the callable</span>
-<span class="sd">            will be used as a key function for `sort`. If `None`, then defaults</span>
-<span class="sd">            to the natural ordering of the groups. Defaults to `None`.</span>
-<span class="sd">        hooks (dict[str: list[callable]): A dictionary mapping events to</span>
+<span class="sd">        hooks (dict[str, list[callable]): A dictionary mapping events to</span>
 <span class="sd">            a list of callable functions. Tools can register functions on</span>
 <span class="sd">            hooks to have them executed when the event is triggered by another</span>
 <span class="sd">            tool. For example, the Assertions tool has hooks on the Source tool</span>
 <span class="sd">            to trigger assertion resolutions before advancing to next sections.</span>
-<span class="sd">        _tool_data (dict of str =&gt; any): Maps tool names to their data. The</span>
+<span class="sd">        _tool_data (dict[str, Any]): Maps tool names to their data. The</span>
 <span class="sd">                                       namespace for a tool can be used to</span>
 <span class="sd">                                       store whatever they want, but will</span>
 <span class="sd">                                       probably be in a dictionary itself.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">group_order</span> <span class="o">=</span> <span class="kc">None</span>
-
+    <span class="c1">#: dict[str, :py:class:`~pedal.core.tool.ToolRegistration`]: The</span>
+    <span class="c1">#: tools registered for this report, available via their names.</span>
     <span class="n">TOOLS</span> <span class="o">=</span> <span class="p">{}</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates a new Report instance.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tool_data</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">feedback</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">suppressions</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">suppressed_labels</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hiddens</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">group</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">group_names</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hooks</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">submission</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="Report.clear"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.report.Report.clear">[docs]</a>    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-
+<span class="sd">        Completely resets the entire report back to its starting form,</span>
+<span class="sd">        including deleting any attached submissions, tool data, and feedbacks/</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">feedback</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">suppressions</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">suppressed_labels</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hiddens</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_tool_data</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">group</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">group_names</span> <span class="o">=</span> <span class="p">{}</span>
@@ -221,40 +246,46 @@
 
 <div class="viewcode-block" id="Report.contextualize"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.report.Report.contextualize">[docs]</a>    <span class="k">def</span> <span class="nf">contextualize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">submission</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Attach the given submission to this report.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            submission:</span>
+<span class="sd">            submission (:py:class:`pedal.core.submission.Submission`): The</span>
+<span class="sd">                submission to attach to this report.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">submission</span> <span class="o">=</span> <span class="n">submission</span></div>
 
 <div class="viewcode-block" id="Report.hide_correctness"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.report.Report.hide_correctness">[docs]</a>    <span class="k">def</span> <span class="nf">hide_correctness</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-
+<span class="sd">        Suppress the RESULT category entirely, so that the report doesn&#39;t</span>
+<span class="sd">        indicate whether or not the submission was correct.</span>
+<span class="sd">        TODO: Make this just a regular command.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">suppressions</span><span class="p">[</span><span class="n">FeedbackCategory</span><span class="o">.</span><span class="n">RESULT</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hiddens</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s1">&#39;correct&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hiddens</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s1">&#39;score&#39;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Report.add_feedback"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.report.Report.add_feedback">[docs]</a>    <span class="k">def</span> <span class="nf">add_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feedback</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Attaches the given feedback object to this report.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            feedback:</span>
+<span class="sd">            feedback (:py:class:`~pedal.core.feedback.Feedback`): The feedback</span>
+<span class="sd">                object to attach.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            :py:class:`~pedal.core.feedback.Feedback`: The attached feedback</span>
+<span class="sd">            :py:class:`~pedal.core.feedback.Feedback`: The attached feedback.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">feedback</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">feedback</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">feedback</span></div>
 
-<div class="viewcode-block" id="Report.suppress"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.report.Report.suppress">[docs]</a>    <span class="k">def</span> <span class="nf">suppress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="Report.suppress"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.report.Report.suppress">[docs]</a>    <span class="k">def</span> <span class="nf">suppress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Suggest that an entire category or label within a category ignored by</span>
+<span class="sd">        the resolver.</span>
+<span class="sd">        TODO: Currently, only global suppression is supported.</span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            category (str): The category of feedback to suppress.</span>
 <span class="sd">            label (bool or str): A specific label to match against and suppress.</span>
-<span class="sd">            where (bool or group): Which group of report to localize the</span>
-<span class="sd">                suppression to. If instead `True` is passed, the suppression</span>
-<span class="sd">                occurs in every group globally.</span>
-<span class="sd">                TODO: Currently, only global suppression is supported.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">category</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">suppressed_labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
@@ -302,15 +333,49 @@
             <span class="k">for</span> <span class="n">function</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hooks</span><span class="p">[</span><span class="n">event</span><span class="p">]:</span>
                 <span class="n">function</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tool_name</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tool_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Support retrieving a tool&#39;s data from the report using square bracket</span>
+<span class="sd">        syntax. So, for example, you can do `MAIN_REPORT[&#39;tifa&#39;]` and get its</span>
+<span class="sd">        data dictionary. If the tool has been registered, but not initialized</span>
+<span class="sd">        for this report, then the tool will be</span>
+<span class="sd">        :py:method:`pedal.core.tool.reset` first. Otherwise, throws an error</span>
+<span class="sd">        that the tool does not exist.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            tool_name (str): The formal name of the tool, most likely specified</span>
+<span class="sd">                in its `constants.py` file.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            :py:class:`pedal.core.tool.ToolRegistration`: The data associated</span>
+<span class="sd">                with that tool.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">tool_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tool_data</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">TOOLS</span><span class="p">[</span><span class="n">tool_name</span><span class="p">][</span><span class="s1">&#39;reset&#39;</span><span class="p">](</span><span class="n">report</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">tool_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">TOOLS</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">PedalToolNotRegistered</span><span class="p">(</span><span class="n">tool_name</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">TOOLS</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">TOOLS</span><span class="p">[</span><span class="n">tool_name</span><span class="p">]</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tool_data</span><span class="p">[</span><span class="n">tool_name</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tool_name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tool_name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the tool&#39;s current data. Should largely not be used by anyone.</span>
+<span class="sd">        In fact, this could seriously damage the relationships between tools.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            tool_name (str): The name of the tool.</span>
+<span class="sd">            value (dict): The new data to set as this tool&#39;s namespace.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_tool_data</span><span class="p">[</span><span class="n">tool_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
 
-    <span class="k">def</span> <span class="nf">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tool_name</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tool_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Determine if the given `tool_name` is available through this report.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            tool_name (str): The name of a tool.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: Whether the tool is available.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">tool_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tool_data</span>
 
 <div class="viewcode-block" id="Report.register_tool"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.report.Report.register_tool">[docs]</a>    <span class="nd">@classmethod</span>
@@ -325,11 +390,8 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">tool_name</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">TOOLS</span><span class="p">:</span>
-            <span class="c1"># TODO: More sophisticated exceptions</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Tool namespace </span><span class="si">{}</span><span class="s2"> already registered.&quot;</span><span class="p">)</span>
-        <span class="bp">cls</span><span class="o">.</span><span class="n">TOOLS</span><span class="p">[</span><span class="n">tool_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s1">&#39;reset&#39;</span><span class="p">:</span> <span class="n">reset_function</span>
-        <span class="p">}</span></div></div>
+            <span class="k">raise</span> <span class="n">PedalToolAlreadyRegistered</span><span class="p">(</span><span class="n">tool_name</span><span class="p">)</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">TOOLS</span><span class="p">[</span><span class="n">tool_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">ToolRegistration</span><span class="p">(</span><span class="n">tool_name</span><span class="p">,</span> <span class="n">reset_function</span><span class="p">)</span></div></div>
 
 
 <span class="c1">#: The global Report object. Meant to be used as a default singleton</span>
@@ -338,6 +400,8 @@
 <span class="c1">#: default to this Report when no others are given.</span>
 <span class="c1">#: Ideally, the average instructor will never know this exists.</span>
 <span class="n">MAIN_REPORT</span> <span class="o">=</span> <span class="n">Report</span><span class="p">()</span>
+
+<span class="c1"># TODO: Give a mechanism for &quot;freezing&quot; a report that you can keep around.</span>
 </pre></div>
 
            </div>
@@ -350,11 +414,19 @@
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright 2018, acbart, lukesg08
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -365,7 +437,6 @@
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {
