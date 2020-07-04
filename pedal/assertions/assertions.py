@@ -144,9 +144,10 @@ def is_sandbox_result(value):
     return False
 
 
-@AtomicFeedbackFunction(title="Instructor Test",
-                        message_template=("Student code failed instructor test.\n"
-                                          "{context}{failure}{message}"))
+MESSAGE_TEMPLATE = ("Student code failed instructor test.\n"
+                    "{context}{failure}{message}")
+
+
 def _basic_assertion(label, justification, left, right, operator, code_comparison_message,
                      hc_message, hc_message_past, message, contextualize, report=MAIN_REPORT,
                      show_expected_value=True, modify_right=None, partial_score=0, muted=False):
@@ -168,9 +169,9 @@ def _basic_assertion(label, justification, left, right, operator, code_compariso
                         show_expected_value, modify_right, left, right)
         report[TOOL_NAME_ASSERTIONS]['collected'].append(failure)
         fields = {'context': context, 'failure': str(failure), 'message': message}
-        feedback(label, tool=TOOL_NAME_ASSERTIONS, category=Feedback.CATEGORIES.SPECIFICATION,
-                 justification=justification, title=_basic_assertion.title,
-                 message=_basic_assertion.message_template.format(**fields), fields=fields,
+        feedback(label=label, tool=TOOL_NAME_ASSERTIONS, category=Feedback.CATEGORIES.SPECIFICATION,
+                 justification=justification, title="Instructor Test",
+                 message=MESSAGE_TEMPLATE.format(**fields), fields=fields,
                  score=partial_score, correct=False, muted=muted, report=report)
         report[TOOL_NAME_ASSERTIONS]['failures'] += 1
         if report[TOOL_NAME_ASSERTIONS]['exceptions']:
@@ -736,8 +737,8 @@ def assertPrints(result, expected_output, args=None, returns=None,
         # TODO: Fix this!
         fields = {'context': "", 'failure': str(failure), 'message': message or ""}
         feedback(label, tool=TOOL_NAME_ASSERTIONS, category=Feedback.CATEGORIES.SPECIFICATION,
-                 justification="Printed the wrong value", title=_basic_assertion.title,
-                 message=_basic_assertion.message_template.format(**fields), fields=fields,
+                 justification="Printed the wrong value", title="Instructor Test",
+                 message=MESSAGE_TEMPLATE.format(**fields), fields=fields,
                  score=score, correct=False, muted=muted, report=report)
         report['assertions']['failures'] += 1
         if report['assertions']['exceptions']:
