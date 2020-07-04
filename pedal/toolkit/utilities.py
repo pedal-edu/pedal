@@ -22,7 +22,7 @@ def is_top_level(ast_node: CaitNode, report=MAIN_REPORT) -> bool:
     Returns:
         bool: Whether the node is from the top level
     """
-    ast = parse_program(report=MAIN_REPORT)
+    ast = parse_program(report=report)
     for element in ast.body:
         if element.ast_name == "Expr":
             if element.value == ast_node:
@@ -31,34 +31,32 @@ def is_top_level(ast_node: CaitNode, report=MAIN_REPORT) -> bool:
             return True
     return False
 
+from pedal.core.feedback import Feedback
 
-@AtomicFeedbackFunction(
-    message_template="You have defined a function inside of another block. For instance, you may "
-    "have placed it inside another function definition, or inside of a loop. Do not nest your function "
-    "definition!",
-    title="Don't Nest Functions",
-    justification="Found a FunctionDef that was not at the top-level.",
-)
-def no_nested_function_definitions(muted=False, report=MAIN_REPORT) -> bool:
-    """
-    Returns `True` if there are any functions defined inside of other functions.
-    Also attaches feedback, although that can be muted.
+class AssertionFeedback(Feedback):
+    pass
 
-    Returns:
-        bool: Returns whether there is a nested definition
+
+class no_nested_function_definitions(AssertionFeedback):
     """
-    ast = parse_program(report=MAIN_REPORT)
-    defs = ast.find_all("FunctionDef")
-    for a_def in defs:
-        if not is_top_level(a_def):
-            gently(
-                no_nested_function_definitions.text_template,
-                label="no_nested_function_definitions",
-                muted=muted,
-                report=MAIN_REPORT,
-            )
-            return False
-    return True
+    Attaches feedback if there are any functions defined inside of other
+    functions.
+    """
+    message_template = ("You have defined a function inside of another block. "
+                        "For instance, you may have placed it inside another "
+                        "function definition, or inside of a loop. Do not nest "
+                        "your function definition!")
+    title = "Don't Nest Functions"
+    justification = "Found a FunctionDef that was not at the top-level."
+
+    def condition(self):
+        """ Checks whether there is a FunctionDef not at the top level. """
+        ast = parse_program(report=self.report)
+        defs = ast.find_all("FunctionDef")
+        for a_def in defs:
+            if not is_top_level(a_def, report=self.report):
+                return True
+        return False
 
 
 def function_prints(function_name: str = None, report=MAIN_REPORT) -> bool:
@@ -294,6 +292,17 @@ def prevent_literal(*literals, muted=False, report=MAIN_REPORT):
                     explain(message.format(repr(literal)), label=prevent_literal, title=prevent_literal.title, muted=muted, report=report)
                 return literal
     return False
+
+
+class prevent_literal(AtomicFeedbackFunction):
+    message_template = "Do not use the literal value `{literal!r}` in your code."
+
+    def __init__(self, literal, **kwargs):
+        super().__init__(**kwargs)
+        self.fields['literal'] = literal
+
+    def condition(self):
+        pass
 
 
 @AtomicFeedbackFunction(title="Missing Literal")
