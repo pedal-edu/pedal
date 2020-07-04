@@ -706,7 +706,7 @@ class TestVariables(unittest.TestCase):
                 """)
         tifa = pedal.tifa.Tifa()
         tifa.process_code(program)
-        self.assertEqual(tifa.report['tifa']['issues']['unused_variable'][0].locations[0].line, 2)
+        self.assertEqual(tifa.report['tifa']['issues']['unused_variable'][0].location.line, 2)
 
 
 if __name__ == '__main__':

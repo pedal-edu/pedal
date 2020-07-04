@@ -320,6 +320,7 @@ class module_not_found(TifaFeedback):
     title = "Module Not Found"
     text_template = "TODO"
     justification = ""
+    muted = True
 
     def __init__(self, location, name, is_dynamic=False, error=None, **kwargs):
         fields = {"location": location, "name": name,

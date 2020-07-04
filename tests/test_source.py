@@ -62,7 +62,8 @@ class TestCode(unittest.TestCase):
         feedback = get_all_feedback()
         self.assertTrue(feedback)
         self.assertEqual(feedback[0].label, "syntax_error")
-        self.assertEqual(feedback[0].locations[0].line, 7)
+        print(feedback[0].location)
+        self.assertEqual(feedback[0].location.line, 7)
 
     def test_damaged_sections(self):
         contextualize_report(dedent('''

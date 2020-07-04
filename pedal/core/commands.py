@@ -30,6 +30,7 @@ class set_success(FeedbackResponse):
     title = "Complete"
     text_template = "Great work!"
     score = 1
+    correct = True
     category = FeedbackCategory.COMPLETE
     kind = FeedbackKind.RESULT
     valence = Feedback.POSITIVE_VALENCE
@@ -45,6 +46,8 @@ class compliment(FeedbackResponse):
     kind = FeedbackKind.ENCOURAGEMENT
     valence = Feedback.POSITIVE_VALENCE
 
+    def __init__(self, message, **kwargs):
+        super().__init__(message=message, **kwargs)
 
 class give_partial(FeedbackResponse):
     """ Increases the user's current score by the `score`. """
@@ -68,6 +71,9 @@ class explain(FeedbackResponse):
     kind = FeedbackKind.MISTAKE
     valence = Feedback.NEGATIVE_VALENCE
 
+    def __init__(self, message, **kwargs):
+        super().__init__(message=message, **kwargs)
+
 
 class gently(FeedbackResponse):
     """ Give a low-priority piece of negative feedback to the student. """
@@ -78,6 +84,9 @@ class gently(FeedbackResponse):
     kind = FeedbackKind.MISTAKE
     valence = Feedback.NEGATIVE_VALENCE
 
+    def __init__(self, message, **kwargs):
+        super().__init__(message=message, **kwargs)
+
 
 class guidance(FeedbackResponse):
     """ Give instructions about a question. """
@@ -86,6 +95,8 @@ class guidance(FeedbackResponse):
     kind = FeedbackKind.INSTRUCTIONAL
     valence = Feedback.NEUTRAL_VALENCE
 
+    def __init__(self, message, **kwargs):
+        super().__init__(message=message, **kwargs)
 
 def hide_correctness(report=MAIN_REPORT):
     """

@@ -131,6 +131,8 @@ class Feedback:
         # Metadata
         if label is not None:
             self.label = label
+        else:
+            self.label = self.__class__.__name__
         # Condition
         if category is not None:
             self.category = category
@@ -153,7 +155,7 @@ class Feedback:
             self.field_names = field_names
         if title is not None:
             self.title = title
-        else:
+        elif self.title is None:
             self.title = label
         if message is not None:
             self.message = message
@@ -166,12 +168,10 @@ class Feedback:
 
         # Locations
         if isinstance(location, int):
-            location = [Location(location)]
-        elif isinstance(location, Location):
-            location = [location]
+            location = Location(location)
         # TODO: Handle tuples (Line, Col) and (Filename, Line, Col), and possibly lists thereof
         if location is not None:
-            self.locations = location
+            self.location = location
         # Result
         if score is not None:
             self.score = score
@@ -196,6 +196,8 @@ class Feedback:
         if self.field_names is not None:
             for field_name in self.field_names:
                 self.fields[field_name] = kwargs.get(field_name)
+        for key, value in kwargs.items():
+            self.fields[key] = value
         if 'location' not in self.fields and self.location is not None:
             self.fields['location'] = self.location
         # Self-attach to a given report?

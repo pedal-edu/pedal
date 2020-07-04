@@ -46,7 +46,7 @@ class Report:
                                        store whatever they want, but will
                                        probably be in a dictionary itself.
     """
-    #: dict[str, :py:class:`~pedal.core.tool.ToolRegistration`]: The
+    #: dict[str, dict]: The
     #: tools registered for this report, available via their names.
     TOOLS = {}
 
@@ -184,8 +184,7 @@ class Report:
                 in its `constants.py` file.
 
         Returns:
-            :py:class:`pedal.core.tool.ToolRegistration`: The data associated
-                with that tool.
+            dict: The data associated with that tool.
         """
         if tool_name not in self._tool_data:
             if tool_name not in self.TOOLS:

@@ -187,6 +187,7 @@ class TestCode(unittest.TestCase):
         compatibility.run_student(raise_exceptions=True)
         gently("I have a gentle opinion, but you don't want to hear it.")
         final = simple.resolve()
+        print(final.label)
         self.assertEqual(Feedback.CATEGORIES.RUNTIME, final.category)
 
         # Runtime < Explain
