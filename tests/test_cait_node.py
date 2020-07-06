@@ -68,7 +68,8 @@ class CaitNodeTest(unittest.TestCase):
 
         assign = program.children[0]
         assign_value = assign.value
-        self.assertTrue(assign_value.ast_name == "Num", "__getattribute__ fallthrough failed")
+        # self.assertTrue(assign_value.ast_name == "Num", "__getattribute__ fallthrough failed")
+        self.assertTrue(assign_value.ast_name == "Constant", "__getattribute__ fallthrough failed")
 
         assign_targets = assign.targets
         self.assertTrue(type(assign_targets) == list, "expected list, got {} instead".format(list))

@@ -1,4 +1,4 @@
-from __future__ import print_function
+# from __future__ import print_function
 import unittest
 import ast
 import sys
@@ -776,8 +776,8 @@ class CaitTests(unittest.TestCase):
 
     def test_use_previous(self):
         contextualize_report('for reports in weather_reports:\n'
-                   '    if report["Station"]["City"] == "Chicago":\n'
-                   '        trend.append(reports["Data"]["Precipitation"])')
+                             '    if report["Station"]["City"] == "Chicago":\n'
+                             '        trend.append(reports["Data"]["Precipitation"])')
         matches = find_matches("for _var_ in ___:\n"
                                "    if __expr__ == __str2__:\n"
                                "        pass")
@@ -787,8 +787,8 @@ class CaitTests(unittest.TestCase):
             self.assertTrue(submatch)
 
         contextualize_report('for reports in weather_reports:\n'
-                   '    if report["Station"]["City"] == "Chicago":\n'
-                   '        trend.append(reports["Data"]["Precipitation"])')
+                             '    if report["Station"]["City"] == "Chicago":\n'
+                             '        trend.append(reports["Data"]["Precipitation"])')
         matches = find_matches("for _var_ in ___:\n"
                                "    if __expr__ == __str2__:\n"
                                "        pass")
@@ -798,8 +798,8 @@ class CaitTests(unittest.TestCase):
             self.assertFalse(submatch)
 
         contextualize_report('for reports in weather_reports:\n'
-                   '    if report["Station"]["City"] == "Chicago":\n'
-                   '        trend.append(reports["Data"]["Precipitation"])')
+                             '    if report["Station"]["City"] == "Chicago":\n'
+                             '        trend.append(reports["Data"]["Precipitation"])')
         matches = find_matches("for _var_ in ___:\n"
                                "    if __expr__ == __str2__:\n"
                                "        pass")
@@ -817,6 +817,23 @@ class CaitTests(unittest.TestCase):
             __expr__ = match["__expr__"]
             submatch = __expr__.find_matches("_sum_ = _sum_ + _var_", use_previous=True)
             self.assertTrue(submatch)
+
+    def test_match_root(self):
+        set_source("for item in item_list:\n"
+                   "    if item < 0:\n"
+                   "        n = n + item\n"
+                   "n = 0")
+        match01 = find_match("for ___ in ___:\n"
+                             "    __expr__")
+        match02 = find_match("_var_ = 0")
+        match03 = find_match("_var_ = _var_ + _item_")
+        root01 = match01.match_root.tree_id
+        root02 = match02.match_root.tree_id
+        root03 = match03.match_root.tree_id
+        self.assertTrue(root01 < root02)
+        self.assertTrue(root01 < root03)
+
+
 
 
 if __name__ == '__main__':

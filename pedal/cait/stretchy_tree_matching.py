@@ -129,7 +129,7 @@ class StretchyTreeMatcher:
         # if a direct matching is found
         if matching:
             for match in matching:
-                match.match_root = std_node
+                match.match_root = match.mappings[ins_node]
         else:
             matching = []
         #    return matching  # return it
@@ -139,7 +139,7 @@ class StretchyTreeMatcher:
             matching_c = self.any_node_match(ins_node, std_child, check_meta=check_meta, cut=cut, pre_match=pre_match)
             if matching_c:
                 for match in matching_c:
-                    match.match_root = std_child
+                    match.match_root = match.mappings[ins_node]
                 # return matching
                 matching = matching + matching_c
         if len(matching) > 0:

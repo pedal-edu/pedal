@@ -618,6 +618,8 @@ class CaitNode:
             value = self.n
         elif self.is_ast("Str"):
             value = self.s
+        elif self.is_ast("Constant"):
+            value = self.value
         elif self.is_ast("Name"):
             # TODO: Decide on what this should return...
             value = self.id
