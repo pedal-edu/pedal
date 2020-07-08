@@ -193,6 +193,7 @@
     <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Complete&quot;</span>
     <span class="n">text_template</span> <span class="o">=</span> <span class="s2">&quot;Great work!&quot;</span>
     <span class="n">score</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">correct</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">category</span> <span class="o">=</span> <span class="n">FeedbackCategory</span><span class="o">.</span><span class="n">COMPLETE</span>
     <span class="n">kind</span> <span class="o">=</span> <span class="n">FeedbackKind</span><span class="o">.</span><span class="n">RESULT</span>
     <span class="n">valence</span> <span class="o">=</span> <span class="n">Feedback</span><span class="o">.</span><span class="n">POSITIVE_VALENCE</span></div>
@@ -206,8 +207,10 @@
     <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Compliment&quot;</span>
     <span class="n">category</span> <span class="o">=</span> <span class="n">FeedbackCategory</span><span class="o">.</span><span class="n">INSTRUCTOR</span>
     <span class="n">kind</span> <span class="o">=</span> <span class="n">FeedbackKind</span><span class="o">.</span><span class="n">ENCOURAGEMENT</span>
-    <span class="n">valence</span> <span class="o">=</span> <span class="n">Feedback</span><span class="o">.</span><span class="n">POSITIVE_VALENCE</span></div>
+    <span class="n">valence</span> <span class="o">=</span> <span class="n">Feedback</span><span class="o">.</span><span class="n">POSITIVE_VALENCE</span>
 
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="give_partial"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.give_partial">[docs]</a><span class="k">class</span> <span class="nc">give_partial</span><span class="p">(</span><span class="n">FeedbackResponse</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Increases the user&#39;s current score by the `score`. &quot;&quot;&quot;</span>
@@ -229,7 +232,10 @@
     <span class="n">muted</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="n">category</span> <span class="o">=</span> <span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">INSTRUCTOR</span>
     <span class="n">kind</span> <span class="o">=</span> <span class="n">FeedbackKind</span><span class="o">.</span><span class="n">MISTAKE</span>
-    <span class="n">valence</span> <span class="o">=</span> <span class="n">Feedback</span><span class="o">.</span><span class="n">NEGATIVE_VALENCE</span></div>
+    <span class="n">valence</span> <span class="o">=</span> <span class="n">Feedback</span><span class="o">.</span><span class="n">NEGATIVE_VALENCE</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="gently"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.gently">[docs]</a><span class="k">class</span> <span class="nc">gently</span><span class="p">(</span><span class="n">FeedbackResponse</span><span class="p">):</span>
@@ -239,7 +245,10 @@
     <span class="n">muted</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="n">category</span> <span class="o">=</span> <span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">INSTRUCTOR</span>
     <span class="n">kind</span> <span class="o">=</span> <span class="n">FeedbackKind</span><span class="o">.</span><span class="n">MISTAKE</span>
-    <span class="n">valence</span> <span class="o">=</span> <span class="n">Feedback</span><span class="o">.</span><span class="n">NEGATIVE_VALENCE</span></div>
+    <span class="n">valence</span> <span class="o">=</span> <span class="n">Feedback</span><span class="o">.</span><span class="n">NEGATIVE_VALENCE</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="guidance"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.guidance">[docs]</a><span class="k">class</span> <span class="nc">guidance</span><span class="p">(</span><span class="n">FeedbackResponse</span><span class="p">):</span>
@@ -247,8 +256,10 @@
     <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Instructor Guidance&quot;</span>
     <span class="n">category</span> <span class="o">=</span> <span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">INSTRUCTIONS</span>
     <span class="n">kind</span> <span class="o">=</span> <span class="n">FeedbackKind</span><span class="o">.</span><span class="n">INSTRUCTIONAL</span>
-    <span class="n">valence</span> <span class="o">=</span> <span class="n">Feedback</span><span class="o">.</span><span class="n">NEUTRAL_VALENCE</span></div>
+    <span class="n">valence</span> <span class="o">=</span> <span class="n">Feedback</span><span class="o">.</span><span class="n">NEUTRAL_VALENCE</span>
 
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="hide_correctness"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.hide_correctness">[docs]</a><span class="k">def</span> <span class="nf">hide_correctness</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>

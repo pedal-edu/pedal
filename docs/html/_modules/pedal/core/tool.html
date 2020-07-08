@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pedal.sandbox.feedbacks &mdash; Pedal 1.0 documentation</title>
+  <title>pedal.core.tool &mdash; Pedal 1.0 documentation</title>
   
 
   
@@ -145,9 +145,7 @@
         
           <li><a href="../../index.html">Module code</a> &raquo;</li>
         
-          <li><a href="../sandbox.html">pedal.sandbox</a> &raquo;</li>
-        
-      <li>pedal.sandbox.feedbacks</li>
+      <li>pedal.core.tool</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -162,28 +160,69 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for pedal.sandbox.feedbacks</h1><div class="highlight"><pre>
+  <h1>Source code for pedal.core.tool</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Generic runtime exception feedback class.</span>
+<span class="sd">Tools are effectively submodules within Pedal - notable exceptions are</span>
+<span class="sd">:py:mod:`pedal.core`, :py:mod:`pedal.environments`,</span>
+<span class="sd">:py:mod:`pedal.utilities`, and :py:mod:`pedal.resolvers`.</span>
+
+<span class="sd">All Tools with any kind of state are expected to have a `reset` function.</span>
+<span class="sd">Although this can take parameters, we recommend avoiding that. The `reset`</span>
+<span class="sd">should be for putting things back into a &quot;null&quot; state, and then you could have</span>
+<span class="sd">followup functions that also give initial state.</span>
+
+<span class="sd">Tools should avoid removing their references (i.e., clear out data from lists</span>
+<span class="sd">and dictionaries instead of assigning a new one).</span>
+
+<span class="sd">Tools should define a ``constants.py`` file with any useful constants. One of</span>
+<span class="sd">these should be ``TOOL_NAME``, a string value indicating their desired namespace</span>
+<span class="sd">(e.g., ``TOOL_NAME = &quot;source&quot;``).</span>
+
+<span class="sd">Tools should define a ``feedbacks.py`` module that centralizes</span>
+<span class="sd">:term:`Feedback Functions&lt;Feedback Function&gt;` for that tool.</span>
+
+<span class="sd">Any function that interacts with Reports should expose a ``report`` parameter</span>
+<span class="sd">that defaults to :py:data:`pedal.core.report.MAIN_REPORT`. All internal</span>
+<span class="sd">functions should respect the ``report`` that was passed in, and not assume the</span>
+<span class="sd">``MAIN_REPORT``.</span>
+
+<span class="sd">Tools are allowed to store state within their namespace of a</span>
+<span class="sd">:py:class:`pedal.core.report.Report`.</span>
+<span class="sd">If the tool has not yet been initialized, its `reset` function will be called.</span>
+<span class="sd">You can update and access fields via dictionary access.</span>
+
+<span class="sd">.. code-block:: python</span>
+
+<span class="sd">    report[TOOL_NAME][&#39;my field&#39;] = False</span>
+
+<span class="sd">The ``__init__.py`` file for a Tool should use  ``__all__`` to expose any</span>
+<span class="sd">interesting teacher-level functions, classes, and data. That way, teachers can</span>
+<span class="sd">just consistently use ``from pedal.tool import *`` to instantly gain access to</span>
+<span class="sd">the interesting set of members. The big exception to this is</span>
+<span class="sd">:ref:`toolkit`, which is full of prototypical Tools organized</span>
+<span class="sd">into subsubmodules. If it&#39;s just a single function without much complexity, it</span>
+<span class="sd">probably belongs in the Toolkit; but as soon as complexity or multiple</span>
+<span class="sd">functions emerge with a theme, it can be promoted to a Tool.</span>
+
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">pedal.core.feedback</span> <span class="kn">import</span> <span class="n">FeedbackResponse</span>
-<span class="kn">from</span> <span class="nn">pedal.sandbox</span> <span class="kn">import</span> <span class="n">TOOL_NAME</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ToolRegistration&#39;</span><span class="p">]</span>
 
 
-<div class="viewcode-block" id="runtime_error"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.feedbacks.runtime_error">[docs]</a><span class="k">class</span> <span class="nc">runtime_error</span><span class="p">(</span><span class="n">FeedbackResponse</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Used to create all runtime errors &quot;&quot;&quot;</span>
-    <span class="n">tool</span> <span class="o">=</span> <span class="n">TOOL_NAME</span>
-    <span class="n">category</span> <span class="o">=</span> <span class="n">FeedbackResponse</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">RUNTIME</span>
-    <span class="n">kind</span> <span class="o">=</span> <span class="n">FeedbackResponse</span><span class="o">.</span><span class="n">KINDS</span><span class="o">.</span><span class="n">MISTAKE</span>
-    <span class="n">justification</span> <span class="o">=</span> <span class="s2">&quot;A runtime error occurred during execution of some code&quot;</span>
+<div class="viewcode-block" id="ToolRegistration"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.tool.ToolRegistration">[docs]</a><span class="k">class</span> <span class="nc">ToolRegistration</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    ToolRegistration is a data class for holding general, system-wide</span>
+<span class="sd">    information about a Tool. Note that it doesn&#39;t hold the tool&#39;s data, just</span>
+<span class="sd">    the static information about the tool like its reset function.</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">exception</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="n">fields</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="n">message</span><span class="p">,</span>
-                  <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
-                  <span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="n">exception</span><span class="p">,</span>
-                  <span class="s1">&#39;location&#39;</span><span class="p">:</span> <span class="n">location</span><span class="p">,</span>
-                  <span class="s1">&#39;traceback&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="n">fields</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+<span class="sd">    Attributes:</span>
+<span class="sd">        name (str): The formal name of this tool.</span>
+<span class="sd">        reset (callable): A function defined for initializing and</span>
+<span class="sd">            re-initializing the tool&#39;s data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">reset</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset</span> <span class="o">=</span> <span class="n">reset</span></div>
 </pre></div>
 
            </div>

@@ -186,11 +186,11 @@
 <span class="sd">    Attributes:</span>
 <span class="sd">        submission (:py:class:`~pedal.core.submission.Submission`): The</span>
 <span class="sd">            contextualized submission information.</span>
-<span class="sd">        feedback (list of :py:class:`~pedal.core.feedback.Feedback`): The raw</span>
+<span class="sd">        feedback (list[:py:class:`~pedal.core.feedback.Feedback`]): The raw</span>
 <span class="sd">            feedback generated for this Report so far.</span>
 <span class="sd">        suppressions (list[tuple[str, str]]): The categories and labels that</span>
 <span class="sd">            have been suppressed so far.</span>
-<span class="sd">        hiddens (set of str): The parts of the final response that should be</span>
+<span class="sd">        hiddens (set[str]): The parts of the final response that should be</span>
 <span class="sd">            hidden. This can globally hide the &#39;correct&#39;, &#39;score&#39;, etc.</span>
 <span class="sd">        group (int or str): The label for the current group. Feedback given</span>
 <span class="sd">            by a Tool will automatically receive the current `group`. This</span>
@@ -209,7 +209,7 @@
 <span class="sd">                                       store whatever they want, but will</span>
 <span class="sd">                                       probably be in a dictionary itself.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1">#: dict[str, :py:class:`~pedal.core.tool.ToolRegistration`]: The</span>
+    <span class="c1">#: dict[str, dict]: The</span>
     <span class="c1">#: tools registered for this report, available via their names.</span>
     <span class="n">TOOLS</span> <span class="o">=</span> <span class="p">{}</span>
 
@@ -347,8 +347,7 @@
 <span class="sd">                in its `constants.py` file.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            :py:class:`pedal.core.tool.ToolRegistration`: The data associated</span>
-<span class="sd">                with that tool.</span>
+<span class="sd">            dict: The data associated with that tool.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">tool_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tool_data</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">tool_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">TOOLS</span><span class="p">:</span>
