@@ -22,16 +22,6 @@ from pedal.toolkit.files import files_not_handled_correctly
 from pedal.toolkit.functions import (match_signature, output_test, unit_test,
                                      check_coverage, match_parameters)
 from pedal.toolkit.signatures import (function_signature)
-from pedal.toolkit.utilities import (is_top_level, function_prints,
-                                     no_nested_function_definitions,
-                                     find_function_calls, function_is_called,
-                                     only_printing_variables, prevent_literal,
-                                     find_prior_initializations,
-                                     prevent_unused_result, ensure_literal,
-                                     prevent_builtin_usage, find_operation,
-                                     prevent_advanced_iteration,
-                                     ensure_operation, prevent_operation,
-                                     ensure_assignment)
 from pedal.toolkit.imports import ensure_imports
 from pedal.toolkit.printing import ensure_prints
 from pedal.toolkit.plotting import check_for_plot, prevent_incorrect_plt
@@ -270,17 +260,6 @@ class TestUtilities(unittest.TestCase):
             self.assertFalse(is_top_level(calls[1]))
         self.assertEqual(e.final.message, "No errors reported.")
 
-    def test_no_nested_function_definitions(self):
-        with Execution('if True:\n  def x():\n    pass\n  x()') as e:
-            self.assertFalse(no_nested_function_definitions())
-        self.assertEqual(e.final.message, "You have defined a function inside of "
-                                    "another block. For instance, you may have placed it "
-                                    "inside another function definition, or inside of a "
-                                    "loop. Do not nest your function definition!")
-        with Execution('if True:\n  pass\ndef x():\n  pass\nx()') as e:
-            self.assertTrue(no_nested_function_definitions())
-        self.assertEqual(e.final.message, "No errors reported.")
-
     def test_function_prints(self):
         # Function prints
         with Execution('def a(x):\n  print(x+1)\na(1)') as e:
@@ -314,13 +293,6 @@ class TestUtilities(unittest.TestCase):
             self.assertFalse(function_is_called('print'))
         self.assertEqual(e.final.message, "No errors reported.")
 
-    def test_only_printing_variables(self):
-        with Execution('a,b=0,1\nprint(a,b)') as e:
-            self.assertTrue(only_printing_variables())
-        with Execution('print(0,"True", True)') as e:
-            self.assertFalse(only_printing_variables())
-        with Execution('print(True)') as e:
-            self.assertFalse(only_printing_variables())
 
     def test_find_prior_initializations(self):
         with Execution('a=0\na\na=5\na') as e:
@@ -331,67 +303,9 @@ class TestUtilities(unittest.TestCase):
             priors = find_prior_initializations(ast.body[3].value)
             self.assertEqual(len(priors), 2)
 
-    def test_prevent_unused_result(self):
-        with Execution('a="H  "\na.strip()') as e:
-            prevent_unused_result()
-        self.assertEqual(e.final.message, "Remember! You cannot modify a string "
-                                    "directly. Instead, you should assign the result "
-                                    "back to the string variable.")
 
-        with Execution('a="H  "\nb=a.strip()\nb') as e:
-            prevent_unused_result()
-        self.assertEqual(e.final.message, "No errors reported.")
 
-        with Execution('a=[]\na.append(1)\na') as e:
-            prevent_unused_result()
-        self.assertEqual(e.final.message, "No errors reported.")
 
-    def test_prevent_builtin_usage(self):
-        with Execution('sum([1,2,3])') as e:
-            self.assertEqual(prevent_builtin_usage(['sum', 'min']), 'sum')
-        self.assertEqual(e.final.message, "You cannot use the builtin function "
-                                    "<code>sum</code>.")
-
-        with Execution('max([1,2,3])') as e:
-            self.assertIsNone(prevent_builtin_usage(['sum', 'min']))
-        self.assertEqual(e.final.message, "No errors reported.")
-
-    def test_prevent_literal(self):
-        with Execution('a = 5\na') as e:
-            self.assertEqual(prevent_literal(3, 4, 5), 5)
-        self.assertEqual(e.final.message, "Do not use the literal value "
-                                    "<code>5</code> in your code.")
-        with Execution('print("Hello")') as e:
-            self.assertEqual(prevent_literal("Hello"), "Hello")
-        self.assertEqual(e.final.message, "Do not use the literal value "
-                                    "<code>'Hello'</code> in your code.")
-        with Execution('print("Hello", 5)') as e:
-            self.assertFalse(prevent_literal("Fire", 3, 4))
-        self.assertEqual(e.final.message, "No errors reported.")
-        with Execution('a = -1+2\na') as e:
-            self.assertEqual(prevent_literal(3, 4, 5, -1), -1)
-        self.assertEqual(e.final.message, "Do not use the literal value "
-                                    "<code>-1</code> in your code.")
-
-    def test_ensure_literal(self):
-        with Execution('a = 5\na') as e:
-            self.assertEqual(ensure_literal(3, 4, 5), 3)
-        self.assertEqual(e.final.message, "You need the literal value "
-                                    "<code>3</code> in your code.")
-        with Execution('print("Hell")') as e:
-            self.assertEqual(ensure_literal("Hello"), "Hello")
-        self.assertEqual(e.final.message, "You need the literal value "
-                                    "<code>'Hello'</code> in your code.")
-        with Execution('print("Fire", 3, 4)') as e:
-            self.assertFalse(ensure_literal("Fire", 3, 4))
-        self.assertEqual(e.final.message, "No errors reported.")
-        with Execution('a = 5\na') as e:
-            self.assertEqual(ensure_literal(-5), -5)
-        self.assertEqual(e.final.message, "You need the literal value "
-                                    "<code>-5</code> in your code.")
-        with Execution('print("Fire2", 3, 4, -6)') as e:
-            self.assertFalse(ensure_literal("Fire2", 3, 4, -6))
-        self.assertEqual(e.final.message, "No errors reported.")
 
     def test_prevent_advanced_iteration(self):
         with Execution('while False:\n  pass') as e:

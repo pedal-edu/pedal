@@ -420,6 +420,24 @@ unit_tests = {
     # Built-in modules
     'import_string_letters':
         ['import string\nstring.letters+""', ['incompatible_types'], []],
+
+    # Nested function definitions
+    'function_nested_inside_if':
+        ['if False:\n  def x():\n    pass', [], ['nested_function_definition']],
+    'function_toplevel':
+        ['def x():\n  if False:\n    pass', ['nested_function_definition'], []],
+    'no_function_whatsoever':
+        ['if False:\n  pass', ['nested_function_definition'], []],
+    'unused_result_function':
+        ['abs(-5)', [], ['unused_returned_value']],
+    'unused_result_method':
+        ['"".strip()', [], ['unused_returned_value']],
+    'unused_result_custom_function':
+        ['def x(): return 7\nx()', [], ['unused_returned_value']],
+    'used_result_custom_function':
+        ['def x(): return 7\nprint(x())', ['unused_returned_value'], []],
+    'used_result_function':
+        ['print(abs(-5))', ['unused_returned_value'], []],
 }
 
 
