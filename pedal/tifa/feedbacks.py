@@ -215,6 +215,25 @@ class incompatible_types(TifaFeedback):
         super().__init__(location=location, fields=fields, **kwargs)
 
 
+class invalid_indexing(TifaFeedback):
+    """ Invalid Index """
+    title = "Invalid Index"
+    text_template = ("You indexed a {left_name} with {right_name} on line "
+                     "{location.line}. But you can't index a {left_name} with"
+                     "a {right_name}."
+                     )
+    justification = ("TIFA attempted to call an .index() operation on a type"
+                     " with a type that wasn't acceptable.")
+
+    def __init__(self, location, left, right, **kwargs):
+        left_name = left.singular_name
+        right_name = right.singular_name
+        fields = {'location': location,
+                  'left': left, 'right': right,
+                  'left_name': left_name, 'right_name': right_name}
+        super().__init__(location=location, fields=fields, **kwargs)
+
+
 class parameter_type_mismatch(TifaFeedback):
     """ Parameter type mismatch """
     title = "Parameter Type Mismatch"

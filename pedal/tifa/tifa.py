@@ -32,7 +32,7 @@ from pedal.tifa.feedbacks import (action_after_return, return_outside_function, 
                                   read_out_of_scope, type_changes, unnecessary_second_branch,
                                   recursive_call, not_a_function, incorrect_arity, multiple_return_types,
                                   else_on_loop_body, module_not_found, nested_function_definition,
-                                  unused_returned_value)
+                                  unused_returned_value, invalid_indexing)
 
 __all__ = ['Tifa']
 
@@ -1114,10 +1114,14 @@ class Tifa(ast.NodeVisitor):
         if isinstance(node.slice, ast.Index):
             literal = self.get_literal(node.slice.value)
             if literal is None:
-                dynamic_literal = type_to_literal(self.visit(node.slice.value))
-                return value_type.index(dynamic_literal)
+                literal = type_to_literal(self.visit(node.slice.value))
+            result = value_type.index(literal)
+            # TODO: Is this sufficient? Maybe we should be throwing?
+            if isinstance(result, UnknownType):
+                self._issue(invalid_indexing(self.locate(), value_type,
+                                             literal.type()))
             else:
-                return value_type.index(literal)
+                return result
         elif isinstance(node.slice, ast.Slice):
             if node.slice.lower is not None:
                 self.visit(node.slice.lower)

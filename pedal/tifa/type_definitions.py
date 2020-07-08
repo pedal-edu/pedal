@@ -8,7 +8,7 @@ Instead, create a hierachy based on form and not just function.
 
 import ast
 
-from pedal.tifa.feedbacks import append_to_non_list
+from pedal.tifa.feedbacks import append_to_non_list, invalid_indexing
 
 
 def are_literals_equal(first, second):
@@ -100,7 +100,7 @@ class LiteralNone(LiteralValue):
         Returns:
 
         """
-        return LiteralNone()
+        return NoneType()
 
 
 def literal_from_json(val):
@@ -517,7 +517,10 @@ class ListType(Type):
         Returns:
 
         """
-        return self.subtype.clone()
+        if isinstance(i, LiteralNum):
+            return self.subtype.clone()
+        else:
+            return UnknownType()
 
     def clone(self):
         """
@@ -579,7 +582,11 @@ class StrType(Type):
         Returns:
 
         """
-        return StrType()
+        if isinstance(i, LiteralNum):
+            return StrType()
+        else:
+            return UnknownType()
+
 
     def is_empty(self):
         """

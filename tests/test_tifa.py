@@ -727,5 +727,22 @@ class TestVariables(unittest.TestCase):
         self.assertEqual(tifa.report['tifa']['issues']['unused_variable'][0].location.line, 2)
 
 
+    def test_weird_indexing_behavior(self):
+        program = dedent("""
+        movie_list = [{'Title':'Iron Man', 'Release Date':'May 2, 2008','Budget':'140','Running Time':'126'},
+              {'Title':'Iron Man 2', 'Release Date':'May 7, 2010','Budget':'200', 'Running Time':'125'},
+              {'Title':'Iron Man 3', 'Release Date':'May 3, 2013','Budget':'200', 'Running Time':'130'}]
+        total=0
+        for title in movie_list:
+            total=total + 'title'['Running Time']
+        print(total)
+        """)
+        tifa = pedal.tifa.Tifa()
+        tifa.process_code(program)
+        self.assertNotIn('incompatible_types', tifa.report['tifa']['issues'])
+        self.assertIn('invalid_indexing', tifa.report['tifa']['issues'])
+
+
+
 if __name__ == '__main__':
     unittest.main(buffer=False)
