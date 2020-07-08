@@ -39,5 +39,6 @@ say some Kinds of Responses are "hints" instead of "mistakes". We also say
 that Conditions can be Categorized as being from "Specifications" or
 "Runtime".
 
-For more information, check out
-[https://pedal-edu.github.io/pedal](https://pedal-edu.github.io/pedal).
+For more information, check out Pedal_.
+
+.. _Pedal: https://pedal-edu.github.io/pedal
