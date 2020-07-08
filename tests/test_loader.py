@@ -10,28 +10,6 @@ sys.path.insert(0, pedal_library)
 
 here = "" if os.path.basename(os.getcwd()) == "tests" else "tests/"
 
-from pedal.core import *
-from pedal.source import set_source
-
-from pedal.cait.cait_api import parse_program
-from pedal.sandbox.sandbox import Sandbox
-from pedal.toolkit.files import files_not_handled_correctly
-from pedal.toolkit.functions import (match_signature, output_test, unit_test,
-                                     check_coverage, match_parameters)
-from pedal.toolkit.signatures import (function_signature)
-from pedal.toolkit.utilities import (is_top_level, function_prints,
-                                     no_nested_function_definitions,
-                                     find_function_calls, function_is_called,
-                                     only_printing_variables, prevent_literal,
-                                     find_prior_initializations,
-                                     prevent_unused_result, ensure_literal,
-                                     prevent_builtin_usage, find_operation,
-                                     prevent_advanced_iteration,
-                                     ensure_operation, prevent_operation,
-                                     ensure_assignment)
-from pedal.toolkit.imports import ensure_imports
-from pedal.toolkit.printing import ensure_prints
-from pedal.toolkit.plotting import check_for_plot, prevent_incorrect_plt
 from pedal.questions.loader import check_question
 from tests.execution_helper import Execution, ExecutionTestCase
 

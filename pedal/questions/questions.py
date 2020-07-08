@@ -1,8 +1,7 @@
-from pedal.core.feedback import AtomicFeedbackFunction
+from pedal.core.feedback import AtomicFeedbackFunction, Feedback
 from pedal.core.feedback_category import FeedbackCategory, FeedbackKind
 from pedal.core.report import MAIN_REPORT
 from pedal.questions.graders import QuestionGrader
-from pedal.core.commands import feedback
 from pedal.questions.constants import TOOL_NAME
 
 
@@ -34,19 +33,23 @@ class Question:
             for test in self.tests:
                 test(self)
         if not self.answered:
-            show_question(self.instructions, self.report)
+            show_question(self.instructions, report=self.report)
 
 
-@AtomicFeedbackFunction('show_question')
-def show_question(instructions, report=MAIN_REPORT):
+class show_question(Feedback):
     """
 
     Args:
         instructions:
         report:
     """
-    fields = {'instructions': instructions}
-    feedback(show_question.__name__, tool=TOOL_NAME, category=FeedbackCategory.INSTRUCTIONS,
-             kind=FeedbackKind.INSTRUCTIONAL, justification='Question was asked but not answered.',
-             priority='instructions', valence=0, title='Show Question', message=instructions,
-             text=instructions, fields=fields, report=report)
+    category = FeedbackCategory.INSTRUCTIONS
+    kind = FeedbackKind.INSTRUCTIONAL
+    justification = 'Question was asked but not answered.'
+    title = 'Show Question'
+    priority = 'instructions'
+    tool = TOOL_NAME
+    valence = 0
+
+    def __init__(self, instructions, **kwargs):
+        super().__init__(message=instructions, **kwargs)
