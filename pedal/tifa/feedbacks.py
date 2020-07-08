@@ -341,6 +341,37 @@ class append_to_non_list(TifaFeedback):
         super().__init__(location=location, fields=fields, **kwargs)
 
 
+class nested_function_definition(TifaFeedback):
+    """ Function defined not at top-level """
+    message_template = ("The function `{name}` was defined inside of another"
+                        "block on line {location.line}. For instance, you may "
+                        "have placed it inside another function definition, or "
+                        "inside of a loop. Do not nest your function "
+                        "definition!")
+    title = "Don't Nest Functions"
+    justification = "Found a FunctionDef that was not at the top-level."
+    muted = True
+    unscored = True
+
+    def __init__(self, location, name, **kwargs):
+        super().__init__(location=location, name=name, **kwargs)
+
+
+class unused_returned_value(TifaFeedback):
+    """ Expr node had a non-None value """
+    title = "Did Not Use Function's Return Value"
+    message_template = ("It looks like you called the {call_type} `{name}` on "
+                        "{location.line}, but failed to store the result in "
+                        "a variable or use it in an expression. You should "
+                        "remember to use the result!")
+    justification = "Expression node calculated a non-None value."
+    muted = True
+    unscored = True
+
+    def __init__(self, location, name, call_type, **kwargs):
+        fields = {'location': location, 'name': name, 'call_type': call_type }
+        super().__init__(fields=fields, location=location, **kwargs)
+
 '''
 TODO: Finish these checks
 "Empty Body": [], # Any use of pass on its own

@@ -906,21 +906,3 @@ assert_prints = assertPrints
 # TODO: Finish adding in all the other assert variants
 
 
-"""
-New assertions:
-
-assert_has_text(code: str, missing=False, minimum=2, maximum=3)
-assert_has_literal(literal_value: Any)
-assert_has_code(ast_name: str)
-# Whether it was detected statically
-assert_has_called(function_name: str)
-# Whether it was detected dynamically
-assert_has_traced(function_name: str)
-assert_has_name(variable_name: str)
-assert_has_operation(operator: str)
-assert_has_assignment(variable_name: str, type: str, value: Any)
-assert_has_import(module_name: str)
-
-assert_iteration(style: {"For", "While", "Functional", "Recursion"})
-
-"""

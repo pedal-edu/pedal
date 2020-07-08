@@ -49,8 +49,8 @@ class Feedback:
             to the user.
         text (str): A console-friendly, plain-text message that could be rendered to the user.
         fields (Dict[str,Any]): The raw data that was used to interpolate the template to produce the message.
-        location (:py:attr:`~pedal.core.location.Location` or list): Information about specific
-            locations relevant to this message.
+        location (:py:attr:`~pedal.core.location.Location` or int): Information
+            about specific locations relevant to this message.
 
         score (int): A numeric score to modify the students' total score, indicating their overall performance.
             It is ultimately up to the Resolver to decide how to combine all the different scores; a typical
@@ -71,7 +71,8 @@ class Feedback:
             digit should be incremented for small bug fixes/changes. The middle (second) digit should be used for more
             serious and intense changes. The first digit should be incremented when changes are made on exposure to
             learners or some other evidence-based motivation.
-        tags (List[Tag]): Any tags that you want to attach to this feedback.
+        tags (list[:py:class:`~pedal.core.tag.Tag`]): Any tags that you want to
+            attach to this feedback.
 
         group (int or str): Information about what logical grouping within the submission this belongs to. Various
             tools can chunk up a submission (e.g., by section), they can use this field to keep track of how that
@@ -203,8 +204,9 @@ class Feedback:
         # Self-attach to a given report?
         self._met_condition = self.condition(*args, **kwargs)
         # Generate the message and text fields as needed
-        self.message = self._get_message()
-        self.text = self._get_text()
+        if self._met_condition:
+            self.message = self._get_message()
+            self.text = self._get_text()
         if report is not None and self._met_condition:
             report.add_feedback(self)
 

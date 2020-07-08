@@ -1,5 +1,8 @@
+"""
+Main file for all of Tifa's brains.
+"""
+
 import ast
-import sys
 
 from pedal.core.commands import system_error
 from pedal.core.report import MAIN_REPORT
@@ -28,7 +31,8 @@ from pedal.tifa.feedbacks import (action_after_return, return_outside_function, 
                                   iterating_over_empty_list, incompatible_types, parameter_type_mismatch,
                                   read_out_of_scope, type_changes, unnecessary_second_branch,
                                   recursive_call, not_a_function, incorrect_arity, multiple_return_types,
-                                  else_on_loop_body, module_not_found)
+                                  else_on_loop_body, module_not_found, nested_function_definition,
+                                  unused_returned_value)
 
 __all__ = ['Tifa']
 
@@ -330,6 +334,26 @@ class Tifa(ast.NodeVisitor):
         TODO: Implement!
         """
         pass
+
+    def visit_Expr(self, node):
+        """
+        Any expression being used as a statement.
+
+        Args:
+            node (AST): An Expr node
+
+        Returns:
+
+        """
+        value = self.visit(node.value)
+        if isinstance(node.value, ast.Call) and not isinstance(value, NoneType):
+            # TODO: Helper function to get name with title ("append method")
+            if isinstance(node.value.func, ast.Name):
+                call_type = 'function'
+            else:
+                call_type = 'method'
+            name = self.identify_caller(node.value)
+            self._issue(unused_returned_value(self.locate(), name, call_type))
 
     def visit_Assign(self, node):
         """
@@ -772,6 +796,10 @@ class Tifa(ast.NodeVisitor):
 
         function = FunctionType(definition=definition, name=function_name)
         self.store_variable(function_name, function)
+
+        if len(self.node_chain) > 2:
+            self._issue(nested_function_definition(self.locate(), function_name))
+
         return function
 
     def visit_GeneratorExp(self, node):
@@ -813,6 +841,8 @@ class Tifa(ast.NodeVisitor):
         with else_path:
             for statement in node.orelse:
                 self.visit(statement)
+
+        # TODO: Unconditional return
 
         # Combine two paths into one
         # Check for any names that are on the IF path

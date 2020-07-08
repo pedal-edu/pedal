@@ -23,11 +23,11 @@ class Report:
     Attributes:
         submission (:py:class:`~pedal.core.submission.Submission`): The
             contextualized submission information.
-        feedback (list of :py:class:`~pedal.core.feedback.Feedback`): The raw
+        feedback (list[:py:class:`~pedal.core.feedback.Feedback`]): The raw
             feedback generated for this Report so far.
         suppressions (list[tuple[str, str]]): The categories and labels that
             have been suppressed so far.
-        hiddens (set of str): The parts of the final response that should be
+        hiddens (set[str]): The parts of the final response that should be
             hidden. This can globally hide the 'correct', 'score', etc.
         group (int or str): The label for the current group. Feedback given
             by a Tool will automatically receive the current `group`. This

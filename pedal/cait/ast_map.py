@@ -1,4 +1,5 @@
 from pedal.cait.cait_node import CaitNode
+from pedal.core.location import Location
 
 
 class AstSymbol:
@@ -250,6 +251,8 @@ class AstMap:
     @property
     def match_lineno(self):
         """
+        Args:
+            first (bool): Whether to use the first found match, or the last one.
 
         Returns:
             int: the line number this match started on
@@ -260,6 +263,25 @@ class AstMap:
             return -1
         else:
             return min(values)
+
+    def match_location(self, first=True):
+        """
+        Determines the first (or last) location of this match.
+
+        Args:
+            first (bool): Whether to use the first found match's location, or
+                the last one.
+
+        Returns:
+            pedal.core.Location: The the first location of this match.
+        """
+        finder = min if first else max
+        values = [v.lineno for v in self.mappings.values()
+                  if v.lineno is not None]
+        if not values:
+            return Location(None)
+        else:
+            return Location(finder(values))
 
     def __getitem__(self, id_n):
         if id_n.startswith('__'):
@@ -281,3 +303,6 @@ class AstMap:
                 return exists
             else:
                 return id_n in self.func_table
+
+    def __len__(self):
+        return len(self.mappings)

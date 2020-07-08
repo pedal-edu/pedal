@@ -1,6 +1,8 @@
 import ast
 from pedal.cait.ast_helpers import dump
 from types import MethodType
+
+from pedal.core.location import Location
 from pedal.core.report import MAIN_REPORT
 
 
@@ -616,6 +618,12 @@ class CaitNode:
             value = self.id
         return value
 
+    def locate(self):
+        """
+        Returns:
+            pedal.core.Location: The location of this node.
+        """
+        return Location(self.astNode.lineno, col=self.astNode.col_offset)
 
 AST_SINGLE_FUNCTIONS = ["ctx_name", "op_name"]
 AST_ARRAYS_OF_FUNCTIONS = ["ops_names"]

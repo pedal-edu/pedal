@@ -248,7 +248,7 @@ def find_matches(pattern, student_code=None, cut=False, report=MAIN_REPORT, prev
         cut (bool): Set to true to trim root to first branch
         prev_match (AstMap): If user wants to continue off of a previously found match
     Returns:
-        List[CaitNode]: All matching nodes for the given pattern.
+        list[pedal.cait.ast_map.AstMap]: All matching nodes for the given pattern.
     """
     cait_report = reparse_if_needed(student_code, report)
     if not cait_report['success']:
