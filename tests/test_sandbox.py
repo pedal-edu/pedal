@@ -5,10 +5,12 @@ import os
 import sys
 import json
 
+from pedal.core.submission import Submission
+
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from pedal.core.commands import MAIN_REPORT, clear_report
 from pedal.sandbox import Sandbox
-import pedal.sandbox.compatibility as compatibility
+import pedal.sandbox.commands as commands
 from pedal.source import set_source
 
 here = "" if os.path.basename(os.getcwd()) == "tests" else "tests/"
@@ -22,7 +24,7 @@ class TestCode(unittest.TestCase):
 
     def test_normal_run(self):
         student = Sandbox()
-        student.run('a=0\nprint(a)', as_filename='student.py')
+        student.run('a=0\nprint(a)', filename='student.py')
         self.assertIn('a', student.data)
         self.assertEqual(student.data['a'], 0)
         self.assertEqual(len(student.output), 1)
@@ -48,7 +50,7 @@ class TestCode(unittest.TestCase):
                     self.balance -= amount
                     return self.balance > 0''')
         student = Sandbox()
-        student.run(student_code, as_filename='bank.py')
+        student.run(student_code, filename='bank.py')
         # Check that we created the class
         self.assertIn('Bank', student.data)
         # Now let's try making an instance
@@ -56,102 +58,117 @@ class TestCode(unittest.TestCase):
         self.assertIsInstance(student.data['bank'], student.data['Bank'])
         # Can we save money?
         student.call('bank.save', 32)
-        self.assertTrue(student._)
+        self.assertTrue(student.result)
         # What about extracting money?
         student.data['bank'].balance += 100
         student.call('bank.take', 100)
-        self.assertTrue(student._)
+        self.assertTrue(student.result)
 
     def test_improved_exceptions(self):
         TEST_FILENAME = here+'_sandbox_test_student.py'
         with open(TEST_FILENAME) as student_file:
             student_code = student_file.read()
         student = Sandbox()
-        student.run(student_code, as_filename=TEST_FILENAME)
+        student.run(student_code, filename=TEST_FILENAME)
         self.assertIsNotNone(student.exception)
         self.assertIsInstance(student.exception, TypeError)
-        self.assertEqual(student.exception_position, {'line': 1})
+        self.assertEqual(1, student.feedback.location.line)
         self.assertEqual(dedent(
             """
-            Traceback:
-              File "{filename}", line 1
-                1+'0'
-            TypeError: unsupported operand type(s) for +: 'int' and 'str'
-            """.format(filename=TEST_FILENAME)).strip() + "\n", student.exception_formatted)
+            A TypeError occurred:
+
+<pre>Unsupported operand type(s) for +: 'int' and 'str'</pre>
+
+I ran the file `_sandbox_test_student.py`.
+
+The traceback was:
+  Line 1 of file _sandbox_test_student.py
+    1+'0'
+
+
+Type errors occur when you use an operator or function on the wrong type of value. For example, using `+` to add to a list (instead of `.append`), or dividing a string by a number.
+
+Suggestion: To fix a type error, you should trace through your code. Make sure each expression has the type you expect it to have.
+            """.format(filename=TEST_FILENAME)).strip(), student.feedback.message)
 
     def test_error_context(self):
         student_code = dedent('''
                     def get_input():
                         return int(input("Gimme the number"))
                 ''')
-        set_source(student_code)
+        set_source(student_code, "student.py")
         student = Sandbox()
-        student.run(student_code, as_filename='student.py')
+        student.run()
         result = student.call("get_input", inputs="Banana")
-        self.assertEqual({'line': 3}, student.exception_position)
+        self.assertEqual(3, student.feedback.location.line)
         self.assertEqual(dedent(
             """
-            Traceback:
-              File "student.py", line 3, in get_input
-                return int(input("Gimme the number"))
-            ValueError: invalid literal for int() with base 10: 'Banana'
-            
-            The error above occurred when I ran:<br>
-            <pre>get_input()</pre>
-            And entered the inputs:
-            ```
-            Banana
-            ```
+            A ValueError occurred:
 
-            """).strip() + "\n", student.exception_formatted)
+<pre>Invalid literal for int() with base 10: 'banana'</pre>
+
+I ran the code:
+<pre>_ = get_input()</pre>
+
+And I entered as input:
+<pre>Banana</pre>
+
+The traceback was:
+  Line 3 of file student.py in get_input
+        return int(input("Gimme the number"))
+
+
+A ValueError occurs when you pass the wrong type of value to a function. For example, you try to convert a string without numbers to an integer (like `int('Five')`).
+
+Suggestion: Read the error message to see which function had the issue. Check what type the function expects. Then trace your code to make sure you pass in that type.""").strip(), student.feedback.message)
 
     def test_call(self):
         student_code = "def average(a,b):\n return (a+b)/2"
         student = Sandbox()
-        student.run(student_code, as_filename='student.py')
+        student.run(student_code, filename='student.py')
         student.call('average', 10, 12)
 
-    def test_compatibility_api(self):
+    def test_commands_api(self):
         clear_report()
         student_code = 'word = input("Give me a word")\nprint(word+"!")'
         set_source(student_code)
-        self.assertFalse(compatibility.get_output())
-        compatibility.queue_input("Hello")
-        self.assertIsNone(compatibility.run_student(True))
+        self.assertFalse(commands.get_output())
+        commands.queue_input("Hello")
+        self.assertIsInstance(commands.run(), Sandbox)
         self.assertEqual(["Give me a word", "Hello!"],
-                         compatibility.get_output())
-        compatibility.queue_input("World", "Again")
-        self.assertIsNone(compatibility.run_student(True))
-        self.assertEqual(compatibility.get_output(),
+                         commands.get_output())
+        commands.queue_input("World", "Again")
+        self.assertIsInstance(commands.run(), Sandbox)
+        self.assertEqual(commands.get_output(),
                          ["Give me a word", "Hello!",
                           "Give me a word", "World!"])
-        self.assertIsNone(compatibility.run_student(True))
-        self.assertEqual(compatibility.get_output(),
+        self.assertIsInstance(commands.run(), Sandbox)
+        self.assertEqual(commands.get_output(),
                          ["Give me a word", "Hello!",
                           "Give me a word", "World!",
                           "Give me a word", "Again!"])
-        compatibility.reset_output()
-        compatibility.queue_input("Dogs", "Are", "Great")
-        self.assertIsNone(compatibility.run_student(True))
-        self.assertIsNone(compatibility.run_student(True))
-        self.assertIsNone(compatibility.run_student(True))
-        self.assertEqual(compatibility.get_output(),
+        commands.reset_output()
+        commands.queue_input("Dogs", "Are", "Great")
+        self.assertIsInstance(commands.run(), Sandbox)
+        self.assertIsInstance(commands.run(), Sandbox)
+        self.assertIsInstance(commands.run(), Sandbox)
+        self.assertEqual(commands.get_output(),
                          ["Give me a word", "Dogs!",
                           "Give me a word", "Are!",
                           "Give me a word", "Great!"])
         
         
-        compatibility.reset_output()
-        compatibility.queue_input(json.dumps("Virginia,Trend"))
-        self.assertIsNone(compatibility.run_student(True))
-        self.assertEqual(compatibility.get_output(), 
+        commands.reset_output()
+        commands.queue_input(json.dumps("Virginia,Trend"))
+        self.assertIsInstance(commands.run(), Sandbox)
+        self.assertEqual(commands.get_output(),
                          ["Give me a word", '"Virginia,Trend"!'])
 
-    def test_compatibility_exceptions(self):
+    def test_commands_exceptions(self):
         student_code = '1 + "Banana"'
         set_source(student_code)
-        exception = compatibility.run_student()
-        self.assertIsNotNone(exception)
+        commands.run()
+        self.assertIsNotNone(commands.get_exception())
 
     def test_get_by_types(self):
         student_code = dedent('''
@@ -163,7 +180,7 @@ class TestCode(unittest.TestCase):
             another_list = [4,5,6]
         ''')
         student = Sandbox()
-        student.run(student_code, as_filename='student.py')
+        student.run(student_code, filename='student.py')
         # ints
         ints = student.get_names_by_type(int)
         self.assertEqual(len(ints), 2)
@@ -188,12 +205,12 @@ class TestCode(unittest.TestCase):
             plt.show()
         ''')
         student = Sandbox()
-        student.run(student_code, as_filename='student.py')
-        self.assertIn('matplotlib.pyplot', student.modules)
-        plt = student.modules['matplotlib.pyplot']
+        student.run(student_code, filename='student.py')
+        self.assertIn('plotting', dir(student.modules))
+        plt = student.modules.plotting
         self.assertEqual(len(plt.plots), 1)
 
-    def test_matplotlib_compatibility(self):
+    def test_matplotlib_commands(self):
         student_code = dedent('''
             import matplotlib.pyplot as plt
             plt.plot([1,2,3])
@@ -203,9 +220,10 @@ class TestCode(unittest.TestCase):
             plt.show()
         ''')
         set_source(student_code)
-        exception = compatibility.run_student()
-        plt2 = compatibility.get_plots()
-        self.assertEqual(len(plt2), 2)
+        student = commands.run()
+        print(student)
+        plt2 = student.modules.plotting
+        self.assertEqual(len(plt2.plots), 2)
 
     def test_blocked_module_import(self):
         student_code = dedent('''
@@ -213,15 +231,16 @@ class TestCode(unittest.TestCase):
             os
         ''')
         set_source(student_code)
-        exception = compatibility.run_student()
-        self.assertIsNone(exception)
+        exception = commands.run()
+        self.assertIsNotNone(exception)
 
     def test_coverage(self):
-        TEST_FILENAME = here+'_sandbox_test_coverage.py'
-        with open(TEST_FILENAME) as student_file:
+        test_filename = here+'_sandbox_test_coverage.py'
+        with open(test_filename) as student_file:
             student_code = student_file.read()
-        student = Sandbox(tracer_style='coverage')
-        student.run(student_code, as_filename=TEST_FILENAME)
+        student = Sandbox()
+        student.tracer_style = 'coverage'
+        student.run(student_code, filename=test_filename)
         self.assertIsNone(student.exception)
         self.assertEqual(student.trace.pc_covered, 80.0)
         self.assertEqual(student.trace.lines, {1, 2, 4, 7, 10, 11, 12, 13})
@@ -234,8 +253,9 @@ class TestCode(unittest.TestCase):
                 return 0
             x(5)
         ''')
-        student = Sandbox(tracer_style='calls')
-        student.run(student_code, as_filename='student.py')
+        student = Sandbox()
+        student.tracer_style = 'calls'
+        student.run(student_code, filename='student.py')
         self.assertEqual(len(student.trace.calls['x']), 6)
 
     def test_unittest(self):
@@ -243,7 +263,7 @@ class TestCode(unittest.TestCase):
             x = 0
         ''')
         student = Sandbox()
-        # student.run(student_code)
+        student.run(student_code)
         student.call('x')
         self.assertIsNotNone(student.exception)
 
@@ -257,32 +277,31 @@ class TestCode(unittest.TestCase):
         def weigh_fruits(fruits):
             return sum(fruit.weight for fruit in fruits)    
         ''')
+        student.report.contextualize(Submission(main_code=student_code))
         student = Sandbox()
-        student.run(student_code, as_filename='student.py')
+        student.run()
         result = student.call('do_math', 15, 20)
         self.assertEqual(result, 30)
-        self.assertEqual(student.call_contexts[result._actual_call_id],
-                         ['do_math(15, 20)'])
+        self.assertEqual(['_ = do_math(15, 20)'],
+                         [context.code for context in student.get_context()])
         banana = student.call('Fruit', "Banana")
         self.assertIsInstance(banana, student.data['Fruit'])
-        self.assertEqual(student.call_contexts[banana._actual_call_id],
-                         ["Fruit('Banana')"])
+        self.assertEqual(["_ = Fruit('Banana')"],
+                         [context.code for context in student.get_context()])
+        student.start_grouping_context()
+        student.run()
         orange = student.call("Fruit", "Orange", 30, target="orange")
-        pineapple = student.call("Fruit", "Pineapple", 60, target="pineapple")
-        fruits = [orange, pineapple]
-        student.run('fruits = [orange, pineapple]', context=None)
-        total_weight = student.call('weigh_fruits', fruits=fruits,
-                                    context='weigh_fruits(fruits)')
+        self.assertIsInstance(orange, student.data['Fruit'])
+        student.call("Fruit", "Pineapple", 60, target="pineapple")
+        student.run("fruits = [orange, pineapple]")
+        total_weight = student.call('weigh_fruits', args_locals=["fruits"])
         self.assertEqual(total_weight, 90)
-        self.assertEqual([call
-                          for calls in student.call_contexts.values()
-                          for call in calls],
-                         ["do_math(15, 20)",
-                          "Fruit('Banana')",
+        self.assertEqual([student_code,
                           "orange = Fruit('Orange', 30)",
                           "pineapple = Fruit('Pineapple', 60)",
                           "fruits = [orange, pineapple]",
-                          "weigh_fruits(fruits)"])
+                          "_ = weigh_fruits(fruits)"],
+                         [context.code for context in student.get_context()])
         # print(student.call('weigh_fruits', student.var['fruits']))
         # from pprint import pprint
         # pprint(student.call_contexts)
@@ -312,7 +331,7 @@ class TestCode(unittest.TestCase):
         ''')
         set_source(student_code)
         student = Sandbox()
-        student.run(student_code, as_filename='student.py')
+        student.run(student_code, filename='student.py')
         self.assertEqual(str(student.exception), "The filename you passed to 'open' is restricted.")
 
     def test_sandboxing_pedal(self):
@@ -322,7 +341,7 @@ class TestCode(unittest.TestCase):
         ''')
         set_source(student_code)
         student = Sandbox()
-        student.run(student_code, as_filename='student.py')
+        student.run(student_code, filename='student.py')
         self.assertEqual(str(student.exception), "You cannot import pedal!")
     
     def test_sandboxing_sys_modules(self):
@@ -336,7 +355,7 @@ class TestCode(unittest.TestCase):
         ''')
         set_source(student_code)
         student = Sandbox()
-        student.run(student_code, as_filename='student.py')
+        student.run(student_code, filename='student.py')
         self.assertEqual(str(student.exception), "You cannot import pedal!")
     
     def test_sandboxing_devious_open1(self):
@@ -347,7 +366,7 @@ class TestCode(unittest.TestCase):
         ''')
         set_source(student_code)
         student = Sandbox()
-        student.run(student_code, as_filename='student.py')
+        student.run(student_code, filename='student.py')
         self.assertEqual(str(student.exception), "You are not allowed to call 'globals'.")
 
     # TODO: test `import builtins` strategy to access original builtins

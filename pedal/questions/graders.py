@@ -1,6 +1,6 @@
-from pedal.sandbox import run
 from pedal.core.commands import compliment, explain, gently
 from pedal.core.report import MAIN_REPORT
+from pedal.sandbox.commands import run
 from pedal.assertions.assertions import *
 from pedal.toolkit.functions import *
 

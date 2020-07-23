@@ -5,8 +5,91 @@ from pedal.tifa.type_definitions import (UnknownType, FunctionType,
                                          SetType, DayType, TimeType,
                                          LiteralNum)
 
+BUILTIN_MODULES = {
+    'pprint': ModuleType('pprint',
+                         fields={
+                             'pprint': FunctionType(name='pprint', returns=NoneType())
+                         }),
+    'random': ModuleType('random',
+                         fields={
+                             'randint': FunctionType(name='randint', returns=NumType())
+                         }),
+    'string': ModuleType('string',
+                         fields={
+                             'letters': StrType(empty=False),
+                             'digits': StrType(empty=False),
+                             'ascii_letters': StrType(empty=False),
+                             'punctuation': StrType(empty=False),
+                             'printable': StrType(empty=False),
+                             'whitespace': StrType(empty=False),
+                             'ascii_uppercase': StrType(empty=False),
+                             'ascii_lowercase': StrType(empty=False),
+                             'hexdigits': StrType(empty=False),
+                             'octdigits': StrType(empty=False),
+                         }),
+    'parking': ModuleType('parking',
+                          fields={
+                              'Time': FunctionType(name='Time', returns=TimeType()),
+                              'now': FunctionType(name='now', returns=TimeType()),
+                              'Day': FunctionType(name='Day', returns=DayType()),
+                              'today': FunctionType(name='today', returns=DayType()),
+                          }),
+    'math': ModuleType('math',
+                       fields={
+                           'ceil': FunctionType(name='ceil', returns=NumType()),
+                           'copysign': FunctionType(name='copysign', returns=NumType()),
+                           'fabs': FunctionType(name='fabs', returns=NumType()),
+                           'factorial': FunctionType(name='factorial', returns=NumType()),
+                           'floor': FunctionType(name='floor', returns=NumType()),
+                           'fmod': FunctionType(name='fmod', returns=NumType()),
+                           'frexp': FunctionType(name='frexp', returns=NumType()),
+                           'fsum': FunctionType(name='fsum', returns=NumType()),
+                           'gcd': FunctionType(name='gcd', returns=NumType()),
+                           'isclose': FunctionType(name='isclose', returns=BoolType()),
+                           'isfinite': FunctionType(name='isfinite', returns=BoolType()),
+                           'isinf': FunctionType(name='isinf', returns=BoolType()),
+                           'isnan': FunctionType(name='isnan', returns=BoolType()),
+                           'ldexp': FunctionType(name='ldexp', returns=NumType()),
+                           'modf': FunctionType(name='modf', returns=NumType()),
+                           'trunc': FunctionType(name='trunc', returns=NumType()),
+                           'log': FunctionType(name='log', returns=NumType()),
+                           'log1p': FunctionType(name='log1p', returns=NumType()),
+                           'log2': FunctionType(name='log2', returns=NumType()),
+                           'log10': FunctionType(name='log10', returns=NumType()),
+                           'pow': FunctionType(name='pow', returns=NumType()),
+                           'sqrt': FunctionType(name='sqrt', returns=NumType()),
+                           'sin': FunctionType(name='sin', returns=NumType()),
+                           'cos': FunctionType(name='cos', returns=NumType()),
+                           'tan': FunctionType(name='tan', returns=NumType()),
+                           'asin': FunctionType(name='asin', returns=NumType()),
+                           'acos': FunctionType(name='acos', returns=NumType()),
+                           'atan': FunctionType(name='atan', returns=NumType()),
+                           'atan2': FunctionType(name='atan2', returns=NumType()),
+                           'hypot': FunctionType(name='hypot', returns=NumType()),
+                           'degrees': FunctionType(name='degrees', returns=NumType()),
+                           'radians': FunctionType(name='radians', returns=NumType()),
+                           'sinh': FunctionType(name='sinh', returns=NumType()),
+                           'cosh': FunctionType(name='cosh', returns=NumType()),
+                           'tanh': FunctionType(name='tanh', returns=NumType()),
+                           'asinh': FunctionType(name='asinh', returns=NumType()),
+                           'acosh': FunctionType(name='acosh', returns=NumType()),
+                           'atanh': FunctionType(name='atanh', returns=NumType()),
+                           'erf': FunctionType(name='erf', returns=NumType()),
+                           'erfc': FunctionType(name='erfc', returns=NumType()),
+                           'gamma': FunctionType(name='gamma', returns=NumType()),
+                           'lgamma': FunctionType(name='lgamma', returns=NumType()),
+                           'pi': NumType(),
+                           'e': NumType(),
+                           'tau': NumType(),
+                           'inf': NumType(),
+                           'nan': NumType(),
+                       })
+}
+
+
 def get_builtin_module(name):
     """
+    Given the name of the module, retrieve its TIFA representation.
 
     Args:
         name:
@@ -14,111 +97,7 @@ def get_builtin_module(name):
     Returns:
 
     """
-    if name == 'matplotlib':
-        return ModuleType('matplotlib',
-                          submodules={
-                              'pyplot': ModuleType('pyplot', fields={
-                                  'plot': FunctionType(name='plot', returns=NoneType()),
-                                  'hist': FunctionType(name='hist', returns=NoneType()),
-                                  'scatter': FunctionType(name='scatter', returns=NoneType()),
-                                  'show': FunctionType(name='show', returns=NoneType()),
-                                  'xlabel': FunctionType(name='xlabel', returns=NoneType()),
-                                  'ylabel': FunctionType(name='ylabel', returns=NoneType()),
-                                  'title': FunctionType(name='title', returns=NoneType()),
-                              })
-                          })
-    elif name == 'pprint':
-        return ModuleType('pprint',
-                          fields={
-                              'pprint': FunctionType(name='pprint', returns=NoneType())
-                          })
-    elif name == 'random':
-        return ModuleType('random',
-                          fields={
-                              'randint': FunctionType(name='randint', returns=NumType())
-                          })
-    elif name == 'string':
-        return ModuleType('string',
-                          fields={
-                              'letters': StrType(empty=False),
-                              'digits': StrType(empty=False),
-                              'ascii_letters': StrType(empty=False),
-                              'punctuation': StrType(empty=False),
-                              'printable': StrType(empty=False),
-                              'whitespace': StrType(empty=False),
-                              'ascii_uppercase': StrType(empty=False),
-                              'ascii_lowercase': StrType(empty=False),
-                              'hexdigits': StrType(empty=False),
-                              'octdigits': StrType(empty=False),
-                          })
-    elif name == 'turtle':
-        return ModuleType('turtle',
-                          fields={
-                              'forward': FunctionType(name='forward', returns=NoneType()),
-                              'backward': FunctionType(name='backward', returns=NoneType()),
-                              'color': FunctionType(name='color', returns=NoneType()),
-                              'right': FunctionType(name='right', returns=NoneType()),
-                              'left': FunctionType(name='left', returns=NoneType()),
-                          })
-    elif name == 'parking':
-        return ModuleType('parking',
-                          fields={
-                              'Time': FunctionType(name='Time', returns=TimeType()),
-                              'now': FunctionType(name='now', returns=TimeType()),
-                              'Day': FunctionType(name='Day', returns=DayType()),
-                              'today': FunctionType(name='today', returns=DayType()),
-                          }),
-    elif name == 'math':
-        return ModuleType('math',
-                          fields={
-                              'ceil': FunctionType(name='ceil', returns=NumType()),
-                              'copysign': FunctionType(name='copysign', returns=NumType()),
-                              'fabs': FunctionType(name='fabs', returns=NumType()),
-                              'factorial': FunctionType(name='factorial', returns=NumType()),
-                              'floor': FunctionType(name='floor', returns=NumType()),
-                              'fmod': FunctionType(name='fmod', returns=NumType()),
-                              'frexp': FunctionType(name='frexp', returns=NumType()),
-                              'fsum': FunctionType(name='fsum', returns=NumType()),
-                              'gcd': FunctionType(name='gcd', returns=NumType()),
-                              'isclose': FunctionType(name='isclose', returns=BoolType()),
-                              'isfinite': FunctionType(name='isfinite', returns=BoolType()),
-                              'isinf': FunctionType(name='isinf', returns=BoolType()),
-                              'isnan': FunctionType(name='isnan', returns=BoolType()),
-                              'ldexp': FunctionType(name='ldexp', returns=NumType()),
-                              'modf': FunctionType(name='modf', returns=NumType()),
-                              'trunc': FunctionType(name='trunc', returns=NumType()),
-                              'log': FunctionType(name='log', returns=NumType()),
-                              'log1p': FunctionType(name='log1p', returns=NumType()),
-                              'log2': FunctionType(name='log2', returns=NumType()),
-                              'log10': FunctionType(name='log10', returns=NumType()),
-                              'pow': FunctionType(name='pow', returns=NumType()),
-                              'sqrt': FunctionType(name='sqrt', returns=NumType()),
-                              'sin': FunctionType(name='sin', returns=NumType()),
-                              'cos': FunctionType(name='cos', returns=NumType()),
-                              'tan': FunctionType(name='tan', returns=NumType()),
-                              'asin': FunctionType(name='asin', returns=NumType()),
-                              'acos': FunctionType(name='acos', returns=NumType()),
-                              'atan': FunctionType(name='atan', returns=NumType()),
-                              'atan2': FunctionType(name='atan2', returns=NumType()),
-                              'hypot': FunctionType(name='hypot', returns=NumType()),
-                              'degrees': FunctionType(name='degrees', returns=NumType()),
-                              'radians': FunctionType(name='radians', returns=NumType()),
-                              'sinh': FunctionType(name='sinh', returns=NumType()),
-                              'cosh': FunctionType(name='cosh', returns=NumType()),
-                              'tanh': FunctionType(name='tanh', returns=NumType()),
-                              'asinh': FunctionType(name='asinh', returns=NumType()),
-                              'acosh': FunctionType(name='acosh', returns=NumType()),
-                              'atanh': FunctionType(name='atanh', returns=NumType()),
-                              'erf': FunctionType(name='erf', returns=NumType()),
-                              'erfc': FunctionType(name='erfc', returns=NumType()),
-                              'gamma': FunctionType(name='gamma', returns=NumType()),
-                              'lgamma': FunctionType(name='lgamma', returns=NumType()),
-                              'pi': NumType(),
-                              'e': NumType(),
-                              'tau': NumType(),
-                              'inf': NumType(),
-                              'nan': NumType(),
-                          })
+    return BUILTIN_MODULES.get(name, UnknownType())
 
 
 def _builtin_sequence_constructor(sequence_type):

@@ -28,7 +28,7 @@ def separate_into_sections(pattern=DEFAULT_SECTION_PATTERN, report=MAIN_REPORT):
         pass
     report.group = 0
     report[TOOL_NAME]['section'] = 0
-    report[TOOL_NAME]['line_offset'] = 0
+    report.submission.line_offsets = {}
     report[TOOL_NAME]['section_pattern'] = pattern
     report[TOOL_NAME]['sections'] = re.split(pattern, report.submission.main_code, flags=re.MULTILINE)
 
@@ -75,7 +75,7 @@ def next_section(name="", report=MAIN_REPORT):
         if source['independent']:
             new_code = ''.join(sections[section_index])
             old_code = ''.join(sections[:section_index])
-            source['line_offset'] = len(old_code.split("\n"))-1
+            report.submission.set_line_offset(len(old_code.split("\n"))-1)
         else:
             new_code = ''.join(sections[:section_index + 1])
         report.submission.replace_main(new_code)

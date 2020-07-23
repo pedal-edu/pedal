@@ -1,7 +1,11 @@
 import traceback
 import os
+import sys
 
 BuiltinKeyError = KeyError
+
+_backup_stdout = sys.stdout
+
 
 class KeyError(BuiltinKeyError):
     """
@@ -25,6 +29,29 @@ class KeyError(BuiltinKeyError):
 
     def __str__(self):
         return self.message
+
+
+def improve_builtin_exceptions(exception):
+    """
+    Modify the given builtin exception to have a better interface.
+    Currently used to make KeyError look like other exceptions.
+
+    Args:
+        exception (Exception): The existing exception to modify.
+
+    Returns:
+        Exception: A new exception, or the original one unchanged.
+    """
+    if isinstance(exception, BuiltinKeyError):
+        return KeyError(exception, "key not found")
+    return exception
+
+
+def get_exception_name(exception: Exception) -> str:
+    """
+    Gets the name of the exception (e.g., IndexError gives ``"IndexError"``).
+    """
+    return exception.__class__.__name__
 
 
 def add_context_to_error(e, message):
@@ -57,8 +84,8 @@ class ExpandedTraceback:
     """
 
     def __init__(self, exception, exc_info, full_traceback,
-                 instructor_filename, line_offset, student_filename,
-                 original_code_lines):
+                 hide_filenames, line_offsets, show_filenames,
+                 original_code_lines, student_files):
         """
         Args:
             exception (Exception): The exception that was raised.
@@ -66,24 +93,25 @@ class ExpandedTraceback:
                 was raised.
             full_traceback (bool): Whether or not to provide the full traceback
                 or just the parts relevant to students.
-            instructor_filename (str): The name of the instructor file, which
+            instructor_file (str): The name of the instructor file, which
                 can be used to avoid reporting instructor code in the
                 traceback.
         """
-        self.line_offset = line_offset
+        self.line_offsets = line_offsets
         self.exception = exception
         self.exc_info = exc_info
         self.full_traceback = full_traceback
-        self.instructor_filename = instructor_filename
-        self.student_filename = student_filename
+        self.hide_filenames = hide_filenames
+        self.show_filenames = show_filenames
         self.line_number = traceback.extract_tb(exc_info[2])[-1][1]
         self.original_code_lines = original_code_lines
+        self.student_files = student_files
 
     @staticmethod
     def _clean_traceback_line(line):
-        return line.replace(', in <module>', '', 1)
+        return line #.replace(', in <module>', '', 1)
 
-    def format_exception(self, preamble=""):
+    def build_traceback(self):
         """
 
         Args:
@@ -102,18 +130,22 @@ class ExpandedTraceback:
         length = self._count_relevant_tb_levels(tb)
         tb_e = traceback.TracebackException(cl, self.exception, tb, limit=length,
                                             capture_locals=False)
-        # print(list(), file=x)
         for frame in tb_e.stack:
-            if frame.filename == os.path.basename(self.student_filename):
-                frame.lineno += self.line_offset
-            if frame.lineno - 1 < len(self.original_code_lines):
-                frame._line = self.original_code_lines[frame.lineno - 1]
+            if frame.filename in self.line_offsets:
+                frame.lineno += self.line_offsets[frame.filename]
+                if frame.lineno - 1 < len(self.original_code_lines):
+                    frame._line = self.original_code_lines[frame.lineno - 1]
+                else:
+                    frame._line = "*line missing*"
             else:
-                frame._line = "*line missing*"
-        lines = [self._clean_traceback_line(line)
-                 for line in tb_e.format()]
-        lines[0] = "Traceback:\n"
-        return preamble + ''.join(lines)
+                print(frame.filename, self.student_files, frame.lineno)
+                if frame.filename in self.student_files:
+                    frame._line = self.student_files[frame.filename][frame.lineno-1]
+        return [frame for frame in tb_e.stack]
+        #lines = [self._clean_traceback_line(line)
+        #         for line in tb_e.format()]
+        #lines.pop(0)
+        #return ''.join([preamble, "Traceback:\n", *lines])
 
     def _count_relevant_tb_levels(self, tb):
         length = 0
@@ -134,10 +166,10 @@ class ExpandedTraceback:
             return False
         filename, a_, b_, _ = traceback.extract_tb(tb, limit=1)[0]
         # Is the error in the student file?
-        if filename == self.student_filename:
+        if filename in self.show_filenames:
             return False
         # Is the error in the instructor file?
-        if filename == self.instructor_filename:
+        if filename in self.hide_filenames:
             return True
         # Is the error in this test directory?
         current_directory = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))

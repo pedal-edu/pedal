@@ -1,7 +1,7 @@
 from pedal.cait.cait_api import parse_program
 from pedal.core.commands import gently
 from pedal.core.report import MAIN_REPORT
-from pedal.sandbox import compatibility
+from pedal.sandbox import commands
 import ast
 
 from pedal.toolkit.signatures import type_check, parse_type, normalize_type, parse_type_value, test_type_equality
@@ -219,9 +219,9 @@ def output_test(name, *tests):
     Returns:
 
     """
-    student = compatibility.get_student_data()
-    if name in student.data:
-        the_function = student.data[name]
+    student_data = commands.get_student_data()
+    if name in student_data:
+        the_function = student_data[name]
         if callable(the_function):
             result = TEST_TABLE_OUTPUT
             success = True
@@ -235,7 +235,7 @@ def output_test(name, *tests):
                     tip = out[1]
                     out = out[0]
                 message = "<td><code>{}</code></td>" + ("<td><pre>{}</pre></td>" * 2)
-                test_out = compatibility.capture_output(the_function, *inp)
+                test_out = commands.call(the_function, *inp)
                 if isinstance(out, str):
                     if len(test_out) < 1:
                         message = message.format(inputs, repr(out), "<i>No output</i>", tip)
@@ -295,9 +295,9 @@ def unit_test(name, *tests):
     :param tests:
     :return:
     """
-    student = compatibility.get_student_data()
-    if name in student.data:
-        the_function = student.data[name]
+    student_data = commands.get_student_data()
+    if name in student_data:
+        the_function = student_data[name]
         if callable(the_function):
             result = TEST_TABLE_UNITS
             success = True
@@ -418,7 +418,7 @@ def check_coverage(report=None):
         report = MAIN_REPORT
     if not report['source']['success']:
         return None, 0
-    lines_executed = set(compatibility.trace_lines())
+    lines_executed = set(commands.get_trace())
     if -1 in lines_executed:
         lines_executed.remove(-1)
     student_ast = report['source']['ast']
@@ -466,7 +466,7 @@ def ensure_cisc108_tests(test_count, report=None):
     Returns:
 
     """
-    student = compatibility.get_student_data()
+    student = commands.get_student_data()
     if 'assert_equal' not in student.data:
         gently("You have not imported assert_equal from the cisc108 module.")
         return False

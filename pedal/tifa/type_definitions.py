@@ -9,17 +9,20 @@ Instead, create a hierachy based on form and not just function.
 import ast
 
 from pedal.tifa.feedbacks import append_to_non_list, invalid_indexing
+from pedal.utilities.dictionaries import extend_dictionary
 
 
 def are_literals_equal(first, second):
     """
+    Determines if two literals have the exact same value.
+    Checks nested structures.
 
     Args:
-        first:
-        second:
+        first (Any):
+        second (Any):
 
     Returns:
-
+        bool: Whether or not they are equal.
     """
     if first is None or second is None:
         return False
@@ -118,26 +121,6 @@ def literal_from_json(val):
         return LiteralNum(val['value'])
     elif val['type'] == 'LiteralBool':
         return LiteralBool(val['value'])
-
-
-def _dict_extends(d1, d2):
-    """
-    Helper function to create a new dictionary with the contents of the two
-    given dictionaries. Does not modify either dictionary, and the values are
-    copied shallowly. If there are repeates, the second dictionary wins ties.
-
-    The function is written to ensure Skulpt compatibility.
-
-    Args:
-        d1 (dict): The first dictionary
-        d2 (dict): The second dictionary
-    """
-    d3 = {}
-    for key, value in d1.items():
-        d3[key] = value
-    for key, value in d2.items():
-        d3[key] = value
-    return d3
 
 
 class Type:
@@ -284,71 +267,34 @@ class FunctionType(Type):
     def __init__(self, definition=None, name="*Anonymous", returns=None):
         if returns is not None and definition is None:
             if returns == 'identity':
+                # TODO: Determine if these can be extracted to be constant?
                 def definition(ti, ty, na, args, ca):
-                    """
-
-                    Args:
-                        ti:
-                        ty:
-                        na:
-                        args:
-                        ca:
-
-                    Returns:
-
-                    """
+                    """ Identify function definition """
                     if args:
                         return args[0].clone()
                     return UnknownType()
             elif returns == 'element':
                 def definition(ti, ty, na, args, ca):
-                    """
-
-                    Args:
-                        ti:
-                        ty:
-                        na:
-                        args:
-                        ca:
-
-                    Returns:
-
-                    """
+                    """ Element function definition """
                     if args:
                         return args[0].index(0)
                     return UnknownType()
             elif returns == 'void':
                 def definition(ti, ty, na, args, ca):
-                    """
-
-                    Args:
-                        ti:
-                        ty:
-                        na:
-                        args:
-                        ca:
-
-                    Returns:
-
-                    """
+                    """ Void function definition """
                     return NoneType()
             else:
                 def definition(ti, ty, na, args, ca):
-                    """
-
-                    Args:
-                        ti:
-                        ty:
-                        na:
-                        args:
-                        ca:
-
-                    Returns:
-
-                    """
+                    """ Generic function """
                     return returns.clone()
         self.definition = definition
         self.name = name
+
+    def clone(self):
+        """ Create a deep copy of this function type. """
+        returns = self.returns if self.returns is None else self.returns.clone()
+        return FunctionType(definition=self.definition,
+                            name=self.name, returns=returns)
 
 
 class ClassType(Type):
@@ -596,7 +542,7 @@ class StrType(Type):
         """
         return self.empty
 
-    fields = _dict_extends(Type.fields, {})
+    fields = extend_dictionary(Type.fields, {})
     immutable = True
 
 
@@ -655,7 +601,7 @@ class FileType(Type):
         """
         return StrType()
 
-    fields = _dict_extends(Type.fields, {
+    fields = extend_dictionary(Type.fields, {
         'close': FunctionType(name='close', returns='void'),
         'read': FunctionType(name='read', returns=StrType()),
         'readlines': FunctionType(name='readlines', returns=ListType(StrType(), False))
@@ -707,6 +653,7 @@ class DictType(Type):
         Returns:
 
         """
+        # TODO: Pretty sure these should be recursively cloning fields
         return DictType(self.empty, self.literals, self.keys, self.values)
 
     def is_empty(self):
@@ -833,6 +780,12 @@ class ModuleType(Type):
         if fields is None:
             fields = {}
         self.fields = fields
+
+    def clone(self):
+        """ Create a copy of this ModuleType """
+        submodules = {n: v.clone() for n, v in self.submodules.items()}
+        fields = {n: v.clone() for n, v in self.fields.items()}
+        return ModuleType(name=self.name, submodules=submodules, fields=fields)
 
 
 class SetType(ListType):

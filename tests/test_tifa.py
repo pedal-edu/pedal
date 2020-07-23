@@ -562,7 +562,7 @@ class TestVariables(unittest.TestCase):
     def test_tifa_graceful_errors(self):
         student_code = '1 + "Banana"'
         set_source(student_code)
-        exception = compatibility.run_student()
+        exception = commands.run_student()
         self.assertIsNotNone(exception)'''
 
     def test_json_types(self):

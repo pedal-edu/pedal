@@ -9,6 +9,10 @@ from pedal.sandbox.exceptions import (SandboxNoMoreInputsException,
                                       SandboxPreventModule)
 
 
+def do_nothing(*args, **kwargs):
+    """ A function that does absolutely nothing. """
+
+
 def _disabled_compile(source, filename, mode, flags=0, dont_inherit=False):
     """
     A version of the built-in `compile` method that fails with a runtime
@@ -48,7 +52,7 @@ def _disabled_globals():
 
 
 class FunctionNotAllowed(Exception):
-    pass
+    """ Exception created when a function that is not allowed is used. """
 
 
 def disabled_builtin(name):
@@ -78,7 +82,7 @@ def _restricted_open(name, mode='r', buffering=-1):
     elif _OPEN_FORBIDDEN_MODES.search(mode):
         raise RuntimeError("You are not allowed to 'open' files for writing.")
     else:
-        return _original_builtins['open'](name, mode, buffering)
+        return ORIGINAL_BUILTINS['open'](name, mode, buffering)
 
 # TODO: Allow this to be flexible
 
@@ -86,7 +90,7 @@ def _restricted_open(name, mode='r', buffering=-1):
 def _restricted_import(name, globals=None, locals=None, fromlist=(), level=0):
     if name == 'pedal' or name.startswith('pedal.'):
         raise RuntimeError("You cannot import pedal!")
-    return _original_builtins['__import__'](name, globals, locals, fromlist, level)
+    return ORIGINAL_BUILTINS['__import__'](name, globals, locals, fromlist, level)
 
 
 try:
@@ -103,7 +107,7 @@ else:
     else:
         _default_builtins = __builtins__
 
-_original_builtins = {
+ORIGINAL_BUILTINS = {
     'globals': _default_builtins['globals'],
     'locals': _default_builtins['locals'],
     'open': _default_builtins['open'],
@@ -150,32 +154,19 @@ def make_inputs(input_list, repeat=None):
     return mock_input
 
 
-_sys_modules = {}
-
-
-def _override_builtins(namespace, custom_builtins):
-    """
-    Add the custom builtins to the `namespace` (and the original `__builtins__`)
-    suitable for `exec`.
-    """
-    # Obtain the dictionary of built-in methods, which might not exist in
-    # some python versions (e.g., Skulpt)
-
-    # Create a shallow copy of the dictionary of built-in methods. Then,
-    # we'll take specific ones that are unsafe and replace them.
-    namespace["__builtins__"] = _default_builtins.copy()
-    for name, function in custom_builtins.items():
-        namespace["__builtins__"][name] = function
-
-
 def create_module(module_name):
     """
+    Creates empty ModuleTypes based on the ``module_name``. Correctly
+    creates parent modules for submodules as needed to fill in the path.
 
     Args:
-        module_name:
+        module_name: A dot-separated string of modules, as if for ``import``.
 
     Returns:
-
+        :py:class:`types.ModuleType`: The root module created.
+        dict[str, :py:class:`types.ModuleType`]: A dictionary of newly created
+            modules, including the root and the actual target.
+        :py:class:`types.ModuleType`: The target module created.
     """
     submodule_names = module_name.split(".")
     modules = {}
@@ -187,7 +178,7 @@ def create_module(module_name):
         new_submodule = types.ModuleType(reconstructed_path)
         setattr(root, submodule_name, new_submodule)
         modules[reconstructed_path] = new_submodule
-    return root, modules
+    return root, modules, modules[module_name]
 
 
 class MockModule:
@@ -195,13 +186,22 @@ class MockModule:
         return {k: v for k, v in vars(self).items()
                 if not k.startswith('_')}
 
-    def _add_to_module(self, module):
+    def add_to_module(self, module):
         for name, value in self._generate_patches().items():
             setattr(module, name, value)
 
 
+class MockDictModule(MockModule):
+    def __init__(self, fields):
+        self.fields = fields
+
+    def _generate_patches(self):
+        return self.fields
+
+
 class BlockedModule(MockModule):
-    MODULE_NAME = "this module"
+    def __init__(self, name):
+        self.module_name = name
 
     def _generate_patches(self):
         return {'__getattr__': self.getter}
@@ -210,7 +210,7 @@ class BlockedModule(MockModule):
         " If anything asks, we prevent the module. Except for __file__. "
         # Needed to support coverage - it's okay to ask who I am.
         if key == '__file__':
-            return self.MODULE_NAME
+            return self.module_name
         else:
             self.prevent_module()
 
@@ -220,12 +220,11 @@ class BlockedModule(MockModule):
         Args:
             **kwargs:
         """
-        raise SandboxPreventModule("You cannot import {module_name} from student code.".format(
-            module_name=self.MODULE_NAME
-        ))
+        raise SandboxPreventModule(f"You cannot import {self.module_name} from student code.")
 
 
 class MockPedal(BlockedModule):
+    """ TODO: Deprecated? """
     MODULE_NAME = "pedal"
 
 

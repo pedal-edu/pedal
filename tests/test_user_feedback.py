@@ -25,18 +25,22 @@ class TestFeedback(unittest.TestCase):
     def test_runtime(self):
         with Execution('0+"A"', old_style_messages=True) as e:
             suppress("analyzer")
-        self.assertEqual(e.feedback, "TypeError\n<pre>unsupported operand "
-                                     "type(s) for +: 'int' and 'str'</pre>\n"
-                                     "Type errors most often occur when an expression "
-                                     "tries to combine two objects with types that should "
-                                     "not be combined. Like using <code>+</code> to add a "
-                                     "number to a list instead of <code>.append</code>, "
-                                     "or dividing a string by a number."
-                                     "<br><b>Suggestion:</b> To fix a type error you will "
-                                     "most likely need to trace through your code and "
-                                     "make sure the variables have the types you expect "
-                                     "them to have."
-                         )
+        self.assertEqual(e.feedback,
+                         """Type Error
+A TypeError occurred:
+
+<pre>Unsupported operand type(s) for +: 'int' and 'str'</pre>
+
+I ran the file `answer.py`.
+
+The traceback was:
+  Line 1 of file answer.py
+    0+"A"
+
+
+Type errors occur when you use an operator or function on the wrong type of value. For example, using `+` to add to a list (instead of `.append`), or dividing a string by a number.
+
+Suggestion: To fix a type error, you should trace through your code. Make sure each expression has the type you expect it to have.""")
 
     @unittest.skip
     def test_tifa(self):

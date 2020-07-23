@@ -7,7 +7,7 @@ from pprint import pprint
 from pedal.source import set_source
 
 from pedal.cait import parse_program
-from pedal.sandbox import run
+from pedal.sandbox.commands import run
 
 pedal_library = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.insert(0, pedal_library)
@@ -95,11 +95,20 @@ class TestQuestions(ExecutionTestCase):
         self.assertEqual(finals[0][0]['message'], "Create a for loop.")
         self.assertEqual(finals[0][1]['message'], "Create a variable.")
         self.assertEqual(finals[0][2]['message'], dedent("""
-               Traceback:
-                 File "answer.py", line 1
-                   1 + ""
-               TypeError: unsupported operand type(s) for +: 'int' and 'str'
-               """).lstrip())
+               A TypeError occurred:
+
+<pre>Unsupported operand type(s) for +: 'int' and 'str'</pre>
+
+I ran the file `answer.py`.
+
+The traceback was:
+  Line 1 of file answer.py
+    1 + ""
+
+
+Type errors occur when you use an operator or function on the wrong type of value. For example, using `+` to add to a list (instead of `.append`), or dividing a string by a number.
+
+Suggestion: To fix a type error, you should trace through your code. Make sure each expression has the type you expect it to have.""").lstrip())
         # Tried writing some good code
         make_exam('for x in []: pass')
         final_success, final_score, _, finals = sectional.resolve()

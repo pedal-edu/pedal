@@ -194,6 +194,9 @@ class Feedback:
         # Organizational
         if group is not None:
             self.group = group
+        if self.group is None:
+            # Might inherit from Report's current group
+            self.group = self.report.group
         if self.field_names is not None:
             for field_name in self.field_names:
                 self.fields[field_name] = kwargs.get(field_name)
@@ -326,3 +329,4 @@ def CompositeFeedbackFunction(*functions):
         CompositeFeedbackFunction_with_attrs.functions = functions
         return function
     return CompositeFeedbackFunction_with_attrs
+

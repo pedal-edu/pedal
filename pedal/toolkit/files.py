@@ -20,7 +20,7 @@ class open_without_arguments(FeedbackResponse):
     category = Feedback.CATEGORIES.INSTRUCTOR
 
 
-@CompositeFeedbackFunction(open_without_arguments)
+@CompositeFeedbackFunction(open_without_arguments, ensure_literal)
 def files_not_handled_correctly(*filenames, muted=False):
     """
     Statically detect if files have been opened and closed correctly.

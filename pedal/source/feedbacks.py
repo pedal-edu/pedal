@@ -58,17 +58,19 @@ class syntax_error(SourceFeedback):
     version = '0.0.1'
     justification = "Syntax error was triggered while calling ast.parse"
 
-    def __init__(self, line, filename, code, offset, text,
+    def __init__(self, line, filename, code, col_offset, text,
                  exception, exc_info, **kwargs):
         report = kwargs.get('report', MAIN_REPORT)
         traceback = ExpandedTraceback(exception, exc_info, False,
-                                      report.submission.instructor_file,
-                                      line, filename, code)
-        context = traceback.format_exception()
-        fields = {'lineno': line, 'filename': filename, 'offset': offset,
+                                      [report.submission.instructor_file],
+                                      report.submission.line_offsets,
+                                      [filename], code,
+                                      report.submission.files)
+        context = traceback.build_traceback()
+        fields = {'lineno': line, 'filename': filename, 'offset': col_offset,
                   'text': text, 'traceback': traceback, 'exception': exception,
                   'context': context}
-        location = Location(line=line, col=offset, filename=filename)
+        location = Location(line=line, col=col_offset, filename=filename)
         super().__init__(fields=fields, location=location, **kwargs)
 
 

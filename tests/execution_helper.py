@@ -4,11 +4,11 @@ from textwrap import dedent
 from pedal.core import *
 from pedal.core.report import MAIN_REPORT
 from pedal.core.commands import clear_report, suppress, contextualize_report
-from pedal.sandbox.compatibility import get_sandbox
+from pedal.sandbox.commands import get_sandbox
 from pedal.source import verify
 from pedal.tifa import tifa_analysis
 from pedal.resolvers import simple
-from pedal.sandbox import compatibility
+from pedal.sandbox import commands
 from pedal.cait.cait_api import parse_program
 
 
@@ -47,8 +47,8 @@ class Execution:
         # TODO: Clean this up
         self.student = get_sandbox(self.report)
         self.student.report_exceptions_mode = True
-        self.report['sandbox']['run'].tracer_style = self.tracer_style
-        compatibility.run_student(raise_exceptions=True, old_style_messages=self.old_style_messages)
+        self.report['sandbox']['sandbox'].tracer_style = self.tracer_style
+        commands.run()
         return self
 
     def __exit__(self, *args):

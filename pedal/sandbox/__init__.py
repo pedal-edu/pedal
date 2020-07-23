@@ -1,54 +1,22 @@
 from pedal.core.report import MAIN_REPORT, Report
 from pedal.sandbox.constants import TOOL_NAME
-from pedal.sandbox.feedbacks import runtime_error
-from pedal.sandbox.sandbox import Sandbox, DataSandbox
-
-# Compatibility API
-'''
-run_student
-queue_input
-reset_output
-get_output
-'''
+from pedal.sandbox.sandbox import Sandbox
 
 
-def reset(report=MAIN_REPORT, modules=None, tracer_style=None):
+def reset(report=MAIN_REPORT):
     """
+    Resets (or initializes) the Sandbox instance for this report.
+    Completely destroys the existing Sandbox instance attached to this report;
+    if you want to just clear out its data, then instead use
+    :py:func:`pedal.sandbox.commands.clear_sandbox`.
 
     Args:
         report:
     """
     report[TOOL_NAME] = {
-        'run': Sandbox(modules=modules, tracer_style=tracer_style)
+        'sandbox': Sandbox(report=report)
     }
 
 
 Report.register_tool(TOOL_NAME, reset)
 
-
-def run(raise_exceptions=True, report=MAIN_REPORT, coverage=False, threaded=False, inputs=None, modules=None) -> Sandbox:
-    """
-
-    Args:
-        raise_exceptions:
-        report:
-        coverage:
-        threaded:
-        inputs:
-
-    Returns:
-
-    """
-    sandbox = report[TOOL_NAME]['run']
-    sandbox.threaded = threaded
-    source_code = report.submission.main_code
-    sandbox.record_coverage = coverage
-    sandbox.run(source_code, as_filename=report.submission.main_file, inputs=inputs, threaded=threaded, modules=modules)
-    sandbox.raise_exceptions_mode = raise_exceptions
-    if raise_exceptions and sandbox.exception is not None:
-        name = str(sandbox.exception.__class__)[8:-2]
-
-        runtime_error(sandbox.exception_formatted, name, sandbox.exception, sandbox.exception_position,
-                      group=report['source']['section'], report=report)
-
-    return sandbox

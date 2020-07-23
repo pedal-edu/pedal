@@ -11,7 +11,7 @@ from pedal.core.commands import (clear_report, set_success, gently, explain, giv
 from pedal.source import set_source, next_section, verify_section, verify, separate_into_sections
 from pedal.tifa import tifa_analysis
 from pedal.resolvers import simple, sectional
-import pedal.sandbox.compatibility as compatibility
+import pedal.sandbox.commands as commands
 from tests.execution_helper import Execution
 
 
@@ -94,54 +94,21 @@ class TestCode(unittest.TestCase):
         contextualize_report('1+"Hello"')
         verify()
         tifa_analysis()
-        compatibility.run_student(raise_exceptions=True)
+        commands.run()
         suppress("analyzer")
         final = simple.resolve()
         self.assertEqual("runtime", final.category)
-        self.assertEqual("TypeError", final.title)
+        self.assertEqual("Type Error", final.title)
 
     def test_runtime_suppression(self):
         clear_report()
         contextualize_report('import json\njson.loads("0")+"1"')
         verify()
         tifa_analysis()
-        compatibility.run_student(raise_exceptions=True)
+        commands.run()
         suppress("Runtime")
         final = simple.resolve()
         self.assertEqual(Feedback.CATEGORIES.COMPLETE, final.category)
-        self.assertEqual("No errors reported.", final.message)
-
-    def test_premade_exceptions(self):
-        try:
-            a
-        except Exception as e:
-            ne = e
-        clear_report()
-        contextualize_report('a=0\na')
-        verify()
-        compatibility.raise_exception(ne)
-        final = simple.resolve()
-        self.assertEqual(final.message, "<pre>name 'a' is not defined</pre>\n" +
-                         "A name error almost always means that you have used a variable before it has a value.  Often "
-                         "this may be a simple typo, so check the spelling carefully.  <br><b>Suggestion: </b>Check the"
-                         " right hand side of assignment statements and your function calls, this is the most likely "
-                         "place for a NameError to be found. It really helps to step through your code, one line at a "
-                         "time, mentally keeping track of your variables.")
-
-    def test_suppress_premade(self):
-        try:
-            a
-        except Exception as e:
-            ne = e
-        clear_report()
-        contextualize_report('import json\njson.loads("0")+"1"')
-        verify()
-        tifa_analysis()
-        compatibility.raise_exception(ne)
-        suppress("Runtime")
-        final = simple.resolve()
-        self.assertEqual(Feedback.CATEGORIES.COMPLETE, final.category)
-        self.assertEqual("No Errors", final.title)
         self.assertEqual("No errors reported.", final.message)
 
     def test_success(self):
@@ -172,7 +139,7 @@ class TestCode(unittest.TestCase):
         contextualize_report('    ')
         verify()
         tifa_analysis()
-        compatibility.run_student(raise_exceptions=True)
+        commands.run()
         final = simple.resolve()
         self.assertEqual(Feedback.CATEGORIES.SYNTAX, final.category)
         self.assertEqual("No Source Code", final.title)
@@ -184,7 +151,7 @@ class TestCode(unittest.TestCase):
         contextualize_report('import json\njson.loads("0")+"1"')
         verify()
         tifa_analysis()
-        compatibility.run_student(raise_exceptions=True)
+        commands.run()
         gently("I have a gentle opinion, but you don't want to hear it.")
         final = simple.resolve()
         print(final.label)
@@ -195,7 +162,7 @@ class TestCode(unittest.TestCase):
         contextualize_report('import json\njson.loads("0")+"1"')
         verify()
         tifa_analysis()
-        compatibility.run_student(raise_exceptions=True)
+        commands.run()
         explain("LISTEN TO ME")
         final = simple.resolve()
         self.assertEqual(Feedback.CATEGORIES.INSTRUCTOR, final.category)
@@ -218,11 +185,11 @@ class TestCode(unittest.TestCase):
         verify()
         next_section()
         if verify_section():
-            compatibility.run_student(raise_exceptions=True)
+            commands.run()
             give_partial(.2)
         next_section()
         if verify_section():
-            compatibility.run_student(raise_exceptions=True)
+            commands.run()
             give_partial(.3)
         (success, score, hc, messages) = sectional.resolve()
         self.assertEqual(success, False)
@@ -235,11 +202,11 @@ class TestCode(unittest.TestCase):
         separate_into_sections()
         next_section()
         if verify_section():
-            compatibility.run_student(raise_exceptions=True)
+            commands.run()
             give_partial(.2)
         next_section()
         if verify_section():
-            compatibility.run_student(raise_exceptions=True)
+            commands.run()
             give_partial(.3)
             set_success()
         (success, score, hc, messages) = sectional.resolve()
@@ -250,7 +217,7 @@ class TestCode(unittest.TestCase):
     def test_attribute_error(self):
         with Execution('"".unsafe()') as e:
             pass
-        self.assertEqual("AttributeError", e.final.title)
+        self.assertEqual("Attribute Error", e.final.title)
 
 
 if __name__ == '__main__':

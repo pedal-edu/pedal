@@ -1,7 +1,33 @@
-from pedal.toolkit.utilities import function_is_called
+"""
+Extensions related to MatPlotLib.
+
+Mock module for Sandbox.
+
+Assertions.
+"""
+from pedal.core.report import MAIN_REPORT
+from pedal.tifa.builtin_definitions import BUILTIN_MODULES
+from pedal.tifa.type_definitions import ModuleType, FunctionType, NoneType
+from pedal.cait.find_node import function_is_called
 from pedal.cait.cait_api import parse_program, def_use_error
 from pedal.core.commands import gently, explain
-from pedal.sandbox import compatibility
+from pedal.sandbox import commands
+from pedal.sandbox import TOOL_NAME as SANDBOX_TOOL_NAME
+
+_PYPLOT_MODULE = ModuleType('pyplot', fields={
+    'plot': FunctionType(name='plot', returns=NoneType()),
+    'hist': FunctionType(name='hist', returns=NoneType()),
+    'scatter': FunctionType(name='scatter', returns=NoneType()),
+    'show': FunctionType(name='show', returns=NoneType()),
+    'xlabel': FunctionType(name='xlabel', returns=NoneType()),
+    'ylabel': FunctionType(name='ylabel', returns=NoneType()),
+    'title': FunctionType(name='title', returns=NoneType()),
+})
+
+BUILTIN_MODULES['matplotlib'] = ModuleType('matplotlib',
+                                           submodules={
+                                               'pyplot': _PYPLOT_MODULE
+                                           })
 
 PLOT_LABEL = {'plot': 'line plot',
               'hist': 'histogram',
@@ -142,7 +168,7 @@ def check_for_plot(plt_type, data, muted=True):
         plt_type = 'line'
     type_found = False
     data_found = False
-    for graph in compatibility.get_plots():
+    for graph in commands.get_plots():
         for a_plot in graph['data']:
             data_found_here = compare_data(plt_type, data, a_plot)
             if a_plot['type'] == plt_type and data_found_here:
@@ -175,7 +201,7 @@ def check_for_plot_r(plt_type, data):
         plt_type = 'line'
     type_found = False
     data_found = False
-    for graph in compatibility.get_plots():
+    for graph in commands.get_plots():
         for a_plot in graph['data']:
             data_found_here = compare_data(plt_type, data, a_plot)
             if a_plot['type'] == plt_type and data_found_here:
@@ -203,3 +229,20 @@ def check_for_plot_r(plt_type, data):
         return {"message": "You have not created a {} with the proper data.".format(plt_type),
                 "code": "no_plt",
                 "label": "Missing Plot"}
+
+
+def get_plots(report=MAIN_REPORT):
+    """
+
+    Args:
+        report:
+
+    Returns:
+
+    """
+    sandbox = report[SANDBOX_TOOL_NAME]['run']
+    if 'matplotlib.pyplot' in sandbox.modules:
+        mock_plt = sandbox.modules['matplotlib.pyplot']
+        if hasattr(mock_plt, 'plots'):
+            return mock_plt.plots
+    return []

@@ -3,6 +3,9 @@ import os
 import sys
 from textwrap import dedent
 
+from pedal.assertions.static import prevent_operation, ensure_operation, function_prints
+from pedal.cait.find_node import find_operation, find_prior_initializations, find_function_calls, is_top_level, \
+    function_is_called
 from pedal.core.commands import suppress
 from pedal.core.feedback import Feedback
 from pedal.core.report import MAIN_REPORT
@@ -24,7 +27,7 @@ from pedal.toolkit.functions import (match_signature, output_test, unit_test,
 from pedal.toolkit.signatures import (function_signature)
 from pedal.toolkit.imports import ensure_imports
 from pedal.toolkit.printing import ensure_prints
-from pedal.toolkit.plotting import check_for_plot, prevent_incorrect_plt
+from pedal.extensions.plotting import check_for_plot, prevent_incorrect_plt
 from tests.execution_helper import Execution, ExecutionTestCase
 
 
@@ -86,8 +89,8 @@ class TestFiles(ExecutionTestCase):
     def test_files_missing_filename(self):
         with Execution('with open("A.txt") as out:\n  print(out.read())') as e:
             self.assertTrue(files_not_handled_correctly("X.txt"))
-        self.assertEqual(e.final.message, "You need the literal value "
-                                    "`'X.txt'` in your code.")
+        self.assertEqual(e.final.message, "You must use the literal value "
+                                    "`'X.txt'`.")
 
     def test_files_with_open_success(self):
         with Execution('with open("A.txt") as out:\n  print(out.read())') as e:
@@ -238,9 +241,9 @@ class TestFunctions(unittest.TestCase):
             with open(TEST_FILENAME) as student_file:
                 student_code = student_file.read()
             set_source(student_code, report=MAIN_REPORT)
-            student = Sandbox(tracer_style='coverage')
-            MAIN_REPORT['sandbox']['run'] = student
-            student.run(student_code, as_filename=TEST_FILENAME)
+            student = Sandbox()
+            student.tracer_style='coverage'
+            student.run(student_code, filename=TEST_FILENAME)
             uncovered, percentage = check_coverage()
             self.assertEqual(uncovered, missing_lines)
 
@@ -316,28 +319,6 @@ class TestUtilities(unittest.TestCase):
             prevent_advanced_iteration()
         self.assertEqual(e.final.message, "You cannot use the builtin function "
                                     "<code>sum</code>.")
-
-    def test_ensure_operation(self):
-        with Execution('print(1-1)') as e:
-            self.assertFalse(ensure_operation("+"))
-        self.assertEqual(e.final.message, "You are not using the <code>+</code> operator.")
-        with Execution('print(1+1)') as e:
-            self.assertNotEqual(ensure_operation("+"), False)
-        self.assertEqual(e.final.message, "No errors reported.")
-        with Execution('print(1!=1)') as e:
-            self.assertNotEqual(ensure_operation("!="), False)
-        self.assertEqual(e.final.message, "No errors reported.")
-
-    def test_prevent_operation(self):
-        with Execution('print(1+1)') as e:
-            self.assertNotEqual(prevent_operation("+"), False)
-        self.assertEqual(e.final.message, "You may not use the <code>+</code> operator.")
-        with Execution('print(1-1)') as e:
-            self.assertFalse(prevent_operation("+"))
-        self.assertEqual(e.final.message, "No errors reported.")
-        with Execution('1 < 1') as e:
-            self.assertNotEqual(prevent_operation("<"), False)
-        self.assertEqual(e.final.message, "You may not use the <code><</code> operator.")
 
     def test_find_operation(self):
         with Execution('1+1') as e:

@@ -1,9 +1,7 @@
-# TODO: Pretty sure new version of skulpt doesn't need this
-try:
-    TimeoutError
-except NameError:
-    class TimeoutError(Exception):
-        pass
+"""
+Exceptions related to Sandbox execution; note that these are not meant for
+students, they indicate system errors.
+"""
 
 
 class SandboxException(Exception):

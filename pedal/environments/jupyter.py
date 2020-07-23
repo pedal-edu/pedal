@@ -91,7 +91,7 @@ from pedal.source import set_source
 set_source({student_code})
 from pedal.tifa import tifa_analysis
 tifa_analysis(True)
-from pedal.sandbox.compatibility import *
+from pedal.sandbox.commands import *
 queue_input({inputs})
 run_student(True)
 student = get_sandbox()

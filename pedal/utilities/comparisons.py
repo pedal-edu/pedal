@@ -195,3 +195,11 @@ def _are_sets_equal(x, y, _exact_strings, _delta):
         if not _set_contains(x_element, y, _exact_strings, _delta):
             return False
     return True
+
+
+def iterable(obj) -> bool:
+    """
+    Determines if this object satisfies the iterable interface, which
+    requires it to support either ``__iter__`` or ``__getitem__``.
+    """
+    return hasattr(obj, '__iter__') or hasattr(obj, '__getitem__')

@@ -17,9 +17,9 @@ except BaseException:
 
 
 class InterruptableThread(threading.Thread):
-    '''
+    """
     A thread that can be interrupted.
-    '''
+    """
 
     def __init__(self, func, args, kwargs):
         threading.Thread.__init__(self)
@@ -29,10 +29,10 @@ class InterruptableThread(threading.Thread):
         self.exc_info = (None, None, None)
 
     def run(self):
-        '''
+        """
         Begin thread execution, calling the `func` that was originally
         passed in.
-        '''
+        """
         try:
             self.result = self.func(*self.args, **self.kwargs)
         except Exception:

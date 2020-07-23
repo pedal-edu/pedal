@@ -24,8 +24,9 @@ class SandboxBasicTracer:
     def __init__(self):
         super().__init__()
         self.filename = "student.py"
+        self.code = None
 
-    def _as_filename(self, filename, code):
+    def as_filename(self, filename, code):
         if os.path.isabs(filename):
             self.filename = filename
         else:
@@ -126,3 +127,10 @@ class SandboxCallTracer(SandboxBasicTracer, Bdb):
         self.quitting = True
         # Return true to suppress exception (if it is a BdbQuit)
         return isinstance(exc_type, BdbQuit)
+
+
+TRACER_STYLES = {
+    'coverage': SandboxCoverageTracer,
+    'calls': SandboxCallTracer,
+    'none': SandboxBasicTracer,
+}

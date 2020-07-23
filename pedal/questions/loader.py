@@ -65,7 +65,7 @@ from pedal.core.commands import set_success, give_partial
 from pedal.core.feedback_category import FeedbackCategory
 from pedal.questions.constants import TOOL_NAME
 
-from pedal.sandbox.compatibility import get_sandbox
+from pedal.sandbox.commands import get_sandbox
 from pedal.toolkit.functions import *
 from pedal.utilities.comparisons import equality_test
 
@@ -328,7 +328,7 @@ def check_case(function, case, student_function):
     test_case = TestCase(function_name, case.get('name'))
     # Get callable
     sandbox = get_sandbox(MAIN_REPORT)
-    sandbox.set_output(None)
+    sandbox.clear_output()
     # Potential bonus message
     if 'message' in case:
         test_case.add_message(case['message'])
@@ -337,7 +337,7 @@ def check_case(function, case, student_function):
         test_case.add_inputs(case['inputs'])
         sandbox.set_input(test_case.inputs)
     else:
-        sandbox.set_input(None)
+        sandbox.clear_input()
     # Pass in the arguments and call the function
     if 'arguments' in case:
         test_case.add_arguments(case['arguments'])
@@ -497,7 +497,7 @@ def load_question(data):
     :return:
     """
     ast = parse_program()
-    student = compatibility.get_student_data()
+    student_data = commands.get_student_data()
     # Check that there aren't any invalid syntactical structures
     # Get all of the function ASTs in a dictionary
     function_definitions = {definition._name: definition
@@ -516,7 +516,7 @@ def load_question(data):
                 function_points += function_rubric.get('definition', 10)
                 check_function_signature(function, definition, settings)
                 function_points += function_rubric.get('signature', 10)
-                student_function = check_function_value(function, student.data, settings)
+                student_function = check_function_value(function, student_data, settings)
                 function_points += function_rubric.get('value', 0)
             except FeedbackException as fe:
                 yield fe.as_message(), fe.label

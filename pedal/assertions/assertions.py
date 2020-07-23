@@ -3,9 +3,10 @@ from pedal.core.feedback import Feedback, AtomicFeedbackFunction
 from pedal.core.commands import give_partial
 from pedal.core.report import MAIN_REPORT
 from pedal.sandbox.result import SandboxResult
-from pedal.sandbox.sandbox import DataSandbox
+from pedal.sandbox.sandbox import Sandbox
 from pedal.assertions.setup import _setup_assertions, AssertionException, TOOL_NAME_ASSERTIONS
-from pedal.utilities.comparisons import equality_test, output_test
+from pedal.utilities.comparisons import equality_test, output_test, iterable
+from pedal.utilities.language import escape_curly_braces
 from pedal.utilities.types import humanize_types
 
 
@@ -15,44 +16,10 @@ from pedal.utilities.types import humanize_types
 # TODO: Setup __all__ and make sure that DELTA is not included
 
 
-def iterable(obj):
-    """
-
-    Args:
-        obj:
-
-    Returns:
-
-    """
-    return hasattr(obj, '__iter__') or hasattr(obj, '__getitem__')
-
-
 DELTA = .001
-_MAX_LENGTH = 80
 
 
-def _escape_curly_braces(result):
-    return result.replace("{", "{{").replace("}", "}}")
 
-
-def safe_repr(obj, short=False):
-    """
-
-    Args:
-        obj:
-        short:
-
-    Returns:
-
-    """
-    try:
-        result = repr(obj)
-    except Exception:
-        result = object.__repr__(obj)
-    if short and len(result) >= _MAX_LENGTH:
-        result = result[:_MAX_LENGTH] + ' [truncated]...'
-    result = result
-    return result
 
 
 def _fail(code_message, actual_message, expected_message,
@@ -103,10 +70,10 @@ def _build_context(sandboxed_results, actual_message, expected_message,
         targets.append(sandbox.target_contexts[call_id])
     # Actual rendering of text
     if calls:
-        calls = [_escape_curly_braces(str(call)) for call in calls]
+        calls = [escape_curly_braces(str(call)) for call in calls]
         context.append("I ran:\n<pre>" + "\n".join(calls) + "</pre>")
     if inputs:
-        inputs = [_escape_curly_braces(str(inp)) for inp in inputs]
+        inputs = [escape_curly_braces(str(inp)) for inp in inputs]
         context.append("I entered as input:\n<pre>" + "\n".join(inputs) + "</pre>")
     actual_message += ":\n<pre>{}</pre>"
     for i, target in enumerate(targets):
@@ -770,7 +737,7 @@ def assertHasFunction(obj, function, args=None, returns=None,
     """
     # If object is a sandbox, will check the .data[variable] attribute
     # Otherwise, check it directly
-    if isinstance(obj, DataSandbox):
+    if isinstance(obj, Sandbox):
         comparison = lambda o, f: f in o.data
     else:
         def comparison(o, f):
@@ -794,7 +761,7 @@ def assertHasFunction(obj, function, args=None, returns=None,
                             "to have the function",
                             message, contextualize=contextualize, report=report, partial_score=score, muted=muted):
         return False
-    if isinstance(obj, DataSandbox):
+    if isinstance(obj, Sandbox):
         student_function = obj.data[function]
     else:
         try:
@@ -832,7 +799,7 @@ def assertHas(obj, variable, types=None, value=None, score=None, muted=False,
     """
     # If object is a sandbox, will check the .data[variable] attribute
     # Otherwise, check it directly
-    if isinstance(obj, DataSandbox):
+    if isinstance(obj, Sandbox):
         comparison = lambda o, v: v in o.data
     else:
         comparison = lambda o, v: v in hasattr(o, v)
@@ -843,7 +810,7 @@ def assertHas(obj, variable, types=None, value=None, score=None, muted=False,
                             "to have the variable",
                             message, contextualize, report=report, partial_score=score, muted=muted):
         return False
-    if isinstance(obj, DataSandbox):
+    if isinstance(obj, Sandbox):
         student_variable = obj.data[variable]
     else:
         student_variable = getattr(obj, variable)

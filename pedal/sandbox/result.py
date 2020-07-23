@@ -1,3 +1,9 @@
+"""
+Holds the SandboxResult proxy that emulates other classes as perfectly
+as possible.
+"""
+
+
 class SandboxResult:
     """
     Proxy class for wrapping results from executing student code. Attempts
@@ -131,12 +137,12 @@ class SandboxResult:
         return issubclass(self.value, subclass)
 
     def __len__(self):
-        '''
+        """
         Fun fact: cpython DEMANDS that __len__ return an integer. Not something
         that looks like an integer, but a true, honest-to-god integer that
         can fit into a slot.
         https://stackoverflow.com/questions/42521449/how-does-python-ensure-the-return-value-of-len-is-an-integer-when-len-is-cal
-        '''
+        """
         return len(self.value)
 
     def __getitem__(self, key):
@@ -199,7 +205,7 @@ class SandboxResult:
             return self.value != other.value
         return self.value != other
 
-    ## Numeric Operations
+    # Numeric Operations
 
     def __add__(self, other):
         if isinstance(other, SandboxResult):
@@ -312,7 +318,7 @@ class SandboxResult:
     def __ror__(self, other):
         return self._clone_this_result(self.value.__ror__(other))
 
-    ## TODO: __iadd__ and other in-place assignment operators?
+    # TODO: __iadd__ and other in-place assignment operators?
 
     def __neg__(self):
         return self._clone_this_result(self.value.__neg__())

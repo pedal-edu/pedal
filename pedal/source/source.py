@@ -43,8 +43,6 @@ def reset(report=MAIN_REPORT):
         'sections': None,
         'section': None,
         'section_pattern': None,
-        # TODO: Consider moving line_offset into Submission
-        'line_offset': 0
     }
     return report[TOOL_NAME]
 
@@ -52,8 +50,8 @@ def reset(report=MAIN_REPORT):
 Report.register_tool(TOOL_NAME, reset)
 
 
-def set_source(code, filename=DEFAULT_STUDENT_FILENAME, sections=False, independent=False,
-               report=MAIN_REPORT):
+def set_source(code, filename=DEFAULT_STUDENT_FILENAME, sections=False,
+               independent=False, report=MAIN_REPORT):
     """
     Sets the contents of the Source to be the given code. Can also be
     optionally given a filename.
@@ -88,6 +86,9 @@ def set_source(code, filename=DEFAULT_STUDENT_FILENAME, sections=False, independ
         verify(code, report=report)
     else:
         separate_into_sections(report=report)
+
+
+# TODO: source_prepend and source_append
 
 
 def restore_code(report=MAIN_REPORT):
@@ -141,12 +142,7 @@ verify_section = verify
 
 def get_program(report=MAIN_REPORT) -> str:
     """
-    Retrieves the current main file.
-    Args:
-        report:
-
-    Returns:
-
+    Retrieves the current main file's code.
     """
     return report.submission.main_code
 
