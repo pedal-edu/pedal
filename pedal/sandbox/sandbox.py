@@ -259,13 +259,15 @@ class Sandbox:
         if kwargs_locals is None:
             kwargs_locals = []
         # Make the call and evaluate it
+        self.target = target
         actual, student = self._construct_call(function, args, kwargs,
                                                args_locals, kwargs_locals,
                                                target)
+        context_id = self._next_context_id
         self._execute(actual, self.report.submission.instructor_file,
                       SandboxContextKind.CALL, threaded=threaded)
         self._purge_temporaries()
-        return self._handle_result(target)
+        return self._handle_result(target, context_id)
 
     def evaluate(self, code, target="_", threaded=None):
         """
@@ -292,18 +294,19 @@ class Sandbox:
         """
         self.target = target
         code = f"{target} = {code}"
+        context_id = self._next_context_id
         self._execute(code, self.report.submission.instructor_file,
                       SandboxContextKind.EVAL, threaded=threaded)
-        return self._handle_result(target)
+        return self._handle_result(target, context_id)
 
-    def _handle_result(self, target):
+    def _handle_result(self, target, context_id):
         """ Determine the appropriate return value (either an exception or the
         value stored in target. Also updates self.result. """
         if self.exception is None:
             self.result = self.data[target]
             if self.result_proxy_class is not None:
                 self.result = self.result_proxy_class(self.result,
-                                                      call_id=self._next_context_id,
+                                                      call_id=context_id,
                                                       sandbox=self)
             return self.result
         else:

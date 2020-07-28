@@ -1,7 +1,8 @@
 from pedal.core.commands import compliment, explain, gently
 from pedal.core.report import MAIN_REPORT
 from pedal.sandbox.commands import run
-from pedal.assertions.assertions import *
+from pedal.assertions.runtime import *
+from pedal.assertions.static import ensure_function
 from pedal.toolkit.functions import *
 
 
@@ -80,8 +81,7 @@ class FunctionGrader(QuestionGrader):
         self.student = run(raise_exceptions=True, context=False)
         self.student.report_exceptions_mode = False
 
-        self.definition = match_signature_muted(self.function_name, *self.signature)
-        if not assertGenerally(self.definition):
+        if not ensure_function(self.function_name, *self.signature):
             gently("Function not defined")
             return False
 

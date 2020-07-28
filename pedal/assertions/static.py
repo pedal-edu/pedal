@@ -199,6 +199,7 @@ prevent_operation(operator: str)
 TODO: prevent_assignment(variable_name: str, type: str, value: Any)
 TODO: prevent_import(module_name: str)
 TODO: prevent_iteration(style: {"For", "While", "Functional", "Recursion"})
+TODO: ensure_function
 
 ensure_prints => ensure_function_call('print')
 function_prints => ensure_function_call('print', root=match_signature('name')

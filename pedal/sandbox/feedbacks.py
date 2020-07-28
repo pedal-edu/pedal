@@ -6,7 +6,7 @@ from pedal.sandbox.data import format_contexts
 from pedal.utilities.exceptions import KeyError, get_exception_name
 from pedal.core.feedback import FeedbackResponse
 from pedal.sandbox import TOOL_NAME
-from pedal.utilities.language import add_indefinite_article
+from pedal.utilities.text import add_indefinite_article
 
 RUNTIME_ERROR_MESSAGE_HEADER = (
     "{exception_name} occurred:\n\n"

@@ -3,6 +3,10 @@ Holds the SandboxResult proxy that emulates other classes as perfectly
 as possible.
 """
 
+# This module provides a version of ``len`` that handles SandboxResult
+#   correctly, requiring us to hold a reference to the original ``len``.
+_original_len = len
+
 
 class SandboxResult:
     """
@@ -143,7 +147,7 @@ class SandboxResult:
         can fit into a slot.
         https://stackoverflow.com/questions/42521449/how-does-python-ensure-the-return-value-of-len-is-an-integer-when-len-is-cal
         """
-        return len(self.value)
+        return _original_len(self.value)
 
     def __getitem__(self, key):
         return self._clone_this_result(self.value[key])
@@ -373,3 +377,29 @@ class SandboxResult:
 
     def __aexit__(self, exc_type, exc_value, traceback):
         return self.value.__aexit__(exc_type, exc_value, traceback)
+
+
+def is_sandbox_result(value) -> bool:
+    """
+    Determines if the given value is secretly a proxied SandboxResult.
+    """
+    if hasattr(value, "__actual_class__"):
+        if value.__actual_class__ == SandboxResult:
+            return True
+    return False
+
+
+def len(s):
+    """
+    Return the length (the number of items) of an object. The argument may be
+    a sequence (such as a string, bytes, tuple, list, or range) or a collection
+    (such as a dictionary, set, or frozen set).
+
+    Replacement for builtin :py:func:`len` function that is compatible
+    with SandboxResult. See
+    :py:func:pedal.sandbox.result.SandboxResult.__len__ for details on this
+    weird thing.
+    """
+    if is_sandbox_result(s):
+        return s._clone_this_result(_original_len(s.value))
+    return len(s)

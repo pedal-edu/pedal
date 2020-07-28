@@ -71,6 +71,9 @@ class SandboxContext:
                  exception, submission):
         self.call_id = call_id
         self.kind = kind
+        # Hack: Chomp off the "_ =" if the target is "_"
+        if target == "_":
+            code = code[len("_ = "):]
         self.code = code
         self.filename = filename
         self.target = target
@@ -101,9 +104,8 @@ def format_contexts(contexts):
     final_text = []
     final_text.extend(execution_text)
     if inputs_text:
-        final_text.append("And I entered as input:\n<pre>{}</pre>\n".format(
-            "\n".join(inputs_text)
-        ))
+        inputs = "\n".join(inputs_text)
+        final_text.append(f"And I entered as input:\n<pre>{inputs}</pre>\n")
     return "\n".join(final_text)
 
 

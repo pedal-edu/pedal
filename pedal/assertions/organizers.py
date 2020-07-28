@@ -31,6 +31,10 @@ Phases are reset between sections.
 
 **Subtests** are a way to combine multiple assertions into a single cohesive test.
 TODO: Rename? And expand on.
+with assert_group('test_add') as test_add_group:
+
+if assert_unit_tests('function_name', FUNCTION_CASES):
+
 
 '''
 
@@ -39,13 +43,6 @@ from pedal.core.report import MAIN_REPORT
 from pedal.assertions.setup import (_setup_assertions, AssertionException,
                                     _add_relationships, _add_phase)
 from functools import wraps
-
-
-def contextualize_calls():
-    """
-
-    """
-    pass
 
 
 class _finish_section:

@@ -52,3 +52,12 @@ def safe_repr(obj, short=False, max_length=80) -> str:
         result = result[:max_length] + ' [truncated]...'
     result = result
     return result
+
+
+def chomp(text):
+    """ Removes the trailing newline character, if there is one. """
+    if text[-2:] == '\n\r':
+        return text[:-2]
+    if text[-1] == '\n':
+        return text[:-1]
+    return text

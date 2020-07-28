@@ -74,3 +74,12 @@ class BlockPyEnvironment(Environment):
         commands.run_student(raise_exceptions=False)
 
 setup_pedal = BlockPyEnvironment
+
+
+"""
+TODO: Enhance the following
+
+Override formatters
+assertions could get HTML diffs
+Grouping a bunch of assert_equal produces a table
+"""
