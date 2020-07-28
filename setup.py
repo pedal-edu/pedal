@@ -13,6 +13,7 @@ setuptools.setup(
               'pedal.source', 'pedal.cait', 'pedal.tifa',
               'pedal.sandbox', 'pedal.assertions',
               'pedal.questions', 'pedal.toolkit',
+              'pedal.extensions'
               ],
     license='Creative Commons Attribution-Noncommercial-Share Alike license',
     long_description=open('README.rst').read(),
