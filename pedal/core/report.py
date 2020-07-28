@@ -12,6 +12,7 @@ from pedal.core.feedback_category import FeedbackCategory
 
 
 # TODO: Mechanism for checking whether a piece of feedback is in the report
+from pedal.core.formatting import Formatter
 from pedal.core.tool import ToolRegistration
 
 
@@ -56,6 +57,7 @@ class Report:
         """
         self._tool_data = {}
         self.feedback = []
+        self.ignored_feedback = []
         self.suppressions = {}
         self.suppressed_labels = []
         self.hiddens = set()
@@ -64,22 +66,25 @@ class Report:
         self.hooks = {}
         self.submission = None
         self.result = None
+        self.format = Formatter()
 
     def clear(self):
         """
         Completely resets the entire report back to its starting form,
         including deleting any attached submissions, tool data, and feedbacks/
         """
-        self.feedback = []
-        self.suppressions = {}
-        self.suppressed_labels = []
-        self.hiddens = set()
-        self._tool_data = {}
+        self.feedback.clear()
+        self.ignored_feedback.clear()
+        self.suppressions.clear()
+        self.suppressed_labels.clear()
+        self.hiddens.clear()
+        self._tool_data.clear()
         self.group = None
-        self.group_names = {}
-        self.hooks = {}
+        self.group_names.clear()
+        self.hooks.clear()
         self.submission = None
         self.result = None
+        self.format = Formatter()
 
     def contextualize(self, submission):
         """
@@ -112,6 +117,23 @@ class Report:
             :py:class:`~pedal.core.feedback.Feedback`: The attached feedback.
         """
         self.feedback.append(feedback)
+        return feedback
+
+    def add_ignored_feedback(self, feedback):
+        """
+        Attaches the given feedback object to this report, but only in the
+        ignored list. That means it should not be considered by the Resolver,
+        since its condition did not apply to the code. Some Resolvers like
+        to know about feedback that was not reached.
+
+        Args:
+            feedback (:py:class:`~pedal.core.feedback.Feedback`): The feedback
+                object to attach.
+
+        Returns:
+            :py:class:`~pedal.core.feedback.Feedback`: The attached feedback.
+        """
+        self.ignored_feedback.append(feedback)
         return feedback
 
     def suppress(self, category=None, label=True):
@@ -213,6 +235,16 @@ class Report:
             bool: Whether the tool is available.
         """
         return tool_name in self._tool_data
+
+    def set_formatter(self, formatter):
+        """
+        Update the formatter with the new option.
+
+        Args:
+            formatter (:py:class:`pedal.core.formatting.Formatter`): The new
+                formatter to use.
+        """
+        self.format = formatter
 
     @classmethod
     def register_tool(cls, tool_name: str, reset_function):

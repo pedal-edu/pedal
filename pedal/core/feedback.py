@@ -210,8 +210,11 @@ class Feedback:
         if self._met_condition:
             self.message = self._get_message()
             self.text = self._get_text()
-        if report is not None and self._met_condition:
-            report.add_feedback(self)
+        if report is not None:
+            if self._met_condition:
+                report.add_feedback(self)
+            else:
+                report.add_ignored_feedback(self)
 
     def condition(self, *args, **kwargs):
         """
