@@ -122,7 +122,7 @@ class RuntimeAssertionFeedback(AssertionFeedback):
         elif kwargs.get('context') is not None:
             context_message = kwargs['context']
         else:
-            context_message = format_contexts(contexts)
+            context_message = format_contexts(contexts, self.report.format)
         # Calculate the assertion_message
         if kwargs.get('assertion') is False:
             assertion_message = ""

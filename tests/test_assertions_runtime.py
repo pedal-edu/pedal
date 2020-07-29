@@ -34,7 +34,7 @@ The following exception occurred:
         self.assertFeedback(e, """assert_equal
 Student code failed instructor test.
 I ran the code:
-<pre>add(1, 2)</pre>
+<pre class='pedal-python-code'><code>add(1, 2)</code></pre>
 The value of the result was:
 <pre class='pedal-python-value'>-1</pre>
 But I expected the result to be equal to:
@@ -51,7 +51,7 @@ But I expected the result to be equal to:
         self.assertFeedback(e, """assert_equal
 Student code failed instructor test.
 I ran the code:
-<pre>add(1, 2)</pre>
+<pre class='pedal-python-code'><code>add(1, 2)</code></pre>
 The value of the result was:
 <pre class='pedal-python-value'>-1</pre>
 But I expected the result to be equal to:
@@ -68,7 +68,7 @@ But I expected the result to be equal to:
         self.assertFeedback(e, """assert_in
 Student code failed instructor test.
 I ran the code:
-<pre>make_int()</pre>
+<pre class='pedal-python-code'><code>make_int()</code></pre>
 The value of the result was:
 <pre class='pedal-python-value'>7</pre>
 But I expected the result to be in:
@@ -80,7 +80,7 @@ But I expected the result to be in:
         self.assertFeedback(e, """assert_in
 Student code failed instructor test.
 I ran the code:
-<pre>make_ints()</pre>
+<pre class='pedal-python-code'><code>make_ints()</code></pre>
 The value of the result was:
 <pre class='pedal-python-value'>[1, 2, 3]</pre>
 But I expected the result to contain:
@@ -92,7 +92,7 @@ But I expected the result to contain:
         self.assertFeedback(e, """assert_is_none
 Student code failed instructor test.
 I ran the code:
-<pre>do_math()</pre>
+<pre class='pedal-python-code'><code>do_math()</code></pre>
 The value of the result was:
 <pre class='pedal-python-value'>3</pre>
 But I expected the result to be None""")
@@ -123,7 +123,7 @@ But I expected the result to be None""")
         self.assertFeedback(e, """assert_is
 Student code failed instructor test.
 I ran the code:
-<pre>get_list()</pre>
+<pre class='pedal-python-code'><code>get_list()</code></pre>
 The value of the result was:
 <pre class='pedal-python-value'>[1, 2]</pre>
 But I expected the result to be identical to:
@@ -147,7 +147,7 @@ Student code failed instructor test.
         self.assertFeedback(e, """assert_length_equal
 Student code failed instructor test.
 I ran the code:
-<pre>get(1, 2)</pre>
+<pre class='pedal-python-code'><code>get(1, 2)</code></pre>
 The value of the result was:
 <pre class='pedal-python-value'>[1, 2]</pre>
 But I expected the result to have the length:
@@ -164,7 +164,7 @@ But I expected the result to have the length:
         self.assertFeedback(e, """assert_length_equal
 Student code failed instructor test.
 I ran the code:
-<pre>get()</pre>
+<pre class='pedal-python-code'><code>get()</code></pre>
 The value of the result was:
 <pre class='pedal-python-value'>5</pre>
 But I expected the result to be the length of:
@@ -186,7 +186,7 @@ But I expected the result to be the length of:
         self.assertFeedback(e, """assert_contains_subset
 Student code failed instructor test.
 I ran the code:
-<pre>get()</pre>
+<pre class='pedal-python-code'><code>get()</code></pre>
 The value of the result was:
 <pre class='pedal-python-value'>[1, 2, 3]</pre>
 But I expected the result to be in:
@@ -203,7 +203,7 @@ But I expected the result to be in:
         self.assertFeedback(e, """assert_not_contains_subset
 Student code failed instructor test.
 I ran the code:
-<pre>get()</pre>
+<pre class='pedal-python-code'><code>get()</code></pre>
 The value of the result was:
 <pre class='pedal-python-value'>[1, 2]</pre>
 But I expected the result to not be in:
@@ -220,7 +220,7 @@ But I expected the result to not be in:
         self.assertFeedback(e, """assert_output
 Student code failed instructor test.
 I ran the code:
-<pre>hi()</pre>
+<pre class='pedal-python-code'><code>hi()</code></pre>
 The function printed:
 <pre class='pedal-output'>Hello world!</pre>
 But I expected the output to be:

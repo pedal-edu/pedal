@@ -28,7 +28,7 @@ class set_success(FeedbackResponse):
     assignment is done.
     """
     title = "Complete"
-    text_template = "Great work!"
+    message_template = "Great work!"
     score = 1
     correct = True
     category = FeedbackCategory.COMPLETE
@@ -52,7 +52,7 @@ class compliment(FeedbackResponse):
 class give_partial(FeedbackResponse):
     """ Increases the user's current score by the `score`. """
     title = "Partial Credit"
-    text_template = "Partial credit"
+    message_template = "Partial credit"
     category = FeedbackCategory.INSTRUCTOR
     kind = FeedbackKind.RESULT
     valence = Feedback.POSITIVE_VALENCE
@@ -143,7 +143,7 @@ def log(*items, **kwargs):
     for item in items:
         item = item if isinstance(item, str) else str(item)
         cloned_kwargs = kwargs.copy()
-        cloned_kwargs.setdefault('text', item)
+        cloned_kwargs.setdefault('message', item)
         feedback(label="log", **kwargs)
 
 
@@ -167,7 +167,7 @@ def debug(*items, **kwargs):
     for item in items:
         item = item
         cloned_kwargs = kwargs.copy()
-        cloned_kwargs.setdefault('text', item)
+        cloned_kwargs.setdefault('message', item)
         feedback(label="debug", **kwargs)
 
 

@@ -129,7 +129,7 @@ def verify(code=None, filename=DEFAULT_STUDENT_FILENAME, report=MAIN_REPORT,
         parsed = ast.parse(code, filename)
         report[TOOL_NAME]['ast'] = parsed
     except SyntaxError as e:
-        syntax_error(e.lineno, e.filename, code, e.offset, e.text, e,
+        syntax_error(e.lineno, e.filename, code, e.offset, e,
                      sys.exc_info(), report=report, muted=muted)
         report[TOOL_NAME]['success'] = False
         report[TOOL_NAME]['ast'] = ast.parse("")

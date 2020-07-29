@@ -77,19 +77,19 @@ class TestCode(unittest.TestCase):
             """
             A TypeError occurred:
 
-<pre>Unsupported operand type(s) for +: 'int' and 'str'</pre>
+<pre class='pedal-exception'>Unsupported operand type(s) for +: 'int' and 'str'</pre>
 
-I ran the file `_sandbox_test_student.py`.
+I ran the file <code class='pedal-filename'>_sandbox_test_student.py</code>.
 
 The traceback was:
-  Line 1 of file _sandbox_test_student.py
-    1+'0'
-
+<div class='pedal-traceback'>Line 1 of file <code class='pedal-filename'>_sandbox_test_student.py</code>
+    <pre class='pedal-python-code'><code>1+'0'</code></pre>
+</div>
 
 Type errors occur when you use an operator or function on the wrong type of value. For example, using `+` to add to a list (instead of `.append`), or dividing a string by a number.
 
 Suggestion: To fix a type error, you should trace through your code. Make sure each expression has the type you expect it to have.
-            """.format(filename=TEST_FILENAME)).strip(), student.feedback.message)
+""".format(filename=TEST_FILENAME)).strip(), student.feedback.message)
 
     def test_error_context(self):
         student_code = dedent('''
@@ -105,18 +105,16 @@ Suggestion: To fix a type error, you should trace through your code. Make sure e
             """
             A ValueError occurred:
 
-<pre>Invalid literal for int() with base 10: 'banana'</pre>
+<pre class='pedal-exception'>Invalid literal for int() with base 10: 'banana'</pre>
 
 I ran the code:
-<pre>_ = get_input()</pre>
+<pre class='pedal-python-code'><code>get_input()</code></pre>
 
-And I entered as input:
-<pre>Banana</pre>
-
+And I entered as input:<pre class='pedal-inputs'>Banana</pre>
 The traceback was:
-  Line 3 of file student.py in get_input
-        return int(input("Gimme the number"))
-
+<div class='pedal-traceback'>Line 3 of file <code class='pedal-filename'>student.py</code> in <code class='pedal-frame'>get_input</code>
+    <pre class='pedal-python-code'><code>    return int(input("Gimme the number"))</code></pre>
+</div>
 
 A ValueError occurs when you pass the wrong type of value to a function. For example, you try to convert a string without numbers to an integer (like `int('Five')`).
 
@@ -282,11 +280,11 @@ Suggestion: Read the error message to see which function had the issue. Check wh
         student.run()
         result = student.call('do_math', 15, 20)
         self.assertEqual(result, 30)
-        self.assertEqual(['_ = do_math(15, 20)'],
+        self.assertEqual(['do_math(15, 20)'],
                          [context.code for context in student.get_context()])
         banana = student.call('Fruit', "Banana")
         self.assertIsInstance(banana, student.data['Fruit'])
-        self.assertEqual(["_ = Fruit('Banana')"],
+        self.assertEqual(["Fruit('Banana')"],
                          [context.code for context in student.get_context()])
         student.start_grouping_context()
         student.run()
@@ -300,7 +298,7 @@ Suggestion: Read the error message to see which function had the issue. Check wh
                           "orange = Fruit('Orange', 30)",
                           "pineapple = Fruit('Pineapple', 60)",
                           "fruits = [orange, pineapple]",
-                          "_ = weigh_fruits(fruits)"],
+                          "weigh_fruits(fruits)"],
                          [context.code for context in student.get_context()])
         # print(student.call('weigh_fruits', student.var['fruits']))
         # from pprint import pprint

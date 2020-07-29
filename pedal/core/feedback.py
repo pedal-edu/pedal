@@ -47,8 +47,11 @@ class Feedback:
             that the :py:attr:`~pedal.core.feedback.Feedback.label` should be used instead.
         message (str): A markdown-formatted message (aka also supporting HTML) that could be rendered
             to the user.
-        text (str): A console-friendly, plain-text message that could be rendered to the user.
-        fields (Dict[str,Any]): The raw data that was used to interpolate the template to produce the message.
+        message_template (str): A markdown-formatted message template that will
+            be used if a ``message`` is None. Any ``fields`` will be injected
+            into the template IF the ``condition`` is met.
+        fields (Dict[str,Any]): The raw data that was used to interpolate the
+            template to produce the message.
         location (:py:attr:`~pedal.core.location.Location` or int): Information
             about specific locations relevant to this message.
 
@@ -98,9 +101,7 @@ class Feedback:
     kind = None
     title = None
     message = None
-    text = None
     message_template = None
-    text_template = None
     priority = None
     valence = None
     location = None
@@ -118,8 +119,7 @@ class Feedback:
                  category=None, justification=None,
                  fields=None, field_names=None,
                  kind=None, title=None,
-                 message=None, text=None,
-                 message_template=None, text_template=None,
+                 message=None, message_template=None,
                  priority=None, valence=None,
                  location=None, score=None, correct=None,
                  muted=None, unscored=None,
@@ -160,17 +160,14 @@ class Feedback:
             self.title = label
         if message is not None:
             self.message = message
-        if text is not None:
-            self.text = text
         if message_template is not None:
             self.message_template = message_template
-        if text_template is not None:
-            self.text_template = text_template
 
         # Locations
         if isinstance(location, int):
             location = Location(location)
-        # TODO: Handle tuples (Line, Col) and (Filename, Line, Col), and possibly lists thereof
+        # TODO: Handle tuples (Line, Col) and (Filename, Line, Col), and
+        #  possibly lists thereof
         if location is not None:
             self.location = location
         # Result
@@ -206,10 +203,9 @@ class Feedback:
             self.fields['location'] = self.location
         # Self-attach to a given report?
         self._met_condition = self.condition(*args, **kwargs)
-        # Generate the message and text fields as needed
+        # Generate the message field as needed
         if self._met_condition:
             self.message = self._get_message()
-            self.text = self._get_text()
         if report is not None:
             if self._met_condition:
                 report.add_feedback(self)
@@ -230,8 +226,8 @@ class Feedback:
         """
         Determines the appropriate value for the message. It will attempt
         to use this instance's message, but if it's not available then it will
-        try to generate one from the message_template. Then, it falls back
-        to _get_text.
+        try to generate one from the message_template. Then, it returns a
+        generic message.
 
         Returns:
             str: The message for this feedback.
@@ -240,31 +236,7 @@ class Feedback:
             return self.message
         if self.message_template is not None:
             return self.message_template.format(**self.fields)
-        return self._get_text(False)
-
-    def _get_text(self, fallback_to_message=True):
-        """
-        Determines the appropriate value for the plaintext response. It will
-        attempt to use this instance's text, but if it's not available then it
-        will try to generate one from the text_template. Then, it falls back
-        to _get_message, unless the ``fallback_to_message`` parameter is False.
-
-        Args:
-            fallback_to_message (bool): Whether or not to try the message
-                instead if there's no text available.
-
-        Returns:
-            str: The text for this feedback.
-        """
-        if self.text is not None:
-            return self.text
-        if self.text_template is not None:
-            return self.text_template.format(**self.fields)
-        if fallback_to_message:
-            return self._get_message()
-        else:
-            # Simply no text to give!
-            return ""
+        return "No feedback message provided"
 
     def __bool__(self):
         return bool(self._met_condition)
@@ -332,4 +304,3 @@ def CompositeFeedbackFunction(*functions):
         CompositeFeedbackFunction_with_attrs.functions = functions
         return function
     return CompositeFeedbackFunction_with_attrs
-

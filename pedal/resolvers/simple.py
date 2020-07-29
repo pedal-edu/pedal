@@ -174,6 +174,6 @@ def resolve(report=MAIN_REPORT, priority_key=by_priority):
             final.label == 'set_success_no_errors' and final.category == Feedback.CATEGORIES.COMPLETE):
         # TODO: Promote to be its own atomic feedback function
         final.title = set_success.title
-        final.message = set_success.text_template()
+        final.message = set_success.message_template()
     report.result = final
     return final

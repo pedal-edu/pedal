@@ -2,6 +2,7 @@
 Generic runtime exception feedback class.
 """
 from pedal.core.location import Location
+from pedal.core.report import MAIN_REPORT
 from pedal.sandbox.data import format_contexts
 from pedal.utilities.exceptions import KeyError, get_exception_name
 from pedal.core.feedback import FeedbackResponse
@@ -10,7 +11,7 @@ from pedal.utilities.text import add_indefinite_article
 
 RUNTIME_ERROR_MESSAGE_HEADER = (
     "{exception_name} occurred:\n\n"
-    "<pre>{exception_message}</pre>\n\n"
+    "{exception_message}\n\n"
     "{context_message}\n"
     "The traceback was:\n{traceback_message}\n"
 )
@@ -43,6 +44,7 @@ class runtime_error(FeedbackResponse):
     message_template = RUNTIME_ERROR_MESSAGE_HEADER
 
     def __init__(self, exception, context, traceback, location, **kwargs):
+        report = kwargs.get('report', MAIN_REPORT)
         exception_name = get_exception_name(exception)
         exception_name_proper = add_indefinite_article(exception_name)
         exception_message = str(exception).capitalize()
@@ -52,16 +54,12 @@ class runtime_error(FeedbackResponse):
             title = EXCEPTION_FF_MAP[type(exception)].title
         location = Location(location)
         traceback_stack = traceback.build_traceback()
-        traceback_message = "\n".join([
-            (f"  Line {frame.lineno} of file {frame.filename}" +
-             (f" in {frame.name}\n" if frame.name != "<module>" else "\n") +
-             f"    {frame.line}\n")
-            for frame in traceback_stack
-        ])
-        context_message = format_contexts(context)
+        traceback_message = traceback.format_traceback(traceback_stack,
+                                                       report.format)
+        context_message = format_contexts(context, report.format)
         fields = {'exception': exception,
                   'exception_name': exception_name_proper,
-                  'exception_message': exception_message,
+                  'exception_message': report.format.exception(exception_message),
                   'location': location,
                   'traceback': traceback,
                   'traceback_stack': traceback_stack,

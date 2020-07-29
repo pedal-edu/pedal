@@ -532,7 +532,7 @@ class TestVariables(unittest.TestCase):
         self.assertNotIn('b', unset_variables)
         self.assertIn('c', unset_variables)
 
-    def test_weirdness(self):
+    def test_weirdness_used_function(self):
         tifa = pedal.tifa.Tifa()
         tifa.process_code('def a(x):\n    return x\na(1)')
         issues = tifa.report['tifa']['issues']
@@ -541,10 +541,12 @@ class TestVariables(unittest.TestCase):
         tifa = pedal.tifa.Tifa()
         tifa.process_code('def a(x):\n    return x\n')
         issues = tifa.report['tifa']['issues']
-        self.assertEqual(issues['unused_variable'][0].text,
-                         "The function `a` was given a definition on line 1, "
-                         "but was never used after that.")
+        self.assertEqual(issues['unused_variable'][0].message,
+                         "The function <code class='pedal-name'>a</code> was "
+                         "given a definition on line 1, but was never used "
+                         "after that.")
 
+    def test_weirdness_tate_import_example(self):
         tifa = pedal.tifa.Tifa()
         tifa.process_code(dedent('''
         import tate

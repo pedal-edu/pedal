@@ -83,12 +83,14 @@ class SandboxContext:
         self.submission = submission
 
 
-def format_contexts(contexts):
+def format_contexts(contexts, format):
     """
     Create a text string representation from a list of contexts.
 
     Args:
         contexts (list[SandboxContext]): The list of sandbox executions.
+        format (:py:class:`pedal.core.formatting.Formatter`): The formatter
+            to use to augment the context message.
 
     Returns:
         str: The string representation of the contexts.
@@ -97,15 +99,18 @@ def format_contexts(contexts):
     inputs_text = []
     for context in contexts:
         if context.filename in (None, context.submission.instructor_file):
-            execution_text.append(f"I ran the code:\n<pre>{context.code}</pre>\n")
+            code_message = format.python_code(context.code)
+            execution_text.append(f"I ran the code:\n{code_message}\n")
         else:
-            execution_text.append(f"I ran the file `{context.filename}`.\n")
+            filename_message = format.filename(context.filename)
+            execution_text.append(f"I ran the file {filename_message}.\n")
         inputs_text.extend(context.inputs)
     final_text = []
     final_text.extend(execution_text)
     if inputs_text:
         inputs = "\n".join(inputs_text)
-        final_text.append(f"And I entered as input:\n<pre>{inputs}</pre>\n")
+        inputs_message = format.inputs(inputs)
+        final_text.append(f"And I entered as input:{inputs_message}")
     return "\n".join(final_text)
 
 

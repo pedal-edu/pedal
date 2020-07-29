@@ -21,7 +21,8 @@ class Location:
             If missing, then defaults to the student's submission's main file.
     """
 
-    def __init__(self, line, col=None, end_line=None, end_col=None, filename=None):
+    def __init__(self, line, col=None, end_line=None, end_col=None,
+                 filename=None):
         self.line = line
         self.col = col
         self.end_line = end_line

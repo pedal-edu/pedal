@@ -1,3 +1,7 @@
+"""
+Utilities for handling exceptions across all of Pedal.
+"""
+
 import traceback
 import os
 import sys
@@ -93,9 +97,6 @@ class ExpandedTraceback:
                 was raised.
             full_traceback (bool): Whether or not to provide the full traceback
                 or just the parts relevant to students.
-            instructor_file (str): The name of the instructor file, which
-                can be used to avoid reporting instructor code in the
-                traceback.
         """
         self.line_offsets = line_offsets
         self.exception = exception
@@ -107,18 +108,9 @@ class ExpandedTraceback:
         self.original_code_lines = original_code_lines
         self.student_files = student_files
 
-    @staticmethod
-    def _clean_traceback_line(line):
-        return line #.replace(', in <module>', '', 1)
-
     def build_traceback(self):
         """
-
-        Args:
-            preamble:
-
-        Returns:
-
+        Filter out unnecessary frames
         """
         if not self.exception:
             return ""
@@ -136,16 +128,12 @@ class ExpandedTraceback:
                 if frame.lineno - 1 < len(self.original_code_lines):
                     frame._line = self.original_code_lines[frame.lineno - 1]
                 else:
-                    frame._line = "*line missing*"
+                    frame._line = "# *line missing*"
             else:
                 print(frame.filename, self.student_files, frame.lineno)
                 if frame.filename in self.student_files:
                     frame._line = self.student_files[frame.filename][frame.lineno-1]
         return [frame for frame in tb_e.stack]
-        #lines = [self._clean_traceback_line(line)
-        #         for line in tb_e.format()]
-        #lines.pop(0)
-        #return ''.join([preamble, "Traceback:\n", *lines])
 
     def _count_relevant_tb_levels(self, tb):
         length = 0
@@ -186,3 +174,26 @@ class ExpandedTraceback:
             return False
         # Okay, it's not a student related file
         return True
+
+    def format_traceback(self, traceback_stack, formatter):
+        """
+        Turn a stack of tracebacks into a message.
+
+        Args:
+            traceback_stack (list[Frame]): The actual traceback to format into
+                a message.
+            formatter (:py:class:`pedal.core.formatters.Formatter`): The
+                formatter to use to make the message.
+
+        Returns:
+            str: The text of the message.
+        """
+        traceback_message = "\n".join([
+            (f"Line {formatter.line(frame.lineno)}"
+             f" of file {formatter.filename(frame.filename)}" +
+             (f" in {formatter.frame(frame.name)}\n"
+              if frame.name != "<module>" else "\n") +
+             f"    {formatter.python_code(frame.line)}\n")
+            for frame in traceback_stack
+        ])
+        return formatter.traceback(traceback_message)
