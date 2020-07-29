@@ -14,7 +14,7 @@ allow you to make statements about the students' source code.
 
 Imported as::
 
-    from pedal.toolkit.utility import *
+    from pedal.cait.find_node import *
 
 .. function:: is_top_level(ast_node: CaitNode) -> bool
 
