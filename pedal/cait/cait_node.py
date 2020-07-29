@@ -150,8 +150,8 @@ class CaitNode:
                 return eval_binop(op_num, op_expr)
             if op_expr.ast_name == "UnaryOp":
                 return eval_unop(op_num, op_expr)
-            if op_expr.ast_name == "Num":
-                return op_expr.n
+            if op_expr.ast_name == "Constant":  # TODO: Make sure this actuall checks for a number
+                return op_expr.value
             raise NotImplementedError
 
         def eval_bool_comp(num_list, comp_ast):
@@ -225,16 +225,18 @@ class CaitNode:
 
         try:
             ins_expr = CaitNode(ast.parse(expr), report=self.report).body[0].value
-            ins_nums = ins_expr.find_all("Num")
-            std_nums = self.find_all("Num")
+            # ins_nums = ins_expr.find_all("Num")
+            # std_nums = self.find_all("Num")
+            ins_nums = ins_expr.find_all("Constant")
+            std_nums = self.find_all("Constant")
             test_nums = []
             for num in ins_nums:
-                raw_num = num.n
+                raw_num = num.value
                 test_nums.append(raw_num)
                 test_nums.append(raw_num + mag)
                 test_nums.append(raw_num - mag)
             for num in std_nums:
-                raw_num = num.n
+                raw_num = num.value
                 test_nums.append(raw_num)
                 test_nums.append(raw_num + mag)
                 test_nums.append(raw_num - mag)
