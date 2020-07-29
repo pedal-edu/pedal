@@ -3,18 +3,18 @@ This file is meant to be an idealized example of Pedal with a completely generic
 wants to customize everything without actually changing anything.
 """
 from pedal.core.submission import Submission
-from pedal.core.environment import Environment
+from pedal.environments.autograder import setup_pedal
 from pedal.core.resolver import Resolver
 
-autograder = Environment()
+autograder = setup_pedal()
 student_submission = Submission(files={'answer.py': 'print("Hello world!")'},
                                 user={"name": "Ada Lovelace"},
                                 assignment={"name": "#24.3 List Indexing in Functions"},
                                 course={"name": "Introduction to Computer Science"})
 
-MAIN_REPORT.contextualize(student_submission)
+contextualize_report(student_submission)
 
 from pedal.source import validate
+validate()
 
-resolver = Resolver()
-resolver.resolve()
+resolve()
