@@ -47,27 +47,6 @@ def _parse_source(code, report=MAIN_REPORT):
     return parsed
 
 
-def reset(report=MAIN_REPORT):
-    """
-
-    Args:
-        report:
-
-    Returns:
-
-    """
-    report[TOOL_NAME] = {
-        'success': True,
-        'error': None,
-        'ast': None,
-        'cache': {}
-    }
-    return report[TOOL_NAME]
-
-
-Report.register_tool(TOOL_NAME, reset)
-
-
 def reparse_if_needed(student_code=None, report=MAIN_REPORT):
     """
     Retrieves the current report for CAIT. If there is no CAIT report, it will
@@ -285,3 +264,24 @@ def find_expr_sub_matches(pattern, student_code, is_mod=False, report=MAIN_REPOR
     if (not is_node and not is_mod) and len(matcher.root_node.children) != 1:
         raise ValueError("pattern does not evaluate to a singular statement")
     return matcher.find_matches(student_code, check_meta=False)
+
+
+def reset(report=MAIN_REPORT):
+    """
+
+    Args:
+        report:
+
+    Returns:
+
+    """
+    report[TOOL_NAME] = {
+        'success': True,
+        'error': None,
+        'ast': None,
+        'cache': {}
+    }
+    return report[TOOL_NAME]
+
+
+Report.register_tool(TOOL_NAME, reset)

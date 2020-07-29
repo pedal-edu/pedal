@@ -1,3 +1,6 @@
+"""
+The main Stretchy Tree Matching algorithm, implemented as a class.
+"""
 import ast
 import re
 from pedal.cait.ast_map import AstMap
@@ -34,21 +37,18 @@ def _name_regex(name_id):
 
 class StretchyTreeMatcher:
     """
+    The StretchyTreeMatcher is used to compare a pattern against some
+    student code. It produces a set of potential mappings between them.
 
+    Args:
+        ast_or_code (str or AstNode): The students' code or a valid AstNode from
+            `ast.parse`. If the code has invalid syntax, a SyntaxError
+            will be raised.
+        filename (str): The filename to parse with - only used for error
+            reporting.
+        report (Report): A report to obtain data from.
     """
     def __init__(self, ast_or_code, report, filename="__main__"):
-        """
-        The StretchyTreeMatcher is used to compare a pattern against some
-        student code. It produces a set of potential mappings between them.
-
-        Args:
-            ast_or_code (str or AstNode): The students' code or a valid AstNode from
-                `ast.parse`. If the code has invalid syntax, a SyntaxError
-                will be raised.
-            filename (str): The filename to parse with - only used for error
-                reporting.
-            report (Report): A report to obtain data from.
-        """
         self.report = report
         if isinstance(ast_or_code, str):
             ast_node = ast.parse(ast_or_code, filename)

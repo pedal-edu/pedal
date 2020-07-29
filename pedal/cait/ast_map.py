@@ -1,3 +1,7 @@
+"""
+This module contains AstSymbol, AstSymbolList, and AstMap, three classes
+that are used to model names and matched expressions.
+"""
 from pedal.cait.cait_node import CaitNode
 from pedal.core.location import Location
 

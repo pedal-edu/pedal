@@ -1,3 +1,7 @@
+"""
+Helper functions for traversing through the code structure.
+"""
+
 from pedal.cait import parse_program
 from pedal.core.report import MAIN_REPORT
 from pedal.utilities.operators import COMPARE_OP_NAMES, BOOL_OP_NAMES, BIN_OP_NAMES, UNARY_OP_NAMES

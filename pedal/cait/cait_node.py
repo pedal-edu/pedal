@@ -1,3 +1,6 @@
+"""
+Module for the CaitNode class, which wraps AST nodes.
+"""
 import ast
 from pedal.cait.ast_helpers import dump
 from types import MethodType
@@ -9,12 +12,10 @@ from pedal.core.report import MAIN_REPORT
 class CaitNode:
     """
     A wrapper class for AST nodes. Linearizes access to the children of the ast
-    node and saves the field this AST node
-    originated from.
+    node and saves the field this AST node originated from.
 
     Attributes:
-        ast_name (str): The name of the original AstNode (e.g., "Name" or
-            "FunctionDef")
+        ast_node (ast.AST): The original AstNode.
 
     TODO: May want to just add fields and methods to the existing AST nodes and
     use a production pattern instead.
@@ -635,6 +636,7 @@ class CaitNode:
             pedal.core.Location: The location of this node.
         """
         return Location(self.astNode.lineno, col=self.astNode.col_offset)
+
 
 AST_SINGLE_FUNCTIONS = ["ctx_name", "op_name"]
 AST_ARRAYS_OF_FUNCTIONS = ["ops_names"]
