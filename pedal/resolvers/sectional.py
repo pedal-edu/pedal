@@ -35,9 +35,9 @@ def resolve(report=None, priority_key=None):
                 continue
             elif feedback.label.lower() in suppressions[category]:
                 continue
-        success, partial, message, data = simple.parse_feedback(feedback)
+        success, partial, message, title, data = simple.parse_feedback(feedback)
         final_success = success or final_success
-        final_score += partial
+        final_score += partial if partial else 0
         if message is not None:
             #print("RESETING GROUP", group, message[:20], found_failure, feedback.priority)
             if group not in finals:

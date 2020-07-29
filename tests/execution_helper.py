@@ -29,18 +29,21 @@ class Execution:
     """
 
     """
-    def __init__(self, code, tracer_style='none', old_style_messages=False, report=MAIN_REPORT):
+    def __init__(self, code, tracer_style='none', old_style_messages=False,
+                 run_tifa=True, report=MAIN_REPORT):
         self.code = code
         self.tracer_style = tracer_style
         self.old_style_messages = old_style_messages
         self.report=report
         self.final = None
+        self.run_tifa = run_tifa
 
     def __enter__(self):
         clear_report(report=self.report)
         contextualize_report(self.code, report=self.report)
         verify(report=self.report)
-        tifa_analysis(report=self.report)
+        if self.run_tifa:
+            tifa_analysis(report=self.report)
         # TODO: Clean this up
         self.student = get_sandbox(self.report)
         self.student.report_exceptions_mode = True

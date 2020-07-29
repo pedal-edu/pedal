@@ -1,5 +1,6 @@
+from pedal.core.commands import gently
 from pedal.core.report import MAIN_REPORT
-from pedal.questions import _setup_questions, _name_hash
+from pedal.questions import _name_hash, SETTING_SHOW_CASE_DETAILS, load_question
 from pedal.questions.questions import show_question
 
 
@@ -28,7 +29,6 @@ class Pool:
         Returns:
 
         """
-        _setup_questions(self.report)
         if force is None:
             if self.seed is None:
                 force = self.report['questions']['seed']
@@ -64,7 +64,6 @@ def check_pool_exam(name, questions, force=None, seed=None, report=MAIN_REPORT):
         seed:
         report:
     """
-    _setup_questions(report)
     # Choose a question
     if force is None:
         if seed is None:

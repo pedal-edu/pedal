@@ -1,6 +1,8 @@
-import ast
+"""
+Functions for letting students organize their code into sections.
+"""
+
 import re
-import sys
 from pedal.core.report import MAIN_REPORT
 from pedal.source.constants import TOOL_NAME
 from pedal.source.feedbacks import not_enough_sections, incorrect_number_of_sections

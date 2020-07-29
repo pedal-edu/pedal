@@ -1,3 +1,9 @@
+"""
+Categories and Kinds are special enumerations that classify the feedback
+conditions and responses, respectively.
+"""
+
+
 class FeedbackCategory:
     """
     An Enumeration of feedback condition categories.
@@ -52,8 +58,6 @@ class FeedbackKind:
     Valence can vary between specific instances of a kind of feedback, but some tend to
     have a specific valence.
 
-    TODO: Rewrite the documentation below in the #: alternate style.
-
     Attributes:
         MISCONCEPTION (str): A description of the misconception that
             is believed to be in the student's mind, or perhaps the relevant concept from the
@@ -67,7 +71,7 @@ class FeedbackKind:
             hours, perhaps it is time to take a break?").
     """
     # Negative
-    MISCONCEPTION = "Misconception"
+    MISCONCEPTION: str = "Misconception"
     MISTAKE = "Mistake"
     HINT = "Hint"
     CONSTRAINT = "Constraint"
@@ -82,3 +86,4 @@ class FeedbackKind:
     # Neutral
     INSTRUCTIONAL = "Instructional"
     META = "Meta"
+

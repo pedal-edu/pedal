@@ -60,7 +60,7 @@ class SandboxCoverageTracer(SandboxBasicTracer):
         self.original = coverage.python.get_python_source
 
         def _get_source_correctly(reading_filename):
-            print(reading_filename, file=self.s)
+            #print(reading_filename, file=self.s)
             if reading_filename == self.filename:
                 return self.code
             else:

@@ -89,21 +89,17 @@ def reparse_if_needed(student_code=None, report=MAIN_REPORT):
             return cait
         else:
             student_ast = _parse_source(student_code, report=report)
-    # Try to steal parse from Source module, if available
-    elif report[SOURCE_TOOL_NAME]['success']:
-        # student_code = report[SOURCE_TOOL_NAME]['code']
-        #if student_code in cait['cache']:
-        #    cait['ast'] = cait['cache'][student_code]
-        #    return cait
-        #else:
-        #    student_ast = report[SOURCE_TOOL_NAME]['ast']
-        student_ast = report[SOURCE_TOOL_NAME]['ast']
     else:
         student_code = report.submission.main_code
+        # Have we already parsed this code?
         if student_code in cait['cache']:
             cait['ast'] = cait['cache'][student_code]
             return cait
-        student_ast = _parse_source(student_code, report=report)
+        # Try to steal parse from Source module, if available
+        if report[SOURCE_TOOL_NAME]['success']:
+            student_ast = report[SOURCE_TOOL_NAME]['ast']
+        else:
+            student_ast = _parse_source(student_code, report=report)
     cait['ast'] = cait['cache'][student_code] = CaitNode(student_ast, report=report)
     return cait
 
@@ -252,7 +248,7 @@ def find_matches(pattern, student_code=None, cut=False, report=MAIN_REPORT, prev
         cut (bool): Set to true to trim root to first branch
         prev_match (AstMap): If user wants to continue off of a previously found match
     Returns:
-        List[CaitNode]: All matching nodes for the given pattern.
+        list[pedal.cait.ast_map.AstMap]: All matching nodes for the given pattern.
     """
     cait_report = reparse_if_needed(student_code, report)
     if not cait_report['success']:

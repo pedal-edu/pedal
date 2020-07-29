@@ -204,9 +204,17 @@ class BlockedModule(MockModule):
     MODULE_NAME = "this module"
 
     def _generate_patches(self):
-        return {'__getattr__': self.prevent_module}
+        return {'__getattr__': self.getter}
 
-    def prevent_module(self, **kwargs):
+    def getter(self, key):
+        " If anything asks, we prevent the module. Except for __file__. "
+        # Needed to support coverage - it's okay to ask who I am.
+        if key == '__file__':
+            return self.MODULE_NAME
+        else:
+            self.prevent_module()
+
+    def prevent_module(self, *args, **kwargs):
         """
 
         Args:
@@ -235,9 +243,12 @@ class MockTurtle(MockModule):
 
     def _reset_turtles(self):
         self.calls = []
-
-    def __repr__(self):
-        return repr(self.plots)
+        
+    def _generate_patches(self):
+        return {'__getattr__': self._fake_call}
+        
+    def _fake_call(self, *args, **kwargs):
+        return 0
 
     '''
     def _generate_patches(self):

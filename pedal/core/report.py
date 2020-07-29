@@ -1,6 +1,18 @@
+"""
+File that holds the the Report class and the global MAIN_REPORT.
+
+Note that you can make other Reports, but that doesn't actually seem to be
+useful very often. Usually you want to just rely on the global MAIN_REPORT.
+"""
+
 __all__ = ['Report', 'MAIN_REPORT']
 
+from pedal.core.errors import PedalToolNotRegistered, PedalToolAlreadyRegistered
 from pedal.core.feedback_category import FeedbackCategory
+
+
+# TODO: Mechanism for checking whether a piece of feedback is in the report
+from pedal.core.tool import ToolRegistration
 
 
 class Report:
@@ -9,49 +21,59 @@ class Report:
     data that the Tool might want to provide for other tools.
 
     Attributes:
-        submission (:py:class:`~pedal.core.submission.Submission`): The contextualized submission information.
-        feedback (list of :py:class:`~pedal.core.feedback.Feedback`): The raw feedback generated for
-            this Report so far.
-        suppressions (list of tuple(str, str)): The categories and labels that have been suppressed so far.
+        submission (:py:class:`~pedal.core.submission.Submission`): The
+            contextualized submission information.
+        feedback (list[:py:class:`~pedal.core.feedback.Feedback`]): The raw
+            feedback generated for this Report so far.
+        suppressions (list[tuple[str, str]]): The categories and labels that
+            have been suppressed so far.
+        hiddens (set[str]): The parts of the final response that should be
+            hidden. This can globally hide the 'correct', 'score', etc.
         group (int or str): The label for the current group. Feedback given
             by a Tool will automatically receive the current `group`. This
             is used by the Source tool, for example, in order to group feedback
             by sections.
-        group_names (dict[group:str]): A printable, student-facing name for the
+        group_names (dict[group, str]): A printable, student-facing name for the
             group. When a group needs to be rendered out to the user, this
             will override whatever label was going to be presented instead.
-        group_order (sequence or callable or None): The mechanism to use to
-            order groups. If a sequence, the order will be inferred based on
-            the order of elements in the sequence. If a callable, the callable
-            will be used as a key function for `sort`. If `None`, then defaults
-            to the natural ordering of the groups. Defaults to `None`.
-        hooks (dict[str: list[callable]): A dictionary mapping events to
+        hooks (dict[str, list[callable]): A dictionary mapping events to
             a list of callable functions. Tools can register functions on
             hooks to have them executed when the event is triggered by another
             tool. For example, the Assertions tool has hooks on the Source tool
             to trigger assertion resolutions before advancing to next sections.
-        _tool_data (dict of str => any): Maps tool names to their data. The
+        _tool_data (dict[str, Any]): Maps tool names to their data. The
                                        namespace for a tool can be used to
                                        store whatever they want, but will
                                        probably be in a dictionary itself.
     """
-    group_order = None
-
+    #: dict[str, dict]: The
+    #: tools registered for this report, available via their names.
     TOOLS = {}
 
     def __init__(self):
         """
         Creates a new Report instance.
         """
-        self.clear()
+        self._tool_data = {}
+        self.feedback = []
+        self.suppressions = {}
+        self.suppressed_labels = []
+        self.hiddens = set()
+        self.group = None
+        self.group_names = {}
+        self.hooks = {}
+        self.submission = None
+        self.result = None
 
     def clear(self):
         """
-
+        Completely resets the entire report back to its starting form,
+        including deleting any attached submissions, tool data, and feedbacks/
         """
         self.feedback = []
         self.suppressions = {}
         self.suppressed_labels = []
+        self.hiddens = set()
         self._tool_data = {}
         self.group = None
         self.group_names = {}
@@ -61,40 +83,46 @@ class Report:
 
     def contextualize(self, submission):
         """
+        Attach the given submission to this report.
 
         Args:
-            submission:
+            submission (:py:class:`pedal.core.submission.Submission`): The
+                submission to attach to this report.
         """
         self.submission = submission
 
     def hide_correctness(self):
         """
-
+        Suppress the RESULT category entirely, so that the report doesn't
+        indicate whether or not the submission was correct.
+        TODO: Make this just a regular command.
         """
-        self.suppressions[FeedbackCategory.RESULT] = []
+        self.hiddens.add('correct')
+        self.hiddens.add('score')
 
     def add_feedback(self, feedback):
         """
         Attaches the given feedback object to this report.
 
         Args:
-            feedback:
+            feedback (:py:class:`~pedal.core.feedback.Feedback`): The feedback
+                object to attach.
 
         Returns:
-            :py:class:`~pedal.core.feedback.Feedback`: The attached feedback
+            :py:class:`~pedal.core.feedback.Feedback`: The attached feedback.
         """
         self.feedback.append(feedback)
         return feedback
 
-    def suppress(self, category=None, label=True, where=True):
+    def suppress(self, category=None, label=True):
         """
+        Suggest that an entire category or label within a category ignored by
+        the resolver.
+        TODO: Currently, only global suppression is supported.
+
         Args:
             category (str): The category of feedback to suppress.
             label (bool or str): A specific label to match against and suppress.
-            where (bool or group): Which group of report to localize the
-                suppression to. If instead `True` is passed, the suppression
-                occurs in every group globally.
-                TODO: Currently, only global suppression is supported.
         """
         if category is None:
             self.suppressed_labels.append(label)
@@ -143,14 +171,47 @@ class Report:
                 function(report=self)
 
     def __getitem__(self, tool_name):
+        """
+        Support retrieving a tool's data from the report using square bracket
+        syntax. So, for example, you can do `MAIN_REPORT['tifa']` and get its
+        data dictionary. If the tool has been registered, but not initialized
+        for this report, then the tool will be
+        :py:method:`pedal.core.tool.reset` first. Otherwise, throws an error
+        that the tool does not exist.
+
+        Args:
+            tool_name (str): The formal name of the tool, most likely specified
+                in its `constants.py` file.
+
+        Returns:
+            dict: The data associated with that tool.
+        """
         if tool_name not in self._tool_data:
-            self.TOOLS[tool_name]['reset'](report=self)
+            if tool_name not in self.TOOLS:
+                raise PedalToolNotRegistered(tool_name, list(self.TOOLS.keys()))
+            self.TOOLS[tool_name].reset(report=self)
         return self._tool_data[tool_name]
 
     def __setitem__(self, tool_name, value):
+        """
+        Update the tool's current data. Should largely not be used by anyone.
+        In fact, this could seriously damage the relationships between tools.
+
+        Args:
+            tool_name (str): The name of the tool.
+            value (dict): The new data to set as this tool's namespace.
+        """
         self._tool_data[tool_name] = value
 
     def __contains__(self, tool_name):
+        """
+        Determine if the given `tool_name` is available through this report.
+        Args:
+            tool_name (str): The name of a tool.
+
+        Returns:
+            bool: Whether the tool is available.
+        """
         return tool_name in self._tool_data
 
     @classmethod
@@ -165,11 +226,8 @@ class Report:
 
         """
         if tool_name in cls.TOOLS:
-            # TODO: More sophisticated exceptions
-            raise Exception("Tool namespace {} already registered.")
-        cls.TOOLS[tool_name] = {
-            'reset': reset_function
-        }
+            raise PedalToolAlreadyRegistered(tool_name)
+        cls.TOOLS[tool_name] = ToolRegistration(tool_name, reset_function)
 
 
 #: The global Report object. Meant to be used as a default singleton
@@ -178,3 +236,5 @@ class Report:
 #: default to this Report when no others are given.
 #: Ideally, the average instructor will never know this exists.
 MAIN_REPORT = Report()
+
+# TODO: Give a mechanism for "freezing" a report that you can keep around.

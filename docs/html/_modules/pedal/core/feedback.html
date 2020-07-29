@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,27 +11,29 @@
   
 
   
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
 </head>
@@ -48,7 +49,7 @@
           
 
           
-            <a href="../../../index.html" class="icon icon-home"> Pedal
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> Pedal
           
 
           
@@ -75,6 +76,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -100,6 +102,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -138,7 +141,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../../index.html">Module code</a> &raquo;</li>
         
@@ -162,11 +165,16 @@
 <span class="sd">Simple data classes for storing feedback to present to learners.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Feedback&#39;</span><span class="p">,</span> <span class="s1">&#39;FeedbackKind&#39;</span><span class="p">,</span> <span class="s1">&#39;FeedbackCategory&#39;</span><span class="p">,</span> <span class="s2">&quot;AtomicFeedbackFunction&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Feedback&#39;</span><span class="p">,</span> <span class="s1">&#39;FeedbackKind&#39;</span><span class="p">,</span> <span class="s1">&#39;FeedbackCategory&#39;</span><span class="p">,</span>
+           <span class="s2">&quot;AtomicFeedbackFunction&quot;</span><span class="p">,</span> <span class="s2">&quot;CompositeFeedbackFunction&quot;</span><span class="p">,</span>
+           <span class="s2">&quot;FeedbackResponse&quot;</span><span class="p">]</span>
 
-<span class="kn">from</span> <span class="nn">pedal.core.location</span> <span class="k">import</span> <span class="n">Location</span>
-<span class="kn">from</span> <span class="nn">pedal.core.report</span> <span class="k">import</span> <span class="n">MAIN_REPORT</span>
-<span class="kn">from</span> <span class="nn">pedal.core.feedback_category</span> <span class="k">import</span> <span class="n">FeedbackKind</span><span class="p">,</span> <span class="n">FeedbackCategory</span>
+<span class="kn">from</span> <span class="nn">pedal.core.location</span> <span class="kn">import</span> <span class="n">Location</span>
+<span class="kn">from</span> <span class="nn">pedal.core.report</span> <span class="kn">import</span> <span class="n">MAIN_REPORT</span>
+<span class="kn">from</span> <span class="nn">pedal.core.feedback_category</span> <span class="kn">import</span> <span class="n">FeedbackKind</span><span class="p">,</span> <span class="n">FeedbackCategory</span>
+
+<span class="n">PEDAL_DEVELOPERS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Austin Cory Bart &lt;acbart@udel.edu&gt;&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Luke Gusukuma &lt;lukesg08@vt.edu&gt;&quot;</span><span class="p">]</span>
 
 
 <div class="viewcode-block" id="Feedback"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.Feedback">[docs]</a><span class="k">class</span> <span class="nc">Feedback</span><span class="p">:</span>
@@ -174,10 +182,11 @@
 <span class="sd">    A class for storing raw feedback.</span>
 
 <span class="sd">    Attributes:</span>
-<span class="sd">        label (str): An internal name for this specific piece of feedback. The label</span>
-<span class="sd">            should be an underscore-separated string following the same conventions as</span>
-<span class="sd">            names in Python. They do not have to be globally unique, but labels should be</span>
-<span class="sd">            as unique as possible (especially within a category).</span>
+<span class="sd">        label (str): An internal name for this specific piece of feedback. The</span>
+<span class="sd">            label should be an underscore-separated string following the same</span>
+<span class="sd">            conventions as names in Python. They do not have to be globally</span>
+<span class="sd">            unique, but labels should be as unique as possible (especially</span>
+<span class="sd">            within a category).</span>
 <span class="sd">        tool (str, optional): An internal name for indicating the tool that created</span>
 <span class="sd">            this feedback. Should be taken directly from the Tool itself. If `None`, then</span>
 <span class="sd">            this was not created by a tool but directly by the control script.</span>
@@ -203,8 +212,8 @@
 <span class="sd">            to the user.</span>
 <span class="sd">        text (str): A console-friendly, plain-text message that could be rendered to the user.</span>
 <span class="sd">        fields (Dict[str,Any]): The raw data that was used to interpolate the template to produce the message.</span>
-<span class="sd">        locations (:obj:`list` of :py:attr:`~pedal.core.location.Location`): Information about specific locations</span>
-<span class="sd">            relevant to this message.</span>
+<span class="sd">        location (:py:attr:`~pedal.core.location.Location` or int): Information</span>
+<span class="sd">            about specific locations relevant to this message.</span>
 
 <span class="sd">        score (int): A numeric score to modify the students&#39; total score, indicating their overall performance.</span>
 <span class="sd">            It is ultimately up to the Resolver to decide how to combine all the different scores; a typical</span>
@@ -216,6 +225,8 @@
 <span class="sd">            default kinds of feedback, or perhaps feedback that is interesting for analysis but not pedagogically</span>
 <span class="sd">            helpful to give to the student. They will still contribute to overall score, but not to the correcntess</span>
 <span class="sd">            of the submission.</span>
+<span class="sd">        unscored (bool): Whether or not this piece of feedback contributes to</span>
+<span class="sd">            the score/correctness.</span>
 
 <span class="sd">        author (List[str]): A list of names/emails that indicate who created this piece of feedback. They can be</span>
 <span class="sd">            either names, emails, or combinations in the style of `&quot;Cory Bart &lt;acbart@udel.edu&gt;&quot;`.</span>
@@ -223,12 +234,17 @@
 <span class="sd">            digit should be incremented for small bug fixes/changes. The middle (second) digit should be used for more</span>
 <span class="sd">            serious and intense changes. The first digit should be incremented when changes are made on exposure to</span>
 <span class="sd">            learners or some other evidence-based motivation.</span>
-<span class="sd">        tags (List[str]): Any tags that you want to attach to this feedback.</span>
+<span class="sd">        tags (list[:py:class:`~pedal.core.tag.Tag`]): Any tags that you want to</span>
+<span class="sd">            attach to this feedback.</span>
 
 <span class="sd">        group (int or str): Information about what logical grouping within the submission this belongs to. Various</span>
 <span class="sd">            tools can chunk up a submission (e.g., by section), they can use this field to keep track of how that</span>
 <span class="sd">            decision was made. Resolvers can also use this information to organize feedback or to report multiple</span>
 <span class="sd">            categories.</span>
+<span class="sd">        report (:py:class:`~pedal.core.report.Report`): The Report object to</span>
+<span class="sd">            attach this feedback to. Defaults to MAIN_REPORT. Unspecified fields</span>
+<span class="sd">            will be filled in by inspecting the current Feedback Function</span>
+<span class="sd">            context.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">POSITIVE_VALENCE</span> <span class="o">=</span> <span class="mi">1</span>
@@ -237,44 +253,179 @@
     <span class="n">CATEGORIES</span> <span class="o">=</span> <span class="n">FeedbackCategory</span>
     <span class="n">KINDS</span> <span class="o">=</span> <span class="n">FeedbackKind</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">tool</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="s1">&#39;instructor&#39;</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;mistake&#39;</span><span class="p">,</span> <span class="n">justification</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">priority</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">valence</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">locations</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">score</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">correct</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">muted</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">author</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">group</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
-        <span class="c1"># Model</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="n">label</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tool</span> <span class="o">=</span> <span class="n">tool</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">category</span> <span class="o">=</span> <span class="n">category</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">kind</span> <span class="o">=</span> <span class="n">kind</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">justification</span> <span class="o">=</span> <span class="n">justification</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">priority</span> <span class="o">=</span> <span class="n">priority</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">valence</span> <span class="o">=</span> <span class="n">valence</span>
-        <span class="c1"># Presentation</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="n">title</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="n">message</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">text</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span> <span class="o">=</span> <span class="n">fields</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">locations</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
-            <span class="n">locations</span> <span class="o">=</span> <span class="p">[</span><span class="n">Location</span><span class="p">(</span><span class="n">locations</span><span class="p">)]</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">locations</span><span class="p">,</span> <span class="n">Location</span><span class="p">):</span>
-            <span class="n">locations</span> <span class="o">=</span> <span class="p">[</span><span class="n">locations</span><span class="p">]</span>
-        <span class="c1"># TODO: Handle tuples (Line, Col) and (Filename, Line, Col), and possibly lists thereof</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">locations</span> <span class="o">=</span> <span class="n">locations</span>
-        <span class="c1"># Result</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">score</span> <span class="o">=</span> <span class="n">score</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">correct</span> <span class="o">=</span> <span class="n">correct</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">muted</span> <span class="o">=</span> <span class="n">muted</span>
+    <span class="n">label</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">category</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">justification</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">fields</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">field_names</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">kind</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">message_template</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">text_template</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">priority</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">valence</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">location</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">score</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">correct</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">muted</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">unscored</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">tool</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">version</span> <span class="o">=</span> <span class="s1">&#39;1.0.0&#39;</span>
+    <span class="n">author</span> <span class="o">=</span> <span class="n">PEDAL_DEVELOPERS</span>
+    <span class="n">tags</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">group</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">category</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">justification</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">fields</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">field_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">kind</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">message</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">message_template</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">text_template</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">priority</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">valence</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">location</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">score</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">correct</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">muted</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">unscored</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">tool</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">author</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">tags</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">group</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">,</span>
+                 <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="c1"># Internal data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">report</span> <span class="o">=</span> <span class="n">report</span>
         <span class="c1"># Metadata</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">version</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">author</span> <span class="o">=</span> <span class="n">author</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tags</span> <span class="o">=</span> <span class="n">tags</span>
+        <span class="k">if</span> <span class="n">label</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="n">label</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="c1"># Condition</span>
+        <span class="k">if</span> <span class="n">category</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">category</span> <span class="o">=</span> <span class="n">category</span>
+        <span class="k">if</span> <span class="n">justification</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">justification</span> <span class="o">=</span> <span class="n">justification</span>
+        <span class="c1"># Response</span>
+        <span class="k">if</span> <span class="n">kind</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">kind</span> <span class="o">=</span> <span class="n">kind</span>
+        <span class="k">if</span> <span class="n">priority</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">priority</span> <span class="o">=</span> <span class="n">priority</span>
+        <span class="k">if</span> <span class="n">valence</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">valence</span> <span class="o">=</span> <span class="n">valence</span>
+
+        <span class="c1"># Presentation</span>
+        <span class="k">if</span> <span class="n">fields</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fields</span> <span class="o">=</span> <span class="n">fields</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fields</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="n">field_names</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">field_names</span> <span class="o">=</span> <span class="n">field_names</span>
+        <span class="k">if</span> <span class="n">title</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="n">title</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="n">label</span>
+        <span class="k">if</span> <span class="n">message</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="n">message</span>
+        <span class="k">if</span> <span class="n">text</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">text</span>
+        <span class="k">if</span> <span class="n">message_template</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">message_template</span> <span class="o">=</span> <span class="n">message_template</span>
+        <span class="k">if</span> <span class="n">text_template</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">text_template</span> <span class="o">=</span> <span class="n">text_template</span>
+
+        <span class="c1"># Locations</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="n">location</span> <span class="o">=</span> <span class="n">Location</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
+        <span class="c1"># TODO: Handle tuples (Line, Col) and (Filename, Line, Col), and possibly lists thereof</span>
+        <span class="k">if</span> <span class="n">location</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">location</span>
+        <span class="c1"># Result</span>
+        <span class="k">if</span> <span class="n">score</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">score</span> <span class="o">=</span> <span class="n">score</span>
+        <span class="k">if</span> <span class="n">correct</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">correct</span> <span class="o">=</span> <span class="n">correct</span>
+        <span class="k">if</span> <span class="n">muted</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">muted</span> <span class="o">=</span> <span class="n">muted</span>
+        <span class="k">if</span> <span class="n">unscored</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">unscored</span> <span class="o">=</span> <span class="n">unscored</span>
+        <span class="c1"># Metadata</span>
+        <span class="k">if</span> <span class="n">tool</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tool</span> <span class="o">=</span> <span class="n">tool</span>
+        <span class="k">if</span> <span class="n">version</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">version</span>
+        <span class="k">if</span> <span class="n">author</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">author</span> <span class="o">=</span> <span class="n">author</span>
+        <span class="k">if</span> <span class="n">tags</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tags</span> <span class="o">=</span> <span class="n">tags</span>
         <span class="c1"># Organizational</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">group</span> <span class="o">=</span> <span class="n">group</span>
+        <span class="k">if</span> <span class="n">group</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">group</span> <span class="o">=</span> <span class="n">group</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">field_names</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">field_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">field_names</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="n">field_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">field_name</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">if</span> <span class="s1">&#39;location&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;location&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span>
         <span class="c1"># Self-attach to a given report?</span>
-        <span class="k">if</span> <span class="n">report</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_met_condition</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="c1"># Generate the message and text fields as needed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_message</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_text</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">report</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_met_condition</span><span class="p">:</span>
             <span class="n">report</span><span class="o">.</span><span class="n">add_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Feedback.condition"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.Feedback.condition">[docs]</a>    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Detect if this feedback is present in the code.</span>
+<span class="sd">        Defaults to true.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: Always returns True by default.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+    <span class="k">def</span> <span class="nf">_get_message</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Determines the appropriate value for the message. It will attempt</span>
+<span class="sd">        to use this instance&#39;s message, but if it&#39;s not available then it will</span>
+<span class="sd">        try to generate one from the message_template. Then, it falls back</span>
+<span class="sd">        to _get_text.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: The message for this feedback.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">message</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">message_template</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">message_template</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_text</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_get_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fallback_to_message</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Determines the appropriate value for the plaintext response. It will</span>
+<span class="sd">        attempt to use this instance&#39;s text, but if it&#39;s not available then it</span>
+<span class="sd">        will try to generate one from the text_template. Then, it falls back</span>
+<span class="sd">        to _get_message, unless the ``fallback_to_message`` parameter is False.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            fallback_to_message (bool): Whether or not to try the message</span>
+<span class="sd">                instead if there&#39;s no text available.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: The text for this feedback.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">text</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">text</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">text_template</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">text_template</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">fallback_to_message</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_message</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Simply no text to give!</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__bool__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_met_condition</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a string representation of this piece of Feedback for quick, dev purposes.</span>
 <span class="sd">        Returns:</span>
@@ -282,7 +433,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="s2">&quot;&lt;Feedback (</span><span class="si">{}</span><span class="s2">,</span><span class="si">{}</span><span class="s2">)&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">category</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a string representation of this piece of Feedback that displays considerably more information.</span>
 <span class="sd">        Returns:</span>
@@ -300,48 +451,30 @@
         <span class="k">return</span> <span class="s2">&quot;Feedback(</span><span class="si">{}{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="AtomicFeedbackFunction"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.AtomicFeedbackFunction">[docs]</a><span class="k">def</span> <span class="nf">AtomicFeedbackFunction</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="s1">&#39;0.0.1&#39;</span><span class="p">,</span> <span class="n">message_template</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">text_template</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                           <span class="n">justification</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">muted</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="FeedbackResponse"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.FeedbackResponse">[docs]</a><span class="k">class</span> <span class="nc">FeedbackResponse</span><span class="p">(</span><span class="n">Feedback</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Decorator for feedback functions to indicate their intent.</span>
+<span class="sd">    An extension of :py:class:`~pedal.core.feedback.Feedback` that is meant</span>
+<span class="sd">    to indicate that the class should not have any condition behind its</span>
+<span class="sd">    response.</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="AtomicFeedbackFunction"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.AtomicFeedbackFunction">[docs]</a><span class="k">class</span> <span class="nc">AtomicFeedbackFunction</span><span class="p">(</span><span class="n">Feedback</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An extension of :py:class:`~pedal.core.feedback.Feedback` that is meant</span>
+<span class="sd">    to indicate that the class should have a condition and response.</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="CompositeFeedbackFunction"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.CompositeFeedbackFunction">[docs]</a><span class="k">def</span> <span class="nf">CompositeFeedbackFunction</span><span class="p">(</span><span class="o">*</span><span class="n">functions</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Decorator for functions that return multiple types of feedback functions.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        tags:</span>
-<span class="sd">        title:</span>
-<span class="sd">        text_template:</span>
-<span class="sd">        message_template:</span>
-<span class="sd">        version:</span>
-<span class="sd">        justification:</span>
+<span class="sd">        functions (callable): A list of callable functions.</span>
 
 <span class="sd">    Returns:</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">AtomicFeedbackFunction_with_attrs</span><span class="p">(</span><span class="n">function</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            function:</span>
-
-<span class="sd">        Returns:</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">function</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="n">title</span> <span class="k">if</span> <span class="n">title</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">function</span><span class="o">.</span><span class="vm">__name__</span>
-        <span class="n">function</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="n">function</span><span class="o">.</span><span class="vm">__name__</span>
-        <span class="n">function</span><span class="o">.</span><span class="n">tags</span> <span class="o">=</span> <span class="n">tags</span> <span class="k">if</span> <span class="n">tags</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[]</span>
-        <span class="n">function</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">version</span>
-        <span class="n">function</span><span class="o">.</span><span class="n">justification</span> <span class="o">=</span> <span class="n">justification</span>
-        <span class="n">function</span><span class="o">.</span><span class="n">message_template</span> <span class="o">=</span> <span class="n">message_template</span> <span class="ow">or</span> <span class="n">text_template</span>
-        <span class="n">function</span><span class="o">.</span><span class="n">text_template</span> <span class="o">=</span> <span class="n">text_template</span> <span class="ow">or</span> <span class="n">message_template</span>
-        <span class="n">function</span><span class="o">.</span><span class="n">muted</span> <span class="o">=</span> <span class="n">muted</span>
-        <span class="k">return</span> <span class="n">function</span>
-    <span class="k">return</span> <span class="n">AtomicFeedbackFunction_with_attrs</span></div>
-
-
-<span class="k">def</span> <span class="nf">CompositeFeedbackFunction</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-
-<span class="sd">    Returns:</span>
-
+<span class="sd">        callable: The decorated function.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">CompositeFeedbackFunction_with_attrs</span><span class="p">(</span><span class="n">function</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -352,11 +485,9 @@
 <span class="sd">        Returns:</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">CompositeFeedbackFunction_with_attrs</span><span class="o">.</span><span class="n">functions</span> <span class="o">=</span> <span class="n">functions</span>
         <span class="k">return</span> <span class="n">function</span>
-    <span class="k">return</span> <span class="n">CompositeFeedbackFunction_with_attrs</span>
-
-
-<span class="n">PEDAL_DEVELOPERS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Austin Cory Bart &lt;acbart@udel.edu&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot;Luke Gusukuma &lt;lukesg08@vt.edu&gt;&quot;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">CompositeFeedbackFunction_with_attrs</span></div>
 </pre></div>
 
            </div>
@@ -369,11 +500,19 @@
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright 2018, acbart, lukesg08
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -384,7 +523,6 @@
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

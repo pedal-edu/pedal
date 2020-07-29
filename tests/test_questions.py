@@ -18,9 +18,10 @@ from pedal.resolvers import sectional
 from pedal.questions import *
 from pedal.assertions import *
 
-from tests.execution_helper import Execution
+from tests.execution_helper import Execution, ExecutionTestCase
 
-class TestQuestions(unittest.TestCase):
+
+class TestQuestions(ExecutionTestCase):
 
     def test_choose_ask(self):
         with Execution('0') as e:
@@ -29,7 +30,7 @@ class TestQuestions(unittest.TestCase):
             question_B = Question("QB", "Create an if statement.", [])
             pool_1 = Pool("P1", [question_A, question_B])
             pool_1.choose().ask()
-        self.assertEqual(e.message, "Create a for loop.")
+        self.assertFeedback(e, "Show Question\nCreate a for loop.")
         
         with Execution('0') as e:
             set_seed(1)
@@ -37,7 +38,7 @@ class TestQuestions(unittest.TestCase):
             question_B = Question("QB", "Create an if statement.", [])
             pool_1 = Pool("P1", [question_A, question_B])
             pool_1.choose().ask()
-        self.assertEqual(e.message, "Create an if statement.")
+        self.assertFeedback(e, "Show Question\nCreate an if statement.")
     
     def test_exam_progress(self):
         def test_has_loop(question):
@@ -50,13 +51,13 @@ class TestQuestions(unittest.TestCase):
         question_B = Question("QB", "Create an if statement.", [])
         pool_1 = Pool("P1", [question_A, question_B])
         def test_variable(question):
-            student = run(report_exceptions=True)
+            student = run()
             if assertHas(student, "alpha", value=2):
                 question.answer()
         question_C = Question("QC", "Create a variable.", [test_variable])
         pool_2 = Pool("P2", [question_C])
         def test_second_variable(question):
-            student = run(report_exceptions=True)
+            student = run()
             student.report_exceptions_mode = True
             if assertHas(student, "beta", value=3):
                 question.answer()
@@ -95,11 +96,9 @@ class TestQuestions(unittest.TestCase):
         self.assertEqual(finals[0][1]['message'], "Create a variable.")
         self.assertEqual(finals[0][2]['message'], dedent("""
                Traceback:
-                 File "__main__.py", line 1
+                 File "answer.py", line 1
                    1 + ""
                TypeError: unsupported operand type(s) for +: 'int' and 'str'
-               
-               The error above occurred when I ran your file: __main__.py
                """).lstrip())
         # Tried writing some good code
         make_exam('for x in []: pass')

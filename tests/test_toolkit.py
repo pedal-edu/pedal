@@ -22,16 +22,6 @@ from pedal.toolkit.files import files_not_handled_correctly
 from pedal.toolkit.functions import (match_signature, output_test, unit_test,
                                      check_coverage, match_parameters)
 from pedal.toolkit.signatures import (function_signature)
-from pedal.toolkit.utilities import (is_top_level, function_prints,
-                                     no_nested_function_definitions,
-                                     find_function_calls, function_is_called,
-                                     only_printing_variables, prevent_literal,
-                                     find_prior_initializations,
-                                     prevent_unused_result, ensure_literal,
-                                     prevent_builtin_usage, find_operation,
-                                     prevent_advanced_iteration,
-                                     ensure_operation, prevent_operation,
-                                     ensure_assignment)
 from pedal.toolkit.imports import ensure_imports
 from pedal.toolkit.printing import ensure_prints
 from pedal.toolkit.plotting import check_for_plot, prevent_incorrect_plt
@@ -40,57 +30,66 @@ from tests.execution_helper import Execution, ExecutionTestCase
 
 class TestFiles(ExecutionTestCase):
 
-    def test_files_not_handled_correctly(self):
+    def test_files_not_closed(self):
         with Execution('open("not opened.txt")') as e:
             self.assertTrue(files_not_handled_correctly(1))
         self.assertFeedback(e, "Unclosed Files\nYou have not closed all the files you "
                                 "were supposed to.")
 
+    def test_files_closed_as_function(self):
         with Execution('open("not opened.txt")\nclose()') as e:
             self.assertTrue(files_not_handled_correctly(1))
         self.assertFeedback(e, "Close Is a Method\nYou have attempted to call "
-                                    "<code>close</code> as a function, but it is "
+                                    "`close` as a function, but it is "
                                     "actually a method of the file object.")
 
+    def test_files_open_without_filename(self):
         with Execution('open()') as e:
             self.assertTrue(files_not_handled_correctly(1))
-        self.assertEqual(e.final.message, "You have called the <code>open</code> "
+        self.assertEqual(e.final.message, "You have called the `open` "
                                     "function without any arguments. It needs a "
                                     "filename.")
 
+    def test_files_open_as_method(self):
         with Execution('"filename.txt".open()') as e:
             self.assertTrue(files_not_handled_correctly(1))
         self.assertEqual(e.final.message, "You have attempted to call "
-                                    "<code>open</code> as a method, but it is actually a "
+                                    "`open` as a method, but it is actually a "
                                     "built-in function.")
 
+    def test_files_not_all_files_opened(self):
         with Execution('a = open("A.txt")\na.close()') as e:
             self.assertTrue(files_not_handled_correctly(2))
         self.assertEqual(e.final.message, "You have not opened all the files you "
                                     "were supposed to.")
 
+    def test_files_too_many_opens(self):
         with Execution('a = open("A.txt")\nb = open("B.txt")'
                        '\na.close()\nb.close()') as e:
             self.assertTrue(files_not_handled_correctly(1))
         self.assertEqual(e.final.message, "You have opened more files than you "
                                     "were supposed to.")
 
+    def test_files_too_many_closes(self):
         with Execution('a = open("A.txt")\n\na.close()\na.close()') as e:
             self.assertTrue(files_not_handled_correctly(1))
         self.assertEqual(e.final.message, "You have closed more files than you "
                                     "were supposed to.")
 
+    def test_files_too_many_with_opens(self):
         with Execution('with open("A.txt") as out:\n  b = open("B.txt")'
                        '\n  b.close()') as e:
             self.assertTrue(files_not_handled_correctly(1))
         self.assertEqual(e.final.message, "You have opened more files than you "
                                     "were supposed to.")
 
+    def test_files_missing_filename(self):
         with Execution('with open("A.txt") as out:\n  print(out.read())') as e:
             self.assertTrue(files_not_handled_correctly("X.txt"))
         self.assertEqual(e.final.message, "You need the literal value "
-                                    "<code>'X.txt'</code> in your code.")
+                                    "`'X.txt'` in your code.")
 
+    def test_files_with_open_success(self):
         with Execution('with open("A.txt") as out:\n  print(out.read())') as e:
             self.assertFalse(files_not_handled_correctly("A.txt"))
             suppress(Feedback.CATEGORIES.RUNTIME)
@@ -261,17 +260,6 @@ class TestUtilities(unittest.TestCase):
             self.assertFalse(is_top_level(calls[1]))
         self.assertEqual(e.final.message, "No errors reported.")
 
-    def test_no_nested_function_definitions(self):
-        with Execution('if True:\n  def x():\n    pass\n  x()') as e:
-            self.assertFalse(no_nested_function_definitions())
-        self.assertEqual(e.final.message, "You have defined a function inside of "
-                                    "another block. For instance, you may have placed it "
-                                    "inside another function definition, or inside of a "
-                                    "loop. Do not nest your function definition!")
-        with Execution('if True:\n  pass\ndef x():\n  pass\nx()') as e:
-            self.assertTrue(no_nested_function_definitions())
-        self.assertEqual(e.final.message, "No errors reported.")
-
     def test_function_prints(self):
         # Function prints
         with Execution('def a(x):\n  print(x+1)\na(1)') as e:
@@ -305,13 +293,6 @@ class TestUtilities(unittest.TestCase):
             self.assertFalse(function_is_called('print'))
         self.assertEqual(e.final.message, "No errors reported.")
 
-    def test_only_printing_variables(self):
-        with Execution('a,b=0,1\nprint(a,b)') as e:
-            self.assertTrue(only_printing_variables())
-        with Execution('print(0,"True", True)') as e:
-            self.assertFalse(only_printing_variables())
-        with Execution('print(True)') as e:
-            self.assertFalse(only_printing_variables())
 
     def test_find_prior_initializations(self):
         with Execution('a=0\na\na=5\na') as e:
@@ -322,67 +303,9 @@ class TestUtilities(unittest.TestCase):
             priors = find_prior_initializations(ast.body[3].value)
             self.assertEqual(len(priors), 2)
 
-    def test_prevent_unused_result(self):
-        with Execution('a="H  "\na.strip()') as e:
-            prevent_unused_result()
-        self.assertEqual(e.final.message, "Remember! You cannot modify a string "
-                                    "directly. Instead, you should assign the result "
-                                    "back to the string variable.")
 
-        with Execution('a="H  "\nb=a.strip()\nb') as e:
-            prevent_unused_result()
-        self.assertEqual(e.final.message, "No errors reported.")
 
-        with Execution('a=[]\na.append(1)\na') as e:
-            prevent_unused_result()
-        self.assertEqual(e.final.message, "No errors reported.")
 
-    def test_prevent_builtin_usage(self):
-        with Execution('sum([1,2,3])') as e:
-            self.assertEqual(prevent_builtin_usage(['sum', 'min']), 'sum')
-        self.assertEqual(e.final.message, "You cannot use the builtin function "
-                                    "<code>sum</code>.")
-
-        with Execution('max([1,2,3])') as e:
-            self.assertIsNone(prevent_builtin_usage(['sum', 'min']))
-        self.assertEqual(e.final.message, "No errors reported.")
-
-    def test_prevent_literal(self):
-        with Execution('a = 5\na') as e:
-            self.assertEqual(prevent_literal(3, 4, 5), 5)
-        self.assertEqual(e.final.message, "Do not use the literal value "
-                                    "<code>5</code> in your code.")
-        with Execution('print("Hello")') as e:
-            self.assertEqual(prevent_literal("Hello"), "Hello")
-        self.assertEqual(e.final.message, "Do not use the literal value "
-                                    "<code>'Hello'</code> in your code.")
-        with Execution('print("Hello", 5)') as e:
-            self.assertFalse(prevent_literal("Fire", 3, 4))
-        self.assertEqual(e.final.message, "No errors reported.")
-        with Execution('a = -1+2\na') as e:
-            self.assertEqual(prevent_literal(3, 4, 5, -1), -1)
-        self.assertEqual(e.final.message, "Do not use the literal value "
-                                    "<code>-1</code> in your code.")
-
-    def test_ensure_literal(self):
-        with Execution('a = 5\na') as e:
-            self.assertEqual(ensure_literal(3, 4, 5), 3)
-        self.assertEqual(e.final.message, "You need the literal value "
-                                    "<code>3</code> in your code.")
-        with Execution('print("Hell")') as e:
-            self.assertEqual(ensure_literal("Hello"), "Hello")
-        self.assertEqual(e.final.message, "You need the literal value "
-                                    "<code>'Hello'</code> in your code.")
-        with Execution('print("Fire", 3, 4)') as e:
-            self.assertFalse(ensure_literal("Fire", 3, 4))
-        self.assertEqual(e.final.message, "No errors reported.")
-        with Execution('a = 5\na') as e:
-            self.assertEqual(ensure_literal(-5), -5)
-        self.assertEqual(e.final.message, "You need the literal value "
-                                    "<code>-5</code> in your code.")
-        with Execution('print("Fire2", 3, 4, -6)') as e:
-            self.assertFalse(ensure_literal("Fire2", 3, 4, -6))
-        self.assertEqual(e.final.message, "No errors reported.")
 
     def test_prevent_advanced_iteration(self):
         with Execution('while False:\n  pass') as e:

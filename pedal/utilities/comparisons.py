@@ -61,7 +61,7 @@ def _split_into_lolos(a_string) -> 'List[List[str]]':
 
     Returns: The list of list of strings
     """
-    return [list(line) for line in s.split("\n")]
+    return [list(line) for line in a_string.split("\n")]
 
 
 def _normalize_string(a_string, numeric_endings=False):

@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,27 +11,29 @@
   
 
   
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="prev" title="Toolkit" href="../developers/tools/toolkit.html" /> 
@@ -49,7 +50,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> Pedal
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> Pedal
           
 
           
@@ -76,6 +77,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -101,6 +103,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -139,7 +142,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../index.html">Docs</a> &raquo;</li>
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
       <li>Glossary</li>
     
@@ -163,68 +166,68 @@
   <div class="section" id="glossary">
 <h1>Glossary<a class="headerlink" href="#glossary" title="Permalink to this headline">¶</a></h1>
 <dl class="glossary simple">
-<dt id="term-submission">Submission</dt><dd><p>The learners’ code along with other relevant metadata about the learner, assignment, and course.</p>
+<dt id="term-Submission">Submission</dt><dd><p>The learners’ code along with other relevant metadata about the learner, assignment, and course.</p>
 </dd>
-<dt id="term-instructor-control-script">Instructor Control Script</dt><dd><p>A Python script authored by the instructor using the Pedal API that contains the grading logic.</p>
+<dt id="term-Instructor-Control-Script">Instructor Control Script</dt><dd><p>A Python script authored by the instructor using the Pedal API that contains the grading logic.</p>
 </dd>
-<dt id="term-feedback">Feedback</dt><dd><p>Information meant to be delivered to a learner because of an identified issue with their <a class="reference internal" href="#term-submission"><span class="xref std std-term">Submission</span></a>.
-Combines the concept of a <a class="reference internal" href="#term-feedback-condition"><span class="xref std std-term">Feedback Condition</span></a> and a <a class="reference internal" href="#term-feedback-response"><span class="xref std std-term">Feedback Response</span></a>.
+<dt id="term-Feedback">Feedback</dt><dd><p>Information meant to be delivered to a learner because of an identified issue with their <a class="reference internal" href="#term-Submission"><span class="xref std std-term">Submission</span></a>.
+Combines the concept of a <a class="reference internal" href="#term-Feedback-Condition"><span class="xref std std-term">Feedback Condition</span></a> and a <a class="reference internal" href="#term-Feedback-Response"><span class="xref std std-term">Feedback Response</span></a>.
 Technically speaking, a given Condition could warrant any number of possible responses; it is an open
 research question as to the best form of that Response. Often, the Response is the result of an inference
 of the learners’ mental state backing the concrete Condition that was detected.</p>
 </dd>
-<dt id="term-feedback-condition">Feedback Condition</dt><dd><p>The conditional logic that identified an issue in a <a class="reference internal" href="#term-submission"><span class="xref std std-term">Submission</span></a>.</p>
+<dt id="term-Feedback-Condition">Feedback Condition</dt><dd><p>The conditional logic that identified an issue in a <a class="reference internal" href="#term-Submission"><span class="xref std std-term">Submission</span></a>.</p>
 </dd>
-<dt id="term-feedback-response">Feedback Response</dt><dd><p>The message that should be delivered to a learner. We support two kinds of responses: a plain text response
+<dt id="term-Feedback-Response">Feedback Response</dt><dd><p>The message that should be delivered to a learner. We support two kinds of responses: a plain text response
 that should be suitable for command line environments (“text”), and a Markdown/HTML version that is suitable
 for web environments (“message”).</p>
 </dd>
-<dt id="term-feedback-function">Feedback Function</dt><dd><p>A function that has a side-effect of adding Feedback to the report, along with whatever other
+<dt id="term-Feedback-Function">Feedback Function</dt><dd><p>A function that has a side-effect of adding Feedback to the report, along with whatever other
 return values it produces. If a Feedback Function intentionally only involves a single kind of
-feedback that it attaches, we refer to it as an <a class="reference internal" href="#term-atomic-feedback-function"><span class="xref std std-term">Atomic Feedback Function</span></a> and there may be
-metadata attached. Otherwise, it would be a <a class="reference internal" href="#term-composite-feedback-function"><span class="xref std std-term">Composite Feedback Function</span></a> since it could produce
+feedback that it attaches, we refer to it as an <a class="reference internal" href="#term-Atomic-Feedback-Function"><span class="xref std std-term">Atomic Feedback Function</span></a> and there may be
+metadata attached. Otherwise, it would be a <a class="reference internal" href="#term-Composite-Feedback-Function"><span class="xref std std-term">Composite Feedback Function</span></a> since it could produce
 several possible pieces of Feedback. Either way, the codebase attempts to document when a given
 function is also a Feedback Function.</p>
 </dd>
-<dt id="term-feedback-label">Feedback Label</dt><dd><p>An identifier for feedback. Labels are meant to be unique within a given <a class="reference internal" href="#term-feedback-category"><span class="xref std std-term">Feedback Category</span></a>, but
+<dt id="term-Feedback-Label">Feedback Label</dt><dd><p>An identifier for feedback. Labels are meant to be unique within a given <a class="reference internal" href="#term-Feedback-Category"><span class="xref std std-term">Feedback Category</span></a>, but
 they do not necessarily correspond to a specific response (especially since those can be overridden).
 The label is really identifying the condition, not the response. Tools need to do some amount of
 coordination to avoid stepping on each other’s labels.</p>
 </dd>
-<dt id="term-report">Report</dt><dd><p>A centralized container for Feedback and the results of each <a class="reference internal" href="#term-tool"><span class="xref std std-term">Tool</span></a>. The data for a tool is namespaced by the
-name of the tool. By default, a given <a class="reference internal" href="#term-feedback-function"><span class="xref std std-term">Feedback Function</span></a> add <a class="reference internal" href="#term-feedback"><span class="xref std std-term">Feedback</span></a> to the <a class="reference internal" href="#term-main-report"><span class="xref std std-term">Main Report</span></a>, although
-technically a system can use another report instead. Reports are eventually given to a <a class="reference internal" href="#term-resolver"><span class="xref std std-term">Resolver</span></a> to
+<dt id="term-Report">Report</dt><dd><p>A centralized container for Feedback and the results of each <a class="reference internal" href="#term-Tool"><span class="xref std std-term">Tool</span></a>. The data for a tool is namespaced by the
+name of the tool. By default, a given <a class="reference internal" href="#term-Feedback-Function"><span class="xref std std-term">Feedback Function</span></a> add <a class="reference internal" href="#term-Feedback"><span class="xref std std-term">Feedback</span></a> to the <a class="reference internal" href="#term-Main-Report"><span class="xref std std-term">Main Report</span></a>, although
+technically a system can use another report instead. Reports are eventually given to a <a class="reference internal" href="#term-Resolver"><span class="xref std std-term">Resolver</span></a> to
 be condensed into some coherent response for the learner. Reports can allow feedback to be suppressed,
 and have a few other useful features.</p>
 </dd>
-<dt id="term-main-report">Main Report</dt><dd><p>A global singleton used as the default <a class="reference internal" href="#term-report"><span class="xref std std-term">Report</span></a>. Meant as a convenience, since most of the time grading
+<dt id="term-Main-Report">Main Report</dt><dd><p>A global singleton used as the default <a class="reference internal" href="#term-Report"><span class="xref std std-term">Report</span></a>. Meant as a convenience, since most of the time grading
 scripts are written with the expectation that only a single Report is being generated.</p>
 </dd>
-<dt id="term-tool">Tool</dt><dd><p>A submodule that can read and write to a <a class="reference internal" href="#term-report"><span class="xref std std-term">Report</span></a>, potentially building on previous Tools.</p>
+<dt id="term-Tool">Tool</dt><dd><p>A submodule that can read and write to a <a class="reference internal" href="#term-Report"><span class="xref std std-term">Report</span></a>, potentially building on previous Tools.</p>
 </dd>
-<dt id="term-resolver">Resolver</dt><dd><p>A system that can analyze a Report and create a relevant bit of output for an <a class="reference internal" href="#term-environment"><span class="xref std std-term">Environment</span></a>.</p>
+<dt id="term-Resolver">Resolver</dt><dd><p>A system that can analyze a Report and create a relevant bit of output for an <a class="reference internal" href="#term-Environment"><span class="xref std std-term">Environment</span></a>.</p>
 </dd>
-<dt id="term-environment">Environment</dt><dd><p>Specific configuration for an autograding environment that is hosting Pedal, such as
+<dt id="term-Environment">Environment</dt><dd><p>Specific configuration for an autograding environment that is hosting Pedal, such as
 <cite>BlockPy &lt;https://blockpy.com&gt;</cite>, <cite>WebCAT &lt;https://web-cat.cs.vt.edu/&gt;</cite>, or
 <cite>GradeScope &lt;https://www.gradescope.com/&gt;</cite>. The Environment can take care of running common
 setup functions for tools and providing the instructor with a simpler interface, as well as
-adjusting the <a class="reference internal" href="#term-submission"><span class="xref std std-term">Submission</span></a> and <a class="reference internal" href="#term-resolver"><span class="xref std std-term">Resolver</span></a> output as needed for the autograder itself.</p>
+adjusting the <a class="reference internal" href="#term-Submission"><span class="xref std std-term">Submission</span></a> and <a class="reference internal" href="#term-Resolver"><span class="xref std std-term">Resolver</span></a> output as needed for the autograder itself.</p>
 </dd>
-<dt id="term-feedback-category">Feedback Category</dt><dd><p>We organize feedback in several ways, including the distinct types of feedback conditions
+<dt id="term-Feedback-Category">Feedback Category</dt><dd><p>We organize feedback in several ways, including the distinct types of feedback conditions
 based on their presence within the students’ submission. These categories include “Syntax”,
 “Runtime”, “Style”, and several others.</p>
 </dd>
-<dt id="term-feedback-kind">Feedback Kind</dt><dd><p>Another way we organize feedback is by its pedagogical role. This reflects the way that the
+<dt id="term-Feedback-Kind">Feedback Kind</dt><dd><p>Another way we organize feedback is by its pedagogical role. This reflects the way that the
 Feedback Response has been written. These kinds include “Mistake”, “Misconception”, “Hint”,
 and several others. Different kinds may have an implicit valence.</p>
 </dd>
-<dt id="term-atomic-feedback-function">Atomic Feedback Function</dt><dd><p>A <a class="reference internal" href="#term-feedback-function"><span class="xref std std-term">Feedback Function</span></a> that returns no more than one type of feedback (as determined by the
+<dt id="term-Atomic-Feedback-Function">Atomic Feedback Function</dt><dd><p>A <a class="reference internal" href="#term-Feedback-Function"><span class="xref std std-term">Feedback Function</span></a> that returns no more than one type of feedback (as determined by the
 Label). Such functions can be decorated with the <a class="reference internal" href="../developers/api.html#pedal.core.feedback.AtomicFeedbackFunction" title="pedal.core.feedback.AtomicFeedbackFunction"><code class="xref py py-func docutils literal notranslate"><span class="pre">AtomicFeedbackFunction()</span></code></a>
 decorator to have additional meta information. It is not required that an Atomic Feedback Function
 always returns its type of feedback (i.e., it can do some checks to determine if the scenario exists).
 Typically, the name of the function is the same as its label.</p>
 </dd>
-<dt id="term-composite-feedback-function">Composite Feedback Function</dt><dd><p>A <a class="reference internal" href="#term-feedback-function"><span class="xref std std-term">Feedback Function</span></a> that potentially returns more than one type of feedback. This is not
+<dt id="term-Composite-Feedback-Function">Composite Feedback Function</dt><dd><p>A <a class="reference internal" href="#term-Feedback-Function"><span class="xref std std-term">Feedback Function</span></a> that potentially returns more than one type of feedback. This is not
 a required tag, but helps provide more metadata about the possible kinds of feedback that a given
 function returns.</p>
 </dd>
@@ -249,11 +252,19 @@ function returns.</p>
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright 2018, acbart, lukesg08
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -264,7 +275,6 @@ function returns.</p>
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

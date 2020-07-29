@@ -2,11 +2,16 @@
 Simple data classes for storing feedback to present to learners.
 """
 
-__all__ = ['Feedback', 'FeedbackKind', 'FeedbackCategory', "AtomicFeedbackFunction"]
+__all__ = ['Feedback', 'FeedbackKind', 'FeedbackCategory',
+           "AtomicFeedbackFunction", "CompositeFeedbackFunction",
+           "FeedbackResponse"]
 
 from pedal.core.location import Location
 from pedal.core.report import MAIN_REPORT
 from pedal.core.feedback_category import FeedbackKind, FeedbackCategory
+
+PEDAL_DEVELOPERS = ["Austin Cory Bart <acbart@udel.edu>",
+                    "Luke Gusukuma <lukesg08@vt.edu>"]
 
 
 class Feedback:
@@ -14,10 +19,11 @@ class Feedback:
     A class for storing raw feedback.
 
     Attributes:
-        label (str): An internal name for this specific piece of feedback. The label
-            should be an underscore-separated string following the same conventions as
-            names in Python. They do not have to be globally unique, but labels should be
-            as unique as possible (especially within a category).
+        label (str): An internal name for this specific piece of feedback. The
+            label should be an underscore-separated string following the same
+            conventions as names in Python. They do not have to be globally
+            unique, but labels should be as unique as possible (especially
+            within a category).
         tool (str, optional): An internal name for indicating the tool that created
             this feedback. Should be taken directly from the Tool itself. If `None`, then
             this was not created by a tool but directly by the control script.
@@ -43,8 +49,8 @@ class Feedback:
             to the user.
         text (str): A console-friendly, plain-text message that could be rendered to the user.
         fields (Dict[str,Any]): The raw data that was used to interpolate the template to produce the message.
-        locations (:obj:`list` of :py:attr:`~pedal.core.location.Location`): Information about specific locations
-            relevant to this message.
+        location (:py:attr:`~pedal.core.location.Location` or int): Information
+            about specific locations relevant to this message.
 
         score (int): A numeric score to modify the students' total score, indicating their overall performance.
             It is ultimately up to the Resolver to decide how to combine all the different scores; a typical
@@ -56,6 +62,8 @@ class Feedback:
             default kinds of feedback, or perhaps feedback that is interesting for analysis but not pedagogically
             helpful to give to the student. They will still contribute to overall score, but not to the correcntess
             of the submission.
+        unscored (bool): Whether or not this piece of feedback contributes to
+            the score/correctness.
 
         author (List[str]): A list of names/emails that indicate who created this piece of feedback. They can be
             either names, emails, or combinations in the style of `"Cory Bart <acbart@udel.edu>"`.
@@ -63,12 +71,17 @@ class Feedback:
             digit should be incremented for small bug fixes/changes. The middle (second) digit should be used for more
             serious and intense changes. The first digit should be incremented when changes are made on exposure to
             learners or some other evidence-based motivation.
-        tags (List[str]): Any tags that you want to attach to this feedback.
+        tags (list[:py:class:`~pedal.core.tag.Tag`]): Any tags that you want to
+            attach to this feedback.
 
         group (int or str): Information about what logical grouping within the submission this belongs to. Various
             tools can chunk up a submission (e.g., by section), they can use this field to keep track of how that
             decision was made. Resolvers can also use this information to organize feedback or to report multiple
             categories.
+        report (:py:class:`~pedal.core.report.Report`): The Report object to
+            attach this feedback to. Defaults to MAIN_REPORT. Unspecified fields
+            will be filled in by inspecting the current Feedback Function
+            context.
     """
 
     POSITIVE_VALENCE = 1
@@ -77,42 +90,178 @@ class Feedback:
     CATEGORIES = FeedbackCategory
     KINDS = FeedbackKind
 
-    def __init__(self, label, tool=None, category='instructor', kind='mistake', justification=None,
-                 priority=None, valence=-1, title=None, message=None, text=None, fields=None,
-                 locations=None, score=None, correct=None, muted=None, version=None, author=None, tags=None,
-                 group=None, report=MAIN_REPORT):
-        # Model
-        self.label = label
-        self.tool = tool
-        self.category = category
-        self.kind = kind
-        self.justification = justification
-        self.priority = priority
-        self.valence = valence
-        # Presentation
-        self.title = title
-        self.message = message
-        self.text = text
-        self.fields = fields
-        if isinstance(locations, int):
-            locations = [Location(locations)]
-        elif isinstance(locations, Location):
-            locations = [locations]
-        # TODO: Handle tuples (Line, Col) and (Filename, Line, Col), and possibly lists thereof
-        self.locations = locations
-        # Result
-        self.score = score
-        self.correct = correct
-        self.muted = muted
+    label = None
+    category = None
+    justification = None
+    fields = None
+    field_names = None
+    kind = None
+    title = None
+    message = None
+    text = None
+    message_template = None
+    text_template = None
+    priority = None
+    valence = None
+    location = None
+    score = None
+    correct = None
+    muted = None
+    unscored = None
+    tool = None
+    version = '1.0.0'
+    author = PEDAL_DEVELOPERS
+    tags = None
+    group = None
+
+    def __init__(self, *args, label=None,
+                 category=None, justification=None,
+                 fields=None, field_names=None,
+                 kind=None, title=None,
+                 message=None, text=None,
+                 message_template=None, text_template=None,
+                 priority=None, valence=None,
+                 location=None, score=None, correct=None,
+                 muted=None, unscored=None,
+                 tool=None, version=None, author=None,
+                 tags=None,
+                 group=None, report=MAIN_REPORT,
+                 **kwargs):
+        # Internal data
+        self.report = report
         # Metadata
-        self.version = version
-        self.author = author
-        self.tags = tags
+        if label is not None:
+            self.label = label
+        else:
+            self.label = self.__class__.__name__
+        # Condition
+        if category is not None:
+            self.category = category
+        if justification is not None:
+            self.justification = justification
+        # Response
+        if kind is not None:
+            self.kind = kind
+        if priority is not None:
+            self.priority = priority
+        if valence is not None:
+            self.valence = valence
+
+        # Presentation
+        if fields is not None:
+            self.fields = fields
+        else:
+            self.fields = {}
+        if field_names is not None:
+            self.field_names = field_names
+        if title is not None:
+            self.title = title
+        elif self.title is None:
+            self.title = label
+        if message is not None:
+            self.message = message
+        if text is not None:
+            self.text = text
+        if message_template is not None:
+            self.message_template = message_template
+        if text_template is not None:
+            self.text_template = text_template
+
+        # Locations
+        if isinstance(location, int):
+            location = Location(location)
+        # TODO: Handle tuples (Line, Col) and (Filename, Line, Col), and possibly lists thereof
+        if location is not None:
+            self.location = location
+        # Result
+        if score is not None:
+            self.score = score
+        if correct is not None:
+            self.correct = correct
+        if muted is not None:
+            self.muted = muted
+        if unscored is not None:
+            self.unscored = unscored
+        # Metadata
+        if tool is not None:
+            self.tool = tool
+        if version is not None:
+            self.version = version
+        if author is not None:
+            self.author = author
+        if tags is not None:
+            self.tags = tags
         # Organizational
-        self.group = group
+        if group is not None:
+            self.group = group
+        if self.field_names is not None:
+            for field_name in self.field_names:
+                self.fields[field_name] = kwargs.get(field_name)
+        for key, value in kwargs.items():
+            self.fields[key] = value
+        if 'location' not in self.fields and self.location is not None:
+            self.fields['location'] = self.location
         # Self-attach to a given report?
-        if report is not None:
+        self._met_condition = self.condition(*args, **kwargs)
+        # Generate the message and text fields as needed
+        if self._met_condition:
+            self.message = self._get_message()
+            self.text = self._get_text()
+        if report is not None and self._met_condition:
             report.add_feedback(self)
+
+    def condition(self, *args, **kwargs):
+        """
+        Detect if this feedback is present in the code.
+        Defaults to true.
+
+        Returns:
+            bool: Always returns True by default.
+        """
+        return True
+
+    def _get_message(self):
+        """
+        Determines the appropriate value for the message. It will attempt
+        to use this instance's message, but if it's not available then it will
+        try to generate one from the message_template. Then, it falls back
+        to _get_text.
+
+        Returns:
+            str: The message for this feedback.
+        """
+        if self.message is not None:
+            return self.message
+        if self.message_template is not None:
+            return self.message_template.format(**self.fields)
+        return self._get_text(False)
+
+    def _get_text(self, fallback_to_message=True):
+        """
+        Determines the appropriate value for the plaintext response. It will
+        attempt to use this instance's text, but if it's not available then it
+        will try to generate one from the text_template. Then, it falls back
+        to _get_message, unless the ``fallback_to_message`` parameter is False.
+
+        Args:
+            fallback_to_message (bool): Whether or not to try the message
+                instead if there's no text available.
+
+        Returns:
+            str: The text for this feedback.
+        """
+        if self.text is not None:
+            return self.text
+        if self.text_template is not None:
+            return self.text_template.format(**self.fields)
+        if fallback_to_message:
+            return self._get_message()
+        else:
+            # Simply no text to give!
+            return ""
+
+    def __bool__(self):
+        return bool(self._met_condition)
 
     def __str__(self):
         """
@@ -140,48 +289,30 @@ class Feedback:
         return "Feedback({}{})".format(self.label, metadata)
 
 
-def AtomicFeedbackFunction(title=None, version='0.0.1', message_template=None, text_template=None,
-                           justification=None, tags=None, muted=None):
+class FeedbackResponse(Feedback):
     """
-    Decorator for feedback functions to indicate their intent.
+    An extension of :py:class:`~pedal.core.feedback.Feedback` that is meant
+    to indicate that the class should not have any condition behind its
+    response.
+    """
+
+
+class AtomicFeedbackFunction(Feedback):
+    """
+    An extension of :py:class:`~pedal.core.feedback.Feedback` that is meant
+    to indicate that the class should have a condition and response.
+    """
+
+
+def CompositeFeedbackFunction(*functions):
+    """
+    Decorator for functions that return multiple types of feedback functions.
 
     Args:
-        tags:
-        title:
-        text_template:
-        message_template:
-        version:
-        justification:
+        functions (callable): A list of callable functions.
 
     Returns:
-
-    """
-    def AtomicFeedbackFunction_with_attrs(function):
-        """
-
-        Args:
-            function:
-
-        Returns:
-
-        """
-        function.title = title if title is not None else function.__name__
-        function.label = function.__name__
-        function.tags = tags if tags is not None else []
-        function.version = version
-        function.justification = justification
-        function.message_template = message_template or text_template
-        function.text_template = text_template or message_template
-        function.muted = muted
-        return function
-    return AtomicFeedbackFunction_with_attrs
-
-
-def CompositeFeedbackFunction():
-    """
-
-    Returns:
-
+        callable: The decorated function.
     """
     def CompositeFeedbackFunction_with_attrs(function):
         """
@@ -192,8 +323,6 @@ def CompositeFeedbackFunction():
         Returns:
 
         """
+        CompositeFeedbackFunction_with_attrs.functions = functions
         return function
     return CompositeFeedbackFunction_with_attrs
-
-
-PEDAL_DEVELOPERS = ["Austin Cory Bart <acbart@udel.edu>", "Luke Gusukuma <lukesg08@vt.edu>"]

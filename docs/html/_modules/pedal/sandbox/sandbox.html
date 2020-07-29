@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,27 +11,29 @@
   
 
   
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
 </head>
@@ -48,7 +49,7 @@
           
 
           
-            <a href="../../../index.html" class="icon icon-home"> Pedal
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> Pedal
           
 
           
@@ -75,6 +76,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -100,6 +102,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -138,7 +141,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../../index.html">Module code</a> &raquo;</li>
         
@@ -161,32 +164,34 @@
             
   <h1>Source code for pedal.sandbox.sandbox</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">File containing the Sandbox class, reset, and run functions.</span>
 
 <span class="sd">TODO: Handle sys.argv</span>
+
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">pprint</span> <span class="k">import</span> <span class="n">pprint</span>
+<span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <span class="n">pprint</span>
 <span class="kn">import</span> <span class="nn">ast</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">io</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">string</span>
-<span class="kn">from</span> <span class="nn">unittest.mock</span> <span class="k">import</span> <span class="n">patch</span>
+<span class="kn">from</span> <span class="nn">unittest.mock</span> <span class="kn">import</span> <span class="n">patch</span>
 
-<span class="kn">from</span> <span class="nn">pedal.core.report</span> <span class="k">import</span> <span class="n">MAIN_REPORT</span>
-<span class="kn">from</span> <span class="nn">pedal.core.commands</span> <span class="k">import</span> <span class="n">feedback</span>
-<span class="kn">from</span> <span class="nn">pedal.sandbox.feedbacks</span> <span class="k">import</span> <span class="n">runtime_error</span>
-<span class="kn">from</span> <span class="nn">pedal.utilities.comparisons</span> <span class="k">import</span> <span class="n">output_test</span>
-<span class="kn">from</span> <span class="nn">pedal.utilities.exceptions</span> <span class="k">import</span> <span class="n">ExpandedTraceback</span><span class="p">,</span> <span class="n">add_context_to_error</span>
-<span class="kn">from</span> <span class="nn">pedal.sandbox</span> <span class="k">import</span> <span class="n">mocked</span>
-<span class="kn">from</span> <span class="nn">pedal.sandbox.exceptions</span> <span class="k">import</span> <span class="p">(</span><span class="n">SandboxHasNoFunction</span><span class="p">,</span>
+<span class="kn">from</span> <span class="nn">pedal.core.report</span> <span class="kn">import</span> <span class="n">MAIN_REPORT</span>
+<span class="kn">from</span> <span class="nn">pedal.core.commands</span> <span class="kn">import</span> <span class="n">feedback</span>
+<span class="kn">from</span> <span class="nn">pedal.sandbox.feedbacks</span> <span class="kn">import</span> <span class="n">runtime_error</span>
+<span class="kn">from</span> <span class="nn">pedal.utilities.comparisons</span> <span class="kn">import</span> <span class="n">output_test</span>
+<span class="kn">from</span> <span class="nn">pedal.utilities.exceptions</span> <span class="kn">import</span> <span class="n">ExpandedTraceback</span><span class="p">,</span> <span class="n">add_context_to_error</span>
+<span class="kn">from</span> <span class="nn">pedal.sandbox</span> <span class="kn">import</span> <span class="n">mocked</span>
+<span class="kn">from</span> <span class="nn">pedal.sandbox.exceptions</span> <span class="kn">import</span> <span class="p">(</span><span class="n">SandboxHasNoFunction</span><span class="p">,</span>
                                       <span class="n">SandboxStudentCodeException</span><span class="p">,</span>
                                       <span class="n">SandboxHasNoVariable</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">pedal.sandbox.timeout</span> <span class="k">import</span> <span class="n">timeout</span>
-<span class="kn">from</span> <span class="nn">pedal.sandbox.messages</span> <span class="k">import</span> <span class="n">EXTENDED_ERROR_EXPLANATION</span>
-<span class="kn">from</span> <span class="nn">pedal.sandbox.result</span> <span class="k">import</span> <span class="n">SandboxResult</span>
-<span class="kn">from</span> <span class="nn">pedal.sandbox.tracer</span> <span class="k">import</span> <span class="p">(</span><span class="n">SandboxCallTracer</span><span class="p">,</span> <span class="n">SandboxCoverageTracer</span><span class="p">,</span>
+<span class="kn">from</span> <span class="nn">pedal.sandbox.timeout</span> <span class="kn">import</span> <span class="n">timeout</span>
+<span class="kn">from</span> <span class="nn">pedal.sandbox.messages</span> <span class="kn">import</span> <span class="n">EXTENDED_ERROR_EXPLANATION</span>
+<span class="kn">from</span> <span class="nn">pedal.sandbox.result</span> <span class="kn">import</span> <span class="n">SandboxResult</span>
+<span class="kn">from</span> <span class="nn">pedal.sandbox.tracer</span> <span class="kn">import</span> <span class="p">(</span><span class="n">SandboxCallTracer</span><span class="p">,</span> <span class="n">SandboxCoverageTracer</span><span class="p">,</span>
                                   <span class="n">SandboxBasicTracer</span><span class="p">)</span>
 
 
@@ -217,7 +222,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span></div>
 
@@ -228,7 +233,7 @@
 <span class="sd">    self-contained student data namespace.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
 
@@ -296,7 +301,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">SandboxVariable</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
 
-    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;&quot;</span></div>
 
 
@@ -310,10 +315,10 @@
 <span class="sd">        data: The namespace produced by the students&#39; code. This is basically</span>
 <span class="sd">            a dictionary mapping valid python names to their values.</span>
 <span class="sd">        raw_output (str): The exact literal results of all the `print` calls</span>
-<span class="sd">            made so far, including the &quot;\n&quot; characters.</span>
-<span class="sd">        output (list of str): The current lines of output, broken up by</span>
-<span class="sd">            distinct print calls (not &quot;\n&quot; characters). Note that this will</span>
-<span class="sd">            not have any &quot;\n&quot; characters unless you explicitly printed them.</span>
+<span class="sd">            made so far, including the newline characters.</span>
+<span class="sd">        output (list[str]): The current lines of output, broken up by</span>
+<span class="sd">            distinct print calls (not newline characters). Note that this will</span>
+<span class="sd">            not have any newline characters unless you explicitly printed them.</span>
 <span class="sd">        output_contexts (dict[str:list[str]]): The output for each call context.</span>
 <span class="sd">        call_id (int): The current call_id of the most recent call. Is</span>
 <span class="sd">            initially 0, indicating the original sandbox creation.</span>
@@ -339,7 +344,7 @@
         <span class="s1">&#39;none&#39;</span><span class="p">:</span> <span class="n">SandboxBasicTracer</span><span class="p">,</span>
     <span class="p">}</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">initial_raw_output</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">initial_exception</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">modules</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">full_traceback</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -442,6 +447,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">allowed_time</span> <span class="o">=</span> <span class="mi">3</span>
 
     <span class="k">def</span> <span class="nf">_set_tracer_style</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracer_style</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">tracer_style</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">tracer_style</span> <span class="o">=</span> <span class="s1">&#39;none&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_tracer_style</span> <span class="o">=</span> <span class="n">tracer_style</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">trace</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">TRACER_STYLES</span><span class="p">[</span><span class="n">tracer_style</span><span class="o">.</span><span class="n">lower</span><span class="p">()]()</span>
 
@@ -745,7 +752,7 @@
             <span class="n">actual</span> <span class="o">=</span> <span class="n">call</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">actual</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">call</span><span class="p">)</span>
-        <span class="n">student_call</span> <span class="o">=</span> <span class="n">call</span> <span class="k">if</span> <span class="n">target</span> <span class="ow">is</span> <span class="s2">&quot;_&quot;</span> <span class="k">else</span> <span class="n">actual</span>
+        <span class="n">student_call</span> <span class="o">=</span> <span class="n">call</span> <span class="k">if</span> <span class="n">target</span> <span class="o">==</span> <span class="s2">&quot;_&quot;</span> <span class="k">else</span> <span class="n">actual</span>
         <span class="k">return</span> <span class="n">actual</span><span class="p">,</span> <span class="n">student_call</span>
 
     <span class="k">def</span> <span class="nf">_start_patches</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">patches</span><span class="p">):</span>
@@ -827,7 +834,7 @@
 <span class="sd">                tracebacks will be shown with the given context. If False,</span>
 <span class="sd">                no context will be given (the default).</span>
 <span class="sd">            threaded (bool): whether or not to run this code in a separate</span>
-<span class="sd">                thread. Defaults to :attribute:`Sandbox.threaded`.</span>
+<span class="sd">                thread. Defaults to :attr:`Sandbox.threaded`.</span>
 <span class="sd">            report_exceptions (bool): Whether or not to capture exceptions.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Handle any threading if necessary</span>
@@ -974,11 +981,19 @@
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright 2018, acbart, lukesg08
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -989,7 +1004,6 @@
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

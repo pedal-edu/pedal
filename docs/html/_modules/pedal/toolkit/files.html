@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,27 +11,29 @@
   
 
   
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
 </head>
@@ -48,7 +49,7 @@
           
 
           
-            <a href="../../../index.html" class="icon icon-home"> Pedal
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> Pedal
           
 
           
@@ -75,6 +76,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -100,6 +102,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -138,7 +141,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../../index.html">Module code</a> &raquo;</li>
         
@@ -158,14 +161,14 @@
            <div itemprop="articleBody">
             
   <h1>Source code for pedal.toolkit.files</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">pedal.cait.cait_api</span> <span class="k">import</span> <span class="n">parse_program</span>
-<span class="kn">from</span> <span class="nn">pedal.core.commands</span> <span class="k">import</span> <span class="n">explain</span><span class="p">,</span> <span class="n">feedback</span>
-<span class="kn">from</span> <span class="nn">pedal.core.feedback</span> <span class="k">import</span> <span class="n">AtomicFeedbackFunction</span><span class="p">,</span> <span class="n">CompositeFeedbackFunction</span><span class="p">,</span> <span class="n">Feedback</span>
-<span class="kn">from</span> <span class="nn">pedal.toolkit.utilities</span> <span class="k">import</span> <span class="n">ensure_literal</span>
+<span></span><span class="kn">from</span> <span class="nn">pedal.cait.cait_api</span> <span class="kn">import</span> <span class="n">parse_program</span>
+<span class="kn">from</span> <span class="nn">pedal.core.commands</span> <span class="kn">import</span> <span class="n">explain</span><span class="p">,</span> <span class="n">feedback</span>
+<span class="kn">from</span> <span class="nn">pedal.core.feedback</span> <span class="kn">import</span> <span class="n">AtomicFeedbackFunction</span><span class="p">,</span> <span class="n">CompositeFeedbackFunction</span><span class="p">,</span> <span class="n">Feedback</span>
+<span class="kn">from</span> <span class="nn">pedal.toolkit.utilities</span> <span class="kn">import</span> <span class="n">ensure_literal</span>
 
 
 <span class="c1"># TODO</span>
-<div class="viewcode-block" id="open_without_arguments"><a class="viewcode-back" href="../../../developers/tools/toolkit.html#pedal.toolkit.files.open_without_arguments">[docs]</a><span class="nd">@AtomicFeedbackFunction</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Opened Without Arguments&quot;</span><span class="p">,</span>
+<span class="nd">@AtomicFeedbackFunction</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Opened Without Arguments&quot;</span><span class="p">,</span>
                         <span class="n">message_template</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;You have called the `open` function &quot;</span>
                                           <span class="s2">&quot;without any arguments. It needs a filename.&quot;</span><span class="p">))</span>
 <span class="k">def</span> <span class="nf">open_without_arguments</span><span class="p">(</span><span class="n">muted</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -178,7 +181,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">feedback</span><span class="p">(</span><span class="n">open_without_arguments</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="s2">&quot;toolkit&quot;</span><span class="p">,</span> <span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">INSTRUCTOR</span><span class="p">,</span>
-                    <span class="n">message</span><span class="o">=</span><span class="n">open_without_arguments</span><span class="o">.</span><span class="n">message_template</span><span class="o">.</span><span class="n">format</span><span class="p">(),</span> <span class="n">muted</span><span class="o">=</span><span class="n">muted</span><span class="p">)</span></div>
+                    <span class="n">message</span><span class="o">=</span><span class="n">open_without_arguments</span><span class="o">.</span><span class="n">message_template</span><span class="o">.</span><span class="n">format</span><span class="p">(),</span> <span class="n">muted</span><span class="o">=</span><span class="n">muted</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="files_not_handled_correctly"><a class="viewcode-back" href="../../../developers/tools/toolkit.html#pedal.toolkit.files.files_not_handled_correctly">[docs]</a><span class="nd">@CompositeFeedbackFunction</span><span class="p">()</span>
@@ -205,13 +208,13 @@
                     <span class="k">return</span> <span class="kc">True</span>
                 <span class="n">called_open</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a_call</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="s1">&#39;close&#39;</span><span class="p">:</span>
-                <span class="n">explain</span><span class="p">(</span><span class="s2">&quot;You have attempted to call &lt;code&gt;close&lt;/code&gt; as a &quot;</span>
+                <span class="n">explain</span><span class="p">(</span><span class="s2">&quot;You have attempted to call `close` as a &quot;</span>
                         <span class="s2">&quot;function, but it is actually a method of the &quot;</span>
                         <span class="s2">&quot;file object.&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;used_close_as_function&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Close Is a Method&quot;</span><span class="p">,</span> <span class="n">priority</span><span class="o">=</span><span class="s1">&#39;verifier&#39;</span><span class="p">)</span>
                 <span class="k">return</span> <span class="kc">True</span>
         <span class="k">elif</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">ast_name</span> <span class="o">==</span> <span class="s1">&#39;Attribute&#39;</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">attr</span> <span class="o">==</span> <span class="s1">&#39;open&#39;</span><span class="p">:</span>
-                <span class="n">explain</span><span class="p">(</span><span class="s2">&quot;You have attempted to call &lt;code&gt;open&lt;/code&gt; as a &quot;</span>
+                <span class="n">explain</span><span class="p">(</span><span class="s2">&quot;You have attempted to call `open` as a &quot;</span>
                         <span class="s2">&quot;method, but it is actually a built-in function.&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;used_open_as_method&quot;</span><span class="p">,</span>
                         <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Open Is a Function&quot;</span><span class="p">)</span>
                 <span class="k">return</span> <span class="kc">True</span>
@@ -245,11 +248,19 @@
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright 2018, acbart, lukesg08
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -260,7 +271,6 @@
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

@@ -35,6 +35,7 @@ rather than an afterthought.
     developers/api
     developers/integrations
     developers/tools
+    developers/conventions
     everyone/glossary
 
 

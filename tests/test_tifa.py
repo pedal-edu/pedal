@@ -420,6 +420,24 @@ unit_tests = {
     # Built-in modules
     'import_string_letters':
         ['import string\nstring.letters+""', ['incompatible_types'], []],
+
+    # Nested function definitions
+    'function_nested_inside_if':
+        ['if False:\n  def x():\n    pass', [], ['nested_function_definition']],
+    'function_toplevel':
+        ['def x():\n  if False:\n    pass', ['nested_function_definition'], []],
+    'no_function_whatsoever':
+        ['if False:\n  pass', ['nested_function_definition'], []],
+    'unused_result_function':
+        ['abs(-5)', [], ['unused_returned_value']],
+    'unused_result_method':
+        ['"".strip()', [], ['unused_returned_value']],
+    'unused_result_custom_function':
+        ['def x(): return 7\nx()', [], ['unused_returned_value']],
+    'used_result_custom_function':
+        ['def x(): return 7\nprint(x())', ['unused_returned_value'], []],
+    'used_result_function':
+        ['print(abs(-5))', ['unused_returned_value'], []],
 }
 
 
@@ -706,7 +724,24 @@ class TestVariables(unittest.TestCase):
                 """)
         tifa = pedal.tifa.Tifa()
         tifa.process_code(program)
-        self.assertEqual(tifa.report['tifa']['issues']['unused_variable'][0].locations[0].line, 2)
+        self.assertEqual(tifa.report['tifa']['issues']['unused_variable'][0].location.line, 2)
+
+
+    def test_weird_indexing_behavior(self):
+        program = dedent("""
+        movie_list = [{'Title':'Iron Man', 'Release Date':'May 2, 2008','Budget':'140','Running Time':'126'},
+              {'Title':'Iron Man 2', 'Release Date':'May 7, 2010','Budget':'200', 'Running Time':'125'},
+              {'Title':'Iron Man 3', 'Release Date':'May 3, 2013','Budget':'200', 'Running Time':'130'}]
+        total=0
+        for title in movie_list:
+            total=total + 'title'['Running Time']
+        print(total)
+        """)
+        tifa = pedal.tifa.Tifa()
+        tifa.process_code(program)
+        self.assertNotIn('incompatible_types', tifa.report['tifa']['issues'])
+        self.assertIn('invalid_indexing', tifa.report['tifa']['issues'])
+
 
 
 if __name__ == '__main__':

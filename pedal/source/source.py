@@ -13,6 +13,7 @@
 import sys
 import ast
 
+from pedal.core.feedback import CompositeFeedbackFunction
 from pedal.core.report import Report, MAIN_REPORT
 from pedal.core.submission import Submission
 from pedal.source.constants import TOOL_NAME, DEFAULT_STUDENT_FILENAME
@@ -23,12 +24,14 @@ from pedal.source.substitutions import Substitution
 
 def reset(report=MAIN_REPORT):
     """
+    Resets the Source tool back to its initial configuration, removing any
+    previously stored code/parses/section info.
 
     Args:
-        report:
+        report: The report object to be reseting.
 
     Returns:
-
+        dict: The data associated with the Source tool.
     """
     report[TOOL_NAME] = {
         'substitutions': [],
@@ -99,7 +102,9 @@ def restore_code(report=MAIN_REPORT):
         verify(report=report)
 
 
-def verify(code=None, filename=DEFAULT_STUDENT_FILENAME, report=MAIN_REPORT, muted=False):
+@CompositeFeedbackFunction(blank_source, syntax_error)
+def verify(code=None, filename=DEFAULT_STUDENT_FILENAME, report=MAIN_REPORT,
+           muted=False):
     """
     Parses the given source code and checks for syntax errors; if no code is given, defaults to the
     current Main file of the submission.
@@ -123,8 +128,8 @@ def verify(code=None, filename=DEFAULT_STUDENT_FILENAME, report=MAIN_REPORT, mut
         parsed = ast.parse(code, filename)
         report[TOOL_NAME]['ast'] = parsed
     except SyntaxError as e:
-        syntax_error(e.lineno, e.filename, code, e.offset, e.text, e.__traceback__, e, sys.exc_info(), report=report,
-                     muted=muted)
+        syntax_error(e.lineno, e.filename, code, e.offset, e.text, e,
+                     sys.exc_info(), report=report, muted=muted)
         report[TOOL_NAME]['success'] = False
         report[TOOL_NAME]['ast'] = ast.parse("")
     return report[TOOL_NAME]['success']
@@ -158,6 +163,7 @@ def get_original_program(report=MAIN_REPORT) -> str:
     return report[TOOL_NAME]['substitutions'][0].code
 
 
+@CompositeFeedbackFunction(source_file_not_found)
 def set_source_file(filename: str, sections=False, independent=False, report=MAIN_REPORT):
     """
     Uses the given `filename` on the filesystem as the new main file.

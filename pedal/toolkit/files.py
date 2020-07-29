@@ -1,14 +1,10 @@
 from pedal.cait.cait_api import parse_program
 from pedal.core.commands import explain, feedback
-from pedal.core.feedback import AtomicFeedbackFunction, CompositeFeedbackFunction, Feedback
-from pedal.toolkit.utilities import ensure_literal
+from pedal.core.feedback import AtomicFeedbackFunction, CompositeFeedbackFunction, Feedback, FeedbackResponse
+from pedal.assertions.static import ensure_literal
 
 
-# TODO
-@AtomicFeedbackFunction(title="Opened Without Arguments",
-                        message_template=("You have called the `open` function "
-                                          "without any arguments. It needs a filename."))
-def open_without_arguments(muted=False):
+class open_without_arguments(FeedbackResponse):
     """
 
     Args:
@@ -17,11 +13,14 @@ def open_without_arguments(muted=False):
     Returns:
 
     """
-    return feedback(open_without_arguments.__name__, "toolkit", Feedback.CATEGORIES.INSTRUCTOR,
-                    message=open_without_arguments.message_template.format(), muted=muted)
+    muted = False
+    title = "Opened Without Arguments"
+    message_template = ("You have called the `open` function "
+                        "without any arguments. It needs a filename.")
+    category = Feedback.CATEGORIES.INSTRUCTOR
 
 
-@CompositeFeedbackFunction()
+@CompositeFeedbackFunction(open_without_arguments)
 def files_not_handled_correctly(*filenames, muted=False):
     """
     Statically detect if files have been opened and closed correctly.
@@ -45,13 +44,14 @@ def files_not_handled_correctly(*filenames, muted=False):
                     return True
                 called_open.append(a_call)
             elif a_call.func.id == 'close':
-                explain("You have attempted to call <code>close</code> as a "
+                explain("You have attempted to call `close` as a "
                         "function, but it is actually a method of the "
                         "file object.", label="used_close_as_function", title="Close Is a Method", priority='verifier')
                 return True
         elif a_call.func.ast_name == 'Attribute':
             if a_call.func.attr == 'open':
-                explain("You have attempted to call <code>open</code> as a "
+                # TODO: Make these feedback functions
+                explain("You have attempted to call `open` as a "
                         "method, but it is actually a built-in function.", label="used_open_as_method",
                         title="Open Is a Function")
                 return True
@@ -71,5 +71,8 @@ def files_not_handled_correctly(*filenames, muted=False):
         explain("You have closed more files than you were supposed to.", label="extra_closed_files", title="Extra Closed Files")
         return True
     if actual_filenames:
-        return ensure_literal(*filenames)
+        for filename in filenames:
+            ensured = ensure_literal(filename)
+            if ensured:
+                return ensured
     return False

@@ -1,3 +1,4 @@
+# TODO: Pretty sure new version of skulpt doesn't need this
 try:
     TimeoutError
 except NameError:

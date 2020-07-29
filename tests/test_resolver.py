@@ -67,23 +67,23 @@ class TestCode(unittest.TestCase):
 
     def test_partials(self):
         with Execution('0') as e:
-            give_partial(.1, "You had a zero in your code.")
-            give_partial(.1, "You looped correctly.")
+            give_partial(.1, message="You had a zero in your code.")
+            give_partial(.1, message="You looped correctly.")
         self.assertEqual(e.final.message, "No errors reported.")
         self.assertEqual(e.final.score, .2)
         self.assertFalse(e.final.success)
 
         with Execution('0') as e:
-            give_partial(.1, "You had a zero in your code.")
-            give_partial(.1, "You looped correctly.")
+            give_partial(.1, message="You had a zero in your code.")
+            give_partial(.1, message="You looped correctly.")
             gently("Okay but you still only wrote 0.")
         self.assertEqual(e.final.message, "Okay but you still only wrote 0.")
         self.assertEqual(e.final.score, .2)
         self.assertFalse(e.final.success)
 
         with Execution('0') as e:
-            give_partial(.1, "You had a zero in your code.")
-            give_partial(.1, "You looped correctly.")
+            give_partial(.1, message="You had a zero in your code.")
+            give_partial(.1, message="You looped correctly.")
             set_success()
         self.assertEqual(e.final.message, "Great work!")
         self.assertEqual(e.final.score, 1.2)
@@ -187,6 +187,7 @@ class TestCode(unittest.TestCase):
         compatibility.run_student(raise_exceptions=True)
         gently("I have a gentle opinion, but you don't want to hear it.")
         final = simple.resolve()
+        print(final.label)
         self.assertEqual(Feedback.CATEGORIES.RUNTIME, final.category)
 
         # Runtime < Explain

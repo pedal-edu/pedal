@@ -1,5 +1,8 @@
+"""
+Main file for all of Tifa's brains.
+"""
+
 import ast
-import sys
 
 from pedal.core.commands import system_error
 from pedal.core.report import MAIN_REPORT
@@ -10,11 +13,11 @@ from pedal.tifa.type_definitions import (UnknownType, RecursedType,
                                          NumType, NoneType, BoolType, TupleType,
                                          ListType, StrType, GeneratorType,
                                          DictType, ModuleType, SetType,
-                                         # FileType, DayType, TimeType,
+    # FileType, DayType, TimeType,
                                          type_from_json, type_to_literal, get_tifa_type,
                                          LiteralNum, LiteralBool,
                                          LiteralNone, LiteralStr,
-                                         LiteralTuple)
+                                         LiteralTuple, Type, get_tifa_type_from_value)
 from pedal.tifa.builtin_definitions import (get_builtin_module, get_builtin_function)
 from pedal.tifa.type_operations import (merge_types, are_types_equal,
                                         VALID_UNARYOP_TYPES, VALID_BINOP_TYPES,
@@ -28,7 +31,8 @@ from pedal.tifa.feedbacks import (action_after_return, return_outside_function, 
                                   iterating_over_empty_list, incompatible_types, parameter_type_mismatch,
                                   read_out_of_scope, type_changes, unnecessary_second_branch,
                                   recursive_call, not_a_function, incorrect_arity, multiple_return_types,
-                                  else_on_loop_body, module_not_found)
+                                  else_on_loop_body, module_not_found, nested_function_definition,
+                                  unused_returned_value, invalid_indexing)
 
 __all__ = ['Tifa']
 
@@ -330,6 +334,26 @@ class Tifa(ast.NodeVisitor):
         TODO: Implement!
         """
         pass
+
+    def visit_Expr(self, node):
+        """
+        Any expression being used as a statement.
+
+        Args:
+            node (AST): An Expr node
+
+        Returns:
+
+        """
+        value = self.visit(node.value)
+        if isinstance(node.value, ast.Call) and not isinstance(value, NoneType):
+            # TODO: Helper function to get name with title ("append method")
+            if isinstance(node.value.func, ast.Name):
+                call_type = 'function'
+            else:
+                call_type = 'method'
+            name = self.identify_caller(node.value)
+            self._issue(unused_returned_value(self.locate(), name, call_type))
 
     def visit_Assign(self, node):
         """
@@ -772,6 +796,10 @@ class Tifa(ast.NodeVisitor):
 
         function = FunctionType(definition=definition, name=function_name)
         self.store_variable(function_name, function)
+
+        if len(self.node_chain) > 2:
+            self._issue(nested_function_definition(self.locate(), function_name))
+
         return function
 
     def visit_GeneratorExp(self, node):
@@ -813,6 +841,8 @@ class Tifa(ast.NodeVisitor):
         with else_path:
             for statement in node.orelse:
                 self.visit(statement)
+
+        # TODO: Unconditional return
 
         # Combine two paths into one
         # Check for any names that are on the IF path
@@ -1010,6 +1040,9 @@ class Tifa(ast.NodeVisitor):
         """
         return NumType()
 
+    def visit_Constant(self, node) -> Type:
+        return get_tifa_type_from_value(node.value)
+
     def visit_Return(self, node):
         """
 
@@ -1081,10 +1114,14 @@ class Tifa(ast.NodeVisitor):
         if isinstance(node.slice, ast.Index):
             literal = self.get_literal(node.slice.value)
             if literal is None:
-                dynamic_literal = type_to_literal(self.visit(node.slice.value))
-                return value_type.index(dynamic_literal)
+                literal = type_to_literal(self.visit(node.slice.value))
+            result = value_type.index(literal)
+            # TODO: Is this sufficient? Maybe we should be throwing?
+            if isinstance(result, UnknownType):
+                self._issue(invalid_indexing(self.locate(), value_type,
+                                             literal.type()))
             else:
-                return value_type.index(literal)
+                return result
         elif isinstance(node.slice, ast.Slice):
             if node.slice.lower is not None:
                 self.visit(node.slice.lower)

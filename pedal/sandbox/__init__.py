@@ -12,21 +12,21 @@ get_output
 '''
 
 
-def reset(report=MAIN_REPORT):
+def reset(report=MAIN_REPORT, modules=None, tracer_style=None):
     """
 
     Args:
         report:
     """
     report[TOOL_NAME] = {
-        'run': Sandbox()
+        'run': Sandbox(modules=modules, tracer_style=tracer_style)
     }
 
 
 Report.register_tool(TOOL_NAME, reset)
 
 
-def run(raise_exceptions=True, report=MAIN_REPORT, coverage=False, threaded=False, inputs=None) -> Sandbox:
+def run(raise_exceptions=True, report=MAIN_REPORT, coverage=False, threaded=False, inputs=None, modules=None) -> Sandbox:
     """
 
     Args:
@@ -43,7 +43,7 @@ def run(raise_exceptions=True, report=MAIN_REPORT, coverage=False, threaded=Fals
     sandbox.threaded = threaded
     source_code = report.submission.main_code
     sandbox.record_coverage = coverage
-    sandbox.run(source_code, as_filename=report.submission.main_file, inputs=inputs, threaded=threaded)
+    sandbox.run(source_code, as_filename=report.submission.main_file, inputs=inputs, threaded=threaded, modules=modules)
     sandbox.raise_exceptions_mode = raise_exceptions
     if raise_exceptions and sandbox.exception is not None:
         name = str(sandbox.exception.__class__)[8:-2]

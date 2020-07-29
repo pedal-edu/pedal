@@ -4,14 +4,13 @@ Uses a global report object (MAIN_REPORT).
 """
 
 __all__ = ['feedback', 'set_success', 'compliment', 'give_partial', 'explain',
-           'gently', 'hide_correctness', 'suppress', 'log', 'debug', 'system_error',
-           'clear_report', 'get_all_feedback', 'guidance', 'contextualize_report']
+           'gently', 'hide_correctness', 'suppress', 'log', 'debug',
+           'system_error', 'clear_report', 'get_all_feedback', 'guidance',
+           'contextualize_report']
 
-from typing import List
-
-from pedal.core.feedback import Feedback, FeedbackKind, FeedbackCategory, PEDAL_DEVELOPERS, AtomicFeedbackFunction
-from pedal.core.location import Location
-from pedal.core.report import MAIN_REPORT, Report
+from pedal.core.feedback import (Feedback, FeedbackKind, FeedbackCategory,
+                                 FeedbackResponse)
+from pedal.core.report import MAIN_REPORT
 
 from pedal.core.submission import Submission
 
@@ -21,261 +20,186 @@ feedback = Feedback
 
 # TODO: force_success function, which ignores errors to give the points.
 
-
-@AtomicFeedbackFunction(title="Complete",
-                        text_template="Great work!")
-def set_success(score: float = 1, justification: str = None, tool: str = None, group=None,
-                report: Report = MAIN_REPORT):
+class set_success(FeedbackResponse):
     """
     **(Feedback Function)**
 
     Creates Successful feedback for the user, indicating that the entire
     assignment is done.
-
-    Args:
-        tool:
-        group:
-        report:
-        justification (str): Internal message that explains why this function was used.
-        score (number): Arbitrary value to set the user's score to. Defaults to 1.
     """
-    return feedback("set_success",
-                    tool=tool, category=FeedbackCategory.COMPLETE, kind=FeedbackKind.RESULT,
-                    justification=justification, valence=Feedback.POSITIVE_VALENCE,
-                    title=set_success.title, message=set_success.text_template.format(),
-                    text=set_success.text_template.format(),
-                    score=score, correct=True,
-                    muted=False, version='1.0.0', author=PEDAL_DEVELOPERS, group=group,
-                    report=report)
+    title = "Complete"
+    text_template = "Great work!"
+    score = 1
+    correct = True
+    category = FeedbackCategory.COMPLETE
+    kind = FeedbackKind.RESULT
+    valence = Feedback.POSITIVE_VALENCE
 
 
-@AtomicFeedbackFunction(title="Compliment")
-def compliment(message: str, value: float = 0, title=None,
-               justification: str = None, locations: Location = None, tool: str = None, group=None,
-               report: Report = MAIN_REPORT):
+class compliment(FeedbackResponse):
     """
     Create a positive feedback for the user, potentially on a specific line of
     code.
-
-    Args:
-        report:
-        group:
-        tool:
-        title (str): If None, defaults to "Compliment"
-        message (str): The message to display to the user.
-        locations (int): The relevant line of code to reference.
-        value (float): The number to increase the user's score by.
-        justification (str): A justification for why this partial credit was given.
     """
-    return feedback("compliment", tool=tool,
-                    category=FeedbackCategory.INSTRUCTOR, kind=FeedbackKind.ENCOURAGEMENT,
-                    justification=justification, locations=locations,
-                    valence=Feedback.POSITIVE_VALENCE,
-                    title=title or compliment.title, message=message, text=message,
-                    score=value, correct=False, muted=False, version='1.0.0',
-                    author=PEDAL_DEVELOPERS, group=group, report=report
-                    )
+    title = "Compliment"
+    category = FeedbackCategory.INSTRUCTOR
+    kind = FeedbackKind.ENCOURAGEMENT
+    valence = Feedback.POSITIVE_VALENCE
+
+    def __init__(self, message, **kwargs):
+        super().__init__(message=message, **kwargs)
+
+class give_partial(FeedbackResponse):
+    """ Increases the user's current score by the `score`. """
+    title = "Partial Credit"
+    text_template = "Partial credit"
+    category = FeedbackCategory.INSTRUCTOR
+    kind = FeedbackKind.RESULT
+    valence = Feedback.POSITIVE_VALENCE
+    correct = False
+    muted = True
+
+    def __init__(self, value, **kwargs):
+        super().__init__(score=value, **kwargs)
 
 
-@AtomicFeedbackFunction(title="Partial Credit",
-                        text_template="Partial credit")
-def give_partial(value: float, justification: str = None, title: str = None, tool: str = None, group=None,
-                 report: Report = MAIN_REPORT):
-    """
-    Increases the user's current score by the `value`.
+class explain(FeedbackResponse):
+    """ Give a high-priority piece of negative feedback to the student. """
+    title = "Instructor Feedback"
+    muted = False
+    category = Feedback.CATEGORIES.INSTRUCTOR
+    kind = FeedbackKind.MISTAKE
+    valence = Feedback.NEGATIVE_VALENCE
 
-    Args:
-        report:
-        group:
-        tool:
-        title:
-        value (number): The number to increase the user's score by.
-        justification (str): A justification for why this partial credit was given.
-    """
-    return feedback("give_partial", tool=tool, category=FeedbackCategory.INSTRUCTOR,
-                    kind=FeedbackKind.RESULT,
-                    justification=justification, valence=Feedback.POSITIVE_VALENCE,
-                    title=title or give_partial.title, message=give_partial.text_template.format(),
-                    text=give_partial.text_template.format(),
-                    score=value, correct=False, muted=True, version='1.0.0', author=PEDAL_DEVELOPERS, group=group,
-                    report=report)
+    def __init__(self, message, **kwargs):
+        super().__init__(message=message, **kwargs)
 
 
-@AtomicFeedbackFunction(title="Instructor Feedback")
-def explain(message, label='explain', title=None, fields=None,
-            justification=None, priority=None, line=None, text=None, score=None, muted=False,
-            version='0.0.1', author=None, tags=None, group=None, report=MAIN_REPORT):
-    """
+class gently(FeedbackResponse):
+    """ Give a low-priority piece of negative feedback to the student. """
+    title = "Instructor Feedback"
+    priority = Feedback.CATEGORIES.STUDENT
+    muted = False
+    category = Feedback.CATEGORIES.INSTRUCTOR
+    kind = FeedbackKind.MISTAKE
+    valence = Feedback.NEGATIVE_VALENCE
 
-    Args:
-        message:
-        label:
-        title:
-        fields:
-        justification:
-        priority:
-        line:
-        text:
-        score:
-        muted:
-        version:
-        author:
-        tags:
-        group:
-        report:
-
-    Returns:
-
-    """
-    return feedback(label, category=Feedback.CATEGORIES.INSTRUCTOR,
-                    kind=FeedbackKind.MISTAKE, justification=justification, priority=priority,
-                    valence=Feedback.NEGATIVE_VALENCE, title=title or explain.title,
-                    message=message or text, text=text or message,
-                    fields=fields or {}, locations=line, score=score, muted=muted, version=version,
-                    author=author, tags=tags, group=group or report.group, report=report)
+    def __init__(self, message, **kwargs):
+        super().__init__(message=message, **kwargs)
 
 
-@AtomicFeedbackFunction(title="Instructor Feedback")
-def gently(message, label='gently', title=None, fields=None,
-           justification=None, priority=Feedback.CATEGORIES.STUDENT, line=None, text=None, score=None, muted=False,
-           version='0.0.1', author=None, tags=None, group=None, report=MAIN_REPORT):
-    """
+class guidance(FeedbackResponse):
+    """ Give instructions about a question. """
+    title = "Instructor Guidance"
+    category = Feedback.CATEGORIES.INSTRUCTIONS
+    kind = FeedbackKind.INSTRUCTIONAL
+    valence = Feedback.NEUTRAL_VALENCE
 
-    Args:
-        message:
-        label:
-        title:
-        fields:
-        justification:
-        priority:
-        line:
-        text:
-        score:
-        muted:
-        version:
-        author:
-        tags:
-        group:
-        report:
-
-    Returns:
-
-    """
-    return feedback(label, category=Feedback.CATEGORIES.INSTRUCTOR,
-                    kind=FeedbackKind.MISTAKE, justification=justification, priority=priority,
-                    valence=Feedback.NEGATIVE_VALENCE, title=title or gently.title,
-                    message=message or text, text=text or message,
-                    fields=fields or {}, locations=line, score=score, muted=muted, version=version,
-                    author=author, tags=tags, group=group or report.group, report=report)
-
-
-@AtomicFeedbackFunction(title="Instructor Guidance")
-def guidance(message, label="guidance", title=None, fields=None,
-             justification=None, priority=None, line=None, text=None, score=None,
-             muted=False, version='0.0.1', author=None, tags=None, group=None, report=MAIN_REPORT):
-    """
-
-    Args:
-        message:
-        label:
-        title:
-        fields:
-        justification:
-        priority:
-        line:
-        text:
-        score:
-        muted:
-        version:
-        author:
-        tags:
-        group:
-        report:
-
-    Returns:
-
-    """
-    return feedback(label, category=Feedback.CATEGORIES.INSTRUCTIONS,
-                    kind=FeedbackKind.INSTRUCTIONAL, justification=justification, priority=priority,
-                    valence=Feedback.NEUTRAL_VALENCE, title=title or guidance.title,
-                    message=message or text, text=text or message,
-                    fields=fields or {}, locations=line, score=score, muted=muted, version=version,
-                    author=author, tags=tags, group=group or report.group, report=report)
-
+    def __init__(self, message, **kwargs):
+        super().__init__(message=message, **kwargs)
 
 def hide_correctness(report=MAIN_REPORT):
     """
+    Force the report to not indicate score/correctness.
 
     Args:
-        report:
+        report (:py:class:`pedal.core.report.Report`): The report object to
+            hide correctness on.
     """
     report.hide_correctness()
 
 
 def suppress(category=None, label=True, report=MAIN_REPORT):
     """
+    Hides a given category or label within a category from being considered
+    by the resolver.
 
     Args:
-        category:
-        label:
-        report:
+        category (str): The general feedback category to suppress within.
+            Should be a member of
+            :py:class:`pedal.core.feedback_category.FeedbackCategory`.
+        label (str or bool): The specific feedback label to suppress, or
+            True if all the labels within this category should be suppressed.
+        report (:py:class:`~pedal.core.report.Report`): The report object to
+            suppress information within.
     """
     report.suppress(category, label)
 
 
-def log(message, report=MAIN_REPORT):
+def log(*items, **kwargs):
     """
-
-    TODO: Consider making this accept star args, like print would.
+    Attach logging information to the Report as a piece of feedback.
 
     Args:
-        message:
-        report:
+        items (Any): Any set of values to log information about. Will be
+            converted to strings using `str` if not already strings.
 
     Returns:
 
     """
-    return feedback("log", category=Feedback.CATEGORIES.SYSTEM, muted=True, text=message,
-                    valence=Feedback.NEUTRAL_VALENCE)
+    kwargs.setdefault('category', Feedback.CATEGORIES.SYSTEM)
+    kwargs.setdefault('muted', True)
+    kwargs.setdefault('valence', Feedback.NEUTRAL_VALENCE)
+    for item in items:
+        item = item if isinstance(item, str) else str(item)
+        cloned_kwargs = kwargs.copy()
+        cloned_kwargs.setdefault('text', item)
+        feedback(label="log", **kwargs)
 
 
-def debug(message, report=MAIN_REPORT):
+def debug(*items, **kwargs):
     """
+    Attach logging information to the Report as a piece of feedback.
+    Works at a higher priority than :py:func:`~pedal.core.commands.log` and
+    does not attempt to convert to strings.
 
     Args:
-        message:
-        report:
+        items (Any): Any set of values to log information about. Will be
+            converted to strings using `str` if not already strings.
 
     Returns:
 
     """
-    return feedback("debug", category=Feedback.CATEGORIES.SYSTEM, muted=True, text=message,
-                    valence=Feedback.NEGATIVE_VALENCE, priority='high')
+    kwargs.setdefault('category', Feedback.CATEGORIES.SYSTEM)
+    kwargs.setdefault('muted', True)
+    kwargs.setdefault('priority', 'high')
+    kwargs.setdefault('valence', Feedback.NEGATIVE_VALENCE)
+    for item in items:
+        item = item
+        cloned_kwargs = kwargs.copy()
+        cloned_kwargs.setdefault('text', item)
+        feedback(label="debug", **kwargs)
 
 
 def clear_report(report=MAIN_REPORT):
     """
-    Removes all existing data from the report, including any submissions, suppressions, feedback,
-    and Tool data.
+    Removes all existing data from the report, including any submissions,
+    suppressions, feedback, and Tool data.
 
     Args:
-        report: The report to clear (defaults to the :py:data:`pedal.core.report.MAIN_REPORT`).
+        report: The report to clear (defaults to the
+            :py:data:`pedal.core.report.MAIN_REPORT`).
     """
     report.clear()
 
 
-def contextualize_report(submission, filename='answer.py', clear=True, report=MAIN_REPORT):
+def contextualize_report(submission, filename='answer.py', clear=True,
+                         report=MAIN_REPORT):
     """
-    Updates the report with the submission. By default, clears out any old information in the report.
-    You can pass in either an actual :py:class:`~pedal.core.submission.Submission` or a string representing
+    Updates the report with the submission. By default, clears out any old
+    information in the report. You can pass in either an actual
+    :py:class:`~pedal.core.submission.Submission` or a string representing
     the code of the submission.
 
     Args:
-        clear:
         submission (str or Submission):
-        filename (str or None): If the `submission` was not a :py:class:`~pedal.core.submission.Submission`,
-            then this will be used as the filename for the code given in `submission`.
-        report: The report to attach this feedback to (defaults to the :py:data:`pedal.core.report.MAIN_REPORT`).
+        filename (str or None): If the `submission` was not a
+            :py:class:`~pedal.core.submission.Submission`, then this will be
+            used as the filename for the code given in ``submission``.
+        clear (bool): Whether or not to clear the report before attaching
+            the submission.
+        report: The report to attach this feedback to (defaults to the
+            :py:data:`~pedal.core.report.MAIN_REPORT`).
     """
     if not isinstance(submission, Submission):
         submission = Submission(files={filename: submission})
@@ -284,39 +208,35 @@ def contextualize_report(submission, filename='answer.py', clear=True, report=MA
     report.contextualize(submission)
 
 
-def get_all_feedback(report=MAIN_REPORT) -> [Feedback]:
+def get_all_feedback(report=MAIN_REPORT):
     """
-    Gives access to the list of feedback from the report. Usually, you won't need this; but if you want
-    to build on the results of earlier tools, it can be a useful mechanism.
+    Gives access to the list of feedback from the report. Usually, you won't
+    need this; but if you want to build on the results of earlier tools, it
+    can be a useful mechanism.
 
     TODO: Provide mechanisms for conveniently searching feedback
 
     Args:
-        report: The report to attach this feedback to (defaults to the :py:data:`pedal.core.report.MAIN_REPORT`).
+        report (:py:class:`~pedal.core.report.Report`): The report to attach
+            this feedback to (defaults to the
+            :py:data:`~pedal.core.report.MAIN_REPORT`).
 
     Returns:
-        List[pedal.core.feedback.Feedback]: A list of feedback objects.
+        List[:py:class:`~pedal.core.feedback.Feedback`]: A list of feedback
+            objects from the report.
     """
     return report.feedback
 
-@AtomicFeedbackFunction(title="System Error")
-def system_error(tool: str, explanation: str, author: str = PEDAL_DEVELOPERS, report: Report = MAIN_REPORT):
+
+class system_error(FeedbackResponse):
     """
-    Call this function to indicate that something has gone wrong at the system level with Pedal.
-    Ideally, this doesn't happen, but sometimes errors cascade and its polite for tools to suggest
-    that they are not working correctly. These will not usually be reported to the student.
-
-    Args:
-        tool:
-        explanation:
-        author:
-        report:
-
-    Returns:
-
+    Call this function to indicate that something has gone wrong at the system
+    level with Pedal. Ideally, this doesn't happen, but sometimes errors
+    cascade and its polite for tools to suggest that they are not working
+    correctly. These will not usually be reported to the student.
     """
-    return feedback("system_error", tool=tool, category=Feedback.CATEGORIES.SYSTEM,
-                    kind=FeedbackKind.META, justification=explanation,
-                    valence=Feedback.NEUTRAL_VALENCE,
-                    title=system_error.title, message=explanation, text=explanation,
-                    muted=True, author=author, report=report)
+    title = "System Error"
+    category = Feedback.CATEGORIES.SYSTEM
+    kind = FeedbackKind.META
+    valence = Feedback.NEUTRAL_VALENCE
+    muted = True

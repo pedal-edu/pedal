@@ -484,8 +484,8 @@ class CaitTests(unittest.TestCase):
         self.assertEqual(len(matches), 2, "find_matches does not return the correct number of matches")
 
         contextualize_report("for 'fun' in ___:"
-                   "if ___:\n"
-                   "    pass")
+                             "if ___:\n"
+                             "    pass")
         matches = find_matches("for ___ in ___:\n"
                                "    pass")
         self.assertFalse(matches, "find matches should have misparsed and returned False, but returned True instead")
@@ -676,12 +676,12 @@ class CaitTests(unittest.TestCase):
 
     def test_function_Names(self):
         contextualize_report("import weather\n"
-                   "weather_reports = get_weather('Data')\n"
-                   "weather_reports = weather.get_weather('Data')\n"
-                   "total = 0\n"
-                   "for weather in weather_reports:\n"
-                   "    total = total + weather\n"
-                   "print(total)")
+                             "weather_reports = get_weather('Data')\n"
+                             "weather_reports = weather.get_weather('Data')\n"
+                             "total = 0\n"
+                             "for weather in weather_reports:\n"
+                             "    total = total + weather\n"
+                             "print(total)")
         parse_program()
         my_match = find_matches("_get_weather_(__expr__)")
         #  TODO: add to func table instead of symbol table?
@@ -699,7 +699,7 @@ class CaitTests(unittest.TestCase):
 
         MAIN_REPORT.clear()
         contextualize_report('book = {"number_of_pages":285, "price":99.23, "discount":0.1}\n'
-                   'print(["price"])')
+                             'print(["price"])')
         parse_program()
         match = find_match("_var_([__str1__])")
         self.assertTrue(match["_var_"].id == "print", "couldn't find attr func access")
@@ -712,12 +712,12 @@ class CaitTests(unittest.TestCase):
 
     def test_attribute_names(self):
         contextualize_report("import weather\n"
-                   "weather_reports = get_weather('Data')\n"
-                   "weather_reports = weather.get_weather['Data']\n"
-                   "total = 0\n"
-                   "for weather in weather_reports:\n"
-                   "    total = total + weather\n"
-                   "print(total)")
+                             "weather_reports = get_weather('Data')\n"
+                             "weather_reports = weather.get_weather['Data']\n"
+                             "total = 0\n"
+                             "for weather in weather_reports:\n"
+                             "    total = total + weather\n"
+                             "print(total)")
 
         my_match1 = find_matches("_var_._attr_[__str__]")
         self.assertTrue(len(my_match1) == 1, "couldn't find attr func access")
@@ -735,36 +735,38 @@ class CaitTests(unittest.TestCase):
         self.assertFalse(parse.find_all('For'))
 
     def test_aug_assignment(self):
-        contextualize_report("magnitudes = [1.5, 1.9, 4.3, 2.1, 2.0, 3.6, 0.5, 2.5, 1.9, 4.0, 3.8, 0.7, 2.2, 5.1, 1.6]\n"
-                   "count = 0\n"
-                   "for item in magnitudes:\n"
-                   "    if item > 2.0:\n"
-                   "        count = count + 1\n"
-                   "print(count)")
+        contextualize_report(
+            "magnitudes = [1.5, 1.9, 4.3, 2.1, 2.0, 3.6, 0.5, 2.5, 1.9, 4.0, 3.8, 0.7, 2.2, 5.1, 1.6]\n"
+            "count = 0\n"
+            "for item in magnitudes:\n"
+            "    if item > 2.0:\n"
+            "        count = count + 1\n"
+            "print(count)")
         match = find_matches("for ___ in ___:\n"
                              "    __exp__\n"
                              "print(_var_)")[0]
         self.assertTrue(match["__exp__"].find_matches(match["_var_"].id))
 
-        contextualize_report("magnitudes = [1.5, 1.9, 4.3, 2.1, 2.0, 3.6, 0.5, 2.5, 1.9, 4.0, 3.8, 0.7, 2.2, 5.1, 1.6]\n"
-                   "count = 0\n"
-                   "for item in magnitudes:\n"
-                   "    if item > 2.0:\n"
-                   "        count += 1\n"
-                   "print(count)")
+        contextualize_report(
+            "magnitudes = [1.5, 1.9, 4.3, 2.1, 2.0, 3.6, 0.5, 2.5, 1.9, 4.0, 3.8, 0.7, 2.2, 5.1, 1.6]\n"
+            "count = 0\n"
+            "for item in magnitudes:\n"
+            "    if item > 2.0:\n"
+            "        count += 1\n"
+            "print(count)")
         match = find_matches("for ___ in ___:\n"
-                               "    __exp__\n"
-                               "print(_var_)")[0]
+                             "    __exp__\n"
+                             "print(_var_)")[0]
         m__exp__ = match["__exp__"]
         submatches = m__exp__.find_matches(match["_var_"].id, check_meta=False)
         self.assertTrue(submatches)
 
     def test_function_recursion(self):
         contextualize_report("def recursive(item):\n"
-                   "    if item < 0:\n"
-                   "        return 0\n"
-                   "    else:"
-                   "        return recursive(item - 1)")
+                             "    if item < 0:\n"
+                             "        return 0\n"
+                             "    else:"
+                             "        return recursive(item - 1)")
         matches = find_matches("def _recur_(_var_):\n"
                                "    __exp__")
         for match in matches:

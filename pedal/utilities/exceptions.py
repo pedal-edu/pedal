@@ -3,7 +3,6 @@ import os
 
 BuiltinKeyError = KeyError
 
-
 class KeyError(BuiltinKeyError):
     """
     A version of KeyError that replaces the built-in with one small
@@ -141,7 +140,7 @@ class ExpandedTraceback:
         if filename == self.instructor_filename:
             return True
         # Is the error in this test directory?
-        current_directory = os.path.dirname(os.path.realpath(__file__))
+        current_directory = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
         if filename.startswith(current_directory):
             return True
         # Is the error related to a file in the parent directory?

@@ -92,4 +92,8 @@ Submission
 .. automodule:: pedal.core.submission
     :members:
 
+Tools
+*****
 
+.. automodule:: pedal.core.tool
+    :members:

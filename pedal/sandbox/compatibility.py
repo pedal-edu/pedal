@@ -8,7 +8,7 @@ from pedal.sandbox.messages import EXTENDED_ERROR_EXPLANATION
 from pedal.core.report import MAIN_REPORT
 
 
-def run_student(raise_exceptions=False, report=MAIN_REPORT, old_style_messages=False):
+def run_student(raise_exceptions=False, report=MAIN_REPORT, old_style_messages=False, modules=None):
     """
 
     Args:
@@ -22,7 +22,7 @@ def run_student(raise_exceptions=False, report=MAIN_REPORT, old_style_messages=F
     sandbox = report[TOOL_NAME]['run']
     source_code = report.submission.main_code
     filename = report.submission.main_file
-    sandbox.run(source_code, as_filename=filename, report_exceptions=not raise_exceptions)
+    sandbox.run(source_code, as_filename=filename, report_exceptions=not raise_exceptions, modules=modules)
     if raise_exceptions:
         raise_exception(sandbox.exception, sandbox.exception_position,
                         report=report, message=None if old_style_messages else sandbox.exception_formatted)

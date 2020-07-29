@@ -98,13 +98,15 @@ def tifa_analysis(python_3=True, report=None):
     t.process_code(report.submission.main_code)
     return t
 
+
 def reset(report=MAIN_REPORT):
     """
+    Remove all the information associated with this tool.
 
     Args:
         report:
     """
-    # TODO
+    # TODO: Make it so we can reset TIFA through this, safely.
     pass
 
 

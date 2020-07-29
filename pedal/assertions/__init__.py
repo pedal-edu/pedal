@@ -1,4 +1,6 @@
-from pedal.core.report import MAIN_REPORT
+"""
+The assertions module contains classic unittest-style assert statements.
+"""
 
 from pedal.assertions.setup import _setup_assertions, resolve_all
 from pedal.assertions.assertions import *

@@ -10,6 +10,9 @@ from pedal.utilities.types import humanize_types
 
 
 # TODO: Allow bundling of assertions to make a table
+# ^ This will be "subtests" or something similar.
+
+# TODO: Setup __all__ and make sure that DELTA is not included
 
 
 def iterable(obj):
@@ -141,9 +144,10 @@ def is_sandbox_result(value):
     return False
 
 
-@AtomicFeedbackFunction(title="Instructor Test",
-                        message_template=("Student code failed instructor test.\n"
-                                          "{context}{failure}{message}"))
+MESSAGE_TEMPLATE = ("Student code failed instructor test.\n"
+                    "{context}{failure}{message}")
+
+
 def _basic_assertion(label, justification, left, right, operator, code_comparison_message,
                      hc_message, hc_message_past, message, contextualize, report=MAIN_REPORT,
                      show_expected_value=True, modify_right=None, partial_score=0, muted=False):
@@ -165,9 +169,9 @@ def _basic_assertion(label, justification, left, right, operator, code_compariso
                         show_expected_value, modify_right, left, right)
         report[TOOL_NAME_ASSERTIONS]['collected'].append(failure)
         fields = {'context': context, 'failure': str(failure), 'message': message}
-        feedback(label, tool=TOOL_NAME_ASSERTIONS, category=Feedback.CATEGORIES.INSTRUCTOR,
-                 justification=justification, title=_basic_assertion.title,
-                 message=_basic_assertion.message_template.format(**fields), fields=fields,
+        feedback(label=label, tool=TOOL_NAME_ASSERTIONS, category=Feedback.CATEGORIES.SPECIFICATION,
+                 justification=justification, title="Instructor Test",
+                 message=MESSAGE_TEMPLATE.format(**fields), fields=fields,
                  score=partial_score, correct=False, muted=muted, report=report)
         report[TOOL_NAME_ASSERTIONS]['failures'] += 1
         if report[TOOL_NAME_ASSERTIONS]['exceptions']:
@@ -731,9 +735,11 @@ def assertPrints(result, expected_output, args=None, returns=None,
         failure = AssertionException("\n".join(context))
         report['assertions']['collected'].append(failure)
         # TODO: Fix this!
-        report.attach('Instructor Test', category='student', tool='Assertions',
-                      mistake={'message': "Student code failed instructor test.<br>\n" +
-                                          str(failure)})
+        fields = {'context': "", 'failure': str(failure), 'message': message or ""}
+        feedback(label, tool=TOOL_NAME_ASSERTIONS, category=Feedback.CATEGORIES.SPECIFICATION,
+                 justification="Printed the wrong value", title="Instructor Test",
+                 message=MESSAGE_TEMPLATE.format(**fields), fields=fields,
+                 score=score, correct=False, muted=muted, report=report)
         report['assertions']['failures'] += 1
         if report['assertions']['exceptions']:
             raise failure
@@ -897,3 +903,6 @@ def assertGenerally(expression, score=None, message=None, report=MAIN_REPORT, mu
 assert_equal = assertEqual
 assert_not_equal = assertNotEqual
 assert_prints = assertPrints
+# TODO: Finish adding in all the other assert variants
+
+
