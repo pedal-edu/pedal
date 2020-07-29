@@ -150,8 +150,8 @@ class CaitNode:
                 return eval_binop(op_num, op_expr)
             if op_expr.ast_name == "UnaryOp":
                 return eval_unop(op_num, op_expr)
-            if op_expr.ast_name == "Num":
-                return op_expr.n
+            if op_expr.ast_name == "Constant":  # TODO: Make sure this actuall checks for a number
+                return op_expr.value
             raise NotImplementedError
 
         def eval_bool_comp(num_list, comp_ast):
@@ -225,16 +225,18 @@ class CaitNode:
 
         try:
             ins_expr = CaitNode(ast.parse(expr), report=self.report).body[0].value
-            ins_nums = ins_expr.find_all("Num")
-            std_nums = self.find_all("Num")
+            # ins_nums = ins_expr.find_all("Num")
+            # std_nums = self.find_all("Num")
+            ins_nums = ins_expr.find_all("Constant")
+            std_nums = self.find_all("Constant")
             test_nums = []
             for num in ins_nums:
-                raw_num = num.n
+                raw_num = num.value
                 test_nums.append(raw_num)
                 test_nums.append(raw_num + mag)
                 test_nums.append(raw_num - mag)
             for num in std_nums:
-                raw_num = num.n
+                raw_num = num.value
                 test_nums.append(raw_num)
                 test_nums.append(raw_num + mag)
                 test_nums.append(raw_num - mag)
@@ -474,28 +476,35 @@ class CaitNode:
 
     def has(self, node):
         """
-        Determine if this node has the given `node`.
+        Determine if this node has the given `node`. Specifically, it checks if the ast has a given Constant or variable
+        This method does NOT check for equality of two asts. Use find_matches for that functionality
+        Args:
+            node (): A constant (int, float, str), or Name astnode
+
+        Returns: True if found, False otherwise
+
         """
-        if isinstance(node, (int, float)):
+        if isinstance(node, (int, float, str)):
             visitor = ast.NodeVisitor()
-            has_num = []
+            has_constant = []
+
+            def visit_Constant(self, potential):
+                has_constant.append(node == potential.value)
+                return self.generic_visit(potential)
 
             def visit_Num(self, potential):
-                """
+                has_constant.append(node == potential.n)
+                return self.generic_visit(potential)
 
-                Args:
-                    self:
-                    potential:
-
-                Returns:
-
-                """
-                has_num.append(node == potential.n)
+            def visit_Str(self, potential):
+                has_constant.append(node == potential.s)
                 return self.generic_visit(potential)
 
             visitor.visit_Num = MethodType(visit_Num, visitor)
+            visitor.visit_Constant = MethodType(visit_Constant, visitor)
+            visitor.visit_Str = MethodType(visit_Str, visitor)
             visitor.visit(self.astNode)
-            return any(has_num)
+            return any(has_constant)
         elif node.ast_name != "Name":
             return False
         visitor = ast.NodeVisitor()
@@ -613,6 +622,8 @@ class CaitNode:
             value = self.n
         elif self.is_ast("Str"):
             value = self.s
+        elif self.is_ast("Constant"):
+            value = self.value
         elif self.is_ast("Name"):
             # TODO: Decide on what this should return...
             value = self.id

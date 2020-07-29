@@ -1,4 +1,4 @@
-from __future__ import print_function
+# from __future__ import print_function
 import unittest
 import ast
 import sys
@@ -810,15 +810,60 @@ class CaitTests(unittest.TestCase):
             submatch = __expr__.find_matches("_var_[__expr__]")
             self.assertFalse(submatch)
 
-        set_source("for item in item_list:\n"
-                   "    if item < 0:\n"
-                   "        n = n + item")
+        contextualize_report("for item in item_list:\n"
+                             "    if item < 0:\n"
+                             "        n = n + item")
         matches = find_matches("for _var_ in ___:\n"
                                "    __expr__")
         for match in matches:
             __expr__ = match["__expr__"]
             submatch = __expr__.find_matches("_sum_ = _sum_ + _var_", use_previous=True)
             self.assertTrue(submatch)
+
+    def test_match_root(self):
+        contextualize_report("for item in item_list:\n"
+                             "    if item < 0:\n"
+                             "        n = n + item\n"
+                             "n = 0")
+        match01 = find_match("for ___ in ___:\n"
+                             "    __expr__")
+        match02 = find_match("_var_ = 0")
+        match03 = find_match("_var_ = _var_ + _item_")
+        root01 = match01.match_root.tree_id
+        root02 = match02.match_root.tree_id
+        root03 = match03.match_root.tree_id
+        self.assertTrue(root01 < root02)
+        self.assertTrue(root01 < root03)
+
+    def test_copy(self):
+        contextualize_report("for item in item_list:\n"
+                             "    if item < 0:\n"
+                             "        n = n + item\n"
+                             "        i = i + 1\n"
+                             "n = 0")
+        match01 = find_match("for _item_ in ___:\n"
+                             "    __expr__")
+        map_size01 = len(match01.mappings.keys())
+
+        match02 = find_match("___ = _item_ + 1", prev_match=match01)
+        map_size02 = len(match01.mappings.keys())
+
+        match03 = find_match("___ = _item_ + ___", prev_match=match01)
+        map_size03 = len(match01.mappings.keys())
+        map_size03_2 = len(match03.mappings.keys())
+
+        match04 = find_match("___ = _item_ + 1")
+        match05 = find_match("___ = _item_ + ___")
+        map_size05 = len(match05.mappings.keys())
+
+        self.assertTrue(map_size01 == map_size02 == map_size03)
+        self.assertNotEqual(map_size03, map_size03_2)
+        self.assertNotEqual(map_size03_2, map_size05)
+
+        self.assertFalse(match02)
+        self.assertTrue(match03)
+        self.assertTrue(match04)
+
 
 
 if __name__ == '__main__':
