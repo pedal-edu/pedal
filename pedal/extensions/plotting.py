@@ -157,7 +157,7 @@ GRAPH_TYPES = {'line': 'line plot',
                'scatter': 'scatter plot'}
 
 
-def check_for_plot(plt_type, data, muted=True):
+def check_for_plot(plt_type, data, muted=True, report=MAIN_REPORT):
     """
     TODO: Convert to be feedback function!
 
@@ -168,7 +168,8 @@ def check_for_plot(plt_type, data, muted=True):
         plt_type = 'line'
     type_found = False
     data_found = False
-    for graph in commands.get_plots():
+    plots = commands.get_sandbox(report=report).modules.plotting.plots
+    for graph in plots:
         for a_plot in graph['data']:
             data_found_here = compare_data(plt_type, data, a_plot)
             if a_plot['type'] == plt_type and data_found_here:

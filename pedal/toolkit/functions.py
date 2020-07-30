@@ -4,7 +4,6 @@ from pedal.core.report import MAIN_REPORT
 from pedal.sandbox import commands
 import ast
 
-from pedal.toolkit.signatures import type_check, parse_type, normalize_type, parse_type_value, test_type_equality
 
 DELTA = 0.001
 
@@ -115,48 +114,6 @@ def find_def_by_name(name, root=None):
         if a_def._name == name:
             return a_def
     return None
-
-
-def match_parameters(name, *types, returns=None, root=None):
-    """
-
-    Args:
-        name:
-        *types:
-        returns:
-        root:
-
-    Returns:
-
-    """
-    defn = find_def_by_name(name, root)
-    if defn:
-        for expected, actual in zip(types, defn.args.args):
-            if actual.annotation:
-                expected = parse_type_value(expected, True)
-                actual_type = parse_type(actual.annotation)
-                if not test_type_equality(expected, actual_type):
-                    gently("Error in definition of function `{}` parameter `{}`. Expected `{}`, "
-                             "instead found `{}`.".format(name, actual.arg, expected, actual_type),
-                             label="wrong_parameter_type", title="Wrong Parameter Type")
-                    return None
-        else:
-            if returns is not None:
-                if not isinstance(returns, str):
-                    returns = returns.__name__
-                if defn.returns:
-                    actual_type = parse_type(defn.returns)
-                    if not type_check(returns, actual_type):
-                        gently("Error in definition of function `{}` return type. Expected `{}`, "
-                                 "instead found {}.".format(name, returns, actual_type),
-                                 label="wrong_return_type")
-                        return None
-                else:
-                    gently("Error in definition of function `{}` return type. Expected `{}`, "
-                             "but there was no return type specified.".format(name, returns),
-                             label="missing_return_type")
-                    return None
-            return defn
 
 
 def match_signature(name, length, *parameters):
@@ -453,36 +410,3 @@ def ensure_coverage(percentage=.5, destructive=False, report=None):
             return False
     return True
 
-
-def ensure_cisc108_tests(test_count, report=None):
-    """
-
-    TODO: This should be moved out of pedal, or generalized for environments.
-
-    Args:
-        test_count:
-        report:
-
-    Returns:
-
-    """
-    student = commands.get_student_data()
-    if 'assert_equal' not in student.data:
-        gently("You have not imported assert_equal from the cisc108 module.")
-        return False
-    assert_equal = student.data['assert_equal']
-    if not hasattr(assert_equal, 'student_tests'):
-        gently("The assert_equal function has been modified. Do not let it be overwritten!",
-               label="Assertion Function Corrupted")
-        return False
-    student_tests = assert_equal.student_tests
-    if student_tests.tests == 0:
-        gently("You are not unit testing the result.", label="No Student Unit Tests")
-        return False
-    elif student_tests.tests < test_count:
-        gently("You have not written enough unit tests.", label="Not Enough Student Unit Tests")
-        return False
-    elif student_tests.failures > 0:
-        gently("Your unit tests are not passing.", label="Student Unit Tests Failing")
-        return False
-    return True

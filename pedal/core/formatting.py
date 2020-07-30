@@ -24,6 +24,9 @@ class Formatter:
     def python_code(self, code):
         return self.html_pre(self.html_code(code), "pedal-python-code")
 
+    def python_expression(self, code):
+        return self.html_code(code)
+
     def filename(self, filename):
         return self.html_code(filename, "pedal-filename")
 

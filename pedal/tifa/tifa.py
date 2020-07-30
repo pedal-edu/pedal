@@ -580,6 +580,7 @@ class Tifa(ast.NodeVisitor):
         self.store_variable(class_name, new_class_type)
         # TODO: Define a new scope definition that executes the body
         # TODO: find __init__, execute that
+        # TODO: handle Record subclasses
         definitions_scope = self.scope_chain[:]
         class_scope = Tifa.NewScope(self, definitions_scope, class_type=new_class_type)
         with class_scope:
