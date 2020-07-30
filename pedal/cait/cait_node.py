@@ -150,7 +150,9 @@ class CaitNode:
                 return eval_binop(op_num, op_expr)
             if op_expr.ast_name == "UnaryOp":
                 return eval_unop(op_num, op_expr)
-            if op_expr.ast_name == "Constant":  # TODO: Make sure this actuall checks for a number
+            if op_expr.ast_name == "Num":
+                return op_expr.n
+            if op_expr.ast_name == "Constant":
                 return op_expr.value
             raise NotImplementedError
 
@@ -225,18 +227,22 @@ class CaitNode:
 
         try:
             ins_expr = CaitNode(ast.parse(expr), report=self.report).body[0].value
-            # ins_nums = ins_expr.find_all("Num")
-            # std_nums = self.find_all("Num")
-            ins_nums = ins_expr.find_all("Constant")
-            std_nums = self.find_all("Constant")
+            ins_nums = ins_expr.find_all(["Num", "Constant"])
+            std_nums = self.find_all(["Num", "Constant"])
             test_nums = []
             for num in ins_nums:
-                raw_num = num.value
+                if hasattr(num, "n"):
+                    raw_num = num.n
+                else:
+                    raw_num = num.value
                 test_nums.append(raw_num)
                 test_nums.append(raw_num + mag)
                 test_nums.append(raw_num - mag)
             for num in std_nums:
-                raw_num = num.value
+                if hasattr(num, "n"):
+                    raw_num = num.n
+                else:
+                    raw_num = num.value
                 test_nums.append(raw_num)
                 test_nums.append(raw_num + mag)
                 test_nums.append(raw_num - mag)
@@ -452,9 +458,7 @@ class CaitNode:
         """
         items = []
         visitor = ast.NodeVisitor()
-        # setattr(visitor, "current_id", self.tree_id - 1)
         setattr(visitor, "items", items)
-        func_name = 'visit_' + node_type
 
         def main_visit(self, node):
             """
@@ -469,8 +473,16 @@ class CaitNode:
             self.items.append(node.cait_node)
             return self.generic_visit(node)
 
-        func_ref = main_visit
-        setattr(visitor, func_name, MethodType(func_ref, visitor))
+        if type(node_type) is not list:
+            node_type_list = [node_type]
+        else:
+            node_type_list = node_type
+
+        for node_t in node_type_list:
+            func_name = 'visit_' + node_t
+            func_ref = main_visit
+            setattr(visitor, func_name, MethodType(func_ref, visitor))
+
         visitor.visit(self.astNode)
         return visitor.items
 

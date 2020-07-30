@@ -37,6 +37,12 @@ class CaitNodeTest(unittest.TestCase):
         if_set = program.find_all("If")
         self.assertTrue(len(if_set) == 4, "Found {} ifs, when 4 should be found".format(len(if_set)))
 
+        num_set = program.find_all("Num")
+        self.assertTrue(len(num_set) == 10, "Found {} nums, when 10 should be found".format(len(num_set)))
+
+        num_if_set = program.find_all(["Num", "If"])
+        self.assertTrue(len(num_if_set) == 14, "Found {} nums, when 10 should be found".format(len(num_if_set)))
+
         for_node = program.children[2]
         if_set_for = for_node.find_all("If")
         self.assertTrue(len(if_set_for) == 3, "Found {} ifs, when 3 should be found".format(len(if_set_for)))
@@ -68,8 +74,8 @@ class CaitNodeTest(unittest.TestCase):
 
         assign = program.children[0]
         assign_value = assign.value
-        # self.assertTrue(assign_value.ast_name == "Num", "__getattribute__ fallthrough failed")
-        self.assertTrue(assign_value.ast_name == "Constant", "__getattribute__ fallthrough failed")
+        self.assertTrue(assign_value.ast_name == "Num" or assign_value.ast_name == "Constant",
+                        "__getattribute__ fallthrough failed")
 
         assign_targets = assign.targets
         self.assertTrue(type(assign_targets) == list, "expected list, got {} instead".format(list))
