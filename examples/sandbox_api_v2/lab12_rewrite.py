@@ -1,27 +1,38 @@
-from pedal import (set_source, next_section, execute)
-from pedal.assertions import *
+from pedal import separate_into_sections
+from pedal.source.sections import *
+from pedal.assertions.feedbacks import assert_group
+from pedal.core.commands import *
+from pedal.sandbox.commands import run, start_trace, stop_trace, get_trace
+from pedal.assertions.runtime import *
 
-set_source()
-student = execute(coverage=True)
-if student.coverage.ratio < .5:
-    explain("You will only be given feedback if you have at least 50% code coverage. Write some more unit tests!")
+contextualize_report("a = 0")
 
-set_source(sections=4)
-student = next_section()
+start_trace()
+student = run()
+stop_trace()
+
+assert_coverage(.5,
+                message="You will only be given feedback if you have at least 50% code coverage. Write some more unit tests!",
+                category='instructor',
+                priority='high')
+
+separate_into_sections()
 
 
-
-@section(1)
+@section(1, score=1/3)
 def q1_1():
-    """
-
-    """
     assertHasFunction(student, 'add_5', args=["num"]*5, returns="str")
-    with try_all():
-        assertEqual(student.call('add_5', 1,2,3,4,5), "12345", score=.25)
-        assertEqual(student.call('add_5', 5,4,3,2,1), "54321", score=.25)
-        assertEqual(student.call('add_5', 0,0,0,0,0), "00000", score=.25)
-    compliment("#1.1) You completed the add_5 function", score=.25)
+    with assert_group('add'):
+        assertEqual(student.call('add_5', 1,2,3,4,5), "12345")
+        assertEqual(student.call('add_5', 5,4,3,2,1), "54321")
+        assertEqual(student.call('add_5', 0,0,0,0,0), "00000")
+    set_success(message="#1.1) You completed the add_5 function",
+                group=section(1))
+
+
+with section(1, score=1/3) as section1:
+    set_success(message="#1.1) You completed the first section.",
+                group=section1)
 
 @section(1)
 # Does not require them to complete q1_1 because it's not a precondition
