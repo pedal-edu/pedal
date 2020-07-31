@@ -3,12 +3,12 @@ Simple data classes for storing feedback to present to learners.
 """
 
 __all__ = ['Feedback', 'FeedbackKind', 'FeedbackCategory',
-           "AtomicFeedbackFunction", "CompositeFeedbackFunction",
+           "CompositeFeedbackFunction",
            "FeedbackResponse"]
 
 from pedal.core.location import Location
 from pedal.core.report import MAIN_REPORT
-from pedal.core.feedback_category import FeedbackKind, FeedbackCategory
+from pedal.core.feedback_category import FeedbackKind, FeedbackCategory, FeedbackStatus
 
 PEDAL_DEVELOPERS = ["Austin Cory Bart <acbart@udel.edu>",
                     "Luke Gusukuma <lukesg08@vt.edu>"]
@@ -77,9 +77,11 @@ class Feedback:
         tags (list[:py:class:`~pedal.core.tag.Tag`]): Any tags that you want to
             attach to this feedback.
 
-        group (int or str): Information about what logical grouping within the submission this belongs to. Various
-            tools can chunk up a submission (e.g., by section), they can use this field to keep track of how that
-            decision was made. Resolvers can also use this information to organize feedback or to report multiple
+        parent (int or str): Information about what logical grouping within the
+            submission this belongs to. Various tools can chunk up a
+            submission (e.g., by section), they can use this field to keep
+            track of how that decision was made. Resolvers can also use
+            this information to organize feedback or to report multiple
             categories.
         report (:py:class:`~pedal.core.report.Report`): The Report object to
             attach this feedback to. Defaults to MAIN_REPORT. Unspecified fields
@@ -113,7 +115,13 @@ class Feedback:
     version = '1.0.0'
     author = PEDAL_DEVELOPERS
     tags = None
-    group = None
+    parent = None
+
+    _status: str
+    _exception: Exception or None
+    _met_condition: bool
+    _stored_args: tuple
+    _stored_kwargs: dict
 
     def __init__(self, *args, label=None,
                  category=None, justification=None,
@@ -124,8 +132,8 @@ class Feedback:
                  location=None, score=None, correct=None,
                  muted=None, unscored=None,
                  tool=None, version=None, author=None,
-                 tags=None,
-                 group=None, report=MAIN_REPORT,
+                 tags=None, parent=None, report=MAIN_REPORT,
+                 delay_condition=False,
                  **kwargs):
         # Internal data
         self.report = report
@@ -189,11 +197,11 @@ class Feedback:
         if tags is not None:
             self.tags = tags
         # Organizational
-        if group is not None:
-            self.group = group
-        if self.group is None:
+        if parent is not None:
+            self.parent = parent
+        if self.parent is None:
             # Might inherit from Report's current group
-            self.group = self.report.group
+            self.parent = self.report.get_current_group()
         if self.field_names is not None:
             for field_name in self.field_names:
                 self.fields[field_name] = kwargs.get(field_name)
@@ -201,16 +209,40 @@ class Feedback:
             self.fields[key] = value
         if 'location' not in self.fields and self.location is not None:
             self.fields['location'] = self.location
+        # Potentially delay the condition check
+        self._stored_args = args
+        self._stored_kwargs = kwargs
+        if delay_condition:
+            self._met_condition = False
+            self._status = FeedbackStatus.DELAYED
+        else:
+            self._handle_condition()
+
+    def _handle_condition(self):
+        """ Actually handle the condition check, updating message and report. """
         # Self-attach to a given report?
-        self._met_condition = self.condition(*args, **kwargs)
-        # Generate the message field as needed
-        if self._met_condition:
-            self.message = self._get_message()
-        if report is not None:
+        self._exception = None
+        try:
+            self._met_condition = self.condition(*self._stored_args, **self._stored_kwargs)
+            # Generate the message field as needed
             if self._met_condition:
-                report.add_feedback(self)
+                self.message = self._get_message()
+                self._status = FeedbackStatus.ACTIVE
             else:
-                report.add_ignored_feedback(self)
+                self._status = FeedbackStatus.INACTIVE
+        except Exception as e:
+            self._exception = e
+            self._status = FeedbackStatus.ERROR
+        if self.report is not None:
+            if self._met_condition:
+                self.report.add_feedback(self)
+            else:
+                self.report.add_ignored_feedback(self)
+        # Free up these temporary fields after condition is handled
+        del self._stored_args
+        del self._stored_kwargs
+        if self._exception is not None:
+            raise self._exception
 
     def condition(self, *args, **kwargs):
         """
@@ -229,6 +261,8 @@ class Feedback:
         try to generate one from the message_template. Then, it returns a
         generic message.
 
+        You can override this to create a truly dynamic message, if you want.
+
         Returns:
             str: The message for this feedback.
         """
@@ -237,6 +271,15 @@ class Feedback:
         if self.message_template is not None:
             return self.message_template.format(**self.fields)
         return "No feedback message provided"
+
+    def _get_child_feedback(self, feedback, active):
+        """ Callback function that Reports will call when a new piece of
+        feedback is being considered. By default, does nothing. This is useful
+        for :py:class:`pedal.core.group.FeedbackGroup`, most other feedbacks
+        will just not care.
+
+        The ``active`` parameter controls whether or not the condition for the
+        feedback was met. """
 
     def __bool__(self):
         return bool(self._met_condition)
@@ -262,8 +305,8 @@ class Feedback:
             metadata += ", category=" + self.category
         if self.priority is not None:
             metadata += ", priority=" + self.priority
-        if self.group is not None:
-            metadata += ", group=" + str(self.group)
+        if self.parent is not None:
+            metadata += ", parent=" + str(self.parent.label)
         return "Feedback({}{})".format(self.label, metadata)
 
 
@@ -272,13 +315,6 @@ class FeedbackResponse(Feedback):
     An extension of :py:class:`~pedal.core.feedback.Feedback` that is meant
     to indicate that the class should not have any condition behind its
     response.
-    """
-
-
-class AtomicFeedbackFunction(Feedback):
-    """
-    An extension of :py:class:`~pedal.core.feedback.Feedback` that is meant
-    to indicate that the class should have a condition and response.
     """
 
 
@@ -304,3 +340,11 @@ def CompositeFeedbackFunction(*functions):
         CompositeFeedbackFunction_with_attrs.functions = functions
         return function
     return CompositeFeedbackFunction_with_attrs
+
+
+class FeedbackGroup(Feedback):
+    """
+    An extension of :py:class:`~pedal.core.feedback.Feedback` that is meant
+    to indicate that this class will start a new Group context within the report
+    and do something interesting with any children it gets.
+    """

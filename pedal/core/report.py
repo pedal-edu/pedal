@@ -61,6 +61,7 @@ class Report:
         self.suppressions = {}
         self.suppressed_labels = []
         self.hiddens = set()
+        self.groups = []
         self.group = None
         self.group_names = {}
         self.hooks = {}
@@ -117,6 +118,8 @@ class Report:
             :py:class:`~pedal.core.feedback.Feedback`: The attached feedback.
         """
         self.feedback.append(feedback)
+        if feedback.parent is not None:
+            feedback.parent._get_child_feedback(feedback, True)
         return feedback
 
     def add_ignored_feedback(self, feedback):
@@ -134,6 +137,8 @@ class Report:
             :py:class:`~pedal.core.feedback.Feedback`: The attached feedback.
         """
         self.ignored_feedback.append(feedback)
+        if feedback.parent is not None:
+            feedback.parent._get_child_feedback(feedback, False)
         return feedback
 
     def suppress(self, category=None, label=True):
@@ -260,6 +265,19 @@ class Report:
         if tool_name in cls.TOOLS:
             raise PedalToolAlreadyRegistered(tool_name)
         cls.TOOLS[tool_name] = ToolRegistration(tool_name, reset_function)
+
+    def get_current_group(self):
+        if self.groups:
+            return self.groups[-1]
+        else:
+            return None
+
+    def start_group(self, group):
+        self.groups.append(group)
+
+    def stop_group(self, group):
+        if self.groups:
+            self.groups.remove(group)
 
 
 #: The global Report object. Meant to be used as a default singleton

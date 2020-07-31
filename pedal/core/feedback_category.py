@@ -87,3 +87,14 @@ class FeedbackKind:
     INSTRUCTIONAL = "Instructional"
     META = "Meta"
 
+
+class FeedbackStatus:
+    """ Enumeration of feedback status outcomes. When you create a piece of
+    feedback, it will be either active or inactive depeneding on whether its
+    condition was met. Alternatively, it is also possible that it triggered
+    an exception. It may also be delayed, indicating that it has not yet been
+    checked. """
+    INACTIVE = "inactive"
+    ERROR = "error"
+    ACTIVE = "active"
+    DELAYED = "delayed"
