@@ -8,18 +8,18 @@ from pedal.core.commands import system_error
 from pedal.core.report import MAIN_REPORT
 from pedal.core.location import Location
 from pedal.tifa.constants import TOOL_NAME
-from pedal.tifa.type_definitions import (UnknownType, RecursedType,
+from pedal.tifa.type_definitions import (UnknownType,
                                          FunctionType, ClassType, InstanceType,
                                          NumType, NoneType, BoolType, TupleType,
                                          ListType, StrType, GeneratorType,
                                          DictType, ModuleType, SetType,
-    # FileType, DayType, TimeType,
+                                         # FileType, DayType, TimeType,
                                          type_from_json, type_to_literal, get_tifa_type,
                                          LiteralNum, LiteralBool,
                                          LiteralNone, LiteralStr,
                                          LiteralTuple, Type, get_tifa_type_from_value)
 from pedal.tifa.builtin_definitions import (get_builtin_module, get_builtin_function)
-from pedal.tifa.type_operations import (merge_types, are_types_equal,
+from pedal.tifa.type_operations import (are_types_equal,
                                         VALID_UNARYOP_TYPES, VALID_BINOP_TYPES,
                                         ORDERABLE_TYPES, INDEXABLE_TYPES)
 from pedal.tifa.identifier import Identifier
@@ -42,13 +42,14 @@ class Tifa(ast.NodeVisitor):
     TIFA Class for traversing an AST and finding common issues.
 
     Args:
-        python_3 (bool): Whether to parse the code in regular PYTHON_3 mode or
-                         the modified AST that Skulpt uses.
         report (Report): The report object to store data and feedback in. If
                          left None, defaults to the global MAIN_REPORT.
     """
 
-    def __init__(self, python_3=True, report=MAIN_REPORT):
+    source: list
+    final_node: ast.AST or None
+
+    def __init__(self, report=MAIN_REPORT):
         self.report = report
         self._initialize_report()
 
@@ -294,36 +295,37 @@ class Tifa(ast.NodeVisitor):
             if isinstance(node, ast.AST):
                 self.visit(node)
 
-    def walk_targets(self, targets, type, walker):
+    @staticmethod
+    def walk_targets(targets, target_type, walker):
         """
         Iterate through the targets and call the given function on each one.
 
         Args:
             targets (list of Ast nodes): A list of potential targets to be
                                          traversed.
-            type (Type): The given type to be unraveled and applied to the
+            target_type (Type): The given type to be unraveled and applied to the
                          targets.
             walker (Ast Node, Type -> None): A function that will process
                                              each target and unravel the type.
         """
         for target in targets:
-            walker(target, type)
+            walker(target, target_type)
 
-    def _walk_target(self, target, type):
+    def _walk_target(self, target, target_type):
         """
         Recursively apply the type to the target
 
         Args:
             target (Ast): The current AST node to process
-            type (Type): The type to apply to this node
+            target_type (Type): The type to apply to this node
         """
         if isinstance(target, ast.Name):
-            self.store_iter_variable(target.id, type, self.locate(target))
+            self.store_iter_variable(target.id, target_type, self.locate(target))
             return target.id
         elif isinstance(target, (ast.Tuple, ast.List)):
             result = None
             for i, elt in enumerate(target.elts):
-                elt_type = type.iterate(LiteralNum(i))
+                elt_type = target_type.iterate(LiteralNum(i))
                 potential_name = self._walk_target(elt, elt_type)
                 if potential_name is not None and result is None:
                     result = potential_name
@@ -373,21 +375,24 @@ class Tifa(ast.NodeVisitor):
         self.walk_targets(node.targets, value_type, self.assign_target)
 
     # TODO: Properly handle assignments with subscripts
-    def assign_target(self, target, type):
+    def assign_target(self, target, target_type):
         """
+        Assign the type to the target, handling all kinds of assignment
+        statements, including Names, Tuples/Lists, Subscripts, and
+        Attributes.
 
         Args:
-            target:
-            type:
+            target (ast.AST): The targe AST Node.
+            target_type (Type): The TIFA type.
 
         Returns:
 
         """
         if isinstance(target, ast.Name):
-            self.store_variable(target.id, type)
+            self.store_variable(target.id, target_type)
         elif isinstance(target, (ast.Tuple, ast.List)):
             for i, elt in enumerate(target.elts):
-                elt_type = type.iterate(LiteralNum(i))
+                elt_type = target_type.iterate(LiteralNum(i))
                 self.assign_target(elt, elt_type)
         elif isinstance(target, ast.Subscript):
             left_hand_type = self.visit(target.value)
@@ -403,18 +408,18 @@ class Tifa(ast.NodeVisitor):
                     key_type = self.visit(target.slice.value)
                     left_hand_type.empty = False
                     left_hand_type.keys = [key_type.clone()]
-                    left_hand_type.values = [type.clone()]
+                    left_hand_type.values = [target_type.clone()]
                 elif left_hand_type.literals:
                     original_type = left_hand_type.has_literal(literal)
                     if not original_type:
-                        left_hand_type.update_key(literal, type.clone())
-                    elif not are_types_equal(original_type, type):
+                        left_hand_type.update_key(literal, target_type.clone())
+                    elif not are_types_equal(original_type, target_type):
                         # TODO: Fix "Dictionary" to be the name of the variable
-                        self._issue(type_changes(self.locate(), 'Dictionary', original_type, type))
+                        self._issue(type_changes(self.locate(), 'Dictionary', original_type, target_type))
         elif isinstance(target, ast.Attribute):
             left_hand_type = self.visit(target.value)
             if isinstance(left_hand_type, InstanceType):
-                left_hand_type.add_attr(target.attr, type)
+                left_hand_type.add_attr(target.attr, target_type)
             # TODO: Otherwise we attempted to assign to a non-instance
             # TODO: Handle minor type changes (e.g., appending to an inner list)
 
@@ -493,12 +498,13 @@ class Tifa(ast.NodeVisitor):
 
     def visit_Bool(self, node):
         """
+        Visit a constant boolean value.
 
         Args:
-            node:
+            node (ast.AST): The boolean value Node.
 
         Returns:
-
+            Type: A Bool type.
         """
         return BoolType()
 
@@ -663,11 +669,11 @@ class Tifa(ast.NodeVisitor):
         - record
         TODO: Handle records appropriately
         """
-        type = DictType()
+        result_type = DictType()
         if not node.keys:
-            type.empty = True
+            result_type.empty = True
         else:
-            type.empty = False
+            result_type.empty = False
             all_literals = True
             keys, values, literals = [], [], []
             for key, value in zip(node.keys, node.values):
@@ -681,12 +687,12 @@ class Tifa(ast.NodeVisitor):
                     all_literals = False
 
             if all_literals:
-                type.literals = literals
-                type.values = values
+                result_type.literals = literals
+                result_type.values = values
             else:
-                type.keys = key
-                type.values = value
-        return type
+                result_type.keys = node.keys[0]
+                result_type.values = node.values[0]
+        return result_type
 
     def visit_DictComp(self, node):
         """
@@ -790,9 +796,9 @@ class Tifa(ast.NodeVisitor):
                         returns = get_tifa_type(node.returns, self)
                         if not are_types_equal(return_value, returns, True):
                             self._issue(multiple_return_types(return_state.position,
-                                                  returns.precise_description(),
-                                                  return_value.precise_description(),
-                                                  report=self.report))
+                                                              returns.precise_description(),
+                                                              return_value.precise_description(),
+                                                              report=self.report))
             return return_value
 
         function = FunctionType(definition=definition, name=function_name)
@@ -959,15 +965,15 @@ class Tifa(ast.NodeVisitor):
         Returns:
 
         """
-        type = ListType()
+        result_type = ListType()
         if node.elts:
-            type.empty = False
+            result_type.empty = False
             # TODO: confirm homogenous subtype
             for elt in node.elts:
-                type.subtype = self.visit(elt)
+                result_type.subtype = self.visit(elt)
         else:
-            type.empty = True
-        return type
+            result_type.empty = True
+        return result_type
 
     def visit_ListComp(self, node):
         """
@@ -1042,6 +1048,7 @@ class Tifa(ast.NodeVisitor):
         return NumType()
 
     def visit_Constant(self, node) -> Type:
+        """ Handle new 3.8's Constant node """
         return get_tifa_type_from_value(node.value)
 
     def visit_Return(self, node):
@@ -1132,24 +1139,17 @@ class Tifa(ast.NodeVisitor):
                 self.visit(node.slice.step)
             return value_type
 
-    def visit_Tuple(self, node):
-        """
-
-        Args:
-            node:
-
-        Returns:
-
-        """
-        type = TupleType()
+    def visit_Tuple(self, node) -> TupleType:
+        """ Handle Tuple literal """
+        result_type = TupleType()
         if not node.elts:
-            type.empty = True
-            type.subtypes = []
+            result_type.empty = True
+            result_type.subtypes = []
         else:
-            type.empty = False
+            result_type.empty = False
             # TODO: confirm homogenous subtype
-            type.subtypes = [self.visit(elt) for elt in node.elts]
-        return type
+            result_type.subtypes = [self.visit(elt) for elt in node.elts]
+        return result_type
 
     def visit_UnaryOp(self, node):
         """
@@ -1261,18 +1261,20 @@ class Tifa(ast.NodeVisitor):
         """
         return self.load_variable(name, position)
 
-    def store_iter_variable(self, name, type, position=None):
+    def store_iter_variable(self, name, new_type, position=None):
         """
+        Record that the variable was iterated upon. This counts as a Read.
 
         Args:
-            name:
-            type:
-            position:
+            name (str): The name of the variable.
+            new_type (Type): The Tifa Type of the variable.
+            position: The location where this iteration occurred.
 
         Returns:
-
+            :py:class:`pedal.tifa.state.State`: The wrapped State object of
+                the stored variable.
         """
-        state = self.store_variable(name, type, position)
+        state = self.store_variable(name, new_type, position)
         state.read = 'yes'
         return state
 
@@ -1477,14 +1479,15 @@ class Tifa(ast.NodeVisitor):
                 combined = self.combine_states(right_state, parent_state)
                 self.name_map[parent_path_id][right_name] = combined
 
-    def trace_state(self, state, method, position):
+    @staticmethod
+    def trace_state(state, method, position):
         """
         Makes a copy of the given state with the given method type.
 
         Args:
-            position:
             state (State): The state to copy (as in, we trace a copy of it!)
             method (str): The operation being applied to the state.
+            position: The location this copy occurred at.
         Returns:
             State: The new State
         """
@@ -1548,7 +1551,7 @@ class Tifa(ast.NodeVisitor):
             return LiteralTuple(values)
         elif isinstance(node, ast.Name):
             if node.id == "None":
-                return LiteralNone()
+                return LiteralNone(None)
             elif node.id == "False":
                 return LiteralBool(False)
             elif node.id == "True":
@@ -1585,7 +1588,7 @@ class Tifa(ast.NodeVisitor):
             self.tifa.name_map[self.id] = {}
             self.tifa.path_parents[self.id] = self.origin_path
 
-        def __exit__(self, type, value, traceback):
+        def __exit__(self, exc_type, value, traceback):
             self.tifa.path_names.pop()
             self.tifa.path_chain.pop(0)
 
@@ -1619,7 +1622,7 @@ class Tifa(ast.NodeVisitor):
                 self.class_type.scope_id = self.tifa.scope_id
                 self.tifa.class_scopes[self.tifa.scope_id] = self.class_type
 
-        def __exit__(self, type, value, traceback):
+        def __exit__(self, exc_type, value, traceback):
             # Finish up the scope
             self.tifa._finish_scope()
             # Leave the body

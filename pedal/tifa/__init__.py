@@ -94,7 +94,7 @@ def tifa_analysis(python_3=True, report=None):
     """
     if report is None:
         report = MAIN_REPORT
-    t = Tifa(python_3=python_3, report=report)
+    t = Tifa(report=report)
     t.process_code(report.submission.main_code)
     return t
 
