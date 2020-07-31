@@ -126,7 +126,7 @@ class Sandbox:
                                     code, filename)
             return self
 
-    def _execute(self, code, filename, kind, threaded):
+    def _execute(self, code, filename, kind, threaded, **meta):
         # Handle any threading if necessary
         if threaded:
             return self._execute_with_timeout(code, filename, kind)
@@ -134,7 +134,7 @@ class Sandbox:
         self.clear_exception()
         context = SandboxContext(self._next_context_id, code, filename, kind,
                                  self.target, [], "", self.exception,
-                                 self.report.submission)
+                                 self.report.submission, **meta)
         self._context.append(context)
 
         # Patch in dangerous built-ins
@@ -260,12 +260,13 @@ class Sandbox:
             kwargs_locals = []
         # Make the call and evaluate it
         self.target = target
-        actual, student = self._construct_call(function, args, kwargs,
-                                               args_locals, kwargs_locals,
-                                               target)
+        actual, student, arguments = self._construct_call(function, args, kwargs,
+                                                          args_locals, kwargs_locals,
+                                                          target)
         context_id = self._next_context_id
         self._execute(actual, self.report.submission.instructor_file,
-                      SandboxContextKind.CALL, threaded=threaded)
+                      SandboxContextKind.CALL, threaded=threaded,
+                      called=function, args=arguments)
         self._purge_temporaries()
         return self._handle_result(target, context_id)
 
@@ -306,10 +307,14 @@ class Sandbox:
             self.result = self.data[target]
             if self.result_proxy_class is not None:
                 self.result = self.result_proxy_class(self.result,
-                                                      call_id=context_id,
+                                                      context_id=context_id,
                                                       sandbox=self)
             return self.result
         else:
+            if self.result_proxy_class is not None:
+                self.exception = self.result_proxy_class(self.exception,
+                                                         context_id=context_id,
+                                                         sandbox=self)
             return self.exception
 
     ############################################################################
@@ -327,6 +332,29 @@ class Sandbox:
             return self._context[-1:]
         else:
             return self._context[self._context_group_start[-1]:]
+
+    def _guess_context(self, target_name):
+        """
+        Tries to figure out the best context for the given target_name, by
+        first checking whether the target was ever used in a CALL or EVAL.
+        If it fails to find it, then it uses the most recent RUN. Otherwise,
+        it just just returns None.
+
+        Returns:
+            :py:class:`pedal.sandbox.data.SandboxContext` or None: The found
+                context, or None.
+        """
+        # Was it a target for a CALL or EVAL?
+        for context in self._context[::-1]:
+            if context.kind in (SandboxContextKind.EVAL, SandboxContextKind.CALL):
+                if context.target == target_name:
+                    return context
+        # Just get the last run
+        for context in self._context[::-1]:
+            if context.kind == SandboxContextKind.RUN:
+                return context
+        # Okay just give up
+        return None
 
     def start_grouping_context(self):
         """ Any subsequent executions will be grouped. """
@@ -375,6 +403,8 @@ class Sandbox:
             lines = self.report.submission.get_lines()
             show_filenames.update(self.report.submission.files.keys())
             line_offsets = self.report.submission.line_offsets
+        else:
+            lines = code.split("\n")
         # Create a better traceback
         traceback = ExpandedTraceback(self.exception, exc_info,
                                       self.full_traceback,
@@ -492,6 +522,7 @@ class Sandbox:
         return self
 
     def mock_module(self, module_name, new_version, friendly_name=None):
+        """ Create a mocked version of this module. """
         if friendly_name is None:
             friendly_name = module_name
         mocked_modules = self.modules.new_module(new_version, module_name, friendly_name)
@@ -519,6 +550,7 @@ class Sandbox:
 
     def _construct_call(self, function, args, kwargs, args_locals, kwargs_locals,
                         target):
+        """ Turn the given strings into an actual function call string. """
         str_args = [arg_name if arg_name is not None else
                     self._make_temporary('arg', str(index), arg_value)
                     for index, (arg_value, arg_name)
@@ -535,7 +567,7 @@ class Sandbox:
         else:
             actual = f"{target} = {call}"
         student_call = call if target == "_" else actual
-        return actual, student_call
+        return actual, student_call, arguments
 
     def _purge_temporaries(self):
         """
@@ -694,6 +726,31 @@ class Sandbox:
 
         """
         return {k: SandboxVariable(k, v) for k, v in self.data.items()}
+
+    def __getitem__(self, item):
+        value, exception = None, None
+        try:
+            value = self.data[item]
+        except KeyError:
+            exception = NameError(f"NameError: name '{item}' is not defined")
+        filename = self.report.submission.instructor_file
+        context_id = self._next_context_id
+        best_context = self._guess_context(item)
+        if best_context is None:
+            context = SandboxContext(context_id, str(item), filename,
+                                     SandboxContextKind.GETITEM, item, [], "",
+                                     exception, self.report.submission)
+        else:
+            context = best_context.clone(context_id)
+            context.target = str(item)
+            context.exception = exception
+        self._context.append(context)
+        self._next_context_id += 1
+
+        if self.result_proxy_class is not None:
+            return self.result_proxy_class(value, context_id=context_id,
+                                           sandbox=self)
+        return value
 
     ############################################################################
     # Useful Dunders

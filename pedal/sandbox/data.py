@@ -43,6 +43,7 @@ class SandboxContextKind:
     RUN = 'run'
     EVAL = 'eval'
     CALL = 'call'
+    GETITEM = 'getitem'
 
 
 class SandboxContext:
@@ -52,7 +53,7 @@ class SandboxContext:
     outputs, exceptions, etc.
 
     Args:
-        call_id (int): The unique ID representing this sandbox execution.
+        context_id (int): The unique ID representing this sandbox execution.
         code (str): The code that was executed.
         filename (str): The filename of the code that was executed.
         kind (SandboxContextKind): The kind of execution that generated this.
@@ -65,11 +66,15 @@ class SandboxContext:
             execution, or None if none occurred.
         submission (:py:class:`pedal.core.submission.Submission`): The
             submission object that this context was attached to.
+        called (str): The name of the function that was called, if one was
+            called.
+        args (list[str]): A string representation of the arguments that were
+            called.
     """
 
-    def __init__(self, call_id, code, filename, kind, target, inputs, output,
-                 exception, submission):
-        self.call_id = call_id
+    def __init__(self, context_id, code, filename, kind, target, inputs, output,
+                 exception, submission, called=None, args=None):
+        self.context_id = context_id
         self.kind = kind
         # Hack: Chomp off the "_ =" if the target is "_"
         if target == "_":
@@ -81,6 +86,14 @@ class SandboxContext:
         self.output = output
         self.exception = exception
         self.submission = submission
+        self.called = called
+        self.args = args
+
+    def clone(self, context_id):
+        """ Create a separate copy of this item. Inputs will be deepcopied. """
+        return SandboxContext(context_id, self.code, self.filename,
+                              self.kind, self.target, list(self.inputs),
+                              self.output, self.exception, self.submission)
 
 
 def format_contexts(contexts, format):

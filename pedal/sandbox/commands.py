@@ -258,37 +258,68 @@ def get_trace(report=MAIN_REPORT):
     return sandbox.trace.lines - sandbox.trace.missing
 
 
+def start_trace(report=MAIN_REPORT):
+    """ Start tracing using the coverage module. """
+    sandbox: Sandbox = report[TOOL_NAME]['sandbox']
+    sandbox.tracer_style = 'coverage'
+
+
+def stop_trace(report=MAIN_REPORT):
+    """ Stop whatever tracing is going on. """
+    sandbox: Sandbox = report[TOOL_NAME]['sandbox']
+    sandbox.clear_tracer()
+
+
 def clear_mocks(report=MAIN_REPORT):
+    """ Reset mocked modules and functions to their defaults. """
     sandbox: Sandbox = report[TOOL_NAME]['sandbox']
     sandbox.clear_mocks()
 
 
 def mock_function(function_name, new_version, report=MAIN_REPORT):
+    """ Provide a custom version of the built-in function. """
     sandbox: Sandbox = report[TOOL_NAME]['sandbox']
     sandbox.mock_function(function_name, new_version)
 
 
 def allow_function(function_name, report=MAIN_REPORT):
+    """ Explicitly allow students to use the given function. """
     sandbox: Sandbox = report[TOOL_NAME]['sandbox']
     sandbox.allow_function(function_name)
 
 
 def block_function(function_name, report=MAIN_REPORT):
+    """ Cause an error if students call the given function. """
     sandbox: Sandbox = report[TOOL_NAME]['sandbox']
     sandbox.block_function(function_name)
 
 
 def allow_module(module_name, report=MAIN_REPORT):
+    """ Explicitly allow students to use the given module. """
     sandbox: Sandbox = report[TOOL_NAME]['sandbox']
     sandbox.allow_module(module_name)
 
 
 def mock_module(module_name, new_version, friendly_name=None, report=MAIN_REPORT):
+    """
+    Provide an alternative version of the given module.
+
+    Args:
+        module_name (str): The importable name of the module.
+        new_version (dict | :py:class:`pedal.sandbox.mocked.MockModule`): The
+            new version of the module, either as a dictionary of fields/values
+            or a fully created MockModule.
+        friendly_name (str): The internal name to use to store the data for this
+            module, accessible via Sandbox's `modules` field.
+        report (:py:class:`pedal.core.report.Report`): The report with the
+            sandbox instance.
+    """
     sandbox: Sandbox = report[TOOL_NAME]['sandbox']
     sandbox.mock_module(module_name, new_version, friendly_name=friendly_name)
 
 
 def block_module(module_name, report=MAIN_REPORT):
+    """ Cause an error if students use the given module. """
     sandbox: Sandbox = report[TOOL_NAME]['sandbox']
     sandbox.block_module(module_name)
 
