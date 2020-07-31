@@ -158,7 +158,8 @@ def resolve(report=MAIN_REPORT, priority_key=by_priority):
         if feedback.label in report.suppressed_labels:
             continue
         success, partial, message, title, data = parse_feedback(feedback)
-        final.score += partial if partial is not None else 0
+        if not feedback.unscored:
+            final.score += partial if partial is not None else 0
         if feedback.muted:
             continue
         final.success = success or final.success
