@@ -37,7 +37,8 @@ assert_equal(call('add', 5, 4), 9,
 
 """
 
-from pedal.core.feedback import Feedback
+from pedal.core.feedback import Feedback, FeedbackGroup
+from pedal.core.feedback_category import FeedbackStatus
 from pedal.core.report import MAIN_REPORT
 from pedal.sandbox import Sandbox
 from pedal.sandbox.data import format_contexts
@@ -56,9 +57,9 @@ class InterpolatedValue:
         self.is_error = not self.is_sandboxed and isinstance(value, Exception)
         self.report = MAIN_REPORT
         if self.is_sandboxed:
-            call_id = value._actual_call_id
+            context_id = value._actual_context_id
             sandbox = value._actual_sandbox
-            self.context = sandbox._context[call_id]
+            self.context = sandbox._context[context_id]
         else:
             self.context = None
 
@@ -87,11 +88,14 @@ class AssertionBreak(Exception):
     flow around subsequent checks.
     """
 
-    def __init__(self, feedback):
+    def __init__(self, feedback, exception=None):
         self.feedback = feedback
+        self.exception = exception
 
     def __str__(self):
-        return str(self.feedback.label)
+        exception_name = (self.exception.__class__.__name__
+                          if self.exception is not None else "No Error")
+        return f"AssertionBreak({self.feedback.label}, {exception_name})"
 
 
 class AssertionFeedback(Feedback):
@@ -99,6 +103,7 @@ class AssertionFeedback(Feedback):
     category = Feedback.CATEGORIES.SPECIFICATION
     valence = Feedback.NEGATIVE_VALENCE
     kind = Feedback.KINDS.CONSTRAINT
+    assertion_status: str
 
 
 class RuntimeAssertionFeedback(AssertionFeedback):
@@ -108,6 +113,7 @@ class RuntimeAssertionFeedback(AssertionFeedback):
                         "{assertion_message}"
                         "{explanation}")
     _expected_verb: str
+    _aggregate_verb = "Expected"
     _inverse_operator: str
 
     def __init__(self, left, right, *args, **kwargs):
@@ -136,8 +142,11 @@ class RuntimeAssertionFeedback(AssertionFeedback):
         fields = kwargs.setdefault('fields', {})
         fields['left'] = left.value
         fields['right'] = right.value
+        fields['left_boxed'] = left
+        fields['right_boxed'] = right
         fields['contexts'] = contexts
         fields['expected_verb'] = self._expected_verb
+        fields['aggregate_verb'] = self._aggregate_verb
         fields['inverse_operator'] = self._inverse_operator
         fields['context_message'] = context_message
         fields['assertion_message'] = assertion_message
@@ -145,11 +154,12 @@ class RuntimeAssertionFeedback(AssertionFeedback):
         try:
             super().__init__(left, right, *args, **kwargs)
         except Exception as e:
-            self.report[TOOL_NAME]['errors'] += 1
-            if self.report[TOOL_NAME]['exceptions']:
-                raise AssertionBreak(self, e)
+            parent = self.report.get_current_group()
+            # TODO: Does this handle nested groups correctly?
+            if parent is not None:
+                if not parent.try_all:
+                    raise AssertionBreak(self, e)
         if not self:
-            self.report[TOOL_NAME]['failures'] += 1
             if self.report[TOOL_NAME]['exceptions']:
                 raise AssertionBreak(self)
 
@@ -184,8 +194,6 @@ class RuntimeAssertionFeedback(AssertionFeedback):
             left (InterpolatedValue):
             right (InterpolatedValue):
             contexts (list[:py:class:`pedal.sandbox.data.SandboxContext`]):
-            expected_verb (str):
-            inverse_operator (str):
         Returns:
 
         """
@@ -279,3 +287,195 @@ class RuntimePrintingAssertionFeedback(RuntimeAssertionFeedback):
         # Sandboxed value
         else:
             return chomp(execution.context.output)
+
+
+"""
+I ran your function `add` on some new arguments.
+{I also entered some inputs of my own.}?
+It passed X/Y tests.
+
+|    | Arguments | Returned | Expected |
+|----|-----------|----------|----------|
+| ❌ |  1, 2     |   -1     |     3    |
+
+
+What if they trigger an exception instead of producing a value? 
+
+What if they assert_prints?
+    Could be a separate table. Perhaps all the asserts get their own table?
+    Yes, this would make a lot of sense. Then each table is adjusting their
+        "Expected" column title as appropriate.
+    And some tables want to also adjust their Returned column to be "Printed".
+        And to also include the Input column, I suppose (although maybe
+            that should happen automatically whenever you include inputs).
+        Or perhaps it always tells you explicitly what was printed (if it's available?)
+            I feel like that would be information overload.
+
+    "Expected the output to be"
+
+If you encounter an existing AssertionGroup feedback, concatenate it.
+
+The final result is turned into a new AssertionFeedback that is placed before
+    its composite children, to ensure that is given priority. Perhaps we should
+    also mark certain feedback as "superseded" by others?
+
+Group Manager:
+    Keep track of current groups in a stack
+    Groups have a name
+    Also record
+        Errors, failures, successes
+            of each AssertionFeedback that occurs
+    Two modes:
+        Try all: Keep going even if you encounter an error or a failure.
+        Fail on first: If you encounter any fails/errors, stop checking.
+        
+Automatically mutes/unscores any collected assertion feedbacks.
+
+"""
+
+
+class assert_group(AssertionFeedback, FeedbackGroup):
+    """
+
+    TODO: Decorator version
+
+    """
+
+    message_template = ("Student code failed instructor tests.\n"
+                        "{summary_statistics}\n"
+                        "{tables}")
+
+    def __init__(self, name, try_all=True, **kwargs):
+        super().__init__(delay_condition=True, **kwargs)
+        self.name = name
+        self.try_all = try_all
+        self.successes = []
+        self.failures = []
+        self.errors = []
+        self.all_feedback = []
+
+    def __enter__(self):
+        self.report.start_group(self)
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        # Go through all my collected assertions
+        # Count failures, errors, successes
+        # If there are any non-successes, then produce a summary table.
+        #   Otherwise produce a success within this group
+        # Mute and unscore any feedbacks (use their scores though)
+        self.report.stop_group(self)
+        self.format_message()
+        self.format_table()
+        self._handle_condition()
+
+    def _get_child_feedback(self, feedback, active):
+        if isinstance(feedback, RuntimeAssertionFeedback):
+            if feedback._status == FeedbackStatus.INACTIVE:
+                self.successes.append(feedback)
+            elif feedback._status == FeedbackStatus.ACTIVE:
+                self.failures.append(feedback)
+            elif feedback._status == FeedbackStatus.ERROR:
+                self.errors.append(feedback)
+            self.all_feedback.append(feedback)
+        feedback.muted = True
+        feedback.unscored = True
+
+    def format_message(self):
+        self.fields['failures'] = self.failures
+        self.fields['errors'] = self.errors
+        self.fields['successes'] = self.successes
+        self.fields['failure_count'] = failure_count = len(self.failures)
+        self.fields['error_count'] = error_count = len(self.errors)
+        self.fields['success_count'] = success_count = len(self.successes)
+        self.fields['total_count'] = total_count = len(self.all_feedback)
+
+        stats = []
+        stats.append(f"You passed {success_count}/{total_count} tests.\n")
+        if error_count:
+            stats.append(f"There were {error_count} errors.\n")
+        self.fields['summary_statistics'] = "\n".join(stats)
+
+    def format_table(self):
+        # Group by their tables
+        # TODO: left target, right target, expected_verb
+        groups = {}
+        for feedback in self.all_feedback:
+            left = feedback.fields['left_boxed']
+            right = feedback.fields['right_boxed']
+            verb = feedback.fields['aggregate_verb']
+            left_called = left.context.called if left.context else None
+            right_called = right.context.called if right.context else None
+            key = (left_called, right_called, verb)
+            if key not in groups:
+                groups[key] = []
+            groups[key].append(feedback)
+
+        # Actually build tables
+        tables = []
+        for (left_called, right_called, verb), feedbacks in groups.items():
+            if left_called is None and right_called is None:
+                continue
+            # TODO: Handle left AND right called
+            called = self.report.format.name(left_called or right_called)
+            # TODO: Handle inputs, outputs
+            columns = ["", "Arguments", "Returned", verb]
+            rows = []
+            for feedback in feedbacks:
+                left = feedback.fields['left_boxed']
+                right = feedback.fields['right_boxed']
+                if left.context:
+                    arguments = left.context.args
+                    actual, expected = str(left.value), str(right.value)
+                else:
+                    arguments = right.context.args
+                    actual, expected = str(right.value), str(left.value)
+                if feedback._status == FeedbackStatus.INACTIVE:
+                    outcome = self.report.format.html_span("&#10004;", "pedal-positive-mark")
+                else:
+                    outcome = self.report.format.html_span("&#10060;", "pedal-negative-mark")
+                rows.append([outcome, self.report.format.python_code(arguments), actual, expected])
+            table = self.report.format.table(rows, columns)
+            table = (f"I ran your function {called} on some new arguments."
+                     f"{table}")
+            tables.append(table)
+        self.fields['tables'] = "\n".join(tables)
+
+    def condition(self):
+        """ Check that there are no errors or failures. """
+        return self.errors or self.failures
+
+"""
+# Group a bunch of tests at the top level
+with assert_group('add') as add_group:
+    assert_equal(call('add', 1, 2), 3)
+    assert_equal(call('add', 4, 5), 9)
+    assert_equal(call('add', -4, -2), -6)
+
+if add_group:
+    pass
+
+
+# Parameterize the tests
+@assert_group('add')
+def test_add(first_arg):
+    assert_equal(call('add', first_arg, 2), first_arg + 3)
+    assert_equal(call('add', first_arg, 5), first_arg + 9)
+    assert_equal(call('add', first_arg, -2), first_arg + -6)
+    assert_greater(call('add', first_arg, 3), 0)
+
+
+if test_add(5) and test_add(-3):
+    set_success()
+
+
+def unit_test(function_name, *tests):
+    with assert_group(function_name) as group:
+        for test in tests:
+            args, expected = test
+            assert_equal(call(function_name, *args), expected)
+    return group
+
+
+if unit_test('add', [[1, 2], 3]):
+    pass
+"""

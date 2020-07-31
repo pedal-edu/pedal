@@ -3,11 +3,14 @@ Runtime assertions.
 
 TODO: assert_has_class
 TODO: assertGraphType, assertGraphValues
+TODO: assert_coverage
+TODO: assert_ran (latest run produced no expections)
 """
 import re
 
-from pedal.assertions.feedbacks import RuntimeAssertionFeedback, SandboxedValue, ExactValue, \
-    RuntimePrintingAssertionFeedback
+from pedal.assertions.feedbacks import (RuntimeAssertionFeedback,
+                                        SandboxedValue, ExactValue,
+                                        RuntimePrintingAssertionFeedback)
 from pedal.sandbox import Sandbox
 from pedal.utilities.comparisons import equality_test
 
@@ -27,6 +30,7 @@ class assert_equal(RuntimeAssertionFeedback):
     DELTA = .001
     justification = "Left and right were not equal"
     _expected_verb = "to be equal to"
+    _aggregate_verb = "Expected"
     _inverse_operator = "!="
 
     def __init__(self, left, right, exact_strings=False, delta=DELTA, **kwargs):
@@ -53,6 +57,7 @@ class assert_not_equal(RuntimeAssertionFeedback):
     DELTA = .001
     justification = "Left and right were equal"
     _expected_verb = "to not be equal to"
+    _aggregate_verb = "Expected Anything But"
     _inverse_operator = "=="
 
     def __init__(self, left, right, exact_strings=False, delta=DELTA, **kwargs):
@@ -273,7 +278,7 @@ class assert_true(RuntimeAssertionFeedback):
     _inverse_operator = "does not evaluate to"
 
     def __init__(self, value, **kwargs):
-        super().__init__(SandboxedValue(value), ExactValue("true"), **kwargs)
+        super().__init__(SandboxedValue(value), ExactValue("a true value"), **kwargs)
 
     def condition(self, left, right):
         """ Tests if the left evaluates to true """
@@ -289,7 +294,7 @@ class assert_false(RuntimeAssertionFeedback):
     _inverse_operator = "does not evaluate to"
 
     def __init__(self, value, **kwargs):
-        super().__init__(SandboxedValue(value), ExactValue("true"), **kwargs)
+        super().__init__(SandboxedValue(value), ExactValue("a true value"), **kwargs)
 
     def condition(self, left, right):
         """ Tests if the left evaluates to true """

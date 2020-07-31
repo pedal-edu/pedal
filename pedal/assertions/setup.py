@@ -5,38 +5,8 @@ Helper functions and basic setup routines for the entire module.
 from pedal.core.report import MAIN_REPORT
 from pedal.core.commands import set_success
 from pedal.sandbox.exceptions import SandboxStudentCodeException
+from pedal.utilities.sorting import topological_sort
 
-
-TOOL_NAME_ASSERTIONS = "assertions"
-
-
-class AssertionException(Exception):
-    def __str__(self):
-        return self.args[0]
-
-
-def _topological_sort(names, orderings):
-    visited = set()
-    stack = []
-    
-    def dfs(name):
-        """
-
-        Args:
-            name:
-        """
-        visited.add(name)
-        if name in orderings:
-            for neighbor in orderings[name]:
-                if neighbor not in visited:
-                    dfs(neighbor)
-        stack.insert(0, name)
-    
-    for name in names[::-1]:
-        if name not in visited:
-            dfs(name)
-    return stack
-    
 
 def resolve_all(set_successful=False, no_phases_is_success=False, report=MAIN_REPORT):
     """
@@ -49,7 +19,7 @@ def resolve_all(set_successful=False, no_phases_is_success=False, report=MAIN_RE
     orderings = report['assertions']['relationships']
     phase_functions = report['assertions']['phase_functions']
     phase_names = report['assertions']['phases']
-    phase_names = _topological_sort(phase_names, orderings)
+    phase_names = topological_sort(phase_names, orderings)
     #pprint(orderings)
     phase_success = no_phases_is_success
     for phase_name in phase_names:
@@ -57,7 +27,7 @@ def resolve_all(set_successful=False, no_phases_is_success=False, report=MAIN_RE
         for function in phase_functions[phase_name]:
             try:
                 phase_success = phase_success and (function() is not False)
-            except AssertionException:
+            except AssertionBreak:
                 phase_success = False
             except SandboxStudentCodeException:
                 phase_success = False
@@ -124,14 +94,3 @@ def _setup_assertions(report):
         }
         report.add_hook('source.next_section.before', resolve_all)
         report.add_hook('pedal.resolvers.resolve', resolve_all)
-
-
-def set_assertion_mode(exceptions=True, report=MAIN_REPORT):
-    """
-
-    Args:
-        exceptions:
-        report:
-    """
-    _setup_assertions(report)
-    report['assertions']['exceptions'] = exceptions
