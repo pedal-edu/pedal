@@ -130,7 +130,7 @@ class ExpandedTraceback:
                 else:
                     frame._line = "# *line missing*"
             else:
-                print(frame.filename, self.student_files, frame.lineno)
+                #print(frame.filename, self.student_files, frame.lineno)
                 if frame.filename in self.student_files:
                     frame._line = self.student_files[frame.filename][frame.lineno-1]
         return [frame for frame in tb_e.stack]

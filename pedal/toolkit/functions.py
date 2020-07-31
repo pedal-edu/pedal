@@ -4,6 +4,7 @@ from pedal.core.report import MAIN_REPORT
 from pedal.sandbox import commands
 import ast
 
+from pedal.utilities.ast_tools import FindLines
 
 DELTA = 0.001
 
@@ -310,49 +311,6 @@ def unit_test(name, *tests):
         return None
 
 
-class _LineVisitor(ast.NodeVisitor):
-    """
-    NodeVisitor subclass that visits every statement of a program and tracks
-    their line numbers in a list.
-    
-    Attributes:
-        lines (list[int]): The list of lines that were visited.
-    """
-
-    def __init__(self):
-        self.lines = []
-
-    def _track_lines(self, node):
-        self.lines.append(node.lineno)
-        self.generic_visit(node)
-
-    visit_FunctionDef = _track_lines
-    visit_AsyncFunctionDef = _track_lines
-    visit_ClassDef = _track_lines
-    visit_Return = _track_lines
-    visit_Delete = _track_lines
-    visit_Assign = _track_lines
-    visit_AugAssign = _track_lines
-    visit_AnnAssign = _track_lines
-    visit_For = _track_lines
-    visit_AsyncFor = _track_lines
-    visit_While = _track_lines
-    visit_If = _track_lines
-    visit_With = _track_lines
-    visit_AsyncWith = _track_lines
-    visit_Raise = _track_lines
-    visit_Try = _track_lines
-    visit_Assert = _track_lines
-    visit_Import = _track_lines
-    visit_ImportFrom = _track_lines
-    visit_Global = _track_lines
-    visit_Nonlocal = _track_lines
-    visit_Expr = _track_lines
-    visit_Pass = _track_lines
-    visit_Continue = _track_lines
-    visit_Break = _track_lines
-
-
 def check_coverage(report=None):
     """
     Checks that all the statements in the program have been executed.
@@ -379,7 +337,7 @@ def check_coverage(report=None):
     if -1 in lines_executed:
         lines_executed.remove(-1)
     student_ast = report['source']['ast']
-    visitor = _LineVisitor()
+    visitor = FindLines()
     visitor.visit(student_ast)
     lines_in_code = set(visitor.lines)
     if lines_executed < lines_in_code:
