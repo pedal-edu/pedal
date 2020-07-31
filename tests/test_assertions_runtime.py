@@ -1,8 +1,9 @@
 """
 Tests for checking that runtime assertions are working as expected.
 """
-
+from pedal.assertions.feedbacks import assert_group
 from pedal.assertions.runtime import *
+from pedal.sandbox.commands import call
 from tests.execution_helper import Execution, ExecutionTestCase
 
 
@@ -230,3 +231,106 @@ But I expected the output to be:
         with Execution('def hi(): print("Hello world!")', run_tifa=False) as e:
             assert_has_function(e.student, "hi")
         self.assertFeedback(e, "No Errors\nNo errors reported.")
+
+    def test_assert_data_variable_fails(self):
+        with Execution('alpha = 4', run_tifa=False) as e:
+            assert_equal(e.student['alpha'], 5)
+        self.assertFeedback(e, """assert_equal
+Student code failed instructor test.
+I ran the file <code class='pedal-filename'>answer.py</code>.
+The value of <code class='pedal-name'>alpha</code> was:
+<pre class='pedal-python-value'>4</pre>
+But I expected <code class='pedal-name'>alpha</code> to be equal to:
+<pre class='pedal-python-value'>5</pre>""")
+
+    def test_assert_group_fails_some_errors(self):
+        with Execution('def add(a, b): return a+b', run_tifa=False) as e:
+            with assert_group('add') as g:
+                assert_equal(e.student.call('add', 1, 2), 3)
+                assert_equal(e.student.call('add', 1, 4), 6)
+                assert_equal(e.student.call('add', 1, "2"), 3)
+        self.assertFeedback(e, """assert_group
+Student code failed instructor tests.
+You passed 1/3 tests.
+
+I ran your function <code class='pedal-name'>add</code> on some new arguments.<table class='pedal-table'>   <tr class='pedal-header'>
+    <th class='pedal-cell'></th>
+    <th class='pedal-cell'>Arguments</th>
+    <th class='pedal-cell'>Returned</th>
+    <th class='pedal-cell'>Expected</th>
+  </tr>     <tr class='pedal-row'>
+    <td class='pedal-cell'><span class='pedal-positive-mark'>&#10004;</span></td>
+    <td class='pedal-cell'><pre class='pedal-python-code'><code>1, 2</code></pre></td>
+    <td class='pedal-cell'>3</td>
+    <td class='pedal-cell'>3</td>
+  </tr>
+  <tr class='pedal-row'>
+    <td class='pedal-cell'><span class='pedal-negative-mark'>&#10060;</span></td>
+    <td class='pedal-cell'><pre class='pedal-python-code'><code>1, 4</code></pre></td>
+    <td class='pedal-cell'>5</td>
+    <td class='pedal-cell'>6</td>
+  </tr>
+  <tr class='pedal-row'>
+    <td class='pedal-cell'><span class='pedal-negative-mark'>&#10060;</span></td>
+    <td class='pedal-cell'><pre class='pedal-python-code'><code>1, '2'</code></pre></td>
+    <td class='pedal-cell'>unsupported operand type(s) for +: 'int' and 'str'</td>
+    <td class='pedal-cell'>3</td>
+  </tr></table>""")
+
+    def test_assert_group_fails_all(self):
+        with Execution('def add(a, b): return a+b', run_tifa=False) as e:
+            with assert_group('add') as g:
+                assert_equal(e.student.call('add', 1, 3), 3)
+                assert_equal(e.student.call('add', 1, 4), 6)
+                assert_equal(e.student.call('add', 1, 3), 3)
+        self.assertFeedback(e, """assert_group
+Student code failed instructor tests.
+You passed 0/3 tests.
+
+I ran your function <code class='pedal-name'>add</code> on some new arguments.<table class='pedal-table'>   <tr class='pedal-header'>
+    <th class='pedal-cell'></th>
+    <th class='pedal-cell'>Arguments</th>
+    <th class='pedal-cell'>Returned</th>
+    <th class='pedal-cell'>Expected</th>
+  </tr>     <tr class='pedal-row'>
+    <td class='pedal-cell'><span class='pedal-negative-mark'>&#10060;</span></td>
+    <td class='pedal-cell'><pre class='pedal-python-code'><code>1, 3</code></pre></td>
+    <td class='pedal-cell'>4</td>
+    <td class='pedal-cell'>3</td>
+  </tr>
+  <tr class='pedal-row'>
+    <td class='pedal-cell'><span class='pedal-negative-mark'>&#10060;</span></td>
+    <td class='pedal-cell'><pre class='pedal-python-code'><code>1, 4</code></pre></td>
+    <td class='pedal-cell'>5</td>
+    <td class='pedal-cell'>6</td>
+  </tr>
+  <tr class='pedal-row'>
+    <td class='pedal-cell'><span class='pedal-negative-mark'>&#10060;</span></td>
+    <td class='pedal-cell'><pre class='pedal-python-code'><code>1, 3</code></pre></td>
+    <td class='pedal-cell'>4</td>
+    <td class='pedal-cell'>3</td>
+  </tr></table>""")
+
+    def test_assert_group_passes(self):
+        with Execution('def add(a, b): return a+b', run_tifa=False) as e:
+            with assert_group('add') as g:
+                assert_equal(e.student.call('add', 1, 3), 4)
+                assert_equal(e.student.call('add', 1, 4), 5)
+                assert_equal(e.student.call('add', 1, 3), 4)
+        self.assertFeedback(e, "No Errors\nNo errors reported.")
+
+    def test_assert_group_passes_but_earlier_fails(self):
+        with Execution('def add(a, b): return a+b', run_tifa=False) as e:
+            assert_equal(e.student.call('add', 4, 1), 7)
+            with assert_group('add') as g:
+                assert_equal(e.student.call('add', 1, 3), 4)
+                assert_equal(e.student.call('add', 1, 4), 5)
+                assert_equal(e.student.call('add', 1, 3), 4)
+        self.assertFeedback(e, """assert_equal
+Student code failed instructor test.
+I ran the code:
+<pre class='pedal-python-code'><code>add(4, 1)</code></pre>
+The value of the result was:
+<pre class='pedal-python-value'>5</pre>
+But I expected the result to be equal to:
+<pre class='pedal-python-value'>7</pre>""")

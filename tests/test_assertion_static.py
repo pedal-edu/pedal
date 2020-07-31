@@ -9,7 +9,7 @@ class TestAssertions(ExecutionTestCase):
         with Execution('sum([1,2,3])') as e:
             self.assertTrue(prevent_function_call('sum'))
         self.assertFeedback(e, "May Not Use Function\n"
-                               "You used the function `sum` on line 1. "
+                               "You used the function <code class='pedal-name'>sum</code> on line 1. "
                                "You may not use that function.")
 
         with Execution('max([1,2,3])') as e:
@@ -20,7 +20,7 @@ class TestAssertions(ExecutionTestCase):
         with Execution('2+3') as e:
             self.assertTrue(prevent_operation('+'))
         self.assertFeedback(e, "May Not Use Operator\n"
-                               "You used the operator `+` on line 1. "
+                               "You used the operator <code>+</code> on line 1. "
                                "You may not use that operator.")
 
     def test_prevent_operator_not_used(self):
@@ -37,7 +37,7 @@ class TestAssertions(ExecutionTestCase):
         with Execution('2+3+4\n1+2') as e:
             self.assertTrue(prevent_operation('+', at_most=2))
         self.assertFeedback(e, "May Not Use Operator\n"
-                               "You used the operator `+` on line 2. "
+                               "You used the operator <code>+</code> on line 2. "
                                "You may not use that operator more than "
                                "2 times, but you used it 3 times.")
 
@@ -45,7 +45,7 @@ class TestAssertions(ExecutionTestCase):
         with Execution('2+3+4\n1+2') as e:
             self.assertTrue(ensure_operation('+', at_least=5))
         self.assertFeedback(e, "Must Use Operator\n"
-                               "You must use the operator `+` at least "
+                               "You must use the operator <code>+</code> at least "
                                "5 times, but you used it 3 times.")
 
     def test_prevent_muted(self):
