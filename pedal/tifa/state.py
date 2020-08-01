@@ -1,3 +1,7 @@
+"""
+Classes and functions for managing the State of a variable.
+"""
+
 def check_trace(state):
     """
 

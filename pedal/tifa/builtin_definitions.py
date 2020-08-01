@@ -27,6 +27,7 @@ BUILTIN_MODULES = {
                              'hexdigits': StrType(empty=False),
                              'octdigits': StrType(empty=False),
                          }),
+    # TODO: Make this an extension in curriculum-ctvt
     'parking': ModuleType('parking',
                           fields={
                               'Time': FunctionType(name='Time', returns=TimeType()),

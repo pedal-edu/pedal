@@ -1,5 +1,7 @@
 """
-Main file for all of Tifa's brains.
+Main TIFA visitor-based algorithm here.
+
+TODO: JoinedStr
 """
 
 import ast
@@ -335,7 +337,22 @@ class Tifa(ast.NodeVisitor):
         """
         TODO: Implement!
         """
-        pass
+        # Name, Attribute, or SubScript
+        target = node.target
+        # Type
+        annotation = node.annotation
+        # Optional assigned value
+        value = node.value
+        # 0 or 1, with 1 indicating pure names (not expressions)
+        simple = node.simple
+        # If it's a class attribute, then build up the type!
+        if simple:
+            self.visit(annotation)
+            annotation = get_tifa_type(annotation, self)
+            current_scope = self.scope_chain[0]
+            if current_scope in self.class_scopes:
+                # TODO: Treat it as a different kind of ClassType? TypedDict?
+                self.class_scopes[current_scope].add_attr(target.id, annotation)
 
     def visit_Expr(self, node):
         """
@@ -382,7 +399,7 @@ class Tifa(ast.NodeVisitor):
         Attributes.
 
         Args:
-            target (ast.AST): The targe AST Node.
+            target (ast.AST): The target AST Node.
             target_type (Type): The TIFA type.
 
         Returns:
@@ -546,7 +563,7 @@ class Tifa(ast.NodeVisitor):
         arguments = [self.visit(arg) for arg in node.args] if node.args else []
 
         # TODO: Handle keywords
-        # TODO: Handle starargs
+        # TODO: Handle star args
         # TODO: Handle kwargs
         if isinstance(function_type, FunctionType):
             # Test if we have called this definition before
@@ -1353,7 +1370,7 @@ class Tifa(ast.NodeVisitor):
         Args:
             position:
             name (str): The unqualified name of the variable. If the variable is
-                        not found in the current scope or an enclosing sope, all
+                        not found in the current scope or an enclosing scope, all
                         other scopes will be searched to see if it was read out
                         of scope.
         Returns:
@@ -1599,9 +1616,11 @@ class Tifa(ast.NodeVisitor):
 
         Args:
             tifa (Tifa): The tifa instance, so we can modify some of its
-                         properties that track variables and paths.
+                properties that track variables and paths.
             definitions_scope_chain (list of int): The scope chain of the
-                                                   definition
+                definition.
+            class_type (ClassType): If this scope is a ClassType, then this
+                will be available as a field.
         """
 
         def __init__(self, tifa, definitions_scope_chain, class_type=None):

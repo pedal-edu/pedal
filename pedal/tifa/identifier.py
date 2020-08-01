@@ -1,3 +1,8 @@
+"""
+Stores data class Identifier.
+"""
+
+
 class Identifier:
     """
     A representation of an Identifier, encapsulating its current level of
@@ -17,7 +22,8 @@ class Identifier:
         state (State): The current state of the variable.
     """
 
-    def __init__(self, exists: bool, in_scope: bool = False, scoped_name: str = "UNKNOWN", state = ""):
+    def __init__(self, exists: bool, in_scope: bool = False,
+                 scoped_name: str = "UNKNOWN", state=""):
         self.exists = exists
         self.in_scope = in_scope
         self.scoped_name = scoped_name

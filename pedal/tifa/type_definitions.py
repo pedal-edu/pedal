@@ -802,7 +802,7 @@ class GeneratorType(ListType):
     singular_name = 'a generator'
 
 
-# Custom parking class in blockpy
+# TODO: Move these into curriculum-ctvt
 
 class TimeType(Type):
     singular_name = 'a time of day'
