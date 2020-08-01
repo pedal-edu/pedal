@@ -7,6 +7,8 @@ doing any logic themselves.
 from pedal.core.report import MAIN_REPORT
 from pedal.sandbox.constants import TOOL_NAME
 from pedal.sandbox.sandbox import Sandbox
+from pedal.source.constants import TOOL_NAME as SOURCE_TOOL_NAME
+from pedal.utilities.ast_tools import FindExecutableLines
 
 
 def run(code=None, filename=None, inputs=None, threaded=None,
@@ -268,6 +270,36 @@ def stop_trace(report=MAIN_REPORT):
     """ Stop whatever tracing is going on. """
     sandbox: Sandbox = report[TOOL_NAME]['sandbox']
     sandbox.clear_tracer()
+
+
+def check_coverage(report=MAIN_REPORT):
+    """
+    Checks that all the statements in the program have been executed.
+    This function only works when a tracer_style has been set in the sandbox,
+    or you are using an environment that automatically traces calls (e.g.,
+    BlockPy).
+
+    Args:
+        report (Report): The Report to draw source code from; if not given,
+            defaults to MAIN_REPORT.
+    Returns:
+        set[int]: If the source file was not parsed, None is returned.
+            Otherwise, returnes the set of unexecuted lines.
+        float: The ratio of unexected to total executable lines.
+    """
+    if not report[SOURCE_TOOL_NAME]['success']:
+        return None, 0
+    lines_executed = set(get_trace())
+    # TODO: Why... does -1 get returned sometimes?
+    if -1 in lines_executed:
+        lines_executed.remove(-1)
+    student_ast = report[SOURCE_TOOL_NAME]['ast']
+    visitor = FindExecutableLines()
+    visitor.visit(student_ast)
+    lines_in_code = set(visitor.lines)
+    unexecuted_lines = lines_in_code - lines_executed
+    coverage_ratio = len(lines_executed)/len(lines_in_code)
+    return unexecuted_lines, coverage_ratio
 
 
 def clear_mocks(report=MAIN_REPORT):

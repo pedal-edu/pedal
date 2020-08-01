@@ -269,6 +269,35 @@ class prevent_import(PreventAssertionFeedback):
         return has_import(ast, name)
 
 
+class ensure_documented_functions(AssertionFeedback):
+    """ Checks that all of the functions in the source code are documented. """
+    title = "Must Document Functions"
+    message_template = ("You must document the following function{plural}:"
+                        ": {names_message}.")
+
+    def __init__(self, root=None, **kwargs):
+        report = kwargs.get('report', MAIN_REPORT)
+        root = root or parse_program(report=report)
+        fields = {'root': root}
+        super().__init__(fields=fields, **kwargs)
+
+    def condition(self):
+        """ Traverse the AST to find matches. """
+        defs = self.fields['root'].find_all('FunctionDef')
+        names = []
+        for a_def in defs:
+            # Don't have to document constructors (happens in Class Def)
+            if a_def.name == "__init__":
+                continue
+            if (a_def.body and (a_def.body[0].ast_name != "Expr" or
+                                a_def.body[0].value.ast_name != "Str")):
+                names.append(a_def.name)
+        self.fields['names'] = names
+        self.fields['names_message'] = ", ".join(self.report.format.name(name)
+                                                 for name in names)
+        self.fields['plural'] = 's' if names else ''
+        return bool(names)
+
 """
 New assertions:
 

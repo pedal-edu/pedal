@@ -9,27 +9,6 @@ from pedal.utilities.ast_tools import FindLines
 DELTA = 0.001
 
 
-def all_documented():
-    """
-
-    Returns:
-
-    """
-    ast = parse_program()
-    defs = ast.find_all('FunctionDef') + ast.find_all("ClassDef")
-    for a_def in defs:
-        if a_def.name == "__init__":
-            continue
-        if (a_def.body and
-                (a_def.body[0].ast_name != "Expr" or
-                 a_def.body[0].value.ast_name != "Str")):
-            if a_def.ast_name == 'FunctionDef':
-                gently("You have an undocumented function: " + a_def.name)
-            else:
-                gently("You have an undocumented class: " + a_def.name)
-            return False
-    return True
-
 
 def get_arg_name(node):
     """
@@ -95,25 +74,6 @@ def match_signature_muted(name, length, *parameters):
                     return a_def
             else:
                 return a_def
-    return None
-
-
-def find_def_by_name(name, root=None):
-    """
-
-    Args:
-        name:
-        root:
-
-    Returns:
-
-    """
-    if root is None:
-        root = parse_program()
-    defs = root.find_all('FunctionDef')
-    for a_def in defs:
-        if a_def._name == name:
-            return a_def
     return None
 
 
@@ -310,61 +270,4 @@ def unit_test(name, *tests):
         gently("The function <code>{}</code> was not defined.".format(name))
         return None
 
-
-def check_coverage(report=None):
-    """
-    Checks that all the statements in the program have been executed.
-    This function only works when a tracer_style has been set in the sandbox,
-    or you are using an environment that automatically traces calls (e.g.,
-    BlockPy).
-    
-    TODO: Make compatible with tracer_style='coverage'
-    
-    Args:
-        report (Report): The Report to draw source code from; if not given,
-            defaults to MAIN_REPORT.
-    Returns:
-        bool or set[int]: If the source file was not parsed, None is returned.
-            If there were fewer lines traced in execution than are found in
-            the AST, then the set of unexecuted lines are returned. Otherwise,
-            False is returned.
-    """
-    if report is None:
-        report = MAIN_REPORT
-    if not report['source']['success']:
-        return None, 0
-    lines_executed = set(commands.get_trace())
-    if -1 in lines_executed:
-        lines_executed.remove(-1)
-    student_ast = report['source']['ast']
-    visitor = FindLines()
-    visitor.visit(student_ast)
-    lines_in_code = set(visitor.lines)
-    if lines_executed < lines_in_code:
-        return lines_in_code - lines_executed, len(lines_executed)/len(lines_in_code)
-    else:
-        return False, 1
-
-
-def ensure_coverage(percentage=.5, destructive=False, report=None):
-    """
-    Provides some feedback if the students' code has coverage below the
-    given percentage.
-    Note that this avoids destroying the current sandbox instance stored on the
-    report, if there is one present.
-    
-    Args:
-        report:
-        percentage:
-        destructive (bool): Whether or not to remove the sandbox.
-    """
-    if report is None:
-        report = MAIN_REPORT
-    student_code = report['source']['code']
-    unexecuted_lines, percent_covered = check_coverage(report)
-    if unexecuted_lines:
-        if percent_covered <= percentage:
-            gently("Your code coverage is not adequate. You must cover at least half your code to receive feedback.")
-            return False
-    return True
 

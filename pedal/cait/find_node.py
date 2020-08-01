@@ -112,3 +112,24 @@ def find_prior_initializations(node, report=MAIN_REPORT):
             if assignment.lineno < cur_line_no:
                 all_assignments.append(assignment)
     return all_assignments
+
+
+def find_function_definition(name, root=None, report=MAIN_REPORT):
+    """
+    Finds the given function definition based on the given ``name``.
+
+    Args:
+        name (str): The name of the function.
+        root: A subtree of a parse tree to revert to.
+        report (Report): The name of the Report to refer to.
+
+    Returns:
+        :py:class:`pedal.cait.cait_node.CaitNode`: The first occurrence of a
+            function with the given name.
+    """
+    root = root or parse_program(report=report)
+    defs = root.find_all('FunctionDef')
+    for a_def in defs:
+        if a_def._name == name:
+            return a_def
+    return None

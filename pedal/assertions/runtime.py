@@ -10,8 +10,10 @@ import re
 
 from pedal.assertions.feedbacks import (RuntimeAssertionFeedback,
                                         SandboxedValue, ExactValue,
-                                        RuntimePrintingAssertionFeedback)
+                                        RuntimePrintingAssertionFeedback, AssertionFeedback)
+from pedal.core.report import MAIN_REPORT
 from pedal.sandbox import Sandbox
+from pedal.sandbox.commands import check_coverage
 from pedal.utilities.comparisons import equality_test
 
 
@@ -601,6 +603,40 @@ class assert_has_function(RuntimeAssertionFeedback):
         else:
             function = None
         return not callable(function)
+
+
+# TODO: This one is at Runtime, but is not an assertion... Should these be "tests"?
+
+class ensure_coverage(AssertionFeedback):
+    """
+    Verifies that the most recent executed and traced student code has
+    ``at_least`` the given ratio of covered (executed) lines.
+
+    Args:
+        at_least (float): The ratio of covered lines. A value of 1.0 is all
+            lines covered, 0.0 is no lines covered, and .5 is half the lines
+            covered.
+    """
+    title = "You Must Test Your Code"
+    message_template = ("Your code coverage is not adequate. You must cover at "
+                        "least {at_least_message}% your code to receive "
+                        "feedback. So far, you have only covered "
+                        "{coverage_message}%.")
+
+    def __init__(self, at_least=.5, **kwargs):
+        report = kwargs.get("report", MAIN_REPORT)
+        fields = kwargs.setdefault('fields', {})
+        fields['at_least'] = at_least
+        fields['at_least_message'] = str(int(round(100*at_least)))
+        unexecuted_lines, coverage = check_coverage(report)
+        fields['unexecuted_lines'] = unexecuted_lines
+        fields['coverage'] = coverage
+        fields['coverage_message'] = str(int(round(100*coverage)))
+        super().__init__(coverage, at_least, kwargs)
+
+    def condition(self, coverage, at_least):
+        return coverage <= at_least
+
 
 # Alias conventional camel-case names to our functions
 

@@ -42,7 +42,7 @@ def is_literal(node: ast.AST) -> bool:
     return False
 
 
-class FindLines(ast.NodeVisitor):
+class FindExecutableLines(ast.NodeVisitor):
     """
     NodeVisitor subclass that visits every statement of a program and tracks
     their line numbers in a list.
