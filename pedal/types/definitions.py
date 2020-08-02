@@ -8,7 +8,6 @@ Instead, create a hierachy based on form and not just function.
 
 import ast
 
-from pedal.tifa.feedbacks import append_to_non_list, invalid_indexing
 from pedal.utilities.dictionaries import extend_dictionary
 
 
@@ -106,29 +105,12 @@ class LiteralNone(LiteralValue):
         return NoneType()
 
 
-def literal_from_json(val):
-    """
-
-    Args:
-        val:
-
-    Returns:
-
-    """
-    if val['type'] == 'LiteralStr':
-        return LiteralStr(val['value'])
-    elif val['type'] == 'LiteralNum':
-        return LiteralNum(val['value'])
-    elif val['type'] == 'LiteralBool':
-        return LiteralBool(val['value'])
-
-
 class Type:
     """
     Parent class for all other types, used to provide a common interface.
 
     TODO: Handle more complicated object-oriented types and custom types
-    (classes).
+        (classes).
     """
     fields = {}
     immutable = False
@@ -202,7 +184,7 @@ class Type:
             return self.fields[attr]
         # TODO: Handle more kinds of common mistakes
         if attr == "append":
-            tifa._issue(append_to_non_list(callee_position, tifa.identify_caller(callee), self, report=tifa.report))
+            tifa._issue(tifa.append_to_non_list(callee_position, tifa.identify_caller(callee), self, report=tifa.report))
         return UnknownType()
 
     def is_empty(self):
@@ -244,6 +226,7 @@ class UnknownType(Type):
     """
     A special type used to indicate an unknowable type.
     """
+    singular_name = "an unknown type"
 
 
 class RecursedType(Type):
@@ -289,6 +272,7 @@ class FunctionType(Type):
                     return returns.clone()
         self.definition = definition
         self.name = name
+        self.returns = returns
 
     def clone(self):
         """ Create a deep copy of this function type. """
@@ -367,18 +351,12 @@ class InstanceType(Type):
 
 
 class NumType(Type):
+    """ Basic Numeric Type (integers and floats) """
     singular_name = 'a number'
     immutable = True
 
     def index(self, i):
-        """
-
-        Args:
-            i:
-
-        Returns:
-
-        """
+        """ Cannot index a numeric """
         return UnknownType()
 
 
@@ -443,9 +421,7 @@ class TupleType(IndexableType):
 
 
 class ListType(Type):
-    """
-
-    """
+    """ A ListType """
     singular_name = 'a list'
 
     def __init__(self, subtype=None, empty=True):
@@ -453,6 +429,16 @@ class ListType(Type):
             subtype = UnknownType()
         self.subtype = subtype
         self.empty = empty
+
+    def precise_description(self):
+        """ String with all the type information. """
+        if self.empty:
+            descr = "an empty list"
+        else:
+            descr = "a list"
+        if not isinstance(self.subtype, UnknownType):
+            descr += " of "+self.subtype.precise_description()
+        return descr
 
     def index(self, i):
         """
@@ -833,68 +819,10 @@ TYPE_LOOKUPS = {
 }
 
 
-def type_from_json(val):
-    """
-
-    Args:
-        val:
-
-    Returns:
-
-    """
-    if val['type'] == 'DictType':
-        values = [type_from_json(v) for v in val['values']]
-        empty = val.get('empty', None)
-        if 'literals' in val:
-            literals = [literal_from_json(l) for l in val['literals']]
-            return DictType(empty, literals=literals, values=values)
-        else:
-            keys = [type_from_json(k) for k in val['keys']]
-            return DictType(empty, keys=keys, values=values)
-    elif val['type'] == 'ListType':
-        return ListType(type_from_json(val.get('subtype', None)),
-                        val.get('empty', None))
-    elif val['type'] == 'StrType':
-        return StrType(val.get('empty', None))
-    elif val['type'] == 'BoolType':
-        return BoolType()
-    elif val['type'] == 'NoneType':
-        return NoneType()
-    elif val['type'] == 'NumType':
-        return NumType()
-    elif val['type'] == 'ModuleType':
-        submodules = {name: type_from_json(m)
-                      for name, m in val.get('submodules', {}).items()}
-        fields = {name: type_from_json(m)
-                  for name, m in val.get('fields', {}).items()}
-        return ModuleType(name=val.get('name'), submodules=submodules,
-                          fields=fields)
-    elif val['type'] == 'FunctionType':
-        returns = type_from_json(val.get('returns', {'type': 'NoneType'}))
-        return FunctionType(name=val.get('name'), returns=returns)
-
-
-def type_to_literal(type):
-    """
-
-    Args:
-        type:
-
-    Returns:
-
-    """
-    if isinstance(type, NumType):
-        return LiteralNum(0)
-    elif isinstance(type, StrType):
-        return LiteralStr("")
-    else:
-        # TODO: Finish the mapping
-        return LiteralStr("")
-
-
 TYPE_STRINGS = {
     "str": StrType, "string": StrType,
-    "num": NumType, "number": NumType, "int": NumType, "integer": NumType, "float": NumType,
+    "num": NumType, "number": NumType,
+    "int": NumType, "integer": NumType, "float": NumType,
     "complex": NumType,
     "bool": BoolType, "boolean": BoolType,
     "none": NoneType,
@@ -908,99 +836,9 @@ TYPE_STRINGS = {
 }
 
 
-def get_tifa_type_from_str(value, tifa_instance=None):
-    """
+class TypeSpace:
+    def has(self, name):
+        return False
 
-    Args:
-        value:
-        tifa_instance:
-
-    Returns:
-
-    """
-    # if value in custom_types:
-    #    return custom_types[value]
-    if value.lower() in TYPE_STRINGS:
-        return TYPE_STRINGS[value.lower()]()
-    elif tifa_instance:
-        variable = tifa_instance.find_variable_scope(value)
-        if variable.exists:
-            state = tifa_instance.load_variable(value)
-            return state.type
-        # custom_types.add(value)
-    return UnknownType()
-    # TODO: handle custom types
-
-
-def get_tifa_type(v, tifa_instance=None):
-    """
-
-    Attempts to intelligently parse the type, which might be a variable or
-    a string node.
-
-    Args:
-        v:
-        tifa_instance:
-
-    Returns:
-
-    """
-    if isinstance(v, ast.Str):
-        return get_tifa_type_from_str(v.s, tifa_instance)
-    elif isinstance(v, ast.Name):
-        return get_tifa_type_from_str(v.id, tifa_instance)
-    # Fall back to default AST behavior
-    return get_tifa_type_from_ast(v)
-
-
-def get_tifa_type_from_value(value: 'Any') -> Type:
-    """ Converts the Python value to a Tifa Type """
-    if isinstance(value, bool):
-        return BoolType()
-    if isinstance(value, (int, float, complex)):
-        return NumType()
-    if isinstance(value, str):
-        return StrType()
-    if isinstance(value, type(None)):
-        return NoneType()
-    if isinstance(value, tuple):
-        return TupleType((get_tifa_type_from_value(t) for t in value))
-    if isinstance(value, frozenset):
-        return FrozenSetType((get_tifa_type_from_value(t) for t in value))
-
-
-def get_tifa_type_from_ast(value: ast.AST) -> Type:
-    """
-    Determines the Tifa Type from this ast node.
-    Args:
-        value (ast.AST): An AST node.
-
-    Returns:
-        Type: A Tifa Type
-    """
-    try:
-        if isinstance(value, ast.Constant):
-            return get_tifa_type_from_value(value.value)
-    except AttributeError as e:
-        pass
-    if isinstance(value, ast.Str):
-        return StrType(bool(value.v))
-    elif isinstance(value, ast.List):
-        return ListType(subtype=(get_tifa_type_from_ast(value.elts[0])
-                                 if value.elts else None),
-                        empty=bool(value.elts))
-    elif isinstance(value, ast.Set):
-        return SetType(subtype=(get_tifa_type_from_ast(value.elts[0])
-                                if value.elts else None),
-                       empty=bool(value.elts))
-    elif isinstance(value, ast.Tuple):
-        return TupleType(subtypes=[get_tifa_type_from_ast(e) for e in value.elts])
-    elif isinstance(value, ast.Dict):
-        if not value.keys:
-            return DictType(empty=True)
-        if all(isinstance(k, ast.Str) for k in value.keys):
-            return DictType(literals=[LiteralStr(s.s) for s in value.keys],
-                            values=[get_tifa_type_from_ast(vv) for vv in value.values])
-        return DictType(keys=[get_tifa_type_from_ast(k) for k in value.keys],
-                        values=[get_tifa_type_from_ast(vv) for vv in value.values])
-    return UnknownType()
+    def get(self, name):
+        return None

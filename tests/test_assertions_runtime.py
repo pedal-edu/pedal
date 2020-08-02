@@ -5,6 +5,7 @@ from pedal.assertions.feedbacks import assert_group
 from pedal.assertions.runtime import *
 from pedal.sandbox.commands import call
 from tests.execution_helper import Execution, ExecutionTestCase
+import unittest
 
 
 class TestAssertions(ExecutionTestCase):
@@ -334,3 +335,7 @@ The value of the result was:
 <pre class='pedal-python-value'>5</pre>
 But I expected the result to be equal to:
 <pre class='pedal-python-value'>7</pre>""")
+
+
+if __name__ == '__main__':
+    unittest.main(buffer=False)

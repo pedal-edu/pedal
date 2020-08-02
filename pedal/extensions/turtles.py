@@ -4,8 +4,8 @@ Extensions related to built-in Turtle library.
 Mock Module for Sandbox.
 """
 
-from pedal.tifa.builtin_definitions import BUILTIN_MODULES
-from pedal.tifa.type_definitions import ModuleType, FunctionType, NoneType
+from pedal.types.builtin import BUILTIN_MODULES
+from pedal.types.definitions import ModuleType, FunctionType, NoneType
 
 _TURTLE_FIELDS = {
    'forward': FunctionType(name='forward', returns=NoneType()),

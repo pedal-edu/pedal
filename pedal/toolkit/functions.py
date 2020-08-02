@@ -4,26 +4,9 @@ from pedal.core.report import MAIN_REPORT
 from pedal.sandbox import commands
 import ast
 
-from pedal.utilities.ast_tools import FindLines
+from pedal.utilities.ast_tools import FindExecutableLines
 
 DELTA = 0.001
-
-
-
-def get_arg_name(node):
-    """
-
-    Args:
-        node:
-
-    Returns:
-
-    """
-    name = node.id
-    if name is None:
-        return node.arg
-    else:
-        return name
 
 
 def match_function(name, root=None):

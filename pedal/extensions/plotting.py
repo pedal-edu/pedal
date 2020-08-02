@@ -6,8 +6,8 @@ Mock module for Sandbox.
 Assertions.
 """
 from pedal.core.report import MAIN_REPORT
-from pedal.tifa.builtin_definitions import BUILTIN_MODULES
-from pedal.tifa.type_definitions import ModuleType, FunctionType, NoneType
+from pedal.types.builtin import BUILTIN_MODULES
+from pedal.types.definitions import ModuleType, FunctionType, NoneType
 from pedal.cait.find_node import function_is_called
 from pedal.cait.cait_api import parse_program, def_use_error
 from pedal.core.commands import gently, explain

@@ -1,13 +1,13 @@
-import traceback
 import unittest
 import os
 import sys
-from textwrap import dedent, indent
+from textwrap import dedent
 from pprint import pprint
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import pedal.tifa
-import pedal.tifa.type_definitions as defs
+import pedal.types.definitions as defs
+import pedal.types.normalize as normalize
 
 unit_tests = {
     # Source Code, Shouldn't catch this, Should catch this
@@ -568,15 +568,15 @@ class TestVariables(unittest.TestCase):
         self.assertIsNotNone(exception)'''
 
     def test_json_types(self):
-        t = defs.type_from_json({'type': 'NumType'})
+        t = normalize.get_pedal_type_from_json({'type': 'NumType'})
         self.assertIsInstance(t, defs.NumType)
-        t = defs.type_from_json({'type': 'StrType'})
+        t = normalize.get_pedal_type_from_json({'type': 'StrType'})
         self.assertIsInstance(t, defs.StrType)
-        t = defs.type_from_json({'type': 'BoolType'})
+        t = normalize.get_pedal_type_from_json({'type': 'BoolType'})
         self.assertIsInstance(t, defs.BoolType)
-        t = defs.type_from_json({'type': 'NoneType'})
+        t = normalize.get_pedal_type_from_json({'type': 'NoneType'})
         self.assertIsInstance(t, defs.NoneType)
-        t = defs.type_from_json({'type': 'ListType',
+        t = normalize.get_pedal_type_from_json({'type': 'ListType',
                                  'subtype': {'type': 'NumType'}})
         self.assertIsInstance(t, defs.ListType)
         self.assertIsInstance(t.subtype, defs.NumType)
@@ -584,7 +584,7 @@ class TestVariables(unittest.TestCase):
         l1 = {'type': 'LiteralStr', 'value': 'First'}
         l2 = {'type': 'LiteralStr', 'value': 'Second'}
         v1, v2 = {'type': 'StrType'}, {'type': 'NumType'}
-        t = defs.type_from_json({'type': 'DictType', 'literals': [l1, l2],
+        t = normalize.get_pedal_type_from_json({'type': 'DictType', 'literals': [l1, l2],
                                  'values': [v1, v2]})
         self.assertIsInstance(t, defs.DictType)
         self.assertIsInstance(t.literals, list)
@@ -641,7 +641,7 @@ class TestVariables(unittest.TestCase):
                                               {"type": "StrType"}]}]}},
 
                         }}
-        defs.type_from_json(complex_type)
+        normalize.get_pedal_type_from_json(complex_type)
 
     def test_custom_module_import(self):
         tifa = pedal.tifa.Tifa()

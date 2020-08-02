@@ -1,9 +1,9 @@
-from pedal.tifa.type_definitions import (UnknownType, FunctionType,
-                                         NumType, NoneType, BoolType,
-                                         TupleType, ListType, StrType,
-                                         FileType, DictType, ModuleType,
-                                         SetType, DayType, TimeType,
-                                         LiteralNum)
+from pedal.types.definitions import (UnknownType, FunctionType,
+                                     NumType, NoneType, BoolType,
+                                     TupleType, ListType, StrType,
+                                     FileType, DictType, ModuleType,
+                                     SetType, DayType, TimeType,
+                                     LiteralNum)
 
 BUILTIN_MODULES = {
     'pprint': ModuleType('pprint',

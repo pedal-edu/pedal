@@ -2,14 +2,18 @@
 Classes and functions for managing the State of a variable.
 """
 
+
 def check_trace(state):
     """
+    Create a list of all the types that this given state ever took on.
 
     Args:
-        state:
+        state (:py:class:`pedal.tifa.state.State`): The state to check the trace
+            history of.
 
     Returns:
-
+        list[:py:class:`pedal.types.definitions.Type`]: The list of all types
+            that this State ever took on.
     """
     past_types = [state.type]
     for past_state in state.trace:

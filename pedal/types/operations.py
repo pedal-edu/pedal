@@ -1,9 +1,9 @@
 import ast
 
-from pedal.tifa.type_definitions import (UnknownType, NumType, BoolType,
-                                         TupleType, ListType, StrType,
-                                         DictType, SetType, GeneratorType,
-                                         DayType, TimeType, FunctionType, TYPE_STRINGS)
+from pedal.types.definitions import (UnknownType, NumType, BoolType,
+                                     TupleType, ListType, StrType,
+                                     DictType, SetType, GeneratorType,
+                                     DayType, TimeType, FunctionType, TYPE_STRINGS)
 
 
 def merge_types(left, right):
@@ -27,67 +27,32 @@ def merge_types(left, right):
 
 
 def NumType_any(*x):
-    """
-
-    Args:
-        *x:
-
-    Returns:
-
-    """
+    """ Ignores all parameters to return a NumType """
     return NumType()
 
 
 def StrType_any(*x):
-    """
-
-    Args:
-        *x:
-
-    Returns:
-
-    """
+    """ Ignores all parameters to return a StrType """
     return StrType()
 
 
 def BoolType_any(*x):
-    """
-
-    Args:
-        *x:
-
-    Returns:
-
-    """
+    """ Ignores all parameters to return a BoolType """
     return BoolType()
 
 
 def keep_left(left, right):
-    """
-
-    Args:
-        left:
-        right:
-
-    Returns:
-
-    """
+    """ Returns the left parameter """
     return left
 
 
 def keep_right(left, right):
-    """
-
-    Args:
-        left:
-        right:
-
-    Returns:
-
-    """
+    """ Returns the right parameter """
     return right
 
 
+# Maps the operations to their return types, based on the values.
+# The *_any functions don't use the parameters, they return values unconditionally.
 VALID_BINOP_TYPES = {
     ast.Add: {NumType: {NumType: NumType_any},
               StrType: {StrType: StrType_any},
@@ -123,6 +88,7 @@ VALID_BINOP_TYPES = {
                             BoolType: BoolType_any},
                  SetType: {SetType: merge_types}}
 }
+
 VALID_UNARYOP_TYPES = {
     ast.UAdd: {NumType: NumType},
     ast.USub: {NumType: NumType},
@@ -167,14 +133,14 @@ def are_types_equal(left, right, formal=False):
                     return False
             return True
     elif isinstance(left, DictType):
-        #print(left.empty, left.keys, left.literals, right)
+        # print(left.empty, left.keys, left.literals, right)
         if not left.keys and not left.literals:
             return isinstance(right, DictType)
-        #print("L", [literal.value for literal in left.literals], [v.singular_name
+        # print("L", [literal.value for literal in left.literals], [v.singular_name
         #                                                          if not formal and not isinstance(v, FunctionType)
         #                                                          else TYPE_STRINGS[v.name]().singular_name
         #                                                          for v in left.values])
-        #print("R", [literal.value for literal in right.literals], [v.singular_name for v in right.values])
+        # print("R", [literal.value for literal in right.literals], [v.singular_name for v in right.values])
         if left.empty or right.empty:
             return True
         elif left.literals is not None and right.literals is not None:

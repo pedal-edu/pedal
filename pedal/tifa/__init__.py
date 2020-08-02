@@ -72,25 +72,15 @@ from pedal.tifa.constants import TOOL_NAME
 from pedal.tifa.tifa import Tifa
 from pedal.core.report import MAIN_REPORT, Report
 
-NAME = 'TIFA'
-SHORT_DESCRIPTION = "Finds common issues caused by students."
-DESCRIPTION = '''Python Type Inferencer and Flow Analyzer (TIFA)
-
-Tifa traverses an AST to detect common issues made by students.
-'''
-REQUIRES = ['Source']
-OPTIONALS = []
 
 
-def tifa_analysis(python_3=True, report=None):
+def tifa_analysis(report=None):
     """
     Perform the TIFA analysis and attach the results to the Report.
 
     Args:
-        python_3 (bool): Whether to expect a Python3 formatted file, or Python
-            2. This has slight nuance on certain AST elements.
-        report (:class:`Report`): The Report object to attach results to.
-            Defaults to :data:`MAIN_REPORT`.
+        report (:class:`pedal.core.report.Report`): The Report object to
+            attach results to.
     """
     if report is None:
         report = MAIN_REPORT
@@ -107,12 +97,15 @@ def reset(report=MAIN_REPORT):
         report:
     """
     # TODO: Make it so we can reset TIFA through this, safely.
-    pass
+    report[TOOL_NAME] = {
+        'analyses': {},
+        'main_analysis': None,
+        'instance': Tifa(report=report)
+    }
+    return report[TOOL_NAME]
 
 
 Report.register_tool(TOOL_NAME, reset)
 
 
-__all__ = ['NAME', 'DESCRIPTION', 'SHORT_DESCRIPTION',
-           'REQUIRES', 'OPTIONALS',
-           'tifa_analysis', 'Tifa']
+__all__ = ['tifa_analysis', 'Tifa']

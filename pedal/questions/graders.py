@@ -78,8 +78,7 @@ class FunctionGrader(QuestionGrader):
         Returns:
 
         """
-        self.student = run(raise_exceptions=True, context=False)
-        self.student.report_exceptions_mode = False
+        self.student = run()
 
         if not ensure_function(self.function_name, *self.signature):
             gently("Function not defined")

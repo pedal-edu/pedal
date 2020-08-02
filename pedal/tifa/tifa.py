@@ -5,38 +5,54 @@ TODO: JoinedStr
 """
 
 import ast
-
+# TODO: FileType, DayType, TimeType,
 from pedal.core.commands import system_error
 from pedal.core.report import MAIN_REPORT
 from pedal.core.location import Location
+from pedal.types.definitions import (UnknownType,
+                                     FunctionType, ClassType, InstanceType,
+                                     NumType, NoneType, BoolType, TupleType,
+                                     ListType, StrType, GeneratorType,
+                                     DictType, ModuleType, SetType,
+                                     LiteralNum, LiteralBool,
+                                     LiteralNone, LiteralStr,
+                                     LiteralTuple, Type)
+from pedal.types.normalize import (get_pedal_type_from_json,
+                                   get_pedal_literal_from_pedal_type,
+                                   get_pedal_type_from_annotation,
+                                   get_pedal_type_from_value)
+from pedal.types.builtin import (get_builtin_module, get_builtin_function)
+from pedal.types.operations import (are_types_equal,
+                                    VALID_UNARYOP_TYPES, VALID_BINOP_TYPES,
+                                    ORDERABLE_TYPES, INDEXABLE_TYPES)
 from pedal.tifa.constants import TOOL_NAME
-from pedal.tifa.type_definitions import (UnknownType,
-                                         FunctionType, ClassType, InstanceType,
-                                         NumType, NoneType, BoolType, TupleType,
-                                         ListType, StrType, GeneratorType,
-                                         DictType, ModuleType, SetType,
-                                         # FileType, DayType, TimeType,
-                                         type_from_json, type_to_literal, get_tifa_type,
-                                         LiteralNum, LiteralBool,
-                                         LiteralNone, LiteralStr,
-                                         LiteralTuple, Type, get_tifa_type_from_value)
-from pedal.tifa.builtin_definitions import (get_builtin_module, get_builtin_function)
-from pedal.tifa.type_operations import (are_types_equal,
-                                        VALID_UNARYOP_TYPES, VALID_BINOP_TYPES,
-                                        ORDERABLE_TYPES, INDEXABLE_TYPES)
+from pedal.tifa.contexts import NewPath, NewScope
 from pedal.tifa.identifier import Identifier
 from pedal.tifa.state import State
-from pedal.tifa.feedbacks import (action_after_return, return_outside_function, write_out_of_scope,
-                                  unconnected_blocks, iteration_problem, possible_initialization_problem,
-                                  initialization_problem, unused_variable, overwritten_variable,
-                                  iterating_over_non_list,
-                                  iterating_over_empty_list, incompatible_types, parameter_type_mismatch,
-                                  read_out_of_scope, type_changes, unnecessary_second_branch,
-                                  recursive_call, not_a_function, incorrect_arity, multiple_return_types,
-                                  else_on_loop_body, module_not_found, nested_function_definition,
+from pedal.tifa.feedbacks import (action_after_return, return_outside_function,
+                                  write_out_of_scope, unconnected_blocks,
+                                  iteration_problem, not_a_function,
+                                  initialization_problem, unused_variable,
+                                  overwritten_variable, iterating_over_non_list,
+                                  iterating_over_empty_list, incompatible_types,
+                                  parameter_type_mismatch, read_out_of_scope,
+                                  type_changes, unnecessary_second_branch,
+                                  recursive_call, multiple_return_types,
+                                  possible_initialization_problem,
+                                  incorrect_arity, else_on_loop_body,
+                                  module_not_found, nested_function_definition,
                                   unused_returned_value, invalid_indexing)
 
 __all__ = ['Tifa']
+
+
+class TifaAnalysis:
+    """ Container class for the results of running a Tifa Analysis. """
+    def __init__(self):
+        self.success = True
+        self.variables = {}
+        self.top_level_variables = {}
+        self.issues = {}
 
 
 class Tifa(ast.NodeVisitor):
@@ -54,6 +70,7 @@ class Tifa(ast.NodeVisitor):
     def __init__(self, report=MAIN_REPORT):
         self.report = report
         self._initialize_report()
+        self.analysis = None
 
     def _initialize_report(self):
         """
@@ -92,7 +109,6 @@ class Tifa(ast.NodeVisitor):
             Report: The successful or successful report object
         """
         # Code
-        self.source = code.split("\n") if code else []
         filename = filename
 
         # Attempt parsing - might fail!
@@ -348,7 +364,7 @@ class Tifa(ast.NodeVisitor):
         # If it's a class attribute, then build up the type!
         if simple:
             self.visit(annotation)
-            annotation = get_tifa_type(annotation, self)
+            annotation = get_pedal_type_from_annotation(annotation, self)
             current_scope = self.scope_chain[0]
             if current_scope in self.class_scopes:
                 # TODO: Treat it as a different kind of ClassType? TypedDict?
@@ -605,7 +621,7 @@ class Tifa(ast.NodeVisitor):
         # TODO: find __init__, execute that
         # TODO: handle Record subclasses
         definitions_scope = self.scope_chain[:]
-        class_scope = Tifa.NewScope(self, definitions_scope, class_type=new_class_type)
+        class_scope = NewScope(self, definitions_scope, class_type=new_class_type)
         with class_scope:
             self.generic_visit(node)
 
@@ -765,7 +781,7 @@ class Tifa(ast.NodeVisitor):
             Returns:
 
             """
-            function_scope = Tifa.NewScope(self, definitions_scope)
+            function_scope = NewScope(self, definitions_scope)
             with function_scope:
                 # Process arguments
                 args = node.args.args
@@ -776,7 +792,7 @@ class Tifa(ast.NodeVisitor):
                     name = arg.arg
                     if arg.annotation:
                         self.visit(arg.annotation)
-                        annotation = get_tifa_type(arg.annotation, self)
+                        annotation = get_pedal_type_from_annotation(arg.annotation, self)
                         # TODO: Use parameter information to "fill in" empty lists
                         if isinstance(parameter, ListType) and isinstance(annotation, ListType):
                             if isinstance(parameter.subtype, UnknownType):
@@ -796,7 +812,7 @@ class Tifa(ast.NodeVisitor):
                     for arg in args[len(parameters):]:
                         if arg.annotation:
                             self.visit(arg.annotation)
-                            annotation = get_tifa_type(arg.annotation, self)
+                            annotation = get_pedal_type_from_annotation(arg.annotation, self)
                         else:
                             annotation = UnknownType()
                         self.store_variable(arg.arg, annotation, position)
@@ -810,7 +826,7 @@ class Tifa(ast.NodeVisitor):
                     return_value = return_state.type
                     if node.returns:
                         # self.visit(node.returns)
-                        returns = get_tifa_type(node.returns, self)
+                        returns = get_pedal_type_from_annotation(node.returns, self)
                         if not are_types_equal(return_value, returns, True):
                             self._issue(multiple_return_types(return_state.position,
                                                               returns.precise_description(),
@@ -857,11 +873,11 @@ class Tifa(ast.NodeVisitor):
 
         # Visit the bodies
         this_path_id = self.path_chain[0]
-        if_path = Tifa.NewPath(self, this_path_id, "i")
+        if_path = NewPath(self, this_path_id, "i")
         with if_path:
             for statement in node.body:
                 self.visit(statement)
-        else_path = Tifa.NewPath(self, this_path_id, "e")
+        else_path = NewPath(self, this_path_id, "e")
         with else_path:
             for statement in node.orelse:
                 self.visit(statement)
@@ -953,7 +969,7 @@ class Tifa(ast.NodeVisitor):
             Returns:
 
             """
-            function_scope = Tifa.NewScope(self, definitions_scope)
+            function_scope = NewScope(self, definitions_scope)
             with function_scope:
                 # Process arguments
                 args = node.args.args
@@ -1066,7 +1082,7 @@ class Tifa(ast.NodeVisitor):
 
     def visit_Constant(self, node) -> Type:
         """ Handle new 3.8's Constant node """
-        return get_tifa_type_from_value(node.value)
+        return get_pedal_type_from_value(node.value)
 
     def visit_Return(self, node):
         """
@@ -1124,6 +1140,18 @@ class Tifa(ast.NodeVisitor):
         else:
             return StrType(False)
 
+    def visit_JoinedStr(self, node):
+        values = [self.visit(expr) for expr in node.values]
+        # The result will be all StrType
+        return StrType(empty=all(n.empty for n in values))
+
+    def visit_FormattedValue(self, node):
+        value = self.visit(node.value)
+        if isinstance(value, StrType):
+            return value
+        else:
+            return StrType(empty=False)
+
     def visit_Subscript(self, node):
         """
 
@@ -1139,7 +1167,7 @@ class Tifa(ast.NodeVisitor):
         if isinstance(node.slice, ast.Index):
             literal = self.get_literal(node.slice.value)
             if literal is None:
-                literal = type_to_literal(self.visit(node.slice.value))
+                literal = get_pedal_literal_from_pedal_type(self.visit(node.slice.value))
             result = value_type.index(literal)
             # TODO: Is this sufficient? Maybe we should be throwing?
             if isinstance(result, UnknownType):
@@ -1202,11 +1230,11 @@ class Tifa(ast.NodeVisitor):
         # Visit the bodies
         this_path_id = self.path_id
         # One path is that we never enter the body
-        empty_path = Tifa.NewPath(self, this_path_id, "e")
+        empty_path = NewPath(self, this_path_id, "e")
         with empty_path:
             pass
         # Another path is that we loop through the body and check the test again
-        body_path = Tifa.NewPath(self, this_path_id, "w")
+        body_path = NewPath(self, this_path_id, "w")
         with body_path:
             for statement in node.body:
                 self.visit(statement)
@@ -1431,7 +1459,7 @@ class Tifa(ast.NodeVisitor):
                 actual_module = __import__(chain, globals(), {},
                                            ['_tifa_definitions'])
                 definitions = actual_module._tifa_definitions()
-                return type_from_json(definitions)
+                return get_pedal_type_from_json(definitions)
             except Exception as e:
                 self._issue(module_not_found(self.locate(), chain, True, e, report=self.report))
                 return ModuleType()
@@ -1575,76 +1603,3 @@ class Tifa(ast.NodeVisitor):
                 return LiteralBool(True)
         return None
 
-    class NewPath:
-        """
-        Context manager for entering and leaving execution paths (e.g., if
-        statements).)
-
-        Args:
-            tifa (Tifa): The tifa instance, so we can modify some of its
-                         properties that track variables and paths.
-            origin_path (int): The path ID parent to this one.
-            name (str): The symbolic name of this path, typically 'i' for an IF
-                        body and 'e' for ELSE body.
-
-        Fields:
-            id (int): The path ID of this path
-        """
-
-        def __init__(self, tifa, origin_path, name):
-            self.tifa = tifa
-            self.name = name
-            self.origin_path = origin_path
-            self.id = None
-
-        def __enter__(self):
-            self.tifa.path_id += 1
-            self.id = self.tifa.path_id
-            self.tifa.path_names.append(str(self.id) + self.name)
-            self.tifa.path_chain.insert(0, self.id)
-            self.tifa.name_map[self.id] = {}
-            self.tifa.path_parents[self.id] = self.origin_path
-
-        def __exit__(self, exc_type, value, traceback):
-            self.tifa.path_names.pop()
-            self.tifa.path_chain.pop(0)
-
-    class NewScope:
-        """
-        Context manager for entering and leaving scopes (e.g., inside of
-        function calls).
-
-        Args:
-            tifa (Tifa): The tifa instance, so we can modify some of its
-                properties that track variables and paths.
-            definitions_scope_chain (list of int): The scope chain of the
-                definition.
-            class_type (ClassType): If this scope is a ClassType, then this
-                will be available as a field.
-        """
-
-        def __init__(self, tifa, definitions_scope_chain, class_type=None):
-            self.tifa = tifa
-            self.definitions_scope_chain = definitions_scope_chain
-            self.class_type = class_type
-
-        def __enter__(self):
-            # Manage scope
-            self.old_scope = self.tifa.scope_chain[:]
-            # Move to the definition's scope chain
-            self.tifa.scope_chain = self.definitions_scope_chain[:]
-            # And then enter its body's new scope
-            self.tifa.scope_id += 1
-            self.tifa.scope_chain.insert(0, self.tifa.scope_id)
-            # Register as class potentially
-            if self.class_type is not None:
-                self.class_type.scope_id = self.tifa.scope_id
-                self.tifa.class_scopes[self.tifa.scope_id] = self.class_type
-
-        def __exit__(self, exc_type, value, traceback):
-            # Finish up the scope
-            self.tifa._finish_scope()
-            # Leave the body
-            self.tifa.scope_chain.pop(0)
-            # Restore the scope
-            self.tifa.scope_chain = self.old_scope
