@@ -1,4 +1,4 @@
-from pedal.toolkit.utilities import function_is_called
+from pedal.cait.find_node import function_is_called
 from pedal.cait.cait_api import parse_program, def_use_error
 from pedal.core.commands import gently, explain
 from pedal.sandbox import compatibility
@@ -26,7 +26,7 @@ def prevent_incorrect_plt():
                   "<code>import matplotlib.pyplot as plt</code>.",
                   label="plt_rename_err",
                   priority='syntax')
-        return True
+        return Trueuensre
     matplotlib_names = ['plot', 'hist', 'scatter',
                         'title', 'xlabel', 'ylabel', 'show']
     for name in matplotlib_names:
