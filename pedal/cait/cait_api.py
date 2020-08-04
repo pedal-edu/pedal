@@ -255,7 +255,7 @@ def find_matches(pattern, student_code=None, cut=False, report=MAIN_REPORT, prev
         return []
     student_ast = cait_report['ast']
     matcher = StretchyTreeMatcher(pattern, report=report)
-    return matcher.find_matches(student_ast, pre_match=prev_match)
+    return matcher.find_matches(student_ast, prev_match=prev_match)
 
 
 def find_submatches(pattern, student_code, is_mod=False, report=MAIN_REPORT):
