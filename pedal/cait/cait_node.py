@@ -562,9 +562,20 @@ class CaitNode:
         Returns:
             bool: True if this node's ast name matches the specified one
         """
+        # TODO: Deal with this compatibility issue in a more elegant way
         if not isinstance(ast_name, str):
             ast_name = CaitNode.get_ast_name(ast_name.astNode)
-        return CaitNode.get_ast_name(self.astNode).lower() == ast_name.lower()
+        self_name = CaitNode.get_ast_name(self.astNode).lower()
+        other_name = ast_name.lower()
+        evaluation = self_name == other_name
+        if self_name == "constant" and other_name in ["num", "str", "bytes"]:
+            if other_name == "num" and type(self.n) in [float, int]:
+                evaluation = True
+            elif other_name == "str" and type(self.s) is str:
+                evaluation = True
+            elif other_name == "bytes" and type(self.s) is bytes:
+                evaluation = True
+        return evaluation
 
     def is_method(self):
         """
