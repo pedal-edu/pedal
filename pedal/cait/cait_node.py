@@ -426,8 +426,8 @@ class CaitNode:
         matcher = stm.StretchyTreeMatcher(pattern, report=self.report)
         if (not is_node and not is_mod) and len(matcher.root_node.children) != 1:
             raise ValueError("pattern does not evaluate to a singular statement")
-        prev_match = self.map if use_previous else None
-        return matcher.find_matches(self, check_meta=check_meta, prev_match=prev_match)
+        use_previous = self.map if use_previous else None
+        return matcher.find_matches(self, check_meta=check_meta, use_previous=use_previous)
 
     def find_match(self, pattern, is_mod=False, check_meta=True, use_previous=True):
         """
