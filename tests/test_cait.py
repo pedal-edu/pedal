@@ -845,10 +845,10 @@ class CaitTests(unittest.TestCase):
                              "    __expr__")
         map_size01 = len(match01.mappings.keys())
 
-        match02 = find_match("___ = _item_ + 1", prev_match=match01)
+        match02 = find_match("___ = _item_ + 1", use_previous=match01)
         map_size02 = len(match01.mappings.keys())
 
-        match03 = find_match("___ = _item_ + ___", prev_match=match01)
+        match03 = find_match("___ = _item_ + ___", use_previous=match01)
         map_size03 = len(match01.mappings.keys())
         map_size03_2 = len(match03.mappings.keys())
 

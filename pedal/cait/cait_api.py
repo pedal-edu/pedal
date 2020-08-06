@@ -191,7 +191,7 @@ def data_type(node, report=MAIN_REPORT):
     return None
 
 
-def find_match(pattern, student_code=None, report=MAIN_REPORT, cut=False, prev_match=None):
+def find_match(pattern, student_code=None, report=MAIN_REPORT, cut=False, use_previous=None):
     """
     Apply Tree Inclusion and return the first match of the `pattern` in the
     `student_code`.
@@ -202,20 +202,20 @@ def find_match(pattern, student_code=None, report=MAIN_REPORT, cut=False, prev_m
             Defaults to the code of the Source tool in the Report.
         report (Report): The report to attach data to.
         cut (bool): Set to true to trim root to first branch
-        prev_match (AstMap): If user wants to continue off of a previously found match
+        use_previous (AstMap): If user wants to continue off of a previously found match
     Returns:
         CaitNode or None: The first matching node for the given pattern, or
             None if nothing was found.
     """
     matches = find_matches(pattern=pattern, student_code=student_code,
-                           report=report, cut=cut, prev_match=prev_match)
+                           report=report, cut=cut, use_previous=use_previous)
     if matches:
         return matches[0]
     else:
         return None
 
 
-def find_matches(pattern, student_code=None, cut=False, report=MAIN_REPORT, prev_match=None):
+def find_matches(pattern, student_code=None, cut=False, report=MAIN_REPORT, use_previous=None):
     """
     Apply Tree Inclusion and return all matches of the `pattern` in the
     `student_code`.
@@ -225,7 +225,7 @@ def find_matches(pattern, student_code=None, cut=False, report=MAIN_REPORT, prev
         student_code (str): The string of student code to check against.
         report (Report): The report to attach data to.
         cut (bool): Set to true to trim root to first branch
-        prev_match (AstMap): If user wants to continue off of a previously found match
+        use_previous (AstMap): If user wants to continue off of a previously found match
     Returns:
         list[pedal.cait.ast_map.AstMap]: All matching nodes for the given pattern.
     """
@@ -234,7 +234,7 @@ def find_matches(pattern, student_code=None, cut=False, report=MAIN_REPORT, prev
         return []
     student_ast = cait_report['ast']
     matcher = StretchyTreeMatcher(pattern, report=report)
-    return matcher.find_matches(student_ast, pre_match=prev_match)
+    return matcher.find_matches(student_ast, use_previous=use_previous)
 
 
 def find_submatches(pattern, student_code, is_mod=False, report=MAIN_REPORT):

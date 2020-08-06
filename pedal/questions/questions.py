@@ -1,4 +1,4 @@
-from pedal.core.feedback import AtomicFeedbackFunction, Feedback
+from pedal.core.feedback import Feedback
 from pedal.core.feedback_category import FeedbackCategory, FeedbackKind
 from pedal.core.report import MAIN_REPORT
 from pedal.questions.graders import QuestionGrader
