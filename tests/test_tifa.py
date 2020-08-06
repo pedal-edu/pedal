@@ -1,3 +1,4 @@
+import traceback
 import unittest
 import os
 import sys
@@ -462,20 +463,21 @@ def make_tester(code, nones, somes):
     def test_code(self):
         tifa = pedal.tifa.Tifa()
         try:
-            tifa.process_code(code)
+            result = tifa.process_code(code)
         except Exception as e:
             raise type(e)(str(e) +
                           ' in code:\n%s' % code)
-        if not tifa.report['tifa']['success']:
+        if not result.success:
+            traceback.print_tb(result.error.__traceback__)
             self.fail("Error message in\n" + code + "\n" +
-                      str(tifa.report['tifa']['error']))
+                      str(result.error))
         for none in nones:
-            if tifa.report['tifa']['issues'].get(none, []):
+            if result.issues.get(none, []):
                 print("")
-                pprint(tifa.report['tifa']['variables'])
+                pprint(result.variables)
                 self.fail("Incorrectly detected " + none + "\n" + code + "\n")
         for some in somes:
-            if not tifa.report['tifa']['issues'].get(some, []):
+            if not result.issues.get(some, []):
                 self.fail("Failed to detect " + some + "\n" + code + "\n")
 
     return test_code
@@ -489,8 +491,8 @@ for name, (code, nones, somes) in unit_tests.items():
 class TestVariables(unittest.TestCase):
     def test_type_comparisons(self):
         tifa = pedal.tifa.Tifa()
-        tifa.process_code('my_int=0\nmy_str="A"\nmy_list=[1,2,3]')
-        variables = tifa.report['tifa']['top_level_variables']
+        result = tifa.process_code('my_int=0\nmy_str="A"\nmy_list=[1,2,3]')
+        variables = result.top_level_variables
         self.assertEqual(len(variables), 3)
         # Integer variable
         my_int = variables['my_int'].type
@@ -517,8 +519,8 @@ class TestVariables(unittest.TestCase):
 
     def test_variable_def_use(self):
         tifa = pedal.tifa.Tifa()
-        tifa.process_code('a=0\nb=0\nb\nc')
-        issues = tifa.report['tifa']['issues']
+        result = tifa.process_code('a=0\nb=0\nb\nc')
+        issues = result.issues
         # Unused variables
         self.assertEqual(len(issues['unused_variable']), 1)
         unused_variables = [i.fields['name'] for i in issues['unused_variable']]
@@ -534,13 +536,12 @@ class TestVariables(unittest.TestCase):
 
     def test_weirdness_used_function(self):
         tifa = pedal.tifa.Tifa()
-        tifa.process_code('def a(x):\n    return x\na(1)')
-        issues = tifa.report['tifa']['issues']
-        self.assertTrue(tifa.report['tifa']['success'])
+        result = tifa.process_code('def a(x):\n    return x\na(1)')
+        self.assertTrue(result.success)
 
         tifa = pedal.tifa.Tifa()
-        tifa.process_code('def a(x):\n    return x\n')
-        issues = tifa.report['tifa']['issues']
+        result = tifa.process_code('def a(x):\n    return x\n')
+        issues = result.issues
         self.assertEqual(issues['unused_variable'][0].message,
                          "The function <code class='pedal-name'>a</code> was "
                          "given a definition on line 1, but was never used "
@@ -548,7 +549,7 @@ class TestVariables(unittest.TestCase):
 
     def test_weirdness_tate_import_example(self):
         tifa = pedal.tifa.Tifa()
-        tifa.process_code(dedent('''
+        result = tifa.process_code(dedent('''
         import tate
         art = tate.get_artwork()
         h = [a['dimensions']['height'] for a in art if a['artist']['birth']['year'] > 1000]
@@ -557,8 +558,7 @@ class TestVariables(unittest.TestCase):
         import matplotlib.pyplot as plt
         plt.scatter(b, h, alpha=.1)
         plt.show()'''))
-        issues = tifa.report['tifa']['issues']
-        self.assertTrue(tifa.report['tifa']['success'])
+        self.assertTrue(result.success)
 
     '''
     def test_tifa_graceful_errors(self):
@@ -645,27 +645,25 @@ class TestVariables(unittest.TestCase):
 
     def test_custom_module_import(self):
         tifa = pedal.tifa.Tifa()
-        tifa.process_code('import weather\n' +
+        result = tifa.process_code('import weather\n' +
                           'rs = weather.get_weather()\n' +
                           'for r in rs:\n' +
                           '  0+r["Data"]["Precipitation"]')
-        issues = tifa.report['tifa']['issues']
-        self.assertTrue(tifa.report['tifa']['success'])
+        self.assertTrue(result.success)
         
         tifa = pedal.tifa.Tifa()
-        tifa.process_code('import police_shootings\n'
+        result = tifa.process_code('import police_shootings\n'
                           'rs = police_shootings.get_shootings()\n'
                           'for r in rs:\n'
                           '  x=0+r["Person.Age"]\n'
                           'x')
-        issues = tifa.report['tifa']['issues']
-        self.assertTrue(dir(tifa.report['tifa']['top_level_variables']['x'].type.is_equal('NumType')))
-        self.assertTrue(tifa.report['tifa']['success'])
+        self.assertTrue(dir(result.top_level_variables['x'].type.is_equal('NumType')))
+        self.assertTrue(result.success)
 
     def test_get_types(self):
         tifa = pedal.tifa.Tifa()
-        tifa.process_code('a=0\na="Hello"\na=[1,2,3]\na=1')
-        a = tifa.report['tifa']['top_level_variables']['a']
+        result = tifa.process_code('a=0\na="Hello"\na=[1,2,3]\na=1')
+        a = result.top_level_variables['a']
         self.assertTrue(a.was_type('num'))
         self.assertTrue(a.was_type(int))
         self.assertTrue(a.was_type('NumType'))
@@ -675,26 +673,25 @@ class TestVariables(unittest.TestCase):
         self.assertTrue(a.was_type('ListType'))
 
         tifa = pedal.tifa.Tifa()
-        tifa.process_code('credits=[1,2,3,4]\nfor credit in credits:\n  print(credit)')
-        credit = tifa.report['tifa']['top_level_variables']['credit']
+        result = tifa.process_code('credits=[1,2,3,4]\nfor credit in credits:\n  print(credit)')
+        credit = result.top_level_variables['credit']
         self.assertFalse(credit.was_type(list))
         self.assertTrue(credit.was_type(int))
 
     def test_dict_iteration(self):
         tifa = pedal.tifa.Tifa()
-        tifa.process_code('dict = {"T": 0}\nfor i in dict:\n    print(i, dict[i])')
-        self.assertTrue(tifa.report['tifa']['success'])
+        result = tifa.process_code('dict = {"T": 0}\nfor i in dict:\n    print(i, dict[i])')
+        self.assertTrue(result.success)
 
     def test_classes(self):
         program = 'class A:\n def __init__(self):\n  self.x=0\na=A()\na.x+""'
         # print(indent(program, '    '))
         tifa = pedal.tifa.Tifa()
-        tifa.process_code(program)
+        result = tifa.process_code(program)
         # self.assertTrue(tifa.report['tifa']['success'])
         # pprint(tifa.report['tifa'])
         # print(tifa.report['tifa']['top_level_variables']['a'].type.parent.fields)
-        if 'error' in tifa.report['tifa']:
-            raise tifa.report['tifa']['error']
+        self.assertFalse(result.error)
 
         program = dedent("""
                 class Enemy:
@@ -725,8 +722,8 @@ class TestVariables(unittest.TestCase):
                 unnecessary
                 """)
         tifa = pedal.tifa.Tifa()
-        tifa.process_code(program)
-        self.assertEqual(tifa.report['tifa']['issues']['unused_variable'][0].location.line, 2)
+        result = tifa.process_code(program)
+        self.assertEqual(result.issues['unused_variable'][0].location.line, 2)
 
 
     def test_weird_indexing_behavior(self):
@@ -740,9 +737,9 @@ class TestVariables(unittest.TestCase):
         print(total)
         """)
         tifa = pedal.tifa.Tifa()
-        tifa.process_code(program)
-        self.assertNotIn('incompatible_types', tifa.report['tifa']['issues'])
-        self.assertIn('invalid_indexing', tifa.report['tifa']['issues'])
+        result = tifa.process_code(program)
+        self.assertNotIn('incompatible_types', result.issues)
+        self.assertIn('invalid_indexing', result.issues)
 
 
 

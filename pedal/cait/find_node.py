@@ -37,28 +37,29 @@ def find_operation(op_name, root=None, report=MAIN_REPORT):
     Supports all comparison, boolean, binary, and unary operators.
     """
     root = root or parse_program(report=report)
+    found = []
     if op_name in COMPARE_OP_NAMES:
         compares = root.find_all("Compare")
         for compare in compares:
             for op in compare.ops:
                 if op.ast_name == COMPARE_OP_NAMES[op_name]:
-                    yield compare
+                    found.append(compare)
     elif op_name in BOOL_OP_NAMES:
         boolops = root.find_all("BoolOp")
         for boolop in boolops:
             if boolop.op_name == BOOL_OP_NAMES[op_name]:
-                yield boolop
+                found.append(boolop)
     elif op_name in BIN_OP_NAMES:
         binops = root.find_all("BinOp")
         for binop in binops:
             if binop.op_name == BIN_OP_NAMES[op_name]:
-                yield binop
+                found.append(binop)
     elif op_name in UNARY_OP_NAMES:
         unaryops = root.find_all("UnaryOp")
         for unaryop in unaryops:
             if unaryop.op_name == UNARY_OP_NAMES[op_name]:
-                yield unaryop
-    return []
+                found.append(unaryop)
+    return found
 
 
 def find_function_calls(name: str, root=None, report=MAIN_REPORT):

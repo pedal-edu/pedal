@@ -56,6 +56,8 @@ def safe_repr(obj, short=False, max_length=80) -> str:
 
 def chomp(text):
     """ Removes the trailing newline character, if there is one. """
+    if not text:
+        return text
     if text[-2:] == '\n\r':
         return text[:-2]
     if text[-1] == '\n':

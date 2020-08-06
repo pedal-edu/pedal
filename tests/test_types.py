@@ -14,7 +14,7 @@ class TestNormalizeType(unittest.TestCase):
         self.assertIsInstance(normalize_type(float), types.NumType)
         self.assertIsInstance(normalize_type(str), types.StrType)
         self.assertIsInstance(normalize_type(list), types.ListType)
-        self.assertIsInstance(normalize_type(None), types.NoneType)
+        self.assertIsInstance(normalize_type(type(None)), types.NoneType)
 
     def test_complex_annotation(self):
         list_int = normalize_type(ast.parse('list[int]'))

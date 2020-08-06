@@ -585,7 +585,7 @@ class CaitNode:
         if self.ast_name != "Name":
             return None
         try:
-            return self.report['tifa']["top_level_variables"][self.id]
+            return self.report['tifa']['latest'].top_level_variables[self.id]
         except KeyError:
             return None
 

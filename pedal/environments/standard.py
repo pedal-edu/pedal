@@ -56,8 +56,7 @@ class StandardEnvironment(Environment):
         else:
             from pedal.tifa import tifa_analysis
             self.tifa = tifa_analysis(report=report)
-        self.student = run(threaded=True, raise_exceptions=True, report=report)
-        self.student.report_exceptions_mode = True
+        self.student = run(threaded=True, report=report)
         self.set_success = set_success
 
     def print_resolve(self, *args, **kwargs):
@@ -66,8 +65,9 @@ class StandardEnvironment(Environment):
         Title/Label/Score/Message. Any arguments are forwarded to
         :py:func:`pedal.resolvers.simple.resolve`
         """
-        resolve_all(set_successful=self.set_success, no_phases_is_success=True,
-                    report=self.report)
+        #resolve_all(set_successful=self.set_success, no_phases_is_success=True,
+        #            report=self.report)
+        # TODO: Fix resolve_all
         result = simple.resolve(*args, **kwargs)
         # print("Feedback Label:", result.label)
         print("Title:", result.title)

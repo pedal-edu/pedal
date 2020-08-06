@@ -24,10 +24,6 @@ else:
 from pedal.cait.cait_api import parse_program
 from pedal.sandbox.commands import *
 
-# TODO: Set up mock coverage tool in BlockPy
-# Monkey-patch trace_lines
-from pedal.sandbox import commands
-commands.trace_lines = trace_lines
 # TODO: Refactor resolver to return instructions
 # Monkey-patch questions
 from pedal import questions
@@ -49,6 +45,8 @@ HIDE = final.hide_correctness
 from pedal.core.environment import Environment
 from pedal.core.report import MAIN_REPORT
 from pedal.sandbox import Sandbox
+from pedal.tifa import tifa_analysis
+
 
 def enhance_runtime_errors(feedback):
     line.replace(', in <module>', '', 1)
@@ -66,12 +64,14 @@ class BlockPyEnvironment(Environment):
                          user=user, assignment=assignment, course=course,
                          execution=execution, instructor_file=instructor_file,
                          report=report)
+        if not skip_tifa:
+            tifa_analysis(report=self.report)
 
 
     def setup_pedal(self):
-        student = MAIN_REPORT['sandbox']['run'] = Sandbox(report=self.report)
-        student.report_exceptions_mode = True
-        commands.run_student(raise_exceptions=False)
+        pass
+        #student = MAIN_REPORT['sandbox']['run'] = Sandbox(report=self.report)
+        #commands.run_student()
 
 setup_pedal = BlockPyEnvironment
 

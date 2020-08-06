@@ -123,6 +123,8 @@ class Feedback:
     _stored_args: tuple
     _stored_kwargs: dict
 
+    #MAIN_REPORT
+
     def __init__(self, *args, label=None,
                  category=None, justification=None,
                  fields=None, field_names=None,
@@ -239,8 +241,8 @@ class Feedback:
             else:
                 self.report.add_ignored_feedback(self)
         # Free up these temporary fields after condition is handled
-        del self._stored_args
-        del self._stored_kwargs
+        # del self._stored_args
+        # del self._stored_kwargs
         if self._exception is not None:
             raise self._exception
 

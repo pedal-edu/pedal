@@ -168,7 +168,7 @@ class Type:
         """
         return self.index(i)
 
-    def load_attr(self, attr, tifa, callee=None, callee_position=None):
+    def load_attr(self, attr):
         """
 
         Args:
@@ -182,9 +182,6 @@ class Type:
         """
         if attr in self.fields:
             return self.fields[attr]
-        # TODO: Handle more kinds of common mistakes
-        if attr == "append":
-            tifa._issue(tifa.append_to_non_list(callee_position, tifa.identify_caller(callee), self, report=tifa.report))
         return UnknownType()
 
     def is_empty(self):
@@ -462,7 +459,7 @@ class ListType(Type):
         """
         return ListType(self.subtype.clone(), self.empty)
 
-    def load_attr(self, attr, tifa, callee=None, callee_position=None):
+    def load_attr(self, attr):
         """
 
         Args:
@@ -485,7 +482,7 @@ class ListType(Type):
                     self.subtype = args[0]
 
             return FunctionType(_append, 'append')
-        return Type.load_attr(self, attr, tifa, callee, callee_position)
+        return Type.load_attr(self, attr)
 
     def is_empty(self):
         """
@@ -710,7 +707,7 @@ class DictType(Type):
         self.literals.append(literal_key)
         self.values.append(type)
 
-    def load_attr(self, attr, tifa, callee=None, callee_position=None):
+    def load_attr(self, attr):
         """
 
         Args:
@@ -749,7 +746,7 @@ class DictType(Type):
                     return ListType(self.values[0], empty=False)
 
             return FunctionType(_values, 'values')
-        return Type.load_attr(self, attr, tifa, callee, callee_position)
+        return Type.load_attr(self, attr)
 
 
 class ModuleType(Type):
@@ -825,7 +822,7 @@ TYPE_STRINGS = {
     "int": NumType, "integer": NumType, "float": NumType,
     "complex": NumType,
     "bool": BoolType, "boolean": BoolType,
-    "none": NoneType,
+    "none": NoneType, "nonetype": NoneType,
     "dict": DictType, "dictionary": DictType,
     "list": ListType,
     "tuple": TupleType,
