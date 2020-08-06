@@ -865,6 +865,15 @@ class CaitTests(unittest.TestCase):
         self.assertTrue(match04)
 
 
+    def test_cait_get_match_names(self):
+        contextualize_report("for item in item_list:\n"
+                             "    if item < 0:\n"
+                             "        n = n + item\n"
+                             "        i = i + 1\n"
+                             "n = 0")
+        match = find_match("___ = _item_ + 1")
+        self.assertEqual(match.names(), {'_item_': 'i'})
+
 
 if __name__ == '__main__':
     unittest.main(buffer=False)

@@ -310,3 +310,9 @@ class AstMap:
 
     def __len__(self):
         return len(self.mappings)
+
+    def names(self):
+        return {
+            k: v.id for k, v in
+            self.symbol_table.items()
+        }
