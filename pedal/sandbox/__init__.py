@@ -1,6 +1,7 @@
 from pedal.core.report import MAIN_REPORT, Report
 from pedal.sandbox.constants import TOOL_NAME
 from pedal.sandbox.sandbox import Sandbox
+from pedal.sandbox.commands import *
 
 
 def reset(report=MAIN_REPORT):
@@ -19,4 +20,3 @@ def reset(report=MAIN_REPORT):
 
 
 Report.register_tool(TOOL_NAME, reset)
-

@@ -1,7 +1,7 @@
 import os, sys
 from pprint import pprint
 
-pedal_library = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+pedal_library = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
 sys.path.insert(0, pedal_library)
 
 

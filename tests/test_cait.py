@@ -864,7 +864,6 @@ class CaitTests(unittest.TestCase):
         self.assertTrue(match03)
         self.assertTrue(match04)
 
-
     def test_cait_get_match_names(self):
         contextualize_report("for item in item_list:\n"
                              "    if item < 0:\n"

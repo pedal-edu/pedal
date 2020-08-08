@@ -1,6 +1,7 @@
 from pedal.environments.quick import *
 
-code, student, resolve = setup_pedal()
+setup_pedal()
+student = run()
 
 match = find_match("""
 def summate():
