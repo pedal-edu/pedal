@@ -6,10 +6,14 @@ import os
 
 # Core Commands
 from pedal.core.report import MAIN_REPORT
-from pedal.command_line.command_line import main, parse_args
-from pedal.core.commands import *
 from pedal.core.submission import Submission
+from pedal.core.commands import *
 from pedal.source import *
+from pedal.sandbox.commands import *
+from pedal.assertions.commands import *
+from pedal.command_line.command_line import main, parse_args
+
+student: Sandbox
 
 # Am I being run as Pedal, or via Python?
 # Check if an environment was set via CLI
