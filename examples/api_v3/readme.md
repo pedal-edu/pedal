@@ -3,7 +3,16 @@ This directory contains examples of the V3 Pedal API.
 
 # The Examples
 
+```
+$> pedal debug simple_test.py student_code.py --environment blockpy
+$> pedal debug unit_test_examples.py student_code.py --environment blockpy
+```
+
+
 # Running Code
+
+This section has some scattered notes about different ways to run code with
+Pedal.
 
 ## Run File Directly
 
