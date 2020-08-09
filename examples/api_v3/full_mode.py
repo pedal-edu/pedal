@@ -1,3 +1,9 @@
+"""
+
+$> python full_mode.py
+
+"""
+
 from pedal import *
 from pedal.cait import find_match
 from pedal.tifa import tifa_analysis
