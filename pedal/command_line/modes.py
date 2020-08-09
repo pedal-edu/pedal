@@ -126,9 +126,10 @@ class AbstractPipeline:
                 directory_pattern = given_submissions
                 submission_dir = normalize_path(directory_pattern, script)
                 submission_files = [
-                    normalize_path(sub, submission_dir)
+                    os.path.join(submission_dir, sub)
                     for sub in os.listdir(submission_dir)
                 ]
+                print(submission_dir)
                 subs = get_python_files(submission_files)
                 for main_file, main_code in subs.items():
                     new_submission = Submission(
@@ -260,7 +261,8 @@ class GradePipeline(AbstractPipeline):
                     raise bundle.result.error
                 print(bundle.submission.instructor_file,
                       bundle.submission.main_file,
-                      bundle.result.data['MAIN_REPORT'].result.score)
+                      bundle.result.data['MAIN_REPORT'].result.score*
+                      bundle.result.data['MAIN_REPORT'].result.correct)
 
 
 class SandboxPipeline(AbstractPipeline):
