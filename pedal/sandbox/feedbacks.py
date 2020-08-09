@@ -66,7 +66,7 @@ class runtime_error(FeedbackResponse):
                   'traceback_message': traceback_message,
                   'context': context,
                   'context_message': context_message}
-        super().__init__(label=exception_name, fields=fields, title=title,
+        super().__init__(fields=fields, title=title,
                          location=location, **kwargs)
 
 
