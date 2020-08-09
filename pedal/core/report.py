@@ -46,6 +46,9 @@ class Report:
                                        namespace for a tool can be used to
                                        store whatever they want, but will
                                        probably be in a dictionary itself.
+        resolves (list[Any]): The result of having previously called a
+            resolver. This allows you to check if a report has previously
+            been resolved, or do something with that data.
     """
     #: dict[str, dict]: The
     #: tools registered for this report, available via their names.
@@ -66,8 +69,9 @@ class Report:
         self.group_names = {}
         self.hooks = {}
         self.submission = None
-        self.result = None
         self.format = Formatter()
+        self.result = None
+        self.resolves = []
 
     def clear(self):
         """
@@ -85,6 +89,7 @@ class Report:
         self.hooks.clear()
         self.submission = None
         self.result = None
+        self.resolves.clear()
         self.format = Formatter()
 
     def contextualize(self, submission):

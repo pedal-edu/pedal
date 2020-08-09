@@ -44,13 +44,10 @@ HIDE = final.hide_correctness
 """
 from pedal.core.environment import Environment
 from pedal.core.report import MAIN_REPORT
-from pedal.sandbox import Sandbox
+from pedal.sandbox import run
 from pedal.tifa import tifa_analysis
+from pedal.resolvers.simple import resolve
 
-
-def enhance_runtime_errors(feedback):
-    line.replace(', in <module>', '', 1)
-    pass
 
 class BlockPyEnvironment(Environment):
     """
@@ -66,15 +63,13 @@ class BlockPyEnvironment(Environment):
                          report=report)
         if not skip_tifa:
             tifa_analysis(report=self.report)
+        self.fields = {
+            'student': run(),
+            'resolve': resolve
+        }
 
 
-    def setup_pedal(self):
-        pass
-        #student = MAIN_REPORT['sandbox']['run'] = Sandbox(report=self.report)
-        #commands.run_student()
-
-setup_pedal = BlockPyEnvironment
-
+setup_environment = BlockPyEnvironment
 
 """
 TODO: Enhance the following

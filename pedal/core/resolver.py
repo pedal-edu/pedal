@@ -5,6 +5,8 @@ what pieces of feedback should actually be delivered.
 
 __all__ = ['Resolver']
 
+from pedal.core.report import MAIN_REPORT
+
 
 class Resolver:
     """
@@ -12,6 +14,7 @@ class Resolver:
 
     Ideally, it is not responsible for transforming - that is a job for the Environment.
     """
+
     def resolve(self):
         """
         Actually choose the feedback that will be returned

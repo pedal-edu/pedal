@@ -14,6 +14,8 @@ class Environment:
     """
     Abstract Environment class, meant to be subclassed by the environment to
     help simplify configuration. Technically doesn't need to do anything.
+    Creating an instance of an environment will automatically clear out the
+    existing contents of the report.
 
     Args:
         main_file (str): The filename of the main file.
@@ -24,26 +26,27 @@ class Environment:
                  user=None, assignment=None, course=None, execution=None,
                  instructor_file='instructor.py', report=MAIN_REPORT):
         self.report = report
+        report.clear()
         # Setup any code given as the submission.
-        if files is None:
-            if main_code is None:
-                raise ValueError("files and main_code cannot both be None.")
-            files = {main_file: main_code}
+        if isinstance(files, Submission):
+            self.submission = files
         else:
-            if main_file is not None:
+            if files is None:
                 if main_code is None:
-                    main_code = files[main_file]
-                if main_file not in files:
-                    files[main_file] = main_code
+                    raise ValueError("files and main_code cannot both be None.")
+                files = {main_file: main_code}
+            else:
+                if main_file is not None:
+                    if main_code is None:
+                        main_code = files[main_file]
+                    if main_file not in files:
+                        files[main_file] = main_code
+            self.submission = Submission(files, main_file, main_code,
+                                         user, assignment, course, execution,
+                                         instructor_file)
         # Contextualize report
-        self.submission = Submission(files, main_file, main_code,
-                                     user, assignment, course, execution,
-                                     instructor_file)
         self.report.contextualize(self.submission)
-
-    def get_fields(self):
-        """ Abstract method to return the interesting fields of this class. """
-        return []
+        self.fields = {}
 
     def __iter__(self):
-        return self.get_fields()
+        return self.fields.items()

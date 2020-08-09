@@ -179,4 +179,5 @@ def resolve(report=MAIN_REPORT, priority_key=by_priority):
         final.title = set_success.title
         final.message = set_success.message_template()
     report.result = final
+    report.resolves.append(final)
     return final

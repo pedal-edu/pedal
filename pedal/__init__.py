@@ -1,22 +1,43 @@
 """
 A package for analyzing student code.
-
-TODO: Statistics
-TODO: Output checking for folder of submissions
-TODO: Handle tabular output for unit tests
-TODO: Big annotated example
-TODO: Fix sections example
-TODO: Set up "Unit Test" environment
-TODO: Add documentation for each one, particularly toolkit
-TODO: Set up command line and other environments
-TODO: Improve feedback tracking for all the tools
-TODO: Fix up imports everywhere to be consistent, particularly for the modules themselves
-TODO: A/B Tool - override existing feedback, and tools for randomly or deterministically choosing students
-
-DONE: Rework Source module
-DONE: Rework MAIN_REPORT keyword arg for all tools
 """
+import sys
+import os
 
 # Core Commands
+from pedal.core.report import MAIN_REPORT
+from pedal.command_line.command_line import main, parse_args
 from pedal.core.commands import *
+from pedal.core.submission import Submission
 from pedal.source import *
+
+# Am I being run as Pedal, or via Python?
+# Check if an environment was set via CLI
+# Load in a submission file if it was given
+
+# Did the user pass in our special flag or set an environment variable?
+PEDAL_AS_LIBRARY_FLAG = '--PEDAL_AS_LIBRARY' in sys.argv
+try:
+    PEDAL_AS_LIBRARY_FLAG = os.environ['PEDAL_AS_LIBRARY']
+except (AttributeError, KeyError):
+    pass
+
+# If we get command line arguments and we're not told to be a library...
+if sys.argv and not PEDAL_AS_LIBRARY_FLAG:
+    command_line_context = sys.argv[0]
+    # Running this as a module
+    if command_line_context == "-m":
+        # Emulate the console_script mode
+        pass
+    # Running this via the console_script ``pedal``
+    elif command_line_context.endswith('pedal'):
+        # We get to do all the hijinx!
+        pass
+    # Otherwise, assume Python file that has the complete instructor grading script.
+    else:
+        # We need to just use the parameters to set things up, don't run.
+        # Need to setup environment, and make appropriate variables available.
+        if len(sys.argv) > 1:
+            args = parse_args(True)
+            args.instructor = sys.argv[0]
+            main(args)
