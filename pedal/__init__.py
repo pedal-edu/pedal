@@ -11,7 +11,6 @@ from pedal.core.commands import *
 from pedal.source import *
 from pedal.sandbox.commands import *
 from pedal.assertions.commands import *
-from pedal.command_line.command_line import main, parse_args
 
 student: Sandbox
 
@@ -28,6 +27,8 @@ except (AttributeError, KeyError):
 
 # If we get command line arguments and we're not told to be a library...
 if sys.argv and not PEDAL_AS_LIBRARY_FLAG:
+    # Only import if we HAVE sysargs
+    from pedal.command_line.command_line import main, parse_args
     command_line_context = sys.argv[0]
     # Running this as a module
     if command_line_context == "-m":
