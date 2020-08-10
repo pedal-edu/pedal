@@ -43,7 +43,7 @@ class compliment(FeedbackResponse):
     """
     title = "Compliment"
     category = FeedbackCategory.INSTRUCTOR
-    kind = FeedbackKind.ENCOURAGEMENT
+    kind = FeedbackKind.COMPLIMENT
     valence = Feedback.POSITIVE_VALENCE
 
     def __init__(self, message, **kwargs):
@@ -97,6 +97,7 @@ class guidance(FeedbackResponse):
 
     def __init__(self, message, **kwargs):
         super().__init__(message=message, **kwargs)
+
 
 def hide_correctness(report=MAIN_REPORT):
     """
