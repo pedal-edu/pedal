@@ -438,10 +438,13 @@ class Sandbox:
         for name, value in builtins.items():
             if value is True:
                 self.data['__builtins__'][name] = mocked.ORIGINAL_BUILTINS[name]
+                self.data[name] = mocked.ORIGINAL_BUILTINS[name]
             elif value is False:
                 self.data['__builtins__'][name] = mocked.disabled_builtin(name)
+                self.data[name] = mocked.disabled_builtin(name)
             else:
                 self.data['__builtins__'][name] = value
+                self.data[name] = value
         # Override sys modules
         overridden_modules = sys.modules.copy()
         for name, value in self._module_overrides.items():
