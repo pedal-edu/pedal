@@ -39,6 +39,9 @@ class FinalFeedback:
         self.message = message
         self.data = data
         self.hide_correctness = hide_correctness
+        self.positives = []
+        self.instructions = []
+        self.systems = []
 
     def __str__(self) -> str:
         return "FinalFeedback({label!r}, {title!r}, {message!r})".format(label=self.label,
@@ -158,12 +161,18 @@ def resolve(report=MAIN_REPORT, priority_key=by_priority):
         if feedback.label in report.suppressed_labels:
             continue
         success, partial, message, title, data = parse_feedback(feedback)
+        if feedback.category == Feedback.CATEGORIES.SYSTEM:
+            final.systems.append(feedback)
         if not feedback.unscored:
             final.score += partial if partial is not None else 0
         if feedback.muted:
             continue
         final.success = success or final.success
-        if message is not None and final.message is None and feedback.priority != 'positive':
+        if feedback.kind == Feedback.KINDS.COMPLIMENT:
+            final.positives.append(feedback)
+        elif feedback.kind == Feedback.KINDS.INSTRUCTIONAL:
+            final.instructions.append(feedback)
+        elif message is not None and final.message is None:
             final.message = message
             final.title = title
             final.category = feedback.category
@@ -174,7 +183,8 @@ def resolve(report=MAIN_REPORT, priority_key=by_priority):
         final.message = DEFAULT_NO_FEEDBACK_MESSAGE
     final.hide_correctness = suppressions.get('success', False)
     if (not final.hide_correctness and final.success and
-            final.label == 'set_success_no_errors' and final.category == Feedback.CATEGORIES.COMPLETE):
+            final.label == 'set_success_no_errors' and
+            final.category == Feedback.CATEGORIES.COMPLETE):
         # TODO: Promote to be its own atomic feedback function
         final.title = set_success.title
         final.message = set_success.message_template()
