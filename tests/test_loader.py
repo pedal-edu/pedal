@@ -3,8 +3,6 @@ import os
 import sys
 from textwrap import dedent
 
-from pedal.toolkit.records import check_record_instance
-
 pedal_library = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.insert(0, pedal_library)
 
