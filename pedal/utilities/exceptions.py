@@ -192,7 +192,8 @@ class ExpandedTraceback:
             (f"Line {formatter.line(frame.lineno)}"
              f" of file {formatter.filename(frame.filename)}" +
              (f" in {formatter.frame(frame.name)}\n"
-              if frame.name != "<module>" else "\n") +
+              if frame.name != "<module>" and frame.name is not None
+              else "\n") +
              f"    {formatter.python_code(frame.line)}\n")
             for frame in traceback_stack
         ])
