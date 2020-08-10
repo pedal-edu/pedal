@@ -59,8 +59,10 @@ class syntax_error(SourceFeedback):
     """ Generic feedback for any kind of syntax error. """
     muted = False
     title = "Syntax Error"
-    message_template = ("Bad syntax on line {lineno_message}\n"
-                        "{traceback_message}")
+    message_template = ("Bad syntax on line {lineno_message}\n\n"
+                        "The traceback was:\n{traceback_message}\n\n"
+                        "Suggestion: Check line {lineno_message}, the line "
+                        "before it, and the line after it.")
     version = '0.0.1'
     justification = "Syntax error was triggered while calling ast.parse"
 
