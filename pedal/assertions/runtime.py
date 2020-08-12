@@ -10,7 +10,7 @@ import re
 
 from pedal.assertions.feedbacks import (RuntimeAssertionFeedback,
                                         SandboxedValue, ExactValue,
-                                        RuntimePrintingAssertionFeedback, AssertionFeedback)
+                                        RuntimePrintingAssertionFeedback, AssertionFeedback, assert_group)
 from pedal.core.report import MAIN_REPORT
 from pedal.sandbox import Sandbox
 from pedal.sandbox.commands import check_coverage
@@ -674,3 +674,4 @@ assertNotOutputContains = assert_not_output_contains
 assertHasAttr = assert_has_attr
 assertHasFunction = assert_has_function
 assertHasVariable = assert_has_variable
+

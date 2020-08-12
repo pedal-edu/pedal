@@ -126,7 +126,7 @@ def parse_feedback(feedback):
     Returns:
 
     """
-    message = feedback.message or feedback.text
+    message = feedback.message
     title = feedback.title or feedback.label
     return feedback.correct, feedback.score, message, title, feedback.fields
 

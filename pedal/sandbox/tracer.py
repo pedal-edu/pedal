@@ -16,6 +16,8 @@ except Exception:
     class BdbQuit:
         pass
 
+_stdout = sys.stdout
+
 
 class SandboxBasicTracer:
     """

@@ -24,7 +24,7 @@ def resolve_feedback(feedback):
     Returns:
 
     """
-    return "{title}\n{body}".format(title=feedback.title, body=feedback.message or feedback.text)
+    return "{title}\n{body}".format(title=feedback.title, body=feedback.message)
 
 
 @make_resolver

@@ -444,6 +444,7 @@ class assert_group(AssertionFeedback, FeedbackGroup):
         """ Check that there are no errors or failures. """
         return self.errors or self.failures
 
+
 """
 # Group a bunch of tests at the top level
 with assert_group('add') as add_group:

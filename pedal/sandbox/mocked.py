@@ -225,7 +225,7 @@ class BlockedModule(MockModule):
 
 class MockPedal(BlockedModule):
     """ TODO: Deprecated? """
-    MODULE_NAME = "pedal"
+    module_name = "pedal"
 
 
 class MockTurtle(MockModule):
@@ -237,14 +237,27 @@ class MockTurtle(MockModule):
         # TODO: it'd be awesome to have a way to construct a representation
         #       of the drawing result that we could autograde!
     """
+    module_name = 'turtle'
+
     def __init__(self):
-        super().__init__()
+        self.calls = []
 
     def _reset_turtles(self):
         self.calls = []
         
     def _generate_patches(self):
-        return {'__getattr__': self._fake_call}
+        return {'__getattr__': self.getter}
+
+    def getter(self, key):
+        " If anything asks, we prevent the module. Except for __file__. "
+        # Needed to support coverage - it's okay to ask who I am.
+        if key == '__file__':
+            return self.module_name
+
+        def _fake_call_wrapper(*args, **kwargs):
+            self.calls.append((key, args, kwargs))
+            return self._fake_call(args, kwargs)
+        return _fake_call_wrapper
         
     def _fake_call(self, *args, **kwargs):
         return 0

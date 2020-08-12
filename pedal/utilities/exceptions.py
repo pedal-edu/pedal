@@ -113,9 +113,9 @@ class ExpandedTraceback:
         Filter out unnecessary frames
         """
         if not self.exception:
-            return ""
-        if isinstance(self.exception, TimeoutError):
-            return str(self.exception)
+            return []
+        #if isinstance(self.exception, TimeoutError):
+        #    return str(self.exception)
         cl, exc, tb = self.exc_info
         while tb and self._is_relevant_tb_level(tb):
             tb = tb.tb_next

@@ -501,6 +501,8 @@ class Sandbox:
         self.mock_function('open', mocked._restricted_open)
         self.mock_function('__import__', mocked._restricted_import)
         self.mock_module('matplotlib.pyplot', mocked.MockPlt(), 'plotting')
+        # TODO: This breaks coverage for some reason; it's a builtin?
+        self.mock_module('turtle', mocked.MockTurtle(), 'turtles')
         self.block_module('pedal')
 
     def mock_function(self, function_name, new_version):

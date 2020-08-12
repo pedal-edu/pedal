@@ -262,7 +262,8 @@ class GradePipeline(AbstractPipeline):
                 print(bundle.submission.instructor_file,
                       bundle.submission.main_file,
                       bundle.result.data['MAIN_REPORT'].result.score*
-                      bundle.result.data['MAIN_REPORT'].result.correct)
+                      bundle.result.data['MAIN_REPORT'].result.correct,
+                      sep=", ")
 
 
 class SandboxPipeline(AbstractPipeline):
