@@ -36,7 +36,7 @@
     
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Toolkit" href="toolkit.html" />
+    <link rel="next" title="Assertions" href="assertions.html" />
     <link rel="prev" title="CAIT" href="cait.html" /> 
 </head>
 
@@ -101,15 +101,17 @@
 <li class="toctree-l3"><a class="reference internal" href="#source-feedbacks">Source Feedbacks</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="toolkit.html">Toolkit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="assertions.html">Assertions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sandbox.html">Sandbox</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Teacher Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../practices.html">Best Practices</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers/guide.html">Developer Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers/api.html">Developer API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers/integrations.html">Developer Integrations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers/tools.html">Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers/conventions.html">Naming Conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../everyone/glossary.html">Glossary</a></li>
 </ul>
 
@@ -251,30 +253,35 @@ If used when there are no more sections, the <cite>not_enough_sections</cite> fe
 </div>
 <div class="section" id="source-feedbacks">
 <h2>Source Feedbacks<a class="headerlink" href="#source-feedbacks" title="Permalink to this headline">¶</a></h2>
-<code class="sig-prename descclassname">Feedback Function: blank_source</code><dd><ul>
+<code class="sig-prename descclassname">Feedback Function: No Source Code</code><dd><ul>
 <li><strong>Label: </strong><span>blank_source</span></li>
-<li><strong>Justification: </strong><span></span></li>
-<li><strong>Response: </strong><span></span></li>
+<li><strong>Justification: </strong><span>After stripping the code, there were no characters.</span></li>
+<li><strong>Response: </strong><span>Source code file is blank.</span></li>
 </ul>
-</dd><code class="sig-prename descclassname">Feedback Function: not_enough_sections</code><dd><ul>
+</dd><code class="sig-prename descclassname">Feedback Function: Not Enough Sections</code><dd><ul>
 <li><strong>Label: </strong><span>not_enough_sections</span></li>
-<li><strong>Justification: </strong><span></span></li>
-<li><strong>Response: </strong><span></span></li>
+<li><strong>Justification: </strong><span>Section index exceeded the length of the separated sections list.</span></li>
+<li><strong>Response: </strong><span>Tried to advance to next section but the section was not found. Tried to load section {count}, but there were only {found} sections.</span></li>
 </ul>
-</dd><code class="sig-prename descclassname">Feedback Function: source_file_not_found</code><dd><ul>
+</dd><code class="sig-prename descclassname">Feedback Function: Source File Not Found</code><dd><ul>
 <li><strong>Label: </strong><span>source_file_not_found</span></li>
-<li><strong>Justification: </strong><span></span></li>
-<li><strong>Response: </strong><span></span></li>
+<li><strong>Justification: </strong><span>IOError while opening file to set_source</span></li>
+<li><strong>Response: </strong><span>The given filename {filename_message} was either not found or could not be opened. Please make sure the file is available.</span></li>
 </ul>
-</dd><code class="sig-prename descclassname">Feedback Function: syntax_error</code><dd><ul>
+</dd><code class="sig-prename descclassname">Feedback Function: Syntax Error</code><dd><ul>
 <li><strong>Label: </strong><span>syntax_error</span></li>
-<li><strong>Justification: </strong><span></span></li>
-<li><strong>Response: </strong><span></span></li>
+<li><strong>Justification: </strong><span>Syntax error was triggered while calling ast.parse</span></li>
+<li><strong>Response: </strong><span>Bad syntax on line {lineno_message}
+
+The traceback was:
+{traceback_message}
+
+Suggestion: Check line {lineno_message}, the line before it, and the line after it.</span></li>
 </ul>
-</dd><code class="sig-prename descclassname">Feedback Function: incorrect_number_of_sections</code><dd><ul>
+</dd><code class="sig-prename descclassname">Feedback Function: Incorrect Number of Sections</code><dd><ul>
 <li><strong>Label: </strong><span>incorrect_number_of_sections</span></li>
 <li><strong>Justification: </strong><span></span></li>
-<li><strong>Response: </strong><span></span></li>
+<li><strong>Response: </strong><span>Incorrect number of sections in your file. Expected {count}, but only found {found}</span></li>
 </ul>
 </dd></div>
 </div>
@@ -287,7 +294,7 @@ If used when there are no more sections, the <cite>not_enough_sections</cite> fe
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="toolkit.html" class="btn btn-neutral float-right" title="Toolkit" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="assertions.html" class="btn btn-neutral float-right" title="Assertions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="cait.html" class="btn btn-neutral float-left" title="CAIT" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

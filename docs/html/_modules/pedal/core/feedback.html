@@ -92,10 +92,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../teachers/examples.html">Teacher Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../teachers/reference.html">Teacher Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../teachers/tutorial.html">Teacher Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../teachers/practices.html">Best Practices</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers/guide.html">Developer Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers/api.html">Developer API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers/integrations.html">Developer Integrations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers/tools.html">Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers/conventions.html">Naming Conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../everyone/glossary.html">Glossary</a></li>
 </ul>
 
@@ -166,12 +168,12 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Feedback&#39;</span><span class="p">,</span> <span class="s1">&#39;FeedbackKind&#39;</span><span class="p">,</span> <span class="s1">&#39;FeedbackCategory&#39;</span><span class="p">,</span>
-           <span class="s2">&quot;AtomicFeedbackFunction&quot;</span><span class="p">,</span> <span class="s2">&quot;CompositeFeedbackFunction&quot;</span><span class="p">,</span>
+           <span class="s2">&quot;CompositeFeedbackFunction&quot;</span><span class="p">,</span>
            <span class="s2">&quot;FeedbackResponse&quot;</span><span class="p">]</span>
 
 <span class="kn">from</span> <span class="nn">pedal.core.location</span> <span class="kn">import</span> <span class="n">Location</span>
 <span class="kn">from</span> <span class="nn">pedal.core.report</span> <span class="kn">import</span> <span class="n">MAIN_REPORT</span>
-<span class="kn">from</span> <span class="nn">pedal.core.feedback_category</span> <span class="kn">import</span> <span class="n">FeedbackKind</span><span class="p">,</span> <span class="n">FeedbackCategory</span>
+<span class="kn">from</span> <span class="nn">pedal.core.feedback_category</span> <span class="kn">import</span> <span class="n">FeedbackKind</span><span class="p">,</span> <span class="n">FeedbackCategory</span><span class="p">,</span> <span class="n">FeedbackStatus</span>
 
 <span class="n">PEDAL_DEVELOPERS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Austin Cory Bart &lt;acbart@udel.edu&gt;&quot;</span><span class="p">,</span>
                     <span class="s2">&quot;Luke Gusukuma &lt;lukesg08@vt.edu&gt;&quot;</span><span class="p">]</span>
@@ -210,8 +212,11 @@
 <span class="sd">            that the :py:attr:`~pedal.core.feedback.Feedback.label` should be used instead.</span>
 <span class="sd">        message (str): A markdown-formatted message (aka also supporting HTML) that could be rendered</span>
 <span class="sd">            to the user.</span>
-<span class="sd">        text (str): A console-friendly, plain-text message that could be rendered to the user.</span>
-<span class="sd">        fields (Dict[str,Any]): The raw data that was used to interpolate the template to produce the message.</span>
+<span class="sd">        message_template (str): A markdown-formatted message template that will</span>
+<span class="sd">            be used if a ``message`` is None. Any ``fields`` will be injected</span>
+<span class="sd">            into the template IF the ``condition`` is met.</span>
+<span class="sd">        fields (Dict[str,Any]): The raw data that was used to interpolate the</span>
+<span class="sd">            template to produce the message.</span>
 <span class="sd">        location (:py:attr:`~pedal.core.location.Location` or int): Information</span>
 <span class="sd">            about specific locations relevant to this message.</span>
 
@@ -237,9 +242,11 @@
 <span class="sd">        tags (list[:py:class:`~pedal.core.tag.Tag`]): Any tags that you want to</span>
 <span class="sd">            attach to this feedback.</span>
 
-<span class="sd">        group (int or str): Information about what logical grouping within the submission this belongs to. Various</span>
-<span class="sd">            tools can chunk up a submission (e.g., by section), they can use this field to keep track of how that</span>
-<span class="sd">            decision was made. Resolvers can also use this information to organize feedback or to report multiple</span>
+<span class="sd">        parent (int or str): Information about what logical grouping within the</span>
+<span class="sd">            submission this belongs to. Various tools can chunk up a</span>
+<span class="sd">            submission (e.g., by section), they can use this field to keep</span>
+<span class="sd">            track of how that decision was made. Resolvers can also use</span>
+<span class="sd">            this information to organize feedback or to report multiple</span>
 <span class="sd">            categories.</span>
 <span class="sd">        report (:py:class:`~pedal.core.report.Report`): The Report object to</span>
 <span class="sd">            attach this feedback to. Defaults to MAIN_REPORT. Unspecified fields</span>
@@ -261,9 +268,7 @@
     <span class="n">kind</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">title</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">message</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">text</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">message_template</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">text_template</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">priority</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">valence</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">location</span> <span class="o">=</span> <span class="kc">None</span>
@@ -275,20 +280,27 @@
     <span class="n">version</span> <span class="o">=</span> <span class="s1">&#39;1.0.0&#39;</span>
     <span class="n">author</span> <span class="o">=</span> <span class="n">PEDAL_DEVELOPERS</span>
     <span class="n">tags</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">group</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">_status</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">_exception</span><span class="p">:</span> <span class="ne">Exception</span> <span class="ow">or</span> <span class="kc">None</span>
+    <span class="n">_met_condition</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="n">_stored_args</span><span class="p">:</span> <span class="nb">tuple</span>
+    <span class="n">_stored_kwargs</span><span class="p">:</span> <span class="nb">dict</span>
+
+    <span class="c1">#MAIN_REPORT</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">category</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">justification</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">fields</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">field_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">kind</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">message</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">message_template</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">text_template</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">message</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">message_template</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">priority</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">valence</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">location</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">score</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">correct</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">muted</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">unscored</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">tool</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">author</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">tags</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">group</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">,</span>
+                 <span class="n">tags</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">,</span>
+                 <span class="n">delay_condition</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                  <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="c1"># Internal data</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">report</span> <span class="o">=</span> <span class="n">report</span>
@@ -323,17 +335,14 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="n">label</span>
         <span class="k">if</span> <span class="n">message</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="n">message</span>
-        <span class="k">if</span> <span class="n">text</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">text</span>
         <span class="k">if</span> <span class="n">message_template</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">message_template</span> <span class="o">=</span> <span class="n">message_template</span>
-        <span class="k">if</span> <span class="n">text_template</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">text_template</span> <span class="o">=</span> <span class="n">text_template</span>
 
         <span class="c1"># Locations</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
             <span class="n">location</span> <span class="o">=</span> <span class="n">Location</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
-        <span class="c1"># TODO: Handle tuples (Line, Col) and (Filename, Line, Col), and possibly lists thereof</span>
+        <span class="c1"># TODO: Handle tuples (Line, Col) and (Filename, Line, Col), and</span>
+        <span class="c1">#  possibly lists thereof</span>
         <span class="k">if</span> <span class="n">location</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">location</span>
         <span class="c1"># Result</span>
@@ -355,8 +364,11 @@
         <span class="k">if</span> <span class="n">tags</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">tags</span> <span class="o">=</span> <span class="n">tags</span>
         <span class="c1"># Organizational</span>
-        <span class="k">if</span> <span class="n">group</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">group</span> <span class="o">=</span> <span class="n">group</span>
+        <span class="k">if</span> <span class="n">parent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Might inherit from Report&#39;s current group</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">get_current_group</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">field_names</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">field_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">field_names</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="n">field_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">field_name</span><span class="p">)</span>
@@ -364,13 +376,40 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
         <span class="k">if</span> <span class="s1">&#39;location&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;location&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span>
+        <span class="c1"># Potentially delay the condition check</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_stored_args</span> <span class="o">=</span> <span class="n">args</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_stored_kwargs</span> <span class="o">=</span> <span class="n">kwargs</span>
+        <span class="k">if</span> <span class="n">delay_condition</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_met_condition</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_status</span> <span class="o">=</span> <span class="n">FeedbackStatus</span><span class="o">.</span><span class="n">DELAYED</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_handle_condition</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_handle_condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Actually handle the condition check, updating message and report. &quot;&quot;&quot;</span>
         <span class="c1"># Self-attach to a given report?</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_met_condition</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="c1"># Generate the message and text fields as needed</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_message</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_text</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">report</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_met_condition</span><span class="p">:</span>
-            <span class="n">report</span><span class="o">.</span><span class="n">add_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_exception</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_met_condition</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_stored_args</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_stored_kwargs</span><span class="p">)</span>
+            <span class="c1"># Generate the message field as needed</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_met_condition</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_message</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_status</span> <span class="o">=</span> <span class="n">FeedbackStatus</span><span class="o">.</span><span class="n">ACTIVE</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_status</span> <span class="o">=</span> <span class="n">FeedbackStatus</span><span class="o">.</span><span class="n">INACTIVE</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_exception</span> <span class="o">=</span> <span class="n">e</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_status</span> <span class="o">=</span> <span class="n">FeedbackStatus</span><span class="o">.</span><span class="n">ERROR</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">report</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_met_condition</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">add_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">add_ignored_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="c1"># Free up these temporary fields after condition is handled</span>
+        <span class="c1"># del self._stored_args</span>
+        <span class="c1"># del self._stored_kwargs</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_exception</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">_exception</span>
 
 <div class="viewcode-block" id="Feedback.condition"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.Feedback.condition">[docs]</a>    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -386,8 +425,10 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Determines the appropriate value for the message. It will attempt</span>
 <span class="sd">        to use this instance&#39;s message, but if it&#39;s not available then it will</span>
-<span class="sd">        try to generate one from the message_template. Then, it falls back</span>
-<span class="sd">        to _get_text.</span>
+<span class="sd">        try to generate one from the message_template. Then, it returns a</span>
+<span class="sd">        generic message.</span>
+
+<span class="sd">        You can override this to create a truly dynamic message, if you want.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            str: The message for this feedback.</span>
@@ -396,31 +437,16 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">message</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">message_template</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">message_template</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_text</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;No feedback message provided&quot;</span>
 
-    <span class="k">def</span> <span class="nf">_get_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fallback_to_message</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Determines the appropriate value for the plaintext response. It will</span>
-<span class="sd">        attempt to use this instance&#39;s text, but if it&#39;s not available then it</span>
-<span class="sd">        will try to generate one from the text_template. Then, it falls back</span>
-<span class="sd">        to _get_message, unless the ``fallback_to_message`` parameter is False.</span>
+    <span class="k">def</span> <span class="nf">_get_child_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feedback</span><span class="p">,</span> <span class="n">active</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Callback function that Reports will call when a new piece of</span>
+<span class="sd">        feedback is being considered. By default, does nothing. This is useful</span>
+<span class="sd">        for :py:class:`pedal.core.group.FeedbackGroup`, most other feedbacks</span>
+<span class="sd">        will just not care.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            fallback_to_message (bool): Whether or not to try the message</span>
-<span class="sd">                instead if there&#39;s no text available.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            str: The text for this feedback.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">text</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">text</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">text_template</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">text_template</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">fallback_to_message</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_message</span><span class="p">()</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># Simply no text to give!</span>
-            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+<span class="sd">        The ``active`` parameter controls whether or not the condition for the</span>
+<span class="sd">        feedback was met. &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__bool__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_met_condition</span><span class="p">)</span>
@@ -446,8 +472,8 @@
             <span class="n">metadata</span> <span class="o">+=</span> <span class="s2">&quot;, category=&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">category</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">priority</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">metadata</span> <span class="o">+=</span> <span class="s2">&quot;, priority=&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">priority</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">group</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">metadata</span> <span class="o">+=</span> <span class="s2">&quot;, group=&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">group</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">metadata</span> <span class="o">+=</span> <span class="s2">&quot;, parent=&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
         <span class="k">return</span> <span class="s2">&quot;Feedback(</span><span class="si">{}{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span></div>
 
 
@@ -456,13 +482,6 @@
 <span class="sd">    An extension of :py:class:`~pedal.core.feedback.Feedback` that is meant</span>
 <span class="sd">    to indicate that the class should not have any condition behind its</span>
 <span class="sd">    response.</span>
-<span class="sd">    &quot;&quot;&quot;</span></div>
-
-
-<div class="viewcode-block" id="AtomicFeedbackFunction"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.AtomicFeedbackFunction">[docs]</a><span class="k">class</span> <span class="nc">AtomicFeedbackFunction</span><span class="p">(</span><span class="n">Feedback</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    An extension of :py:class:`~pedal.core.feedback.Feedback` that is meant</span>
-<span class="sd">    to indicate that the class should have a condition and response.</span>
 <span class="sd">    &quot;&quot;&quot;</span></div>
 
 
@@ -488,6 +507,14 @@
         <span class="n">CompositeFeedbackFunction_with_attrs</span><span class="o">.</span><span class="n">functions</span> <span class="o">=</span> <span class="n">functions</span>
         <span class="k">return</span> <span class="n">function</span>
     <span class="k">return</span> <span class="n">CompositeFeedbackFunction_with_attrs</span></div>
+
+
+<span class="k">class</span> <span class="nc">FeedbackGroup</span><span class="p">(</span><span class="n">Feedback</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An extension of :py:class:`~pedal.core.feedback.Feedback` that is meant</span>
+<span class="sd">    to indicate that this class will start a new Group context within the report</span>
+<span class="sd">    and do something interesting with any children it gets.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 </pre></div>
 
            </div>

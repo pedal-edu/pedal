@@ -92,10 +92,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../../teachers/examples.html">Teacher Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../teachers/reference.html">Teacher Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../teachers/tutorial.html">Teacher Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../teachers/practices.html">Best Practices</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers/guide.html">Developer Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers/api.html">Developer API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers/integrations.html">Developer Integrations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers/tools.html">Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers/conventions.html">Naming Conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../everyone/glossary.html">Glossary</a></li>
 </ul>
 
@@ -232,34 +234,31 @@
 <span class="sd">        (Path x Fully Qualified Names) =&gt; States</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">pedal.tifa.constants</span> <span class="kn">import</span> <span class="n">TOOL_NAME</span>
-<span class="kn">from</span> <span class="nn">pedal.tifa.tifa</span> <span class="kn">import</span> <span class="n">Tifa</span>
+<span class="kn">from</span> <span class="nn">pedal.tifa.tifa_visitor</span> <span class="kn">import</span> <span class="n">Tifa</span>
 <span class="kn">from</span> <span class="nn">pedal.core.report</span> <span class="kn">import</span> <span class="n">MAIN_REPORT</span><span class="p">,</span> <span class="n">Report</span>
 
-<span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;TIFA&#39;</span>
-<span class="n">SHORT_DESCRIPTION</span> <span class="o">=</span> <span class="s2">&quot;Finds common issues caused by students.&quot;</span>
-<span class="n">DESCRIPTION</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;Python Type Inferencer and Flow Analyzer (TIFA)</span>
 
-<span class="s1">Tifa traverses an AST to detect common issues made by students.</span>
-<span class="s1">&#39;&#39;&#39;</span>
-<span class="n">REQUIRES</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Source&#39;</span><span class="p">]</span>
-<span class="n">OPTIONALS</span> <span class="o">=</span> <span class="p">[]</span>
-
-
-<div class="viewcode-block" id="tifa_analysis"><a class="viewcode-back" href="../../developers/tools/tifa.html#pedal.tifa.tifa_analysis">[docs]</a><span class="k">def</span> <span class="nf">tifa_analysis</span><span class="p">(</span><span class="n">python_3</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="tifa_analysis"><a class="viewcode-back" href="../../developers/tools/tifa.html#pedal.tifa.tifa_analysis">[docs]</a><span class="k">def</span> <span class="nf">tifa_analysis</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Perform the TIFA analysis and attach the results to the Report.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        python_3 (bool): Whether to expect a Python3 formatted file, or Python</span>
-<span class="sd">            2. This has slight nuance on certain AST elements.</span>
-<span class="sd">        report (:class:`Report`): The Report object to attach results to.</span>
-<span class="sd">            Defaults to :data:`MAIN_REPORT`.</span>
+<span class="sd">        code (str or None): The code to evaluate with TIFA. If ``code`` is not</span>
+<span class="sd">            given, then it will default to the student&#39;s main file.</span>
+<span class="sd">        report (:class:`pedal.core.report.Report`): The Report object to</span>
+<span class="sd">            attach results to.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        :py:class:`pedal.tifa.tifa_core.TifaAnalysis`: A TifaAnalysis data</span>
+<span class="sd">            bundle containing all the information that TIFA learned.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">report</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">report</span> <span class="o">=</span> <span class="n">MAIN_REPORT</span>
-    <span class="n">t</span> <span class="o">=</span> <span class="n">Tifa</span><span class="p">(</span><span class="n">python_3</span><span class="o">=</span><span class="n">python_3</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span>
-    <span class="n">t</span><span class="o">.</span><span class="n">process_code</span><span class="p">(</span><span class="n">report</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">main_code</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">t</span></div>
+    <span class="k">if</span> <span class="n">code</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">code</span> <span class="o">=</span> <span class="n">report</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">main_code</span>
+    <span class="k">if</span> <span class="n">code</span> <span class="ow">in</span> <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;analyses&#39;</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;analyses&#39;</span><span class="p">][</span><span class="n">code</span><span class="p">]</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;instance&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">process_code</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+    <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;analyses&#39;</span><span class="p">][</span><span class="n">code</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span>
+    <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;latest&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span>
+    <span class="k">return</span> <span class="n">result</span></div>
 
 
 <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
@@ -270,15 +269,18 @@
 <span class="sd">        report:</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># TODO: Make it so we can reset TIFA through this, safely.</span>
-    <span class="k">pass</span>
+    <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;analyses&#39;</span><span class="p">:</span> <span class="p">{},</span>
+        <span class="s1">&#39;latest&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s1">&#39;instance&#39;</span><span class="p">:</span> <span class="n">Tifa</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">]</span>
 
 
 <span class="n">Report</span><span class="o">.</span><span class="n">register_tool</span><span class="p">(</span><span class="n">TOOL_NAME</span><span class="p">,</span> <span class="n">reset</span><span class="p">)</span>
 
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;NAME&#39;</span><span class="p">,</span> <span class="s1">&#39;DESCRIPTION&#39;</span><span class="p">,</span> <span class="s1">&#39;SHORT_DESCRIPTION&#39;</span><span class="p">,</span>
-           <span class="s1">&#39;REQUIRES&#39;</span><span class="p">,</span> <span class="s1">&#39;OPTIONALS&#39;</span><span class="p">,</span>
-           <span class="s1">&#39;tifa_analysis&#39;</span><span class="p">,</span> <span class="s1">&#39;Tifa&#39;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;tifa_analysis&#39;</span><span class="p">,</span> <span class="s1">&#39;Tifa&#39;</span><span class="p">]</span>
 </pre></div>
 
            </div>

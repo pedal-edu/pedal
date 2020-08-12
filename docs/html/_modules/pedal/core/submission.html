@@ -92,10 +92,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../teachers/examples.html">Teacher Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../teachers/reference.html">Teacher Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../teachers/tutorial.html">Teacher Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../teachers/practices.html">Best Practices</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers/guide.html">Developer Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers/api.html">Developer API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers/integrations.html">Developer Integrations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers/tools.html">Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers/conventions.html">Naming Conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../everyone/glossary.html">Glossary</a></li>
 </ul>
 
@@ -164,6 +166,12 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Representation of a student&#39;s submission to pedal. Almost certainly contains their code,</span>
 <span class="sd">but may also contain other metadata.</span>
+
+
+<span class="sd">TODO: Normalize the concept of evaluations (&quot;&lt;stdin&gt;&quot; or &quot;evaluations&quot;).</span>
+<span class="sd">get_program(filename=&#39;&lt;stdin&gt;&#39;) =&gt; submission.files[&#39;&lt;stdin&gt;&#39;]</span>
+<span class="sd">get_evaluation()</span>
+
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Submission&#39;</span><span class="p">]</span>
@@ -193,12 +201,12 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">files</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">main_file</span><span class="o">=</span><span class="s1">&#39;answer.py&#39;</span><span class="p">,</span> <span class="n">main_code</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">user</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">assignment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">course</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">execution</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">instructor_file</span><span class="o">=</span><span class="s1">&#39;on_run.py&#39;</span><span class="p">):</span>
+                 <span class="n">instructor_file</span><span class="o">=</span><span class="s1">&#39;instructor_tests.py&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">files</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">files</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">files</span> <span class="o">=</span> <span class="n">files</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_file</span> <span class="o">=</span> <span class="n">main_file</span>
-        <span class="k">if</span> <span class="n">main_code</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">main_code</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">main_file</span><span class="p">]</span>
-        <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">main_code</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">main_code</span> <span class="o">=</span> <span class="n">main_code</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_original_main_code</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_code</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">user</span>
@@ -206,19 +214,28 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">course</span> <span class="o">=</span> <span class="n">course</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">execution</span> <span class="o">=</span> <span class="n">execution</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">instructor_file</span> <span class="o">=</span> <span class="n">instructor_file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">line_offsets</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_lines_cache</span> <span class="o">=</span> <span class="p">{}</span>
 
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">lines</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Submission.get_lines"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.submission.Submission.get_lines">[docs]</a>    <span class="k">def</span> <span class="nf">get_lines</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieves the lines of code from this submission.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            list[str]: The lines of code for this submission.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_code</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lines_cache</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_lines_cache</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">main_code</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_code</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lines_cache</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">main_code</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">filename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">code</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_code</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">code</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="n">filename</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">code</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lines_cache</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_lines_cache</span><span class="p">[</span><span class="n">code</span><span class="p">]</span> <span class="o">=</span> <span class="n">code</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lines_cache</span><span class="p">[</span><span class="n">code</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Submission.get_files_lines"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.submission.Submission.get_files_lines">[docs]</a>    <span class="k">def</span> <span class="nf">get_files_lines</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Retrieves a dictionary of lists of strings representing the files&#39;</span>
+<span class="sd">        lines of code. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">filename</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_lines</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">}</span></div>
 
 <div class="viewcode-block" id="Submission.replace_main"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.submission.Submission.replace_main">[docs]</a>    <span class="k">def</span> <span class="nf">replace_main</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -229,7 +246,25 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_code</span> <span class="o">=</span> <span class="n">code</span>
         <span class="k">if</span> <span class="n">file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">main_file</span> <span class="o">=</span> <span class="n">file</span></div></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">main_file</span> <span class="o">=</span> <span class="n">file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">main_file</span><span class="p">]</span> <span class="o">=</span> <span class="n">code</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">main_code</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Retrieves the submission&#39;s main code &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">main_file</span><span class="p">]</span>
+
+    <span class="nd">@main_code</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">main_code</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Changes the submission&#39;s main code &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">main_file</span><span class="p">]</span> <span class="o">=</span> <span class="n">code</span>
+
+<div class="viewcode-block" id="Submission.set_line_offset"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.submission.Submission.set_line_offset">[docs]</a>    <span class="k">def</span> <span class="nf">set_line_offset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lineno</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Sets the line offset for the given filename. Defaults to main</span>
+<span class="sd">        file.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">filename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">line_offsets</span><span class="p">[</span><span class="n">filename</span><span class="p">]</span> <span class="o">=</span> <span class="n">lineno</span></div></div>
 </pre></div>
 
            </div>

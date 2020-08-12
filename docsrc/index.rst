@@ -31,6 +31,7 @@ rather than an afterthought.
     teachers/examples
     teachers/reference
     teachers/tutorial
+    teachers/practices
     developers/guide
     developers/api
     developers/integrations

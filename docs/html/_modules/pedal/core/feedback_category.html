@@ -92,10 +92,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../teachers/examples.html">Teacher Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../teachers/reference.html">Teacher Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../teachers/tutorial.html">Teacher Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../teachers/practices.html">Best Practices</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers/guide.html">Developer Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers/api.html">Developer API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers/integrations.html">Developer Integrations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers/tools.html">Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers/conventions.html">Naming Conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../everyone/glossary.html">Glossary</a></li>
 </ul>
 
@@ -167,7 +169,7 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 
-<div class="viewcode-block" id="FeedbackCategory"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.feedback.FeedbackCategory">[docs]</a><span class="k">class</span> <span class="nc">FeedbackCategory</span><span class="p">:</span>
+<div class="viewcode-block" id="FeedbackCategory"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.FeedbackCategory">[docs]</a><span class="k">class</span> <span class="nc">FeedbackCategory</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An Enumeration of feedback condition categories.</span>
 <span class="sd">    These categories represent distinct types of feedback conditions based on their</span>
@@ -215,7 +217,7 @@
     <span class="p">}</span></div>
 
 
-<div class="viewcode-block" id="FeedbackKind"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.feedback.FeedbackKind">[docs]</a><span class="k">class</span> <span class="nc">FeedbackKind</span><span class="p">:</span>
+<div class="viewcode-block" id="FeedbackKind"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.FeedbackKind">[docs]</a><span class="k">class</span> <span class="nc">FeedbackKind</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An enumeration of the possible kinds of feedback responses, based on their pedagogical role.</span>
 <span class="sd">    Valence can vary between specific instances of a kind of feedback, but some tend to</span>
@@ -250,6 +252,17 @@
     <span class="n">INSTRUCTIONAL</span> <span class="o">=</span> <span class="s2">&quot;Instructional&quot;</span>
     <span class="n">META</span> <span class="o">=</span> <span class="s2">&quot;Meta&quot;</span></div>
 
+
+<span class="k">class</span> <span class="nc">FeedbackStatus</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Enumeration of feedback status outcomes. When you create a piece of</span>
+<span class="sd">    feedback, it will be either active or inactive depeneding on whether its</span>
+<span class="sd">    condition was met. Alternatively, it is also possible that it triggered</span>
+<span class="sd">    an exception. It may also be delayed, indicating that it has not yet been</span>
+<span class="sd">    checked. &quot;&quot;&quot;</span>
+    <span class="n">INACTIVE</span> <span class="o">=</span> <span class="s2">&quot;inactive&quot;</span>
+    <span class="n">ERROR</span> <span class="o">=</span> <span class="s2">&quot;error&quot;</span>
+    <span class="n">ACTIVE</span> <span class="o">=</span> <span class="s2">&quot;active&quot;</span>
+    <span class="n">DELAYED</span> <span class="o">=</span> <span class="s2">&quot;delayed&quot;</span>
 </pre></div>
 
            </div>

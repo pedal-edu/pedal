@@ -92,10 +92,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../teachers/examples.html">Teacher Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../teachers/reference.html">Teacher Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../teachers/tutorial.html">Teacher Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../teachers/practices.html">Best Practices</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers/guide.html">Developer Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers/api.html">Developer API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers/integrations.html">Developer Integrations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers/tools.html">Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers/conventions.html">Naming Conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../everyone/glossary.html">Glossary</a></li>
 </ul>
 
@@ -169,7 +171,7 @@
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;feedback&#39;</span><span class="p">,</span> <span class="s1">&#39;set_success&#39;</span><span class="p">,</span> <span class="s1">&#39;compliment&#39;</span><span class="p">,</span> <span class="s1">&#39;give_partial&#39;</span><span class="p">,</span> <span class="s1">&#39;explain&#39;</span><span class="p">,</span>
            <span class="s1">&#39;gently&#39;</span><span class="p">,</span> <span class="s1">&#39;hide_correctness&#39;</span><span class="p">,</span> <span class="s1">&#39;suppress&#39;</span><span class="p">,</span> <span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="s1">&#39;debug&#39;</span><span class="p">,</span>
            <span class="s1">&#39;system_error&#39;</span><span class="p">,</span> <span class="s1">&#39;clear_report&#39;</span><span class="p">,</span> <span class="s1">&#39;get_all_feedback&#39;</span><span class="p">,</span> <span class="s1">&#39;guidance&#39;</span><span class="p">,</span>
-           <span class="s1">&#39;contextualize_report&#39;</span><span class="p">]</span>
+           <span class="s1">&#39;contextualize_report&#39;</span><span class="p">,</span> <span class="s1">&#39;Feedback&#39;</span><span class="p">]</span>
 
 <span class="kn">from</span> <span class="nn">pedal.core.feedback</span> <span class="kn">import</span> <span class="p">(</span><span class="n">Feedback</span><span class="p">,</span> <span class="n">FeedbackKind</span><span class="p">,</span> <span class="n">FeedbackCategory</span><span class="p">,</span>
                                  <span class="n">FeedbackResponse</span><span class="p">)</span>
@@ -191,7 +193,7 @@
 <span class="sd">    assignment is done.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Complete&quot;</span>
-    <span class="n">text_template</span> <span class="o">=</span> <span class="s2">&quot;Great work!&quot;</span>
+    <span class="n">message_template</span> <span class="o">=</span> <span class="s2">&quot;Great work!&quot;</span>
     <span class="n">score</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">correct</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">category</span> <span class="o">=</span> <span class="n">FeedbackCategory</span><span class="o">.</span><span class="n">COMPLETE</span>
@@ -206,7 +208,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Compliment&quot;</span>
     <span class="n">category</span> <span class="o">=</span> <span class="n">FeedbackCategory</span><span class="o">.</span><span class="n">INSTRUCTOR</span>
-    <span class="n">kind</span> <span class="o">=</span> <span class="n">FeedbackKind</span><span class="o">.</span><span class="n">ENCOURAGEMENT</span>
+    <span class="n">kind</span> <span class="o">=</span> <span class="n">FeedbackKind</span><span class="o">.</span><span class="n">COMPLIMENT</span>
     <span class="n">valence</span> <span class="o">=</span> <span class="n">Feedback</span><span class="o">.</span><span class="n">POSITIVE_VALENCE</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -215,7 +217,7 @@
 <div class="viewcode-block" id="give_partial"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.give_partial">[docs]</a><span class="k">class</span> <span class="nc">give_partial</span><span class="p">(</span><span class="n">FeedbackResponse</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Increases the user&#39;s current score by the `score`. &quot;&quot;&quot;</span>
     <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Partial Credit&quot;</span>
-    <span class="n">text_template</span> <span class="o">=</span> <span class="s2">&quot;Partial credit&quot;</span>
+    <span class="n">message_template</span> <span class="o">=</span> <span class="s2">&quot;Partial credit&quot;</span>
     <span class="n">category</span> <span class="o">=</span> <span class="n">FeedbackCategory</span><span class="o">.</span><span class="n">INSTRUCTOR</span>
     <span class="n">kind</span> <span class="o">=</span> <span class="n">FeedbackKind</span><span class="o">.</span><span class="n">RESULT</span>
     <span class="n">valence</span> <span class="o">=</span> <span class="n">Feedback</span><span class="o">.</span><span class="n">POSITIVE_VALENCE</span>
@@ -260,6 +262,7 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
 
 <div class="viewcode-block" id="hide_correctness"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.hide_correctness">[docs]</a><span class="k">def</span> <span class="nf">hide_correctness</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -306,7 +309,7 @@
     <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
         <span class="n">item</span> <span class="o">=</span> <span class="n">item</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
         <span class="n">cloned_kwargs</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="n">cloned_kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;text&#39;</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
+        <span class="n">cloned_kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;message&#39;</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
         <span class="n">feedback</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;log&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
@@ -330,7 +333,7 @@
     <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
         <span class="n">item</span> <span class="o">=</span> <span class="n">item</span>
         <span class="n">cloned_kwargs</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="n">cloned_kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;text&#39;</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
+        <span class="n">cloned_kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;message&#39;</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
         <span class="n">feedback</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;debug&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 

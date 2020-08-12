@@ -94,6 +94,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../teachers/examples.html">Teacher Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../teachers/reference.html">Teacher Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../teachers/tutorial.html">Teacher Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../teachers/practices.html">Best Practices</a></li>
 <li class="toctree-l1"><a class="reference internal" href="guide.html">Developer Guide</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Developer API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#important-concepts">Important Concepts</a></li>
@@ -108,6 +109,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="integrations.html">Developer Integrations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tools.html">Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conventions.html">Naming Conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../everyone/glossary.html">Glossary</a></li>
 </ul>
 
@@ -233,6 +235,313 @@ Toolkit: Could be Finite set. Often want to mute these and use them as condition
 <span id="core-commands"></span><h2>Core Commands<a class="headerlink" href="#module-pedal.core.commands" title="Permalink to this headline">¶</a></h2>
 <p>Imperative style commands for constructing feedback in a convenient way.
 Uses a global report object (MAIN_REPORT).</p>
+<dl class="py class">
+<dt id="pedal.core.commands.Feedback">
+<em class="property">class </em><code class="sig-name descname">Feedback</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">label=None</em>, <em class="sig-param">category=None</em>, <em class="sig-param">justification=None</em>, <em class="sig-param">fields=None</em>, <em class="sig-param">field_names=None</em>, <em class="sig-param">kind=None</em>, <em class="sig-param">title=None</em>, <em class="sig-param">message=None</em>, <em class="sig-param">message_template=None</em>, <em class="sig-param">priority=None</em>, <em class="sig-param">valence=None</em>, <em class="sig-param">location=None</em>, <em class="sig-param">score=None</em>, <em class="sig-param">correct=None</em>, <em class="sig-param">muted=None</em>, <em class="sig-param">unscored=None</em>, <em class="sig-param">tool=None</em>, <em class="sig-param">version=None</em>, <em class="sig-param">author=None</em>, <em class="sig-param">tags=None</em>, <em class="sig-param">parent=None</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em>, <em class="sig-param">delay_condition=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pedal/core/feedback.html#Feedback"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.commands.Feedback" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class for storing raw feedback.</p>
+<dl class="py attribute">
+<dt id="pedal.core.commands.Feedback.label">
+<code class="sig-name descname">label</code><a class="headerlink" href="#pedal.core.commands.Feedback.label" title="Permalink to this definition">¶</a></dt>
+<dd><p>An internal name for this specific piece of feedback. The
+label should be an underscore-separated string following the same
+conventions as names in Python. They do not have to be globally
+unique, but labels should be as unique as possible (especially
+within a category).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="pedal.core.commands.Feedback.tool">
+<code class="sig-name descname">tool</code><a class="headerlink" href="#pedal.core.commands.Feedback.tool" title="Permalink to this definition">¶</a></dt>
+<dd><p>An internal name for indicating the tool that created
+this feedback. Should be taken directly from the Tool itself. If <cite>None</cite>, then
+this was not created by a tool but directly by the control script.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a>, optional</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="pedal.core.commands.Feedback.category">
+<code class="sig-name descname">category</code><a class="headerlink" href="#pedal.core.commands.Feedback.category" title="Permalink to this definition">¶</a></dt>
+<dd><p>A human-presentable name showable to the learner, indicating what
+sort of feedback this falls into (e.g., “runtime”, “syntax”, “algorithm”).
+More than one feedback will be in a category, but a feedback cannot be in
+more than one category.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="pedal.core.commands.Feedback.kind">
+<code class="sig-name descname">kind</code><a class="headerlink" href="#pedal.core.commands.Feedback.kind" title="Permalink to this definition">¶</a></dt>
+<dd><p>The pedagogical role of this feedback, e.g., “misconception”, “mistake”,
+“hint”, “constraint”. Usually, a piece of Feedback is pointing out a mistake,
+but feedback can also be used for various other purposes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="pedal.core.commands.Feedback.justification">
+<code class="sig-name descname">justification</code><a class="headerlink" href="#pedal.core.commands.Feedback.justification" title="Permalink to this definition">¶</a></dt>
+<dd><p>An instructor-facing string briefly describing why this
+feedback was selected. Serves as a “TL;DR” for this feedback category, useful
+for debugging why a piece of feedback appeared.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="pedal.core.commands.Feedback.priority">
+<code class="sig-name descname">priority</code><a class="headerlink" href="#pedal.core.commands.Feedback.priority" title="Permalink to this definition">¶</a></dt>
+<dd><p>An indication of how important this feedback is relative to other types
+of feedback in the same category. Might be “high/medium/low”. Exactly how this
+gets used is up to the resolver, but typicaly it helps break ties.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="pedal.core.commands.Feedback.valence">
+<code class="sig-name descname">valence</code><a class="headerlink" href="#pedal.core.commands.Feedback.valence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether this is negative, positive, or neutral feedback.
+Either 1, -1, or 0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="pedal.core.commands.Feedback.title">
+<code class="sig-name descname">title</code><a class="headerlink" href="#pedal.core.commands.Feedback.title" title="Permalink to this definition">¶</a></dt>
+<dd><p>A formal, student-facing title for this feedback. If None, indicates
+that the <a class="reference internal" href="#pedal.core.feedback.Feedback.label" title="pedal.core.feedback.Feedback.label"><code class="xref py py-attr docutils literal notranslate"><span class="pre">label</span></code></a> should be used instead.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a>, optional</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="pedal.core.commands.Feedback.message">
+<code class="sig-name descname">message</code><a class="headerlink" href="#pedal.core.commands.Feedback.message" title="Permalink to this definition">¶</a></dt>
+<dd><p>A markdown-formatted message (aka also supporting HTML) that could be rendered
+to the user.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="pedal.core.commands.Feedback.message_template">
+<code class="sig-name descname">message_template</code><a class="headerlink" href="#pedal.core.commands.Feedback.message_template" title="Permalink to this definition">¶</a></dt>
+<dd><p>A markdown-formatted message template that will
+be used if a <code class="docutils literal notranslate"><span class="pre">message</span></code> is None. Any <code class="docutils literal notranslate"><span class="pre">fields</span></code> will be injected
+into the template IF the <code class="docutils literal notranslate"><span class="pre">condition</span></code> is met.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="pedal.core.commands.Feedback.fields">
+<code class="sig-name descname">fields</code><a class="headerlink" href="#pedal.core.commands.Feedback.fields" title="Permalink to this definition">¶</a></dt>
+<dd><p>The raw data that was used to interpolate the
+template to produce the message.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>Dict[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a>,Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="pedal.core.commands.Feedback.location">
+<code class="sig-name descname">location</code><a class="headerlink" href="#pedal.core.commands.Feedback.location" title="Permalink to this definition">¶</a></dt>
+<dd><p>Information
+about specific locations relevant to this message.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pedal.core.location.Location" title="pedal.core.location.Location"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Location</span></code></a> or int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="pedal.core.commands.Feedback.score">
+<code class="sig-name descname">score</code><a class="headerlink" href="#pedal.core.commands.Feedback.score" title="Permalink to this definition">¶</a></dt>
+<dd><p>A numeric score to modify the students’ total score, indicating their overall performance.
+It is ultimately up to the Resolver to decide how to combine all the different scores; a typical
+strategy would be to add all the scores together for any non-muted feedback.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="pedal.core.commands.Feedback.correct">
+<code class="sig-name descname">correct</code><a class="headerlink" href="#pedal.core.commands.Feedback.correct" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates that the entire submission should be considered correct (success) and that the
+task is now finished.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="pedal.core.commands.Feedback.muted">
+<code class="sig-name descname">muted</code><a class="headerlink" href="#pedal.core.commands.Feedback.muted" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether this piece of feedback is something that should be shown to a student. There are
+various use cases for muted feedback: they can serve as flags for later conditionals, suppressed
+default kinds of feedback, or perhaps feedback that is interesting for analysis but not pedagogically
+helpful to give to the student. They will still contribute to overall score, but not to the correcntess
+of the submission.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="pedal.core.commands.Feedback.unscored">
+<code class="sig-name descname">unscored</code><a class="headerlink" href="#pedal.core.commands.Feedback.unscored" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether or not this piece of feedback contributes to
+the score/correctness.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="pedal.core.commands.Feedback.author">
+<code class="sig-name descname">author</code><a class="headerlink" href="#pedal.core.commands.Feedback.author" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of names/emails that indicate who created this piece of feedback. They can be
+either names, emails, or combinations in the style of <cite>“Cory Bart &lt;acbart&#64;udel.edu&gt;”</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>List[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="pedal.core.commands.Feedback.version">
+<code class="sig-name descname">version</code><a class="headerlink" href="#pedal.core.commands.Feedback.version" title="Permalink to this definition">¶</a></dt>
+<dd><p>A version string in the style of Semantic Version (semvar) such as <cite>“0.0.1”</cite>. The last (third)
+digit should be incremented for small bug fixes/changes. The middle (second) digit should be used for more
+serious and intense changes. The first digit should be incremented when changes are made on exposure to
+learners or some other evidence-based motivation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="pedal.core.commands.Feedback.tags">
+<code class="sig-name descname">tags</code><a class="headerlink" href="#pedal.core.commands.Feedback.tags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Any tags that you want to
+attach to this feedback.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tag</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="pedal.core.commands.Feedback.parent">
+<code class="sig-name descname">parent</code><a class="headerlink" href="#pedal.core.commands.Feedback.parent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Information about what logical grouping within the
+submission this belongs to. Various tools can chunk up a
+submission (e.g., by section), they can use this field to keep
+track of how that decision was made. Resolvers can also use
+this information to organize feedback or to report multiple
+categories.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="pedal.core.commands.Feedback.report">
+<code class="sig-name descname">report</code><a class="headerlink" href="#pedal.core.commands.Feedback.report" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Report object to
+attach this feedback to. Defaults to MAIN_REPORT. Unspecified fields
+will be filled in by inspecting the current Feedback Function
+context.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pedal.core.report.Report" title="pedal.core.report.Report"><code class="xref py py-class docutils literal notranslate"><span class="pre">Report</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="pedal.core.commands.Feedback.CATEGORIES">
+<code class="sig-name descname">CATEGORIES</code><a class="headerlink" href="#pedal.core.commands.Feedback.CATEGORIES" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.core.feedback_category.FeedbackCategory</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="pedal.core.commands.Feedback.KINDS">
+<code class="sig-name descname">KINDS</code><a class="headerlink" href="#pedal.core.commands.Feedback.KINDS" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.core.feedback_category.FeedbackKind</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pedal.core.commands.Feedback.condition">
+<code class="sig-name descname">condition</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pedal/core/feedback.html#Feedback.condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.commands.Feedback.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Detect if this feedback is present in the code.
+Defaults to true.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Always returns True by default.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 <dl class="py function">
 <dt id="pedal.core.commands.clear_report">
 <code class="sig-name descname">clear_report</code><span class="sig-paren">(</span><em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pedal/core/commands.html#clear_report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.commands.clear_report" title="Permalink to this definition">¶</a></dt>
@@ -374,7 +683,7 @@ converted to strings using <cite>str</cite> if not already strings.</p>
 
 <dl class="py class">
 <dt id="pedal.core.commands.set_success">
-<em class="property">class </em><code class="sig-name descname">set_success</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">label=None</em>, <em class="sig-param">category=None</em>, <em class="sig-param">justification=None</em>, <em class="sig-param">fields=None</em>, <em class="sig-param">field_names=None</em>, <em class="sig-param">kind=None</em>, <em class="sig-param">title=None</em>, <em class="sig-param">message=None</em>, <em class="sig-param">text=None</em>, <em class="sig-param">message_template=None</em>, <em class="sig-param">text_template=None</em>, <em class="sig-param">priority=None</em>, <em class="sig-param">valence=None</em>, <em class="sig-param">location=None</em>, <em class="sig-param">score=None</em>, <em class="sig-param">correct=None</em>, <em class="sig-param">muted=None</em>, <em class="sig-param">unscored=None</em>, <em class="sig-param">tool=None</em>, <em class="sig-param">version=None</em>, <em class="sig-param">author=None</em>, <em class="sig-param">tags=None</em>, <em class="sig-param">group=None</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pedal/core/commands.html#set_success"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.commands.set_success" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">set_success</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">label=None</em>, <em class="sig-param">category=None</em>, <em class="sig-param">justification=None</em>, <em class="sig-param">fields=None</em>, <em class="sig-param">field_names=None</em>, <em class="sig-param">kind=None</em>, <em class="sig-param">title=None</em>, <em class="sig-param">message=None</em>, <em class="sig-param">message_template=None</em>, <em class="sig-param">priority=None</em>, <em class="sig-param">valence=None</em>, <em class="sig-param">location=None</em>, <em class="sig-param">score=None</em>, <em class="sig-param">correct=None</em>, <em class="sig-param">muted=None</em>, <em class="sig-param">unscored=None</em>, <em class="sig-param">tool=None</em>, <em class="sig-param">version=None</em>, <em class="sig-param">author=None</em>, <em class="sig-param">tags=None</em>, <em class="sig-param">parent=None</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em>, <em class="sig-param">delay_condition=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pedal/core/commands.html#set_success"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.commands.set_success" title="Permalink to this definition">¶</a></dt>
 <dd><p><strong>(Feedback Function)</strong></p>
 <p>Creates Successful feedback for the user, indicating that the entire
 assignment is done.</p>
@@ -402,7 +711,7 @@ suppress information within.</p></li>
 
 <dl class="py class">
 <dt id="pedal.core.commands.system_error">
-<em class="property">class </em><code class="sig-name descname">system_error</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">label=None</em>, <em class="sig-param">category=None</em>, <em class="sig-param">justification=None</em>, <em class="sig-param">fields=None</em>, <em class="sig-param">field_names=None</em>, <em class="sig-param">kind=None</em>, <em class="sig-param">title=None</em>, <em class="sig-param">message=None</em>, <em class="sig-param">text=None</em>, <em class="sig-param">message_template=None</em>, <em class="sig-param">text_template=None</em>, <em class="sig-param">priority=None</em>, <em class="sig-param">valence=None</em>, <em class="sig-param">location=None</em>, <em class="sig-param">score=None</em>, <em class="sig-param">correct=None</em>, <em class="sig-param">muted=None</em>, <em class="sig-param">unscored=None</em>, <em class="sig-param">tool=None</em>, <em class="sig-param">version=None</em>, <em class="sig-param">author=None</em>, <em class="sig-param">tags=None</em>, <em class="sig-param">group=None</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pedal/core/commands.html#system_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.commands.system_error" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">system_error</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">label=None</em>, <em class="sig-param">category=None</em>, <em class="sig-param">justification=None</em>, <em class="sig-param">fields=None</em>, <em class="sig-param">field_names=None</em>, <em class="sig-param">kind=None</em>, <em class="sig-param">title=None</em>, <em class="sig-param">message=None</em>, <em class="sig-param">message_template=None</em>, <em class="sig-param">priority=None</em>, <em class="sig-param">valence=None</em>, <em class="sig-param">location=None</em>, <em class="sig-param">score=None</em>, <em class="sig-param">correct=None</em>, <em class="sig-param">muted=None</em>, <em class="sig-param">unscored=None</em>, <em class="sig-param">tool=None</em>, <em class="sig-param">version=None</em>, <em class="sig-param">author=None</em>, <em class="sig-param">tags=None</em>, <em class="sig-param">parent=None</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em>, <em class="sig-param">delay_condition=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pedal/core/commands.html#system_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.commands.system_error" title="Permalink to this definition">¶</a></dt>
 <dd><p>Call this function to indicate that something has gone wrong at the system
 level with Pedal. Ideally, this doesn’t happen, but sometimes errors
 cascade and its polite for tools to suggest that they are not working
@@ -535,8 +844,21 @@ probably be in a dictionary itself.</p>
 </dd></dl>
 
 <dl class="py attribute">
+<dt id="pedal.core.report.Report.resolves">
+<code class="sig-name descname">resolves</code><a class="headerlink" href="#pedal.core.report.Report.resolves" title="Permalink to this definition">¶</a></dt>
+<dd><p>The result of having previously called a
+resolver. This allows you to check if a report has previously
+been resolved, or do something with that data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a>[Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
 <dt id="pedal.core.report.Report.TOOLS">
-<code class="sig-name descname">TOOLS</code><em class="property"> = {'source': &lt;pedal.core.tool.ToolRegistration object&gt;}</em><a class="headerlink" href="#pedal.core.report.Report.TOOLS" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">TOOLS</code><em class="property"> = {'assertions': &lt;pedal.core.tool.ToolRegistration object&gt;, 'cait': &lt;pedal.core.tool.ToolRegistration object&gt;, 'sandbox': &lt;pedal.core.tool.ToolRegistration object&gt;, 'source': &lt;pedal.core.tool.ToolRegistration object&gt;}</em><a class="headerlink" href="#pedal.core.report.Report.TOOLS" title="Permalink to this definition">¶</a></dt>
 <dd><p>The
 tools registered for this report, available via their names.</p>
 <dl class="field-list simple">
@@ -582,6 +904,27 @@ The namespace is typically a tool or module.</p></li>
 accept a keyword parameter named <cite>report</cite>; this report will be passed
 as as that argument.</p></li>
 </ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pedal.core.report.Report.add_ignored_feedback">
+<code class="sig-name descname">add_ignored_feedback</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">feedback</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pedal/core/report.html#Report.add_ignored_feedback"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.report.Report.add_ignored_feedback" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attaches the given feedback object to this report, but only in the
+ignored list. That means it should not be considered by the Resolver,
+since its condition did not apply to the code. Some Resolvers like
+to know about feedback that was not reached.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>feedback</strong> (<a class="reference internal" href="#pedal.core.feedback.Feedback" title="pedal.core.feedback.Feedback"><code class="xref py py-class docutils literal notranslate"><span class="pre">Feedback</span></code></a>) – The feedback
+object to attach.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The attached feedback.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pedal.core.feedback.Feedback" title="pedal.core.feedback.Feedback"><code class="xref py py-class docutils literal notranslate"><span class="pre">Feedback</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -635,6 +978,18 @@ TODO: Make this just a regular command.</p>
 :param tool_name: A unique string identifying this tool.
 :param reset_function: The function to call to reset the Tool.</p>
 <p>Returns:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pedal.core.report.Report.set_formatter">
+<code class="sig-name descname">set_formatter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">formatter</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pedal/core/report.html#Report.set_formatter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.report.Report.set_formatter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the formatter with the new option.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>formatter</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.core.formatting.Formatter</span></code>) – The new
+formatter to use.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -757,13 +1112,6 @@ for both built-in AST nodes and CaitNodes.</p>
 <div class="section" id="module-pedal.core.feedback">
 <span id="feedback"></span><h2>Feedback<a class="headerlink" href="#module-pedal.core.feedback" title="Permalink to this headline">¶</a></h2>
 <p>Simple data classes for storing feedback to present to learners.</p>
-<dl class="py class">
-<dt id="pedal.core.feedback.AtomicFeedbackFunction">
-<em class="property">class </em><code class="sig-name descname">AtomicFeedbackFunction</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">label=None</em>, <em class="sig-param">category=None</em>, <em class="sig-param">justification=None</em>, <em class="sig-param">fields=None</em>, <em class="sig-param">field_names=None</em>, <em class="sig-param">kind=None</em>, <em class="sig-param">title=None</em>, <em class="sig-param">message=None</em>, <em class="sig-param">text=None</em>, <em class="sig-param">message_template=None</em>, <em class="sig-param">text_template=None</em>, <em class="sig-param">priority=None</em>, <em class="sig-param">valence=None</em>, <em class="sig-param">location=None</em>, <em class="sig-param">score=None</em>, <em class="sig-param">correct=None</em>, <em class="sig-param">muted=None</em>, <em class="sig-param">unscored=None</em>, <em class="sig-param">tool=None</em>, <em class="sig-param">version=None</em>, <em class="sig-param">author=None</em>, <em class="sig-param">tags=None</em>, <em class="sig-param">group=None</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pedal/core/feedback.html#AtomicFeedbackFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.feedback.AtomicFeedbackFunction" title="Permalink to this definition">¶</a></dt>
-<dd><p>An extension of <a class="reference internal" href="#pedal.core.feedback.Feedback" title="pedal.core.feedback.Feedback"><code class="xref py py-class docutils literal notranslate"><span class="pre">Feedback</span></code></a> that is meant
-to indicate that the class should have a condition and response.</p>
-</dd></dl>
-
 <dl class="py function">
 <dt id="pedal.core.feedback.CompositeFeedbackFunction">
 <code class="sig-name descname">CompositeFeedbackFunction</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">functions</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pedal/core/feedback.html#CompositeFeedbackFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.feedback.CompositeFeedbackFunction" title="Permalink to this definition">¶</a></dt>
@@ -783,7 +1131,7 @@ to indicate that the class should have a condition and response.</p>
 
 <dl class="py class">
 <dt id="pedal.core.feedback.Feedback">
-<em class="property">class </em><code class="sig-name descname">Feedback</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">label=None</em>, <em class="sig-param">category=None</em>, <em class="sig-param">justification=None</em>, <em class="sig-param">fields=None</em>, <em class="sig-param">field_names=None</em>, <em class="sig-param">kind=None</em>, <em class="sig-param">title=None</em>, <em class="sig-param">message=None</em>, <em class="sig-param">text=None</em>, <em class="sig-param">message_template=None</em>, <em class="sig-param">text_template=None</em>, <em class="sig-param">priority=None</em>, <em class="sig-param">valence=None</em>, <em class="sig-param">location=None</em>, <em class="sig-param">score=None</em>, <em class="sig-param">correct=None</em>, <em class="sig-param">muted=None</em>, <em class="sig-param">unscored=None</em>, <em class="sig-param">tool=None</em>, <em class="sig-param">version=None</em>, <em class="sig-param">author=None</em>, <em class="sig-param">tags=None</em>, <em class="sig-param">group=None</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pedal/core/feedback.html#Feedback"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.feedback.Feedback" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">Feedback</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">label=None</em>, <em class="sig-param">category=None</em>, <em class="sig-param">justification=None</em>, <em class="sig-param">fields=None</em>, <em class="sig-param">field_names=None</em>, <em class="sig-param">kind=None</em>, <em class="sig-param">title=None</em>, <em class="sig-param">message=None</em>, <em class="sig-param">message_template=None</em>, <em class="sig-param">priority=None</em>, <em class="sig-param">valence=None</em>, <em class="sig-param">location=None</em>, <em class="sig-param">score=None</em>, <em class="sig-param">correct=None</em>, <em class="sig-param">muted=None</em>, <em class="sig-param">unscored=None</em>, <em class="sig-param">tool=None</em>, <em class="sig-param">version=None</em>, <em class="sig-param">author=None</em>, <em class="sig-param">tags=None</em>, <em class="sig-param">parent=None</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em>, <em class="sig-param">delay_condition=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pedal/core/feedback.html#Feedback"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.feedback.Feedback" title="Permalink to this definition">¶</a></dt>
 <dd><p>A class for storing raw feedback.</p>
 <dl class="py attribute">
 <dt id="pedal.core.feedback.Feedback.label">
@@ -903,9 +1251,11 @@ to the user.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="pedal.core.feedback.Feedback.text">
-<code class="sig-name descname">text</code><a class="headerlink" href="#pedal.core.feedback.Feedback.text" title="Permalink to this definition">¶</a></dt>
-<dd><p>A console-friendly, plain-text message that could be rendered to the user.</p>
+<dt id="pedal.core.feedback.Feedback.message_template">
+<code class="sig-name descname">message_template</code><a class="headerlink" href="#pedal.core.feedback.Feedback.message_template" title="Permalink to this definition">¶</a></dt>
+<dd><p>A markdown-formatted message template that will
+be used if a <code class="docutils literal notranslate"><span class="pre">message</span></code> is None. Any <code class="docutils literal notranslate"><span class="pre">fields</span></code> will be injected
+into the template IF the <code class="docutils literal notranslate"><span class="pre">condition</span></code> is met.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></p>
@@ -916,7 +1266,8 @@ to the user.</p>
 <dl class="py attribute">
 <dt id="pedal.core.feedback.Feedback.fields">
 <code class="sig-name descname">fields</code><a class="headerlink" href="#pedal.core.feedback.Feedback.fields" title="Permalink to this definition">¶</a></dt>
-<dd><p>The raw data that was used to interpolate the template to produce the message.</p>
+<dd><p>The raw data that was used to interpolate the
+template to produce the message.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>Dict[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a>,Any]</p>
@@ -1027,11 +1378,13 @@ attach to this feedback.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="pedal.core.feedback.Feedback.group">
-<code class="sig-name descname">group</code><a class="headerlink" href="#pedal.core.feedback.Feedback.group" title="Permalink to this definition">¶</a></dt>
-<dd><p>Information about what logical grouping within the submission this belongs to. Various
-tools can chunk up a submission (e.g., by section), they can use this field to keep track of how that
-decision was made. Resolvers can also use this information to organize feedback or to report multiple
+<dt id="pedal.core.feedback.Feedback.parent">
+<code class="sig-name descname">parent</code><a class="headerlink" href="#pedal.core.feedback.Feedback.parent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Information about what logical grouping within the
+submission this belongs to. Various tools can chunk up a
+submission (e.g., by section), they can use this field to keep
+track of how that decision was made. Resolvers can also use
+this information to organize feedback or to report multiple
 categories.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -1244,7 +1597,7 @@ hours, perhaps it is time to take a break?”).</p>
 
 <dl class="py class">
 <dt id="pedal.core.feedback.FeedbackResponse">
-<em class="property">class </em><code class="sig-name descname">FeedbackResponse</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">label=None</em>, <em class="sig-param">category=None</em>, <em class="sig-param">justification=None</em>, <em class="sig-param">fields=None</em>, <em class="sig-param">field_names=None</em>, <em class="sig-param">kind=None</em>, <em class="sig-param">title=None</em>, <em class="sig-param">message=None</em>, <em class="sig-param">text=None</em>, <em class="sig-param">message_template=None</em>, <em class="sig-param">text_template=None</em>, <em class="sig-param">priority=None</em>, <em class="sig-param">valence=None</em>, <em class="sig-param">location=None</em>, <em class="sig-param">score=None</em>, <em class="sig-param">correct=None</em>, <em class="sig-param">muted=None</em>, <em class="sig-param">unscored=None</em>, <em class="sig-param">tool=None</em>, <em class="sig-param">version=None</em>, <em class="sig-param">author=None</em>, <em class="sig-param">tags=None</em>, <em class="sig-param">group=None</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pedal/core/feedback.html#FeedbackResponse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.feedback.FeedbackResponse" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">FeedbackResponse</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">label=None</em>, <em class="sig-param">category=None</em>, <em class="sig-param">justification=None</em>, <em class="sig-param">fields=None</em>, <em class="sig-param">field_names=None</em>, <em class="sig-param">kind=None</em>, <em class="sig-param">title=None</em>, <em class="sig-param">message=None</em>, <em class="sig-param">message_template=None</em>, <em class="sig-param">priority=None</em>, <em class="sig-param">valence=None</em>, <em class="sig-param">location=None</em>, <em class="sig-param">score=None</em>, <em class="sig-param">correct=None</em>, <em class="sig-param">muted=None</em>, <em class="sig-param">unscored=None</em>, <em class="sig-param">tool=None</em>, <em class="sig-param">version=None</em>, <em class="sig-param">author=None</em>, <em class="sig-param">tags=None</em>, <em class="sig-param">parent=None</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em>, <em class="sig-param">delay_condition=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pedal/core/feedback.html#FeedbackResponse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.feedback.FeedbackResponse" title="Permalink to this definition">¶</a></dt>
 <dd><p>An extension of <a class="reference internal" href="#pedal.core.feedback.Feedback" title="pedal.core.feedback.Feedback"><code class="xref py py-class docutils literal notranslate"><span class="pre">Feedback</span></code></a> that is meant
 to indicate that the class should not have any condition behind its
 response.</p>
@@ -1258,9 +1611,20 @@ Pedal adapt better to a given autograding platform (e.g., BlockPy, WebCAT,
 GradeScope). They are meant to streamline common configuration.</p>
 <dl class="py class">
 <dt id="pedal.core.environment.Environment">
-<em class="property">class </em><code class="sig-name descname">Environment</code><a class="reference internal" href="../_modules/pedal/core/environment.html#Environment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.environment.Environment" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">Environment</code><span class="sig-paren">(</span><em class="sig-param">files=None</em>, <em class="sig-param">main_file='answer.py'</em>, <em class="sig-param">main_code=None</em>, <em class="sig-param">user=None</em>, <em class="sig-param">assignment=None</em>, <em class="sig-param">course=None</em>, <em class="sig-param">execution=None</em>, <em class="sig-param">instructor_file='instructor.py'</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pedal/core/environment.html#Environment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.environment.Environment" title="Permalink to this definition">¶</a></dt>
 <dd><p>Abstract Environment class, meant to be subclassed by the environment to
-help simplify configuration. Technically doesn’t need to do anything.</p>
+help simplify configuration. Technically doesn’t need to do anything.
+Creating an instance of an environment will automatically clear out the
+existing contents of the report.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>main_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The filename of the main file.</p></li>
+<li><p><strong>main_code</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The actual code of the main file.</p></li>
+<li><p><strong>files</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>]</em>) – A list of filenames mapped to their contents.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -1268,9 +1632,12 @@ help simplify configuration. Technically doesn’t need to do anything.</p>
 <span id="submission"></span><h2>Submission<a class="headerlink" href="#module-pedal.core.submission" title="Permalink to this headline">¶</a></h2>
 <p>Representation of a student’s submission to pedal. Almost certainly contains their code,
 but may also contain other metadata.</p>
+<p>TODO: Normalize the concept of evaluations (“&lt;stdin&gt;” or “evaluations”).
+get_program(filename=’&lt;stdin&gt;’) =&gt; submission.files[‘&lt;stdin&gt;’]
+get_evaluation()</p>
 <dl class="py class">
 <dt id="pedal.core.submission.Submission">
-<em class="property">class </em><code class="sig-name descname">Submission</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">files</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">main_file</span><span class="o">=</span><span class="default_value">'answer.py'</span></em>, <em class="sig-param"><span class="n">main_code</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">user</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">assignment</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">course</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">execution</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">instructor_file</span><span class="o">=</span><span class="default_value">'on_run.py'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pedal/core/submission.html#Submission"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.submission.Submission" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">Submission</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">files</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">main_file</span><span class="o">=</span><span class="default_value">'answer.py'</span></em>, <em class="sig-param"><span class="n">main_code</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">user</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">assignment</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">course</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">execution</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">instructor_file</span><span class="o">=</span><span class="default_value">'instructor_tests.py'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pedal/core/submission.html#Submission"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.submission.Submission" title="Permalink to this definition">¶</a></dt>
 <dd><p>Simple class for holding information about the student’s submission.</p>
 <p class="rubric">Examples</p>
 <p>A very simple example of creating a Submission with a single file:</p>
@@ -1358,8 +1725,15 @@ run additional commands (e.g., Sandboxes’ call).</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="pedal.core.submission.Submission.lines">
-<em class="property">property </em><code class="sig-name descname">lines</code><a class="headerlink" href="#pedal.core.submission.Submission.lines" title="Permalink to this definition">¶</a></dt>
+<dt id="pedal.core.submission.Submission.get_files_lines">
+<code class="sig-name descname">get_files_lines</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pedal/core/submission.html#Submission.get_files_lines"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.submission.Submission.get_files_lines" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves a dictionary of lists of strings representing the files’
+lines of code.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pedal.core.submission.Submission.get_lines">
+<code class="sig-name descname">get_lines</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pedal/core/submission.html#Submission.get_lines"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.submission.Submission.get_lines" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves the lines of code from this submission.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -1372,6 +1746,12 @@ run additional commands (e.g., Sandboxes’ call).</p>
 </dd></dl>
 
 <dl class="py method">
+<dt id="id0">
+<em class="property">property </em><code class="sig-name descname">main_code</code><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the submission’s main code</p>
+</dd></dl>
+
+<dl class="py method">
 <dt id="pedal.core.submission.Submission.replace_main">
 <code class="sig-name descname">replace_main</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">code</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></span></em>, <em class="sig-param"><span class="n">file</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pedal/core/submission.html#Submission.replace_main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.submission.Submission.replace_main" title="Permalink to this definition">¶</a></dt>
 <dd><p>Substitutes the current main code and filename with the given arguments.
@@ -1379,6 +1759,13 @@ run additional commands (e.g., Sandboxes’ call).</p>
 :type code: str
 :param file: An optional filename to use.
 :type file: str</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pedal.core.submission.Submission.set_line_offset">
+<code class="sig-name descname">set_line_offset</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lineno</span></em>, <em class="sig-param"><span class="n">filename</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pedal/core/submission.html#Submission.set_line_offset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.submission.Submission.set_line_offset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the line offset for the given filename. Defaults to main
+file.</p>
 </dd></dl>
 
 </dd></dl>
@@ -1415,7 +1802,7 @@ You can update and access fields via dictionary access.</p>
 interesting teacher-level functions, classes, and data. That way, teachers can
 just consistently use <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">pedal.tool</span> <span class="pre">import</span> <span class="pre">*</span></code> to instantly gain access to
 the interesting set of members. The big exception to this is
-<a class="reference internal" href="tools/toolkit.html#toolkit"><span class="std std-ref">Toolkit</span></a>, which is full of prototypical Tools organized
+<span class="xref std std-ref">toolkit</span>, which is full of prototypical Tools organized
 into subsubmodules. If it’s just a single function without much complexity, it
 probably belongs in the Toolkit; but as soon as complexity or multiple
 functions emerge with a theme, it can be promoted to a Tool.</p>

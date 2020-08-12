@@ -92,10 +92,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../teachers/examples.html">Teacher Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../teachers/reference.html">Teacher Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../teachers/tutorial.html">Teacher Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../teachers/practices.html">Best Practices</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers/guide.html">Developer Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers/api.html">Developer API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers/integrations.html">Developer Integrations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers/tools.html">Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers/conventions.html">Naming Conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../everyone/glossary.html">Glossary</a></li>
 </ul>
 
@@ -175,6 +177,7 @@
 
 
 <span class="c1"># TODO: Mechanism for checking whether a piece of feedback is in the report</span>
+<span class="kn">from</span> <span class="nn">pedal.core.formatting</span> <span class="kn">import</span> <span class="n">Formatter</span>
 <span class="kn">from</span> <span class="nn">pedal.core.tool</span> <span class="kn">import</span> <span class="n">ToolRegistration</span>
 
 
@@ -208,6 +211,9 @@
 <span class="sd">                                       namespace for a tool can be used to</span>
 <span class="sd">                                       store whatever they want, but will</span>
 <span class="sd">                                       probably be in a dictionary itself.</span>
+<span class="sd">        resolves (list[Any]): The result of having previously called a</span>
+<span class="sd">            resolver. This allows you to check if a report has previously</span>
+<span class="sd">            been resolved, or do something with that data.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1">#: dict[str, dict]: The</span>
     <span class="c1">#: tools registered for this report, available via their names.</span>
@@ -219,30 +225,37 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_tool_data</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">feedback</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ignored_feedback</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">suppressions</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">suppressed_labels</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hiddens</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">groups</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">group</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">group_names</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hooks</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">submission</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">Formatter</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resolves</span> <span class="o">=</span> <span class="p">[]</span>
 
 <div class="viewcode-block" id="Report.clear"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.report.Report.clear">[docs]</a>    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Completely resets the entire report back to its starting form,</span>
 <span class="sd">        including deleting any attached submissions, tool data, and feedbacks/</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">feedback</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">suppressions</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">suppressed_labels</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">hiddens</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_tool_data</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">feedback</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ignored_feedback</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">suppressions</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">suppressed_labels</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hiddens</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tool_data</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">group</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">group_names</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">hooks</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">group_names</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hooks</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">submission</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="kc">None</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resolves</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">Formatter</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Report.contextualize"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.report.Report.contextualize">[docs]</a>    <span class="k">def</span> <span class="nf">contextualize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">submission</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -275,6 +288,27 @@
 <span class="sd">            :py:class:`~pedal.core.feedback.Feedback`: The attached feedback.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">feedback</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">feedback</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">feedback</span><span class="o">.</span><span class="n">parent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">feedback</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">_get_child_feedback</span><span class="p">(</span><span class="n">feedback</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">feedback</span></div>
+
+<div class="viewcode-block" id="Report.add_ignored_feedback"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.report.Report.add_ignored_feedback">[docs]</a>    <span class="k">def</span> <span class="nf">add_ignored_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feedback</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Attaches the given feedback object to this report, but only in the</span>
+<span class="sd">        ignored list. That means it should not be considered by the Resolver,</span>
+<span class="sd">        since its condition did not apply to the code. Some Resolvers like</span>
+<span class="sd">        to know about feedback that was not reached.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            feedback (:py:class:`~pedal.core.feedback.Feedback`): The feedback</span>
+<span class="sd">                object to attach.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            :py:class:`~pedal.core.feedback.Feedback`: The attached feedback.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ignored_feedback</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">feedback</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">feedback</span><span class="o">.</span><span class="n">parent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">feedback</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">_get_child_feedback</span><span class="p">(</span><span class="n">feedback</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">feedback</span></div>
 
 <div class="viewcode-block" id="Report.suppress"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.report.Report.suppress">[docs]</a>    <span class="k">def</span> <span class="nf">suppress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
@@ -377,6 +411,16 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">tool_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tool_data</span>
 
+<div class="viewcode-block" id="Report.set_formatter"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.report.Report.set_formatter">[docs]</a>    <span class="k">def</span> <span class="nf">set_formatter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">formatter</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the formatter with the new option.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            formatter (:py:class:`pedal.core.formatting.Formatter`): The new</span>
+<span class="sd">                formatter to use.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">formatter</span></div>
+
 <div class="viewcode-block" id="Report.register_tool"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.report.Report.register_tool">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">register_tool</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">tool_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">reset_function</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -390,7 +434,20 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">tool_name</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">TOOLS</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">PedalToolAlreadyRegistered</span><span class="p">(</span><span class="n">tool_name</span><span class="p">)</span>
-        <span class="bp">cls</span><span class="o">.</span><span class="n">TOOLS</span><span class="p">[</span><span class="n">tool_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">ToolRegistration</span><span class="p">(</span><span class="n">tool_name</span><span class="p">,</span> <span class="n">reset_function</span><span class="p">)</span></div></div>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">TOOLS</span><span class="p">[</span><span class="n">tool_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">ToolRegistration</span><span class="p">(</span><span class="n">tool_name</span><span class="p">,</span> <span class="n">reset_function</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">get_current_group</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">start_group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">group</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">stop_group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">group</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">group</span><span class="p">)</span></div>
 
 
 <span class="c1">#: The global Report object. Meant to be used as a default singleton</span>

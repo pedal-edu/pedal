@@ -23,13 +23,14 @@ class FeedbackFunctionDirective(Directive):
         literal = nodes.literal_block(code, code)
         literal['language'] = 'python'
 
-        title = getattr(member_data, 'title', member_name)
+        title = (getattr(member_data, 'title', member_name) or
+                 getattr(member_data, 'label', member_name) or "")
         justification = getattr(member_data, 'justification', "")
         muted = getattr(member_data, 'muted', False)
         if hasattr(member_data, 'message_template'):
             text = getattr(member_data, 'message_template')
         else:
-            text = getattr(member_data, 'text_template', "")
+            text = getattr(member_data, 'message')
 
         result = [addnodes.desc_classname(text="Feedback Function: "+title)]
         lst = nodes.bullet_list()
