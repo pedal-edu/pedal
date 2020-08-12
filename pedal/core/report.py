@@ -68,6 +68,7 @@ class Report:
         self.group = None
         self.group_names = {}
         self.hooks = {}
+        self.class_hooks = {}
         self.submission = None
         self.format = Formatter()
         self.result = None
@@ -75,8 +76,9 @@ class Report:
 
     def clear(self):
         """
-        Completely resets the entire report back to its starting form,
-        including deleting any attached submissions, tool data, and feedbacks/
+        Resets the entire report back to its starting form,
+        including deleting any attached submissions, tool data, and feedbacks.
+        However, it will not affect class hooks.
         """
         self.feedback.clear()
         self.ignored_feedback.clear()
@@ -91,6 +93,11 @@ class Report:
         self.result = None
         self.resolves.clear()
         self.format = Formatter()
+
+    def full_clear(self):
+        """ This totally resets the report, including any class hooks. """
+        self.clear()
+        self.class_hooks.clear()
 
     def contextualize(self, submission):
         """
@@ -188,6 +195,14 @@ class Report:
             self.hooks[event] = []
         self.hooks[event].append(function)
 
+    @classmethod
+    def add_class_hook(cls, event, function):
+        """ Similar to ``add_hook``, except attaches them to the class, so
+        they will be executed for ALL report subclasses. """
+        if event not in cls.class_hooks:
+            cls.class_hooks[event] = []
+        cls.class_hooks[event].append(function)
+
     def execute_hooks(self, tool, event_name):
         """
         Trigger the functions for all of the associated hooks.
@@ -198,6 +213,9 @@ class Report:
             event_name (str): The event name (separate words with periods).
         """
         event = tool + '.' + event_name
+        if event in self.class_hooks:
+            for function in self.class_hooks[event]:
+                function(report=self)
         if event in self.hooks:
             for function in self.hooks[event]:
                 function(report=self)
