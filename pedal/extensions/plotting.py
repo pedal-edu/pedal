@@ -5,14 +5,15 @@ Mock module for Sandbox.
 
 Assertions.
 """
+from pedal import Feedback, CompositeFeedbackFunction
+from pedal.assertions import ensure_function_call, prevent_function_call
+from pedal.core.feedback import FeedbackResponse
 from pedal.core.report import MAIN_REPORT
 from pedal.types.builtin import BUILTIN_MODULES
 from pedal.types.definitions import ModuleType, FunctionType, NoneType
 from pedal.cait.find_node import function_is_called
 from pedal.cait.cait_api import parse_program, def_use_error
-from pedal.core.commands import gently, explain
-from pedal.sandbox import commands
-from pedal.sandbox import TOOL_NAME as SANDBOX_TOOL_NAME
+from pedal.sandbox import mocked, get_sandbox, Sandbox
 
 _PYPLOT_MODULE = ModuleType('pyplot', fields={
     'plot': FunctionType(name='plot', returns=NoneType()),
@@ -29,94 +30,195 @@ BUILTIN_MODULES['matplotlib'] = ModuleType('matplotlib',
                                                'pyplot': _PYPLOT_MODULE
                                            })
 
+
+class MockPlt(mocked.MockModule):
+    """
+    Mock MatPlotLib library that can be used to capture plot data.
+
+    Attributes:
+        plots (list of dict): The internal list of plot dictionaries.
+    """
+
+    def __init__(self):
+        super().__init__()
+        self._reset_plots()
+
+    def show(self, **kwargs):
+        """ Renders the plot """
+        self.plots.append(self.active_plot)
+        self._reset_plot()
+
+    def unshown_plots(self):
+        """ Checks for plots that are not yet shown. """
+        return self.active_plot['data']
+
+    def __repr__(self):
+        return repr(self.plots)
+
+    def __str__(self):
+        return str(self.plots)
+
+    def _reset_plots(self):
+        self.plots = []
+        self._reset_plot()
+
+    def _reset_plot(self):
+        self.active_plot = {'data': [],
+                            'xlabel': None, 'ylabel': None,
+                            'title': None, 'legend': False}
+
+    def hist(self, data, **kwargs):
+        """ Make a histogram """
+        label = kwargs.get('label', None)
+        self.active_plot['data'].append({'type': 'hist', 'values': data,
+                                         'label': label})
+
+    def plot(self, xs, ys=None, **kwargs):
+        """ Make a line plot """
+        label = kwargs.get('label', None)
+        if ys is None:
+            self.active_plot['data'].append({'type': 'line',
+                                             'x': list(range(len(xs))),
+                                             'y': xs, 'label': label})
+        else:
+            self.active_plot['data'].append({'type': 'line', 'x': xs,
+                                             'y': ys, 'label': label})
+
+    def scatter(self, xs, ys, **kwargs):
+        """ Make a scatter plot """
+        label = kwargs.get('label', None)
+        self.active_plot['data'].append({'type': 'scatter', 'x': xs,
+                                         'y': ys, 'label': label})
+
+    def xlabel(self, label, **kwargs):
+        """ Label the x-axis """
+        self.active_plot['xlabel'] = label
+
+    def title(self, label, **kwargs):
+        """ Make the title """
+        self.active_plot['title'] = label
+
+    def suptitle(self, label, **kwargs):
+        """ Make the super title """
+        self.title(label, **kwargs)
+
+    def ylabel(self, label, **kwargs):
+        """ Label the Y-axis """
+        self.active_plot['ylabel'] = label
+
+    def legend(self, **kwargs):
+        """ Show the legend """
+        self.active_plot['legend'] = True
+
+    def _generate_patches(self):
+        def dummy(*args, **kwargs):
+            """ This function does nothing. """
+
+        return dict(hist=self.hist, plot=self.plot,
+                    scatter=self.scatter, show=self.show,
+                    xlabel=self.xlabel, ylabel=self.ylabel,
+                    title=self.title, legend=self.legend,
+                    xticks=dummy, yticks=dummy,
+                    autoscale=dummy, axhline=dummy,
+                    axhspan=dummy, axvline=dummy,
+                    axvspan=dummy, clf=dummy,
+                    cla=dummy, close=dummy,
+                    figlegend=dummy, figimage=dummy,
+                    suptitle=self.suptitle, text=dummy,
+                    tick_params=dummy, ticklabel_format=dummy,
+                    tight_layout=dummy, xkcd=dummy,
+                    xlim=dummy, ylim=dummy,
+                    xscale=dummy, yscale=dummy)
+
+
+def mock_matplotlib(report=MAIN_REPORT):
+    """ Start mocking the MatPlotLib library. """
+    sandbox = get_sandbox(report)
+    sandbox.mock_module('matplotlib.pyplot', MockPlt(), 'plotting')
+
+
 PLOT_LABEL = {'plot': 'line plot',
               'hist': 'histogram',
               'scatter': 'scatter plot'}
 
 
-def prevent_incorrect_plt():
-    """
+class plt_rename_err(Feedback):
+    title = "Wrong MatPlotLib Import"
+    priority = Feedback.CATEGORIES.SYNTAX
+    category = Feedback.CATEGORIES.INSTRUCTOR
+    justification = "The name 'plt' appeared in the code with a def-use error."
+    message_template = ("You have imported the "
+                        "{_format.code('matplotlib.pyplot')} module, "
+                        "but you did not rename it to {_format.code('plt')} "
+                        "using {_format.code('import matplotlib.pyplot as plt')}.")
 
-    Returns:
-
-    """
-    ast = parse_program()
-    plts = [n for n in ast.find_all("Name") if n.id == 'plt']
-    if plts and def_use_error(plts[0]):
-        # TODO: I converted this to the explain_r function, but I wasn't sure about the priority thing ~Luke Gusukuma
-        # explain("You have imported the <code>matplotlib.pyplot</code> module, "
-        #         "but you did not rename it to <code>plt</code> using "
-        #         "<code>import matplotlib.pyplot as plt</code>.<br><br><i>(plt_rename_err)<i></br></br>", 'verifier')
-        explain("You have imported the <code>matplotlib.pyplot</code> module, "
-                  "but you did not rename it to <code>plt</code> using "
-                  "<code>import matplotlib.pyplot as plt</code>.",
-                  label="plt_rename_err",
-                  priority='syntax')
-        return True
-    matplotlib_names = ['plot', 'hist', 'scatter',
-                        'title', 'xlabel', 'ylabel', 'show']
-    for name in matplotlib_names:
-        for n in ast.find_all("Name"):
-            if n.id == name:
-                if def_use_error(n):
-                    # explain(("You have attempted to use the MatPlotLib "
-                    #          "function named <code>{0}</code>. However, you "
-                    #          "imported MatPlotLib in a way that does not "
-                    #          "allow you to use the function directly. I "
-                    #          "recommend you use <code>plt.{0}</code> instead, "
-                    #          "after you use <code>import matplotlib.pyplot as "
-                    #          "plt</code>.<br><br><i>(plt_wrong_import)<i></br></br>").format(name), 'verifier')
-                    explain(("You have attempted to use the MatPlotLib "
-                               "function named <code>{0}</code>. However, you "
-                               "imported MatPlotLib in a way that does not "
-                               "allow you to use the function directly. I "
-                               "recommend you use <code>plt.{0}</code> instead, "
-                               "after you use <code>import matplotlib.pyplot as "
-                               "plt</code>.").format(name),
-                              label="plt_wrong_import",
-                              priority='syntax')
-                    return True
-    return False
-
-
-def ensure_correct_plot(function_name):
-    """
-
-    Args:
-        function_name:
-
-    Returns:
-
-    """
-    for a_plot, label in PLOT_LABEL.items():
-        if function_name == a_plot:
-            if not function_is_called(function_name):
-                gently("You are not calling the <code>{func_name}</code> function.".format(func_name=function_name),
-                       title="Not calling {func_name}".format(func_name=function_name),
-                       fields={'func_name': function_name},
-                       label="no_{func_name}_call".format(func_name=function_name))
-                return True
-        elif function_is_called(a_plot):
-            gently("You have called the <code>{}</code> function, which makes a {}.".format(a_plot, label),
-                     label="wrong_plt")
+    def condition(self):
+        ast = parse_program(report=self.report)
+        plts = [n for n in ast.find_all("Name") if n.id == 'plt']
+        if plts and def_use_error(plts[0]):
             return True
-    return False
+        return False
 
 
-def ensure_show():
-    """
+class plt_wrong_import(Feedback):
+    title = "Missing MatPlotLib Import"
+    priority = Feedback.CATEGORIES.SYNTAX
+    category = Feedback.CATEGORIES.INSTRUCTOR
+    justification = ("A matplotlib name (e.g., 'plot' or 'hist') was used with"
+                     " a def-use error.")
+    message_template = ("You have attempted to use the MatPlotLib "
+                        "function named {name_message}. However, you "
+                        "imported MatPlotLib in a way that does not "
+                        "allow you to use the function directly. I "
+                        "recommend you use {correct_message} instead, "
+                        "after you use "
+                        "{_format.code('import matplotlib.pyplot as plt')}.")
 
-    Returns:
+    def condition(self):
+        ast = parse_program(report=self.report)
+        matplotlib_names = ['plot', 'hist', 'scatter',
+                            'title', 'xlabel', 'ylabel', 'show']
+        as_code = self.report.format.code
+        for name in matplotlib_names:
+            for n in ast.find_all("Name"):
+                if n.id == name:
+                    if def_use_error(n):
+                        self.fields['name_message'] = as_code(name)
+                        self.fields['correct_message'] = as_code("plt." + name)
+                        return True
+        return False
 
-    """
-    if not function_is_called("show"):
-        gently("You have not called <code>show</code> function, which "
-                 "actually creates the graph.", label="no_show")
-        return True
-    return False
+
+@CompositeFeedbackFunction(plt_rename_err, plt_wrong_import)
+def prevent_incorrect_plt(**kwargs):
+    """ Confirms that matplotlib.pyplot is being imported correctly. """
+    return plt_rename_err(**kwargs) and plt_wrong_import(**kwargs)
 
 
-def compare_data(plt_type, correct, given):
+@CompositeFeedbackFunction(prevent_function_call, ensure_function_call)
+def ensure_correct_plot(function_name, report=MAIN_REPORT, **kwargs):
+    """ Checks that the given plot type was correctly called. """
+    ensure_function_call(function_name, **kwargs)
+    as_code = report.format.code
+    for name, description in PLOT_LABEL.items():
+        prevent_function_call(name, **kwargs,
+                              message=(f"You have called the {as_code(name)} "
+                                       f"function, which makes a {description}."))
+
+
+class ensure_show(Feedback):
+    """ Verifies that the `plt.show` function was called. """
+    title = "Missing Show Function"
+    category = Feedback.CATEGORIES.INSTRUCTOR
+    message_template = ("You have not called the {_format.code('plt.show')} "
+                        "function, which actually creates the graph.")
+    justification = "The show function was not found as a function call."
+
+    def condition(self):
+        return not function_is_called("show")
+
+
+def compare_data(plt_type, correct, given, special_comparion=None):
     """
     Determines whether the given data matches any of the data found in the
     correct data. This handles plots of different types: if a histogram
@@ -126,9 +228,15 @@ def compare_data(plt_type, correct, given):
         plt_type (str): The expected type of this plot
         correct (List of Int or List of List of Int): The expected data.
         given (Dict): The actual plotted data and information
+        special_comparion (callable): A special comparison function to use
+            between the data. If None, then will use the ``==`` operator.
     Returns:
         bool: Whether the correct data was found in the given plot.
     """
+    if special_comparion is None:
+        def special_comparion(left, right):
+            return left == right
+
     # Infer arguments
     if plt_type == 'hist':
         correct_xs = None
@@ -145,11 +253,12 @@ def compare_data(plt_type, correct, given):
         correct_ys = correct
 
     if given['type'] == 'hist':
-        return correct_ys == given['values']
+        return special_comparion(correct_ys, given['values'])
     elif plt_type == 'hist':
-        return correct_ys == given['y']
+        return special_comparion(correct_ys, given['y'])
     else:
-        return correct_xs == given['x'] and correct_ys == given['y']
+        return (special_comparion(correct_xs, given['x']) and
+                special_comparion(correct_ys, given['y']))
 
 
 GRAPH_TYPES = {'line': 'line plot',
@@ -157,18 +266,60 @@ GRAPH_TYPES = {'line': 'line plot',
                'scatter': 'scatter plot'}
 
 
-def check_for_plot(plt_type, data, muted=True, report=MAIN_REPORT):
-    """
-    TODO: Convert to be feedback function!
+class BadGraphFeedback(FeedbackResponse):
+    category = Feedback.CATEGORIES.INSTRUCTOR
+    def __init__(self, plt_type, expected, actual, **kwargs):
+        fields = kwargs.setdefault('fields', {})
+        fields['plt_type'] = plt_type
+        fields['expected'] = expected
+        fields['actual'] = actual
+        super().__init__(plt_type, expected, actual, **kwargs)
 
-    Returns any errors found for this plot type and data.
-    In other words, if it returns False, the plot was found correctly.
+
+class other_plt(BadGraphFeedback):
+    title = "Plotting Another Graph"
+    message_template = ("You have created a {plt_type}, but it does not "
+                        "have the right data. That data appears to have been "
+                        "plotted in another graph.")
+
+
+class wrong_plt_data(BadGraphFeedback):
+    title = "Plot Data Incorrect"
+    message_template = ("You have created a {plt_type}, but it does not have "
+                        "the right data.")
+
+
+class wrong_plt_type(BadGraphFeedback):
+    title = "Wrong Plot Type"
+    message_template = ("You have plotted the right data, but you appear to "
+                        "have not plotted it as a {plt_type}.")
+
+
+class no_plt(BadGraphFeedback):
+    title = "Missing Plot"
+    message_template = "You have not created a {plt_type} with the proper data."
+
+
+@CompositeFeedbackFunction(other_plt, wrong_plt_data, wrong_plt_type, no_plt)
+def assert_plot(plt_type, data, **kwargs):
     """
+    Check whether a plot with the given ``plt_type`` and ``data`` exists.
+    If the plot was found successfully, returns False.
+    Otherwise, returns the feedback that was detected.
+
+    Args:
+        plt_type (str): Either 'line', 'hist', or 'scatter'
+        data (list): The expected data to check in the plots. Could be a single
+            list of numbers, or a pair of two lists (for scatter/line plots).
+    """
+    report = kwargs.get("report", MAIN_REPORT)
+    # Allow instructor to use "plot" instead of "line" as type
     if plt_type == 'plot':
         plt_type = 'line'
+    # Check the plots to see if there is a plot with the data
     type_found = False
     data_found = False
-    plots = commands.get_sandbox(report=report).modules.plotting.plots
+    plots = get_sandbox(report=report).modules.plotting.plots
     for graph in plots:
         for a_plot in graph['data']:
             data_found_here = compare_data(plt_type, data, a_plot)
@@ -177,73 +328,43 @@ def check_for_plot(plt_type, data, muted=True, report=MAIN_REPORT):
             if a_plot['type'] == plt_type:
                 type_found = True
             if data_found_here:
-                data_found = True
+                data_found = data_found_here
+    # Figure out what kind of mistake was made.
     plt_type = GRAPH_TYPES.get(plt_type, plt_type)
     if type_found and data_found:
-        return ("You have created a {}, but it does not have the right data. That data appears to have been plotted "
-                "in another graph.<br><br><i>(other_plt)<i></br></br>".format(plt_type))
+        return other_plt(plt_type, data, data_found)
     elif type_found:
-        return ("You have created a {}, but it does not have the right data."
-                "<br><br><i>(wrong_plt_data)<i></br></br>".format(plt_type))
+        return wrong_plt_data(plt_type, data, data_found)
     elif data_found:
-        return ("You have plotted the right data, but you appear to have not plotted it as a {}."
-                "<br><br><i>(wrong_plt_type)<i></br></br>".format(plt_type))
+        return wrong_plt_type(plt_type, data, data_found)
     else:
-        return ("You have not created a {} with the proper data."
-                "<br><br><i>(no_plt)<i></br></br>".format(plt_type))
-
-
-def check_for_plot_r(plt_type, data):
-    """
-    Returns any errors found for this plot type and data.
-    In other words, if it returns False, the plot was found correctly.
-    """
-    if plt_type == 'plot':
-        plt_type = 'line'
-    type_found = False
-    data_found = False
-    for graph in commands.get_plots():
-        for a_plot in graph['data']:
-            data_found_here = compare_data(plt_type, data, a_plot)
-            if a_plot['type'] == plt_type and data_found_here:
-                return False
-            if a_plot['type'] == plt_type:
-                type_found = True
-            if data_found_here:
-                data_found = True
-    plt_type = GRAPH_TYPES.get(plt_type, plt_type)
-    if type_found and data_found:
-        return {"message": "You have created a {}, but it does not have the right data. "
-                           "That data appears to have been plotted in another graph.".format(plt_type),
-                "code": "other_plt",
-                "label": "Plotting Another Graph"}
-    elif type_found:
-        return {"message": "You have created a {}, but it does not have the right data.".format(plt_type),
-                "code": "wrong_plt_data",
-                "label": "Plot Data Incorrect"}
-    elif data_found:
-        return {"message": "You have plotted the right data, but you appear to have not plotted it as a {}.".format(plt_type),
-                "code": "wrong_plt_type",
-                "label": "Wrong Plot Type"
-                }
-    else:
-        return {"message": "You have not created a {} with the proper data.".format(plt_type),
-                "code": "no_plt",
-                "label": "Missing Plot"}
+        return no_plt(plt_type, data, data_found)
 
 
 def get_plots(report=MAIN_REPORT):
     """
+    Retrieves any plots made by the user. The general structure is as follows:
 
-    Args:
-        report:
+    .. code-block::python
 
-    Returns:
-
+        plots = [
+        {
+            'title': str,
+            'xlabel': str,
+            'ylabel': str,
+            'legend': bool
+            'data': {
+                'type': str # either 'line' or 'scatter' or 'hist'
+                'label': str
+                # If 'hist' type
+                'values': list[float]
+                # If 'scatter' or 'line' type
+                'x': list[float],
+                'y': list[float]
+            }
+        }
+        # ...
+        ]
     """
-    sandbox = report[SANDBOX_TOOL_NAME]['run']
-    if 'matplotlib.pyplot' in sandbox.modules:
-        mock_plt = sandbox.modules['matplotlib.pyplot']
-        if hasattr(mock_plt, 'plots'):
-            return mock_plt.plots
-    return []
+    return get_sandbox(report=report).modules.plotting.plots
+

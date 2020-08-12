@@ -35,6 +35,7 @@ from pedal.utilities.exceptions import ExpandedTraceback, improve_builtin_except
 from pedal.sandbox.data import SandboxVariable, SandboxContextKind, \
     SandboxContext, SandboxModules
 from pedal.sandbox import mocked
+from pedal.sandbox.constants import TOOL_NAME
 from pedal.sandbox.feedbacks import runtime_error, EXCEPTION_FF_MAP
 from pedal.sandbox.exceptions import SandboxHasNoFunction, SandboxHasNoVariable
 from pedal.sandbox.timeout import timeout
@@ -500,10 +501,10 @@ class Sandbox:
         self.block_function('globals')
         self.mock_function('open', mocked._restricted_open)
         self.mock_function('__import__', mocked._restricted_import)
-        self.mock_module('matplotlib.pyplot', mocked.MockPlt(), 'plotting')
         # TODO: This breaks coverage for some reason; it's a builtin?
         self.mock_module('turtle', mocked.MockTurtle(), 'turtles')
         self.block_module('pedal')
+        self.report.execute_hooks(TOOL_NAME, 'reset_mocks')
 
     def mock_function(self, function_name, new_version):
         self._module_overrides['__builtins__'][function_name] = new_version
