@@ -196,7 +196,6 @@ Suggestion: Read the error message to see which function had the issue. Check wh
         self.assertIn('General Kenobi!', strs)
 
     def test_matplotlib(self):
-        from pedal.extensions.plotting import mock_matplotlib
         student_code = dedent('''
             import matplotlib.pyplot as plt
             plt.plot([1,2,3])
@@ -204,14 +203,12 @@ Suggestion: Read the error message to see which function had the issue. Check wh
             plt.show()
         ''')
         contextualize_report(student_code)
-        mock_matplotlib()
         student = run(student_code, filename='student.py')
         self.assertIn('plotting', dir(student.modules))
         plt = student.modules.plotting
         self.assertEqual(len(plt.plots), 1)
 
     def test_matplotlib_commands(self):
-        from pedal.extensions.plotting import mock_matplotlib
         student_code = dedent('''
             import matplotlib.pyplot as plt
             plt.plot([1,2,3])
@@ -221,7 +218,6 @@ Suggestion: Read the error message to see which function had the issue. Check wh
             plt.show()
         ''')
         contextualize_report(student_code)
-        mock_matplotlib()
         student = commands.run()
         print(student)
         plt2 = student.modules.plotting

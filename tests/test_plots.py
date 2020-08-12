@@ -19,24 +19,24 @@ plt.show()''')[1:]
 class TestPlots(ExecutionTestCase):
 
     def test_check_for_plot_correct_hist(self):
-        with Execution(code_hist_and_plot, matplotlib=True) as e:
+        with Execution(code_hist_and_plot) as e:
             self.assertEqual(assert_plot('hist', [1, 2, 3]), False)
         self.assertFeedback(e, "No Errors\nNo errors reported.")
 
     def test_check_for_plot_wrong_hist(self):
-        with Execution(code_hist_and_plot, matplotlib=True) as e:
+        with Execution(code_hist_and_plot) as e:
             assert_plot('hist', [1, 2, 3, 4])
         self.assertFeedback(e, "Plot Data Incorrect\n"
                                "You have created a histogram, but it does not "
                                "have the right data.")
 
     def test_check_for_plot_correct_plot(self):
-        with Execution(code_hist_and_plot, matplotlib=True) as e:
+        with Execution(code_hist_and_plot) as e:
             self.assertEqual(assert_plot('line', [4, 5, 6]), False)
         self.assertFeedback(e, "No Errors\nNo errors reported.")
 
     def test_check_for_plot_wrong_plot(self):
-        with Execution(code_hist_and_plot, matplotlib=True) as e:
+        with Execution(code_hist_and_plot) as e:
             assert_plot('line', [4, 5, 6, 7])
         self.assertFeedback(e, "Plot Data Incorrect\n"
                                "You have created a line plot, but it does not "
@@ -49,7 +49,7 @@ class TestPlots(ExecutionTestCase):
             plt.title("My line plot")
             plt.show()
         ''')
-        with Execution(student_code, matplotlib=True) as e:
+        with Execution(student_code) as e:
             assert_plot('hist', [1, 2, 3])
         self.assertFeedback(e, "Wrong Plot Type\n"
                                "You have plotted the right data, but you appear "
@@ -65,7 +65,7 @@ class TestPlots(ExecutionTestCase):
             plt.title("Right graph with the wrong data")
             plt.show()
         ''')
-        with Execution(student_code, matplotlib=True) as e:
+        with Execution(student_code) as e:
             assert_plot('hist', [1, 2, 3])
         self.assertFeedback(e, "Plotting Another Graph\n"
                                "You have created a histogram, but it does not "
@@ -78,7 +78,7 @@ class TestPlots(ExecutionTestCase):
             plt.title("My line plot")
             plt.show()
         ''')
-        with Execution(student_code, matplotlib=True) as e:
+        with Execution(student_code) as e:
             self.assertEqual(assert_plot('hist', [4, 5, 6]),
                              "You have not created a histogram with the "
                              "proper data.<br><br><i>(no_plt)<i></br></br>")
@@ -89,7 +89,7 @@ class TestPlots(ExecutionTestCase):
             plt.title("Nothingness and despair")
             plt.show()
         ''')
-        with Execution(student_code, matplotlib=True) as e:
+        with Execution(student_code) as e:
             self.assertEqual(assert_plot('scatter', []), False)
 
         student_code = dedent('''
@@ -98,7 +98,7 @@ class TestPlots(ExecutionTestCase):
             plt.title("Some actual stuff")
             plt.show()
         ''')
-        with Execution(student_code, matplotlib=True) as e:
+        with Execution(student_code) as e:
             assert_plot('scatter', [[1, 2, 3], [4, 5, 6]])
 
 
@@ -110,7 +110,7 @@ class TestPlots(ExecutionTestCase):
             plt.title("Some actual stuff")
             plt.show()
         ''')
-        with Execution(student_code, matplotlib=True) as e:
+        with Execution(student_code) as e:
             self.assertEqual(prevent_incorrect_plt(), True)
         self.assertEqual(e.final.message, "You have imported the "
                                     "<code>matplotlib.pyplot</code> module, but you did "
@@ -123,7 +123,7 @@ class TestPlots(ExecutionTestCase):
             plt.title("Some actual stuff")
             plt.show()
         ''')
-        with Execution(student_code, matplotlib=True) as e:
+        with Execution(student_code) as e:
             self.assertEqual(prevent_incorrect_plt(), True)
         self.assertEqual(e.final.message, "You have attempted to use the MatPlotLib "
                                     "function named <code>scatter</code>. However, you "
@@ -138,5 +138,5 @@ class TestPlots(ExecutionTestCase):
             plt.title("Some actual stuff")
             plt.show()
         ''')
-        with Execution(student_code, matplotlib=True) as e:
+        with Execution(student_code) as e:
             self.assertEqual(prevent_incorrect_plt(), False)

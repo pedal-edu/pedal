@@ -48,6 +48,7 @@ from pedal.core.report import MAIN_REPORT
 from pedal.sandbox import run, get_sandbox, set_input
 from pedal.tifa import tifa_analysis
 from pedal.resolvers.simple import resolve
+from pedal.extensions.plotting import mock_matplotlib
 
 
 class BlockPyEnvironment(Environment):

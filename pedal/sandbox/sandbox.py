@@ -502,9 +502,9 @@ class Sandbox:
         self.mock_function('open', mocked._restricted_open)
         self.mock_function('__import__', mocked._restricted_import)
         # TODO: This breaks coverage for some reason; it's a builtin?
-        self.mock_module('turtle', mocked.MockTurtle(), 'turtles')
         self.block_module('pedal')
-        self.report.execute_hooks(TOOL_NAME, 'reset_mocks')
+        self.mock_module('turtle', mocked.MockTurtle(), 'turtles')
+        self.mock_module('matplotlib.pyplot', mocked.MockPlt(), 'plotting')
 
     def mock_function(self, function_name, new_version):
         self._module_overrides['__builtins__'][function_name] = new_version
