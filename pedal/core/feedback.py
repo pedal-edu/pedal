@@ -271,7 +271,8 @@ class Feedback:
         if self.message is not None:
             return self.message
         if self.message_template is not None:
-            return self.message_template.format(**self.fields)
+            return self.message_template.format(_format=self.report.format,
+                                                **self.fields)
         return "No feedback message provided"
 
     def _get_child_feedback(self, feedback, active):
