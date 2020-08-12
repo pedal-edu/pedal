@@ -25,6 +25,9 @@ try:
 except (AttributeError, KeyError):
     pass
 
+def is_common_tool(command_line_context):
+    return command_line_context.endswith('pydevconsole.py')
+
 # If we get command line arguments and we're not told to be a library...
 if sys.argv and not PEDAL_AS_LIBRARY_FLAG:
     # Only import if we HAVE sysargs
@@ -39,6 +42,8 @@ if sys.argv and not PEDAL_AS_LIBRARY_FLAG:
         # We get to do all the hijinx!
         pass
     # Otherwise, assume Python file that has the complete instructor grading script.
+    elif is_common_tool(command_line_context):
+        pass
     else:
         # We need to just use the parameters to set things up, don't run.
         # Need to setup environment, and make appropriate variables available.
