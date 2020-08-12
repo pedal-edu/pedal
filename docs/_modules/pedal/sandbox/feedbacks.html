@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,27 +11,29 @@
   
 
   
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
 </head>
@@ -48,7 +49,7 @@
           
 
           
-            <a href="../../../index.html" class="icon icon-home"> Pedal
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> Pedal
           
 
           
@@ -75,6 +76,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -90,16 +92,19 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../teachers/examples.html">Teacher Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../teachers/reference.html">Teacher Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../teachers/tutorial.html">Teacher Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../teachers/practices.html">Best Practices</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers/guide.html">Developer Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers/api.html">Developer API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers/integrations.html">Developer Integrations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers/tools.html">Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers/conventions.html">Naming Conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../everyone/glossary.html">Glossary</a></li>
 </ul>
 
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -138,7 +143,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../../index.html">Module code</a> &raquo;</li>
         
@@ -160,38 +165,237 @@
            <div itemprop="articleBody">
             
   <h1>Source code for pedal.sandbox.feedbacks</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">pedal.core.commands</span> <span class="k">import</span> <span class="n">feedback</span>
-<span class="kn">from</span> <span class="nn">pedal.core.report</span> <span class="k">import</span> <span class="n">MAIN_REPORT</span>
-<span class="kn">from</span> <span class="nn">pedal.core.feedback</span> <span class="k">import</span> <span class="n">Feedback</span><span class="p">,</span> <span class="n">CompositeFeedbackFunction</span>
-<span class="kn">from</span> <span class="nn">pedal.sandbox</span> <span class="k">import</span> <span class="n">TOOL_NAME</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Generic runtime exception feedback class.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">pedal.core.location</span> <span class="kn">import</span> <span class="n">Location</span>
+<span class="kn">from</span> <span class="nn">pedal.core.report</span> <span class="kn">import</span> <span class="n">MAIN_REPORT</span>
+<span class="kn">from</span> <span class="nn">pedal.sandbox.data</span> <span class="kn">import</span> <span class="n">format_contexts</span>
+<span class="kn">from</span> <span class="nn">pedal.utilities.exceptions</span> <span class="kn">import</span> <span class="ne">KeyError</span><span class="p">,</span> <span class="n">get_exception_name</span>
+<span class="kn">from</span> <span class="nn">pedal.core.feedback</span> <span class="kn">import</span> <span class="n">FeedbackResponse</span>
+<span class="kn">from</span> <span class="nn">pedal.sandbox</span> <span class="kn">import</span> <span class="n">TOOL_NAME</span>
+<span class="kn">from</span> <span class="nn">pedal.utilities.text</span> <span class="kn">import</span> <span class="n">add_indefinite_article</span>
 
-<div class="viewcode-block" id="runtime_error"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.feedbacks.runtime_error">[docs]</a><span class="nd">@CompositeFeedbackFunction</span><span class="p">()</span>
-<span class="k">def</span> <span class="nf">runtime_error</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">exception</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">muted</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+<span class="n">RUNTIME_ERROR_MESSAGE_HEADER</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;</span><span class="si">{exception_name}</span><span class="s2"> occurred:</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+    <span class="s2">&quot;</span><span class="si">{exception_message}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+    <span class="s2">&quot;</span><span class="si">{context_message}</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="s2">&quot;The traceback was:</span><span class="se">\n</span><span class="si">{traceback_message}</span><span class="se">\n</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="runtime_error"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.feedbacks.runtime_error">[docs]</a><span class="k">class</span> <span class="nc">runtime_error</span><span class="p">(</span><span class="n">FeedbackResponse</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Used to create all runtime errors.</span>
 
-<span class="sd">    Args:</span>
-<span class="sd">        message:</span>
-<span class="sd">        name:</span>
-<span class="sd">        exception:</span>
-<span class="sd">        position:</span>
-<span class="sd">        text:</span>
-<span class="sd">        muted:</span>
-<span class="sd">        group:</span>
-<span class="sd">        report:</span>
-
-<span class="sd">    Returns:</span>
+<span class="sd">    Fields:</span>
+<span class="sd">        exception (Exception): The original exception.</span>
+<span class="sd">        exception_name (str): The original name of the exception.</span>
+<span class="sd">        exception_message (str): the original error message from the exception.</span>
+<span class="sd">        traceback (:py:class:`~pedal.utilities.exceptions.ExpandedTraceback`):</span>
+<span class="sd">            An enhanced version of the builtin Traceback object. Has a number</span>
+<span class="sd">            of additional fields.</span>
+<span class="sd">        traceback_message (str): A nicely formatted version of the traceback.</span>
+<span class="sd">        context (list[:py:class:`~pedal.sandbox.data.SandboxContext`]): The</span>
+<span class="sd">            history of inputs, outputs, executed code, and other information</span>
+<span class="sd">            from when this runtime error occurred. Usually just a single</span>
+<span class="sd">            element, but sometimes longer if created in a grouping context.</span>
+<span class="sd">            If the code was run from a file, then the filename is given.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">fields</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="n">message</span><span class="p">,</span>
-              <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
-              <span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="n">exception</span><span class="p">,</span>
-              <span class="s1">&#39;position&#39;</span><span class="p">:</span> <span class="n">position</span><span class="p">,</span>
-              <span class="s1">&#39;traceback&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
-    <span class="c1"># TODO: Finish</span>
-    <span class="k">return</span> <span class="n">feedback</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">tool</span><span class="o">=</span><span class="n">TOOL_NAME</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">RUNTIME</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="n">Feedback</span><span class="o">.</span><span class="n">KINDS</span><span class="o">.</span><span class="n">MISTAKE</span><span class="p">,</span>
-                    <span class="n">justification</span><span class="o">=</span><span class="s2">&quot;A runtime error occurred during execution of some code&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
-                    <span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">text</span> <span class="ow">or</span> <span class="n">message</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="n">fields</span><span class="p">,</span> <span class="n">locations</span><span class="o">=</span><span class="n">position</span><span class="p">,</span> <span class="n">muted</span><span class="o">=</span><span class="n">muted</span><span class="p">,</span>
-                    <span class="n">version</span><span class="o">=</span><span class="s1">&#39;0.0.1&#39;</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="n">group</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span></div>
+    <span class="n">tool</span> <span class="o">=</span> <span class="n">TOOL_NAME</span>
+    <span class="n">category</span> <span class="o">=</span> <span class="n">FeedbackResponse</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">RUNTIME</span>
+    <span class="n">kind</span> <span class="o">=</span> <span class="n">FeedbackResponse</span><span class="o">.</span><span class="n">KINDS</span><span class="o">.</span><span class="n">MISTAKE</span>
+    <span class="n">justification</span> <span class="o">=</span> <span class="s2">&quot;A runtime error occurred during execution of some code.&quot;</span>
+    <span class="n">version</span> <span class="o">=</span> <span class="s1">&#39;1.1.0&#39;</span>
+    <span class="n">message_template</span> <span class="o">=</span> <span class="n">RUNTIME_ERROR_MESSAGE_HEADER</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exception</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">traceback</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">report</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;report&#39;</span><span class="p">,</span> <span class="n">MAIN_REPORT</span><span class="p">)</span>
+        <span class="n">exception_name</span> <span class="o">=</span> <span class="n">get_exception_name</span><span class="p">(</span><span class="n">exception</span><span class="p">)</span>
+        <span class="n">exception_name_proper</span> <span class="o">=</span> <span class="n">add_indefinite_article</span><span class="p">(</span><span class="n">exception_name</span><span class="p">)</span>
+        <span class="n">exception_message</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">exception</span><span class="p">)</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">exception</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">EXCEPTION_FF_MAP</span><span class="p">:</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="n">exception_name</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="n">EXCEPTION_FF_MAP</span><span class="p">[</span><span class="nb">type</span><span class="p">(</span><span class="n">exception</span><span class="p">)]</span><span class="o">.</span><span class="n">title</span>
+        <span class="n">location</span> <span class="o">=</span> <span class="n">Location</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
+        <span class="n">traceback_stack</span> <span class="o">=</span> <span class="n">traceback</span><span class="o">.</span><span class="n">build_traceback</span><span class="p">()</span>
+        <span class="n">traceback_message</span> <span class="o">=</span> <span class="n">traceback</span><span class="o">.</span><span class="n">format_traceback</span><span class="p">(</span><span class="n">traceback_stack</span><span class="p">,</span>
+                                                       <span class="n">report</span><span class="o">.</span><span class="n">format</span><span class="p">)</span>
+        <span class="n">context_message</span> <span class="o">=</span> <span class="n">format_contexts</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">report</span><span class="o">.</span><span class="n">format</span><span class="p">)</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;exception&#39;</span><span class="p">:</span> <span class="n">exception</span><span class="p">,</span>
+                  <span class="s1">&#39;exception_name&#39;</span><span class="p">:</span> <span class="n">exception_name_proper</span><span class="p">,</span>
+                  <span class="s1">&#39;exception_message&#39;</span><span class="p">:</span> <span class="n">report</span><span class="o">.</span><span class="n">format</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">exception_message</span><span class="p">),</span>
+                  <span class="s1">&#39;location&#39;</span><span class="p">:</span> <span class="n">location</span><span class="p">,</span>
+                  <span class="s1">&#39;traceback&#39;</span><span class="p">:</span> <span class="n">traceback</span><span class="p">,</span>
+                  <span class="s1">&#39;traceback_stack&#39;</span><span class="p">:</span> <span class="n">traceback_stack</span><span class="p">,</span>
+                  <span class="s1">&#39;traceback_message&#39;</span><span class="p">:</span> <span class="n">traceback_message</span><span class="p">,</span>
+                  <span class="s1">&#39;context&#39;</span><span class="p">:</span> <span class="n">context</span><span class="p">,</span>
+                  <span class="s1">&#39;context_message&#39;</span><span class="p">:</span> <span class="n">context_message</span><span class="p">}</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="n">fields</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span>
+                         <span class="n">location</span><span class="o">=</span><span class="n">location</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="type_error"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.feedbacks.type_error">[docs]</a><span class="k">class</span> <span class="nc">type_error</span><span class="p">(</span><span class="n">runtime_error</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Type Error &quot;&quot;&quot;</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Type Error&quot;</span>
+    <span class="n">message_template</span> <span class="o">=</span> <span class="p">(</span><span class="n">RUNTIME_ERROR_MESSAGE_HEADER</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span>
+                        <span class="s2">&quot;Type errors occur when you use an operator or &quot;</span>
+                        <span class="s2">&quot;function on the wrong type of value. For example, &quot;</span>
+                        <span class="s2">&quot;using `+` to add to a list (instead of `.append`), or &quot;</span>
+                        <span class="s2">&quot;dividing a string by a number.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                        <span class="s2">&quot;Suggestion: To fix a type error, you should trace &quot;</span>
+                        <span class="s2">&quot;through your code. Make sure each expression has the &quot;</span>
+                        <span class="s2">&quot;type you expect it to have.&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="name_error"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.feedbacks.name_error">[docs]</a><span class="k">class</span> <span class="nc">name_error</span><span class="p">(</span><span class="n">runtime_error</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Runtime NameError &quot;&quot;&quot;</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Name Error&quot;</span>
+    <span class="n">message_template</span> <span class="o">=</span> <span class="p">(</span><span class="n">RUNTIME_ERROR_MESSAGE_HEADER</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span>
+                        <span class="s2">&quot;A name error means you have used a variable that has &quot;</span>
+                        <span class="s2">&quot;no value.  You may have a typo, so check the &quot;</span>
+                        <span class="s2">&quot;spelling. Or, you may have forgotten to initialize a &quot;</span>
+                        <span class="s2">&quot;variable.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                        <span class="s2">&quot;Suggestion: Trace your code and make sure each &quot;</span>
+                        <span class="s2">&quot;variable was set before it was read.&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="value_error"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.feedbacks.value_error">[docs]</a><span class="k">class</span> <span class="nc">value_error</span><span class="p">(</span><span class="n">runtime_error</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Runtime ValueError &quot;&quot;&quot;</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Value Error&quot;</span>
+    <span class="n">message_template</span> <span class="o">=</span> <span class="p">(</span><span class="n">RUNTIME_ERROR_MESSAGE_HEADER</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span>
+                        <span class="s2">&quot;A ValueError occurs when you pass the wrong type of &quot;</span>
+                        <span class="s2">&quot;value to a function. For example, you try to convert &quot;</span>
+                        <span class="s2">&quot;a string without numbers to an integer (like &quot;</span>
+                        <span class="s2">&quot;`int(&#39;Five&#39;)`).</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                        <span class="s2">&quot;Suggestion: Read the error message to see which &quot;</span>
+                        <span class="s2">&quot;function had the issue. Check what type the function &quot;</span>
+                        <span class="s2">&quot;expects. Then trace your code to make sure you pass &quot;</span>
+                        <span class="s2">&quot;in that type.&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="attribute_error"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.feedbacks.attribute_error">[docs]</a><span class="k">class</span> <span class="nc">attribute_error</span><span class="p">(</span><span class="n">runtime_error</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Runtime AttributeError &quot;&quot;&quot;</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Attribute Error&quot;</span>
+    <span class="n">message_template</span> <span class="o">=</span> <span class="p">(</span><span class="n">RUNTIME_ERROR_MESSAGE_HEADER</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span>
+                        <span class="s2">&quot;An AttributeError means you used an attribute or &quot;</span>
+                        <span class="s2">&quot;method that does not exist. For example, you wrote &quot;</span>
+                        <span class="s2">&quot;`text.delete()` even though there is no `delete` &quot;</span>
+                        <span class="s2">&quot;method.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                        <span class="s2">&quot;Suggestion: Make sure that you spelled the method or &quot;</span>
+                        <span class="s2">&quot;attribute correctly. Then, trace your code to check &quot;</span>
+                        <span class="s2">&quot;that the dot&#39;s left expression is the correct type.&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="index_error"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.feedbacks.index_error">[docs]</a><span class="k">class</span> <span class="nc">index_error</span><span class="p">(</span><span class="n">runtime_error</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Runtime IndexError &quot;&quot;&quot;</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Index Error&quot;</span>
+    <span class="n">message_template</span> <span class="o">=</span> <span class="p">(</span><span class="n">RUNTIME_ERROR_MESSAGE_HEADER</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span>
+                        <span class="s2">&quot;An IndexError means that you indexed past the end of &quot;</span>
+                        <span class="s2">&quot;a string or a list.  For example, if you access index &quot;</span>
+                        <span class="s2">&quot;5 in a list with 3 items.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                        <span class="s2">&quot;Suggestion: Remember that the first position in a &quot;</span>
+                        <span class="s2">&quot;list or string is 0. Often, you will be off by just &quot;</span>
+                        <span class="s2">&quot;one index position, so check your math. Also, make &quot;</span>
+                        <span class="s2">&quot;sure the list or string has the right value.&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="zero_division_error"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.feedbacks.zero_division_error">[docs]</a><span class="k">class</span> <span class="nc">zero_division_error</span><span class="p">(</span><span class="n">runtime_error</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Runtime ZeroDivisionError &quot;&quot;&quot;</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Division by Zero Error&quot;</span>
+    <span class="n">message_template</span> <span class="o">=</span> <span class="p">(</span><span class="n">RUNTIME_ERROR_MESSAGE_HEADER</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span>
+                        <span class="s2">&quot;A ZeroDivisionError means you divided by 0. The &quot;</span>
+                        <span class="s2">&quot;denominator (the right side of a division expression) &quot;</span>
+                        <span class="s2">&quot;cannot be 0.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                        <span class="s2">&quot;Suggestion: Check that you are dividing by the &quot;</span>
+                        <span class="s2">&quot;correct value. Or, you might need to add an `if` &quot;</span>
+                        <span class="s2">&quot;statement to handle the zero case.&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="indentation_error"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.feedbacks.indentation_error">[docs]</a><span class="k">class</span> <span class="nc">indentation_error</span><span class="p">(</span><span class="n">runtime_error</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Syntax IndentationError &quot;&quot;&quot;</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Indentation Error&quot;</span>
+    <span class="n">message_template</span> <span class="o">=</span> <span class="p">(</span><span class="n">RUNTIME_ERROR_MESSAGE_HEADER</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span>
+                        <span class="s2">&quot;An IndentationError means you have not indented your &quot;</span>
+                        <span class="s2">&quot;code correctly. You have too many or too few spaces.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                        <span class="s2">&quot;Suggestion: Check the line number, and the lines &quot;</span>
+                        <span class="s2">&quot;before and after. Check the body of each function &quot;</span>
+                        <span class="s2">&quot;definition, `if` statement, and `for` loop. Remember, &quot;</span>
+                        <span class="s2">&quot;all the statements INSIDE of a body have the same &quot;</span>
+                        <span class="s2">&quot;indentation.&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="import_error"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.feedbacks.import_error">[docs]</a><span class="k">class</span> <span class="nc">import_error</span><span class="p">(</span><span class="n">runtime_error</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Runtime ImportError &quot;&quot;&quot;</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Import Error&quot;</span>
+    <span class="n">message_template</span> <span class="o">=</span> <span class="p">(</span><span class="n">RUNTIME_ERROR_MESSAGE_HEADER</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span>
+                        <span class="s2">&quot;An ImportError means you tried to import a module &quot;</span>
+                        <span class="s2">&quot;that does not exist. You might have a typo or a file &quot;</span>
+                        <span class="s2">&quot;might be in the wrong location.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                        <span class="s2">&quot;Suggestion: Check the spelling and capitalization of &quot;</span>
+                        <span class="s2">&quot;the module&#39;s name. If you are importing a file, then &quot;</span>
+                        <span class="s2">&quot;check that it is in the correct folder.&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="io_error"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.feedbacks.io_error">[docs]</a><span class="k">class</span> <span class="nc">io_error</span><span class="p">(</span><span class="n">runtime_error</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Runtime IOError &quot;&quot;&quot;</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Input/Output Error&quot;</span>
+    <span class="n">message_template</span> <span class="o">=</span> <span class="p">(</span><span class="n">RUNTIME_ERROR_MESSAGE_HEADER</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span>
+                        <span class="s2">&quot;An IOError means you tried to open a file that was &quot;</span>
+                        <span class="s2">&quot;not available.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                        <span class="s2">&quot;Suggestion: Make sure that the file is in the &quot;</span>
+                        <span class="s2">&quot;correct folder. Then, make sure you spelled the &quot;</span>
+                        <span class="s2">&quot;filename correctly.&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="key_error"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.feedbacks.key_error">[docs]</a><span class="k">class</span> <span class="nc">key_error</span><span class="p">(</span><span class="n">runtime_error</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Runtime KeyError &quot;&quot;&quot;</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Key Error&quot;</span>
+    <span class="n">message_template</span> <span class="o">=</span> <span class="p">(</span><span class="n">RUNTIME_ERROR_MESSAGE_HEADER</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span>
+                        <span class="s2">&quot;A KeyError means you accessed a non-existent key in &quot;</span>
+                        <span class="s2">&quot;a dictionary.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                        <span class="s2">&quot;Suggestion: First, check that you spelled the key &quot;</span>
+                        <span class="s2">&quot;correctly. Make sure the key has the right type and &quot;</span>
+                        <span class="s2">&quot;value. Then, check that the dictionary actually has &quot;</span>
+                        <span class="s2">&quot;that key.&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="memory_error"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.feedbacks.memory_error">[docs]</a><span class="k">class</span> <span class="nc">memory_error</span><span class="p">(</span><span class="n">runtime_error</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Runtime MemoryError &quot;&quot;&quot;</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Memory Error&quot;</span>
+    <span class="n">message_template</span> <span class="o">=</span> <span class="p">(</span><span class="n">RUNTIME_ERROR_MESSAGE_HEADER</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span>
+                        <span class="s2">&quot;A MemoryError means your program ran out of mental &quot;</span>
+                        <span class="s2">&quot;space.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                        <span class="s2">&quot;Suggestion: You might have an infinite loop. Or, you &quot;</span>
+                        <span class="s2">&quot;might not be filtering your data enough.&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="timeout_error"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.feedbacks.timeout_error">[docs]</a><span class="k">class</span> <span class="nc">timeout_error</span><span class="p">(</span><span class="n">runtime_error</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Runtime TimeoutError &quot;&quot;&quot;</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Timeout Error&quot;</span>
+    <span class="n">message_template</span> <span class="o">=</span> <span class="p">(</span><span class="n">RUNTIME_ERROR_MESSAGE_HEADER</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span>
+                        <span class="s2">&quot;A TimeoutError means your program took too long to &quot;</span>
+                        <span class="s2">&quot;run.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                        <span class="s2">&quot;Suggestion: Check that you do not have an infinite &quot;</span>
+                        <span class="s2">&quot;loop.&quot;</span><span class="p">)</span></div>
+
+
+<span class="n">EXCEPTION_FF_MAP</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="ne">TypeError</span><span class="p">:</span> <span class="n">type_error</span><span class="p">,</span>
+    <span class="ne">NameError</span><span class="p">:</span> <span class="n">name_error</span><span class="p">,</span>
+    <span class="ne">ValueError</span><span class="p">:</span> <span class="n">value_error</span><span class="p">,</span>
+    <span class="ne">AttributeError</span><span class="p">:</span> <span class="n">attribute_error</span><span class="p">,</span>
+    <span class="ne">IndexError</span><span class="p">:</span> <span class="n">index_error</span><span class="p">,</span>
+    <span class="ne">ZeroDivisionError</span><span class="p">:</span> <span class="n">zero_division_error</span><span class="p">,</span>
+    <span class="ne">IndentationError</span><span class="p">:</span> <span class="n">indentation_error</span><span class="p">,</span>
+    <span class="ne">ImportError</span><span class="p">:</span> <span class="n">import_error</span><span class="p">,</span>
+    <span class="ne">IOError</span><span class="p">:</span> <span class="n">io_error</span><span class="p">,</span>
+    <span class="ne">KeyError</span><span class="p">:</span> <span class="n">key_error</span><span class="p">,</span>
+    <span class="ne">MemoryError</span><span class="p">:</span> <span class="n">memory_error</span><span class="p">,</span>
+    <span class="ne">TimeoutError</span><span class="p">:</span> <span class="n">timeout_error</span><span class="p">,</span>
+<span class="p">}</span>
 </pre></div>
 
            </div>
@@ -204,11 +408,19 @@
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright 2018, acbart, lukesg08
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -219,7 +431,6 @@
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

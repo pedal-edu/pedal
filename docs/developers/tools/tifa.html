@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,27 +11,29 @@
   
 
   
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="CAIT" href="cait.html" />
@@ -50,7 +51,7 @@
           
 
           
-            <a href="../../index.html" class="icon icon-home"> Pedal
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> Pedal
           
 
           
@@ -77,6 +78,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -92,6 +94,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../teachers/examples.html">Teacher Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../teachers/reference.html">Teacher Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../teachers/tutorial.html">Teacher Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../teachers/practices.html">Best Practices</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guide.html">Developer Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api.html">Developer API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../integrations.html">Developer Integrations</a></li>
@@ -101,15 +104,16 @@
 <li class="toctree-l2"><a class="reference internal" href="cait.html">CAIT</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sandbox.html">Sandbox</a></li>
 <li class="toctree-l2"><a class="reference internal" href="assertions.html">Assertions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="toolkit.html">Toolkit</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../conventions.html">Naming Conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../everyone/glossary.html">Glossary</a></li>
 </ul>
 
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -148,7 +152,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../tools.html">Tools</a> &raquo;</li>
         
@@ -195,393 +199,90 @@
 </dl>
 <p>Important concepts:</p>
 <dl class="glossary simple">
-<dt id="term-issue">Issue</dt><dd><p>A problematic situation in the submitted code that will be reported
+<dt id="term-Issue">Issue</dt><dd><p>A problematic situation in the submitted code that will be reported
 but may not stop the execution. However, when an Issue occurs,
 any results may be invalid.</p>
 </dd>
-<dt id="term-error">Error</dt><dd><p>A situation in execution that terminates the program.</p>
+<dt id="term-Error">Error</dt><dd><p>A situation in execution that terminates the program.</p>
 </dd>
-<dt id="term-name">Name</dt><dd><p>A name of a variable</p>
+<dt id="term-Name">Name</dt><dd><p>A name of a variable</p>
 </dd>
-<dt id="term-scope">Scope</dt><dd><p>The context of a function, with its own namespaces. Represented
+<dt id="term-Scope">Scope</dt><dd><p>The context of a function, with its own namespaces. Represented
 internally using numeric IDs (Scope IDs).</p>
 </dd>
-<dt id="term-scope-chain">Scope Chain</dt><dd><p>A stack of scopes, with the innermost scope on top.</p>
+<dt id="term-Scope-Chain">Scope Chain</dt><dd><p>A stack of scopes, with the innermost scope on top.</p>
 </dd>
-<dt id="term-fully-qualified-name">Fully Qualified Name</dt><dd><p>A string representation of a variable and its scope
+<dt id="term-Fully-Qualified-Name">Fully Qualified Name</dt><dd><p>A string representation of a variable and its scope
 chain, written using “/”. For example: 0/1/4/my_variable_name</p>
 </dd>
-<dt id="term-path">Path</dt><dd><p>A single path of execution through the control flow; every program
+<dt id="term-Path">Path</dt><dd><p>A single path of execution through the control flow; every program
 has at least one sequential path, but IFs, FORs, WHILEs, etc. can
 cause multiple paths. Paths are represented using numeric IDs (Path
 IDs).</p>
 </dd>
-<dt id="term-state">State</dt><dd><p>Information about a Name that indicates things like the variable’s
+<dt id="term-State">State</dt><dd><p>Information about a Name that indicates things like the variable’s
 current type and whether that name has been read, set, or
 overwritten.</p>
 </dd>
-<dt id="term-identifier">Identifier</dt><dd><p>A wrapper around variables, used to hold their potential
+<dt id="term-Identifier">Identifier</dt><dd><p>A wrapper around variables, used to hold their potential
 non-existence (which is an Issue but not an Error).</p>
 </dd>
-<dt id="term-type">Type</dt><dd><p>A symbolic representation of the variable’s type.</p>
+<dt id="term-Type">Type</dt><dd><p>A symbolic representation of the variable’s type.</p>
 </dd>
-<dt id="term-literal">Literal</dt><dd><p>Sometimes, we need a specialized representation of a literal value
+<dt id="term-Literal">Literal</dt><dd><p>Sometimes, we need a specialized representation of a literal value
 to be passed around. This is particularly important for accessing
 elements in an tuples.</p>
 </dd>
-<dt id="term-name-map">Name Map</dt><dd><p>(Path x Fully Qualified Names) =&gt; States</p>
+<dt id="term-Name-Map">Name Map</dt><dd><p>(Path x Fully Qualified Names) =&gt; States</p>
 </dd>
 </dl>
-<dl class="function">
-<dt id="pedal.tifa.tifa_analysis">
-<code class="sig-name descname">tifa_analysis</code><span class="sig-paren">(</span><em class="sig-param">python_3=True</em>, <em class="sig-param">report=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa.html#tifa_analysis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.tifa_analysis" title="Permalink to this definition">¶</a></dt>
-<dd><p>Perform the TIFA analysis and attach the results to the Report.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>python_3</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Whether to expect a Python3 formatted file, or Python
-2. This has slight nuance on certain AST elements.</p></li>
-<li><p><strong>report</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Report</span></code>) – The Report object to attach results to.
-Defaults to <code class="xref py py-data docutils literal notranslate"><span class="pre">MAIN_REPORT</span></code>.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="class">
+<dl class="py class">
 <dt id="pedal.tifa.Tifa">
-<em class="property">class </em><code class="sig-name descname">Tifa</code><span class="sig-paren">(</span><em class="sig-param">python_3=True</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa" title="Permalink to this definition">¶</a></dt>
-<dd><p>TIFA Class for traversing an AST and finding common issues.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>python_3</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Whether to parse the code in regular PYTHON_3 mode or
-the modified AST that Skulpt uses.</p></li>
-<li><p><strong>report</strong> (<a class="reference internal" href="../api.html#pedal.core.report.Report" title="pedal.core.report.Report"><em>Report</em></a>) – The report object to store data and feedback in. If
-left None, defaults to the global MAIN_REPORT.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="class">
-<dt id="pedal.tifa.Tifa.NewPath">
-<em class="property">class </em><code class="sig-name descname">NewPath</code><span class="sig-paren">(</span><em class="sig-param">tifa</em>, <em class="sig-param">origin_path</em>, <em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.NewPath"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.NewPath" title="Permalink to this definition">¶</a></dt>
-<dd><p>Context manager for entering and leaving execution paths (e.g., if
-statements).)</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>tifa</strong> (<a class="reference internal" href="#pedal.tifa.Tifa" title="pedal.tifa.Tifa"><em>Tifa</em></a>) – The tifa instance, so we can modify some of its
-properties that track variables and paths.</p></li>
-<li><p><strong>origin_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – The path ID parent to this one.</p></li>
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The symbolic name of this path, typically ‘i’ for an IF
-body and ‘e’ for ELSE body.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="simple">
-<dt>Fields:</dt><dd><p>id (int): The path ID of this path</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="class">
-<dt id="pedal.tifa.Tifa.NewScope">
-<em class="property">class </em><code class="sig-name descname">NewScope</code><span class="sig-paren">(</span><em class="sig-param">tifa</em>, <em class="sig-param">definitions_scope_chain</em>, <em class="sig-param">class_type=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.NewScope"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.NewScope" title="Permalink to this definition">¶</a></dt>
-<dd><p>Context manager for entering and leaving scopes (e.g., inside of
-function calls).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>tifa</strong> (<a class="reference internal" href="#pedal.tifa.Tifa" title="pedal.tifa.Tifa"><em>Tifa</em></a>) – The tifa instance, so we can modify some of its
-properties that track variables and paths.</p></li>
-<li><p><strong>definitions_scope_chain</strong> (<em>list of int</em>) – The scope chain of the
-definition</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="pedal.tifa.Tifa.append_variable">
-<code class="sig-name descname">append_variable</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">append_type</em>, <em class="sig-param">position=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.append_variable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.append_variable" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> – </p></li>
-<li><p><strong>append_type</strong> – </p></li>
-<li><p><strong>position</strong> – </p></li>
-</ul>
-</dd>
-</dl>
-<p>Returns:</p>
-</dd></dl>
-
-<dl class="method">
+<em class="property">class </em><code class="sig-name descname">Tifa</code><span class="sig-paren">(</span><em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa_visitor.html#Tifa"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa" title="Permalink to this definition">¶</a></dt>
+<dd><p>TIFA subclass for traversing an AST and finding common issues.
+You can instantiate this class, manipulate settings, and then process
+some code or AST.</p>
+<dl class="py method">
 <dt id="pedal.tifa.Tifa.assign_target">
-<code class="sig-name descname">assign_target</code><span class="sig-paren">(</span><em class="sig-param">target</em>, <em class="sig-param">type</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.assign_target"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.assign_target" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
+<code class="sig-name descname">assign_target</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">target</span></em>, <em class="sig-param"><span class="n">target_type</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa_visitor.html#Tifa.assign_target"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.assign_target" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assign the type to the target, handling all kinds of assignment
+statements, including Names, Tuples/Lists, Subscripts, and
+Attributes.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>target</strong> – </p></li>
-<li><p><strong>type</strong> – </p></li>
+<li><p><strong>target</strong> (<a class="reference external" href="https://docs.python.org/3/library/ast.html#ast.AST" title="(in Python v3.8)"><em>ast.AST</em></a>) – The target AST Node.</p></li>
+<li><p><strong>target_type</strong> (<em>Type</em>) – The TIFA type.</p></li>
 </ul>
 </dd>
 </dl>
 <p>Returns:</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="pedal.tifa.Tifa.combine_states">
-<code class="sig-name descname">combine_states</code><span class="sig-paren">(</span><em class="sig-param">left</em>, <em class="sig-param">right</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.combine_states"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.combine_states" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>left</strong> – </p></li>
-<li><p><strong>right</strong> – </p></li>
-</ul>
-</dd>
-</dl>
-<p>Returns:</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="pedal.tifa.Tifa.find_path_parent">
-<code class="sig-name descname">find_path_parent</code><span class="sig-paren">(</span><em class="sig-param">path_id</em>, <em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.find_path_parent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.find_path_parent" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>path_id</strong> – </p></li>
-<li><p><strong>name</strong> – </p></li>
-</ul>
-</dd>
-</dl>
-<p>Returns:</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="pedal.tifa.Tifa.find_variable_out_of_scope">
-<code class="sig-name descname">find_variable_out_of_scope</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.find_variable_out_of_scope"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.find_variable_out_of_scope" title="Permalink to this definition">¶</a></dt>
-<dd><p>Walk through every scope and determine if this variable can be found
-elsewhere (which would be an issue).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The name of the variable</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><dl class="simple">
-<dt>An Identifier for the variable, which could potentially</dt><dd><p>not exist.</p>
-</dd>
-</dl>
-</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Identifier</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="pedal.tifa.Tifa.find_variable_scope">
-<code class="sig-name descname">find_variable_scope</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.find_variable_scope"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.find_variable_scope" title="Permalink to this definition">¶</a></dt>
-<dd><p>Walk through this scope and all enclosing scopes, finding the relevant
-identifier given by <cite>name</cite>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The name of the variable</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><dl class="simple">
-<dt>An Identifier for the variable, which could potentially</dt><dd><p>not exist.</p>
-</dd>
-</dl>
-</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Identifier</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="pedal.tifa.Tifa.get_literal">
-<code class="sig-name descname">get_literal</code><span class="sig-paren">(</span><em class="sig-param">node</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.get_literal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.get_literal" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>node</strong> – </p>
-</dd>
-</dl>
-<p>Returns:</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="pedal.tifa.Tifa.identify_caller">
-<code class="sig-name descname">identify_caller</code><span class="sig-paren">(</span><em class="sig-param">node</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.identify_caller"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.identify_caller" title="Permalink to this definition">¶</a></dt>
-<dd><p>Figures out the variable that was used to kick off this call,
-which is almost always the relevant Name to track as being updated.
-If the origin wasn’t a Name, nothing will need to be updated so None
-is returned instead.</p>
-<p>TODO: Is this sufficient?</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>node</strong> (<em>AST</em>) – An AST node</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><dl class="simple">
-<dt>The name of the variable or None if no origin could</dt><dd><p>be found.</p>
-</dd>
-</dl>
-</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a> or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.8)">None</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="pedal.tifa.Tifa.in_scope">
-<em class="property">static </em><code class="sig-name descname">in_scope</code><span class="sig-paren">(</span><em class="sig-param">full_name</em>, <em class="sig-param">scope_chain</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.in_scope"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.in_scope" title="Permalink to this definition">¶</a></dt>
-<dd><p>Determine if the fully qualified variable name is in the given scope
-chain.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>full_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – A fully qualified variable name</p></li>
-<li><p><strong>scope_chain</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – A representation of a scope chain.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Whether the variable lives in this scope</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)">bool</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="pedal.tifa.Tifa.iterate_variable">
-<code class="sig-name descname">iterate_variable</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">position=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.iterate_variable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.iterate_variable" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update the variable by iterating through it - this doesn’t do anything
-fancy yet.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="pedal.tifa.Tifa.load_module">
-<code class="sig-name descname">load_module</code><span class="sig-paren">(</span><em class="sig-param">chain</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.load_module"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.load_module" title="Permalink to this definition">¶</a></dt>
-<dd><p>Finds the module in the set of available modules.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>chain</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – A chain of module imports (e.g., “matplotlib.pyplot”)</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><dl class="simple">
-<dt>The specific module with its members, or an empty</dt><dd><p>module type.</p>
-</dd>
-</dl>
-</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>ModuleType</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="pedal.tifa.Tifa.load_variable">
-<code class="sig-name descname">load_variable</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">position=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.load_variable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.load_variable" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieve the variable with the given name.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>position</strong> – </p></li>
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The unqualified name of the variable. If the variable is
-not found in the current scope or an enclosing sope, all
-other scopes will be searched to see if it was read out
-of scope.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The current state of the variable.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>State</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="pedal.tifa.Tifa.locate">
-<code class="sig-name descname">locate</code><span class="sig-paren">(</span><em class="sig-param">node: _ast.AST = None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.locate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.locate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a dictionary representing the current location within the
-AST.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The line and column of the current or given node.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference internal" href="../api.html#pedal.core.location.Location" title="pedal.core.location.Location">Location</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="pedal.tifa.Tifa.match_rso">
-<em class="property">static </em><code class="sig-name descname">match_rso</code><span class="sig-paren">(</span><em class="sig-param">left</em>, <em class="sig-param">right</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.match_rso"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.match_rso" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>left</strong> – </p></li>
-<li><p><strong>right</strong> – </p></li>
-</ul>
-</dd>
-</dl>
-<p>Returns:</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="pedal.tifa.Tifa.merge_paths">
-<code class="sig-name descname">merge_paths</code><span class="sig-paren">(</span><em class="sig-param">parent_path_id</em>, <em class="sig-param">left_path_id</em>, <em class="sig-param">right_path_id</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.merge_paths"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.merge_paths" title="Permalink to this definition">¶</a></dt>
-<dd><p>Combines any variables on the left and right path into the parent
-name space.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>parent_path_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – The parent path of the left and right branches</p></li>
-<li><p><strong>left_path_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – One of the two paths</p></li>
-<li><p><strong>right_path_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – The other of the two paths.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
+<dl class="py method">
 <dt id="pedal.tifa.Tifa.process_ast">
-<code class="sig-name descname">process_ast</code><span class="sig-paren">(</span><em class="sig-param">ast_tree</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.process_ast"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.process_ast" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">process_ast</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ast_tree</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa_visitor.html#Tifa.process_ast"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.process_ast" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given an AST, actually performs the type and flow analyses to return a
 report.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>ast_tree</strong> (<em>Ast</em>) – The AST object</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The final report object created (also available as a field).</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="../api.html#pedal.core.report.Report" title="pedal.core.report.Report">Report</a></p>
+<dd class="field-odd"><p><strong>ast_tree</strong> (<em>AST</em>) – The AST object</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pedal.tifa.Tifa.process_code">
-<code class="sig-name descname">process_code</code><span class="sig-paren">(</span><em class="sig-param">code</em>, <em class="sig-param">filename='__main__'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.process_code"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.process_code" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">process_code</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">code</span></em>, <em class="sig-param"><span class="n">filename</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">reset</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa_visitor.html#Tifa.process_code"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.process_code" title="Permalink to this definition">¶</a></dt>
 <dd><p>Processes the AST of the given source code to generate a report.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>code</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The Python source code</p></li>
-<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The filename of the source code (defaults to __main__)</p></li>
+<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The filename of the source code (defaults to
+the submissions’ main file).</p></li>
+<li><p><strong>reset</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Whether or not to reset the results from the
+previous analysis before running this one.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -593,78 +294,9 @@ report.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="pedal.tifa.Tifa.return_variable">
-<code class="sig-name descname">return_variable</code><span class="sig-paren">(</span><em class="sig-param">return_type</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.return_variable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.return_variable" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>return_type</strong> – </p>
-</dd>
-</dl>
-<p>Returns:</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="pedal.tifa.Tifa.store_iter_variable">
-<code class="sig-name descname">store_iter_variable</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">type</em>, <em class="sig-param">position=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.store_iter_variable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.store_iter_variable" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> – </p></li>
-<li><p><strong>type</strong> – </p></li>
-<li><p><strong>position</strong> – </p></li>
-</ul>
-</dd>
-</dl>
-<p>Returns:</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="pedal.tifa.Tifa.store_variable">
-<code class="sig-name descname">store_variable</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">store_type</em>, <em class="sig-param">position=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.store_variable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.store_variable" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update the variable with the given name to now have the new type.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The unqualified name of the variable. The variable will
-be assumed to be in the current scope.</p></li>
-<li><p><strong>store_type</strong> (<em>Type</em>) – The new type of this variable.</p></li>
-<li><p><strong>position</strong> – The location that this store occurred at</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The new state of the variable.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>State</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="pedal.tifa.Tifa.trace_state">
-<code class="sig-name descname">trace_state</code><span class="sig-paren">(</span><em class="sig-param">state</em>, <em class="sig-param">method</em>, <em class="sig-param">position</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.trace_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.trace_state" title="Permalink to this definition">¶</a></dt>
-<dd><p>Makes a copy of the given state with the given method type.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>position</strong> – </p></li>
-<li><p><strong>state</strong> (<em>State</em>) – The state to copy (as in, we trace a copy of it!)</p></li>
-<li><p><strong>method</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The operation being applied to the state.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The new State</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>State</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
+<dl class="py method">
 <dt id="pedal.tifa.Tifa.visit">
-<code class="sig-name descname">visit</code><span class="sig-paren">(</span><em class="sig-param">node</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.visit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">visit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa_visitor.html#Tifa.visit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Process this node by calling its appropriate visit_*</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -679,15 +311,15 @@ be assumed to be in the current scope.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pedal.tifa.Tifa.visit_AnnAssign">
-<code class="sig-name descname">visit_AnnAssign</code><span class="sig-paren">(</span><em class="sig-param">node</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.visit_AnnAssign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_AnnAssign" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">visit_AnnAssign</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa_visitor.html#Tifa.visit_AnnAssign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_AnnAssign" title="Permalink to this definition">¶</a></dt>
 <dd><p>TODO: Implement!</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pedal.tifa.Tifa.visit_Assign">
-<code class="sig-name descname">visit_Assign</code><span class="sig-paren">(</span><em class="sig-param">node</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.visit_Assign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_Assign" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">visit_Assign</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa_visitor.html#Tifa.visit_Assign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_Assign" title="Permalink to this definition">¶</a></dt>
 <dd><p>Simple assignment statement:
 __targets__ = __value__</p>
 <dl class="field-list simple">
@@ -700,9 +332,9 @@ __targets__ = __value__</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pedal.tifa.Tifa.visit_Attribute">
-<code class="sig-name descname">visit_Attribute</code><span class="sig-paren">(</span><em class="sig-param">node</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.visit_Attribute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_Attribute" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">visit_Attribute</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa_visitor.html#Tifa.visit_Attribute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_Attribute" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>node</strong> – </p>
@@ -711,9 +343,9 @@ __targets__ = __value__</p>
 <p>Returns:</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pedal.tifa.Tifa.visit_AugAssign">
-<code class="sig-name descname">visit_AugAssign</code><span class="sig-paren">(</span><em class="sig-param">node</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.visit_AugAssign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_AugAssign" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">visit_AugAssign</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa_visitor.html#Tifa.visit_AugAssign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_AugAssign" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>node</strong> – </p>
@@ -722,9 +354,9 @@ __targets__ = __value__</p>
 <p>Returns:</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pedal.tifa.Tifa.visit_BinOp">
-<code class="sig-name descname">visit_BinOp</code><span class="sig-paren">(</span><em class="sig-param">node</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.visit_BinOp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_BinOp" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">visit_BinOp</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa_visitor.html#Tifa.visit_BinOp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_BinOp" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>node</strong> – </p>
@@ -733,20 +365,26 @@ __targets__ = __value__</p>
 <p>Returns:</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pedal.tifa.Tifa.visit_Bool">
-<code class="sig-name descname">visit_Bool</code><span class="sig-paren">(</span><em class="sig-param">node</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.visit_Bool"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_Bool" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
+<code class="sig-name descname">visit_Bool</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa_visitor.html#Tifa.visit_Bool"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_Bool" title="Permalink to this definition">¶</a></dt>
+<dd><p>Visit a constant boolean value.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>node</strong> – </p>
+<dd class="field-odd"><p><strong>node</strong> (<a class="reference external" href="https://docs.python.org/3/library/ast.html#ast.AST" title="(in Python v3.8)"><em>ast.AST</em></a>) – The boolean value Node.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A Bool type.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Type</p>
 </dd>
 </dl>
-<p>Returns:</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pedal.tifa.Tifa.visit_BoolOp">
-<code class="sig-name descname">visit_BoolOp</code><span class="sig-paren">(</span><em class="sig-param">node</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.visit_BoolOp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_BoolOp" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">visit_BoolOp</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa_visitor.html#Tifa.visit_BoolOp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_BoolOp" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>node</strong> – </p>
@@ -755,9 +393,9 @@ __targets__ = __value__</p>
 <p>Returns:</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pedal.tifa.Tifa.visit_Call">
-<code class="sig-name descname">visit_Call</code><span class="sig-paren">(</span><em class="sig-param">node</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.visit_Call"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_Call" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">visit_Call</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa_visitor.html#Tifa.visit_Call"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_Call" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>node</strong> – </p>
@@ -766,9 +404,9 @@ __targets__ = __value__</p>
 <p>Returns:</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pedal.tifa.Tifa.visit_ClassDef">
-<code class="sig-name descname">visit_ClassDef</code><span class="sig-paren">(</span><em class="sig-param">node</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.visit_ClassDef"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_ClassDef" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">visit_ClassDef</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa_visitor.html#Tifa.visit_ClassDef"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_ClassDef" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>node</strong> – </p>
@@ -776,9 +414,9 @@ __targets__ = __value__</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pedal.tifa.Tifa.visit_Compare">
-<code class="sig-name descname">visit_Compare</code><span class="sig-paren">(</span><em class="sig-param">node</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.visit_Compare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_Compare" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">visit_Compare</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa_visitor.html#Tifa.visit_Compare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_Compare" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>node</strong> – </p>
@@ -787,9 +425,15 @@ __targets__ = __value__</p>
 <p>Returns:</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
+<dt id="pedal.tifa.Tifa.visit_Constant">
+<code class="sig-name descname">visit_Constant</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span></em><span class="sig-paren">)</span> &#x2192; pedal.types.definitions.Type<a class="reference internal" href="../../_modules/pedal/tifa/tifa_visitor.html#Tifa.visit_Constant"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_Constant" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle new 3.8’s Constant node</p>
+</dd></dl>
+
+<dl class="py method">
 <dt id="pedal.tifa.Tifa.visit_Dict">
-<code class="sig-name descname">visit_Dict</code><span class="sig-paren">(</span><em class="sig-param">node</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.visit_Dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_Dict" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">visit_Dict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa_visitor.html#Tifa.visit_Dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_Dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Three types of dictionaries
 - empty
 - uniform type
@@ -797,9 +441,9 @@ __targets__ = __value__</p>
 TODO: Handle records appropriately</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pedal.tifa.Tifa.visit_DictComp">
-<code class="sig-name descname">visit_DictComp</code><span class="sig-paren">(</span><em class="sig-param">node</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.visit_DictComp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_DictComp" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">visit_DictComp</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa_visitor.html#Tifa.visit_DictComp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_DictComp" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>node</strong> – </p>
@@ -808,9 +452,21 @@ TODO: Handle records appropriately</p>
 <p>Returns:</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
+<dt id="pedal.tifa.Tifa.visit_Expr">
+<code class="sig-name descname">visit_Expr</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa_visitor.html#Tifa.visit_Expr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_Expr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Any expression being used as a statement.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>node</strong> (<em>AST</em>) – An Expr node</p>
+</dd>
+</dl>
+<p>Returns:</p>
+</dd></dl>
+
+<dl class="py method">
 <dt id="pedal.tifa.Tifa.visit_For">
-<code class="sig-name descname">visit_For</code><span class="sig-paren">(</span><em class="sig-param">node</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.visit_For"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_For" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">visit_For</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa_visitor.html#Tifa.visit_For"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_For" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>node</strong> – </p>
@@ -818,9 +474,9 @@ TODO: Handle records appropriately</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pedal.tifa.Tifa.visit_FunctionDef">
-<code class="sig-name descname">visit_FunctionDef</code><span class="sig-paren">(</span><em class="sig-param">node</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.visit_FunctionDef"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_FunctionDef" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">visit_FunctionDef</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa_visitor.html#Tifa.visit_FunctionDef"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_FunctionDef" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>node</strong> – </p>
@@ -829,9 +485,9 @@ TODO: Handle records appropriately</p>
 <p>Returns:</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pedal.tifa.Tifa.visit_GeneratorExp">
-<code class="sig-name descname">visit_GeneratorExp</code><span class="sig-paren">(</span><em class="sig-param">node</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.visit_GeneratorExp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_GeneratorExp" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">visit_GeneratorExp</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa_visitor.html#Tifa.visit_GeneratorExp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_GeneratorExp" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>node</strong> – </p>
@@ -840,9 +496,9 @@ TODO: Handle records appropriately</p>
 <p>Returns:</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pedal.tifa.Tifa.visit_If">
-<code class="sig-name descname">visit_If</code><span class="sig-paren">(</span><em class="sig-param">node</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.visit_If"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_If" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">visit_If</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa_visitor.html#Tifa.visit_If"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_If" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>node</strong> – </p>
@@ -850,9 +506,9 @@ TODO: Handle records appropriately</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pedal.tifa.Tifa.visit_IfExp">
-<code class="sig-name descname">visit_IfExp</code><span class="sig-paren">(</span><em class="sig-param">node</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.visit_IfExp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_IfExp" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">visit_IfExp</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa_visitor.html#Tifa.visit_IfExp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_IfExp" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>node</strong> – </p>
@@ -861,9 +517,9 @@ TODO: Handle records appropriately</p>
 <p>Returns:</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pedal.tifa.Tifa.visit_Import">
-<code class="sig-name descname">visit_Import</code><span class="sig-paren">(</span><em class="sig-param">node</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.visit_Import"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_Import" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">visit_Import</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa_visitor.html#Tifa.visit_Import"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_Import" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>node</strong> – </p>
@@ -871,9 +527,9 @@ TODO: Handle records appropriately</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pedal.tifa.Tifa.visit_ImportFrom">
-<code class="sig-name descname">visit_ImportFrom</code><span class="sig-paren">(</span><em class="sig-param">node</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.visit_ImportFrom"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_ImportFrom" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">visit_ImportFrom</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa_visitor.html#Tifa.visit_ImportFrom"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_ImportFrom" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>node</strong> – </p>
@@ -881,9 +537,9 @@ TODO: Handle records appropriately</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pedal.tifa.Tifa.visit_Lambda">
-<code class="sig-name descname">visit_Lambda</code><span class="sig-paren">(</span><em class="sig-param">node</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.visit_Lambda"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_Lambda" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">visit_Lambda</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa_visitor.html#Tifa.visit_Lambda"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_Lambda" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>node</strong> – </p>
@@ -892,9 +548,9 @@ TODO: Handle records appropriately</p>
 <p>Returns:</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pedal.tifa.Tifa.visit_List">
-<code class="sig-name descname">visit_List</code><span class="sig-paren">(</span><em class="sig-param">node</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.visit_List"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_List" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">visit_List</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa_visitor.html#Tifa.visit_List"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_List" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>node</strong> – </p>
@@ -903,9 +559,9 @@ TODO: Handle records appropriately</p>
 <p>Returns:</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pedal.tifa.Tifa.visit_ListComp">
-<code class="sig-name descname">visit_ListComp</code><span class="sig-paren">(</span><em class="sig-param">node</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.visit_ListComp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_ListComp" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">visit_ListComp</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa_visitor.html#Tifa.visit_ListComp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_ListComp" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>node</strong> – </p>
@@ -914,9 +570,9 @@ TODO: Handle records appropriately</p>
 <p>Returns:</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pedal.tifa.Tifa.visit_Name">
-<code class="sig-name descname">visit_Name</code><span class="sig-paren">(</span><em class="sig-param">node</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.visit_Name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_Name" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">visit_Name</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa_visitor.html#Tifa.visit_Name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_Name" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>node</strong> – </p>
@@ -925,9 +581,9 @@ TODO: Handle records appropriately</p>
 <p>Returns:</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pedal.tifa.Tifa.visit_NameConstant">
-<code class="sig-name descname">visit_NameConstant</code><span class="sig-paren">(</span><em class="sig-param">node</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.visit_NameConstant"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_NameConstant" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">visit_NameConstant</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa_visitor.html#Tifa.visit_NameConstant"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_NameConstant" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>node</strong> – </p>
@@ -936,9 +592,9 @@ TODO: Handle records appropriately</p>
 <p>Returns:</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pedal.tifa.Tifa.visit_Num">
-<code class="sig-name descname">visit_Num</code><span class="sig-paren">(</span><em class="sig-param">node</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.visit_Num"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_Num" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">visit_Num</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa_visitor.html#Tifa.visit_Num"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_Num" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>node</strong> – </p>
@@ -947,9 +603,9 @@ TODO: Handle records appropriately</p>
 <p>Returns:</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pedal.tifa.Tifa.visit_Return">
-<code class="sig-name descname">visit_Return</code><span class="sig-paren">(</span><em class="sig-param">node</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.visit_Return"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_Return" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">visit_Return</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa_visitor.html#Tifa.visit_Return"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_Return" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>node</strong> – </p>
@@ -957,9 +613,9 @@ TODO: Handle records appropriately</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pedal.tifa.Tifa.visit_SetComp">
-<code class="sig-name descname">visit_SetComp</code><span class="sig-paren">(</span><em class="sig-param">node</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.visit_SetComp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_SetComp" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">visit_SetComp</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa_visitor.html#Tifa.visit_SetComp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_SetComp" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>node</strong> – </p>
@@ -968,9 +624,9 @@ TODO: Handle records appropriately</p>
 <p>Returns:</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pedal.tifa.Tifa.visit_Str">
-<code class="sig-name descname">visit_Str</code><span class="sig-paren">(</span><em class="sig-param">node</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.visit_Str"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_Str" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">visit_Str</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa_visitor.html#Tifa.visit_Str"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_Str" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>node</strong> – </p>
@@ -979,9 +635,9 @@ TODO: Handle records appropriately</p>
 <p>Returns:</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pedal.tifa.Tifa.visit_Subscript">
-<code class="sig-name descname">visit_Subscript</code><span class="sig-paren">(</span><em class="sig-param">node</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.visit_Subscript"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_Subscript" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">visit_Subscript</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa_visitor.html#Tifa.visit_Subscript"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_Subscript" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>node</strong> – </p>
@@ -990,20 +646,15 @@ TODO: Handle records appropriately</p>
 <p>Returns:</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pedal.tifa.Tifa.visit_Tuple">
-<code class="sig-name descname">visit_Tuple</code><span class="sig-paren">(</span><em class="sig-param">node</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.visit_Tuple"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_Tuple" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>node</strong> – </p>
-</dd>
-</dl>
-<p>Returns:</p>
+<code class="sig-name descname">visit_Tuple</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span></em><span class="sig-paren">)</span> &#x2192; pedal.types.definitions.TupleType<a class="reference internal" href="../../_modules/pedal/tifa/tifa_visitor.html#Tifa.visit_Tuple"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_Tuple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle Tuple literal</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pedal.tifa.Tifa.visit_UnaryOp">
-<code class="sig-name descname">visit_UnaryOp</code><span class="sig-paren">(</span><em class="sig-param">node</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.visit_UnaryOp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_UnaryOp" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">visit_UnaryOp</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa_visitor.html#Tifa.visit_UnaryOp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_UnaryOp" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>node</strong> – </p>
@@ -1012,9 +663,9 @@ TODO: Handle records appropriately</p>
 <p>Returns:</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pedal.tifa.Tifa.visit_While">
-<code class="sig-name descname">visit_While</code><span class="sig-paren">(</span><em class="sig-param">node</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.visit_While"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_While" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">visit_While</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa_visitor.html#Tifa.visit_While"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_While" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>node</strong> – </p>
@@ -1022,9 +673,9 @@ TODO: Handle records appropriately</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pedal.tifa.Tifa.visit_With">
-<code class="sig-name descname">visit_With</code><span class="sig-paren">(</span><em class="sig-param">node</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.visit_With"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_With" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">visit_With</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa_visitor.html#Tifa.visit_With"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_With" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>node</strong> – </p>
@@ -1032,9 +683,9 @@ TODO: Handle records appropriately</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pedal.tifa.Tifa.visit_comprehension">
-<code class="sig-name descname">visit_comprehension</code><span class="sig-paren">(</span><em class="sig-param">node</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.visit_comprehension"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_comprehension" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">visit_comprehension</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa_visitor.html#Tifa.visit_comprehension"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_comprehension" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>node</strong> – </p>
@@ -1042,9 +693,9 @@ TODO: Handle records appropriately</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pedal.tifa.Tifa.visit_statements">
-<code class="sig-name descname">visit_statements</code><span class="sig-paren">(</span><em class="sig-param">nodes</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.visit_statements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_statements" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">visit_statements</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">nodes</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa_visitor.html#Tifa.visit_statements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.visit_statements" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>nodes</strong> – </p>
@@ -1053,16 +704,16 @@ TODO: Handle records appropriately</p>
 <p>Returns:</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pedal.tifa.Tifa.walk_targets">
-<code class="sig-name descname">walk_targets</code><span class="sig-paren">(</span><em class="sig-param">targets</em>, <em class="sig-param">type</em>, <em class="sig-param">walker</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa.html#Tifa.walk_targets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.walk_targets" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="sig-name descname">walk_targets</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">targets</span></em>, <em class="sig-param"><span class="n">target_type</span></em>, <em class="sig-param"><span class="n">walker</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa/tifa_visitor.html#Tifa.walk_targets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.Tifa.walk_targets" title="Permalink to this definition">¶</a></dt>
 <dd><p>Iterate through the targets and call the given function on each one.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>targets</strong> (<em>list of Ast nodes</em>) – A list of potential targets to be
 traversed.</p></li>
-<li><p><strong>type</strong> (<em>Type</em>) – The given type to be unraveled and applied to the
+<li><p><strong>target_type</strong> (<em>Type</em>) – The given type to be unraveled and applied to the
 targets.</p></li>
 <li><p><strong>walker</strong> (<em>Ast Node</em><em>, </em><em>Type -&gt; None</em>) – A function that will process
 each target and unravel the type.</p></li>
@@ -1071,6 +722,32 @@ each target and unravel the type.</p></li>
 </dl>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="py function">
+<dt id="pedal.tifa.tifa_analysis">
+<code class="sig-name descname">tifa_analysis</code><span class="sig-paren">(</span><em class="sig-param">code=None</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/tifa.html#tifa_analysis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.tifa.tifa_analysis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform the TIFA analysis and attach the results to the Report.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>code</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.8)"><em>None</em></a>) – The code to evaluate with TIFA. If <code class="docutils literal notranslate"><span class="pre">code</span></code> is not
+given, then it will default to the student’s main file.</p></li>
+<li><p><strong>report</strong> (<a class="reference internal" href="../api.html#pedal.core.report.Report" title="pedal.core.report.Report"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.core.report.Report</span></code></a>) – The Report object to
+attach results to.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>A TifaAnalysis data</dt><dd><p>bundle containing all the information that TIFA learned.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.tifa.tifa_core.TifaAnalysis</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -1095,11 +772,19 @@ each target and unravel the type.</p></li>
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright 2018, acbart, lukesg08
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -1110,7 +795,6 @@ each target and unravel the type.</p></li>
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

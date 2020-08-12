@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,27 +11,29 @@
   
 
   
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Source" href="source.html" />
@@ -50,7 +51,7 @@
           
 
           
-            <a href="../../index.html" class="icon icon-home"> Pedal
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> Pedal
           
 
           
@@ -77,6 +78,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -103,20 +105,24 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="source.html">Source</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../reference.html#getting-output">Getting Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="assertions.html">Assertions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sandbox.html">Sandbox</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Teacher Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../practices.html">Best Practices</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers/guide.html">Developer Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers/api.html">Developer API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers/integrations.html">Developer Integrations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers/tools.html">Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers/conventions.html">Naming Conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../everyone/glossary.html">Glossary</a></li>
 </ul>
 
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -155,7 +161,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../reference.html">Teacher Reference</a> &raquo;</li>
         
@@ -191,7 +197,7 @@ used in this quick reference guide. The <cite>find_match</cite> function is used
 you’ll use the following pattern</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">matches</span> <span class="o">=</span> <span class="n">find_matches</span><span class="p">(</span><span class="s2">&quot;#instructor code&quot;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">matches</span><span class="p">:</span>
-  <span class="c1"># do something</span>
+<span class="c1"># do something</span>
 </pre></div>
 </div>
 <p>Also note that many of these items return a CaitNode; CaitNodes should mirror the built-in
@@ -241,11 +247,12 @@ with CaitNodes as many additional operations and matching functionality are supp
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">match</span> <span class="o">=</span> <span class="n">find_match</span><span class="p">(</span><span class="s2">&quot;def _my_func_():</span><span class="se">\n</span><span class="s2">&quot;</span>
                    <span class="s2">&quot;    pass</span><span class="se">\n</span><span class="s2">&quot;</span>
                    <span class="s2">&quot;_my_func_()&quot;</span><span class="p">)</span>
-<span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+<span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;You haven&#39;t defined a function and used the function you defined!&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>will look for a function definition followed by the usage of the function as an ast sibling (so same indentation level as definition</p>
+<p>will look for a function definition followed by the usage of the function as
+an ast sibling (so same indentation level as definition</p>
 </div>
 <div class="section" id="subtree-matching">
 <h2>Subtree matching<a class="headerlink" href="#subtree-matching" title="Permalink to this headline">¶</a></h2>
@@ -254,7 +261,9 @@ with CaitNodes as many additional operations and matching functionality are supp
 <span class="n">match</span><span class="p">[</span><span class="s1">&#39;__exp__&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">find_match</span><span class="p">(</span><span class="s2">&quot;# whatever submatch&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Normally CAIT will match to direct siblings. By using an expression, you can instead search everything contained in the body of the for loop, or other ast child nodes (see tutorial)</p>
+<p>Normally CAIT will match to direct siblings. By using an expression, you can
+instead search everything contained in the body of the for loop, or other ast
+child nodes (see tutorial)</p>
 </div>
 <div class="section" id="finding-data-types">
 <h2>Finding Data types<a class="headerlink" href="#finding-data-types" title="Permalink to this headline">¶</a></h2>
@@ -266,13 +275,14 @@ with CaitNodes as many additional operations and matching functionality are supp
 
 <span class="n">data_state</span> <span class="o">=</span> <span class="n">match</span><span class="p">[</span><span class="s1">&#39;_sum_&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get_data_state</span><span class="p">()</span>
 <span class="n">data_state</span><span class="o">.</span><span class="n">was_type</span><span class="p">(</span><span class="s1">&#39;NumType&#39;</span><span class="p">)</span> <span class="c1"># checks if _sum_ was a number at some point</span>
-<span class="n">data_state</span><span class="o">.</span><span class="n">was_type</span><span class="p">(</span><span class="n">NumType</span><span class="p">)</span> <span class="c1"># equivalent to previous line</span>
+<span class="n">data_state</span><span class="o">.</span><span class="n">was_type</span><span class="p">(</span><span class="n">NumType</span><span class="p">)</span>   <span class="c1"># equivalent to previous line</span>
+<span class="n">data_state</span><span class="o">.</span><span class="n">was_type</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>       <span class="c1"># equivalent to previous line</span>
 
 <span class="n">match</span><span class="p">[</span><span class="s1">&#39;_sum_&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">was_type</span><span class="p">(</span><span class="s1">&#39;NumType&#39;</span><span class="p">)</span> <span class="c1"># If you&#39;re only doing one access, you can use this</span>
 </pre></div>
 </div>
 <p>If you want to explore the data types yourself, recursively access the <cite>trace</cite> (a list of <cite>State</cite> objects) attribute of data_state and check each state’s <cite>type</cite> attribute. For example</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.tifa.type_definitions</span> <span class="kn">import</span> <span class="o">*</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.types.definitions</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="sd">&#39;&#39;&#39;# Student Source Code</span>
 <span class="sd">var = 14</span>
 <span class="sd">var = &#39;String&#39;</span>
@@ -280,7 +290,7 @@ with CaitNodes as many additional operations and matching functionality are supp
 <span class="n">match</span> <span class="o">=</span> <span class="n">find_match</span><span class="p">(</span><span class="s2">&quot;_var_ = ___</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="n">data_state</span> <span class="o">=</span> <span class="n">match</span><span class="p">[</span><span class="s1">&#39;_var_&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get_data_state</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">print_types</span><span class="p">(</span><span class="n">data_state</span><span class="p">):</span>
-    <span class="k">print</span><span class="p">(</span><span class="n">data_state</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">data_state</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_state</span><span class="o">.</span><span class="n">trace</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">print_types</span><span class="p">(</span><span class="n">data_state</span><span class="o">.</span><span class="n">trace</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 <span class="n">print_types</span><span class="p">(</span><span class="n">data_state</span><span class="p">)</span>
@@ -313,11 +323,19 @@ with CaitNodes as many additional operations and matching functionality are supp
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright 2018, acbart, lukesg08
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -328,7 +346,6 @@ with CaitNodes as many additional operations and matching functionality are supp
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

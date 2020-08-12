@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,31 +11,33 @@
   
 
   
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Teacher Tutorial" href="../tutorial.html" />
-    <link rel="prev" title="Toolkit" href="toolkit.html" /> 
+    <link rel="prev" title="Assertions" href="assertions.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -50,7 +51,7 @@
           
 
           
-            <a href="../../index.html" class="icon icon-home"> Pedal
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> Pedal
           
 
           
@@ -77,6 +78,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -95,24 +97,24 @@
 <li class="toctree-l2"><a class="reference internal" href="tifa.html">TIFA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cait.html">CAIT</a></li>
 <li class="toctree-l2"><a class="reference internal" href="source.html">Source</a></li>
-<li class="toctree-l2"><a class="reference internal" href="toolkit.html">Toolkit</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Sandbox</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#getting-output">Getting Output</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="assertions.html">Assertions</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Sandbox</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Teacher Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../practices.html">Best Practices</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers/guide.html">Developer Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers/api.html">Developer API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers/integrations.html">Developer Integrations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers/tools.html">Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers/conventions.html">Naming Conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../everyone/glossary.html">Glossary</a></li>
 </ul>
 
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -151,7 +153,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../reference.html">Teacher Reference</a> &raquo;</li>
         
@@ -185,87 +187,54 @@ code, most environments will provide a <cite>student</cite> variable that holds 
 <span class="n">student</span> <span class="o">=</span> <span class="n">run</span><span class="p">()</span>
 </pre></div>
 </div>
-<dl class="function">
-<dt id="student.call">
-<code class="sig-prename descclassname">student.</code><code class="sig-name descname">call</code><span class="sig-paren">(</span><em class="sig-param">function: str</em>, <em class="sig-param">*arguments: Any</em>, <em class="sig-param">inputs: list[str]= None</em>, <em class="sig-param">target: str=&quot;_&quot;</em><span class="sig-paren">)</span> &#x2192; Result<a class="headerlink" href="#student.call" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt id="call">
+<code class="sig-name descname">call</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">function</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></span></em>, <em class="sig-param"><span class="o">*</span><span class="n">arguments</span><span class="p">:</span> <span class="n">Any</span></em>, <em class="sig-param"><span class="n">inputs</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a><span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">target</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></span> <span class="o">=</span> <span class="default_value">'_'</span></em><span class="sig-paren">)</span> &#x2192; Result<a class="headerlink" href="#call" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calls the given <cite>function</cite> that the student has defined, using all the given <cite>arguments</cite>.
 You can pass in <cite>inputs</cite> to mock any builtin <cite>input</cite> calls. You can also choose the variable within the students’
 code namespace that the result will be assigned to.</p>
-<p>Note that this function returns a Sandbox Result Proxy. This is an extremely sophisticated type that attempts to
-perfectly imitate built-in values as much as possible. If a students’ code returns an integer, you can treat the
-returned value as if it were an integer (adding, subtracting, even using things like <cite>isinstance</cite>). However,
-extra meta information is included in the result, which allows more sophisticated output that includes the context
-of the call.</p>
+<p>Note that this function returns a Sandbox Result Proxy. This is an extremely
+sophisticated type that attempts to perfectly imitate built-in values as
+much as possible. If a students’ code returns an integer, you can treat the
+returned value as if it were an integer (adding, subtracting, even using
+things like <cite>isinstance</cite>). However, extra meta information is sneakily
+included in the result, which allows more sophisticated output that
+includes the context of the call.</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="student.run">
-<code class="sig-prename descclassname">student.</code><code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param">code: str</em>, <em class="sig-param">inputs: list[str] = None</em><span class="sig-paren">)</span> &#x2192; student<a class="headerlink" href="#student.run" title="Permalink to this definition">¶</a></dt>
-<dd><p>Runs the given arbitrary code, as you might expect from calling <cite>exec</cite>. However, handles a lot of common sandboxing
-issues. For example, the students’ code is in a seperate thread and shouldn’t be able to modify anything about the
-Report object or access files on disk (unless you explicitly allow them). Code with errors will have their errors
-adjusted to better provide the context of what went wrong and ensure that students understand why their code is
-wrong and not the instructors.</p>
+<dl class="py function">
+<dt id="run">
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">code</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></span></em>, <em class="sig-param"><span class="n">inputs</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a><span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; student<a class="headerlink" href="#run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs the given arbitrary code, as you might expect from calling <cite>exec</cite>.
+However, handles a lot of common sandboxing issues. For example, the
+students’ code is in a seperate thread and shouldn’t be able to modify
+anything about the Report object or access files on disk (unless you
+explicitly allow them). Code with errors will have their errors adjusted
+to better provide the context of what went wrong and ensure that students
+understand why their code is wrong and not the instructors.</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="student.get_names_by_type">
-<code class="sig-prename descclassname">student.</code><code class="sig-name descname">get_names_by_type</code><span class="sig-paren">(</span><em class="sig-param">type: Any</em><span class="sig-paren">)</span> &#x2192; list[str]<a class="headerlink" href="#student.get_names_by_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a list of all the variable names that have the given type (based on <cite>isinstance</cite>).</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="student.get_values_by_type">
-<code class="sig-prename descclassname">student.</code><code class="sig-name descname">get_values_by_type</code><span class="sig-paren">(</span><em class="sig-param">type: Any</em><span class="sig-paren">)</span> &#x2192; list[Any]<a class="headerlink" href="#student.get_values_by_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a list of all the variable values that have the given type (based on <cite>isinstance</cite>).</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="student.get_variables_by_type">
-<code class="sig-prename descclassname">student.</code><code class="sig-name descname">get_variables_by_type</code><span class="sig-paren">(</span><em class="sig-param">type: Any</em><span class="sig-paren">)</span> &#x2192; list[(str, type)]<a class="headerlink" href="#student.get_variables_by_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a list of all the names and values that match the given type.</p>
-</dd></dl>
-
-<dl class="function">
+<dl class="py data">
 <dt>
-<code class="sig-name descname">student.functions: {str: callable}</code></dt>
-<dd><p>Attribute that will give you all of the variables that are callabel functions.</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<code class="sig-name descname">student.var: {str: Any}</code></dt>
-<dd><p>Attribute that will give you all of the variables.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="student.set_output">
-<code class="sig-prename descclassname">student.</code><code class="sig-name descname">set_output</code><span class="sig-paren">(</span><em class="sig-param">raw_output</em><span class="sig-paren">)</span><a class="headerlink" href="#student.set_output" title="Permalink to this definition">¶</a></dt>
-<dd><p>Overrides the current output with the new value.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="student.append_output">
-<code class="sig-prename descclassname">student.</code><code class="sig-name descname">append_output</code><span class="sig-paren">(</span><em class="sig-param">raw_output</em><span class="sig-paren">)</span><a class="headerlink" href="#student.append_output" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds new output to the previously printed output.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="student.set_input">
-<code class="sig-prename descclassname">student.</code><code class="sig-name descname">set_input</code><span class="sig-paren">(</span><em class="sig-param">*inputs: str</em><span class="sig-paren">)</span><a class="headerlink" href="#student.set_input" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets the given <cite>inputs</cite> strings to be the value that <cite>input</cite> will return. This allows you to test students’
-code that involves the builtin <cite>input</cite> function, mocking whatever needs to be typed in.</p>
-</dd></dl>
-
-<div class="section" id="getting-output">
-<h2>Getting Output<a class="headerlink" href="#getting-output" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.sandbox.compatibility</span> <span class="kn">import</span> <span class="n">get_output</span>
-<span class="n">output</span> <span class="o">=</span> <span class="n">get_output</span><span class="p">()</span>
-<span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">output</span><span class="p">:</span>
-    <span class="k">print</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>  <span class="c1"># Each line of output is given as a separate item in the list.</span>
+<code class="sig-name descname">student.data: dict[str, Any]</code></dt>
+<dd><p>All of the students’ created variables and functions will be stored in
+a dictionary attached to the <cite>data</cite> field. You can access it like so:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.sandbox</span> <span class="kn">import</span> <span class="n">run</span>
+<span class="n">student</span> <span class="o">=</span> <span class="n">run</span><span class="p">(</span><span class="s1">&#39;alpha = 7&#39;</span><span class="p">)</span>
+<span class="n">student</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;alpha&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
-</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="set_input">
+<code class="sig-name descname">set_input</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">inputs</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#set_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the given <cite>inputs</cite> strings to be the value that <cite>input</cite> will return.
+This allows you to test students’ code that involves the builtin <cite>input</cite>
+function, mocking whatever needs to be typed in.</p>
+</dd></dl>
+
+<p>TODO: Add in other pedal.sandbox.commands!</p>
 </div>
 
 
@@ -279,7 +248,7 @@ code that involves the builtin <cite>input</cite> function, mocking whatever nee
         <a href="../tutorial.html" class="btn btn-neutral float-right" title="Teacher Tutorial" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="toolkit.html" class="btn btn-neutral float-left" title="Toolkit" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="assertions.html" class="btn btn-neutral float-left" title="Assertions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -288,11 +257,19 @@ code that involves the builtin <cite>input</cite> function, mocking whatever nee
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright 2018, acbart, lukesg08
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -303,7 +280,6 @@ code that involves the builtin <cite>input</cite> function, mocking whatever nee
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

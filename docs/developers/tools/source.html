@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,27 +11,29 @@
   
 
   
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="TIFA" href="tifa.html" />
@@ -50,7 +51,7 @@
           
 
           
-            <a href="../../index.html" class="icon icon-home"> Pedal
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> Pedal
           
 
           
@@ -77,6 +78,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -92,6 +94,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../teachers/examples.html">Teacher Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../teachers/reference.html">Teacher Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../teachers/tutorial.html">Teacher Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../teachers/practices.html">Best Practices</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guide.html">Developer Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api.html">Developer API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../integrations.html">Developer Integrations</a></li>
@@ -101,15 +104,16 @@
 <li class="toctree-l2"><a class="reference internal" href="cait.html">CAIT</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sandbox.html">Sandbox</a></li>
 <li class="toctree-l2"><a class="reference internal" href="assertions.html">Assertions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="toolkit.html">Toolkit</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../conventions.html">Naming Conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../everyone/glossary.html">Glossary</a></li>
 </ul>
 
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -148,7 +152,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../tools.html">Tools</a> &raquo;</li>
         
@@ -206,34 +210,39 @@
 </tr>
 </tbody>
 </table>
-<dl class="function">
+<dl class="py function">
 <dt id="pedal.source.source.get_original_program">
-<code class="sig-name descname">get_original_program</code><span class="sig-paren">(</span><em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="../../_modules/pedal/source/source.html#get_original_program"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.source.source.get_original_program" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_original_program</code><span class="sig-paren">(</span><em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span> &#x2192; <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a><a class="reference internal" href="../../_modules/pedal/source/source.html#get_original_program"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.source.source.get_original_program" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves the original version of the Submission’s main code, ignoring all subsitutions.
 :param report:</p>
 <p>Returns:</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="pedal.source.source.get_program">
-<code class="sig-name descname">get_program</code><span class="sig-paren">(</span><em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="../../_modules/pedal/source/source.html#get_program"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.source.source.get_program" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieves the current main file.
-:param report:</p>
-<p>Returns:</p>
+<code class="sig-name descname">get_program</code><span class="sig-paren">(</span><em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span> &#x2192; <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a><a class="reference internal" href="../../_modules/pedal/source/source.html#get_program"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.source.source.get_program" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the current main file’s code.</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="pedal.source.source.reset">
 <code class="sig-name descname">reset</code><span class="sig-paren">(</span><em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/source/source.html#reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.source.source.reset" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Resets the Source tool back to its initial configuration, removing any
+previously stored code/parses/section info.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>report</strong> – </p>
+<dd class="field-odd"><p><strong>report</strong> – The report object to be reseting.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The data associated with the Source tool.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a></p>
 </dd>
 </dl>
-<p>Returns:</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="pedal.source.source.restore_code">
 <code class="sig-name descname">restore_code</code><span class="sig-paren">(</span><em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/source/source.html#restore_code"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.source.source.restore_code" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
@@ -243,7 +252,7 @@
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="pedal.source.source.set_source">
 <code class="sig-name descname">set_source</code><span class="sig-paren">(</span><em class="sig-param">code</em>, <em class="sig-param">filename='answer.py'</em>, <em class="sig-param">sections=False</em>, <em class="sig-param">independent=False</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/source/source.html#set_source"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.source.source.set_source" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets the contents of the Source to be the given code. Can also be
@@ -269,7 +278,7 @@ left None, defaults to the global MAIN_REPORT.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="pedal.source.source.set_source_file">
 <code class="sig-name descname">set_source_file</code><span class="sig-paren">(</span><em class="sig-param">filename: str</em>, <em class="sig-param">sections=False</em>, <em class="sig-param">independent=False</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/source/source.html#set_source_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.source.source.set_source_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Uses the given <cite>filename</cite> on the filesystem as the new main file.</p>
@@ -286,7 +295,7 @@ left None, defaults to the global MAIN_REPORT.</p></li>
 <p>Returns:</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="pedal.source.source.verify">
 <code class="sig-name descname">verify</code><span class="sig-paren">(</span><em class="sig-param">code=None</em>, <em class="sig-param">filename='answer.py'</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em>, <em class="sig-param">muted=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/source/source.html#verify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.source.source.verify" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parses the given source code and checks for syntax errors; if no code is given, defaults to the
@@ -304,7 +313,7 @@ current Main file of the submission.</p>
 <p>Returns:</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="pedal.source.source.verify_section">
 <code class="sig-name descname">verify_section</code><span class="sig-paren">(</span><em class="sig-param">code=None</em>, <em class="sig-param">filename='answer.py'</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em>, <em class="sig-param">muted=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pedal.source.source.verify_section" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parses the given source code and checks for syntax errors; if no code is given, defaults to the
@@ -344,11 +353,19 @@ current Main file of the submission.</p>
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright 2018, acbart, lukesg08
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -359,7 +376,6 @@ current Main file of the submission.</p>
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

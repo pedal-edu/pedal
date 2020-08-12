@@ -10,4 +10,3 @@ Tools
     tools/cait
     tools/sandbox
     tools/assertions
-    tools/toolkit

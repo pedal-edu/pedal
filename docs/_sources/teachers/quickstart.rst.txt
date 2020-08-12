@@ -2,17 +2,19 @@ Teacher Quick Start Guide
 =========================
 
 Pedal is composed of `Tools` that write `Feedback` to a centralized `Report`
-by detecting `Conditions` in your learners' `Submission` and providing an appropriate `Response`.
-As a grader, you just have to write the Instructor Control Script (or "Grading Script").
-In this Quick Start Guide, we'll show you how you can make this happen in just a few lines of code.
-Once you've got the basics, you can check out the :doc:`tutorial` for a more in-depth coverage.
+by detecting `Conditions` in your learners' `Submission` and providing an
+appropriate `Response`. As a grader, you just have to write the Instructor
+Control Script (or "Grading Script"). In this Quick Start Guide, we'll show you
+how you can make this happen in just a few lines of code. Once you've got the
+basics, you can check out the :doc:`tutorial` for a more in-depth coverage.
 
 Command Line Usage
 ^^^^^^^^^^^^^^^^^^
 
-Pedal is meant to be integrated into existing autograders (see integrations), but works perfectly fine
-on its own through the command line. For example, after you create a grading script named
-`grade_assignment.py`, you can run a single student submission through it to get the recommended feedback:
+Pedal is meant to be integrated into existing autograders (see integrations),
+but works perfectly fine on its own through the command line. For example,
+after you create a grading script named `grade_assignment.py`, you can run a
+single student submission through it to get the recommended feedback:
 
 .. code:: console
 
@@ -28,26 +30,63 @@ Or you could regrade a folder of student submissions:
     Babbage Bart.py
     Reese Trexler.py
 
-    $> pedal score grade_assignment.py submissions/
-    Ada Bart, 100
-    Babbage Bart, 0
-    Reese Trexler, 63
+    $> pedal grade grade_assignment.py submissions/
+    grade_assignment.py, submissions/Ada Bart.py, 100
+    grade_assignment.py, submissions/Babbage Bart.py, 0
+    grade_assignment.py, submissions/Reese Trexler.py, 63
 
-There are many settings for the command line version. Check the Integrations for more info.
+There are many settings for the command line version. Check the Integrations for
+more info.
 
-Let's turn to look at what you might put inside that `grade_assignment.py` script.
+Instructor Control Scripts
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Standard Environment
-^^^^^^^^^^^^^^^^^^^^
-
-Although Pedal can be configured in a lot of ways, you may want to begin by using our default
-"Standard Environment", which immediately sets up some of core Tools for a submission of learners' code.
+Let's turn to look at what you might put inside that `grade_assignment.py`
+script. This is our Instructor Control Script (or a "grading script", if you
+prefer). If you're not using a custom environment, then you will probably
+want to run the following at the minimum:
 
 .. code:: python
 
-    from pedal.environments import setup_pedal
+    # Always start by importing Pedal
+    from pedal import *
+
+    # Load the students' code
     student_code = "print('Hello world!')"
-    ast, student, resolve = setup_pedal(student_code)
+    contextualize_report(student_code)
+
+    # Check their source code for syntax errors
+    verify()
+    # Run their code
+    student = run(student_code)
+
+    # ... More instructor logic can go here ...
+
+    # Resolve output and print
+    from pedal.resolvers import print_resolve
+    print_resolve()
+
+Custom Environments
+^^^^^^^^^^^^^^^^^^^
+
+Always needing to setup and run the students' code is tedious. If you write that
+code a hundred times, you're likely to make a mistake. Pedal supports the idea
+of Environment's to handle the common boilerplate. These can be passed in as
+command line arguments, or an autograding platform can provide them automatically.
+
+For example, let's say we ran the following on the command line to emulate the
+BlockPy environment:
+
+.. code:: console
+
+    $> pedal feedback grade_assignment.py student_submission.py --environment blockpy
+
+Now our instructor script can become just the following:
+
+.. code-block:: python
+
+    # Always start by importing Pedal
+    from pedal import *
 
     # ... More instructor logic can go here ...
 
@@ -56,8 +95,7 @@ Although Pedal can be configured in a lot of ways, you may want to begin by usin
 After just the lines above, the learners' submission will have been:
 
 * Checked for `Source` code errors that prevent parsing, with relevant syntax error messages generated.
-* Parsed into a traversable AST by `CAIT`, to enable structural checks.
-* Executed in our `Sandbox` (relatively safely), with relevant runtime error messages generated.
+* Executed in our `Sandbox` (relatively safely), with relevant runtime error messages generated and student data stored in a `student` variable.
 * Reviewed by `TIFA`, which detects and provides feedback on common algorithmic errors (e.g., unused variables).
 * A default `Resolver` is provided to be called at the end of your script.
 
@@ -68,24 +106,24 @@ Core Feedback Functions
 ^^^^^^^^^^^^^^^^^^^^^^^
 
 There are a few core feedback commands that provide simple Responses to students.
-Most likely, these will be called within the body of `if` statements throughout your instructor control script.
+Most likely, these will be called within the body of `if` statements throughout
+your instructor control script.
 
-.. code:: python
-
-    from pedal import gently, set_success, give_partial, compliment
-
-The first is `gently`, which allows you to present the learner with a simple textual message.
-This might be a hint, or a description of the mistake they made, or something else.
-However, it should be used to deliver negative feedback.
-There are other Feedback Functions to deliver negative feedback; the name `gently` refers to the
-fact that most Resolvers will prioritize this feedback lower than runtime errors, syntax errors, etc.
+**Gently**: The first is :func:`~pedal.core.commands.gently`, which allows you
+to present the learner with a simple textual message. This might be a hint, or
+a description of the mistake they made, or something else. However, it should
+be used to deliver negative feedback. There are other Feedback Functions to
+deliver negative feedback; the name `gently` refers to the fact that most
+Resolvers will prioritize this feedback lower than runtime errors, syntax
+errors, etc. Its high-priority complement is `explain` which will totally
+supplant most other kinds of errors.
 
 Notice that we provide a label as a second argument.
 Although optional, we encourage you to label feedback to enhance your subsequent analysis.
 
 .. code:: python
 
-    gently("You failed to solve the question correctly!", "incorrect_answer")
+    gently("You failed to solve the question correctly!", label="incorrect_answer")
 
 The next is `set_success`, which allows you to establish that the learner has completed the problem
 successfully. The default resolver will prioritize this feedback above all others.
