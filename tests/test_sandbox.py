@@ -8,7 +8,7 @@ import json
 from pedal.core.submission import Submission
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from pedal.core.commands import MAIN_REPORT, clear_report
+from pedal.core.commands import MAIN_REPORT, clear_report, contextualize_report
 from pedal.sandbox import Sandbox
 import pedal.sandbox.commands as commands
 from pedal.source import set_source
@@ -236,6 +236,7 @@ Suggestion: Read the error message to see which function had the issue. Check wh
         test_filename = here+'_sandbox_test_coverage.py'
         with open(test_filename) as student_file:
             student_code = student_file.read()
+        contextualize_report(student_code)
         student = Sandbox()
         student.tracer_style = 'coverage'
         student.run(student_code, filename=test_filename)
@@ -366,6 +367,19 @@ Suggestion: Read the error message to see which function had the issue. Check wh
         student = Sandbox()
         student.run(student_code, filename='student.py')
         self.assertEqual(str(student.exception), "You are not allowed to call 'globals'.")
+
+    def test_mock_turtle(self):
+        student_code = dedent('''
+            import turtle
+            turtle.forward(100)
+            turtle.mainloop()
+        ''')
+        set_source(student_code)
+        student = Sandbox()
+        student.run(student_code, filename='student.py')
+        self.assertIsNone(student.exception)
+        self.assertEqual(student.modules.turtles.calls[0][0], 'forward')
+        self.assertEqual(student.modules.turtles.calls[0][1][0], 100)
 
     # TODO: test `import builtins` strategy to access original builtins
 
