@@ -83,10 +83,10 @@ def parse_args(reduced_mode=False):
                                             'instructor control script.',
                         default='submissions',
                         nargs='?')
+    # TODO: Handle output to file
     parser.add_argument('--output', '-o',
                         help='The output path for the result. Defaults to stdout.',
                         default=None)
-    # TODO: Is variable substitutions actually necessary now?
     parser.add_argument('--config', '-c',
                         help="Uses the configuration file to get settings.")
     parser.add_argument('--create_output',
@@ -96,6 +96,11 @@ def parse_args(reduced_mode=False):
                         help="Sets the environment context for this script, which"
                              " can run special setups and override tools as"
                              " needed.", default=None)
+    parser.add_argument('--instructor_name',
+                        help="Sets the name of the instructor file to something"
+                             " more friendly. If not given, then will default"
+                             " to the instructor filename.", default=None)
+    '''
     parser.add_argument('--include_submissions', help='An optional REGEX filter '
                                                       'to only include certain submissions')
     parser.add_argument('--exclude_submissions', help='An optional REGEX filter '
@@ -107,7 +112,10 @@ def parse_args(reduced_mode=False):
     parser.add_argument('--parallel_scripts', help="Which style to use for "
                                                    "running scripts in parallel.",
                         choices=["threads", "processes", "none"])
+    '''
     args = parser.parse_args()
+    if args.instructor_name is None:
+        args.instructor_name = args.instructor
     return args
 
 

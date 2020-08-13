@@ -212,10 +212,14 @@ class VerifyPipeline(AbstractPipeline):
         super().__init__(config)
 
         class TestReferenceSolutions(unittest.TestCase):
+            __module__ = 'VerifyTestCase'
+            __qualname__ = config.instructor_name
             maxDiff = None
             def __str__(self):
                 return f"{config.instructor}, using {self._testMethodName[5:]}.py"
                 #return f"{self.id().__name__} (Test{config.instructor})"
+            def __repr__(self):
+                return str(self)
         self.TestReferenceSolutions = TestReferenceSolutions
         self.tests = []
 
@@ -234,6 +238,7 @@ class VerifyPipeline(AbstractPipeline):
                 self.assertEqual(chomp(str(actual[field]).strip()),
                                  chomp(value),
                                  msg=f"Wrong value for '{field}' in {name}.")
+
         setattr(self.TestReferenceSolutions, "test_" + name, new_test)
         self.tests.append("test_" + name)
 
