@@ -221,16 +221,19 @@ class VerifyPipeline(AbstractPipeline):
 
     def add_case(self, name, bundle_result, verifier):
         """ Add this ``name`` as a new test. """
+        print(bundle_result.output)
+        error = bundle_result.error if bundle_result.error else None
+        actual = bundle_result.data['MAIN_REPORT'].result.to_json()
+        error = bundle_result.error
+        expected_fields = verifier.get_final()
         def new_test(self):
-            if bundle_result.error:
-                raise bundle_result.error
-            report = bundle_result.data['MAIN_REPORT']
-            actual = report.result.to_json()
-            for field, value in verifier.get_final():
+            if error:
+                raise error
+            for field, value in expected_fields:
                 self.assertIn(field, actual, msg="Field was not in feedback.")
                 self.assertEqual(chomp(str(actual[field]).strip()),
                                  chomp(value),
-                                 msg=f"Wrong value for '{field}'.")
+                                 msg=f"Wrong value for '{field}' in {name}.")
         setattr(self.TestReferenceSolutions, "test_" + name, new_test)
         self.tests.append("test_" + name)
 
@@ -262,7 +265,7 @@ class GradePipeline(AbstractPipeline):
                 print(bundle.submission.instructor_file,
                       bundle.submission.main_file,
                       bundle.result.data['MAIN_REPORT'].result.score*
-                      bundle.result.data['MAIN_REPORT'].result.correct,
+                      bundle.result.data['MAIN_REPORT'].result.success,
                       sep=", ")
 
 
