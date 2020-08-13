@@ -136,7 +136,7 @@ def def_use_error(node, report=MAIN_REPORT):
     if not isinstance(node, str) and node.ast_name != "Name":
         raise TypeError
     try:
-        def_use_vars = report[TIFA_TOOL_NAME]['issues']['initialization_problem']
+        def_use_vars = report[TIFA_TOOL_NAME]['latest'].issues['initialization_problem']
     except KeyError:
         return False
     if not isinstance(node, str):
@@ -170,7 +170,7 @@ def data_state(node, report=MAIN_REPORT):
     else:
         node_id = node.id
     try:
-        return report[TIFA_TOOL_NAME]["top_level_variables"][node_id]
+        return report[TIFA_TOOL_NAME]["latest"].top_level_variables[node_id]
     except KeyError:
         return None
 
