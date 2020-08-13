@@ -147,7 +147,7 @@ def resolve(report=MAIN_REPORT, priority_key=by_priority):
     feedbacks.sort(key=priority_key)
     suppressions = report.suppressions
     # Process
-    final = FinalFeedback(success=False, score=0,
+    final = FinalFeedback(success=True, score=0,
                           title=None, message=None,
                           category=Feedback.CATEGORIES.COMPLETE, label='set_success_no_errors',
                           data=[], hide_correctness=False)
@@ -167,7 +167,7 @@ def resolve(report=MAIN_REPORT, priority_key=by_priority):
             final.score += partial if partial is not None else 0
         if feedback.muted:
             continue
-        final.success = success or final.success
+        final.success = success and final.success
         if feedback.kind == Feedback.KINDS.COMPLIMENT:
             final.positives.append(feedback)
         elif feedback.kind == Feedback.KINDS.INSTRUCTIONAL:
@@ -182,12 +182,15 @@ def resolve(report=MAIN_REPORT, priority_key=by_priority):
         final.title = DEFAULT_NO_FEEDBACK_TITLE
         final.message = DEFAULT_NO_FEEDBACK_MESSAGE
     final.hide_correctness = suppressions.get('success', False)
-    if (not final.hide_correctness and final.success and
+    if (not final.hide_correctness and
             final.label == 'set_success_no_errors' and
             final.category == Feedback.CATEGORIES.COMPLETE):
         # TODO: Promote to be its own atomic feedback function
         final.title = set_success.title
-        final.message = set_success.message_template()
+        final.message = set_success.message_template
+        final.score = 1
+        final.success = True
+    final.success = bool(final.success)
     report.result = final
     report.resolves.append(final)
     return final
