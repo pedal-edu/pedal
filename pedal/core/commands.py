@@ -49,6 +49,7 @@ class compliment(FeedbackResponse):
     def __init__(self, message, **kwargs):
         super().__init__(message=message, **kwargs)
 
+
 class give_partial(FeedbackResponse):
     """ Increases the user's current score by the `score`. """
     title = "Partial Credit"
