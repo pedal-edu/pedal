@@ -90,13 +90,13 @@ class TestAssertions(ExecutionTestCase):
         with Execution('a = 6\na') as e:
             self.assertTrue(ensure_literal(5))
         self.assertFeedback(e, "Must Use Literal Value\n"
-                               "You must use the literal value `5`.")
+                               "You must use the literal value <code>5</code>.")
 
     def test_ensure_literal_used_str(self):
         with Execution('print("Helo")') as e:
             self.assertTrue(ensure_literal("Hello"))
         self.assertFeedback(e, "Must Use Literal Value\n"
-                               "You must use the literal value `'Hello'`.")
+                               "You must use the literal value <code>'Hello'</code>.")
 
     def test_ensure_literal_unused(self):
         with Execution('print("Hello", 5)') as e:
@@ -107,10 +107,10 @@ class TestAssertions(ExecutionTestCase):
         with Execution('a = -15+2\na') as e:
             self.assertTrue(ensure_literal(-1))
         self.assertFeedback(e, "Must Use Literal Value\n"
-                               "You must use the literal value `-1`.")
+                               "You must use the literal value <code>-1</code>.")
 
     def test_ensure_literal_used_boolean(self):
         with Execution('a = False\na') as e:
             self.assertTrue(ensure_literal(True))
         self.assertFeedback(e, "Must Use Literal Value\n"
-                               "You must use the literal value `True`.")
+                               "You must use the literal value <code>True</code>.")

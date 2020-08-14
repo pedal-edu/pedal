@@ -185,13 +185,13 @@ class ensure_literal(EnsureAssertionFeedback):
     """ Make sure that the given literal value does appear in the student's
         code. """
     title = "Must Use Literal Value"
-    message_template = "You must use the literal value `{literal!r}`{capacity}."
+    message_template = "You must use the literal value {literal_message}{capacity}."
 
     def __init__(self, literal, at_least=1, root=None, **kwargs):
         report = kwargs.get('report', MAIN_REPORT)
         root = root or parse_program(report=report)
         fields = {'literal': literal, 'at_least': at_least, 'capacity': '',
-                  'root': root, 'literal_message': report.format.python_expression(literal)}
+                  'root': root, 'literal_message': report.format.python_expression(repr(literal))}
         super(AssertionFeedback, self).__init__(fields=fields, **kwargs)
 
     def condition(self):
