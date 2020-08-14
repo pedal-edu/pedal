@@ -6,6 +6,7 @@ __all__ = ['Feedback', 'FeedbackKind', 'FeedbackCategory',
            "CompositeFeedbackFunction",
            "FeedbackResponse"]
 
+from pedal.core.formatting import FeedbackFieldWrapper
 from pedal.core.location import Location
 from pedal.core.report import MAIN_REPORT
 from pedal.core.feedback_category import FeedbackKind, FeedbackCategory, FeedbackStatus
@@ -98,6 +99,7 @@ class Feedback:
     label = None
     category = None
     justification = None
+    constant_fields = None
     fields = None
     field_names = None
     kind = None
@@ -162,6 +164,8 @@ class Feedback:
             self.fields = fields
         else:
             self.fields = {}
+        if self.constant_fields is not None:
+            self.fields.update(self.constant_fields)
         if field_names is not None:
             self.field_names = field_names
         if title is not None:
@@ -233,6 +237,7 @@ class Feedback:
             else:
                 self._status = FeedbackStatus.INACTIVE
         except Exception as e:
+            self._met_condition = False
             self._exception = e
             self._status = FeedbackStatus.ERROR
         if self.report is not None:
@@ -271,8 +276,9 @@ class Feedback:
         if self.message is not None:
             return self.message
         if self.message_template is not None:
-            return self.message_template.format(_format=self.report.format,
-                                                **self.fields)
+            fields = {field: FeedbackFieldWrapper(field, value, self.report.format)
+                      for field, value in self.fields.items()}
+            return self.message_template.format(**fields)
         return "No feedback message provided"
 
     def _get_child_feedback(self, feedback, active):

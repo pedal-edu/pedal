@@ -1,6 +1,68 @@
+"""
+Utilities and classes related to formatting a Feedback Message.
+"""
+
+
+def chomp_spec(format_spec, word):
+    """ Return a new version of format_spec without the ``word`` and
+    (if there are multiple format_spec given) the extra colon. """
+    if format_spec.endswith(word):
+        format_spec = format_spec[:-len(word)]
+        if format_spec and format_spec[-1] == ':':
+            format_spec = format_spec[:-1]
+    return format_spec
+
+
+class FeedbackFieldWrapper:
+    """
+    Wraps an individual field within a Feedback message.
+
+    Args:
+        key (str): The name of the field.
+        value (Any): The value to interpolate into the message.
+        formatter (Formatter): The formatter to use from the report.
+    """
+    def __init__(self, key, value, formatter):
+        self.key = key
+        self.value = value
+        self.formatter = formatter
+
+    def __getattr__(self, key):
+        return getattr(self.value, key)
+
+    def __getitem__(self, index):
+        return self.value[index]
+
+    def __repr__(self):
+        return repr(self.value)
+
+    def __str__(self):
+        return str(self.value)
+
+    def __format__(self, format_spec):
+        value = str(self.value)
+        for formatter_name in self.formatter.available:
+            if format_spec.endswith(formatter_name):
+                format_spec = chomp_spec(format_spec, formatter_name)
+                value = getattr(self.formatter, formatter_name)(self.value)
+                break
+        return value.__format__(format_spec)
+
+# TODO: Convert Formatter into HtmlFormatter, and then make Formatter text by
+#       default.
 
 
 class Formatter:
+    """ Utility class for wrapping a feedback message with HTML or other
+    extra information. Can be subclassed by a different environment and
+    attached to a Report, in order to change how we create feedback. """
+
+    available = ['exception', 'filename', 'frame', 'traceback',
+                 #'html_code', 'html_div', 'html_pre', 'html_span', 'html_tag',
+                 'inputs', 'line', 'name', 'output',
+                 'python_code', 'python_expression', 'python_value',
+                 'table']
+
     def html_tag(self, tag, contents, classes=None):
         if classes is None:
             return f"<{tag}>{contents}</{tag}>"
