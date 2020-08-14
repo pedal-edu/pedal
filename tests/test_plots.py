@@ -3,7 +3,7 @@ Tests for checking that the plotting extension works.
 """
 from textwrap import dedent
 
-from tests.execution_helper import Execution, ExecutionTestCase
+from tests.execution_helper import Execution, ExecutionTestCase, SUCCESS_MESSAGE
 from pedal.extensions.plotting import *
 
 
@@ -21,7 +21,7 @@ class TestPlots(ExecutionTestCase):
     def test_check_for_plot_correct_hist(self):
         with Execution(code_hist_and_plot) as e:
             self.assertEqual(assert_plot('hist', [1, 2, 3]), False)
-        self.assertFeedback(e, "No Errors\nNo errors reported.")
+        self.assertFeedback(e, SUCCESS_MESSAGE)
 
     def test_check_for_plot_wrong_hist(self):
         with Execution(code_hist_and_plot) as e:
@@ -33,7 +33,7 @@ class TestPlots(ExecutionTestCase):
     def test_check_for_plot_correct_plot(self):
         with Execution(code_hist_and_plot) as e:
             self.assertEqual(assert_plot('line', [4, 5, 6]), False)
-        self.assertFeedback(e, "No Errors\nNo errors reported.")
+        self.assertFeedback(e, SUCCESS_MESSAGE)
 
     def test_check_for_plot_wrong_plot(self):
         with Execution(code_hist_and_plot) as e:

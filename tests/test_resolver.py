@@ -12,31 +12,46 @@ from pedal.source import set_source, next_section, verify_section, verify, separ
 from pedal.tifa import tifa_analysis
 from pedal.resolvers import simple, sectional
 import pedal.sandbox.commands as commands
-from tests.execution_helper import Execution
+from tests.execution_helper import Execution, SUCCESS_TEXT, ExecutionTestCase, SUCCESS_MESSAGE
 
 
-class TestCode(unittest.TestCase):
+class TestResolver(ExecutionTestCase):
+
+    def test_do_nothing(self):
+        clear_report()
+        final = simple.resolve()
+        self.assertTrue(final.success)
+        self.assertEqual(final.message, SUCCESS_TEXT)
 
     def test_gently(self):
         clear_report()
-        final = simple.resolve()
-        self.assertFalse(final.success)
-        self.assertEqual(final.message, "No errors reported.")
-
         gently('You should always create unit tests.')
         final = simple.resolve()
         self.assertFalse(final.success)
         self.assertEqual(final.message, 'You should always create unit tests.')
 
+    def test_gently_order(self):
+        clear_report()
+        gently('A great and exciting message!')
         gently('A boring message that we should not show.')
         final = simple.resolve()
         self.assertFalse(final.success)
-        self.assertEqual(final.message, 'You should always create unit tests.')
+        self.assertEqual(final.message, 'A great and exciting message!')
 
+    def test_set_success(self):
+        clear_report()
         set_success()
         final = simple.resolve()
         self.assertTrue(final.success)
-        self.assertEqual(final.message, 'You should always create unit tests.')
+        self.assertEqual(final.message, 'Great work!')
+
+    def test_gently_and_set_success(self):
+        clear_report()
+        gently("What have you done?")
+        set_success()
+        final = simple.resolve()
+        self.assertFalse(final.success)
+        self.assertEqual(final.message, 'What have you done?')
 
     def test_explain(self):
         # Tifa < Explain
@@ -62,14 +77,14 @@ class TestCode(unittest.TestCase):
         verify()
         tifa_analysis()
         final = simple.resolve()
-        print(final)
-        self.assertEqual("No errors reported.", final.message)
+        self.assertEqual(SUCCESS_MESSAGE, final.title+"\n"+final.message)
 
     def test_partials(self):
         with Execution('0') as e:
+            gently("You were incorrect.")
             give_partial(.1, message="You had a zero in your code.")
             give_partial(.1, message="You looped correctly.")
-        self.assertEqual(e.final.message, "No errors reported.")
+        self.assertFeedback(e, "Instructor Feedback\nYou were incorrect.")
         self.assertEqual(e.final.score, .2)
         self.assertFalse(e.final.success)
 
@@ -109,7 +124,7 @@ class TestCode(unittest.TestCase):
         suppress("Runtime")
         final = simple.resolve()
         self.assertEqual(Feedback.CATEGORIES.COMPLETE, final.category)
-        self.assertEqual("No errors reported.", final.message)
+        self.assertEqual(SUCCESS_TEXT, final.message)
 
     def test_success(self):
         clear_report()
@@ -131,8 +146,7 @@ class TestCode(unittest.TestCase):
         suppress(label='set_success')
         final = simple.resolve()
         self.assertEqual(Feedback.CATEGORIES.COMPLETE, final.category)
-        self.assertEqual("No Errors", final.title)
-        self.assertEqual("No errors reported.", final.message)
+        self.assertEqual(SUCCESS_MESSAGE, final.title+"\n"+final.message)
 
     def test_empty(self):
         clear_report()
@@ -171,12 +185,13 @@ class TestCode(unittest.TestCase):
         with Execution('input("Type something:")') as e:
             pass
         self.assertNotEqual(Feedback.CATEGORIES.RUNTIME, e.final.category)
-        self.assertEqual("No Errors", e.final.title)
+        self.assertFeedback(e, SUCCESS_MESSAGE)
 
+    def test_input_with_conversion(self):
         with Execution('float(input("Type something:"))') as e:
             pass
         self.assertNotEqual(Feedback.CATEGORIES.RUNTIME, e.final.category)
-        self.assertEqual("No Errors", e.final.title)
+        self.assertFeedback(e, SUCCESS_MESSAGE)
 
     def test_sectional_error(self):
         clear_report()

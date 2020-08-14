@@ -341,8 +341,7 @@ def check_case(function, case, student_function):
     # Pass in the arguments and call the function
     if 'arguments' in case:
         test_case.add_arguments(case['arguments'])
-    result = sandbox.call(function_name, *test_case.arguments,
-                          report_exceptions=False, context=False)
+    result = sandbox.call(function_name, *test_case.arguments)
     # Store actual values
     test_case.add_prints_returns(sandbox.output, result)
     # Check for errors

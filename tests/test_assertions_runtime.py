@@ -4,7 +4,7 @@ Tests for checking that runtime assertions are working as expected.
 from pedal.assertions.feedbacks import assert_group
 from pedal.assertions.runtime import *
 from pedal.sandbox.commands import call
-from tests.execution_helper import Execution, ExecutionTestCase
+from tests.execution_helper import Execution, ExecutionTestCase, SUCCESS_MESSAGE
 import unittest
 
 
@@ -13,7 +13,7 @@ class TestAssertions(ExecutionTestCase):
     def test_assert_equal_basic_passes(self):
         with Execution('5') as e:
             assert_equal(5, 5)
-        self.assertFeedback(e, "No Errors\nNo errors reported.")
+        self.assertFeedback(e, SUCCESS_MESSAGE)
 
     def test_assert_equal_basic_fails(self):
         with Execution('5') as e:
@@ -45,7 +45,7 @@ But I expected the result to be equal to:
     def test_assert_equal_call_left_passes(self):
         with Execution('def add(a, b): return a+b', run_tifa=False) as e:
             assert_equal(e.student.call('add', 1, 2), 3)
-        self.assertFeedback(e, "No Errors\nNo errors reported.")
+        self.assertFeedback(e, SUCCESS_MESSAGE)
 
     def test_assert_equal_call_right_fails(self):
         with Execution('def add(a, b): return a-b', run_tifa=False) as e:
@@ -62,7 +62,7 @@ But I expected the result to be equal to:
     def test_assert_equal_call_right_passes(self):
         with Execution('def add(a, b): return a+b', run_tifa=False) as e:
             assert_equal(3, e.student.call('add', 1, 2))
-        self.assertFeedback(e, "No Errors\nNo errors reported.")
+        self.assertFeedback(e, SUCCESS_MESSAGE)
 
     def test_assert_in_call_left_fails(self):
         with Execution('def make_int(): return 7', run_tifa=False) as e:
@@ -102,21 +102,21 @@ But I expected the result to be None""")
     def test_assert_is_none_call_left_passes(self):
         with Execution('def do_math(): 1+2', run_tifa=False) as e:
             assert_is_none(e.student.call('do_math'))
-        self.assertFeedback(e, "No Errors\nNo errors reported.")
+        self.assertFeedback(e, SUCCESS_MESSAGE)
 
     def test_assert_is_call_left_passes(self):
         with Execution('r = [1, 2]\ndef get_list(): return r', run_tifa=False) as e:
             result_list = e.student.call('get_list')
             value_list = e.student.data['r']
             assert_is(result_list, value_list)
-        self.assertFeedback(e, "No Errors\nNo errors reported.")
+        self.assertFeedback(e, SUCCESS_MESSAGE)
 
     def test_assert_is_basic_passes(self):
         with Execution('0 is 0', run_tifa=False) as e:
             l = [1,2,3]
             r = l
             assert_is(l, r)
-        self.assertFeedback(e, "No Errors\nNo errors reported.")
+        self.assertFeedback(e, SUCCESS_MESSAGE)
 
     def test_assert_is_call_left_fails(self):
         with Execution('r = [1, 2]\ndef get_list(): return r', run_tifa=False) as e:
@@ -134,7 +134,7 @@ But I expected the result to be identical to:
     def test_assert_length_equal_basic_passes(self):
         with Execution('5') as e:
             assert_length_equal([1,2,3], 3)
-        self.assertFeedback(e, "No Errors\nNo errors reported.")
+        self.assertFeedback(e, SUCCESS_MESSAGE)
 
     def test_assert_length_equal_basic_fails(self):
         with Execution('5') as e:
@@ -158,7 +158,7 @@ But I expected the result to have the length:
     def test_assert_length_equal_call_left_passes(self):
         with Execution('def get(a, b): return "test"', run_tifa=False) as e:
             assert_length_equal(e.student.call('get', 1, 2), 4)
-        self.assertFeedback(e, "No Errors\nNo errors reported.")
+        self.assertFeedback(e, SUCCESS_MESSAGE)
 
     def test_assert_length_equal_call_right_fails(self):
         with Execution('def get(): return 5', run_tifa=False) as e:
@@ -175,12 +175,12 @@ But I expected the result to be the length of:
     def test_assert_length_equal_call_right_passes(self):
         with Execution('def get(): return 3', run_tifa=False) as e:
             assert_length_equal([1, 2, 3], e.student.call('get'))
-        self.assertFeedback(e, "No Errors\nNo errors reported.")
+        self.assertFeedback(e, SUCCESS_MESSAGE)
 
     def test_assert_contains_subset_call_left_passes(self):
         with Execution('def get(): return [1,2,3]', run_tifa=False) as e:
             assert_contains_subset(e.student.call('get'), [1, 2, 3, 4, 5])
-        self.assertFeedback(e, "No Errors\nNo errors reported.")
+        self.assertFeedback(e, SUCCESS_MESSAGE)
 
     def test_assert_contains_subset_call_left_fails(self):
         with Execution('def get(): return [1,2,3]', run_tifa=False) as e:
@@ -197,7 +197,7 @@ But I expected the result to be in:
     def test_assert_not_contains_subset_call_left_passes(self):
         with Execution('def get(): return [1,2,3,4,5]', run_tifa=False) as e:
             assert_not_contains_subset(e.student.call('get'), [1, 2, 3])
-        self.assertFeedback(e, "No Errors\nNo errors reported.")
+        self.assertFeedback(e, SUCCESS_MESSAGE)
 
     def test_assert_not_contains_subset_call_left_fails(self):
         with Execution('def get(): return [1,2]', run_tifa=False) as e:
@@ -214,7 +214,7 @@ But I expected the result to not be in:
     def test_assert_output_call_left_passes(self):
         with Execution('def hi(): print("Hello world!")', run_tifa=False) as e:
             assert_output(e.student.call('hi'), "Hello world!")
-        self.assertFeedback(e, "No Errors\nNo errors reported.")
+        self.assertFeedback(e, SUCCESS_MESSAGE)
 
     def test_assert_output_call_left_fails(self):
         with Execution('def hi(): print("Hello world!")', run_tifa=False) as e:
@@ -231,7 +231,7 @@ But I expected the output to be:
     def test_assert_has_function_passes(self):
         with Execution('def hi(): print("Hello world!")', run_tifa=False) as e:
             assert_has_function(e.student, "hi")
-        self.assertFeedback(e, "No Errors\nNo errors reported.")
+        self.assertFeedback(e, SUCCESS_MESSAGE)
 
     def test_assert_data_variable_fails(self):
         with Execution('alpha = 4', run_tifa=False) as e:
@@ -318,7 +318,7 @@ I ran your function <code class='pedal-name'>add</code> on some new arguments.<t
                 assert_equal(e.student.call('add', 1, 3), 4)
                 assert_equal(e.student.call('add', 1, 4), 5)
                 assert_equal(e.student.call('add', 1, 3), 4)
-        self.assertFeedback(e, "No Errors\nNo errors reported.")
+        self.assertFeedback(e, SUCCESS_MESSAGE)
 
     def test_assert_group_passes_but_earlier_fails(self):
         with Execution('def add(a, b): return a+b', run_tifa=False) as e:

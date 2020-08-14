@@ -1,7 +1,7 @@
 
 from pedal.assertions.static import *
 
-from tests.execution_helper import Execution, ExecutionTestCase
+from tests.execution_helper import Execution, ExecutionTestCase, SUCCESS_MESSAGE
 
 
 class TestAssertions(ExecutionTestCase):
@@ -14,7 +14,7 @@ class TestAssertions(ExecutionTestCase):
 
         with Execution('max([1,2,3])') as e:
             self.assertFalse(prevent_function_call('sum'))
-        self.assertFeedback(e, "No Errors\nNo errors reported.")
+        self.assertFeedback(e, SUCCESS_MESSAGE)
 
     def test_prevent_operator_used(self):
         with Execution('2+3') as e:
@@ -26,12 +26,12 @@ class TestAssertions(ExecutionTestCase):
     def test_prevent_operator_not_used(self):
         with Execution('+3') as e:
             self.assertFalse(prevent_function_call('+'))
-        self.assertFeedback(e, "No Errors\nNo errors reported.")
+        self.assertFeedback(e, SUCCESS_MESSAGE)
 
     def test_prevent_operator_below_limit(self):
         with Execution('1+3-4') as e:
             self.assertFalse(prevent_function_call('+', at_most=2))
-        self.assertFeedback(e, "No Errors\nNo errors reported.")
+        self.assertFeedback(e, SUCCESS_MESSAGE)
 
     def test_prevent_operator_above_limit(self):
         with Execution('2+3+4\n1+2') as e:
@@ -51,7 +51,7 @@ class TestAssertions(ExecutionTestCase):
     def test_prevent_muted(self):
         with Execution('sum([1,2,3])') as e:
             self.assertTrue(prevent_function_call('sum', muted=True))
-        self.assertFeedback(e, "No Errors\nNo errors reported.")
+        self.assertFeedback(e, SUCCESS_MESSAGE)
 
     def test_prevent_literal_used_int(self):
         with Execution('a = 5\na') as e:
@@ -70,7 +70,7 @@ class TestAssertions(ExecutionTestCase):
     def test_prevent_literal_unused(self):
         with Execution('print("Hello", 5)') as e:
             self.assertFalse(prevent_literal("Fire"))
-        self.assertFeedback(e, "No Errors\nNo errors reported.")
+        self.assertFeedback(e, SUCCESS_MESSAGE)
 
     def test_prevent_literal_used_negative_int(self):
         with Execution('a = -1+2\na') as e:
@@ -101,7 +101,7 @@ class TestAssertions(ExecutionTestCase):
     def test_ensure_literal_unused(self):
         with Execution('print("Hello", 5)') as e:
             self.assertFalse(ensure_literal("Hello"))
-        self.assertFeedback(e, "No Errors\nNo errors reported.")
+        self.assertFeedback(e, SUCCESS_MESSAGE)
 
     def test_ensure_literal_used_negative_int(self):
         with Execution('a = -15+2\na') as e:

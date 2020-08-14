@@ -5,7 +5,7 @@ import sys
 pedal_library = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.insert(0, pedal_library)
 
-from tests.execution_helper import Execution
+from tests.execution_helper import Execution, SUCCESS_MESSAGE
 from pedal.core.commands import *
 
 
@@ -15,7 +15,7 @@ class TestFeedback(unittest.TestCase):
     def test_no_errors(self):
         with Execution('a=0\na') as e:
             pass
-        self.assertEqual(e.feedback, "No Errors\nNo errors reported.")
+        self.assertEqual(e.feedback, SUCCESS_MESSAGE)
 
     def test_success(self):
         with Execution('a=0\na') as e:

@@ -52,14 +52,13 @@ class TestQuestions(ExecutionTestCase):
         pool_1 = Pool("P1", [question_A, question_B])
         def test_variable(question):
             student = run()
-            if assertHas(student, "alpha", value=2):
+            if assert_has_variable(student, "alpha", value=2):
                 question.answer()
         question_C = Question("QC", "Create a variable.", [test_variable])
         pool_2 = Pool("P2", [question_C])
         def test_second_variable(question):
             student = run()
-            student.report_exceptions_mode = True
-            if assertHas(student, "beta", value=3):
+            if not assert_has_variable(student, "beta", value=3):
                 question.answer()
                 set_success()
         question_D = Question("QD", "Create a beta variable.", [test_second_variable])
@@ -74,7 +73,6 @@ class TestQuestions(ExecutionTestCase):
             set_seed(0)
             set_source(code)
             student = run()
-            student.report_exceptions_mode = True
             pool_1.choose().ask()
             pool_2.choose().ask()
             if pool_1.answered and pool_2.answered:

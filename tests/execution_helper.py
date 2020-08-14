@@ -11,6 +11,9 @@ from pedal.resolvers import simple
 from pedal.sandbox import commands
 from pedal.cait.cait_api import parse_program
 
+SUCCESS_MESSAGE = "Complete\nGreat work!"
+SUCCESS_TEXT = "Great work!"
+
 
 class ExecutionTestCase(unittest.TestCase):
     def assertFeedback(self, execution, feedback_string):
@@ -46,7 +49,6 @@ class Execution:
             tifa_analysis(report=self.report)
         # TODO: Clean this up
         self.student = get_sandbox(self.report)
-        self.student.report_exceptions_mode = True
         self.report['sandbox']['sandbox'].tracer_style = self.tracer_style
         commands.run()
         return self

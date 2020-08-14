@@ -4,7 +4,7 @@ Tests related to checking function definitions
 
 import unittest
 from pedal.assertions.static import *
-from tests.execution_helper import Execution, ExecutionTestCase
+from tests.execution_helper import Execution, ExecutionTestCase, SUCCESS_MESSAGE
 
 
 class TestAssertions(ExecutionTestCase):
@@ -12,7 +12,7 @@ class TestAssertions(ExecutionTestCase):
         with Execution('def x(a: int, b: str, c: [int]) -> str: pass\nx') as e:
             self.assertFalse(ensure_function('x', 3, (int, str, 'list[int]'),
                                              str))
-        self.assertFeedback(e, "No Errors\nNo errors reported.")
+        self.assertFeedback(e, SUCCESS_MESSAGE)
 
     def test_function_missing_parameter(self):
         with Execution('def x(a: int, b, c: [int]) -> str: pass\nx') as e:
