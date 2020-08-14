@@ -421,7 +421,7 @@ class TifaCore:
         potential_module = get_builtin_module(module_names[0])
         if potential_module is not None:
             base_module = potential_module
-            for module in module_names:
+            for module in module_names[1:]:
                 if (isinstance(base_module, ModuleType) and
                         module in base_module.submodules):
                     base_module = base_module.submodules[module]
