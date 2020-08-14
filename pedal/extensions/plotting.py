@@ -79,7 +79,7 @@ def prevent_incorrect_plt(**kwargs):
 def ensure_correct_plot(function_name, report=MAIN_REPORT, **kwargs):
     """ Checks that the given plot type was correctly called. """
     ensure_function_call(function_name, **kwargs)
-    as_code = report.format.code
+    as_code = report.format.python_expression
     for name, description in PLOT_LABEL.items():
         prevent_function_call(name, **kwargs,
                               message=(f"You have called the {as_code(name)} "
