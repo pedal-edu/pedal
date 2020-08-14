@@ -135,16 +135,15 @@ def def_use_error(node, report=MAIN_REPORT):
     """
     if not isinstance(node, str) and node.ast_name != "Name":
         raise TypeError
-    try:
-        def_use_vars = report[TIFA_TOOL_NAME]['latest'].issues['initialization_problem']
-    except KeyError:
-        return False
+    from pedal.tifa.commands import get_issues
+    from pedal.tifa.feedbacks import initialization_problem
+    def_use_issues = get_issues(initialization_problem)
     if not isinstance(node, str):
         node_id = node.id
     else:
         node_id = node
     has_error = False
-    for issue in def_use_vars:
+    for issue in def_use_issues:
         name = issue.fields['name']
         if name == node_id:
             has_error = True
