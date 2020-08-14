@@ -15,9 +15,6 @@ from pedal.cait.find_node import function_is_called
 from pedal.cait.cait_api import parse_program, def_use_error
 from pedal.sandbox.commands import get_sandbox
 
-
-
-
 PLOT_LABEL = {'plot': 'line plot',
               'hist': 'histogram',
               'scatter': 'scatter plot'}
@@ -28,15 +25,18 @@ class plt_rename_err(Feedback):
     priority = Feedback.CATEGORIES.SYNTAX
     category = Feedback.CATEGORIES.INSTRUCTOR
     justification = "The name 'plt' appeared in the code with a def-use error."
+    constant_fields = {'suggestion': 'import matplotlib.pyplot as plt',
+                       'actual': 'matplotlib.pyplot',
+                       'expected': 'plt'}
     message_template = ("You have imported the "
-                        "{_format.code('matplotlib.pyplot')} module, "
-                        "but you did not rename it to {_format.code('plt')} "
-                        "using {_format.code('import matplotlib.pyplot as plt')}.")
+                        "{expected:name} module, "
+                        "but you did not rename it to {actual:name} "
+                        "using {suggestion:python_expression}.")
 
     def condition(self):
         ast = parse_program(report=self.report)
         plts = [n for n in ast.find_all("Name") if n.id == 'plt']
-        if plts and def_use_error(plts[0]):
+        if plts and any(def_use_error(plt) for plt in plts):
             return True
         return False
 
@@ -47,25 +47,24 @@ class plt_wrong_import(Feedback):
     category = Feedback.CATEGORIES.INSTRUCTOR
     justification = ("A matplotlib name (e.g., 'plot' or 'hist') was used with"
                      " a def-use error.")
+    constant_fields = {'suggestion': 'import matplotlib.pyplot as plt'}
     message_template = ("You have attempted to use the MatPlotLib "
-                        "function named {name_message}. However, you "
+                        "function named {expected:name}. However, you "
                         "imported MatPlotLib in a way that does not "
                         "allow you to use the function directly. I "
-                        "recommend you use {correct_message} instead, "
-                        "after you use "
-                        "{_format.code('import matplotlib.pyplot as plt')}.")
+                        "recommend you use {actual:python_expression} instead, "
+                        "after you use {suggestion:python_expression}.")
 
     def condition(self):
         ast = parse_program(report=self.report)
         matplotlib_names = ['plot', 'hist', 'scatter',
                             'title', 'xlabel', 'ylabel', 'show']
-        as_code = self.report.format.code
         for name in matplotlib_names:
             for n in ast.find_all("Name"):
                 if n.id == name:
                     if def_use_error(n):
-                        self.fields['name_message'] = as_code(name)
-                        self.fields['correct_message'] = as_code("plt." + name)
+                        self.fields['actual'] = name
+                        self.fields['expected'] = "plt." + name
                         return True
         return False
 
@@ -73,7 +72,7 @@ class plt_wrong_import(Feedback):
 @CompositeFeedbackFunction(plt_rename_err, plt_wrong_import)
 def prevent_incorrect_plt(**kwargs):
     """ Confirms that matplotlib.pyplot is being imported correctly. """
-    return plt_rename_err(**kwargs) and plt_wrong_import(**kwargs)
+    return plt_rename_err(**kwargs) or plt_wrong_import(**kwargs)
 
 
 @CompositeFeedbackFunction(prevent_function_call, ensure_function_call)

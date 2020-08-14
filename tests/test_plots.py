@@ -115,11 +115,12 @@ class TestPlots(ExecutionTestCase):
         ''')
         with Execution(student_code) as e:
             self.assertTrue(prevent_incorrect_plt())
-        self.assertFeedback(e, "Missing MatPlotLib Import\n"
+        self.assertFeedback(e, "Wrong MatPlotLib Import\n"
                                "You have imported the "
-                                    "<code>matplotlib.pyplot</code> module, but you did "
-                                    "not rename it to <code>plt</code> using "
-                                    "<code>import matplotlib.pyplot as plt</code>.")
+                               "<code class='pedal-name'>plt</code> module, but"
+                               " you did not rename it to "
+                               "<code class='pedal-name'>matplotlib.pyplot</code>"
+                               " using <code>import matplotlib.pyplot as plt</code>.")
 
     def test_prevent_incorrect_plt_missing_plt(self):
         student_code = dedent('''
@@ -132,12 +133,13 @@ class TestPlots(ExecutionTestCase):
             self.assertTrue(prevent_incorrect_plt())
         self.assertFeedback(e, "Missing MatPlotLib Import\n"
                                "You have attempted to use the MatPlotLib "
-                                    "function named <code>scatter</code>. However, you "
-                                    "imported MatPlotLib in a way that does not "
-                                    "allow you to use the function directly. I "
-                                    "recommend you use <code>plt.scatter</code> instead, "
-                                    "after you use <code>import matplotlib.pyplot as "
-                                    "plt</code>.")
+                               "function named "
+                               "<code class='pedal-name'>plt.scatter</code>. "
+                               "However, you imported MatPlotLib in a way that "
+                               "does not allow you to use the function "
+                               "directly. I recommend you use "
+                               "<code>scatter</code> instead, after you use "
+                               "<code>import matplotlib.pyplot as plt</code>.")
 
     def test_prevent_incorrect_plt_success(self):
         student_code = dedent('''
