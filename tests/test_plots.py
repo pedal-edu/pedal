@@ -72,6 +72,7 @@ class TestPlots(ExecutionTestCase):
                                "have the right data. That data appears to have "
                                "been plotted in another graph.")
 
+    def test_assert_plot_missing_plot_and_data(self):
         student_code = dedent('''
             import matplotlib.pyplot as plt
             plt.plot([1,2,3])
@@ -79,10 +80,11 @@ class TestPlots(ExecutionTestCase):
             plt.show()
         ''')
         with Execution(student_code) as e:
-            self.assertEqual(assert_plot('hist', [4, 5, 6]),
-                             "You have not created a histogram with the "
-                             "proper data.<br><br><i>(no_plt)<i></br></br>")
+            assert_plot('hist', [4, 5, 6])
+        self.assertFeedback(e, "Missing Plot\n"
+                               "You have not created a histogram with the proper data.")
 
+    def test_assert_plot_empty_scatter(self):
         student_code = dedent('''
             import matplotlib.pyplot as plt
             plt.scatter([], [])
@@ -90,8 +92,10 @@ class TestPlots(ExecutionTestCase):
             plt.show()
         ''')
         with Execution(student_code) as e:
-            self.assertEqual(assert_plot('scatter', []), False)
+            assert_plot('scatter', [])
+        self.assertFeedback(e, SUCCESS_MESSAGE)
 
+    def test_assert_plot_simple_scatter(self):
         student_code = dedent('''
             import matplotlib.pyplot as plt
             plt.scatter([1,2,3], [4,5,6])
@@ -100,8 +104,7 @@ class TestPlots(ExecutionTestCase):
         ''')
         with Execution(student_code) as e:
             assert_plot('scatter', [[1, 2, 3], [4, 5, 6]])
-
-
+        self.assertFeedback(e, SUCCESS_MESSAGE)
 
     def test_prevent_incorrect_plt(self):
         student_code = dedent('''
@@ -111,12 +114,14 @@ class TestPlots(ExecutionTestCase):
             plt.show()
         ''')
         with Execution(student_code) as e:
-            self.assertEqual(prevent_incorrect_plt(), True)
-        self.assertEqual(e.final.message, "You have imported the "
+            self.assertTrue(prevent_incorrect_plt())
+        self.assertFeedback(e, "Missing MatPlotLib Import\n"
+                               "You have imported the "
                                     "<code>matplotlib.pyplot</code> module, but you did "
                                     "not rename it to <code>plt</code> using "
                                     "<code>import matplotlib.pyplot as plt</code>.")
 
+    def test_prevent_incorrect_plt_missing_plt(self):
         student_code = dedent('''
             import matplotlib.pyplot as plt
             scatter([1,2,3], [4,5,6])
@@ -124,14 +129,17 @@ class TestPlots(ExecutionTestCase):
             plt.show()
         ''')
         with Execution(student_code) as e:
-            self.assertEqual(prevent_incorrect_plt(), True)
-        self.assertEqual(e.final.message, "You have attempted to use the MatPlotLib "
+            self.assertTrue(prevent_incorrect_plt())
+        self.assertFeedback(e, "Missing MatPlotLib Import\n"
+                               "You have attempted to use the MatPlotLib "
                                     "function named <code>scatter</code>. However, you "
                                     "imported MatPlotLib in a way that does not "
                                     "allow you to use the function directly. I "
                                     "recommend you use <code>plt.scatter</code> instead, "
                                     "after you use <code>import matplotlib.pyplot as "
                                     "plt</code>.")
+
+    def test_prevent_incorrect_plt_success(self):
         student_code = dedent('''
             import matplotlib.pyplot as plt
             plt.scatter([1,2,3], [4,5,6])
@@ -139,4 +147,4 @@ class TestPlots(ExecutionTestCase):
             plt.show()
         ''')
         with Execution(student_code) as e:
-            self.assertEqual(prevent_incorrect_plt(), False)
+            self.assertFalse(prevent_incorrect_plt())
