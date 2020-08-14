@@ -90,7 +90,8 @@ class ensure_show(Feedback):
     """ Verifies that the `plt.show` function was called. """
     title = "Missing Show Function"
     category = Feedback.CATEGORIES.INSTRUCTOR
-    message_template = ("You have not called the {_format.code('plt.show')} "
+    constant_fields = {'missing': 'plt.show'}
+    message_template = ("You have not called the {missing:python_expression} "
                         "function, which actually creates the graph.")
     justification = "The show function was not found as a function call."
 
