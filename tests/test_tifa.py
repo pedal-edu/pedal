@@ -764,6 +764,27 @@ class TestVariables(unittest.TestCase):
         self.assertNotIn('incompatible_types', result.issues)
         self.assertIn('invalid_indexing', result.issues)
 
+    def test_not_finding_unused_return_value(self):
+        program = dedent("""
+            #import classics
+            import matplotlib.pyplot as plt
+            book_downloads = []
+            #report_list = classics.get_books(test=True)
+            report_list = [{'bibliography': {'type': 'Text'},
+                            'metadata': {'downloads': 0}}]
+            for report in report_list:
+                if report["bibliography"]["type"] == "Text":
+                    book_downloads.append(report["metadata"]["downloads"])
+            plt.hist(book_downloads)
+            plt.ylabel("Number of Books")
+            plt.xlabel("downloads")
+            plt.title("Spreads of Book Downloads")
+            plt.show()
+        """)
+        tifa = pedal.tifa.Tifa()
+        result = tifa.process_code(program, filename="student.py")
+        self.assertNotIn('unused_returned_value', result.issues)
+        self.assertFalse(result.issues)
 
 
 if __name__ == '__main__':

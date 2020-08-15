@@ -480,6 +480,7 @@ class ListType(Type):
                         tifa.append_variable(callee, cloned_type, position)
                     self.empty = False
                     self.subtype = args[0]
+                return NoneType()
 
             return FunctionType(_append, 'append')
         return Type.load_attr(self, attr)
