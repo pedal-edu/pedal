@@ -312,7 +312,8 @@ class Tifa(TifaCore, ast.NodeVisitor):
             else:
                 call_type = 'method'
             name = self.identify_caller(node.value)
-            self._issue(unused_returned_value(self.locate(), name, call_type))
+            self._issue(unused_returned_value(self.locate(), name,
+                                              call_type, value))
 
     def visit_Assign(self, node):
         """

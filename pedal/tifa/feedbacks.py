@@ -416,9 +416,10 @@ class unused_returned_value(TifaFeedback):
     muted = True
     unscored = True
 
-    def __init__(self, location, name, call_type, **kwargs):
+    def __init__(self, location, name, call_type, result_type, **kwargs):
         report = kwargs.get("report", MAIN_REPORT)
         fields = {'location': location, 'name': name, 'call_type': call_type,
+                  'result_type': result_type,
                   'name_message': report.format.name(name)}
         super().__init__(fields=fields, location=location, **kwargs)
 
