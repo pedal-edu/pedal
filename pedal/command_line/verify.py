@@ -86,7 +86,10 @@ def generate_report_out(path, environment, report):
     if os.path.exists(path):
         result = parse_out_file(path)
     final_environment = _make_final(environment)
-    fields = report.result.to_json()
+    try:
+        fields = report.result.to_json()
+    except Exception as e:
+        raise report
     # TODO: Hack, just remove the data field for simplicity - fix this later
     fields.pop('data')
     fields.pop('hide_correctness')

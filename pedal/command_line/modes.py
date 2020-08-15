@@ -129,7 +129,6 @@ class AbstractPipeline:
                     os.path.join(submission_dir, sub)
                     for sub in os.listdir(submission_dir)
                 ]
-                print(submission_dir)
                 subs = get_python_files(submission_files)
                 for main_file, main_code in subs.items():
                     new_submission = Submission(
@@ -193,6 +192,8 @@ class VerifyPipeline(AbstractPipeline):
     def process_output(self):
         for bundle in self.submissions:
             bundle.run_ics_bundle()
+            if bundle.result.error:
+                raise bundle.result.error
             # Now get the expected output
             base = os.path.splitext(bundle.submission.main_file)[0]
             test_name = os.path.basename(base)
@@ -225,8 +226,11 @@ class VerifyPipeline(AbstractPipeline):
 
     def add_case(self, name, bundle_result, verifier):
         """ Add this ``name`` as a new test. """
-        print(bundle_result.output)
+        if bundle_result.output.strip():
+            print(bundle_result.output)
         error = bundle_result.error if bundle_result.error else None
+        if error:
+            print(error)
         actual = bundle_result.data['MAIN_REPORT'].result.to_json()
         error = bundle_result.error
         expected_fields = verifier.get_final()
