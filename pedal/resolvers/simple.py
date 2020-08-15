@@ -170,9 +170,10 @@ def resolve(report=MAIN_REPORT, priority_key=by_priority):
         final.success = success and final.success
         if feedback.kind == Feedback.KINDS.COMPLIMENT:
             final.positives.append(feedback)
-        elif feedback.kind == Feedback.KINDS.INSTRUCTIONAL:
+            continue
+        if feedback.kind == Feedback.KINDS.INSTRUCTIONAL:
             final.instructions.append(feedback)
-        elif message is not None and final.message is None:
+        if message is not None and final.message is None:
             final.message = message
             final.title = title
             final.category = feedback.category
