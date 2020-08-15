@@ -643,22 +643,39 @@ class TestVariables(unittest.TestCase):
                         }}
         normalize.get_pedal_type_from_json(complex_type)
 
-    def test_custom_module_import(self):
+    def test_custom_module_import_weather(self):
         tifa = pedal.tifa.Tifa()
         result = tifa.process_code('import weather\n' +
                           'rs = weather.get_weather()\n' +
                           'for r in rs:\n' +
-                          '  0+r["Data"]["Precipitation"]')
+                          '  0+r["Data"]["Precipitation"]',
+                                   filename='student.py')
         self.assertTrue(result.success)
-        
+        self.assertNotIn('module_not_found', result.issues)
+
+    def test_custom_module_import_police(self):
         tifa = pedal.tifa.Tifa()
         result = tifa.process_code('import police_shootings\n'
                           'rs = police_shootings.get_shootings()\n'
                           'for r in rs:\n'
                           '  x=0+r["Person.Age"]\n'
-                          'x')
+                          'x', filename='student.py')
         self.assertTrue(dir(result.top_level_variables['x'].type.is_equal('NumType')))
         self.assertTrue(result.success)
+        self.assertNotIn('module_not_found', result.issues)
+
+    def test_custom_module_import_broadway(self):
+        tifa = pedal.tifa.Tifa()
+        result = tifa.process_code(dedent("""
+            import broadway
+            report_list = broadway.get_shows()
+            total= 0
+            for broadway in report_list:
+                if broadway ["Show"]["Type"] == "Musical":
+                    total = total + 1
+            print(total)"""), filename='student.py')
+        self.assertTrue(result.success)
+        self.assertNotIn('module_not_found', result.issues)
 
     def test_get_types(self):
         tifa = pedal.tifa.Tifa()

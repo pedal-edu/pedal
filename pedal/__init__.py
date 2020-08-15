@@ -14,7 +14,3 @@ from pedal.cait import *
 from pedal.assertions.commands import *
 
 student: Sandbox
-
-# Am I being run as Pedal, or via Python?
-# Check if an environment was set via CLI
-# Load in a submission file if it was given

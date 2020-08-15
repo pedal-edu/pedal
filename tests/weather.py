@@ -24,7 +24,7 @@ def _tifa_definitions():
                         "empty": False,
                         "subtype": {"type": "NumType"}
                     },
-
+                },
                     'get_weather': {
                         "type": "FunctionType",
                         "name": 'get_weather',

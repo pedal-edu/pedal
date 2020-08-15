@@ -419,7 +419,7 @@ class TifaCore:
         """
         module_names = chain.split('.')
         potential_module = get_builtin_module(module_names[0])
-        if potential_module is not None:
+        if not isinstance(potential_module, UnknownType):
             base_module = potential_module
             for module in module_names[1:]:
                 if (isinstance(base_module, ModuleType) and
@@ -435,6 +435,7 @@ class TifaCore:
                 definitions = actual_module._tifa_definitions()
                 return get_pedal_type_from_json(definitions)
             except Exception as e:
+                print(e)
                 self._issue(module_not_found(self.locate(), chain, True, e, report=self.report))
                 return ModuleType()
 
