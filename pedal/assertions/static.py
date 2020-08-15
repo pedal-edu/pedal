@@ -460,3 +460,40 @@ def ensure_prints_exactly(count, **kwargs):
     """
     return (ensure_function_call('print', at_least=count, **kwargs) and
             prevent_function_call('print', at_most=count, **kwargs))
+
+
+class ensure_starting_code(AssertionFeedback):
+    """Detects if the given code is missing."""
+    title = "Don't Change Starting Code"
+    message_template = "You have changed or removed the starting code. "
+
+    def __init__(self, code, root=None, **kwargs):
+        report = kwargs.get('report', MAIN_REPORT)
+        root = root or parse_program(report=report)
+        fields = {'code': code, 'root': root}
+        super().__init__(fields=fields, **kwargs)
+
+    def condition(self):
+        """ Traverse the AST to find matches. """
+        code = self.fields['code']
+        ast = self.fields['root']
+        return not ast.find_match(code)
+
+
+class prevent_embedded_answer(AssertionFeedback):
+    """ Detects if the given code is present. """
+    title = "Don't Write Answer Directly"
+    message_template = ("You have embedded the answer directly in your code, "
+                        "instead of writing code to compute the answer.")
+
+    def __init__(self, code, root=None, **kwargs):
+        report = kwargs.get('report', MAIN_REPORT)
+        root = root or parse_program(report=report)
+        fields = {'code': code, 'root': root}
+        super().__init__(fields=fields, **kwargs)
+
+    def condition(self):
+        """ Traverse the AST to find matches. """
+        code = self.fields['code']
+        ast = self.fields['root']
+        return ast.find_match(code)
