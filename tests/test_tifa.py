@@ -664,6 +664,12 @@ class TestVariables(unittest.TestCase):
         self.assertTrue(result.success)
         self.assertNotIn('module_not_found', result.issues)
 
+    def test_custom_module_import_babbages(self):
+        tifa = pedal.tifa.Tifa()
+        result = tifa.process_code('import babbages\n'
+                          'print(babbages)', filename='student.py')
+        self.assertIn('module_not_found', result.issues)
+
     def test_custom_module_import_broadway(self):
         tifa = pedal.tifa.Tifa()
         result = tifa.process_code(dedent("""
