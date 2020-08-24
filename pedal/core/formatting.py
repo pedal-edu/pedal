@@ -28,10 +28,10 @@ class FeedbackFieldWrapper:
         self.formatter = formatter
 
     def __getattr__(self, key):
-        return getattr(self.value, key)
+        return FeedbackFieldWrapper(self.key, getattr(self.value, key), self.formatter)
 
     def __getitem__(self, index):
-        return self.value[index]
+        return FeedbackFieldWrapper(self.key, self.value[index], self.formatter)
 
     def __repr__(self):
         return repr(self.value)
