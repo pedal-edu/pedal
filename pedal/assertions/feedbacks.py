@@ -100,6 +100,7 @@ class AssertionBreak(Exception):
 
 class AssertionFeedback(Feedback):
     """ Most basic assertion """
+    title = "Failed Instructor Test"
     category = Feedback.CATEGORIES.SPECIFICATION
     valence = Feedback.NEGATIVE_VALENCE
     kind = Feedback.KINDS.CONSTRAINT
@@ -151,9 +152,13 @@ class RuntimeAssertionFeedback(AssertionFeedback):
         fields['context_message'] = context_message
         fields['assertion_message'] = assertion_message
         fields['explanation'] = explanation
+
         try:
             super().__init__(left, right, *args, **kwargs)
         except Exception as e:
+            #if not hasattr(self, "_met_condition"):
+            #    self._met_condition = False
+            #    raise e
             parent = self.report.get_current_group()
             # TODO: Does this handle nested groups correctly?
             if parent is not None:
