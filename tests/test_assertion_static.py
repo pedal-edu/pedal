@@ -57,14 +57,14 @@ class TestAssertions(ExecutionTestCase):
         with Execution('a = 5\na') as e:
             self.assertTrue(prevent_literal(5))
         self.assertFeedback(e, "May Not Use Literal Value\n"
-                               "You used the literal value `5` on line 1. "
+                               "You used the literal value <code>5</code> on line 1. "
                                "You may not use that value.")
 
     def test_prevent_literal_used_str(self):
         with Execution('print("Hello")') as e:
             self.assertTrue(prevent_literal("Hello"))
         self.assertFeedback(e, "May Not Use Literal Value\n"
-                               "You used the literal value `'Hello'` on line 1."
+                               "You used the literal value <code>'Hello'</code> on line 1."
                                " You may not use that value.")
 
     def test_prevent_literal_unused(self):
@@ -76,14 +76,14 @@ class TestAssertions(ExecutionTestCase):
         with Execution('a = -1+2\na') as e:
             self.assertTrue(prevent_literal(-1))
         self.assertFeedback(e, "May Not Use Literal Value\n"
-                               "You used the literal value `-1` on line 1. "
+                               "You used the literal value <code>-1</code> on line 1. "
                                "You may not use that value.")
 
     def test_prevent_literal_used_boolean(self):
         with Execution('a = True\na') as e:
             self.assertTrue(prevent_literal(True))
         self.assertFeedback(e, "May Not Use Literal Value\n"
-                               "You used the literal value `True` on line 1. "
+                               "You used the literal value <code>True</code> on line 1. "
                                "You may not use that value.")
 
     def test_ensure_literal_used_int(self):

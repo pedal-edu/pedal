@@ -786,6 +786,27 @@ class TestVariables(unittest.TestCase):
         self.assertNotIn('unused_returned_value', result.issues)
         self.assertFalse(result.issues)
 
+    def test_typedict_book(self):
+        program = dedent("""
+            from cisc108 import *
+            class Book(TypedDict):
+                title: str
+                pages: int
+                hardcover: bool
+            
+            def page_count(a_book: Book) -> int:
+                return a_book['pages']
+                
+            hp = {'title': 'Harry Potter',
+                  'pages': 300,
+                  'hardcover': false}
+            
+            assert_equal(page_count(hp), 300)
+        """)
+        tifa = pedal.tifa.Tifa()
+        result = tifa.process_code(program, filename="student.py")
+        self.assertFalse(result.issues)
+
 
 if __name__ == '__main__':
     unittest.main(buffer=False)
