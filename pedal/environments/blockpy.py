@@ -45,7 +45,7 @@ HIDE = final.hide_correctness
 from pedal import verify
 from pedal.core.environment import Environment
 from pedal.core.report import MAIN_REPORT
-from pedal.sandbox import run, get_sandbox, set_input
+from pedal.sandbox import run, get_sandbox, set_input, start_trace
 from pedal.tifa import tifa_analysis
 from pedal.resolvers.simple import resolve
 
@@ -58,7 +58,7 @@ class BlockPyEnvironment(Environment):
                  user=None, assignment=None, course=None, execution=None,
                  instructor_file='on_run.py', skip_tifa=False, skip_run=False,
                  inputs=None, set_success=True,
-                 report=MAIN_REPORT):
+                 report=MAIN_REPORT, trace=True):
         super().__init__(files=files, main_file=main_file, main_code=main_code,
                          user=user, assignment=assignment, course=course,
                          execution=execution, instructor_file=instructor_file,
@@ -71,6 +71,8 @@ class BlockPyEnvironment(Environment):
         if skip_run:
             student = get_sandbox(report=report)
         else:
+            if trace:
+                start_trace()
             student = run(report=report)
         self.fields = {
             'student': student,
