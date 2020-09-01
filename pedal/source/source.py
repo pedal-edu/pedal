@@ -133,6 +133,7 @@ def verify(code=None, filename=DEFAULT_STUDENT_FILENAME, report=MAIN_REPORT,
                      sys.exc_info(), report=report, muted=muted)
         report[TOOL_NAME]['success'] = False
         report[TOOL_NAME]['ast'] = ast.parse("")
+    report[TOOL_NAME]['success'] = True
     return report[TOOL_NAME]['success']
 
 
