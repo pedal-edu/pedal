@@ -238,3 +238,11 @@ BUILTIN_MODULES['matplotlib'] = ModuleType('matplotlib',
                                            submodules={
                                                'pyplot': _PYPLOT_MODULE
                                            })
+
+
+# TODO: Have to figure out how to setup this to be an extension.
+#       Problem: It would be imported AFTER Tifa is run...
+BUILTIN_MODULES['cisc108'] = ModuleType('cisc108', fields={
+    'assert_equal': FunctionType(name='assert_equal', returns=NoneType()),
+    'assert_type': FunctionType(name='assert_type', returns=NoneType()),
+})
