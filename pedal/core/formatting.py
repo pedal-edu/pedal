@@ -151,7 +151,7 @@ class Formatter:
             row_text = "\n".join(row_text)
             body.append(f"  <tr{row_class}>\n{row_text}\n  </tr>")
         body = "\n".join(body)
-        return (f"<table{table_class}>"
+        return (f"\n<table{table_class}>"
                 f"   <tr{header_class}>\n{header}\n  </tr>"
                 f"   {body}"
                 f"</table>")
