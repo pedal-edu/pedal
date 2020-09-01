@@ -298,7 +298,10 @@ def check_coverage(report=MAIN_REPORT):
     visitor.visit(student_ast)
     lines_in_code = set(visitor.lines)
     unexecuted_lines = lines_in_code - lines_executed
-    coverage_ratio = len(lines_executed)/len(lines_in_code)
+    if lines_in_code:
+        coverage_ratio = len(lines_executed)/len(lines_in_code)
+    else:
+        coverage_ratio = 0
     return unexecuted_lines, coverage_ratio
 
 

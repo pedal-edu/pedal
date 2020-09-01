@@ -1,6 +1,8 @@
 import sys
 import os
 
+from unittest.mock import patch
+
 try:
     import coverage
 except ImportError:
@@ -56,20 +58,20 @@ class SandboxCoverageTracer(SandboxBasicTracer):
         self.pc_covered = None
         self.missing = set()
         self.lines = set()
-        # self.s = sys.stdout
 
     def __enter__(self):
         # Force coverage to accept the code
         self.original = coverage.python.get_python_source
 
         def _get_source_correctly(reading_filename):
-            #print(reading_filename, file=self.s)
             if reading_filename == self.filename:
                 return self.code
             else:
                 return self.original(reading_filename)
 
-        coverage.python.get_python_source = _get_source_correctly
+        self.p = patch('coverage.python.get_python_source', _get_source_correctly)
+        self.p.start()
+        #coverage.python.get_python_source = _get_source_correctly
         self.coverage = coverage.Coverage()
         self.coverage.start()
 
@@ -77,8 +79,7 @@ class SandboxCoverageTracer(SandboxBasicTracer):
         self.coverage.stop()
         self.coverage.save()
         # Restore the get_python_source reader
-        coverage.python.get_python_source = self.original
-        self.original = None
+        #coverage.python.get_python_source = self.original
         # Actually analyze the data, attach some data
         analysis = self.coverage._analyze(self.filename)
         # print(vars(self.coverage._analyze(self.filename)), file=self.s)
@@ -87,6 +88,10 @@ class SandboxCoverageTracer(SandboxBasicTracer):
         self.pc_covered = analysis.numbers.pc_covered
         self.missing = analysis.missing
         self.lines = analysis.statements - analysis.missing
+
+        self.p.stop()
+        self.original = None
+
     
     @property
     def percent_covered(self):
