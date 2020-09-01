@@ -5,6 +5,8 @@ import sys
 from textwrap import dedent
 from pprint import pprint
 
+from pedal import contextualize_report
+
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import pedal.tifa
 import pedal.types.definitions as defs
@@ -439,6 +441,11 @@ unit_tests = {
         ['def x(): return 7\nprint(x())', ['unused_returned_value'], []],
     'used_result_function':
         ['print(abs(-5))', ['unused_returned_value'], []],
+
+    # Reused variable in outer scope
+    'function_reused_outer_variable_write':
+        ['def y(b): return b+"!"\ndef x(a): return y(a)+"?"\na="Hi"\nx(a)',
+         ['write_out_of_scope'], []]
 }
 
 
@@ -461,6 +468,7 @@ def make_tester(code, nones, somes):
 
     """
     def test_code(self):
+        contextualize_report(code)
         tifa = pedal.tifa.Tifa()
         try:
             result = tifa.process_code(code)
