@@ -80,7 +80,7 @@ class prevent_function_call(PreventAssertionFeedback):
         name = self.fields['name']
         calls = find_function_calls(name, root=self.fields['root'])
         if calls:
-            self.fields['location'] = Location.from_ast(calls[-1])
+            self.update_location(Location.from_ast(calls[-1]))
         return self._check_usage('call_count', calls)
 
 
@@ -130,7 +130,7 @@ class prevent_operation(PreventAssertionFeedback):
         self.fields['name_message'] = self.report.format.python_expression(name)
         uses = list(find_operation(name, root=self.fields['root']))
         if uses:
-            self.fields['location'] = Location.from_ast(uses[-1])
+            self.update_location(Location.from_ast(uses[-1]))
         return self._check_usage('use_count', uses)
 
 
@@ -154,7 +154,7 @@ class ensure_operation(EnsureAssertionFeedback):
         self.fields['name_message'] = self.report.format.python_expression(name)
         uses = list(find_operation(name, root=self.fields['root']))
         if uses:
-            self.fields['location'] = Location.from_ast(uses[-1])
+            self.update_location(Location.from_ast(uses[-1]))
         return self._check_usage('use_count', uses)
 
 
@@ -162,7 +162,7 @@ class prevent_literal(PreventAssertionFeedback):
     """ Make sure that the given literal value does not appear in the student's
     code. """
     title = "May Not Use Literal Value"
-    message_template = ("You used the literal value `{literal!r}` on line "
+    message_template = ("You used the literal value {literal_message:python_expression} on line "
                         "{location.line}. You may not use that value"
                         "{capacity}.")
 
@@ -170,14 +170,14 @@ class prevent_literal(PreventAssertionFeedback):
         report = kwargs.get('report', MAIN_REPORT)
         root = root or parse_program(report=report)
         fields = {'literal': literal, 'at_most': at_most, 'capacity': '',
-                  'root': root, 'literal_message': report.format.python_expression(literal)}
+                  'root': root, 'literal_message': repr(literal)}
         super(AssertionFeedback, self).__init__(fields=fields, **kwargs)
 
     def condition(self):
         literal = self.fields['literal']
         uses = self.fields['root'].find_matches(repr(literal))
         if uses:
-            self.fields['location'] = uses[-1].match_location(False)
+            self.update_location(uses[-1].match_location(False))
         return self._check_usage('use_count', uses)
 
 
@@ -198,9 +198,82 @@ class ensure_literal(EnsureAssertionFeedback):
         literal = self.fields['literal']
         uses = self.fields['root'].find_matches(repr(literal))
         if uses:
-            self.fields['location'] = uses[-1].match_location(False)
+            self.update_location(uses[-1].match_location(False))
         return self._check_usage('use_count', uses)
 
+
+class prevent_literal_type(PreventAssertionFeedback):
+    """ Make sure that the given literal value does not appear in the student's
+    code. """
+    title = "May Not Use Type of Literal Value"
+    message_template = ("You used the literal value type "
+                        "{literal_type_message:python_expression} on line {location.line}."
+                        " You may not use that type of value{capacity}.")
+
+    def __init__(self, literal_type, at_most=0, root=None, **kwargs):
+        report = kwargs.get('report', MAIN_REPORT)
+        root = root or parse_program(report=report)
+        fields = {'literal_type': literal_type, 'at_most': at_most,
+                  'capacity': '', 'root': root,
+                  'literal_type_message': literal_type.__name__}
+        super(AssertionFeedback, self).__init__(fields=fields, **kwargs)
+
+    def condition(self):
+        literal_type = self.fields['literal_type']
+        if literal_type == bool:
+            uses = (self.fields['root'].find_matches("False") +
+                    self.fields['root'].find_matches("True"))
+            uses = [match.match_root for match in uses]
+        elif literal_type == str:
+            uses = self.fields['root'].find_all("Str")
+        elif literal_type in (int, float):
+            uses = [node for node in self.fields['root'].find_all("Num")
+                    if isinstance(node.value, literal_type)]
+        elif literal_type == list:
+            uses = self.fields['root'].find_all("List")
+        elif literal_type == dict:
+            uses = self.fields['root'].find_all("Dict")
+        else:
+            raise ValueError(f"Unknown literal type: {literal_type}")
+        if uses:
+            self.update_location(uses[-1].lineno)
+        return self._check_usage('use_count', uses)
+
+
+class ensure_literal_type(EnsureAssertionFeedback):
+    """ Make sure that the given type of literal value does appear in the
+    student's code. """
+    title = "Must Use Type of Literal Value"
+    message_template = "You must use a literal value of type {literal_type_message:python_expression}{capacity}."
+
+    def __init__(self, literal_type, at_least=1, root=None, **kwargs):
+        report = kwargs.get('report', MAIN_REPORT)
+        root = root or parse_program(report=report)
+        fields = {'literal_type': literal_type, 'at_least': at_least,
+                  'capacity': '', 'root': root,
+                  'literal_type_message': literal_type.__name__}
+        super(AssertionFeedback, self).__init__(fields=fields, **kwargs)
+
+    def condition(self):
+        literal_type = self.fields['literal_type']
+        if literal_type == bool:
+            uses = (self.fields['root'].find_matches("False")+
+                    self.fields['root'].find_matches("True"))
+            uses = [match.match_root for match in uses]
+        elif literal_type == str:
+            uses = self.fields['root'].find_all("Str")
+        elif literal_type in (int, float):
+            uses = [node for node in self.fields['root'].find_all("Num")
+                    if isinstance(node.value, literal_type)]
+        elif literal_type == list:
+            uses = self.fields['root'].find_all("List")
+        elif literal_type == dict:
+            uses = self.fields['root'].find_all("Dict")
+        else:
+            raise ValueError(f"Unknown literal type: {literal_type}")
+        if uses:
+            self.update_location(uses[-1].lineno)
+        return self._check_usage('use_count', uses)
 
 class prevent_ast(PreventAssertionFeedback):
     """
@@ -226,7 +299,7 @@ class prevent_ast(PreventAssertionFeedback):
         self.fields['name_message'] = AST_NODE_NAMES.get(name, name)
         uses = list(self.fields['root'].find_all(name))
         if uses:
-            self.fields['location'] = Location.from_ast(uses[-1])
+            self.update_location(Location.from_ast(uses[-1]))
         return self._check_usage('use_count', uses)
 
 
@@ -252,7 +325,7 @@ class ensure_ast(EnsureAssertionFeedback):
         self.fields['name_message'] = AST_NODE_NAMES.get(name, name)
         uses = list(self.fields['root'].find_all(name))
         if uses:
-            self.fields['location'] = Location.from_ast(uses[-1])
+            self.update_location(Location.from_ast(uses[-1]))
         return self._check_usage('use_count', uses)
 
 
@@ -369,7 +442,6 @@ TODO: prevent_source_text(code: str, missing=False, minimum=2, maximum=3)
 TODO: prevent_traced_call(function_name: str)# Whether it was detected dynamically
 TODO: prevent_name(variable_name: str)
 TODO: prevent_assignment(variable_name: str, type: str, value: Any)
-TODO: prevent_iteration(style: {"For", "While", "Functional", "Recursion"})
 TODO: ensure_function
 
 ensure_prints(count)

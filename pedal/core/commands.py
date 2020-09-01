@@ -41,13 +41,14 @@ class compliment(FeedbackResponse):
     Create a positive feedback for the user, potentially on a specific line of
     code.
     """
-    title = "Compliment"
     category = FeedbackCategory.INSTRUCTOR
     kind = FeedbackKind.COMPLIMENT
     valence = Feedback.POSITIVE_VALENCE
 
-    def __init__(self, message, **kwargs):
-        super().__init__(message=message, **kwargs)
+    def __init__(self, message, title=None, **kwargs):
+        if title is None:
+            title = message
+        super().__init__(message=message, title=title, **kwargs)
 
 
 class give_partial(FeedbackResponse):

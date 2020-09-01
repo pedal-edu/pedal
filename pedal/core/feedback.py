@@ -224,6 +224,7 @@ class Feedback:
         else:
             self._handle_condition()
 
+
     def _handle_condition(self):
         """ Actually handle the condition check, updating message and report. """
         # Self-attach to a given report?
@@ -317,6 +318,14 @@ class Feedback:
         if self.parent is not None:
             metadata += ", parent=" + str(self.parent.label)
         return "Feedback({}{})".format(self.label, metadata)
+
+    def update_location(self, location):
+        """ Updates both the fields and location attribute.
+        TODO: Handle less information intelligently. """
+        if isinstance(location, int):
+            location = Location(location)
+        self.location = location
+        self.fields['location'] = location
 
 
 class FeedbackResponse(Feedback):
