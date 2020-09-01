@@ -619,7 +619,7 @@ class ensure_coverage(AssertionFeedback):
     """
     title = "You Must Test Your Code"
     message_template = ("Your code coverage is not adequate. You must cover at "
-                        "least {at_least_message}% your code to receive "
+                        "least {at_least_message}% of your code to receive "
                         "feedback. So far, you have only covered "
                         "{coverage_message}%.")
 
@@ -632,7 +632,7 @@ class ensure_coverage(AssertionFeedback):
         fields['unexecuted_lines'] = unexecuted_lines
         fields['coverage'] = coverage
         fields['coverage_message'] = str(int(round(100*coverage)))
-        super().__init__(coverage, at_least, kwargs)
+        super().__init__(coverage, at_least, **kwargs)
 
     def condition(self, coverage, at_least):
         return coverage <= at_least
