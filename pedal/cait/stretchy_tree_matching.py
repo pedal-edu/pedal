@@ -187,7 +187,7 @@ class StretchyTreeMatcher:
                 return self.deep_find_match_generic(ins_node, std_node,
                                                     check_meta=check_meta, ignores=["ctx"], use_previous=use_previous)
         # could else return False, but shallow_match_generic should do this as well
-        elif match[_EXP]:  # and meta_matched:  # if expression
+        elif match[_EXP] and meta_matched:  # and meta_matched:  # if expression
             # terminate recursion, the whole subtree should match since expression nodes match to anything
             mapping.merge_map_with(use_previous)
             mapping.add_exp_to_sym_table(ins_node, std_node)
@@ -310,7 +310,7 @@ class StretchyTreeMatcher:
             wild_card = re.compile('^___$')  # /regex
             matched = False
             meta_matched = self.metas_match(ins_node, std_node, check_meta)
-            if exp_match.match(name_id):  # and meta_matched:  # if expression
+            if exp_match.match(name_id) and meta_matched:  # and meta_matched:  # if expression
                 # terminate recursion, the whole subtree should match since expression nodes match to anything
                 mapping.add_exp_to_sym_table(value, std_node)
                 matched = True
@@ -577,13 +577,14 @@ class StretchyTreeMatcher:
     def shallow_match_Pass(self, ins_node, std_node, check_meta=True):
         """
         An empty body should match to anything
+        TODO: This should match to an entire body rather than just a single statement in a body
         Args:
             ins_node: Instructor ast to find in the student ast
             std_node: Student AST to search for the instructor ast in
             check_meta: flag to check whether the fields of the instructor node and the student node should match
 
         Returns:
-            list of AstMap: a mapping between the isntructor and student asts, or False if such a mapping doesn't exist
+            list of AstMap: a mapping between the instructor and student asts, or False if such a mapping doesn't exist
         """
         # if check_meta and ins_node.field != std_node.field:
         if not self.metas_match(ins_node, std_node, check_meta):
