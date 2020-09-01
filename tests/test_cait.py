@@ -873,6 +873,20 @@ class CaitTests(unittest.TestCase):
         match = find_match("___ = _item_ + 1")
         self.assertEqual(match.names(), {'_item_': 'i'})
 
+    def test_find_matches_expr2(self):
+        contextualize_report('for prop_report in crime_reports:\n'
+                             '    total_prop= total_prop + prop_report["Property Crime"]\n'
+                             '    count_prop= count_prop +1\n'
+                             'average_property = total_prop/count_prop\n'
+                             'for violent_report in crime_reports:\n'
+                             '    total_viol= total_viol + violent_report["Violent Crime"]\n'
+                             '    count_viol= count_viol +1\n'
+                             'average_violent= total_viol/count_viol\n')
+        matches = find_matches("for ___ in __exp__:\n"
+                               "    pass")
+        self.assertEqual(4, len(matches))
+        # TODO: This is 4 because right now pass matches to statements instead of an entire body
+
 
 if __name__ == '__main__':
     unittest.main(buffer=False)
