@@ -321,7 +321,12 @@ class TifaCore:
         """
         return self.store_variable(name, append_type, position)
 
-    def store_variable(self, name, store_type, position=None):
+    def create_variable(self, name, create_type, position=None):
+        """ Stores a new variable, but unconditionally - even if it exists
+        in another scope, it will be considered a new variable."""
+        return self.store_variable(name, create_type, position, force_create=True)
+
+    def store_variable(self, name, store_type, position=None, force_create=False):
         """
         Update the variable with the given name to now have the new type.
 
@@ -338,7 +343,7 @@ class TifaCore:
         full_name = self._scope_chain_str(name)
         current_path = self.path_chain[0]
         variable = self.find_variable_scope(name)
-        if not variable.exists:
+        if not variable.exists or force_create:
             # Create a new instance of the variable on the current path
             new_state = State(name, [], store_type, 'store', position,
                               read='no', set='yes', over='no')

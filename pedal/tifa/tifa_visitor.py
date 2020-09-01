@@ -651,11 +651,11 @@ class Tifa(TifaCore, ast.NodeVisitor):
                             self._issue(parameter_type_mismatch(self.locate(), name, annotation, parameter))
                     if parameter is not None:
                         parameter = parameter.clone_mutably()
-                        self.store_variable(name, parameter, position)
+                        self.create_variable(name, parameter, position)
                 # Too many arguments
                 if len(args) < len(parameters):
                     for undefined_parameter in parameters[len(args):]:
-                        self.store_variable(name, UnknownType(), position)
+                        self.create_variable(name, UnknownType(), position)
                 # Not enough arguments
                 if len(args) > len(parameters):
                     for arg in args[len(parameters):]:
@@ -664,7 +664,7 @@ class Tifa(TifaCore, ast.NodeVisitor):
                             annotation = get_pedal_type_from_annotation(arg.annotation, self)
                         else:
                             annotation = UnknownType()
-                        self.store_variable(arg.arg, annotation, position)
+                        self.create_variable(arg.arg, annotation, position)
                 self.visit_statements(node.body)
                 return_state = self.find_variable_scope("*return")
                 return_value = NoneType()
