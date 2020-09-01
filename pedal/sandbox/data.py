@@ -45,6 +45,15 @@ class SandboxContextKind:
     CALL = 'call'
     GETITEM = 'getitem'
 
+    @staticmethod
+    def describe_action(kind):
+        """ Produces the relevant Action message for the given kind
+        of context """
+        if kind == SandboxContextKind.EVAL:
+            return 'I evaluated the expression'
+        else:
+            return 'I ran the code'
+
 
 class SandboxContext:
     """
@@ -113,7 +122,9 @@ def format_contexts(contexts, format):
     for context in contexts:
         if context.filename in (None, context.submission.instructor_file):
             code_message = format.python_code(context.code)
-            execution_text.append(f"I ran the code:\n{code_message}\n")
+            action_message = SandboxContextKind.describe_action(context.kind)
+            message = action_message+":\n"+code_message+"\n"
+            execution_text.append(message)
         else:
             filename_message = format.filename(context.filename)
             execution_text.append(f"I ran the file {filename_message}.\n")
