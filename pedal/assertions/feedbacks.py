@@ -208,6 +208,7 @@ class RuntimeAssertionFeedback(AssertionFeedback):
             assertion = self.format_exception(left, right)
         # Handle the number of contexts
         elif not contexts:
+            # TODO: Check if this is working correctly; might be wrapping in output weirdly
             assertion = self.report.format.output(f"{left.value} "
                                                   f"{self._inverse_operator} "
                                                   f"{right.value}")

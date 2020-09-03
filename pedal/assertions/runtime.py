@@ -14,6 +14,9 @@ from pedal.assertions.feedbacks import (RuntimeAssertionFeedback,
 from pedal.core.report import MAIN_REPORT
 from pedal.sandbox import Sandbox
 from pedal.sandbox.commands import check_coverage
+from pedal.sandbox.result import share_sandbox_context
+from pedal.types.normalize import normalize_type, get_pedal_type_from_value
+from pedal.types.operations import are_types_equal
 from pedal.utilities.comparisons import equality_test
 
 
@@ -414,7 +417,7 @@ class assert_is_instance(RuntimeAssertionFeedback):
 
     def condition(self, obj, cls):
         """ Tests if the left and right are equal """
-        return not isinstance(obj, cls)
+        return not isinstance(obj.value, cls.value)
 
 
 class assert_not_is_instance(RuntimeAssertionFeedback):
@@ -430,7 +433,46 @@ class assert_not_is_instance(RuntimeAssertionFeedback):
 
     def condition(self, obj, cls):
         """ Tests if the left and right are equal """
-        return isinstance(obj, cls)
+        return isinstance(obj.value, cls.value)
+
+
+class _compare_type(RuntimeAssertionFeedback):
+
+    def __init__(self, value, expected_type, **kwargs):
+        fields = kwargs.setdefault('fields', {})
+        value_pedal_type = get_pedal_type_from_value(value)
+        expected_pedal_type = normalize_type(expected_type)
+        singular_name = share_sandbox_context(value_pedal_type.singular_name, value)
+        fields['value_raw'] = value
+        fields['value_type'] = value_pedal_type
+        fields['value_type_name'] = singular_name
+        fields['expected_type_raw'] = expected_type
+        fields['expected_type'] = expected_pedal_type
+        fields['expected_type_name'] = expected_pedal_type.singular_name
+        super().__init__(SandboxedValue(singular_name),
+                         SandboxedValue(expected_pedal_type.singular_name), **kwargs)
+
+    def condition(self, value, expected_type):
+        """ Tests if the left and right are equal """
+        value_type = self.fields['value_type']
+        expected_type = self.fields['expected_type']
+        return not are_types_equal(value_type, expected_type)
+
+
+class assert_type(_compare_type):
+    """ Same as assert_is_instance, but has a slightly different wording. """
+    justification = "Value is not of type"
+    _expected_verb = ("to not be a value of type", "to not be the type of")
+    _inverse_operator = "is a value of type"
+
+
+class assert_not_type(_compare_type):
+    justification = "Value is of type"
+    _expected_verb = ("to be a value of type", "to be the type of")
+    _inverse_operator = "is not a value of type"
+
+    def condition(self, value, expected_type):
+        return not super().condition(value, expected_type)
 
 
 class assert_regex(RuntimeAssertionFeedback):
@@ -446,7 +488,7 @@ class assert_regex(RuntimeAssertionFeedback):
 
     def condition(self, regex, text):
         """ Tests if the regex matches the text """
-        return re.search(regex, text) is None
+        return re.search(regex.value, text.value) is None
 
 
 class assert_not_regex(RuntimeAssertionFeedback):
@@ -458,7 +500,7 @@ class assert_not_regex(RuntimeAssertionFeedback):
     _inverse_operator = "matches the text"
 
     def __init__(self, regex, text, **kwargs):
-        super().__init__(SandboxedValue(regex), SandboxedValue(text), **kwargs)
+        super().__init__(SandboxedValue(regex.value), SandboxedValue(text.value), **kwargs)
 
     def condition(self, regex, text):
         """ Tests if the regex does not match the text """
@@ -674,4 +716,5 @@ assertNotOutputContains = assert_not_output_contains
 assertHasAttr = assert_has_attr
 assertHasFunction = assert_has_function
 assertHasVariable = assert_has_variable
-
+assertType = assert_type
+assertNotType = assert_not_type

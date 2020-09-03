@@ -377,5 +377,22 @@ But I expected the result to be equal to:
 <pre class='pedal-python-value'>7</pre>""")
 
 
+    def test_assert_type_passes_int(self):
+        with Execution('x=3\nprint(x)') as e:
+            assert_type(evaluate('x'), int)
+        self.assertFeedback(e, SUCCESS_MESSAGE)
+
+    def test_assert_type_fails_int(self):
+        with Execution('x="3"\nprint(x)') as e:
+            assert_type(evaluate('x'), int)
+        self.assertFeedback(e, """Failed Instructor Test
+Student code failed instructor test.
+I evaluated the expression:
+<pre class='pedal-python-code'><code>x</code></pre>
+The value of the result was:
+<pre class='pedal-python-value'>'a string'</pre>
+But I expected the result to not be a value of type:
+<pre class='pedal-python-value'>'a number'</pre>""")
+
 if __name__ == '__main__':
     unittest.main(buffer=False)
