@@ -403,3 +403,13 @@ def len(s):
     if is_sandbox_result(s):
         return s._clone_this_result(_original_len(s.value))
     return len(s)
+
+
+def share_sandbox_context(new_value, original_value):
+    """ Produces a new version of the `new_value`, but using the sandbox,
+    context ID, and metadata of the `original_value`."""
+    if is_sandbox_result(original_value):
+        return SandboxResult(new_value,
+                             original_value._actual_context_id,
+                             original_value._actual_sandbox)
+    return new_value
