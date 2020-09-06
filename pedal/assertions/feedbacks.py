@@ -362,6 +362,7 @@ class assert_group(AssertionFeedback, FeedbackGroup):
 
     def __enter__(self):
         self.report.start_group(self)
+        return self
 
     def __exit__(self, exc_type, exc_value, traceback):
         # Go through all my collected assertions
@@ -373,6 +374,7 @@ class assert_group(AssertionFeedback, FeedbackGroup):
         self.format_message()
         self.format_table()
         self._handle_condition()
+        return False
 
     def _get_child_feedback(self, feedback, active):
         if isinstance(feedback, RuntimeAssertionFeedback):
@@ -394,6 +396,8 @@ class assert_group(AssertionFeedback, FeedbackGroup):
         self.fields['error_count'] = error_count = len(self.errors)
         self.fields['success_count'] = success_count = len(self.successes)
         self.fields['total_count'] = total_count = len(self.all_feedback)
+        self.fields['name'] = self.name
+        self.fields['try_all'] = self.try_all
 
         stats = []
         stats.append(f"You passed {success_count}/{total_count} tests.\n")
