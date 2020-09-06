@@ -311,7 +311,7 @@ class DebugPipeline(AbstractPipeline):
                     report = bundle.result.data['MAIN_REPORT']
                     print("Feedback:")
                     for feedback in report.feedback:
-                        print("\t", feedback)
+                        print("\t", feedback, repr(feedback.fields))
                     print(report.result)
 
 
