@@ -421,7 +421,7 @@ class ensure_documented_functions(AssertionFeedback):
             if a_def.name == "__init__":
                 continue
             if (a_def.body and (a_def.body[0].ast_name != "Expr" or
-                                a_def.body[0].value.ast_name != "Str")):
+                                a_def.body[0].value.ast_name not in ("Str", "Constant"))):
                 names.append(a_def.name)
         self.fields['names'] = names
         self.fields['names_message'] = ", ".join(self.report.format.name(name)
