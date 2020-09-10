@@ -167,12 +167,12 @@ def resolve(report=MAIN_REPORT, priority_key=by_priority):
             final.score += partial if partial is not None else 0
         if feedback.muted:
             continue
-        final.success = success and final.success
         if feedback.kind == Feedback.KINDS.COMPLIMENT:
             final.positives.append(feedback)
             continue
         if feedback.kind == Feedback.KINDS.INSTRUCTIONAL:
             final.instructions.append(feedback)
+        final.success = success and final.success
         if message is not None and final.message is None:
             final.message = message
             final.title = title
