@@ -94,6 +94,15 @@ class FakeFrame:
     def line(self):
         return self._line
 
+    def __eq__(self, other):
+        try:
+            return self.filename == other.filename and self.lineno == other.lineno
+        except:
+            return False
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
 
 class ExpandedTraceback:
     """
@@ -142,7 +151,9 @@ class ExpandedTraceback:
             fake_frame = FakeFrame("<module>", self.exception.filename,
                                    self.exception.lineno, None)
             self._fix_frame_line(fake_frame)
-            frames.append(fake_frame)
+            # Skulpt compatibility hack, to prevent duplicate tracebacks
+            if not frames or fake_frame != frames[-1]:
+                frames.append(fake_frame)
         return frames
 
     def _fix_frame_line(self, frame):
