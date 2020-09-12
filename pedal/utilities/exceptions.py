@@ -82,6 +82,19 @@ def add_context_to_error(e, message):
     return e
 
 
+class FakeFrame:
+    """ Simplistic hack to make fake StackFrames for SyntaxErrors """
+    def __init__(self, name, filename, lineno, line):
+        self.name = name
+        self.filename = filename
+        self.lineno = lineno
+        self._line = line
+
+    @property
+    def line(self):
+        return self._line
+
+
 class ExpandedTraceback:
     """
     Class for reformatting tracebacks to have more pertinent information.
@@ -114,8 +127,6 @@ class ExpandedTraceback:
         """
         if not self.exception:
             return []
-        #if isinstance(self.exception, TimeoutError):
-        #    return str(self.exception)
         cl, exc, tb = self.exc_info
         while tb and self._is_relevant_tb_level(tb):
             tb = tb.tb_next
@@ -123,17 +134,28 @@ class ExpandedTraceback:
         tb_e = traceback.TracebackException(cl, self.exception, tb, limit=length,
                                             capture_locals=False)
         for frame in tb_e.stack:
-            if frame.filename in self.line_offsets:
-                frame.lineno += self.line_offsets[frame.filename]
-                if frame.lineno - 1 < len(self.original_code_lines):
-                    frame._line = self.original_code_lines[frame.lineno - 1]
-                else:
-                    frame._line = "# *line missing*"
+            self._fix_frame_line(frame)
+        frames = list(tb_e.stack)
+        # A SyntaxError has to be handled differently to actually get its output:
+        # https://docs.python.org/3/library/traceback.html#traceback.print_exception
+        if isinstance(self.exception, SyntaxError):
+            fake_frame = FakeFrame("<module>", self.exception.filename,
+                                   self.exception.lineno, None)
+            self._fix_frame_line(fake_frame)
+            frames.append(fake_frame)
+        return frames
+
+    def _fix_frame_line(self, frame):
+        if frame.filename in self.line_offsets:
+            frame.lineno += self.line_offsets[frame.filename]
+            if frame.lineno - 1 < len(self.original_code_lines):
+                frame._line = self.original_code_lines[frame.lineno - 1]
             else:
-                #print(frame.filename, self.student_files, frame.lineno)
-                if frame.filename in self.student_files:
-                    frame._line = self.student_files[frame.filename][frame.lineno-1]
-        return [frame for frame in tb_e.stack]
+                frame._line = "# *line missing*"
+        else:
+            # print(frame.filename, self.student_files, frame.lineno)
+            if frame.filename in self.student_files:
+                frame._line = self.student_files[frame.filename][frame.lineno - 1]
 
     def _count_relevant_tb_levels(self, tb):
         length = 0
@@ -154,6 +176,7 @@ class ExpandedTraceback:
             return False
         filename, a_, b_, _ = traceback.extract_tb(tb, limit=1)[0]
         # Is the error in the student file?
+        print(filename, self.show_filenames, self.hide_filenames)
         if filename in self.show_filenames:
             return False
         # Is the error in the instructor file?

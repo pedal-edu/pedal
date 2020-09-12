@@ -38,7 +38,14 @@ class TestCode(unittest.TestCase):
             pass
         self.assertFalse(e.final.success)
         self.assertEqual(e.final.label, 'syntax_error')
-        self.assertIn("Bad syntax on line 2", e.final.message)
+        self.assertEqual("""Bad syntax on line 2
+
+The traceback was:
+<div class='pedal-traceback'>Line 2 of file <code class='pedal-filename'>answer.py</code>
+    <pre class='pedal-python-code'><code>b b b</code></pre>
+</div>
+
+Suggestion: Check line 2, the line before it, and the line after it.""", e.final.message)
 
     def test_sections_syntax_errors(self):
         contextualize_report(dedent('''

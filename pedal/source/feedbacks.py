@@ -69,11 +69,18 @@ class syntax_error(SourceFeedback):
     def __init__(self, line, filename, code, col_offset,
                  exception, exc_info, **kwargs):
         report = kwargs.get('report', MAIN_REPORT)
+        files = report.submission.get_files_lines()
+        if filename not in files:
+            files[filename] = code.split("\n")
+        if report.submission is not None:
+            lines = report.submission.get_lines()
+            line_offsets = report.submission.line_offsets
+        else:
+            lines = code.split("\n")
+            line_offsets = {}
         traceback = ExpandedTraceback(exception, exc_info, False,
                                       [report.submission.instructor_file],
-                                      report.submission.line_offsets,
-                                      [filename], code,
-                                      report.submission.files)
+                                      line_offsets, [filename], lines, files)
         traceback_stack = traceback.build_traceback()
         traceback_message = traceback.format_traceback(traceback_stack,
                                                        report.format)
