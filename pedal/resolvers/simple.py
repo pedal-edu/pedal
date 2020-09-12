@@ -94,6 +94,7 @@ def by_priority(feedback):
         value = len(DEFAULT_CATEGORY_PRIORITY)
     if priority in DEFAULT_CATEGORY_PRIORITY:
         value = DEFAULT_CATEGORY_PRIORITY.index(priority)
+        priority = 'medium'
     offset = priority_offset(priority)
     return value + offset
 
