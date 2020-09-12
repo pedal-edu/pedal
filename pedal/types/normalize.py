@@ -203,9 +203,9 @@ def get_pedal_type_from_value(value, type_space=None) -> Type:
         return FrozenSetType((get_pedal_type_from_value(t, type_space) for t in value))
     if isinstance(value, list):
         if value:
-            return ListType(empty=True)
-        else:
             return ListType(empty=False, subtype=get_pedal_type_from_value(value[0]))
+        else:
+            return ListType(empty=True)
     return UnknownType()
 
 
