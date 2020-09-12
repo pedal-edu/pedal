@@ -187,7 +187,6 @@ class ExpandedTraceback:
             return False
         filename, a_, b_, _ = traceback.extract_tb(tb, limit=1)[0]
         # Is the error in the student file?
-        print(filename, self.show_filenames, self.hide_filenames)
         if filename in self.show_filenames:
             return False
         # Is the error in the instructor file?
