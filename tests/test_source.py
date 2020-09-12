@@ -42,7 +42,7 @@ class TestCode(unittest.TestCase):
 
 The traceback was:
 <div class='pedal-traceback'>Line 2 of file <code class='pedal-filename'>answer.py</code>
-    <pre class='pedal-python-code'><code>b b b</code></pre>
+    <pre class='pedal-python-code python'><code>b b b</code></pre>
 </div>
 
 Suggestion: Check line 2, the line before it, and the line after it.""", e.final.message)

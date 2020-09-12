@@ -84,7 +84,7 @@ class Formatter:
     ############################################################################
 
     def python_code(self, code):
-        return self.html_pre(self.html_code(code), "pedal-python-code")
+        return self.html_pre(self.html_code(code), "pedal-python-code python")
 
     def python_expression(self, code):
         return self.html_code(code)

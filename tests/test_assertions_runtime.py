@@ -36,7 +36,7 @@ The following exception occurred:
         self.assertFeedback(e, """Failed Instructor Test
 Student code failed instructor test.
 I ran the code:
-<pre class='pedal-python-code'><code>add(1, 2)</code></pre>
+<pre class='pedal-python-code python'><code>add(1, 2)</code></pre>
 The value of the result was:
 <pre class='pedal-python-value'>-1</pre>
 But I expected the result to be equal to:
@@ -53,7 +53,7 @@ But I expected the result to be equal to:
         self.assertFeedback(e, """Failed Instructor Test
 Student code failed instructor test.
 I ran the code:
-<pre class='pedal-python-code'><code>add(1, 2)</code></pre>
+<pre class='pedal-python-code python'><code>add(1, 2)</code></pre>
 The value of the result was:
 <pre class='pedal-python-value'>-1</pre>
 But I expected the result to be equal to:
@@ -70,7 +70,7 @@ But I expected the result to be equal to:
         self.assertFeedback(e, """Failed Instructor Test
 Student code failed instructor test.
 I ran the code:
-<pre class='pedal-python-code'><code>make_int()</code></pre>
+<pre class='pedal-python-code python'><code>make_int()</code></pre>
 The value of the result was:
 <pre class='pedal-python-value'>7</pre>
 But I expected the result to be in:
@@ -82,7 +82,7 @@ But I expected the result to be in:
         self.assertFeedback(e, """Failed Instructor Test
 Student code failed instructor test.
 I ran the code:
-<pre class='pedal-python-code'><code>make_ints()</code></pre>
+<pre class='pedal-python-code python'><code>make_ints()</code></pre>
 The value of the result was:
 <pre class='pedal-python-value'>[1, 2, 3]</pre>
 But I expected the result to contain:
@@ -94,7 +94,7 @@ But I expected the result to contain:
         self.assertFeedback(e, """Failed Instructor Test
 Student code failed instructor test.
 I ran the code:
-<pre class='pedal-python-code'><code>do_math()</code></pre>
+<pre class='pedal-python-code python'><code>do_math()</code></pre>
 The value of the result was:
 <pre class='pedal-python-value'>3</pre>
 But I expected the result to be None""")
@@ -125,7 +125,7 @@ But I expected the result to be None""")
         self.assertFeedback(e, """Failed Instructor Test
 Student code failed instructor test.
 I ran the code:
-<pre class='pedal-python-code'><code>get_list()</code></pre>
+<pre class='pedal-python-code python'><code>get_list()</code></pre>
 The value of the result was:
 <pre class='pedal-python-value'>[1, 2]</pre>
 But I expected the result to be identical to:
@@ -149,7 +149,7 @@ Student code failed instructor test.
         self.assertFeedback(e, """Failed Instructor Test
 Student code failed instructor test.
 I ran the code:
-<pre class='pedal-python-code'><code>get(1, 2)</code></pre>
+<pre class='pedal-python-code python'><code>get(1, 2)</code></pre>
 The value of the result was:
 <pre class='pedal-python-value'>[1, 2]</pre>
 But I expected the result to have the length:
@@ -166,7 +166,7 @@ But I expected the result to have the length:
         self.assertFeedback(e, """Failed Instructor Test
 Student code failed instructor test.
 I ran the code:
-<pre class='pedal-python-code'><code>get()</code></pre>
+<pre class='pedal-python-code python'><code>get()</code></pre>
 The value of the result was:
 <pre class='pedal-python-value'>5</pre>
 But I expected the result to be the length of:
@@ -188,7 +188,7 @@ But I expected the result to be the length of:
         self.assertFeedback(e, """Failed Instructor Test
 Student code failed instructor test.
 I ran the code:
-<pre class='pedal-python-code'><code>get()</code></pre>
+<pre class='pedal-python-code python'><code>get()</code></pre>
 The value of the result was:
 <pre class='pedal-python-value'>[1, 2, 3]</pre>
 But I expected the result to be in:
@@ -205,7 +205,7 @@ But I expected the result to be in:
         self.assertFeedback(e, """Failed Instructor Test
 Student code failed instructor test.
 I ran the code:
-<pre class='pedal-python-code'><code>get()</code></pre>
+<pre class='pedal-python-code python'><code>get()</code></pre>
 The value of the result was:
 <pre class='pedal-python-value'>[1, 2]</pre>
 But I expected the result to not be in:
@@ -222,7 +222,7 @@ But I expected the result to not be in:
         self.assertFeedback(e, """Failed Instructor Test
 Student code failed instructor test.
 I ran the code:
-<pre class='pedal-python-code'><code>hi()</code></pre>
+<pre class='pedal-python-code python'><code>hi()</code></pre>
 The function printed:
 <pre class='pedal-output'>Hello world!</pre>
 But I expected the output to be:
@@ -262,19 +262,19 @@ I ran your function <code class='pedal-name'>add</code> on some new arguments.
     <th class='pedal-cell'>Expected</th>
   </tr>     <tr class='pedal-row'>
     <td class='pedal-cell'><span class='pedal-positive-mark'>&#10004;</span></td>
-    <td class='pedal-cell'><pre class='pedal-python-code'><code>1, 2</code></pre></td>
+    <td class='pedal-cell'><pre class='pedal-python-code python'><code>1, 2</code></pre></td>
     <td class='pedal-cell'>3</td>
     <td class='pedal-cell'>3</td>
   </tr>
   <tr class='pedal-row'>
     <td class='pedal-cell'><span class='pedal-negative-mark'>&#10060;</span></td>
-    <td class='pedal-cell'><pre class='pedal-python-code'><code>1, 4</code></pre></td>
+    <td class='pedal-cell'><pre class='pedal-python-code python'><code>1, 4</code></pre></td>
     <td class='pedal-cell'>5</td>
     <td class='pedal-cell'>6</td>
   </tr>
   <tr class='pedal-row'>
     <td class='pedal-cell'><span class='pedal-negative-mark'>&#10060;</span></td>
-    <td class='pedal-cell'><pre class='pedal-python-code'><code>1, '2'</code></pre></td>
+    <td class='pedal-cell'><pre class='pedal-python-code python'><code>1, '2'</code></pre></td>
     <td class='pedal-cell'>unsupported operand type(s) for +: 'int' and 'str'</td>
     <td class='pedal-cell'>3</td>
   </tr></table>""")
@@ -297,19 +297,19 @@ I ran your function <code class='pedal-name'>add</code> on some new arguments.
     <th class='pedal-cell'>Expected</th>
   </tr>     <tr class='pedal-row'>
     <td class='pedal-cell'><span class='pedal-negative-mark'>&#10060;</span></td>
-    <td class='pedal-cell'><pre class='pedal-python-code'><code>1, 3</code></pre></td>
+    <td class='pedal-cell'><pre class='pedal-python-code python'><code>1, 3</code></pre></td>
     <td class='pedal-cell'>4</td>
     <td class='pedal-cell'>3</td>
   </tr>
   <tr class='pedal-row'>
     <td class='pedal-cell'><span class='pedal-negative-mark'>&#10060;</span></td>
-    <td class='pedal-cell'><pre class='pedal-python-code'><code>1, 4</code></pre></td>
+    <td class='pedal-cell'><pre class='pedal-python-code python'><code>1, 4</code></pre></td>
     <td class='pedal-cell'>5</td>
     <td class='pedal-cell'>6</td>
   </tr>
   <tr class='pedal-row'>
     <td class='pedal-cell'><span class='pedal-negative-mark'>&#10060;</span></td>
-    <td class='pedal-cell'><pre class='pedal-python-code'><code>1, 3</code></pre></td>
+    <td class='pedal-cell'><pre class='pedal-python-code python'><code>1, 3</code></pre></td>
     <td class='pedal-cell'>4</td>
     <td class='pedal-cell'>3</td>
   </tr></table>""")
@@ -343,7 +343,7 @@ Your code coverage is not adequate. You must cover at least 90% of your code to 
         self.assertFeedback(e, """Failed Instructor Test
 Student code failed instructor test.
 I ran the code:
-<pre class='pedal-python-code'><code>add(4, 1)</code></pre>
+<pre class='pedal-python-code python'><code>add(4, 1)</code></pre>
 The value of the result was:
 <pre class='pedal-python-value'>5</pre>
 But I expected the result to be equal to:
@@ -370,7 +370,7 @@ The variable x was not created.""")
         self.assertFeedback(e, """Failed Instructor Test
 Student code failed instructor test.
 I evaluated the expression:
-<pre class='pedal-python-code'><code>x</code></pre>
+<pre class='pedal-python-code python'><code>x</code></pre>
 The value of the result was:
 <pre class='pedal-python-value'>3</pre>
 But I expected the result to be equal to:
@@ -388,7 +388,7 @@ But I expected the result to be equal to:
         self.assertFeedback(e, """Failed Instructor Test
 Student code failed instructor test.
 I evaluated the expression:
-<pre class='pedal-python-code'><code>x</code></pre>
+<pre class='pedal-python-code python'><code>x</code></pre>
 The value of the result was:
 <pre class='pedal-python-value'>'a string'</pre>
 But I expected the result to not be a value of type:
@@ -418,7 +418,7 @@ The variable x was not created.""")
         self.assertFeedback(e, """Failed Instructor Test
 Student code failed instructor test.
 I evaluated the expression:
-<pre class='pedal-python-code'><code>x</code></pre>
+<pre class='pedal-python-code python'><code>x</code></pre>
 The value of the result was:
 <pre class='pedal-python-value'>'a number'</pre>
 But I expected the result to not be a value of type:

@@ -83,7 +83,7 @@ I ran the file <code class='pedal-filename'>_sandbox_test_student.py</code>.
 
 The traceback was:
 <div class='pedal-traceback'>Line 1 of file <code class='pedal-filename'>_sandbox_test_student.py</code>
-    <pre class='pedal-python-code'><code>1+'0'</code></pre>
+    <pre class='pedal-python-code python'><code>1+'0'</code></pre>
 </div>
 
 Type errors occur when you use an operator or function on the wrong type of value. For example, using `+` to add to a list (instead of `.append`), or dividing a string by a number.
@@ -108,12 +108,12 @@ Suggestion: To fix a type error, you should trace through your code. Make sure e
 <pre class='pedal-exception'>Invalid literal for int() with base 10: 'banana'</pre>
 
 I ran the code:
-<pre class='pedal-python-code'><code>get_input()</code></pre>
+<pre class='pedal-python-code python'><code>get_input()</code></pre>
 
 And I entered as input:<pre class='pedal-inputs'>Banana</pre>
 The traceback was:
 <div class='pedal-traceback'>Line 3 of file <code class='pedal-filename'>student.py</code> in <code class='pedal-frame'>get_input</code>
-    <pre class='pedal-python-code'><code>    return int(input("Gimme the number"))</code></pre>
+    <pre class='pedal-python-code python'><code>    return int(input("Gimme the number"))</code></pre>
 </div>
 
 A ValueError occurs when you pass the wrong type of value to a function. For example, you try to convert a string without numbers to an integer (like `int('Five')`).
