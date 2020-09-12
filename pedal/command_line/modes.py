@@ -237,11 +237,19 @@ class VerifyPipeline(AbstractPipeline):
         def new_test(self):
             if error:
                 raise error
+            entire_actual, entire_expected = "", ""
+            differing_fields = []
             for field, value in expected_fields:
                 self.assertIn(field, actual, msg="Field was not in feedback.")
-                self.assertEqual(chomp(str(actual[field]).strip()),
-                                 chomp(value),
-                                 msg=f"Wrong value for '{field}' in {name}.")
+                actual_value = chomp(str(actual[field]).strip())
+                expected_value = chomp(str(value))
+                entire_actual += field+": "+actual_value+"\n"
+                entire_expected += field+": "+expected_value+"\n"
+                if expected_value != actual_value:
+                    differing_fields.append(field)
+            differing_fields = ', '.join(f"'{field}'" for field in differing_fields)
+            self.assertEqual(entire_expected, entire_actual,
+                             msg=f"Wrong value for {differing_fields} in {name}.")
 
         setattr(self.TestReferenceSolutions, "test_" + name, new_test)
         self.tests.append("test_" + name)
