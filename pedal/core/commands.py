@@ -44,6 +44,7 @@ class compliment(FeedbackResponse):
     category = FeedbackCategory.INSTRUCTOR
     kind = FeedbackKind.COMPLIMENT
     valence = Feedback.POSITIVE_VALENCE
+    correct = True
 
     def __init__(self, message, title=None, **kwargs):
         if title is None:
@@ -58,7 +59,7 @@ class give_partial(FeedbackResponse):
     category = FeedbackCategory.INSTRUCTOR
     kind = FeedbackKind.RESULT
     valence = Feedback.POSITIVE_VALENCE
-    correct = False
+    correct = None
     muted = True
 
     def __init__(self, value, **kwargs):
