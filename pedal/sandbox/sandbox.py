@@ -30,6 +30,7 @@ import io
 from itertools import zip_longest
 from unittest.mock import patch
 
+from pedal.core.feedback_category import FeedbackCategory
 from pedal.core.report import MAIN_REPORT
 from pedal.utilities.exceptions import ExpandedTraceback, improve_builtin_exceptions
 from pedal.sandbox.data import SandboxVariable, SandboxContextKind, \
@@ -413,12 +414,16 @@ class Sandbox:
                                       line_offsets,
                                       show_filenames,
                                       lines, files)
+        if filename == self.report.submission.instructor_file:
+            priority = FeedbackCategory.SPECIFICATION
+        else:
+            priority = FeedbackCategory.RUNTIME
 
         runtime_error_function = EXCEPTION_FF_MAP.get(type(self.exception),
                                                       runtime_error)
         self.feedback = runtime_error_function(exception=self.exception, context=context,
                                                traceback=traceback, location=traceback.line_number,
-                                               report=self.report)
+                                               report=self.report, priority=priority)
         return False
 
     def clear_exception(self):
