@@ -394,5 +394,35 @@ The value of the result was:
 But I expected the result to not be a value of type:
 <pre class='pedal-python-value'>'a number'</pre>""")
 
+    def test_assert_chain_passes(self):
+        with Execution('x=3\nprint(x)') as e:
+            assert_has_variable(e.student, 'x')
+            assert_type(evaluate('x'), int)
+            assert_equal(evaluate('x'), 3)
+        self.assertFeedback(e, SUCCESS_MESSAGE)
+
+    def test_assert_chain_missing_variable(self):
+        with Execution('y=3\nprint(y)') as e:
+            assert_has_variable(e.student, 'x')
+            assert_type(evaluate('x'), int)
+            assert_equal(evaluate('x'), 3)
+        self.assertFeedback(e, """Failed Instructor Test
+Student code failed instructor test.
+The variable x was not created.""")
+
+    def test_assert_chain_incompatible_type(self):
+        with Execution('x=3\nprint(x)') as e:
+            assert_has_variable(e.student, 'x')
+            assert_type(evaluate('x'), list)
+            assert_equal(evaluate('set(x)'), {})
+        self.assertFeedback(e, """Failed Instructor Test
+Student code failed instructor test.
+I evaluated the expression:
+<pre class='pedal-python-code'><code>x</code></pre>
+The value of the result was:
+<pre class='pedal-python-value'>'a number'</pre>
+But I expected the result to not be a value of type:
+<pre class='pedal-python-value'>'a list'</pre>""")
+
 if __name__ == '__main__':
     unittest.main(buffer=False)
