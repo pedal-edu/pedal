@@ -174,6 +174,10 @@ class RuntimeAssertionFeedback(AssertionFeedback):
         for wrapped_value in wrapped_values:
             if wrapped_value.is_sandboxed:
                 contexts.append(wrapped_value.context)
+            if isinstance(wrapped_value.value, Sandbox):
+                run_contexts = wrapped_value.value.get_context()
+                if run_contexts:
+                    contexts.append(run_contexts[-1])
         return contexts
 
     def _build_result_from_target(self, contexts, index):
