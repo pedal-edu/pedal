@@ -367,6 +367,11 @@ class BoolType(Type):
     immutable = True
 
 
+class CustomType(Type):
+    def __init__(self, name):
+        self.singular_name = name
+
+
 class IndexableType(Type):
     """
     An abstract base class to represent a type that can be accessed via
