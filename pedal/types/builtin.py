@@ -14,6 +14,11 @@ BUILTIN_MODULES = {
                          fields={
                              'pprint': FunctionType(name='pprint', returns=NoneType())
                          }),
+    'json': ModuleType('json',
+                       fields={
+                           'loads': FunctionType(name='loads', returns=UnknownType()),
+                           'dumps': FunctionType(name='dumps', returns=StrType())
+                       }),
     'random': ModuleType('random',
                          fields={
                              'randint': FunctionType(name='randint', returns=NumType())
