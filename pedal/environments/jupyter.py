@@ -84,21 +84,34 @@ def download_on_run(assignment_id):
 
 
 PEDAL_PIPELINE = '''
-from pedal.report import *
-from pedal.report.imperative import *
-clear_report()
-from pedal.source import set_source
-set_source({student_code})
-from pedal.tifa import tifa_analysis
-tifa_analysis(True)
-from pedal.sandbox.commands import *
-queue_input({inputs})
-run_student(True)
-student = get_sandbox()
+from pedal.core.report import MAIN_REPORT
+MAIN_REPORT.clear()
+
+# Load in some commonly used tools
 from pedal.cait.cait_api import parse_program
+from pedal.sandbox.commands import *
+from pedal.core.commands import *
+
+from pedal.environments.jupyter import setup_environment
+# Initialize the BlockPy environment
+pedal = setup_environment(skip_tifa=False,
+                          skip_run=skip_run,
+                          inputs={inputs},
+                          main_file='answer.py',
+                          main_code={student_code})
+student = pedal.fields['student']
+
 {on_run}
-from pedal.resolvers import simple
-SUCCESS, SCORE, CATEGORY, LABEL, MESSAGE, DATA, HIDE = simple.resolve()
+
+from pedal.resolvers.simple import resolve
+final = resolve()
+SUCCESS = final.success
+SCORE = final.score
+CATEGORY = final.category
+LABEL = final.title
+MESSAGE = final.message
+DATA = final.data
+HIDE = final.hide_correctness
 '''
 
 
@@ -199,13 +212,13 @@ if (cells.length > 0) {
 
 # If the %grade magic is used, we run the code directly.
 LOCAL_GRADE = r'''
-on_run_code.push("from pedal.plugins.grade_magic import execute_on_run_code");
+on_run_code.push("from pedal.environments.jupyter import execute_on_run_code");
 on_run_code.push('print(execute_on_run_code({on_run_code}, student_code, {inputs}))');
 '''
 
 # If the %grade_blockpy magic is used, we need to get the on_run from blockpy.
 BLOCKPY_GRADE = r'''
-on_run_code.push("from pedal.plugins.grade_magic import blockpy_grade");
+on_run_code.push("from pedal.environments.jupyter import blockpy_grade");
 on_run_code.push('import json')
 on_run_code.push('inputs = {inputs}')
 console.log('inputs = {inputs}')
