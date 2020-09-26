@@ -206,6 +206,17 @@ def get_pedal_type_from_value(value, type_space=None) -> Type:
             return ListType(empty=False, subtype=get_pedal_type_from_value(value[0]))
         else:
             return ListType(empty=True)
+    if isinstance(value, dict):
+        if not value:
+            return DictType(empty=True)
+        if all(isinstance(value, str) for k in value.keys()):
+            return DictType(literals=[LiteralStr(s) for s in value.keys()],
+                            values=[get_pedal_type_from_value(vv, type_space)
+                                    for vv in value.values()])
+        return DictType(keys=[get_pedal_type_from_ast(k, type_space)
+                              for k in value.keys()],
+                        values=[get_pedal_type_from_ast(vv, type_space)
+                                for vv in value.values()])
     return UnknownType()
 
 
