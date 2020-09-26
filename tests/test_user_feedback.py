@@ -31,7 +31,7 @@ A TypeError occurred:
 
 <pre class='pedal-exception'>Unsupported operand type(s) for +: 'int' and 'str'</pre>
 
-I ran the file <code class='pedal-filename'>answer.py</code>.
+I ran your code.
 
 The traceback was:
 <div class='pedal-traceback'>Line 1 of file <code class='pedal-filename'>answer.py</code>

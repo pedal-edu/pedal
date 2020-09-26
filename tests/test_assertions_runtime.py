@@ -238,7 +238,7 @@ But I expected the output to be:
             assert_equal(e.student['alpha'], 5)
         self.assertFeedback(e, """Failed Instructor Test
 Student code failed instructor test.
-I ran the file <code class='pedal-filename'>answer.py</code>.
+I ran your code.
 The value of <code class='pedal-name'>alpha</code> was:
 <pre class='pedal-python-value'>4</pre>
 But I expected <code class='pedal-name'>alpha</code> to be equal to:
@@ -361,6 +361,7 @@ But I expected the result to be equal to:
             assert_equal(e.student.data.get('x'), 7)
         self.assertFeedback(e, """Failed Instructor Test
 Student code failed instructor test.
+I ran your code.
 The variable x was not created.""")
 
     def test_assert_equal_variable_fails_wrong_value(self):
@@ -408,6 +409,7 @@ But I expected the result to not be a value of type:
             assert_equal(evaluate('x'), 3)
         self.assertFeedback(e, """Failed Instructor Test
 Student code failed instructor test.
+I ran your code.
 The variable x was not created.""")
 
     def test_assert_chain_incompatible_type(self):

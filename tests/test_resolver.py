@@ -230,7 +230,7 @@ class TestResolver(ExecutionTestCase):
         self.assertEqual(len(messages), 1)
 
     def test_attribute_error(self):
-        with Execution('"".unsafe()') as e:
+        with Execution('"".unsafe()', run_tifa=False) as e:
             pass
         self.assertEqual("Attribute Error", e.final.title)
 
