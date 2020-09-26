@@ -22,7 +22,7 @@ from pedal.types.definitions import (Type, UnknownType, NumType, BoolType,
                                      DictType, SetType, GeneratorType,
                                      ModuleType, NoneType, FrozenSetType,
                                      FunctionType, TYPE_STRINGS,
-                                     LiteralStr, LiteralNum, LiteralBool)
+                                     LiteralStr, LiteralNum, LiteralBool, CustomType)
 
 
 def normalize_type(type_expression, type_space=None):
@@ -46,7 +46,7 @@ def normalize_type(type_expression, type_space=None):
     # Might be a string, can we evaluate?
     if isinstance(type_expression, str):
         result = get_pedal_type_from_str(type_expression, type_space)
-        if not isinstance(result, UnknownType):
+        if not isinstance(result, (UnknownType, CustomType)):
             return result
         try:
             first_line = ast.parse(type_expression).body[0].value
@@ -56,13 +56,21 @@ def normalize_type(type_expression, type_space=None):
         except AttributeError as e:
             raise ValueError(f"Could not parse string {type_expression!r} into "
                              f"a Pedal type:\n This was not an expression.")
-        return normalize_type(first_line)
+        try:
+            return normalize_type(first_line, type_space=type_space)
+        except:
+            return result
     # Might be a JSON-Encoded dictionary
     if isinstance(type_expression, dict):
-        return get_pedal_type_from_json(type_expression)
+        try:
+            return get_pedal_type_from_json(type_expression)
+        except KeyError:
+            return get_pedal_type_from_type_literal(type_expression, type_space)
     # Perhaps it is an AST node
     if isinstance(type_expression, ast.AST):
         return get_pedal_type_from_ast(type_expression, type_space=type_space)
+    if isinstance(type_expression, list):
+        return get_pedal_type_from_type_literal(type_expression, type_space)
     raise ValueError(f"Could not normalize {type_expression!r} into a Pedal type.")
 
 
@@ -162,7 +170,7 @@ def get_pedal_type_from_str(value, tifa_instance=None):
             state = tifa_instance.load_variable(value)
             return state.type
         # custom_types.add(value)
-    return UnknownType()
+    return CustomType(value)
     # TODO: handle custom types
 
 
@@ -285,3 +293,28 @@ def get_pedal_type_from_ast(value: ast.AST, type_space=None) -> Type:
         if isinstance(value.body[0], ast.Expr):
             return get_pedal_type_from_ast(value.body[0].value, type_space)
     return UnknownType()
+
+
+def get_pedal_type_from_type_literal(value, type_space=None) -> Type:
+    if value == list:
+        return ListType(empty=False)
+    elif value == dict:
+        return DictType(empty=False)
+    elif isinstance(value, list):
+        if value:
+            return ListType(empty=False, subtype=get_pedal_type_from_type_literal(value[0], type_space))
+        else:
+            return ListType(empty=True)
+    elif isinstance(value, dict):
+        if not value:
+            return DictType(empty=True)
+        if all(isinstance(value, str) for k in value.keys()):
+            return DictType(literals=[LiteralStr(s) for s in value.keys()],
+                            values=[get_pedal_type_from_type_literal(vv, type_space)
+                                    for vv in value.values()])
+        return DictType(keys=[get_pedal_type_from_type_literal(k, type_space)
+                              for k in value.keys()],
+                        values=[get_pedal_type_from_type_literal(vv, type_space)
+                                for vv in value.values()])
+    else:
+        return get_pedal_type_from_str(str(value))
