@@ -125,6 +125,8 @@ def format_contexts(contexts, format):
             action_message = SandboxContextKind.describe_action(context.kind)
             message = action_message+":\n"+code_message+"\n"
             execution_text.append(message)
+        elif context.filename in (context.submission.main_file, ):
+            execution_text.append(f"I ran your code.\n")
         else:
             filename_message = format.filename(context.filename)
             execution_text.append(f"I ran the file {filename_message}.\n")
