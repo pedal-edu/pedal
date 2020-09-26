@@ -483,6 +483,7 @@ class ListType(Type):
                 return NoneType()
 
             return FunctionType(_append, 'append')
+        # Extend, Pop
         return Type.load_attr(self, attr)
 
     def is_empty(self):
