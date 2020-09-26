@@ -359,5 +359,26 @@ def block_module(module_name, report=MAIN_REPORT):
     sandbox.block_module(module_name)
 
 
+class CommandBlock:
+    """
+    Context Manager for creating instructor blocks of code that will
+    be shown together to the student.
+
+    TODO: What about named points where you can "rewind" the state to?
+    """
+
+    sandbox: Sandbox
+
+    def __init__(self, report=MAIN_REPORT):
+        self.sandbox = report[TOOL_NAME]['sandbox']
+
+    def __enter__(self):
+        self.sandbox.start_grouping_context()
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.sandbox.stop_grouping_context()
+
+
 # TODO: Deprecate these!
 reset_output = clear_output
