@@ -233,9 +233,9 @@ class incompatible_types(TifaFeedback):
 class invalid_indexing(TifaFeedback):
     """ Invalid Index """
     title = "Invalid Index"
-    message_template = ("You indexed a {left_name} with {right_name} on line "
-                        "{location.line}. But you can't index a {left_name} with"
-                        "a {right_name}."
+    message_template = ("You indexed {left_name} with {right_name} on line "
+                        "{location.line}. But you can't index {left_name} with "
+                        "{right_name}."
                         )
     justification = ("TIFA attempted to call an .index() operation on a type"
                      " with a type that wasn't acceptable.")
@@ -339,12 +339,20 @@ class recursive_call(TifaFeedback):
 class not_a_function(TifaFeedback):
     """ Not a function """
     title = "Not a Function"
-    message_template = "TODO"
+    message_template = ("You attempted to call {name} as if it"
+                        " was a function on line {location.line}. However,"
+                        " that expression was actually a {called_type}.")
     justification = ""
-    muted = True
+    # TODO: Unmute?
+    #muted = True
 
-    def __init__(self, location, name, **kwargs):
-        super().__init__(location=location, name=name, **kwargs)
+    def __init__(self, location, name, called_type, **kwargs):
+        report = kwargs.get("report", MAIN_REPORT)
+        singular_name = called_type.singular_name
+        fields = {'location': location, 'name': name,
+                  'called_type': called_type,
+                  'singular_name': singular_name}
+        super().__init__(fields=fields, **kwargs)
 
 
 class incorrect_arity(TifaFeedback):
