@@ -105,34 +105,62 @@ class SandboxContext:
                               self.output, self.exception, self.submission)
 
 
+class ExecutionTextHolder:
+    def __init__(self, format):
+        self._result = []
+        self._last_action = None
+        self._current_body = []
+        self._format = format
+
+    def add_message(self, action_message, body=None):
+        if action_message != self._last_action and self._last_action is not None:
+            self._finish_body()
+        if body:
+            self._current_body.append(body)
+        self._last_action = action_message
+
+    def _finish_body(self):
+        if self._current_body:
+            code_message = self._format.python_code("\n".join(self._current_body))
+            message = self._last_action + "\n"+code_message + "\n"
+            self._result.append(message)
+            self._current_body = []
+        elif self._last_action:
+            self._result.append(self._last_action+"\n")
+
+    def get_lines(self):
+        self._finish_body()
+        return "".join(self._result)
+
+
 def format_contexts(contexts, format):
     """
     Create a text string representation from a list of contexts.
 
     Args:
-        contexts (list[SandboxContext]): The list of sandbox executions.
+        contexts (list[list[SandboxContext]]): The list of list of sandbox
+            executions. The inner list is because we could have a group of
+            contexts (although more likely it'll be a single one).
         format (:py:class:`pedal.core.formatting.Formatter`): The formatter
             to use to augment the context message.
 
     Returns:
         str: The string representation of the contexts.
     """
-    execution_text = []
+    execution_text = ExecutionTextHolder(format)
     inputs_text = []
-    for context in contexts:
-        if context.filename in (None, context.submission.instructor_file):
-            code_message = format.python_code(context.code)
-            action_message = SandboxContextKind.describe_action(context.kind)
-            message = action_message+":\n"+code_message+"\n"
-            execution_text.append(message)
-        elif context.filename in (context.submission.main_file, ):
-            execution_text.append(f"I ran your code.\n")
-        else:
-            filename_message = format.filename(context.filename)
-            execution_text.append(f"I ran the file {filename_message}.\n")
-        inputs_text.extend(context.inputs)
-    final_text = []
-    final_text.extend(execution_text)
+    for context_group in contexts:
+        for context in context_group:
+            if context.filename in (None, context.submission.instructor_file):
+                action_message = SandboxContextKind.describe_action(context.kind)
+                execution_text.add_message(action_message+":", context.code)
+            elif context.filename in (context.submission.main_file, ):
+                execution_text.add_message(f"I ran your code.")
+            else:
+                filename_message = format.filename(context.filename)
+                execution_text.add_message(f"I ran the file {filename_message}.")
+            inputs_text.extend(context.inputs)
+    final_text = [execution_text.get_lines()]
     if inputs_text:
         inputs = "\n".join(inputs_text)
         inputs_message = format.inputs(inputs)

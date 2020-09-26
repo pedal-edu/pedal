@@ -3,7 +3,7 @@ Tests for checking that runtime assertions are working as expected.
 """
 from pedal.assertions.feedbacks import assert_group
 from pedal.assertions.runtime import *
-from pedal.sandbox.commands import call, start_trace, get_sandbox, evaluate
+from pedal.sandbox.commands import call, start_trace, get_sandbox, evaluate, CommandBlock, run
 from tests.execution_helper import Execution, ExecutionTestCase, SUCCESS_MESSAGE
 import unittest
 
@@ -425,6 +425,39 @@ The value of the result was:
 <pre class='pedal-python-value'>'a number'</pre>
 But I expected the result to not be a value of type:
 <pre class='pedal-python-value'>'a list'</pre>""")
+
+    def test_command_block(self):
+        with Execution('''
+class Fruit:
+    def __init__(self, name, weight=0):
+        self.name = name
+        self.weight = weight
+def do_math(a, b):
+    return a + b - 5
+def weigh_fruits(fruits):
+    return sum(fruit.weight for fruit in fruits)    
+                ''', run_tifa=False) as e:
+
+            with CommandBlock():
+                orange = call("Fruit", "Orange", 30, target="orange")
+                self.assertIsInstance(orange, e.student.data['Fruit'])
+                pineapple = call("Fruit", "Pineapple", 60, target="pineapple")
+                run("fruits = [orange, pineapple]")
+                total_weight = call('weigh_fruits', args_locals=["fruits"])
+                assert_equal(evaluate('pineapple.weight'), 61)
+        self.assertFeedback(e, """Failed Instructor Test
+Student code failed instructor test.
+I ran the code:
+<pre class='pedal-python-code python'><code>orange = Fruit('Orange', 30)
+pineapple = Fruit('Pineapple', 60)
+fruits = [orange, pineapple]
+weigh_fruits(fruits)</code></pre>
+I evaluated the expression:
+<pre class='pedal-python-code python'><code>pineapple.weight</code></pre>
+The value of the result was:
+<pre class='pedal-python-value'>60</pre>
+But I expected the result to be equal to:
+<pre class='pedal-python-value'>61</pre>""")
 
 if __name__ == '__main__':
     unittest.main(buffer=False)

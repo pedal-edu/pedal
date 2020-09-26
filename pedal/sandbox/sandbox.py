@@ -322,7 +322,7 @@ class Sandbox:
     ############################################################################
     # Context (history of executions)
 
-    def get_context(self):
+    def get_context(self, context_id: int = None):
         """
         Retrieve the most recent contexts
         Returns:
@@ -330,10 +330,19 @@ class Sandbox:
                 most recent execution, or executions if currently in a group.
         """
         # TODO: Test off-by-one-errors
-        if not self._context_group_start:
-            return self._context[-1:]
+        if context_id is None:
+            if not self._context_group_start:
+                return self._context[-1:]
+            else:
+                return self._context[self._context_group_start[-1]:]
         else:
-            return self._context[self._context_group_start[-1]:]
+            if not self._context_group_start:
+                return [self._context[context_id]]
+            else:
+                for past_context_group_starts in self._context_group_start[::-1]:
+                    if past_context_group_starts < context_id+1:
+                        return self._context[past_context_group_starts:context_id+1]
+                return self._context[:context_id+1]
 
     def _guess_context(self, target_name):
         """
@@ -421,7 +430,7 @@ class Sandbox:
 
         runtime_error_function = EXCEPTION_FF_MAP.get(type(self.exception),
                                                       runtime_error)
-        self.feedback = runtime_error_function(exception=self.exception, context=context,
+        self.feedback = runtime_error_function(exception=self.exception, context=[context],
                                                traceback=traceback, location=traceback.line_number,
                                                report=self.report, priority=priority)
         return False

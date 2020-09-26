@@ -59,7 +59,7 @@ class InterpolatedValue:
         if self.is_sandboxed:
             context_id = value._actual_context_id
             sandbox = value._actual_sandbox
-            self.context = sandbox._context[context_id]
+            self.context = sandbox.get_context(context_id)
         else:
             self.context = None
 
@@ -177,11 +177,11 @@ class RuntimeAssertionFeedback(AssertionFeedback):
             if isinstance(wrapped_value.value, Sandbox):
                 run_contexts = wrapped_value.value.get_context()
                 if run_contexts:
-                    contexts.append(run_contexts[-1])
+                    contexts.append(run_contexts)
         return contexts
 
     def _build_result_from_target(self, contexts, index):
-        target = contexts[index].target
+        target = contexts[index][-1].target
         if target == "_" or target is None:
             if len(contexts) == 1:
                 return "the result"
@@ -277,7 +277,7 @@ class RuntimePrintingAssertionFeedback(RuntimeAssertionFeedback):
                 actual_output = self.report.format.output(actual_output)
         # Sandboxed value
         else:
-            actual_output = chomp(left.context.output)
+            actual_output = chomp(left.context[-1].output)
             if not actual_output:
                 actual = "The function did not print."
                 actual_output = ""
@@ -296,7 +296,7 @@ class RuntimePrintingAssertionFeedback(RuntimeAssertionFeedback):
             return chomp(execution.value.raw_output)
         # Sandboxed value
         else:
-            return chomp(execution.context.output)
+            return chomp(execution.context[-1].output)
 
 
 """
@@ -417,8 +417,8 @@ class assert_group(AssertionFeedback, FeedbackGroup):
             left = feedback.fields['left_boxed']
             right = feedback.fields['right_boxed']
             verb = feedback.fields['aggregate_verb']
-            left_called = left.context.called if left.context else None
-            right_called = right.context.called if right.context else None
+            left_called = left.context[-1].called if left.context else None
+            right_called = right.context[-1].called if right.context else None
             key = (left_called, right_called, verb)
             if key not in groups:
                 groups[key] = []
@@ -438,10 +438,10 @@ class assert_group(AssertionFeedback, FeedbackGroup):
                 left = feedback.fields['left_boxed']
                 right = feedback.fields['right_boxed']
                 if left.context:
-                    arguments = left.context.args
+                    arguments = left.context[-1].args
                     actual, expected = str(left.value), str(right.value)
                 else:
-                    arguments = right.context.args
+                    arguments = right.context[-1].args
                     actual, expected = str(right.value), str(left.value)
                 if feedback._status == FeedbackStatus.INACTIVE:
                     outcome = self.report.format.html_span("&#10004;", "pedal-positive-mark")
