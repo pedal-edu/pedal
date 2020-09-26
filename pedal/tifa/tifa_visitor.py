@@ -484,8 +484,8 @@ class Tifa(TifaCore, ast.NodeVisitor):
                     initializer.definition(self, initializer, result, [result] + arguments, self.locate())
                     self.definition_chain.pop()
             return result
-        else:
-            self._issue(not_a_function(self.locate(), callee, report=self.report))
+        elif isinstance(function_type, (NumType, StrType, BoolType, NoneType)):
+            self._issue(not_a_function(self.locate(), callee, function_type, report=self.report))
         return UnknownType()
 
     def visit_ClassDef(self, node):
