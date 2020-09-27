@@ -95,7 +95,7 @@ from pedal.core.commands import *
 from pedal.environments.blockpy import setup_environment
 # Initialize the BlockPy environment
 pedal = setup_environment(skip_tifa=False,
-                          skip_run=skip_run,
+                          skip_run=False,
                           inputs={inputs},
                           main_file='answer.py',
                           main_code={student_code})
