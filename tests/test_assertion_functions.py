@@ -9,11 +9,18 @@ from tests.execution_helper import Execution, ExecutionTestCase, SUCCESS_MESSAGE
 
 
 class TestAssertions(ExecutionTestCase):
-    def test_function_found_complex(self):
+    def test_function_found_complex_passes(self):
         with Execution('def x(a: int, b: str, c: [int]) -> str: pass\nx') as e:
             self.assertFalse(ensure_function('x', 3, (int, str, [int]),
                                              str))
         self.assertFeedback(e, SUCCESS_MESSAGE)
+
+    def test_function_found_complex_fails(self):
+        with Execution('def x(a: int, b: str, c: [int]) -> str: pass\nx') as e:
+            self.assertTrue(ensure_function('x', 3, (int, str, [str]),
+                                             str))
+        self.assertFeedback(e, """Wrong Parameter Type
+The function named <code class='pedal-name'>x</code> has a parameter named <code class='pedal-name'>c</code> that is a list of a number, but should be a list of a string.""")
 
     def test_function_missing_parameter(self):
         with Execution('def x(a: int, b, c: [int]) -> str: pass\nx') as e:
