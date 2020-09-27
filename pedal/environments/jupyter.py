@@ -37,7 +37,7 @@ import time
 # necessary. Simply deleting the cache file would be pretty easy, assuming it
 # installs per user.
 
-# This really should come in as a configuration setting somewhere.
+# TODO: MAKE THIS A CONFIG SETTING
 BLOCKPY_URL = 'https://think.cs.vt.edu/blockpy/blockpy/load_assignment_give_feedback'
 
 
@@ -92,7 +92,7 @@ from pedal.cait.cait_api import parse_program
 from pedal.sandbox.commands import *
 from pedal.core.commands import *
 
-from pedal.environments.jupyter import setup_environment
+from pedal.environments.blockpy import setup_environment
 # Initialize the BlockPy environment
 pedal = setup_environment(skip_tifa=False,
                           skip_run=skip_run,
