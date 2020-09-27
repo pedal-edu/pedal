@@ -249,11 +249,11 @@ def get_pedal_type_from_ast(value: ast.AST, type_space=None) -> Type:
     elif isinstance(value, ast.List):
         return ListType(subtype=(get_pedal_type_from_ast(value.elts[0], type_space)
                                  if value.elts else None),
-                        empty=bool(value.elts))
+                        empty=not bool(value.elts))
     elif isinstance(value, ast.Set):
         return SetType(subtype=(get_pedal_type_from_ast(value.elts[0], type_space)
                                 if value.elts else None),
-                       empty=bool(value.elts))
+                       empty=not bool(value.elts))
     elif isinstance(value, ast.Tuple):
         return TupleType(subtypes=[get_pedal_type_from_ast(e, type_space)
                                    for e in value.elts])
@@ -274,13 +274,13 @@ def get_pedal_type_from_ast(value: ast.AST, type_space=None) -> Type:
             if isinstance(value.slice.value, ast.Name):
                 subtype = get_pedal_type_from_str(value.slice.value.id)
                 if value.value.id == "list":
-                    return ListType(subtype=subtype)
+                    return ListType(subtype=subtype, empty=False)
                 if value.value.id == "set":
-                    return SetType(subtype=subtype)
+                    return SetType(subtype=subtype, empty=False)
                 if value.value.id == "tuple":
-                    return TupleType(subtypes=(subtype,))
+                    return TupleType(subtypes=(subtype,), empty=False)
                 if value.value.id == "frozenset":
-                    return FrozenSetType(subtype=subtype)
+                    return FrozenSetType(subtype=subtype, empty=False)
             elif isinstance(value.slice.value, ast.Tuple):
                 subtypes = [get_pedal_type_from_ast(e, type_space)
                             for e in value.slice.value.elts]
@@ -316,5 +316,7 @@ def get_pedal_type_from_type_literal(value, type_space=None) -> Type:
                               for k in value.keys()],
                         values=[get_pedal_type_from_type_literal(vv, type_space)
                                 for vv in value.values()])
+    elif isinstance(value, type):
+        return get_pedal_type_from_str(value.__name__)
     else:
         return get_pedal_type_from_str(str(value))
