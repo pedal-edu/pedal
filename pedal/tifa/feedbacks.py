@@ -239,6 +239,7 @@ class invalid_indexing(TifaFeedback):
                         )
     justification = ("TIFA attempted to call an .index() operation on a type"
                      " with a type that wasn't acceptable.")
+    muted = True
 
     def __init__(self, location, left, right, **kwargs):
         left_name = left.singular_name
