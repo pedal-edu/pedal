@@ -146,7 +146,7 @@ def execute_on_run_code(on_run, student_code, inputs):
     instructor_code = PEDAL_PIPELINE.format(on_run=on_run,
                                             student_code=escaped_student_code,
                                             # inputs=','.join(inputs))
-                                            inputs=inputs)
+                                            inputs=inputs.split(","))
     # Execute the instructor code in a new environment
     global_variables = globals()
     compiled_code = compile(instructor_code, 'instructor_code.py', 'exec')
