@@ -815,6 +815,29 @@ class TestVariables(unittest.TestCase):
         result = tifa.process_code(program, filename="student.py")
         self.assertFalse(result.issues)
 
+    def test_unnecessary_second_branch(self):
+        program = dedent("""# Remember to initialize the variables!
+age = 20
+has_license = True
+# Keep this If/else structure unchanged, but
+# fill in the blanks with the code above
+if has_license == True:
+    if age >= 21:
+        print("Can drink")
+        if age < 1000:
+            pass
+        else:
+            print("Too old")
+            
+    else:
+        print("Too young")
+        
+else:
+    print("Doesn't have a license")""")
+        tifa = pedal.tifa.Tifa()
+        result = tifa.process_code(program, filename="student.py")
+        self.assertTrue(result.issues)
+
 
 if __name__ == '__main__':
     unittest.main(buffer=False)

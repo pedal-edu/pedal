@@ -309,8 +309,10 @@ class type_changes(TifaFeedback):
 class unnecessary_second_branch(TifaFeedback):
     """ Unnecessary second branch """
     title = "Unnecessary Second Branch"
-    message_template = "TODO"
-    justification = ""
+    message_template = ("You have an `if` statement where one of the two branches"
+                       " only has `pass` in its body, on line {location.line}."
+                        " You shouldn't need an empty body.")
+    justification = "There is an else or if statement who's body is just pass."
 
     def __init__(self, location, **kwargs):
         super().__init__(location=location, **kwargs)
