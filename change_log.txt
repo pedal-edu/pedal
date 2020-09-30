@@ -1,3 +1,7 @@
+Version 2.1.1
+-------------
+* Fix TIFA issue with secondary branches
+
 Version 2.1.0
 -------------
 * Published on 9/27/2020
