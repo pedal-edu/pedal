@@ -158,9 +158,10 @@ class ExpandedTraceback:
 
     def _fix_frame_line(self, frame):
         if frame.filename in self.line_offsets:
+            original_lineno = frame.lineno
             frame.lineno += self.line_offsets[frame.filename]
-            if frame.lineno - 1 < len(self.original_code_lines):
-                frame._line = self.original_code_lines[frame.lineno - 1]
+            if original_lineno - 1 < len(self.original_code_lines):
+                frame._line = self.original_code_lines[original_lineno - 1]
             else:
                 frame._line = "# *line missing*"
         else:
@@ -227,7 +228,7 @@ class ExpandedTraceback:
              (f" in {formatter.frame(frame.name)}\n"
               if frame.name != "<module>" and frame.name is not None
               else "\n") +
-             f"    {formatter.python_code(frame.line)}\n")
+             f"{formatter.python_code(frame.line)}\n")
             for frame in traceback_stack
         ])
         return formatter.traceback(traceback_message)
