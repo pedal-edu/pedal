@@ -120,7 +120,7 @@ class TifaCore:
                 node = self.node_chain[-1]
             else:
                 node = self.final_node
-        return Location(node.lineno, col=node.col_offset)
+        return Location(node.lineno+self.line_offset, col=node.col_offset)
 
     def _issue(self, feedback):
         if feedback.label not in self.analysis.issues:

@@ -69,6 +69,7 @@ class Tifa(TifaCore, ast.NodeVisitor):
         if reset or self.analysis is None:
             self.analysis = TifaAnalysis()
         filename = filename or self.report.submission.main_file
+        self.line_offset = self.report.submission.line_offsets.get(filename, 0)
 
         # Attempt parsing - might fail!
         try:
