@@ -404,7 +404,7 @@ class ensure_documented_functions(AssertionFeedback):
     """ Checks that all of the functions in the source code are documented. """
     title = "Must Document Functions"
     message_template = ("You must document the following function{plural}:"
-                        ": {names_message}.")
+                        " {names_message}.")
 
     def __init__(self, root=None, **kwargs):
         report = kwargs.get('report', MAIN_REPORT)
