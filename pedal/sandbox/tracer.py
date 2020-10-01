@@ -82,7 +82,7 @@ class SandboxCoverageTracer(SandboxBasicTracer):
         #coverage.python.get_python_source = self.original
         # Actually analyze the data, attach some data
         analysis = self.coverage._analyze(self.filename)
-        # print(vars(self.coverage._analyze(self.filename)), file=self.s)
+        #print(vars(self.coverage._analyze(self.filename)), file=_stdout)
         self.n_missing = analysis.numbers.n_missing
         self.n_statements = analysis.numbers.n_statements
         self.pc_covered = analysis.numbers.pc_covered
