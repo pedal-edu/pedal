@@ -33,7 +33,8 @@ class Report:
         group (int or str): The label for the current group. Feedback given
             by a Tool will automatically receive the current `group`. This
             is used by the Source tool, for example, in order to group feedback
-            by sections.
+            by sections and the :py:func:`pedal.assertions.commands.unit_test`
+            function to combine results.
         group_names (dict[group, str]): A printable, student-facing name for the
             group. When a group needs to be rendered out to the user, this
             will override whatever label was going to be presented instead.
@@ -130,7 +131,7 @@ class Report:
             :py:class:`~pedal.core.feedback.Feedback`: The attached feedback.
         """
         self.feedback.append(feedback)
-        if feedback.parent is not None:
+        if not isinstance(feedback.parent, (int, str)) and feedback.parent is not None:
             feedback.parent._get_child_feedback(feedback, True)
         return feedback
 
@@ -299,6 +300,10 @@ class Report:
         self.groups.append(group)
 
     def stop_group(self, group):
+        """
+        TODO: Should this prematurely end other groups? If so, do they get a
+            callback event to do any wrapup?
+        """
         if self.groups:
             self.groups.remove(group)
 
