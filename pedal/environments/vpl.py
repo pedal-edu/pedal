@@ -11,8 +11,10 @@ from pedal.core.feedback import Feedback
 from pedal.core.environment import Environment
 from pedal.core.report import MAIN_REPORT
 from pedal.sandbox import run, get_sandbox, set_input, start_trace
+from pedal.source.sections import FeedbackSourceSection
 from pedal.tifa import tifa_analysis
 from pedal.resolvers.simple import resolve as simple_resolve, by_priority
+from pedal.resolvers.sectional import resolve as original_sectional_resolve
 from pedal.core.formatting import Formatter
 
 import tabulate
@@ -49,7 +51,8 @@ class VPLEnvironment(Environment):
         self.fields = {
             'student': student,
             'resolve': resolve,
-            'next_section': self.next_section
+            'next_section': self.next_section,
+            'sectional_resolve': sectional_resolve
         }
 
     def next_section(self, name=""):
@@ -159,3 +162,40 @@ def resolve(report=MAIN_REPORT, priority_key=by_priority):
     print("--|>")
     print("Grade :=>>", round(final.score*score_maximum))
 
+
+import sys
+stdout = sys.stdout
+
+@make_resolver
+def sectional_resolve(report=MAIN_REPORT, priority_key=by_priority):
+    """
+
+    Args:
+        report:
+        custom_success_message:
+    """
+    print("<|--")
+    print(report.get_current_group(), file=stdout)
+    finals = original_sectional_resolve(report, priority_key=priority_key)
+    #if final.positives:
+    #    print("-Positive Notes")
+    #    for positive in final.positives:
+    #        print(positive)
+    global_feedbacks = sorted([f for f in report.feedback if f.parent is None],
+                              key=lambda f: f.section_number if isinstance(f, FeedbackSourceSection) else -1)
+    for global_feedback in global_feedbacks:
+        if isinstance(global_feedback, FeedbackSourceSection):
+            print(f"-Part {global_feedback.section_number}")
+            final = finals.get(global_feedback)
+            if final:
+                print(final.title)
+                print(final.message)
+            else:
+                print("No feedback for this section")
+        # TODO: Should we be skipping all global feedback? Need more examples
+        #else:
+        #    print(global_feedback.title)
+        #    print(global_feedback.message)
+    print("--|>")
+    total_score = sum(f.score for f in finals.values())
+    print("Grade :=>>", round(total_score*score_maximum))
