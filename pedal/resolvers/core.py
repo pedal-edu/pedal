@@ -16,11 +16,6 @@ def make_resolver(func, report=None):
         report = MAIN_REPORT
 
     def resolver_wrapper(*args, **kwargs):
-        """
-
-        Returns:
-
-        """
         report.execute_hooks('pedal.resolvers', 'resolve')
         return func(*args, **kwargs)
 
