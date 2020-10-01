@@ -88,6 +88,7 @@ class Report:
         self.hiddens.clear()
         self._tool_data.clear()
         self.group = None
+        self.groups.clear()
         self.group_names.clear()
         self.hooks.clear()
         self.submission = None
