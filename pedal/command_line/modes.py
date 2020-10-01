@@ -108,20 +108,9 @@ class AbstractPipeline:
                 with open(script, 'r') as scripts_file:
                     scripts_contents = scripts_file.read()
                 all_scripts.append((script, scripts_contents))
-        # If the submission is a single file:
         given_submissions = self.config.submissions
-        if os.path.isfile(given_submissions):
-            main_file = given_submissions
-            with open(given_submissions, 'r') as single_submission_file:
-                main_code = single_submission_file.read()
-            for script, scripts_contents in all_scripts:
-                new_submission = Submission(
-                    main_file=main_file, main_code=main_code,
-                    instructor_file=script
-                )
-                self.submissions.append(Bundle(scripts_contents, new_submission))
-        # Otherwise, use it as a directory adjacent to each ics
-        else:
+        # If submission is a directory, use it as a directory adjacent to each ics
+        if os.path.isdir(given_submissions):
             for script, scripts_contents in all_scripts:
                 directory_pattern = given_submissions
                 submission_dir = normalize_path(directory_pattern, script)
@@ -136,6 +125,23 @@ class AbstractPipeline:
                         instructor_file=script
                     )
                     self.submissions.append(Bundle(scripts_contents, new_submission))
+        # Otherwise, if the submission is a single file:
+        else:
+            main_file = given_submissions
+            load_error = None
+            try:
+                with open(given_submissions, 'r') as single_submission_file:
+                    main_code = single_submission_file.read()
+            except OSError as e:
+                # Okay, file does not exist. Load error gets triggered.
+                main_code = None
+                load_error = e
+            for script, scripts_contents in all_scripts:
+                new_submission = Submission(
+                    main_file=main_file, main_code=main_code,
+                    instructor_file=script, load_error=load_error
+                )
+                self.submissions.append(Bundle(scripts_contents, new_submission))
 
     def load_progsnap(self, path):
         script_file_name, script_file_extension = os.path.splitext(path)

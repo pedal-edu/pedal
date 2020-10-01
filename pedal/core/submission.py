@@ -36,13 +36,16 @@ class Submission:
 
     def __init__(self, files=None, main_file='answer.py', main_code=None,
                  user=None, assignment=None, course=None, execution=None,
-                 instructor_file='instructor_tests.py'):
+                 instructor_file='instructor_tests.py', load_error=None):
         if files is None:
             files = {}
         self.files = files
         self.main_file = main_file
+        self.load_error = load_error
         if main_code is not None:
             self.main_code = main_code
+        if self.main_file not in self.files:
+            self.files[self.main_file] = self.main_code or ""
         self._original_main_code = self.main_code
         self.user = user
         self.assignment = assignment
@@ -87,7 +90,7 @@ class Submission:
     @property
     def main_code(self):
         """ Retrieves the submission's main code """
-        return self.files[self.main_file]
+        return self.files.get(self.main_file, "")
 
     @main_code.setter
     def main_code(self, code):
@@ -100,3 +103,6 @@ class Submission:
         if filename is None:
             filename = self.main_file
         self.line_offsets[filename] = lineno
+
+    def clear_line_offsets(self):
+        self.line_offsets.clear()

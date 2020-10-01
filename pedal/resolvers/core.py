@@ -15,13 +15,13 @@ def make_resolver(func, report=None):
     if report is None:
         report = MAIN_REPORT
 
-    def resolver_wrapper():
+    def resolver_wrapper(*args, **kwargs):
         """
 
         Returns:
 
         """
         report.execute_hooks('pedal.resolvers', 'resolve')
-        return func()
+        return func(*args, **kwargs)
 
     return resolver_wrapper

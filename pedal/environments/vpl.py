@@ -5,223 +5,157 @@ import re
 import sys
 from html.parser import HTMLParser
 
+from pedal.resolvers.core import make_resolver
+from pedal.source import verify, next_section as original_next_section
+from pedal.core.feedback import Feedback
+from pedal.core.environment import Environment
 from pedal.core.report import MAIN_REPORT
-from pedal import source
-from pedal.resolvers import sectional
-from pedal.cait.cait_api import expire_cait_cache
+from pedal.sandbox import run, get_sandbox, set_input, start_trace
+from pedal.tifa import tifa_analysis
+from pedal.resolvers.simple import resolve as simple_resolve, by_priority
+from pedal.core.formatting import Formatter
+
+import tabulate
 
 
-class VPLStyler(HTMLParser):
+class VPLEnvironment(Environment):
     """
-
+    Configures the BlockPy programming environment.
     """
-    HEADERS = ("h1", "h2", "h3", "h4", "h5")
-
-    def __init__(self):
-        super().__init__()
-        self.reset()
-        self.fed = []
-        self.inside_pre = False
-
-    def convert(self, html):
-        """
-
-        Args:
-            html:
-
-        Returns:
-
-        """
-        self.feed(html)
-        return self.get_data()
-
-    @property
-    def text(self):
-        """
-
-        Returns:
-
-        """
-        return ''.join(self.fed)
-
-    def get_data(self):
-        """
-
-        Returns:
-
-        """
-        return self.text
-
-    def force_new_line(self):
-        """
-
-        """
-        if self.text and self.text[-1] not in ("\n", "\r"):
-            self.fed.append("\n")
-
-    def handle_starttag(self, tag, attrs):
-        """
-
-        Args:
-            tag:
-            attrs:
-        """
-        if tag in self.HEADERS:
-            self.force_new_line()
-            self.fed.append("-")
-        elif tag in ("pre",):
-            self.force_new_line()
-            self.fed.append(">")
-            self.inside_pre = True
-
-    def handle_data(self, data):
-        """
-
-        Args:
-            data:
-        """
-        if self.inside_pre:
-            # Need to prepend ">" to the start of new lines.
-            self.fed.append(data.replace("\n", "\n>"))
+    def __init__(self, files=None, main_file='answer.py', main_code=None,
+                 user=None, assignment=None, course=None, execution=None,
+                 instructor_file='on_run.py', skip_tifa=True, skip_run=False,
+                 inputs=None, set_success=True,
+                 report=MAIN_REPORT, trace=True):
+        super().__init__(files=files, main_file=main_file, main_code=main_code,
+                         user=user, assignment=assignment, course=course,
+                         execution=execution, instructor_file=instructor_file,
+                         report=report)
+        self.skip_run = skip_run
+        self.skip_tifa = skip_tifa
+        self.trace = trace
+        report.set_formatter(VPLFormatter(report))
+        verify(report=self.report)
+        if not skip_tifa:
+            tifa_analysis(report=self.report)
+        if inputs:
+            set_input(inputs)
+        if skip_run:
+            student = get_sandbox(report=report)
         else:
-            self.fed.append(data)
+            if trace:
+                start_trace()
+            student = run(report=report)
+        self.fields = {
+            'student': student,
+            'resolve': resolve,
+            'next_section': self.next_section
+        }
 
-    def handle_endtag(self, tag):
+    def next_section(self, name=""):
+        original_next_section(name=name, report=self.report)
+        verify(report=self.report)
+        if not self.skip_tifa:
+            tifa_analysis(report=self.report)
+        student = get_sandbox(report=self.report)
+        if self.skip_run:
+            student.clear()
+        else:
+            if self.trace:
+                start_trace()
+            student.clear()
+            student = student.run()
+        return student
+
+    def load_main(self, path):
         """
-
-        Args:
-            tag:
+        Allowed to return either a string value (the contents of the file)
+        or the exception that was raised.
         """
-        if tag in self.HEADERS:
-            self.fed.append("")
-        elif tag in ("pre",):
-            self.fed.append("")
-            self.inside_pre = False
+        try:
+            return super().load_main(path)
+        except OSError as file_error:
+            return file_error
 
 
-def strip_tags(html):
+setup_environment = VPLEnvironment
+
+## TODO: Check if file exists
+
+class VPLFormatter(Formatter):
+
+    def pre(self, text):
+        return "\n".join([">" + line for line in text.split("\n")])
+
+    def python_code(self, code):
+        return self.pre(code)
+
+    def python_expression(self, code):
+        return self.html_code(code)
+
+    def filename(self, filename):
+        return filename
+
+    def python_value(self, code):
+        return self.pre(code)
+
+    def inputs(self, inputs):
+        return self.pre(inputs)
+
+    def output(self, output):
+        return self.pre(output)
+
+    def traceback(self, traceback):
+        return traceback
+
+    def name(self, name):
+        return name
+
+    def line(self, line_number):
+        return line_number
+
+    def frame(self, name):
+        return name
+
+    def exception(self, exception):
+        return self.pre(exception)
+
+    def table(self, rows, columns):
+        return self.pre(tabulate.tabulate(rows, headers=columns))
+
+
+score_maximum = 1
+
+
+def set_maximum_score(number):
     """
-
-    Args:
-        html:
-
-    Returns:
-
-    """
-    return VPLStyler().convert(html)
-
-
-def set_maximum_score(number, cap=True, report=None):
-    """
+    TODO: Attach data to the Report instead of a global variable.
 
     Args:
         number:
         cap:
         report:
     """
-    if report is None:
-        report = MAIN_REPORT
-    report['vpl']['score_maximum'] = number
-    report['vpl']['score_cap'] = cap
+    global score_maximum
+    score_maximum = number
 
 
-def resolve(report=None, custom_success_message=None):
+@make_resolver
+def resolve(report=MAIN_REPORT, priority_key=by_priority):
     """
 
     Args:
         report:
         custom_success_message:
     """
-    if report is None:
-        report = MAIN_REPORT
     print("<|--")
-    success, score, hc, messages_by_group = sectional.resolve(report)
-    last_group = 0
-    for group, messages in sorted(messages_by_group.items()):
-        if group != last_group:
-            for intermediate_section in range(last_group, group, 2):
-                print("-" + report['source']['sections'][1 + intermediate_section])
-        printed_first_bad = False
-        for message in messages:
-            if message['priority'] in ('positive', 'instructions'):
-                print(strip_tags(message['message']))
-            elif not printed_first_bad:
-                print(strip_tags(message['message']))
-                printed_first_bad = True
-        last_group = group
-    print("-Overall")
-    if success:
-        if custom_success_message is None:
-            print("Complete! Great job!")
-        else:
-            print(custom_success_message)
-    else:
-        print("Incomplete")
+    final = simple_resolve(report, priority_key=priority_key)
+    if final.positives:
+        print("-Positive Notes")
+        for positive in final.positives:
+            print(positive)
+    print("-"+final.title)
+    print(final.message)
     print("--|>")
-    print("Grade :=>>", round(score))
+    print("Grade :=>>", round(final.score*score_maximum))
 
-
-class SectionalAssignment:
-    """
-
-    """
-    max_points = 1
-    sections = None
-
-    def __init__(self, filename=None, max_points=None, report=None):
-        self.report = MAIN_REPORT if report is None else report
-        find_file(filename if filename else self.filename,
-                  sections=True, report=report)
-        set_maximum_score(self.max_points
-                          if max_points is None else max_points)
-        source.check_section_exists(self.sections)
-
-    def pre_test(self):
-        """
-
-        Returns:
-
-        """
-        source.next_section()
-        verified = source.verify_section()
-        expire_cait_cache()
-        return verified
-
-    def post_test(self):
-        """
-
-        Returns:
-
-        """
-        return True
-
-    def resolve(self):
-        """
-
-        """
-        checks = ((self.pre_test() and
-                   getattr(self, attr)() and
-                   self.post_test())
-                  for attr in dir(self)
-                  if attr.startswith('test_') and
-                  callable(getattr(self, attr)))
-        if all(checks):
-            self.report.set_success()
-        resolve(report=self.report)
-
-
-def unittest_resolver(phases, report=None, custom_success_message=None):
-    """
-
-    Args:
-        phases:
-        report:
-        custom_success_message:
-    """
-    success = True
-    for title, phase in phases:
-        outcome = phase()._run_all_tests()
-        if not outcome:
-            break
-        success = success and outcome
-    resolve(custom_success_message=custom_success_message)

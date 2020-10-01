@@ -35,7 +35,7 @@ I ran your code.
 
 The traceback was:
 <div class='pedal-traceback'>Line 1 of file <code class='pedal-filename'>answer.py</code>
-    <pre class='pedal-python-code python'><code>0+"A"</code></pre>
+<pre class='pedal-python-code python'><code>0+"A"</code></pre>
 </div>
 
 Type errors occur when you use an operator or function on the wrong type of value. For example, using `+` to add to a list (instead of `.append`), or dividing a string by a number.

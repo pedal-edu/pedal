@@ -31,9 +31,16 @@ class Environment:
         if isinstance(files, Submission):
             self.submission = files
         else:
+            load_error = None
             if files is None:
                 if main_code is None:
-                    raise ValueError("files and main_code cannot both be None.")
+                    if main_file is None:
+                        raise ValueError("files, main_code, and main_file cannot all be None.")
+                    else:
+                        main_code = self.load_main(main_file)
+                        if isinstance(main_code, Exception):
+                            load_error = main_code
+                            main_code = ""
                 files = {main_file: main_code}
             else:
                 if main_file is not None:
@@ -43,10 +50,20 @@ class Environment:
                         files[main_file] = main_code
             self.submission = Submission(files, main_file, main_code,
                                          user, assignment, course, execution,
-                                         instructor_file)
+                                         instructor_file, load_error=load_error)
         # Contextualize report
         self.report.contextualize(self.submission)
         self.fields = {}
 
+    def load_main(self, main_file):
+        with open(main_file) as opened:
+            return opened.read()
+
     def __iter__(self):
         return self.fields.items()
+
+    def __getattr__(self, key):
+        try:
+            return self.fields[key]
+        except KeyError:
+            raise AttributeError(key)

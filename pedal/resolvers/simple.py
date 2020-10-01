@@ -1,75 +1,7 @@
 from pedal.core.report import MAIN_REPORT
-from pedal.core.commands import set_success
-from pedal.core.feedback import Feedback
+from pedal.core.final_feedback import FinalFeedback
+from pedal.core.feedback import Feedback, DEFAULT_CATEGORY_PRIORITY
 from pedal.resolvers.core import make_resolver
-
-DEFAULT_NO_FEEDBACK_MESSAGE = "No errors reported."
-DEFAULT_NO_FEEDBACK_TITLE = "No Errors"
-
-
-DEFAULT_CATEGORY_PRIORITY = [
-    "highest",
-    # Static
-    Feedback.CATEGORIES.SYNTAX,
-    Feedback.CATEGORIES.MISTAKES,
-    Feedback.CATEGORIES.INSTRUCTOR,
-    Feedback.CATEGORIES.ALGORITHMIC,
-    # Dynamic
-    Feedback.CATEGORIES.RUNTIME,
-    Feedback.CATEGORIES.STUDENT,
-    Feedback.CATEGORIES.SPECIFICATION,
-    Feedback.CATEGORIES.POSITIVE,
-    Feedback.CATEGORIES.INSTRUCTIONS,
-    Feedback.CATEGORIES.UNKNOWN,
-    "lowest"
-]
-
-
-class FinalFeedback:
-    """
-    Internal class used for organizing the feedback into one place. Dumpable into a simple dictionary.
-    """
-    def __init__(self, success=None, score=None, category=None, label=None, title=None,
-                 message=None, data=None, hide_correctness=None):
-        self.success = success
-        self.score = score
-        self.category = category
-        self.label = label
-        self.title = title
-        self.message = message
-        self.data = data
-        self.hide_correctness = hide_correctness
-        self.positives = []
-        self.instructions = []
-        self.systems = []
-
-    def __str__(self) -> str:
-        return "FinalFeedback({label!r}, {title!r}, {message!r})".format(label=self.label,
-                                                                         title=self.title,
-                                                                         message=self.message[:50])
-
-    def for_console(self) -> str:
-        return "{label}\n{score}\n{title}\n{message}".format(label=self.label,
-                                                             score=self.score,
-                                                             title=self.title,
-                                                             message=self.message)
-
-    def to_json(self) -> dict:
-        """
-
-        Returns:
-
-        """
-        return {
-            'success': self.success,
-            'score': self.score,
-            'category': self.category,
-            'label': self.label,
-            'title': self.title,
-            'message': self.message,
-            'data': self.data,
-            'hide_correctness': self.hide_correctness
-        }
 
 
 def by_priority(feedback):
@@ -118,20 +50,6 @@ def priority_offset(priority):
         return .1
 
 
-def parse_feedback(feedback):
-    """
-
-    Args:
-        feedback:
-
-    Returns:
-
-    """
-    message = feedback.message
-    title = feedback.title or feedback.label
-    return feedback.correct, feedback.score, message, title, feedback.fields
-
-
 @make_resolver
 def resolve(report=MAIN_REPORT, priority_key=by_priority):
     """
@@ -146,53 +64,19 @@ def resolve(report=MAIN_REPORT, priority_key=by_priority):
     # Prepare feedbacks
     feedbacks = report.feedback
     feedbacks.sort(key=priority_key)
-    suppressions = report.suppressions
-    # Process
+    # Create the initial final feedback
     final = FinalFeedback(success=True, score=0,
                           title=None, message=None,
                           category=Feedback.CATEGORIES.COMPLETE, label='set_success_no_errors',
-                          data=[], hide_correctness=False)
+                          data=[], hide_correctness=False,
+                          suppressions=report.suppressions,
+                          suppressed_labels=report.suppressed_labels)
+    # Process each feedback in turn
     for feedback in feedbacks:
-        category = feedback.category.lower()
-        if category in suppressions:
-            if True in suppressions[category]:
-                continue
-            elif feedback.label.lower() in suppressions[category]:
-                continue
-        if feedback.label in report.suppressed_labels:
-            continue
-        success, partial, message, title, data = parse_feedback(feedback)
-        if feedback.category == Feedback.CATEGORIES.SYSTEM:
-            final.systems.append(feedback)
-        if not feedback.unscored:
-            final.score += partial if partial is not None else 0
-        if feedback.muted:
-            continue
-        if feedback.kind == Feedback.KINDS.COMPLIMENT:
-            final.positives.append(feedback)
-            continue
-        if feedback.kind == Feedback.KINDS.INSTRUCTIONAL:
-            final.instructions.append(feedback)
-        final.success = success and final.success
-        if message is not None and final.message is None:
-            final.message = message
-            final.title = title
-            final.category = feedback.category
-            final.label = feedback.label
-            final.data = data
-    if final.message is None:
-        final.title = DEFAULT_NO_FEEDBACK_TITLE
-        final.message = DEFAULT_NO_FEEDBACK_MESSAGE
-    final.hide_correctness = suppressions.get('success', False)
-    if (not final.hide_correctness and
-            final.label == 'set_success_no_errors' and
-            final.category == Feedback.CATEGORIES.COMPLETE):
-        # TODO: Promote to be its own atomic feedback function
-        final.title = set_success.title
-        final.message = set_success.message_template
-        final.score = 1
-        final.success = True
-    final.success = bool(final.success)
+        final.merge(feedback)
+    # Override empty message
+    final.finalize()
     report.result = final
     report.resolves.append(final)
     return final
+

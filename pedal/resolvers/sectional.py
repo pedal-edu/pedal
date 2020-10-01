@@ -1,78 +1,55 @@
+"""
+A version of the resolver that still chooses one piece of feedback, but
+does so per section.
+"""
+
 import sys
 
+from pedal.core.feedback import Feedback
+from pedal.core.final_feedback import parse_feedback, FinalFeedback
 from pedal.resolvers import simple
 from pedal.core.report import MAIN_REPORT
+from pedal.resolvers.core import make_resolver
+from pedal.resolvers.simple import by_priority
 
 
-def resolve(report=None, priority_key=None):
+@make_resolver
+def resolve(report=MAIN_REPORT, priority_key=by_priority):
     """
     Args:
-        priority_key:
+        priority_key: The key function to sort feedbacks by
         report (Report): The report object to resolve down. Defaults to the
                          global MAIN_REPORT
 
     Returns
         str: A string of HTML feedback to be delivered
     """
-    if report is None:
-        report = MAIN_REPORT
-    if priority_key is None:
-        priority_key = simple.by_priority
     # Prepare feedbacks
-    feedbacks = report.feedback
-    feedbacks.sort(key=lambda f: (f.group or 0, priority_key(f)))
-    suppressions = report.suppressions
-    # Process
-    final_success = False
-    final_score = 0
+    all_feedbacks = report.feedback
+    # Group the feedback
+    feedback_by_group = {}
+    for feedback in all_feedbacks:
+        if feedback.parent in feedback_by_group:
+            feedback_by_group[feedback.parent].append(feedback)
+        else:
+            feedback_by_group[feedback.parent] = [feedback]
+    # Process each subgroup
     finals = {}
-    found_failure = False
-    for feedback in feedbacks:
-        group = feedback.group or 0
-        category = feedback.category.lower()
-        if category in suppressions:
-            if True in suppressions[category]:
-                continue
-            elif feedback.label.lower() in suppressions[category]:
-                continue
-        success, partial, message, title, data = simple.parse_feedback(feedback)
-        final_success = success or final_success
-        final_score += partial if partial else 0
-        if message is not None:
-            #print("RESETING GROUP", group, message[:20], found_failure, feedback.priority)
-            if group not in finals:
-                finals[group] = []
-                found_failure = False
-            if feedback.priority not in ('positive', 'instructions'):
-                if found_failure:
-                    continue
-                found_failure = True
-            entry = {'label': feedback.label,
-                     'message': message,
-                     'category': feedback.category,
-                     'priority': feedback.priority,
-                     'data': data}
-            if feedback.priority == 'instructions':
-                # Find end of instructions
-                index = 0
-                for feedback in finals[group]:
-                    if feedback['priority'] != 'instructions':
-                        break
-                    index += 1
-                finals[group].insert(index, entry)
-            elif feedback.priority != 'positive':
-                finals[group].insert(0, entry)
-            else:
-                finals[group].append(entry)
-    #from pprint import pprint
-    #pprint(finals)
-    final_hide_correctness = suppressions.get('success', False)
-    if not finals:
-        finals[0] = [{
-            'label': 'No errors',
-            'category': 'Instructor',
-            'data': [],
-            'priority': 'medium',
-            'message': "No errors reported."
-        }]
-    return (final_success, final_score, final_hide_correctness, finals)
+    for group, feedbacks in feedback_by_group.items():
+        feedbacks.sort(key=priority_key)
+        # Create the initial final feedback
+        final = FinalFeedback(success=True, score=0,
+                              title=None, message=None,
+                              category=Feedback.CATEGORIES.COMPLETE, label='set_success_no_errors',
+                              data=[], hide_correctness=False,
+                              suppressions=report.suppressions,
+                              suppressed_labels=report.suppressed_labels)
+        # Process each feedback in turn
+        for feedback in feedbacks:
+            final.merge(feedback)
+        # Override empty message
+        final.finalize()
+        finals[group] = final
+    report.result = finals
+    report.resolves.append(finals)
+    return finals

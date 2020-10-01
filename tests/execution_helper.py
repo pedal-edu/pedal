@@ -1,4 +1,6 @@
 import unittest
+import io
+from contextlib import contextmanager, redirect_stdout
 from textwrap import dedent
 
 from pedal.core import *
@@ -27,6 +29,8 @@ class ExecutionTestCase(unittest.TestCase):
 
         """
         return self.assertEqual(dedent(feedback_string).lstrip(), execution.feedback)
+
+
 
 class Execution:
     """

@@ -78,12 +78,12 @@ class Feedback:
         tags (list[:py:class:`~pedal.core.tag.Tag`]): Any tags that you want to
             attach to this feedback.
 
-        parent (int or str): Information about what logical grouping within the
-            submission this belongs to. Various tools can chunk up a
-            submission (e.g., by section), they can use this field to keep
-            track of how that decision was made. Resolvers can also use
-            this information to organize feedback or to report multiple
-            categories.
+        parent (int, str, or `pedal.core.feedback.Feedback`): Information about
+            what logical grouping within the submission this belongs to.
+            Various tools can chunk up a submission (e.g., by section), they
+            can use this field to keep track of how that decision was made.
+            Resolvers can also use this information to organize feedback or to
+            report multiple categories.
         report (:py:class:`~pedal.core.report.Report`): The Report object to
             attach this feedback to. Defaults to MAIN_REPORT. Unspecified fields
             will be filled in by inspecting the current Feedback Function
@@ -366,3 +366,21 @@ class FeedbackGroup(Feedback):
     to indicate that this class will start a new Group context within the report
     and do something interesting with any children it gets.
     """
+
+
+DEFAULT_CATEGORY_PRIORITY = [
+    "highest",
+    # Static
+    Feedback.CATEGORIES.SYNTAX,
+    Feedback.CATEGORIES.MISTAKES,
+    Feedback.CATEGORIES.INSTRUCTOR,
+    Feedback.CATEGORIES.ALGORITHMIC,
+    # Dynamic
+    Feedback.CATEGORIES.RUNTIME,
+    Feedback.CATEGORIES.STUDENT,
+    Feedback.CATEGORIES.SPECIFICATION,
+    Feedback.CATEGORIES.POSITIVE,
+    Feedback.CATEGORIES.INSTRUCTIONS,
+    Feedback.CATEGORIES.UNKNOWN,
+    "lowest"
+]

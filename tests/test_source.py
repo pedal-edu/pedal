@@ -10,6 +10,7 @@ from pedal.core.commands import clear_report, get_all_feedback, contextualize_re
 from pedal.source import *
 from pedal.tifa import tifa_analysis
 from tests.execution_helper import Execution
+import pedal.resolvers.sectional as sectional
 
 
 class TestCode(unittest.TestCase):
@@ -42,7 +43,7 @@ class TestCode(unittest.TestCase):
 
 The traceback was:
 <div class='pedal-traceback'>Line 2 of file <code class='pedal-filename'>answer.py</code>
-    <pre class='pedal-python-code python'><code>b b b</code></pre>
+<pre class='pedal-python-code python'><code>b b b</code></pre>
 </div>
 
 Suggestion: Check line 2, the line before it, and the line after it.""", e.final.message)
@@ -58,19 +59,19 @@ Suggestion: Check line 2, the line before it, and the line after it.""", e.final
         ##### Part 3
         Runtime Error
         '''))
-        separate_into_sections()
+        separate_into_sections(independent=True)
         check_section_exists(3)
-        self.assertFalse(get_all_feedback())
+        self.assertEqual(get_all_feedback()[0].label, "FeedbackSourceSection")
         next_section()
         verify_section()
-        self.assertFalse(get_all_feedback())
+        self.assertEqual(get_all_feedback()[1].label, "FeedbackSourceSection")
         next_section()
         verify_section()
         feedback = get_all_feedback()
         self.assertTrue(feedback)
-        self.assertEqual(feedback[0].label, "syntax_error")
+        self.assertEqual(feedback[3].label, "syntax_error")
         print(feedback[0].location)
-        self.assertEqual(feedback[0].location.line, 7)
+        self.assertEqual(feedback[3].location.line, 7)
 
     def test_damaged_sections(self):
         contextualize_report(dedent('''
@@ -99,23 +100,31 @@ Suggestion: Check line 2, the line before it, and the line after it.""", e.final
         ##### Part 3
         print(b)
         '''))
-        separate_into_sections()
+        separate_into_sections(independent=False)
         # First section has an unused variable
         next_section()
-        self.assertEqual(len(get_all_feedback()), 0)
-        tifa_analysis(True)
-        self.assertEqual(len(get_all_feedback()), 1)
+        self.assertEqual(len(get_all_feedback()), 2)
+        tifa_analysis()
+        self.assertEqual(len(get_all_feedback()), 3)
         # Second section uses said variable
         next_section()
-        self.assertEqual(len(get_all_feedback()), 1)
-        tifa_analysis(True)
-        self.assertEqual(len(get_all_feedback()), 1)
+        self.assertEqual(len(get_all_feedback()), 4)
+        tifa_analysis()
+        self.assertEqual(len(get_all_feedback()), 4)
         # Third section has a new unused variables
         next_section()
-        self.assertEqual(len(get_all_feedback()), 1)
-        tifa_analysis(True)
+        self.assertEqual(len(get_all_feedback()), 5)
+        tifa_analysis()
         feedback = get_all_feedback()
-        self.assertEqual(len(get_all_feedback()), 2)
+        self.assertEqual(len(get_all_feedback()), 6)
+        finals = sectional.resolve()
+        self.assertEqual("""FeedbackSourceSection
+Feedback separated into groups
+Unused Variable
+The variable <code class='pedal-name'>a</code> was given a value on line 3, but was never used after that.
+Initialization Problem
+The variable <code class='pedal-name'>b</code> was used on line 7, but it was not given a value on a previous line. You cannot use a variable until it has been given a value.""",
+                         "\n".join(f.title+"\n"+f.message for f in finals.values()))
 
 
 if __name__ == '__main__':

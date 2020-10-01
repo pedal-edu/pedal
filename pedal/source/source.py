@@ -122,6 +122,10 @@ def verify(code=None, filename=DEFAULT_STUDENT_FILENAME, report=MAIN_REPORT,
     if code is None:
         code = report.submission.main_code
         filename = report.submission.main_file
+    if report.submission.load_error:
+        source_file_not_found(filename, None)
+        report[TOOL_NAME]['success'] = False
+        return False
     if code.strip() == '':
         blank_source()
         report[TOOL_NAME]['success'] = False
@@ -180,5 +184,5 @@ def set_source_file(filename: str, sections=False, independent=False, report=MAI
                        sections=sections, independent=independent,
                        report=report)
     except IOError:
-        source_file_not_found(filename, sections, report)
+        source_file_not_found(filename, sections, report=report)
         report[TOOL_NAME]['success'] = False

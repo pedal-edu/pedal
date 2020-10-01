@@ -196,38 +196,77 @@ class TestResolver(ExecutionTestCase):
     def test_sectional_error(self):
         clear_report()
         contextualize_report('a=0\n##### Part 1\nprint("A")\n##### Part 2\nsyntax error')
-        separate_into_sections()
+        separate_into_sections(independent=True)
+        # Part 0
         verify()
+        commands.clear_sandbox()
+        commands.run()
+        # Part 1
         next_section()
-        if verify_section():
-            commands.run()
-            give_partial(.2)
+        verify()
+        commands.clear_sandbox()
+        commands.run()
+        give_partial(.2)
+        # Part 2
         next_section()
-        if verify_section():
-            commands.run()
-            give_partial(.3)
-        (success, score, hc, messages) = sectional.resolve()
-        self.assertEqual(success, False)
-        self.assertEqual(score, .2)
-        self.assertEqual(len(messages), 1)
+        verify()
+        commands.clear_sandbox()
+        commands.run()
+        give_partial(.2)
+        # Resolve everything
+        finals = sectional.resolve()
+        self.assertEqual("""# Global
+FeedbackSourceSection
+Feedback separated into groups
+# 1
+Complete
+Great work!
+# 2
+Syntax Error
+Bad syntax on line 5
+
+The traceback was:
+<div class='pedal-traceback'>Line 5 of file <code class='pedal-filename'>answer.py</code>
+<pre class='pedal-python-code python'><code>syntax error</code></pre>
+</div>
+
+Suggestion: Check line 5, the line before it, and the line after it.""",
+                         "\n".join(f"# {g.section_number if g is not None else 'Global'}\n{f.title}\n{f.message}"
+                                   for g, f in finals.items()))
 
     def test_sectional_success(self):
         clear_report()
         contextualize_report('a=0\n##### Part 1\nprint("A")\n##### Part 2\nprint("B")')
-        separate_into_sections()
+        separate_into_sections(independent=True)
+        # Part 0
+        verify()
+        commands.clear_sandbox()
+        commands.run()
+        # Part 1
         next_section()
-        if verify_section():
-            commands.run()
-            give_partial(.2)
+        verify()
+        commands.clear_sandbox()
+        commands.run()
+        give_partial(.2)
+        # Part 2
         next_section()
-        if verify_section():
-            commands.run()
-            give_partial(.3)
-            set_success()
-        (success, score, hc, messages) = sectional.resolve()
-        self.assertEqual(success, True)
-        self.assertEqual(score, .5)
-        self.assertEqual(len(messages), 1)
+        verify()
+        commands.clear_sandbox()
+        commands.run()
+        give_partial(.2)
+        # Resolve everything
+        finals = sectional.resolve()
+        self.assertEqual("""# 2
+FeedbackSourceSection
+Feedback separated into groups
+# 1
+Complete
+Great work!
+# 2
+Complete
+Great work!""",
+                         "\n".join(f"# {g.section_number if g is not None else 'Global'}\n{f.title}\n{f.message}"
+                                   for g, f in finals.items()))
 
     def test_attribute_error(self):
         with Execution('"".unsafe()', run_tifa=False) as e:
