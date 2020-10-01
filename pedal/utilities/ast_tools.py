@@ -160,6 +160,13 @@ class FindExecutableLines(ast.NodeVisitor):
         self.lines.append(node.lineno)
         self.generic_visit(node)
 
+    def _track_expr_line(self, node):
+        """ Skips over string Expr nodes (which are docstrings) """
+        try:
+            node.value.s
+        except AttributeError:
+            self._track_lines(node)
+
     visit_FunctionDef = _track_lines
     visit_AsyncFunctionDef = _track_lines
     visit_ClassDef = _track_lines
@@ -181,7 +188,7 @@ class FindExecutableLines(ast.NodeVisitor):
     visit_ImportFrom = _track_lines
     visit_Global = _track_lines
     visit_Nonlocal = _track_lines
-    visit_Expr = _track_lines
+    visit_Expr = _track_expr_line
     visit_Pass = _track_lines
     visit_Continue = _track_lines
     visit_Break = _track_lines
