@@ -63,6 +63,13 @@ class Formatter:
                  'python_code', 'python_expression', 'python_value',
                  'table']
 
+    def __init__(self, report=None):
+        """ Can optionally specify a report, in order to do more sophisicated things. """
+        self.report = report
+
+    def update_report(self, report):
+        self.report = report
+
     def html_tag(self, tag, contents, classes=None):
         if classes is None:
             return f"<{tag}>{contents}</{tag}>"
