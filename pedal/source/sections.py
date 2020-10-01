@@ -50,6 +50,8 @@ def separate_into_sections(pattern=DEFAULT_SECTION_PATTERN, independent=True, re
     report[TOOL_NAME]['substitutions'].append(backup)
     report.submission.replace_main(report[TOOL_NAME]['sections'][0])
 
+    report.add_hook('pedal.resolvers.resolve', stop_any_sections)
+
     #print(report[TOOL_NAME]['sections'])
 
 
@@ -67,10 +69,17 @@ def stop_sections(report=MAIN_REPORT):
     old_submission = report[TOOL_NAME]['substitutions'].pop()
     report.stop_group(report[TOOL_NAME]['section_group'])
     report.submission.replace_main(old_submission.code, old_submission.filename)
+    report[TOOL_NAME]['section_group'] = None
+
+def stop_any_sections(report=MAIN_REPORT):
+    if report[TOOL_NAME]['substitutions']:
+        stop_sections(report)
 
 
 def next_section(name="", report=MAIN_REPORT):
     """
+
+    TODO: Incoporate name to allow instructors to name sections (defaults to numbers)
 
     Args:
         name:
