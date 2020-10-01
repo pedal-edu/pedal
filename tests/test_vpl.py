@@ -38,14 +38,6 @@ Suggestion: Check line 15, the line before it, and the line after it.
 Grade :=>> 0
 """, f.getvalue())
 
-
-    def test_sections(self):
-        vpl = VPLEnvironment(main_file=here+'datafiles/student_example.py')
-        separate_into_sections()
-        with io.StringIO() as f, redirect_stdout(f):
-            vpl.resolve()
-            self.assertEqual("NoSectionalErrors", f.getvalue())
-
     def test_file_not_found(self):
         vpl = VPLEnvironment(main_file=here + 'datafiles/banana_cream_pudding.py')
         with io.StringIO() as f, redirect_stdout(f):
@@ -58,6 +50,7 @@ Grade :=>> 0
 """, f.getvalue())
 
     def test_resolve(self):
+        clear_report()
         vpl = VPLEnvironment(main_file=here+'datafiles/student_example.py')
         separate_into_sections()
         # Part 0 - usually skipped
@@ -72,18 +65,30 @@ Grade :=>> 0
         vpl.next_section()
         # Resolve entire thing
         with io.StringIO() as f, redirect_stdout(f):
-            vpl.resolve()
+            vpl.sectional_resolve()
             self.assertEqual("""<|--
--##### Part 1
--##### Part 2
-Hey, not a bad job!
--##### Part 3
-Invalid syntax on line 15
+-Part 0
+No feedback for this section
+-Part 1
+No feedback for this section
+-Part 2
+Complete
+Great work!
+-Part 3
+Syntax Error
+Bad syntax on line 15
 
--Overall
-Incomplete
+The traceback was:
+Line 15 of file datafiles/student_example.py
+>a syntax error in this section!
+
+
+Suggestion: Check line 15, the line before it, and the line after it.
+-Part 4
+No feedback for this section
 --|>
-Grade :=>> 0""", f.getvalue())
+Grade :=>> 1
+""", f.getvalue())
 
 
 if __name__ == '__main__':

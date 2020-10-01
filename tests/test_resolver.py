@@ -256,7 +256,7 @@ Suggestion: Check line 5, the line before it, and the line after it.""",
         give_partial(.2)
         # Resolve everything
         finals = sectional.resolve()
-        self.assertEqual("""# 2
+        self.assertEqual("""# Global
 FeedbackSourceSection
 Feedback separated into groups
 # 1
