@@ -326,7 +326,8 @@ class DebugPipeline(AbstractPipeline):
                     print("Feedback:")
                     for feedback in report.feedback:
                         print("\t", feedback, repr(feedback.fields))
-                    print(report.result)
+                    print("Final Feedback")
+                    pprint(report.result.to_json())
 
 
 class MODES:
