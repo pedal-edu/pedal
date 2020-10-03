@@ -79,17 +79,18 @@ class TestQuestions(ExecutionTestCase):
                 pool_3.choose().ask()
         # Opened a blank file and evaluated
         make_exam('')
-        final_success, final_score, _, finals = sectional.resolve()
+        finals = sectional.resolve()
+        print(finals)
         self.assertEqual(finals[0][0]['message'], "Create a for loop.")
         self.assertEqual(finals[0][1]['message'], "Create a variable.")
         self.assertEqual(finals[0][2]['message'], "Source code file is blank.")
         # Tried writing some inadequate code
         make_exam('if True: pass')
-        final_success, final_score, _, finals = sectional.resolve()
+        finals = sectional.resolve()
         self.assertEqual(finals[0][0]['message'], "Create a for loop.")
         # Tried writing some bad code
         make_exam('1 + ""')
-        final_success, final_score, _, finals = sectional.resolve()
+        finals = sectional.resolve()
         self.assertEqual(finals[0][0]['message'], "Create a for loop.")
         self.assertEqual(finals[0][1]['message'], "Create a variable.")
         self.assertEqual(finals[0][2]['message'], dedent("""
