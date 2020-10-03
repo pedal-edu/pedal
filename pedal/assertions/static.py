@@ -8,6 +8,7 @@ from pedal.cait.find_node import find_operation, find_function_calls, find_funct
 from pedal.core.feedback import CompositeFeedbackFunction
 from pedal.core.location import Location
 from pedal.core.report import MAIN_REPORT
+from pedal.core.commands import compliment as core_compliment
 from pedal.types.normalize import normalize_type
 from pedal.types.operations import are_types_equal
 from pedal.utilities.ast_tools import AST_NODE_NAMES
@@ -456,7 +457,7 @@ function_prints => ensure_function_call('print', root=match_signature('name')
 
 @CompositeFeedbackFunction(missing_function, duplicate_function_definition)
 def ensure_function(name, arity=None, parameters=None,
-                    returns=None, root=None, **kwargs):
+                    returns=None, root=None, compliment=False, **kwargs):
     """ Checks that the function exists and has the right signature. """
     report = kwargs.get('report', MAIN_REPORT)
     root = root or parse_program(report=report)
@@ -513,6 +514,11 @@ def ensure_function(name, arity=None, parameters=None,
             return wrong_return_type(name, actual_returns, expected_returns,
                                      **kwargs)
     # Alternatively, returns positive FF?
+    if compliment:
+        if isinstance(compliment, str):
+            core_compliment(compliment, label="function_defined", **kwargs)
+        elif compliment is True:
+            core_compliment(f"Defined {name}", label="function_defined", **kwargs)
     return None
 
 
