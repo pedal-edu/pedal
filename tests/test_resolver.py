@@ -3,11 +3,12 @@ import os
 import sys
 
 from pedal.core.feedback import Feedback
+from pedal.core.final_feedback import FinalFeedback
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from pedal.core.commands import (clear_report, set_success, gently, explain, give_partial, suppress,
-                                 contextualize_report, get_all_feedback)
+                                 contextualize_report, get_all_feedback, feedback)
 from pedal.source import set_source, next_section, verify_section, verify, separate_into_sections
 from pedal.tifa import tifa_analysis
 from pedal.resolvers import simple, sectional
@@ -85,7 +86,7 @@ class TestResolver(ExecutionTestCase):
             give_partial(.1, message="You had a zero in your code.")
             give_partial(.1, message="You looped correctly.")
         self.assertFeedback(e, "Instructor Feedback\nYou were incorrect.")
-        self.assertEqual(e.final.score, .2)
+        self.assertEqual(.2, e.final.score)
         self.assertFalse(e.final.success)
 
         with Execution('0') as e:
@@ -272,6 +273,21 @@ Great work!""",
         with Execution('"".unsafe()', run_tifa=False) as e:
             pass
         self.assertEqual("Attribute Error", e.final.title)
+
+    def test_combining_scores_complex(self):
+        clear_report()
+        contextualize_report('a=0\nprint(a)')
+        # These are added
+        feedback(activate=True, valence=1, score="+4%", category='instructor')
+        # These are skipped
+        feedback(activate=False, valence=1, score="+5%", category='instructor')
+        # These are skipped
+        feedback(activate=True, valence=-1, score="+8%", category='instructor')
+        # These are added
+        feedback(activate=False, valence=-1, score="+7%", category='instructor')
+        # Calculate final result
+        final = simple.resolve()
+        self.assertEqual(.11, final.score)
 
 
 if __name__ == '__main__':

@@ -69,6 +69,11 @@ class Feedback:
         unscored (bool): Whether or not this piece of feedback contributes to
             the score/correctness.
 
+        else_message (str): A string to render as a message when a
+            NEGATIVE valence feedback is NOT triggered, or a POSITIVE valence
+            feedback IS triggered.
+            TODO: Should we also have an else_message_template? Probably.
+
         author (List[str]): A list of names/emails that indicate who created this piece of feedback. They can be
             either names, emails, or combinations in the style of `"Cory Bart <acbart@udel.edu>"`.
         version (str): A version string in the style of Semantic Version (semvar) such as `"0.0.1"`. The last (third)
@@ -106,6 +111,7 @@ class Feedback:
     title = None
     message = None
     message_template = None
+    else_message = None
     priority = None
     valence = None
     location = None
@@ -119,6 +125,7 @@ class Feedback:
     tags = None
     parent = None
 
+    activate: bool
     _status: str
     _exception: Exception or None
     _met_condition: bool
@@ -132,12 +139,13 @@ class Feedback:
                  fields=None, field_names=None,
                  kind=None, title=None,
                  message=None, message_template=None,
+                 else_message=None,
                  priority=None, valence=None,
                  location=None, score=None, correct=None,
                  muted=None, unscored=None,
                  tool=None, version=None, author=None,
                  tags=None, parent=None, report=MAIN_REPORT,
-                 delay_condition=False,
+                 delay_condition=False, activate=True,
                  **kwargs):
         # Internal data
         self.report = report
@@ -151,6 +159,7 @@ class Feedback:
             self.category = category
         if justification is not None:
             self.justification = justification
+        self.activate = activate
         # Response
         if kind is not None:
             self.kind = kind
@@ -176,6 +185,8 @@ class Feedback:
             self.message = message
         if message_template is not None:
             self.message_template = message_template
+        if else_message is not None:
+            self.else_message = else_message
 
         # Locations
         if isinstance(location, int):
@@ -255,12 +266,12 @@ class Feedback:
     def condition(self, *args, **kwargs):
         """
         Detect if this feedback is present in the code.
-        Defaults to true.
+        Defaults to true through the `activate` parameter.
 
         Returns:
-            bool: Always returns True by default.
+            bool: Whether or not this feedback's condition was detected.
         """
-        return True
+        return self.activate
 
     def _get_message(self):
         """
