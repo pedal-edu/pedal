@@ -1,10 +1,12 @@
 Version 2.2.0
 -------------
-* New scoring API.
+* New scoring API, allowing string scores
 * Allow "else_message" on feedback functions.
 * Debug CLI gives more context
 * ensure_function now allows compliment parameter
 * Resolvers can now analyze ignored feedback
+* The unit_test function now supports more features
+* New environment, VPL
 
 Version 2.1.1
 -------------
