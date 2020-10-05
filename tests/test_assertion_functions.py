@@ -3,6 +3,8 @@ Tests related to checking function definitions
 """
 
 import unittest
+
+from pedal import unit_test
 from pedal.assertions.static import *
 from pedal.types.definitions import DictType, LiteralStr, StrType
 from tests.execution_helper import Execution, ExecutionTestCase, SUCCESS_MESSAGE
@@ -57,6 +59,18 @@ The function named <code class='pedal-name'>x</code> has a parameter named <code
                                "The function named <code class='pedal-name'>pet</code> "
                                "has a parameter named <code class='pedal-name'>d</code> "
                                "that is a string, but should be Dog.")
+
+    def test_unit_test_partial_credit_true(self):
+        with Execution('def add(a, b): return b', run_tifa=False) as e:
+            unit_test('add',
+                      ((1, 2), 3),
+                      ((0, 0), 0),
+                      ((0, 3), 3),
+                      ((0, 5), 5),
+                      ((1, 3), 4),
+                      score="+100%",
+                      partial_credit=True)
+        self.assertEqual(3/5, e.final.score)
 
 
 if __name__ == '__main__':

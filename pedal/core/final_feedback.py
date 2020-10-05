@@ -1,7 +1,6 @@
-import re
-
 from pedal.core.feedback import Feedback
 from pedal.core.commands import set_success
+from pedal.core.scoring import Score, combine_scores
 
 
 def parse_feedback(feedback):
@@ -26,8 +25,6 @@ class FinalFeedback:
 
     DEFAULT_NO_FEEDBACK_TITLE = "No Errors"
     DEFAULT_NO_FEEDBACK_MESSAGE = "No errors reported."
-
-    SCORE_PATTERN = re.compile(r"(\!*)([\+\-\/\*])?([\d\.]+)(\%)?(.*)")
 
     def __init__(self, success=None, score=None, category=None, label=None, title=None,
                  message=None, data=None, hide_correctness=None,
@@ -97,7 +94,7 @@ class FinalFeedback:
             self.score = 1
             self.success = True
         else:
-            self.score = self.combine_scores(self._scores)
+            self.score = combine_scores(self._scores)
         self.success = bool(self.success)
         return self
 
@@ -105,38 +102,6 @@ class FinalFeedback:
         return "FinalFeedback({label!r}, {title!r}, {message!r})".format(label=self.label,
                                                                          title=self.title,
                                                                          message=self.message[:50])
-
-    def combine_scores(self, scores) -> float:
-        total = 0
-        for score in scores:
-            if isinstance(score, (int, float)):
-                total += score
-            elif isinstance(score, str):
-                total = self.parse_score(score, total)
-        return round(total, 2)
-
-    def parse_score(self, score, current) -> float:
-        match = self.SCORE_PATTERN.match(score)
-        if not match:
-            # TODO: Add context of feedback being processed
-            raise ValueError(f"Invalid Score string: {score}")
-        invert = bool(len(match.group(1)) % 2)
-        operator = match.group(2)
-        value = float(match.group(3))
-        percentage = bool(match.group(4) == "%")
-        leftovers = match.group(5)
-        if percentage:
-            value = value / 100.0
-        if operator in ("+", None) and not invert:
-            current += value
-        elif operator == "-" and not invert:
-            current -= value
-        elif operator == "*" and not invert:
-            current *= value
-        elif operator == "/" and not invert:
-            current /= value
-        return current
-
 
     def for_console(self) -> str:
         return "{label}\n{score}\n{title}\n{message}".format(label=self.label,
