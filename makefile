@@ -20,5 +20,5 @@ style:
 	flake8 pedal/
 
 publish:
-	python setup.py sdist bdist_wheel
+	python3 setup.py sdist bdist_wheel
 	twine upload ./dist/* --skip-existing
