@@ -353,7 +353,7 @@ class GradeMagic(Magics):
             else:
                 inputs = line
                 assignment = ""
-            inputs = json.dumps(inputs)
+            inputs = json.dumps(inputs.split(",")[1:])
         return {"inputs": inputs, "assignment": assignment}
 
     # noinspection PyMethodMayBeStatic
