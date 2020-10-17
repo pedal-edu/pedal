@@ -113,3 +113,7 @@ venv.bak/
 
 # Luke Gusukuma personalization
 ctstats/
+
+# Powerpoint/excel/word
+~$*.pptx
+~$*.docx
