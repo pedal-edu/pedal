@@ -38,4 +38,5 @@ jobs:
         #flake8 pedal/ --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with unittest
       run: |
-        python -m unittest discover tests/
+        cd tests/
+        python -m unittest discover ./
