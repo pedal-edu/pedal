@@ -1,19 +1,39 @@
 Introduction
 ============
 
-.. image:: ../_static/pedal-overview-v3.png
+Good feedback is hard to come by.
+Imagine you are a student submitting your first program, and this is what
+the system spits out::
 
+    Traceback (most recent call last):
+        File "instructor.py", line 12323, in _special_custom_helper:
+            self.assertEqual(result, 5)
+    AssertionError: 7 != 5
+
+Pretty disorienting, right?
 We believe that autograding feedback should be *more* than just unit tests.
-Program analysis can give us deep insight into students' problems - if they
-declare a variable and its never used it, shouldn't we address that with feedback?
+Program analysis can give us deeper insight into students' issues, and allow
+us to write more accurate feedback.
 Research has shown that many existing error messages are unhelpful - can't we
-provide more context, details, and pedagogically-friendly language when students
-get a TypeError because they added a string and a number? Our goal is
-to make it easier for instructors to leverage these tools and start making
+provide more context, details, and pedagogically-friendly language? Our goal is
+to make it easier for instructors to write sophisticated feedback and make
 measurable progress towards helping learners.
 
+The Pedal library is a pure Python library that let's instructors create grading
+scripts that analyze a students' submission to provide custom feedback.
+Using declarative Python statement, the instructors specify conditions that should
+trigger different responses. The system chooses the most appropriate feedback
+(in addition to tracking alternatives).
+Since Pedal itself is written in Python, it is compatible with a wide range of
+autograding platforms - as long as they allow you to execute arbitrary Python code.
+
+An Example
+----------
+
+Let's look at an example.
+
 .. code-block:: python
-    :caption: student.py
+    :caption: An Example Student Program with Mistakes
 
     def add_prices(books):
         for book in books:
@@ -21,44 +41,57 @@ measurable progress towards helping learners.
             return total
 
 The student's code above has a number of errors - they failed to initialize a
-variable, they used the list instead of the iteration target, they returned
-inside of a loop, etc. Pedal could detect many of these scenarios and provide
-different kinds of feedback.
+variable, they added the list to the iteration varaible, they returned
+inside of a loop... There's a lot wrong here!
+Pedal could detect many of these scenarios and provide different kinds of feedback.
+
+Let's take a look a quick look at a complex Pedal script that could provide
+feedback on this code.
 
 .. code-block:: python
-    :caption: instructor.py
+    :caption: Instructor Control Script
 
     from pedal import *
 
-    from pedal.source import verify
+    # Check for syntax errors
     verify()
 
     # Generic, friendly feedback on undeclared variables, among others
-    from pedal.tifa import tifa_analysis
     tifa_analysis()
 
     # Partial credit for good progress
-    from pedal.commands import give_partial
-    from pedal.cait import parse_program
-    ast = parse_program()
-    if ast.find("For"):
-        give_partial(1/10, "Right, you need a `for` loop!")
+    if find_asts("For"):
+        compliment("Good, you have a `for` loop!", score="+10%")
 
     # Give feedback by finding a common problem-specific mistake
-    from pedal.commands import explain
-    from pedal.cait import find_matches
-    matches = find_matches("for _expr_ in _list_:\n ___ = ____ + _list_")
+    matches = find_matches("for _expr_ in _list_:\n"
+                           "    ___ = ____ + _list_")
     if matches:
-        explain("list_inside_loop", "You shouldn't use the list inside the for loop.")
+        explain("You shouldn't use the list inside the for loop.",
+                label="list_inside_loop", title="List Inside Loop")
 
-    # Unit test, with enhanced tracebacks and safe execution!
-    from pedal.sandbox import run
-    from pedal.assertions import assert_equal, ensure_function
+    # Run students' code in a sandbox
     student = run()
-    ensure_function(student, 'add_prices', list, returns=int)
-    assert_equal(student.add_prices([1,2,3]), 6)
+    # Check they defined the function with the right type
+    ensure_function(student, 'add_prices', arity=1, returns=int)
+    # Unit test their function
+    assert_equal(call('add_prices', [1,2,3]), 6)
 
+    # Have the resolver choose some feedback
     resolve()
 
-This only briefly summarizes some of our features, read some of the sections
-below to find out more!
+Architecture
+------------
+
+The diagram below captures the major components of Pedal with a little detail.
+
+.. image:: ../_static/pedal-overview-v3.png
+
+Teachers begin by creating an Instructor Control Script, like the one above,
+using Pedal's selection of tools. This script should be associated with a problem
+on your autograding platform, and students can submit a solution for that question.
+The tools can analyze the student's submission for conditions that warrant specific
+responses. The responses and their conditions are then encapsulated into raw
+Feedback, which is stored in a centralized Report. At the conclusion of the script,
+a Resolver is used to choose the most appropriate final feedback (or feedbacks),
+which are then sent back to the student via the autograder.
