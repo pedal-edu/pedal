@@ -12,8 +12,7 @@ setuptools.setup(
               'pedal.resolvers', 'pedal.command_line',
               'pedal.source', 'pedal.cait', 'pedal.tifa',
               'pedal.sandbox', 'pedal.assertions',
-              'pedal.questions', 'pedal.toolkit',
-              'pedal.extensions', 'pedal.types'
+              'pedal.questions', 'pedal.extensions', 'pedal.types'
               ],
     license='Creative Commons Attribution-Noncommercial-Share Alike license',
     long_description=open('README.rst').read(),
