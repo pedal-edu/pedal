@@ -7,6 +7,7 @@ import types
 
 from pedal.sandbox.exceptions import (SandboxNoMoreInputsException,
                                       SandboxPreventModule)
+from pedal.utilities.system import IS_PYTHON_36
 
 
 def do_nothing(*args, **kwargs):
@@ -238,6 +239,34 @@ class MockTurtle(MockModule):
         #       of the drawing result that we could autograde!
     """
     module_name = 'turtle'
+    if IS_PYTHON_36:
+        FIELDS = ["Canvas", "Pen", "RawPen", "RawTurtle", "Screen",
+                  "ScrolledCanvas", "Shape", "TK", "TNavigator", "TPen", "Tbuffer",
+                  "Terminator", "Turtle", "TurtleGraphicsError", "TurtleScreen",
+                  "TurtleScreenBase", "Vec2D", "addshape", "back", "backward",
+                  "begin_fill", "begin_poly", "bgcolor", "bgpic", "bk", "bye",
+                  "circle", "clear", "clearscreen", "clearstamp", "clearstamps",
+                  "clone", "color", "colormode", "config_dict", "deepcopy",
+                  "degrees", "delay", "distance", "done", "dot", "down",
+                  "end_fill", "end_poly", "exitonclick", "fd", "fillcolor",
+                  "filling", "forward", "get_poly", "get_shapepoly", "getcanvas",
+                  "getmethparlist", "getpen", "getscreen", "getshapes", "getturtle",
+                  "goto", "heading", "hideturtle", "home", "ht", "inspect",
+                  "isdown", "isfile", "isvisible", "join", "left", "listen", "lt",
+                  "mainloop", "math", "mode", "numinput", "onclick", "ondrag",
+                  "onkey", "onkeypress", "onkeyrelease", "onrelease",
+                  "onscreenclick", "ontimer", "pd", "pen", "pencolor", "pendown",
+                  "pensize", "penup", "pos", "position", "pu", "radians",
+                  "read_docstrings", "readconfig", "register_shape", "reset",
+                  "resetscreen", "resizemode", "right", "rt", "screensize",
+                  "seth", "setheading", "setpos", "setposition", "settiltangle",
+                  "setundobuffer", "setup", "setworldcoordinates", "setx", "sety",
+                  "shape", "shapesize", "shapetransform", "shearfactor",
+                  "showturtle", "simpledialog", "speed", "split", "st", "stamp",
+                  "sys", "textinput", "tilt", "tiltangle", "time", "title",
+                  "towards", "tracer", "turtles", "turtlesize", "types", "undo",
+                  "undobufferentries", "up", "update", "width", "window_height",
+                  "window_width", "write", "write_docstringdict", "xcor", "ycor"]
 
     def __init__(self):
         self.calls = []
@@ -246,7 +275,11 @@ class MockTurtle(MockModule):
         self.calls = []
         
     def _generate_patches(self):
-        return {'__getattr__': self.getter}
+        if IS_PYTHON_36:
+            # Generate patches manually
+            return {name: self.getter(name) for name in self.FIELDS}
+        else:
+            return {'__getattr__': self.getter}
 
     def getter(self, key):
         " If anything asks, we prevent the module. Except for __file__. "
@@ -261,37 +294,6 @@ class MockTurtle(MockModule):
         
     def _fake_call(self, *args, **kwargs):
         return 0
-
-    '''
-    def _generate_patches(self):
-        def dummy(**kwargs):
-            pass
-
-        return dict(Canvas=dummy, Pen=dummy, RawPen=dummy, RawTurtle=dummy, Screen=dummy, ScrolledCanvas=dummy,
-                    Shape=dummy, TK=dummy, TNavigator=dummy, TPen=dummy, Tbuffer=dummy, Terminator=dummy,
-                    Turtle=dummy, TurtleGraphicsError=dummy, TurtleScreen=dummy, TurtleScreenBase=dummy, Vec2D=dummy,
-                    addshape=dummy, back=dummy, backward=dummy, begin_fill=dummy, begin_poly=dummy, bgcolor=dummy,
-                    bgpic=dummy, bk=dummy, bye=dummy, circle=dummy, clear=dummy, clearscreen=dummy, clearstamp=dummy,
-                    clearstamps=dummy, clone=dummy, color=dummy, colormode=dummy, config_dict=dummy, deepcopy=dummy,
-                    degrees=dummy, delay=dummy, distance=dummy, done=dummy, dot=dummy, down=dummy, end_fill=dummy,
-                    end_poly=dummy, exitonclick=dummy, fd=dummy, fillcolor=dummy, filling=dummy, forward=dummy,
-                    get_poly=dummy, get_shapepoly=dummy, getcanvas=dummy, getmethparlist=dummy, getpen=dummy,
-                    getscreen=dummy, getshapes=dummy, getturtle=dummy, goto=dummy, heading=dummy, hideturtle=dummy,
-                    home=dummy, ht=dummy, inspect=dummy, isdown=dummy, isfile=dummy, isvisible=dummy, join=dummy,
-                    left=dummy, listen=dummy, lt=dummy, mainloop=dummy, math=dummy, mode=dummy, numinput=dummy,
-                    onclick=dummy, ondrag=dummy, onkey=dummy, onkeypress=dummy, onkeyrelease=dummy, onrelease=dummy,
-                    onscreenclick=dummy, ontimer=dummy, pd=dummy, pen=dummy, pencolor=dummy, pendown=dummy,
-                    pensize=dummy, penup=dummy, pos=dummy, position=dummy, pu=dummy, radians=dummy,
-                    read_docstrings=dummy, readconfig=dummy, register_shape=dummy, reset=dummy, resetscreen=dummy,
-                    resizemode=dummy, right=dummy, rt=dummy, screensize=dummy, seth=dummy, setheading=dummy,
-                    setpos=dummy, setposition=dummy, settiltangle=dummy, setundobuffer=dummy, setup=dummy,
-                    setworldcoordinates=dummy, setx=dummy, sety=dummy, shape=dummy, shapesize=dummy,
-                    shapetransform=dummy, shearfactor=dummy, showturtle=dummy, simpledialog=dummy, speed=dummy,
-                    split=dummy, st=dummy, stamp=dummy, sys=dummy, textinput=dummy, tilt=dummy, tiltangle=dummy,
-                    time=dummy, title=dummy, towards=dummy, tracer=dummy, turtles=dummy, turtlesize=dummy, types=dummy,
-                    undo=dummy, undobufferentries=dummy, up=dummy, update=dummy, width=dummy, window_height=dummy,
-                    window_width=dummy, write=dummy, write_docstringdict=dummy, xcor=dummy, ycor=dummy)
-    '''
 
 
 class MockPlt(MockModule):
