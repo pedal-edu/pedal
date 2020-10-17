@@ -44,6 +44,7 @@ from pedal.tifa.feedbacks import (action_after_return, return_outside_function,
                                   incorrect_arity, else_on_loop_body,
                                   module_not_found, nested_function_definition,
                                   unused_returned_value, invalid_indexing)
+from pedal.utilities.system import IS_PYTHON_39
 
 
 class Tifa(TifaCore, ast.NodeVisitor):
@@ -220,6 +221,7 @@ class Tifa(TifaCore, ast.NodeVisitor):
                 # TODO: Handle updating value in list
                 pass
             elif isinstance(left_hand_type, DictType):
+                # TODO: Update this for Python 3.9, now that Slice notation has changed
                 if not isinstance(target.slice, ast.Index):
                     # TODO: Can't subscript a dictionary assignment
                     return None
@@ -244,6 +246,7 @@ class Tifa(TifaCore, ast.NodeVisitor):
             # TODO: Handle minor type changes (e.g., appending to an inner list)
 
     def _visit_collection_loop(self, node):
+        was_empty = False
         # Handle the iteration list
         iter_list = node.iter
         iter_list_name = None
@@ -259,6 +262,7 @@ class Tifa(TifaCore, ast.NodeVisitor):
         if iter_type.is_empty():
             # TODO: It should check if its ONLY ever iterating over an empty list.
             # For now, only reports if we are NOT in a function
+            was_empty = True
             if len(self.scope_chain) == 1:
                 self._issue(iterating_over_empty_list(self.locate(iter_list), iter_list_name))
 
@@ -270,9 +274,12 @@ class Tifa(TifaCore, ast.NodeVisitor):
         # Handle the iteration variable
         iter_variable_name = self._walk_target(node.target, iter_subtype)
 
+        # Check that the iteration list and variable are distinct
         if iter_variable_name and iter_list_name:
             if iter_variable_name == iter_list_name:
                 self._issue(iteration_problem(self.locate(node.target), iter_variable_name))
+
+        return was_empty
 
     def visit_AnnAssign(self, node):
         """
@@ -599,10 +606,11 @@ class Tifa(TifaCore, ast.NodeVisitor):
         Args:
             node:
         """
-        self._visit_collection_loop(node)
+        was_empty = self._visit_collection_loop(node)
         # Handle the bodies
-        self.visit_statements(node.body)
-        self.visit_statements(node.orelse)
+        if not was_empty:
+            self.visit_statements(node.body)
+            self.visit_statements(node.orelse)
 
     def visit_FunctionDef(self, node):
         """
@@ -1013,10 +1021,23 @@ class Tifa(TifaCore, ast.NodeVisitor):
         # Handle value
         value_type = self.visit(node.value)
         # Handle slice
-        if isinstance(node.slice, ast.Index):
-            literal = self.get_literal(node.slice.value)
+        if IS_PYTHON_39 and isinstance(node.slice, ast.Tuple):
+            # TODO: Do something about extslices (especially since students stumble into this accidentally)
+            pass
+        elif not IS_PYTHON_39 and isinstance(node.slice, ast.ExtSlice):
+            # TODO: Do something about extslices (especially since students stumble into this accidentally)
+            pass
+        elif isinstance(node.slice, ast.Slice):
+            self.visit_Slice(node.slice)
+            return value_type
+        else:
+            if IS_PYTHON_39:
+                slice = node.slice
+            else:
+                slice = node.slice.value
+            literal = self.get_literal(slice)
             if literal is None:
-                literal = get_pedal_literal_from_pedal_type(self.visit(node.slice.value))
+                literal = get_pedal_literal_from_pedal_type(self.visit(slice))
             result = value_type.index(literal)
             # TODO: Is this sufficient? Maybe we should be throwing?
             if isinstance(result, UnknownType):
@@ -1024,14 +1045,17 @@ class Tifa(TifaCore, ast.NodeVisitor):
                                              literal.type()))
             else:
                 return result
-        elif isinstance(node.slice, ast.Slice):
-            if node.slice.lower is not None:
-                self.visit(node.slice.lower)
-            if node.slice.upper is not None:
-                self.visit(node.slice.upper)
-            if node.slice.step is not None:
-                self.visit(node.slice.step)
-            return value_type
+
+    def visit_Slice(self, node):
+        """ Handles a slice by visiting its components; cannot return a value
+        because the slice is always the same type as its value, which is
+        not available on the Slice node itself. """
+        if node.lower is not None:
+            self.visit(node.lower)
+        if node.upper is not None:
+            self.visit(node.upper)
+        if node.step is not None:
+            self.visit(node.step)
 
     def visit_Tuple(self, node) -> TupleType:
         """ Handle Tuple literal """
