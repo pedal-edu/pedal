@@ -1,6 +1,13 @@
 Pedal
 =====
 
+.. image:: https://github.com/pedal-edu/pedal/workflows/Test%20and%20Lint/badge.svg
+    :alt: Test and Lint
+
+
+.. image:: https://github.com/pedal-edu/pedal/workflows/Build%20Documentation/badge.svg
+    :alt: Documentation
+
 A collection of tools to analyze student's work in a pipeline.
 Pedal not only provides some of these tools, but it provides a *framework*
 around those tools.
