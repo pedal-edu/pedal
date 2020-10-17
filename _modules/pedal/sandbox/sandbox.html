@@ -1,0 +1,1083 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pedal.sandbox.sandbox &mdash; Pedal 1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> Pedal
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../everyone/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../everyone/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../teachers/quickstart.html">Teacher Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../teachers/examples.html">Teacher Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../teachers/reference.html">Teacher Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../teachers/tutorial.html">Teacher Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../teachers/practices.html">Best Practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers/guide.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers/api.html">Developer API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers/integrations.html">Developer Integrations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers/tools.html">Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers/conventions.html">Naming Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../everyone/glossary.html">Glossary</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Pedal</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../sandbox.html">pedal.sandbox</a> &raquo;</li>
+        
+      <li>pedal.sandbox.sandbox</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pedal.sandbox.sandbox</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">File containing the Sandbox class.</span>
+
+<span class="sd">Student attributes:</span>
+
+<span class="sd">student.data</span>
+<span class="sd">student.functions</span>
+<span class="sd">student.vars</span>
+<span class="sd">student.result</span>
+<span class="sd">student.output (list[str]): The list of strings that have been printed to the</span>
+<span class="sd">    console by :py:func:`print`. Note that line endings have been removed</span>
+<span class="sd">    using :py:func:`string.rstrip`.</span>
+<span class="sd">student.inputs (list[str]): The list of strings that will be passed to</span>
+<span class="sd">    :py:func:`input`.</span>
+<span class="sd">student.raw_output (str): A concatenated string of all the text that was printed</span>
+<span class="sd">    to console. No changes have been made to the text.</span>
+<span class="sd">student.exception (Exception or None): The exception that occurred during the</span>
+<span class="sd">    most recent execution, or None if nothing happened.</span>
+<span class="sd">student.modules.plots</span>
+<span class="sd">student.modules.turtles</span>
+
+<span class="sd">student.settings</span>
+
+<span class="sd">TODO: Handle sys.argv</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">io</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">zip_longest</span>
+<span class="kn">from</span> <span class="nn">unittest.mock</span> <span class="kn">import</span> <span class="n">patch</span>
+
+<span class="kn">from</span> <span class="nn">pedal.core.feedback_category</span> <span class="kn">import</span> <span class="n">FeedbackCategory</span>
+<span class="kn">from</span> <span class="nn">pedal.core.report</span> <span class="kn">import</span> <span class="n">MAIN_REPORT</span>
+<span class="kn">from</span> <span class="nn">pedal.utilities.exceptions</span> <span class="kn">import</span> <span class="n">ExpandedTraceback</span><span class="p">,</span> <span class="n">improve_builtin_exceptions</span>
+<span class="kn">from</span> <span class="nn">pedal.sandbox.data</span> <span class="kn">import</span> <span class="n">SandboxVariable</span><span class="p">,</span> <span class="n">SandboxContextKind</span><span class="p">,</span> \
+    <span class="n">SandboxContext</span><span class="p">,</span> <span class="n">SandboxModules</span>
+<span class="kn">from</span> <span class="nn">pedal.sandbox</span> <span class="kn">import</span> <span class="n">mocked</span>
+<span class="kn">from</span> <span class="nn">pedal.sandbox.constants</span> <span class="kn">import</span> <span class="n">TOOL_NAME</span>
+<span class="kn">from</span> <span class="nn">pedal.sandbox.feedbacks</span> <span class="kn">import</span> <span class="n">runtime_error</span><span class="p">,</span> <span class="n">EXCEPTION_FF_MAP</span>
+<span class="kn">from</span> <span class="nn">pedal.sandbox.exceptions</span> <span class="kn">import</span> <span class="n">SandboxHasNoFunction</span><span class="p">,</span> <span class="n">SandboxHasNoVariable</span>
+<span class="kn">from</span> <span class="nn">pedal.sandbox.timeout</span> <span class="kn">import</span> <span class="n">timeout</span>
+<span class="kn">from</span> <span class="nn">pedal.sandbox.result</span> <span class="kn">import</span> <span class="n">SandboxResult</span>
+<span class="kn">from</span> <span class="nn">pedal.sandbox.tracer</span> <span class="kn">import</span> <span class="n">TRACER_STYLES</span>
+
+
+<div class="viewcode-block" id="Sandbox"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox">[docs]</a><span class="k">class</span> <span class="nc">Sandbox</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Args:</span>
+<span class="sd">        report (:py:class:`~pedal.core.report.Report`): The report that this</span>
+<span class="sd">            Sandbox is attached to.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        _context (list[SandboxContext]): The history of executions made in</span>
+<span class="sd">            this sandbox.</span>
+<span class="sd">        _next_context_id (int): The ID of the next execution context.</span>
+<span class="sd">        _current_patches (list[Patch]): A stack of patches that are currently</span>
+<span class="sd">            being used. This allows recursive patching behavior.</span>
+<span class="sd">        data (dict[str, Any]): The namespace that the context are occurring in.</span>
+<span class="sd">            Note that this is mutable.</span>
+
+<span class="sd">        exception (Exception): The exception that occurred during the</span>
+<span class="sd">            most recent execution, or None if nothing happened.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">MAXIMUM_TEMPORARY_LENGTH</span> <span class="o">=</span> <span class="mi">25</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">report</span> <span class="o">=</span> <span class="n">report</span>
+        <span class="c1"># Namespace</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">exception</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">feedback</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># Contextualization</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_context</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_next_context_id</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_context_group_start</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># Patching</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_current_patches</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_current_stdout</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># Temporary Variables</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_temporary_variables</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_backup_variables</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1"># Modules</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_module_overrides</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">modules</span> <span class="o">=</span> <span class="n">SandboxModules</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clear_mocks</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clear_data</span><span class="p">()</span>
+        <span class="c1"># Inputs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># Outputs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">raw_output</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># Target</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">target</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># Proxying results</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">result_proxy_class</span> <span class="o">=</span> <span class="n">SandboxResult</span>
+        <span class="c1"># Show the full traceback</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">full_traceback</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="c1"># Use threading?</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">threaded</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">allowed_time</span> <span class="o">=</span> <span class="mi">3</span>
+        <span class="c1"># Tracer Styles</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tracer_style</span> <span class="o">=</span> <span class="s1">&#39;none&#39;</span>
+
+    <span class="c1">############################################################################</span>
+    <span class="c1"># Execution (run/call/eval)</span>
+
+    <span class="k">def</span> <span class="nf">_execute_with_timeout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">kind</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Execute the given code, but stop after `self.allowed_time`.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            code (str):</span>
+<span class="sd">            filename (str):</span>
+<span class="sd">            kind (:py:class:`pedal.sandbox.sandbox_mixins.SandboxContextKind`):</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            :py:class:`pedal.sandbox.sandbox.Sandbox`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">timeout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">allowed_time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute</span><span class="p">,</span>
+                           <span class="n">code</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">kind</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">TimeoutError</span> <span class="k">as</span> <span class="n">timeout_exception</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_stop_patches</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_capture_exception</span><span class="p">(</span><span class="n">timeout_exception</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">(),</span>
+                                    <span class="n">code</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">_execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">kind</span><span class="p">,</span> <span class="n">threaded</span><span class="p">,</span> <span class="o">**</span><span class="n">meta</span><span class="p">):</span>
+        <span class="c1"># Handle any threading if necessary</span>
+        <span class="k">if</span> <span class="n">threaded</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute_with_timeout</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">kind</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">clear_exception</span><span class="p">()</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="n">SandboxContext</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_next_context_id</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">kind</span><span class="p">,</span>
+                                 <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="p">,</span> <span class="p">[],</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">exception</span><span class="p">,</span>
+                                 <span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">submission</span><span class="p">,</span> <span class="o">**</span><span class="n">meta</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_context</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+
+        <span class="c1"># Patch in dangerous built-ins</span>
+        <span class="c1"># Override builtins and mock stuff out</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_start_mocking</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># TODO: Support CaitNode and Ast (needs skulpt to support compile better)</span>
+            <span class="n">compiled_code</span> <span class="o">=</span> <span class="nb">compile</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;exec&#39;</span><span class="p">)</span>
+            <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">as_filename</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">code</span><span class="p">):</span>
+                <span class="n">exec</span><span class="p">(</span><span class="n">compiled_code</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">user_exception</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_stop_mocking</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_capture_exception</span><span class="p">(</span><span class="n">user_exception</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">(),</span>
+                                    <span class="n">code</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_stop_mocking</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_next_context_id</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+<div class="viewcode-block" id="Sandbox.run"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">inputs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">threaded</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">after</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">before</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        If both ``code`` and ``filename`` are None, then the submission&#39;s</span>
+<span class="sd">        main file will be executed. If ``code`` is given but ``filename`` is</span>
+<span class="sd">        not, then it is assumed to be instructor code.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            code (str or :py:class:`~pedal.cait.cait_node.CaitNode` or None):</span>
+<span class="sd">                The code to execute.</span>
+<span class="sd">            filename (str or None): The filename to use for this code.</span>
+<span class="sd">            inputs (list[str]): Optional inputs to be passed to</span>
+<span class="sd">                :py:func:`~pedal.sandbox.Sandbox.set_input`.</span>
+<span class="sd">            threaded (bool): Whether or not to run this code in a threaded</span>
+<span class="sd">                environment, which allows for timeouts.</span>
+<span class="sd">            after (str): Code to run after this code (without a filename).</span>
+<span class="sd">            before (str): Code to run before this code (without a filename).</span>
+
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Sandbox: This sandbox instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">threaded</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">threaded</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">threaded</span>
+        <span class="k">if</span> <span class="n">code</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">filename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">main_file</span>
+            <span class="n">code</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="n">filename</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">filename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">instructor_file</span>
+        <span class="k">if</span> <span class="n">inputs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_input</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">before</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_execute</span><span class="p">(</span><span class="n">before</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">SandboxContextKind</span><span class="o">.</span><span class="n">RUN</span><span class="p">,</span> <span class="n">threaded</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">target</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_execute</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">SandboxContextKind</span><span class="o">.</span><span class="n">RUN</span><span class="p">,</span> <span class="n">threaded</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">after</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_execute</span><span class="p">(</span><span class="n">after</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">SandboxContextKind</span><span class="o">.</span><span class="n">RUN</span><span class="p">,</span> <span class="n">threaded</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Sandbox.call"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.call">[docs]</a>    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="n">threaded</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+             <span class="n">inputs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">function_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+             <span class="n">args_locals</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">kwargs_locals</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Execute the given function from the student&#39;s namespace.</span>
+
+<span class="sd">        The ``args_locals`` and ``kwargs_locals`` values allow you to</span>
+<span class="sd">        use student&#39;s local variables as arguments, instead of literal values.</span>
+<span class="sd">        They actually support any arbitrary Python code, it will be injected</span>
+<span class="sd">        without modification.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            function (str): The name of the function to call.</span>
+<span class="sd">            *args (Any): Any number of positional arguments to be passed to</span>
+<span class="sd">                the called function.</span>
+<span class="sd">            target (str): The variable to assign the result of this call to.</span>
+<span class="sd">                Defaults to ``&quot;_&quot;``.</span>
+<span class="sd">            threaded (bool): Whether or not to run this code in a threaded</span>
+<span class="sd">                environment, which allows for timeouts.</span>
+<span class="sd">            inputs (str or list[str]):</span>
+<span class="sd">            function_kwargs (dict[str, Any]): Additional keyword arguments</span>
+<span class="sd">                that could not be passed in directly via ``**kwargs`` (perhaps</span>
+<span class="sd">                because they conflict with an existing parameter like</span>
+<span class="sd">                ``target``).</span>
+<span class="sd">            args_locals (list[str]): A list of names (or any valid Python</span>
+<span class="sd">                expression) that will be passed as positional arguments to</span>
+<span class="sd">                the function (as opposed to actual values). If any value is</span>
+<span class="sd">                None (or if the list is too short), then the corresponding</span>
+<span class="sd">                position argument from ``*args`` will be used instead.</span>
+<span class="sd">            kwargs_locals (dict[str, str]): A dictionary of keyword argument</span>
+<span class="sd">                names mapped to local names (or any valid Python expression),</span>
+<span class="sd">                that will be used as keyword parameters similar to</span>
+<span class="sd">                ``args_locals``.</span>
+<span class="sd">            **kwargs (): Additional keyword arguments passed to the called</span>
+<span class="sd">                function.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Exception or :py:class:`~pedal.sandbox.sandbox.SandboxResult`: The</span>
+<span class="sd">                result of calling the function will be returned, proxied behind</span>
+<span class="sd">                a SandboxResult (which attempts to perfectly emulate that</span>
+<span class="sd">                value). If the function call failed, the exception will be</span>
+<span class="sd">                returned instead.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Confirm that the function_name exists</span>
+        <span class="k">if</span> <span class="n">function</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">functions</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">function</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">exception</span> <span class="o">=</span> <span class="n">SandboxHasNoVariable</span><span class="p">(</span>
+                    <span class="s2">&quot;The function </span><span class="si">{function}</span><span class="s2"> does not exist.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">function</span><span class="o">=</span><span class="n">function</span><span class="p">)</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">exception</span> <span class="o">=</span> <span class="n">SandboxHasNoFunction</span><span class="p">(</span>
+                    <span class="s2">&quot;The variable </span><span class="si">{function}</span><span class="s2"> is not a function.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">function</span><span class="o">=</span><span class="n">function</span><span class="p">)</span>
+                <span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">exception</span>
+        <span class="c1"># Handle convenience setup</span>
+        <span class="k">if</span> <span class="n">inputs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_input</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">function_kwargs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">function_kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">args_locals</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">args_locals</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">kwargs_locals</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">kwargs_locals</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># Make the call and evaluate it</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">target</span> <span class="o">=</span> <span class="n">target</span>
+        <span class="n">actual</span><span class="p">,</span> <span class="n">student</span><span class="p">,</span> <span class="n">arguments</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_construct_call</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span>
+                                                          <span class="n">args_locals</span><span class="p">,</span> <span class="n">kwargs_locals</span><span class="p">,</span>
+                                                          <span class="n">target</span><span class="p">)</span>
+        <span class="n">context_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_next_context_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_execute</span><span class="p">(</span><span class="n">actual</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">instructor_file</span><span class="p">,</span>
+                      <span class="n">SandboxContextKind</span><span class="o">.</span><span class="n">CALL</span><span class="p">,</span> <span class="n">threaded</span><span class="o">=</span><span class="n">threaded</span><span class="p">,</span>
+                      <span class="n">called</span><span class="o">=</span><span class="n">function</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="n">arguments</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_purge_temporaries</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_result</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">context_id</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Sandbox.evaluate"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.evaluate">[docs]</a>    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="n">threaded</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Evaluates the given code and assigns the result to the given target.</span>
+<span class="sd">        Will cause an error if ``code`` is not a valid expression.</span>
+
+<span class="sd">        # TODO: Clean up syntax error.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            code (str or :py:class:`~pedal.cait.cait_node.CaitNode`):</span>
+<span class="sd">                The code to execute. If a CaitNode, then that will be executed</span>
+<span class="sd">                directly instead of being compiled.</span>
+<span class="sd">            target (str): The name of the variable to assign the result to.</span>
+<span class="sd">                Note that the result is also returned by this function.</span>
+<span class="sd">            threaded (bool): Whether or not to run this code in a threaded</span>
+<span class="sd">                environment, which allows for timeouts.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Exception or :py:class:`~pedal.sandbox.sandbox.SandboxResult`: The</span>
+<span class="sd">                result of evaluating the code will be returned, proxied behind</span>
+<span class="sd">                a SandboxResult (which attempts to perfectly emulate that</span>
+<span class="sd">                value). If the function call failed, the exception will be</span>
+<span class="sd">                returned instead.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">target</span> <span class="o">=</span> <span class="n">target</span>
+        <span class="n">code</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{target}</span><span class="s2"> = </span><span class="si">{code}</span><span class="s2">&quot;</span>
+        <span class="n">context_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_next_context_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_execute</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">instructor_file</span><span class="p">,</span>
+                      <span class="n">SandboxContextKind</span><span class="o">.</span><span class="n">EVAL</span><span class="p">,</span> <span class="n">threaded</span><span class="o">=</span><span class="n">threaded</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_result</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">context_id</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_handle_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">context_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Determine the appropriate return value (either an exception or the</span>
+<span class="sd">        value stored in target. Also updates self.result. &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">exception</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">target</span><span class="p">]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_proxy_class</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_proxy_class</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">,</span>
+                                                      <span class="n">context_id</span><span class="o">=</span><span class="n">context_id</span><span class="p">,</span>
+                                                      <span class="n">sandbox</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_proxy_class</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">exception</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_proxy_class</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exception</span><span class="p">,</span>
+                                                         <span class="n">context_id</span><span class="o">=</span><span class="n">context_id</span><span class="p">,</span>
+                                                         <span class="n">sandbox</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">exception</span>
+
+    <span class="c1">############################################################################</span>
+    <span class="c1"># Context (history of executions)</span>
+
+<div class="viewcode-block" id="Sandbox.get_context"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.get_context">[docs]</a>    <span class="k">def</span> <span class="nf">get_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieve the most recent contexts</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            list[:py:class:`pedal.sandbox.sandbox_mixins.SandboxContext`]: The</span>
+<span class="sd">                most recent execution, or executions if currently in a group.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># TODO: Test off-by-one-errors</span>
+        <span class="k">if</span> <span class="n">context_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_context_group_start</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_context</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">:]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_context</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_context_group_start</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_context_group_start</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_context</span><span class="p">[</span><span class="n">context_id</span><span class="p">]]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">past_context_group_starts</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_context_group_start</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+                    <span class="k">if</span> <span class="n">past_context_group_starts</span> <span class="o">&lt;</span> <span class="n">context_id</span><span class="o">+</span><span class="mi">1</span><span class="p">:</span>
+                        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_context</span><span class="p">[</span><span class="n">past_context_group_starts</span><span class="p">:</span><span class="n">context_id</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_context</span><span class="p">[:</span><span class="n">context_id</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span></div>
+
+    <span class="k">def</span> <span class="nf">_guess_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Tries to figure out the best context for the given target_name, by</span>
+<span class="sd">        first checking whether the target was ever used in a CALL or EVAL.</span>
+<span class="sd">        If it fails to find it, then it uses the most recent RUN. Otherwise,</span>
+<span class="sd">        it just just returns None.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            :py:class:`pedal.sandbox.data.SandboxContext` or None: The found</span>
+<span class="sd">                context, or None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Was it a target for a CALL or EVAL?</span>
+        <span class="k">for</span> <span class="n">context</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_context</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">context</span><span class="o">.</span><span class="n">kind</span> <span class="ow">in</span> <span class="p">(</span><span class="n">SandboxContextKind</span><span class="o">.</span><span class="n">EVAL</span><span class="p">,</span> <span class="n">SandboxContextKind</span><span class="o">.</span><span class="n">CALL</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">context</span><span class="o">.</span><span class="n">target</span> <span class="o">==</span> <span class="n">target_name</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">context</span>
+        <span class="c1"># Just get the last run</span>
+        <span class="k">for</span> <span class="n">context</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_context</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">context</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="n">SandboxContextKind</span><span class="o">.</span><span class="n">RUN</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">context</span>
+        <span class="c1"># Okay just give up</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="Sandbox.start_grouping_context"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.start_grouping_context">[docs]</a>    <span class="k">def</span> <span class="nf">start_grouping_context</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Any subsequent executions will be grouped. &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_context_group_start</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_next_context_id</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Sandbox.stop_grouping_context"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.stop_grouping_context">[docs]</a>    <span class="k">def</span> <span class="nf">stop_grouping_context</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Stop grouping subsequent executions. &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_context_group_start</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Sandbox.clear_context"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.clear_context">[docs]</a>    <span class="k">def</span> <span class="nf">clear_context</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Removes the history of any previous executions. &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_context_group_start</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_context</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span></div>
+
+    <span class="c1">############################################################################</span>
+    <span class="c1"># Tracing</span>
+    <span class="k">def</span> <span class="nf">_set_tracer_style</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracer_style</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">tracer_style</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">tracer_style</span> <span class="o">=</span> <span class="s1">&#39;none&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tracer_style</span> <span class="o">=</span> <span class="n">tracer_style</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trace</span> <span class="o">=</span> <span class="n">TRACER_STYLES</span><span class="p">[</span><span class="n">tracer_style</span><span class="o">.</span><span class="n">lower</span><span class="p">()]()</span>
+
+    <span class="k">def</span> <span class="nf">_get_tracer_style</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tracer_style</span>
+
+    <span class="n">tracer_style</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">_get_tracer_style</span><span class="p">,</span> <span class="n">_set_tracer_style</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Sandbox.clear_tracer"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.clear_tracer">[docs]</a>    <span class="k">def</span> <span class="nf">clear_tracer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Stop tracing in this sandbox. &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tracer_style</span> <span class="o">=</span> <span class="s1">&#39;none&#39;</span></div>
+
+    <span class="c1">############################################################################</span>
+    <span class="c1"># Exception Handling</span>
+
+    <span class="k">def</span> <span class="nf">_capture_exception</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exception</span><span class="p">,</span> <span class="n">exc_info</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">exception</span> <span class="o">=</span> <span class="n">improve_builtin_exceptions</span><span class="p">(</span><span class="n">exception</span><span class="p">)</span>
+        <span class="c1"># Load in any extra data</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_context</span><span class="p">()</span>
+        <span class="n">line_offsets</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">show_filenames</span> <span class="o">=</span> <span class="p">{</span><span class="n">filename</span><span class="p">}</span> <span class="o">-</span> <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">instructor_file</span><span class="p">}</span>
+        <span class="n">hide_filenames</span> <span class="o">=</span> <span class="p">{</span><span class="n">filename</span><span class="p">}</span>
+        <span class="n">files</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">get_files_lines</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">filename</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+            <span class="n">files</span><span class="p">[</span><span class="n">filename</span><span class="p">]</span> <span class="o">=</span> <span class="n">code</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">submission</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">get_lines</span><span class="p">()</span>
+            <span class="n">show_filenames</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+            <span class="n">line_offsets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">line_offsets</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="n">code</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="c1"># Create a better traceback</span>
+        <span class="n">traceback</span> <span class="o">=</span> <span class="n">ExpandedTraceback</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exception</span><span class="p">,</span> <span class="n">exc_info</span><span class="p">,</span>
+                                      <span class="bp">self</span><span class="o">.</span><span class="n">full_traceback</span><span class="p">,</span>
+                                      <span class="n">hide_filenames</span><span class="p">,</span>
+                                      <span class="n">line_offsets</span><span class="p">,</span>
+                                      <span class="n">show_filenames</span><span class="p">,</span>
+                                      <span class="n">lines</span><span class="p">,</span> <span class="n">files</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">filename</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">instructor_file</span><span class="p">:</span>
+            <span class="n">priority</span> <span class="o">=</span> <span class="n">FeedbackCategory</span><span class="o">.</span><span class="n">SPECIFICATION</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">priority</span> <span class="o">=</span> <span class="n">FeedbackCategory</span><span class="o">.</span><span class="n">RUNTIME</span>
+
+        <span class="n">runtime_error_function</span> <span class="o">=</span> <span class="n">EXCEPTION_FF_MAP</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exception</span><span class="p">),</span>
+                                                      <span class="n">runtime_error</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">feedback</span> <span class="o">=</span> <span class="n">runtime_error_function</span><span class="p">(</span><span class="n">exception</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">exception</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="p">[</span><span class="n">context</span><span class="p">],</span>
+                                               <span class="n">traceback</span><span class="o">=</span><span class="n">traceback</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="n">traceback</span><span class="o">.</span><span class="n">line_number</span><span class="p">,</span>
+                                               <span class="n">report</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="p">,</span> <span class="n">priority</span><span class="o">=</span><span class="n">priority</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="Sandbox.clear_exception"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.clear_exception">[docs]</a>    <span class="k">def</span> <span class="nf">clear_exception</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Removes the latest exception information &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">exception</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">feedback</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+    <span class="c1">############################################################################</span>
+    <span class="c1"># Patching and Mocking</span>
+
+    <span class="k">def</span> <span class="nf">_start_mocking</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">SandboxContext</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Mock input, output, builtins, and modules &quot;&quot;&quot;</span>
+        <span class="c1"># Handle input tracking</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mock_function</span><span class="p">(</span><span class="s1">&#39;input&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_track_inputs</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">inputs</span><span class="p">))</span>
+        <span class="c1"># Override builtin functions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset_builtins</span><span class="p">()</span>
+        <span class="n">builtins</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_module_overrides</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;__builtins__&#39;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">builtins</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;__builtins__&#39;</span><span class="p">][</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">mocked</span><span class="o">.</span><span class="n">ORIGINAL_BUILTINS</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">mocked</span><span class="o">.</span><span class="n">ORIGINAL_BUILTINS</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;__builtins__&#39;</span><span class="p">][</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">mocked</span><span class="o">.</span><span class="n">disabled_builtin</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">mocked</span><span class="o">.</span><span class="n">disabled_builtin</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;__builtins__&#39;</span><span class="p">][</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="c1"># Override sys modules</span>
+        <span class="n">overridden_modules</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_module_overrides</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="n">overridden_modules</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_module_overrides</span><span class="p">[</span><span class="s1">&#39;__builtins__&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">builtins</span>
+        <span class="c1"># And do the patches</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_current_stdout</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_start_patches</span><span class="p">(</span>
+            <span class="n">patch</span><span class="o">.</span><span class="n">dict</span><span class="p">(</span><span class="s1">&#39;sys.modules&#39;</span><span class="p">,</span> <span class="n">overridden_modules</span><span class="p">),</span>
+            <span class="n">patch</span><span class="p">(</span><span class="s1">&#39;sys.stdout&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_stdout</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span>
+            <span class="n">patch</span><span class="p">(</span><span class="s1">&#39;time.sleep&#39;</span><span class="p">,</span> <span class="n">return_value</span><span class="o">=</span><span class="kc">None</span><span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_stop_mocking</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">SandboxContext</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Turn off any patches, store output &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_stop_patches</span><span class="p">()</span>
+        <span class="n">current_stdout</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_stdout</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">append_output</span><span class="p">(</span><span class="n">current_stdout</span><span class="o">.</span><span class="n">getvalue</span><span class="p">(),</span> <span class="n">context</span><span class="p">)</span>
+
+    <span class="c1"># Patching Functionality</span>
+    <span class="k">def</span> <span class="nf">_start_patches</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">patches</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Helper function to start and keep track of multiple patches &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_current_patches</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">patches</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">a_patch</span> <span class="ow">in</span> <span class="n">patches</span><span class="p">:</span>
+            <span class="n">a_patch</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_stop_patches</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Helper function to end any tracked patches &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_patches</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">patches</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_patches</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">a_patch</span> <span class="ow">in</span> <span class="n">patches</span><span class="p">:</span>
+            <span class="n">a_patch</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Sandbox.clear_mocks"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.clear_mocks">[docs]</a>    <span class="k">def</span> <span class="nf">clear_mocks</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Removes any module or builtin overrides currently in effect. &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_module_overrides</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset_default_overrides</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Sandbox.reset_default_overrides"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.reset_default_overrides">[docs]</a>    <span class="k">def</span> <span class="nf">reset_default_overrides</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Resets the list of blocked functions and modules to its starting</span>
+<span class="sd">        state. This blocks ``compile``, ``eval``, ``exec``, ``globals``,</span>
+<span class="sd">        and provides mocked versions of ``open`` and ``import`` that are</span>
+<span class="sd">        more restricted. It also blocks the ``pedal`` module.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_module_overrides</span><span class="p">[</span><span class="s1">&#39;__builtins__&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">block_function</span><span class="p">(</span><span class="s1">&#39;compile&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">block_function</span><span class="p">(</span><span class="s1">&#39;eval&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">block_function</span><span class="p">(</span><span class="s1">&#39;exec&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">block_function</span><span class="p">(</span><span class="s1">&#39;globals&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mock_function</span><span class="p">(</span><span class="s1">&#39;open&#39;</span><span class="p">,</span> <span class="n">mocked</span><span class="o">.</span><span class="n">_restricted_open</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mock_function</span><span class="p">(</span><span class="s1">&#39;__import__&#39;</span><span class="p">,</span> <span class="n">mocked</span><span class="o">.</span><span class="n">_restricted_import</span><span class="p">)</span>
+        <span class="c1"># TODO: This breaks coverage for some reason; it&#39;s a builtin?</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">block_module</span><span class="p">(</span><span class="s1">&#39;pedal&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mock_module</span><span class="p">(</span><span class="s1">&#39;turtle&#39;</span><span class="p">,</span> <span class="n">mocked</span><span class="o">.</span><span class="n">MockTurtle</span><span class="p">(),</span> <span class="s1">&#39;turtles&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mock_module</span><span class="p">(</span><span class="s1">&#39;matplotlib.pyplot&#39;</span><span class="p">,</span> <span class="n">mocked</span><span class="o">.</span><span class="n">MockPlt</span><span class="p">(),</span> <span class="s1">&#39;plotting&#39;</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">mock_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">function_name</span><span class="p">,</span> <span class="n">new_version</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_module_overrides</span><span class="p">[</span><span class="s1">&#39;__builtins__&#39;</span><span class="p">][</span><span class="n">function_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_version</span>
+
+    <span class="k">def</span> <span class="nf">allow_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">function_name</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_module_overrides</span><span class="p">[</span><span class="s1">&#39;__builtins__&#39;</span><span class="p">][</span><span class="n">function_name</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="nf">block_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">function_name</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_module_overrides</span><span class="p">[</span><span class="s1">&#39;__builtins__&#39;</span><span class="p">][</span><span class="n">function_name</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="Sandbox.allow_module"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.allow_module">[docs]</a>    <span class="k">def</span> <span class="nf">allow_module</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            module_name (str):</span>
+
+<span class="sd">        Returns:</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_module_overrides</span><span class="p">[</span><span class="n">module_name</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Sandbox.mock_module"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.mock_module">[docs]</a>    <span class="k">def</span> <span class="nf">mock_module</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_name</span><span class="p">,</span> <span class="n">new_version</span><span class="p">,</span> <span class="n">friendly_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Create a mocked version of this module. &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">friendly_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">friendly_name</span> <span class="o">=</span> <span class="n">module_name</span>
+        <span class="n">mocked_modules</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">new_module</span><span class="p">(</span><span class="n">new_version</span><span class="p">,</span> <span class="n">module_name</span><span class="p">,</span> <span class="n">friendly_name</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">mocked_version</span> <span class="ow">in</span> <span class="n">mocked_modules</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_module_overrides</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_module_overrides</span><span class="p">[</span><span class="n">name</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_module_overrides</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">mocked_version</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Sandbox.block_module"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.block_module">[docs]</a>    <span class="k">def</span> <span class="nf">block_module</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Prevent the module from being loaded in student code.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            module_name (str): The name of the module to prevent, as it would</span>
+<span class="sd">                be used by import (e.g., ``&quot;matplotlib.pyplot&quot;``).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Sandbox: This sandbox.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_module_overrides</span><span class="p">[</span><span class="n">module_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">mocked</span><span class="o">.</span><span class="n">BlockedModule</span><span class="p">(</span><span class="n">module_name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+    <span class="c1">############################################################################</span>
+    <span class="c1"># Code generation</span>
+
+    <span class="k">def</span> <span class="nf">_construct_call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">args_locals</span><span class="p">,</span> <span class="n">kwargs_locals</span><span class="p">,</span>
+                        <span class="n">target</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Turn the given strings into an actual function call string. &quot;&quot;&quot;</span>
+        <span class="n">str_args</span> <span class="o">=</span> <span class="p">[</span><span class="n">arg_name</span> <span class="k">if</span> <span class="n">arg_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_make_temporary</span><span class="p">(</span><span class="s1">&#39;arg&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">index</span><span class="p">),</span> <span class="n">arg_value</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="p">(</span><span class="n">arg_value</span><span class="p">,</span> <span class="n">arg_name</span><span class="p">)</span>
+                    <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">zip_longest</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">args_locals</span><span class="p">))]</span>
+        <span class="n">str_kwargs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">,</span>
+                                     <span class="bp">self</span><span class="o">.</span><span class="n">_make_temporary</span><span class="p">(</span><span class="s1">&#39;kwarg&#39;</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
+                      <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs_locals</span> <span class="k">else</span>
+                      <span class="n">kwargs_locals</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+                      <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
+        <span class="n">arguments</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">str_args</span> <span class="o">+</span> <span class="n">str_kwargs</span><span class="p">)</span>
+        <span class="n">call</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{function}</span><span class="s2">(</span><span class="si">{arguments}</span><span class="s2">)&quot;</span>
+        <span class="k">if</span> <span class="n">target</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">actual</span> <span class="o">=</span> <span class="n">call</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">actual</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{target}</span><span class="s2"> = </span><span class="si">{call}</span><span class="s2">&quot;</span>
+        <span class="n">student_call</span> <span class="o">=</span> <span class="n">call</span> <span class="k">if</span> <span class="n">target</span> <span class="o">==</span> <span class="s2">&quot;_&quot;</span> <span class="k">else</span> <span class="n">actual</span>
+        <span class="k">return</span> <span class="n">actual</span><span class="p">,</span> <span class="n">student_call</span><span class="p">,</span> <span class="n">arguments</span>
+
+    <span class="k">def</span> <span class="nf">_purge_temporaries</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Delete any variables in the namespace that have been made as</span>
+<span class="sd">        temporaries. This happens automatically after you execute code.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_temporary_variables</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_backup_variables</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_backup_variables</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_temporary_variables</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_make_temporary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">category</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a temporary variable in the namespace for the given</span>
+<span class="sd">        category/name. This is used to load arguments into the namespace to</span>
+<span class="sd">        be used in function calls. Temporaries are only created if the value&#39;s</span>
+<span class="sd">        repr length is too long, as defined by _is_long_value.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            category (str): A categorical division for the temporary variable</span>
+<span class="sd">                that can help keep the namespace distinctive - there are a</span>
+<span class="sd">                few different kinds of categories (e.g., for regular positional</span>
+<span class="sd">                args, star args, kwargs).</span>
+<span class="sd">            name (str): A distinctive ID for this variable. The final variable</span>
+<span class="sd">                name will be &quot;_temporary_&lt;category&gt;_&lt;name&gt;&quot;.</span>
+<span class="sd">            value: The value for this argument.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            str: The new name for the temporary variable.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">SandboxVariable</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">value</span><span class="o">.</span><span class="n">name</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">value</span><span class="p">))</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">MAXIMUM_TEMPORARY_LENGTH</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">repr</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;_temporary_</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">category</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_backup_variables</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_temporary_variables</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">return</span> <span class="n">key</span>
+
+<div class="viewcode-block" id="Sandbox.make_safe_variable"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.make_safe_variable">[docs]</a>    <span class="k">def</span> <span class="nf">make_safe_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Tries to construct a safe variable name in the current namespace, based</span>
+<span class="sd">        off the given one. This is accomplished by appending a &quot;_&quot; and a number</span>
+<span class="sd">        of increasing value until no comparable name exists in the namespace.</span>
+<span class="sd">        This is particularly useful when you want to create a variable name to</span>
+<span class="sd">        assign to, but you are concerned that the user might have a variable</span>
+<span class="sd">        with that name already, which their code relies on.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str): A desired target name.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            str: A safe target name, based off the given one.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">current_addition</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">attempt_index</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="k">while</span> <span class="n">name</span> <span class="o">+</span> <span class="n">current_addition</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
+            <span class="n">current_addition</span> <span class="o">=</span> <span class="s2">&quot;_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">attempt_index</span><span class="p">)</span>
+            <span class="n">attempt_index</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">name</span> <span class="o">+</span> <span class="n">current_addition</span></div>
+
+
+    <span class="c1">############################################################################</span>
+    <span class="c1"># Data Namespace Management</span>
+
+    <span class="k">def</span> <span class="nf">clear_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Temporary data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_temporary_variables</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_backup_variables</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset_builtins</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">reset_builtins</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;__builtins__&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">mocked</span><span class="o">.</span><span class="n">_default_builtins</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;__builtins__&#39;</span><span class="p">][</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+<div class="viewcode-block" id="Sandbox.set_student_data"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.set_student_data">[docs]</a>    <span class="k">def</span> <span class="nf">set_student_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Overwrites the existing student data with the keys and values from</span>
+<span class="sd">        the ``new_data``. This copies the data over, but does not modify the</span>
+<span class="sd">        reference to ``data``&#39;s dictionary.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            new_data (dict[str, Any]): The new data.</span>
+
+<span class="sd">        Returns:</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clear_data</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">new_data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span></div>
+
+<div class="viewcode-block" id="Sandbox.get_names_by_type"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.get_names_by_type">[docs]</a>    <span class="k">def</span> <span class="nf">get_names_by_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">exclude_builtins</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            type:</span>
+<span class="sd">            exclude_builtins:</span>
+
+<span class="sd">        Returns:</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">exclude_builtins</span> <span class="ow">and</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;__&#39;</span><span class="p">):</span>
+                    <span class="k">continue</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+<div class="viewcode-block" id="Sandbox.get_values_by_type"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.get_values_by_type">[docs]</a>    <span class="k">def</span> <span class="nf">get_values_by_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">exclude_builtins</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            type:</span>
+<span class="sd">            exclude_builtins:</span>
+
+<span class="sd">        Returns:</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_names_by_type</span><span class="p">(</span><span class="nb">type</span><span class="p">,</span> <span class="n">exclude_builtins</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Sandbox.get_variables_by_type"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.get_variables_by_type">[docs]</a>    <span class="k">def</span> <span class="nf">get_variables_by_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">exclude_builtins</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            type:</span>
+<span class="sd">            exclude_builtins:</span>
+
+<span class="sd">        Returns:</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_names_by_type</span><span class="p">(</span><span class="nb">type</span><span class="p">,</span> <span class="n">exclude_builtins</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[(</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">name</span><span class="p">])</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">]</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">functions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieve a list of all the callable names in the students&#39; namespace.</span>
+<span class="sd">        In other words, get a list of all the functions the student defined.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list of callables</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="n">v</span><span class="p">)}</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">var</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Returns:</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">SandboxVariable</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="n">value</span><span class="p">,</span> <span class="n">exception</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">item</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="n">exception</span> <span class="o">=</span> <span class="ne">NameError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;NameError: name &#39;</span><span class="si">{item}</span><span class="s2">&#39; is not defined&quot;</span><span class="p">)</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">instructor_file</span>
+        <span class="n">context_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_next_context_id</span>
+        <span class="n">best_context</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_guess_context</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">best_context</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">context</span> <span class="o">=</span> <span class="n">SandboxContext</span><span class="p">(</span><span class="n">context_id</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">item</span><span class="p">),</span> <span class="n">filename</span><span class="p">,</span>
+                                     <span class="n">SandboxContextKind</span><span class="o">.</span><span class="n">GETITEM</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="p">[],</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                                     <span class="n">exception</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">submission</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">context</span> <span class="o">=</span> <span class="n">best_context</span><span class="o">.</span><span class="n">clone</span><span class="p">(</span><span class="n">context_id</span><span class="p">)</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">target</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">exception</span> <span class="o">=</span> <span class="n">exception</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_context</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_next_context_id</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_proxy_class</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_proxy_class</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">context_id</span><span class="o">=</span><span class="n">context_id</span><span class="p">,</span>
+                                           <span class="n">sandbox</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">value</span>
+
+    <span class="c1">############################################################################</span>
+    <span class="c1"># Useful Dunders</span>
+
+    <span class="c1">#def __repr__(self):</span>
+    <span class="c1">#    return &quot;Sandbox({})&quot;.format()</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;Sandbox(contexts=</span><span class="si">{context_count}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">context_count</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_context</span><span class="p">))</span>
+
+    <span class="c1">############################################################################</span>
+    <span class="c1"># Input Handling</span>
+
+<div class="viewcode-block" id="Sandbox.clear_input"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.clear_input">[docs]</a>    <span class="k">def</span> <span class="nf">clear_input</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Removes any inputs queued. &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_input</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Sandbox.set_input"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.set_input">[docs]</a>    <span class="k">def</span> <span class="nf">set_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">clear</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Queues the given value as the next arguments to the `input` function.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">inputs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">clear</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">inputs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span> <span class="o">=</span> <span class="n">inputs</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+    <span class="k">def</span> <span class="nf">_track_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context_inputs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Wraps an input function with a tracker.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">def</span> <span class="nf">_input_tracker</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">args</span><span class="p">:</span>
+                <span class="n">prompt</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">prompt</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">:</span>
+                <span class="n">value_entered</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># TODO: Make this smarter, more elegant in choosing IF we should repeat 0</span>
+                <span class="n">value_entered</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span>
+            <span class="n">context_inputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value_entered</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">value_entered</span>
+
+        <span class="k">return</span> <span class="n">_input_tracker</span>
+
+    <span class="c1">############################################################################</span>
+    <span class="c1"># Output Handling</span>
+
+<div class="viewcode-block" id="Sandbox.clear_output"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.clear_output">[docs]</a>    <span class="k">def</span> <span class="nf">clear_output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Remove any output currently attached to this sandbox. &quot;&quot;&quot;</span>
+        <span class="c1"># Update outputs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">raw_output</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Sandbox.append_output"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.append_output">[docs]</a>    <span class="k">def</span> <span class="nf">append_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_output</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Adds the string of `raw_output` to the current `raw_output` attribute.</span>
+<span class="sd">        The added string will be split on newlines and rstripped to append</span>
+<span class="sd">        to the `output` attribute.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            raw_output (str): The new raw_output for the sandbox. To compute</span>
+<span class="sd">                the `output` attribute, the system splits and rstrips at</span>
+<span class="sd">                newlines.</span>
+<span class="sd">            context (:py:class:`pedal.sandbox.data.SandboxContext`): The</span>
+<span class="sd">                currently executing context, where this output will be recorded.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">raw_output</span> <span class="o">+=</span> <span class="n">raw_output</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">output</span> <span class="o">=</span> <span class="n">raw_output</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw_output</span><span class="p">:</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="n">raw_output</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">line</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Sandbox.clear"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.clear">[docs]</a>    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Removes any existing data in this sandbox. &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clear_data</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clear_context</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clear_mocks</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clear_exception</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clear_input</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clear_output</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clear_tracer</span><span class="p">()</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2018, acbart, lukesg08
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

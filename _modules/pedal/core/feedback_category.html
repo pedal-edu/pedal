@@ -1,0 +1,314 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pedal.core.feedback_category &mdash; Pedal 1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> Pedal
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../everyone/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../everyone/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../teachers/quickstart.html">Teacher Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../teachers/examples.html">Teacher Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../teachers/reference.html">Teacher Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../teachers/tutorial.html">Teacher Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../teachers/practices.html">Best Practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers/guide.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers/api.html">Developer API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers/integrations.html">Developer Integrations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers/tools.html">Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers/conventions.html">Naming Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../everyone/glossary.html">Glossary</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Pedal</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>pedal.core.feedback_category</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pedal.core.feedback_category</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Categories and Kinds are special enumerations that classify the feedback</span>
+<span class="sd">conditions and responses, respectively.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="FeedbackCategory"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.FeedbackCategory">[docs]</a><span class="k">class</span> <span class="nc">FeedbackCategory</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An Enumeration of feedback condition categories.</span>
+<span class="sd">    These categories represent distinct types of feedback conditions based on their</span>
+<span class="sd">    presence within the students&#39; submission.</span>
+<span class="sd">    Notice that these explain the condition, not the feedback response (which would</span>
+<span class="sd">    fall under Kind).</span>
+
+<span class="sd">    Some are contextualized to instruction (&quot;mistakes&quot;, &quot;specification&quot;, &quot;instructor&quot;)</span>
+<span class="sd">    and some are generic (&quot;syntax&quot;, &quot;runtime&quot;, &quot;algorithmic&quot;). One category is also</span>
+<span class="sd">    available for errors identified by the student.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1">#: Grammatical and typographical errors that prevent parsing.</span>
+    <span class="n">SYNTAX</span> <span class="o">=</span> <span class="s1">&#39;syntax&#39;</span>
+    <span class="c1">#: Execution errors triggered during runtime by an invalid Python operation</span>
+    <span class="n">RUNTIME</span> <span class="o">=</span> <span class="s1">&#39;runtime&#39;</span>
+    <span class="c1">#: Errors that do not prevent functioning code but are generically wrong.</span>
+    <span class="n">ALGORITHMIC</span> <span class="o">=</span> <span class="s1">&#39;algorithmic&#39;</span>
+    <span class="c1">#: Errors that do not prevent functioning code but are specifically wrong.</span>
+    <span class="n">MISTAKES</span> <span class="o">=</span> <span class="s1">&#39;mistakes&#39;</span>
+    <span class="c1">#: Errors suggested because the code failed to meet specified behavior.</span>
+    <span class="n">SPECIFICATION</span> <span class="o">=</span> <span class="s1">&#39;specification&#39;</span>
+    <span class="c1">#: Errors marked by the instructor in a one-off fashion.</span>
+    <span class="n">INSTRUCTOR</span> <span class="o">=</span> <span class="s1">&#39;instructor&#39;</span>
+    <span class="c1">#: Errors marked by the students&#39; own code, such as failing test cases.</span>
+    <span class="n">STUDENT</span> <span class="o">=</span> <span class="s1">&#39;student&#39;</span>
+    <span class="c1">#: Stylistic errors that do not prevent correct behavior but are otherwise undesirable</span>
+    <span class="n">STYLE</span> <span class="o">=</span> <span class="s1">&#39;style&#39;</span>
+    <span class="c1">#: Errors caused by the Pedal grading infrastructure or the surrounding infrastructure.</span>
+    <span class="n">SYSTEM</span> <span class="o">=</span> <span class="s1">&#39;system&#39;</span>
+    <span class="c1">#: A category for feedback that are not actually errors, but is positive information.</span>
+    <span class="n">POSITIVE</span> <span class="o">=</span> <span class="s1">&#39;positive&#39;</span>
+    <span class="c1">#: A special category recognizing a completed submission</span>
+    <span class="n">COMPLETE</span> <span class="o">=</span> <span class="s1">&#39;complete&#39;</span>
+    <span class="c1">#: A category for feedback that are not actually errors, but is neutral.</span>
+    <span class="n">INSTRUCTIONS</span> <span class="o">=</span> <span class="s1">&#39;instructions&#39;</span>
+    <span class="c1">#: A category for unknown feedback. Ideally, never used.</span>
+    <span class="n">UNKNOWN</span> <span class="o">=</span> <span class="s1">&#39;uncategorized&#39;</span>
+
+    <span class="n">ALIASES</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;parser&#39;</span><span class="p">:</span> <span class="n">SYNTAX</span><span class="p">,</span>
+        <span class="s1">&#39;verifier&#39;</span><span class="p">:</span> <span class="n">SYNTAX</span><span class="p">,</span>
+        <span class="s1">&#39;instructor&#39;</span><span class="p">:</span> <span class="n">INSTRUCTOR</span><span class="p">,</span>
+        <span class="s1">&#39;analyzer&#39;</span><span class="p">:</span> <span class="n">ALGORITHMIC</span>
+    <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="FeedbackKind"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.FeedbackKind">[docs]</a><span class="k">class</span> <span class="nc">FeedbackKind</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An enumeration of the possible kinds of feedback responses, based on their pedagogical role.</span>
+<span class="sd">    Valence can vary between specific instances of a kind of feedback, but some tend to</span>
+<span class="sd">    have a specific valence.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        MISCONCEPTION (str): A description of the misconception that</span>
+<span class="sd">            is believed to be in the student&#39;s mind, or perhaps the relevant concept from the</span>
+<span class="sd">            material that should be associated with this. (&quot;Variables must be initialized before they are used&quot;).</span>
+<span class="sd">        MISTAKE (str): A description of the error or bug that the student has created (&quot;NameError on line 5: sum</span>
+<span class="sd">            has not been defined&quot;).</span>
+<span class="sd">        HINT (str): A suggestion for what the student can do (&quot;Initialize the sum variable on line 2&quot;).</span>
+<span class="sd">        CONSTRAINT (str): A description of the task requirements or task type that the student has violated</span>
+<span class="sd">            (&quot;You used a for loop, but this question expected you to use recursion.&quot;).</span>
+<span class="sd">        METACOGNITIVE (str): A suggestion for more regulative strategies (&quot;You have been working for 5</span>
+<span class="sd">            hours, perhaps it is time to take a break?&quot;).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Negative</span>
+    <span class="n">MISCONCEPTION</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Misconception&quot;</span>
+    <span class="n">MISTAKE</span> <span class="o">=</span> <span class="s2">&quot;Mistake&quot;</span>
+    <span class="n">HINT</span> <span class="o">=</span> <span class="s2">&quot;Hint&quot;</span>
+    <span class="n">CONSTRAINT</span> <span class="o">=</span> <span class="s2">&quot;Constraint&quot;</span>
+    <span class="n">METACOGNITIVE</span> <span class="o">=</span> <span class="s2">&quot;Metacognitive&quot;</span>
+    <span class="n">REINFORCEMENT</span> <span class="o">=</span> <span class="s2">&quot;Reinforcement&quot;</span>
+    <span class="c1"># Positive</span>
+    <span class="n">COMPLIMENT</span> <span class="o">=</span> <span class="s2">&quot;Compliment&quot;</span>
+    <span class="n">ENCOURAGEMENT</span> <span class="o">=</span> <span class="s2">&quot;Encouragement&quot;</span>
+    <span class="c1"># Variable</span>
+    <span class="n">RESULT</span> <span class="o">=</span> <span class="s2">&quot;Result&quot;</span>
+    <span class="n">PERFORMANCE</span> <span class="o">=</span> <span class="s2">&quot;Performance&quot;</span>
+    <span class="c1"># Neutral</span>
+    <span class="n">INSTRUCTIONAL</span> <span class="o">=</span> <span class="s2">&quot;Instructional&quot;</span>
+    <span class="n">META</span> <span class="o">=</span> <span class="s2">&quot;Meta&quot;</span></div>
+
+
+<span class="k">class</span> <span class="nc">FeedbackStatus</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Enumeration of feedback status outcomes. When you create a piece of</span>
+<span class="sd">    feedback, it will be either active or inactive depeneding on whether its</span>
+<span class="sd">    condition was met. Alternatively, it is also possible that it triggered</span>
+<span class="sd">    an exception. It may also be delayed, indicating that it has not yet been</span>
+<span class="sd">    checked. &quot;&quot;&quot;</span>
+    <span class="n">INACTIVE</span> <span class="o">=</span> <span class="s2">&quot;inactive&quot;</span>
+    <span class="n">ERROR</span> <span class="o">=</span> <span class="s2">&quot;error&quot;</span>
+    <span class="n">ACTIVE</span> <span class="o">=</span> <span class="s2">&quot;active&quot;</span>
+    <span class="n">DELAYED</span> <span class="o">=</span> <span class="s2">&quot;delayed&quot;</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2018, acbart, lukesg08
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

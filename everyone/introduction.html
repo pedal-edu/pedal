@@ -1,0 +1,289 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Introduction &mdash; Pedal 1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Installation" href="installation.html" />
+    <link rel="prev" title="Welcome to Pedal’s documentation!" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> Pedal
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../teachers/quickstart.html">Teacher Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../teachers/examples.html">Teacher Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../teachers/reference.html">Teacher Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../teachers/tutorial.html">Teacher Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../teachers/practices.html">Best Practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers/guide.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers/api.html">Developer API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers/integrations.html">Developer Integrations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers/tools.html">Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers/conventions.html">Naming Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Pedal</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Introduction</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/everyone/introduction.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
+<img alt="../_images/pedal-overview.png" src="../_images/pedal-overview.png" />
+<p>We believe that autograding feedback should be <em>more</em> than just unit tests.
+Program analysis can give us deep insight into students’ problems - if they
+declare a variable and its never used it, shouldn’t we address that with feedback?
+Research has shown that many existing error messages are unhelpful - can’t we
+provide more context, details, and pedagogically-friendly language when students
+get a TypeError because they added a string and a number? Our goal is
+to make it easier for instructors to leverage these tools and start making
+measurable progress towards helping learners.</p>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">student.py</span><a class="headerlink" href="#id1" title="Permalink to this code">¶</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">add_prices</span><span class="p">(</span><span class="n">books</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">book</span> <span class="ow">in</span> <span class="n">books</span><span class="p">:</span>
+        <span class="n">total</span> <span class="o">=</span> <span class="n">book</span> <span class="o">+</span> <span class="n">books</span>
+        <span class="k">return</span> <span class="n">total</span>
+</pre></div>
+</div>
+</div>
+<p>The student’s code above has a number of errors - they failed to initialize a
+variable, they used the list instead of the iteration target, they returned
+inside of a loop, etc. Pedal could detect many of these scenarios and provide
+different kinds of feedback.</p>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">instructor.py</span><a class="headerlink" href="#id2" title="Permalink to this code">¶</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="kn">from</span> <span class="nn">pedal.source</span> <span class="kn">import</span> <span class="n">verify</span>
+<span class="n">verify</span><span class="p">()</span>
+
+<span class="c1"># Generic, friendly feedback on undeclared variables, among others</span>
+<span class="kn">from</span> <span class="nn">pedal.tifa</span> <span class="kn">import</span> <span class="n">tifa_analysis</span>
+<span class="n">tifa_analysis</span><span class="p">()</span>
+
+<span class="c1"># Partial credit for good progress</span>
+<span class="kn">from</span> <span class="nn">pedal.commands</span> <span class="kn">import</span> <span class="n">give_partial</span>
+<span class="kn">from</span> <span class="nn">pedal.cait</span> <span class="kn">import</span> <span class="n">parse_program</span>
+<span class="n">ast</span> <span class="o">=</span> <span class="n">parse_program</span><span class="p">()</span>
+<span class="k">if</span> <span class="n">ast</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;For&quot;</span><span class="p">):</span>
+    <span class="n">give_partial</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">10</span><span class="p">,</span> <span class="s2">&quot;Right, you need a `for` loop!&quot;</span><span class="p">)</span>
+
+<span class="c1"># Give feedback by finding a common problem-specific mistake</span>
+<span class="kn">from</span> <span class="nn">pedal.commands</span> <span class="kn">import</span> <span class="n">explain</span>
+<span class="kn">from</span> <span class="nn">pedal.cait</span> <span class="kn">import</span> <span class="n">find_matches</span>
+<span class="n">matches</span> <span class="o">=</span> <span class="n">find_matches</span><span class="p">(</span><span class="s2">&quot;for _expr_ in _list_:</span><span class="se">\n</span><span class="s2"> ___ = ____ + _list_&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">matches</span><span class="p">:</span>
+    <span class="n">explain</span><span class="p">(</span><span class="s2">&quot;list_inside_loop&quot;</span><span class="p">,</span> <span class="s2">&quot;You shouldn&#39;t use the list inside the for loop.&quot;</span><span class="p">)</span>
+
+<span class="c1"># Unit test, with enhanced tracebacks and safe execution!</span>
+<span class="kn">from</span> <span class="nn">pedal.sandbox</span> <span class="kn">import</span> <span class="n">run</span>
+<span class="kn">from</span> <span class="nn">pedal.assertions</span> <span class="kn">import</span> <span class="n">assert_equal</span><span class="p">,</span> <span class="n">ensure_function</span>
+<span class="n">student</span> <span class="o">=</span> <span class="n">run</span><span class="p">()</span>
+<span class="n">ensure_function</span><span class="p">(</span><span class="n">student</span><span class="p">,</span> <span class="s1">&#39;add_prices&#39;</span><span class="p">,</span> <span class="nb">list</span><span class="p">,</span> <span class="n">returns</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+<span class="n">assert_equal</span><span class="p">(</span><span class="n">student</span><span class="o">.</span><span class="n">add_prices</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span> <span class="mi">6</span><span class="p">)</span>
+
+<span class="n">resolve</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<p>This only briefly summarizes some of our features, read some of the sections
+below to find out more!</p>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="installation.html" class="btn btn-neutral float-right" title="Installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../index.html" class="btn btn-neutral float-left" title="Welcome to Pedal’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2018, acbart, lukesg08
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,345 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Source &mdash; Pedal 1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Assertions" href="assertions.html" />
+    <link rel="prev" title="CAIT" href="cait.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> Pedal
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../everyone/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../everyone/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Teacher Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Teacher Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../reference.html">Teacher Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="core.html">Core Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tifa.html">TIFA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cait.html">CAIT</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Source</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#sections">Sections</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#source-feedbacks">Source Feedbacks</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="assertions.html">Assertions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sandbox.html">Sandbox</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Teacher Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../practices.html">Best Practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers/guide.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers/api.html">Developer API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers/integrations.html">Developer Integrations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers/tools.html">Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers/conventions.html">Naming Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../everyone/glossary.html">Glossary</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Pedal</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../reference.html">Teacher Reference</a> &raquo;</li>
+        
+      <li>Source</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/teachers/tools/source.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="source">
+<h1>Source<a class="headerlink" href="#source" title="Permalink to this headline">¶</a></h1>
+<p>Imported as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.source</span> <span class="kn">import</span> <span class="o">*</span>
+</pre></div>
+</div>
+<dl class="function">
+<dt id="verify">
+<code class="sig-name descname">verify</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#verify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses the current main code of the submission and reports any syntax errors as feedback.
+You can actually pass in explicit code and filename as strings, but by default uses the
+current submission.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="get_program">
+<code class="sig-name descname">get_program</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#get_program" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the current main code of the submission.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="set_source">
+<code class="sig-name descname">set_source</code><span class="sig-paren">(</span><em class="sig-param">code: str</em>, <em class="sig-param">filename: str</em><span class="sig-paren">)</span><a class="headerlink" href="#set_source" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience function for overriding the current submission with some other code.
+Any checks that use the main code of the submission will use this code instead.
+No longer necessary, mostly a legacy solution in light of the new contextualization through
+submissions.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="restore_code">
+<code class="sig-name descname">restore_code</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#restore_code" title="Permalink to this definition">¶</a></dt>
+<dd><p>Undoes the latest set_source.</p>
+</dd></dl>
+
+<div class="section" id="sections">
+<h2>Sections<a class="headerlink" href="#sections" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="separate_into_sections">
+<code class="sig-name descname">separate_into_sections</code><span class="sig-paren">(</span><em class="sig-param">pattern = r'^(##### Part .+)$'</em><span class="sig-paren">)</span><a class="headerlink" href="#separate_into_sections" title="Permalink to this definition">¶</a></dt>
+<dd><p>Breaks the current main code file into multiple sections using the regular expression <cite>pattern</cite>.
+The first section will be set as the main code submission, and you can advance through to the
+next one by calling <a class="reference internal" href="#next_section" title="next_section"><code class="xref py py-func docutils literal notranslate"><span class="pre">next_section()</span></code></a>, or verify that there are the right number of sections
+with <a class="reference internal" href="#check_section_exists" title="check_section_exists"><code class="xref py py-func docutils literal notranslate"><span class="pre">check_section_exists()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="check_section_exists">
+<code class="sig-name descname">check_section_exists</code><span class="sig-paren">(</span><em class="sig-param">number: int</em><span class="sig-paren">)</span><a class="headerlink" href="#check_section_exists" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verifies that the right number of expected sections exist after a separation is performed. Otherwise,
+creates new feedback indicating the issue.
+The prologue before the
+first section is 0, while subsequent ones are 1, 2, 3, etc.
+So if you have 3 sections in your code plus the prologue,
+you should pass in 3 and not 4 to verify that all of them exist.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="next_section">
+<code class="sig-name descname">next_section</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#next_section" title="Permalink to this definition">¶</a></dt>
+<dd><p>Moves the current submission main code to be the next section that was found during separation.
+If used when there are no more sections, the <cite>not_enough_sections</cite> feedback is given.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="stop_sections">
+<code class="sig-name descname">stop_sections</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stop_sections" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes any separations and restores the main code submission back to a single file.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="source-feedbacks">
+<h2>Source Feedbacks<a class="headerlink" href="#source-feedbacks" title="Permalink to this headline">¶</a></h2>
+<code class="sig-prename descclassname">Feedback Function: No Source Code</code><dd><ul>
+<li><strong>Label: </strong><span>blank_source</span></li>
+<li><strong>Justification: </strong><span>After stripping the code, there were no characters.</span></li>
+<li><strong>Response: </strong><span>Source code file is blank.</span></li>
+</ul>
+</dd><code class="sig-prename descclassname">Feedback Function: Not Enough Sections</code><dd><ul>
+<li><strong>Label: </strong><span>not_enough_sections</span></li>
+<li><strong>Justification: </strong><span>Section index exceeded the length of the separated sections list.</span></li>
+<li><strong>Response: </strong><span>Tried to advance to next section but the section was not found. Tried to load section {count}, but there were only {found} sections.</span></li>
+</ul>
+</dd><code class="sig-prename descclassname">Feedback Function: Source File Not Found</code><dd><ul>
+<li><strong>Label: </strong><span>source_file_not_found</span></li>
+<li><strong>Justification: </strong><span>IOError while opening file to set_source</span></li>
+<li><strong>Response: </strong><span>The given filename {name:filename} was either not found or could not be opened. Please make sure the file is available.</span></li>
+</ul>
+</dd><code class="sig-prename descclassname">Feedback Function: Syntax Error</code><dd><ul>
+<li><strong>Label: </strong><span>syntax_error</span></li>
+<li><strong>Justification: </strong><span>Syntax error was triggered while calling ast.parse</span></li>
+<li><strong>Response: </strong><span>Bad syntax on line {lineno:line}
+
+The traceback was:
+{traceback_message}
+
+Suggestion: Check line {lineno:line}, the line before it, and the line after it.</span></li>
+</ul>
+</dd><code class="sig-prename descclassname">Feedback Function: Incorrect Number of Sections</code><dd><ul>
+<li><strong>Label: </strong><span>incorrect_number_of_sections</span></li>
+<li><strong>Justification: </strong><span></span></li>
+<li><strong>Response: </strong><span>Incorrect number of sections in your file. Expected {count}, but only found {found}</span></li>
+</ul>
+</dd></div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="assertions.html" class="btn btn-neutral float-right" title="Assertions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="cait.html" class="btn btn-neutral float-left" title="CAIT" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2018, acbart, lukesg08
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
