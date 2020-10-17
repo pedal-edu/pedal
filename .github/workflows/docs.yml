@@ -26,7 +26,6 @@ jobs:
       - uses: ammaraskar/sphinx-action@master
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}" 
-          build-command: "sphinx-build -b coverage . _build"
           docs-folder: "docsrc/"
       # Build PDF using custom depedencies
       #- uses: ammaraskar/sphinx-action@master
@@ -50,7 +49,7 @@ jobs:
       - name: Commit documentation changes
         run: |
           git clone https://github.com/pedal-edu/pedal.git --branch gh-pages --single-branch gh-pages
-          cp -r _build/html/* gh-pages/
+          cp -r docsrc/_build/html/* gh-pages/
           cd gh-pages
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
