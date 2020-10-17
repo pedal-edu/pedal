@@ -3,7 +3,6 @@ from pedal.core.report import MAIN_REPORT
 from pedal.sandbox.commands import run
 from pedal.assertions.runtime import *
 from pedal.assertions.static import ensure_function
-from pedal.toolkit.functions import *
 
 
 class QuestionGrader:

@@ -66,7 +66,6 @@ from pedal.core.feedback_category import FeedbackCategory
 from pedal.questions.constants import TOOL_NAME
 
 from pedal.sandbox.commands import get_sandbox
-from pedal.toolkit.functions import *
 from pedal.utilities.comparisons import equality_test
 
 SETTING_SHOW_CASE_DETAILS = "show case details"

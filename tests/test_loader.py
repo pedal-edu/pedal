@@ -44,6 +44,7 @@ LIST_SIGNATURE = {'functions': [{
     }]
 }]}
 
+@unittest.skip
 class TestQuestionsLoader(ExecutionTestCase):
 
     def test_loader_missing_function(self):
