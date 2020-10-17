@@ -2,7 +2,7 @@ Pedal
 =====
 
 .. image:: https://github.com/pedal-edu/pedal/workflows/Test%20and%20Lint/badge.svg
-    :alt: Test and Lint
+    :alt: Unit Tests for 3.6, 3.7, 3.8, 3.9
 
 
 .. image:: https://github.com/pedal-edu/pedal/workflows/Build%20Documentation/badge.svg
