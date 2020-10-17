@@ -116,21 +116,29 @@ I ran your function <code>add5</code> on my own test cases. It failed 2/2 of my 
             check_question(ADD5_QUESTION)
         self.assertFeedback(e, "Complete\nGreat work!")
 
+    # TODO: Finish this test once the functionality is ready!
+    @unittest.skip
     def test_loading_signature_no_parameter_type(self):
         with Execution('def add5(a):\n return a+5\nadd5(3)') as e:
             check_question(ADD5_QUESTION_SIGNATURE)
         self.assertFeedback(e, "Instructor Feedback\nError in definition of function `add5` signature. Expected `int -> int`, instead found `Any -> Any`.")
 
+    # TODO: Finish this test once the functionality is ready!
+    @unittest.skip
     def test_loading_signature_no_return_type(self):
         with Execution('def add5(a: int):\n return a+5\nadd5(3)') as e:
             check_question(ADD5_QUESTION_SIGNATURE)
         self.assertFeedback(e, "Instructor Feedback\nError in definition of function `add5` signature. Expected `int -> int`, instead found `int -> Any`.")
 
+    # TODO: Finish this test once the functionality is ready!
+    @unittest.skip
     def test_loading_signature_correct_type(self):
         with Execution('def add5(a: int) -> int:\n return a+5\nadd5(3)') as e:
             check_question(ADD5_QUESTION_SIGNATURE)
         self.assertFeedback(e, "Complete\nGreat work!")
 
+    # TODO: Finish this test once the functionality is ready!
+    @unittest.skip
     def test_loading_list_question(self):
         with Execution('def summate(vals: [int]) -> int:\n return sum(vals)\nsummate([1,2,3])') as e:
             check_question(LIST_SIGNATURE)

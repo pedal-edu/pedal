@@ -39,7 +39,9 @@ class TestQuestions(ExecutionTestCase):
             pool_1 = Pool("P1", [question_A, question_B])
             pool_1.choose().ask()
         self.assertFeedback(e, "Show Question\nCreate an if statement.")
-    
+
+    # TODO: Finish this test once the functionality is ready!
+    @unittest.skip
     def test_exam_progress(self):
         def test_has_loop(question):
             ast = parse_program()
