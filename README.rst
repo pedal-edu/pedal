@@ -30,7 +30,7 @@ all attached to a *Report*. A *Resolver* can then transform that Feedback into
 something that an *Environment* can hand off to a learner (or other interested
 party). These Feedback Functions are organized into *Tools*.
 
-.. image:: docs/html/_static/pedal-overview.png
+.. image:: docsrc/_static/pedal-overview.png
 
 One of our major goals is to attach metadata to feedback to enable easier
 analysis, versioning, and evaluation. Although Instructor Control Scripts can
