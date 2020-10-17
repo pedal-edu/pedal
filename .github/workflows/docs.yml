@@ -22,11 +22,10 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v1
-      - run: |
-          pip install -r requirements_dev.txt
       # Build the documentation
       - uses: ammaraskar/sphinx-action@master
         with:
+          pre-build-command: "python3 -m pip install -r requirements_dev.txt && python3 -m pip install -e ."
           repo-token: "${{ secrets.GITHUB_TOKEN }}" 
           docs-folder: "docsrc/"
       # Build PDF using custom depedencies
