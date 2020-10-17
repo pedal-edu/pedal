@@ -1,3 +1,10 @@
+Version 2.2.1
+-------------
+* Added find_asts(node) to replace parse_program().find_all(node)
+* Separated built documentation into a distinct branch
+* Minor fixes for python 3.6 and 3.9 compatibility
+* Updated documentation for latest version
+
 Version 2.2.0
 -------------
 * New scoring API, allowing string scores
