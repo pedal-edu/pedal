@@ -209,6 +209,7 @@
                                   <span class="n">incorrect_arity</span><span class="p">,</span> <span class="n">else_on_loop_body</span><span class="p">,</span>
                                   <span class="n">module_not_found</span><span class="p">,</span> <span class="n">nested_function_definition</span><span class="p">,</span>
                                   <span class="n">unused_returned_value</span><span class="p">,</span> <span class="n">invalid_indexing</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">pedal.utilities.system</span> <span class="kn">import</span> <span class="n">IS_PYTHON_39</span>
 
 
 <div class="viewcode-block" id="Tifa"><a class="viewcode-back" href="../../../developers/tools/tifa.html#pedal.tifa.Tifa">[docs]</a><span class="k">class</span> <span class="nc">Tifa</span><span class="p">(</span><span class="n">TifaCore</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">NodeVisitor</span><span class="p">):</span>
@@ -385,6 +386,7 @@
                 <span class="c1"># TODO: Handle updating value in list</span>
                 <span class="k">pass</span>
             <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">left_hand_type</span><span class="p">,</span> <span class="n">DictType</span><span class="p">):</span>
+                <span class="c1"># TODO: Update this for Python 3.9, now that Slice notation has changed</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">slice</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Index</span><span class="p">):</span>
                     <span class="c1"># TODO: Can&#39;t subscript a dictionary assignment</span>
                     <span class="k">return</span> <span class="kc">None</span>
@@ -409,6 +411,7 @@
             <span class="c1"># TODO: Handle minor type changes (e.g., appending to an inner list)</span>
 
     <span class="k">def</span> <span class="nf">_visit_collection_loop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+        <span class="n">was_empty</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="c1"># Handle the iteration list</span>
         <span class="n">iter_list</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">iter</span>
         <span class="n">iter_list_name</span> <span class="o">=</span> <span class="kc">None</span>
@@ -424,6 +427,7 @@
         <span class="k">if</span> <span class="n">iter_type</span><span class="o">.</span><span class="n">is_empty</span><span class="p">():</span>
             <span class="c1"># TODO: It should check if its ONLY ever iterating over an empty list.</span>
             <span class="c1"># For now, only reports if we are NOT in a function</span>
+            <span class="n">was_empty</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scope_chain</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_issue</span><span class="p">(</span><span class="n">iterating_over_empty_list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">locate</span><span class="p">(</span><span class="n">iter_list</span><span class="p">),</span> <span class="n">iter_list_name</span><span class="p">))</span>
 
@@ -435,9 +439,12 @@
         <span class="c1"># Handle the iteration variable</span>
         <span class="n">iter_variable_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_walk_target</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">target</span><span class="p">,</span> <span class="n">iter_subtype</span><span class="p">)</span>
 
+        <span class="c1"># Check that the iteration list and variable are distinct</span>
         <span class="k">if</span> <span class="n">iter_variable_name</span> <span class="ow">and</span> <span class="n">iter_list_name</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">iter_variable_name</span> <span class="o">==</span> <span class="n">iter_list_name</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_issue</span><span class="p">(</span><span class="n">iteration_problem</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">locate</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">target</span><span class="p">),</span> <span class="n">iter_variable_name</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">was_empty</span>
 
 <div class="viewcode-block" id="Tifa.visit_AnnAssign"><a class="viewcode-back" href="../../../developers/tools/tifa.html#pedal.tifa.Tifa.visit_AnnAssign">[docs]</a>    <span class="k">def</span> <span class="nf">visit_AnnAssign</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -764,10 +771,11 @@
 <span class="sd">        Args:</span>
 <span class="sd">            node:</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_visit_collection_loop</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+        <span class="n">was_empty</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_visit_collection_loop</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
         <span class="c1"># Handle the bodies</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">visit_statements</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">visit_statements</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">orelse</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">was_empty</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">visit_statements</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">visit_statements</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">orelse</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Tifa.visit_FunctionDef"><a class="viewcode-back" href="../../../developers/tools/tifa.html#pedal.tifa.Tifa.visit_FunctionDef">[docs]</a>    <span class="k">def</span> <span class="nf">visit_FunctionDef</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -1178,25 +1186,41 @@
         <span class="c1"># Handle value</span>
         <span class="n">value_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
         <span class="c1"># Handle slice</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">slice</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Index</span><span class="p">):</span>
-            <span class="n">literal</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_literal</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">slice</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">IS_PYTHON_39</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">slice</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Tuple</span><span class="p">):</span>
+            <span class="c1"># TODO: Do something about extslices (especially since students stumble into this accidentally)</span>
+            <span class="k">pass</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="n">IS_PYTHON_39</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">slice</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">ExtSlice</span><span class="p">):</span>
+            <span class="c1"># TODO: Do something about extslices (especially since students stumble into this accidentally)</span>
+            <span class="k">pass</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">slice</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Slice</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">visit_Slice</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">slice</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">value_type</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">IS_PYTHON_39</span><span class="p">:</span>
+                <span class="nb">slice</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">slice</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">slice</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">slice</span><span class="o">.</span><span class="n">value</span>
+            <span class="n">literal</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_literal</span><span class="p">(</span><span class="nb">slice</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">literal</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">literal</span> <span class="o">=</span> <span class="n">get_pedal_literal_from_pedal_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">slice</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+                <span class="n">literal</span> <span class="o">=</span> <span class="n">get_pedal_literal_from_pedal_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="nb">slice</span><span class="p">))</span>
             <span class="n">result</span> <span class="o">=</span> <span class="n">value_type</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">literal</span><span class="p">)</span>
             <span class="c1"># TODO: Is this sufficient? Maybe we should be throwing?</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">UnknownType</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_issue</span><span class="p">(</span><span class="n">invalid_indexing</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">locate</span><span class="p">(),</span> <span class="n">value_type</span><span class="p">,</span>
                                              <span class="n">literal</span><span class="o">.</span><span class="n">type</span><span class="p">()))</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">result</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">slice</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Slice</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">slice</span><span class="o">.</span><span class="n">lower</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">slice</span><span class="o">.</span><span class="n">lower</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">slice</span><span class="o">.</span><span class="n">upper</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">slice</span><span class="o">.</span><span class="n">upper</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">slice</span><span class="o">.</span><span class="n">step</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">slice</span><span class="o">.</span><span class="n">step</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">value_type</span></div>
+                <span class="k">return</span> <span class="n">result</span></div>
+
+<div class="viewcode-block" id="Tifa.visit_Slice"><a class="viewcode-back" href="../../../developers/tools/tifa.html#pedal.tifa.Tifa.visit_Slice">[docs]</a>    <span class="k">def</span> <span class="nf">visit_Slice</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Handles a slice by visiting its components; cannot return a value</span>
+<span class="sd">        because the slice is always the same type as its value, which is</span>
+<span class="sd">        not available on the Slice node itself. &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">lower</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">lower</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">upper</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">upper</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">step</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">step</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Tifa.visit_Tuple"><a class="viewcode-back" href="../../../developers/tools/tifa.html#pedal.tifa.Tifa.visit_Tuple">[docs]</a>    <span class="k">def</span> <span class="nf">visit_Tuple</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TupleType</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot; Handle Tuple literal &quot;&quot;&quot;</span>
