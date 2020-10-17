@@ -265,6 +265,30 @@ def find_expr_sub_matches(pattern, student_code, is_mod=False, report=MAIN_REPOR
     return matcher.find_matches(student_code, check_meta=False)
 
 
+def find_asts(node_name: str, student_code=None, report=MAIN_REPORT):
+    """
+    Find all occurrences of the given AST node, based on the name of the AST
+    node (e.g., `"For"` or `"FunctionDef"`).
+
+    Args:
+        node_type: the string representing the "type" of node to look for
+        student_code (str): Optionally, different code to parse and search.
+        report: defaults to MAIN_REPORT unless another one is given.
+
+    Returns:
+        a list of Ast Nodes (cait_nodes) of self that are of the specified type (including self if self
+                meets that criteria)
+
+    Returns:
+
+    """
+    cait_report = reparse_if_needed(student_code, report)
+    if not cait_report['success']:
+        return []
+    student_ast = cait_report['ast']
+    return student_ast.find_all(node_name)
+
+
 def reset(report=MAIN_REPORT):
     """
 
