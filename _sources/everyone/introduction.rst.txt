@@ -1,7 +1,7 @@
 Introduction
 ============
 
-.. image:: ../_static/pedal-overview.png
+.. image:: ../_static/pedal-overview-v3.png
 
 We believe that autograding feedback should be *more* than just unit tests.
 Program analysis can give us deep insight into students' problems - if they
