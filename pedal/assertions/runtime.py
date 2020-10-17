@@ -437,6 +437,9 @@ class assert_not_is_instance(RuntimeAssertionFeedback):
 
 
 class _compare_type(RuntimeAssertionFeedback):
+    """
+    TODO: Failing for assert_type({"test":1}, dict)
+    """
 
     def __init__(self, value, expected_type, **kwargs):
         fields = kwargs.setdefault('fields', {})
