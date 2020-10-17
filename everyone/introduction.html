@@ -88,7 +88,11 @@
             
               <p class="caption"><span class="caption-text">Contents</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#an-example">An Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#architecture">Architecture</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../teachers/quickstart.html">Teacher Quick Start Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../teachers/examples.html">Teacher Examples</a></li>
@@ -168,17 +172,35 @@
             
   <div class="section" id="introduction">
 <h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
-<img alt="../_images/pedal-overview-v3.png" src="../_images/pedal-overview-v3.png" />
-<p>We believe that autograding feedback should be <em>more</em> than just unit tests.
-Program analysis can give us deep insight into students’ problems - if they
-declare a variable and its never used it, shouldn’t we address that with feedback?
+<p>Good feedback is hard to come by.
+Imagine you are a student submitting your first program, and this is what
+the system spits out:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
+    <span class="n">File</span> <span class="s2">&quot;instructor.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">12323</span><span class="p">,</span> <span class="ow">in</span> <span class="n">_special_custom_helper</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="ne">AssertionError</span><span class="p">:</span> <span class="mi">7</span> <span class="o">!=</span> <span class="mi">5</span>
+</pre></div>
+</div>
+<p>Pretty disorienting, right?
+We believe that autograding feedback should be <em>more</em> than just unit tests.
+Program analysis can give us deeper insight into students’ issues, and allow
+us to write more accurate feedback.
 Research has shown that many existing error messages are unhelpful - can’t we
-provide more context, details, and pedagogically-friendly language when students
-get a TypeError because they added a string and a number? Our goal is
-to make it easier for instructors to leverage these tools and start making
+provide more context, details, and pedagogically-friendly language? Our goal is
+to make it easier for instructors to write sophisticated feedback and make
 measurable progress towards helping learners.</p>
+<p>The Pedal library is a pure Python library that let’s instructors create grading
+scripts that analyze a students’ submission to provide custom feedback.
+Using declarative Python statement, the instructors specify conditions that should
+trigger different responses. The system chooses the most appropriate feedback
+(in addition to tracking alternatives).
+Since Pedal itself is written in Python, it is compatible with a wide range of
+autograding platforms - as long as they allow you to execute arbitrary Python code.</p>
+<div class="section" id="an-example">
+<h2>An Example<a class="headerlink" href="#an-example" title="Permalink to this headline">¶</a></h2>
+<p>Let’s look at an example.</p>
 <div class="literal-block-wrapper docutils container" id="id1">
-<div class="code-block-caption"><span class="caption-text">student.py</span><a class="headerlink" href="#id1" title="Permalink to this code">¶</a></div>
+<div class="code-block-caption"><span class="caption-text">An Example Student Program with Mistakes</span><a class="headerlink" href="#id1" title="Permalink to this code">¶</a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">add_prices</span><span class="p">(</span><span class="n">books</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">book</span> <span class="ow">in</span> <span class="n">books</span><span class="p">:</span>
         <span class="n">total</span> <span class="o">=</span> <span class="n">book</span> <span class="o">+</span> <span class="n">books</span>
@@ -187,47 +209,58 @@ measurable progress towards helping learners.</p>
 </div>
 </div>
 <p>The student’s code above has a number of errors - they failed to initialize a
-variable, they used the list instead of the iteration target, they returned
-inside of a loop, etc. Pedal could detect many of these scenarios and provide
-different kinds of feedback.</p>
+variable, they added the list to the iteration varaible, they returned
+inside of a loop… There’s a lot wrong here!
+Pedal could detect many of these scenarios and provide different kinds of feedback.</p>
+<p>Let’s take a look a quick look at a complex Pedal script that could provide
+feedback on this code.</p>
 <div class="literal-block-wrapper docutils container" id="id2">
-<div class="code-block-caption"><span class="caption-text">instructor.py</span><a class="headerlink" href="#id2" title="Permalink to this code">¶</a></div>
+<div class="code-block-caption"><span class="caption-text">Instructor Control Script</span><a class="headerlink" href="#id2" title="Permalink to this code">¶</a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal</span> <span class="kn">import</span> <span class="o">*</span>
 
-<span class="kn">from</span> <span class="nn">pedal.source</span> <span class="kn">import</span> <span class="n">verify</span>
+<span class="c1"># Check for syntax errors</span>
 <span class="n">verify</span><span class="p">()</span>
 
 <span class="c1"># Generic, friendly feedback on undeclared variables, among others</span>
-<span class="kn">from</span> <span class="nn">pedal.tifa</span> <span class="kn">import</span> <span class="n">tifa_analysis</span>
 <span class="n">tifa_analysis</span><span class="p">()</span>
 
 <span class="c1"># Partial credit for good progress</span>
-<span class="kn">from</span> <span class="nn">pedal.commands</span> <span class="kn">import</span> <span class="n">give_partial</span>
-<span class="kn">from</span> <span class="nn">pedal.cait</span> <span class="kn">import</span> <span class="n">parse_program</span>
-<span class="n">ast</span> <span class="o">=</span> <span class="n">parse_program</span><span class="p">()</span>
-<span class="k">if</span> <span class="n">ast</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;For&quot;</span><span class="p">):</span>
-    <span class="n">give_partial</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">10</span><span class="p">,</span> <span class="s2">&quot;Right, you need a `for` loop!&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">find_asts</span><span class="p">(</span><span class="s2">&quot;For&quot;</span><span class="p">):</span>
+    <span class="n">compliment</span><span class="p">(</span><span class="s2">&quot;Good, you have a `for` loop!&quot;</span><span class="p">,</span> <span class="n">score</span><span class="o">=</span><span class="s2">&quot;+10%&quot;</span><span class="p">)</span>
 
 <span class="c1"># Give feedback by finding a common problem-specific mistake</span>
-<span class="kn">from</span> <span class="nn">pedal.commands</span> <span class="kn">import</span> <span class="n">explain</span>
-<span class="kn">from</span> <span class="nn">pedal.cait</span> <span class="kn">import</span> <span class="n">find_matches</span>
-<span class="n">matches</span> <span class="o">=</span> <span class="n">find_matches</span><span class="p">(</span><span class="s2">&quot;for _expr_ in _list_:</span><span class="se">\n</span><span class="s2"> ___ = ____ + _list_&quot;</span><span class="p">)</span>
+<span class="n">matches</span> <span class="o">=</span> <span class="n">find_matches</span><span class="p">(</span><span class="s2">&quot;for _expr_ in _list_:</span><span class="se">\n</span><span class="s2">&quot;</span>
+                       <span class="s2">&quot;    ___ = ____ + _list_&quot;</span><span class="p">)</span>
 <span class="k">if</span> <span class="n">matches</span><span class="p">:</span>
-    <span class="n">explain</span><span class="p">(</span><span class="s2">&quot;list_inside_loop&quot;</span><span class="p">,</span> <span class="s2">&quot;You shouldn&#39;t use the list inside the for loop.&quot;</span><span class="p">)</span>
+    <span class="n">explain</span><span class="p">(</span><span class="s2">&quot;You shouldn&#39;t use the list inside the for loop.&quot;</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="s2">&quot;list_inside_loop&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;List Inside Loop&quot;</span><span class="p">)</span>
 
-<span class="c1"># Unit test, with enhanced tracebacks and safe execution!</span>
-<span class="kn">from</span> <span class="nn">pedal.sandbox</span> <span class="kn">import</span> <span class="n">run</span>
-<span class="kn">from</span> <span class="nn">pedal.assertions</span> <span class="kn">import</span> <span class="n">assert_equal</span><span class="p">,</span> <span class="n">ensure_function</span>
+<span class="c1"># Run students&#39; code in a sandbox</span>
 <span class="n">student</span> <span class="o">=</span> <span class="n">run</span><span class="p">()</span>
-<span class="n">ensure_function</span><span class="p">(</span><span class="n">student</span><span class="p">,</span> <span class="s1">&#39;add_prices&#39;</span><span class="p">,</span> <span class="nb">list</span><span class="p">,</span> <span class="n">returns</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
-<span class="n">assert_equal</span><span class="p">(</span><span class="n">student</span><span class="o">.</span><span class="n">add_prices</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span> <span class="mi">6</span><span class="p">)</span>
+<span class="c1"># Check they defined the function with the right type</span>
+<span class="n">ensure_function</span><span class="p">(</span><span class="n">student</span><span class="p">,</span> <span class="s1">&#39;add_prices&#39;</span><span class="p">,</span> <span class="n">arity</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">returns</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+<span class="c1"># Unit test their function</span>
+<span class="n">assert_equal</span><span class="p">(</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;add_prices&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span> <span class="mi">6</span><span class="p">)</span>
 
+<span class="c1"># Have the resolver choose some feedback</span>
 <span class="n">resolve</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
-<p>This only briefly summarizes some of our features, read some of the sections
-below to find out more!</p>
+</div>
+<div class="section" id="architecture">
+<h2>Architecture<a class="headerlink" href="#architecture" title="Permalink to this headline">¶</a></h2>
+<p>The diagram below captures the major components of Pedal with a little detail.</p>
+<img alt="../_images/pedal-overview-v3.png" src="../_images/pedal-overview-v3.png" />
+<p>Teachers begin by creating an Instructor Control Script, like the one above,
+using Pedal’s selection of tools. This script should be associated with a problem
+on your autograding platform, and students can submit a solution for that question.
+The tools can analyze the student’s submission for conditions that warrant specific
+responses. The responses and their conditions are then encapsulated into raw
+Feedback, which is stored in a centralized Report. At the conclusion of the script,
+a Resolver is used to choose the most appropriate final feedback (or feedbacks),
+which are then sent back to the student via the autograder.</p>
+</div>
 </div>
 
 
