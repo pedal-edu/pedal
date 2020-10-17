@@ -1,6 +1,13 @@
 Pedal
 =====
 
+.. image:: https://github.com/pedal-edu/pedal/workflows/Test%20and%20Lint/badge.svg
+    :alt: Test and Lint
+
+
+.. image:: https://github.com/pedal-edu/pedal/workflows/Build%20Documentation/badge.svg
+    :alt: Documentation
+
 A collection of tools to analyze student's work in a pipeline.
 Pedal not only provides some of these tools, but it provides a *framework*
 around those tools.
@@ -23,7 +30,7 @@ all attached to a *Report*. A *Resolver* can then transform that Feedback into
 something that an *Environment* can hand off to a learner (or other interested
 party). These Feedback Functions are organized into *Tools*.
 
-.. image:: docs/html/_static/pedal-overview.png
+.. image:: docsrc/_static/pedal-overview.png
 
 One of our major goals is to attach metadata to feedback to enable easier
 analysis, versioning, and evaluation. Although Instructor Control Scripts can
