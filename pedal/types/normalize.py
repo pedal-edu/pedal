@@ -23,6 +23,7 @@ from pedal.types.definitions import (Type, UnknownType, NumType, BoolType,
                                      ModuleType, NoneType, FrozenSetType,
                                      FunctionType, TYPE_STRINGS,
                                      LiteralStr, LiteralNum, LiteralBool, CustomType)
+from pedal.utilities.system import IS_PYTHON_39
 
 
 def normalize_type(type_expression, type_space=None):
@@ -269,21 +270,26 @@ def get_pedal_type_from_ast(value: ast.AST, type_space=None) -> Type:
                         values=[get_pedal_type_from_ast(vv, type_space)
                                 for vv in value.values])
     # Support new style subscripts (e.g., ``list[int]``)
-    elif isinstance(value, ast.Subscript) and isinstance(value.slice, ast.Index):
+    elif ((IS_PYTHON_39 and isinstance(value, ast.Subscript)) or
+          isinstance(value, ast.Subscript) and isinstance(value.slice, ast.Index)):
+        if IS_PYTHON_39:
+            slice = value.slice
+        else:
+            slice = value.slice.value
         if isinstance(value.value, ast.Name):
-            if isinstance(value.slice.value, ast.Name):
-                subtype = get_pedal_type_from_str(value.slice.value.id)
+            if isinstance(slice, ast.Name):
+                subtype = get_pedal_type_from_str(slice.id)
                 if value.value.id == "list":
                     return ListType(subtype=subtype, empty=False)
                 if value.value.id == "set":
                     return SetType(subtype=subtype, empty=False)
                 if value.value.id == "tuple":
-                    return TupleType(subtypes=(subtype,), empty=False)
+                    return TupleType(subtypes=(subtype,))
                 if value.value.id == "frozenset":
                     return FrozenSetType(subtype=subtype, empty=False)
-            elif isinstance(value.slice.value, ast.Tuple):
+            elif isinstance(slice, ast.Tuple):
                 subtypes = [get_pedal_type_from_ast(e, type_space)
-                            for e in value.slice.value.elts]
+                            for e in slice.elts]
                 if value.value.id == "tuple":
                     return TupleType(subtypes=subtypes)
                 elif value.value.id == "dict" and len(subtypes) == 2:
