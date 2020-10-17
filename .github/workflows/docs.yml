@@ -29,22 +29,22 @@ jobs:
           build-command: "sphinx-build -b coverage . _build"
           docs-folder: "docsrc/"
       # Build PDF using custom depedencies
-      - uses: ammaraskar/sphinx-action@master
-        with:
-          repo-token: "${{ secrets.GITHUB_TOKEN }}"
-          pre-build-command: "apt-get update -y && apt-get install -y latexmk texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended"
-          build-command: "make latexpdf"
-          docs-folder: "docsrc/"
+      #- uses: ammaraskar/sphinx-action@master
+      #  with:
+      #    repo-token: "${{ secrets.GITHUB_TOKEN }}"
+      #    pre-build-command: "apt-get update -y && apt-get install -y latexmk texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended"
+      #    build-command: "make latexpdf"
+      #    docs-folder: "docsrc/"
       # Create an artifact of the html output.
-      - uses: actions/upload-artifact@v1
-        with:
-          name: DocumentationHTML
-          path: docsrc/_build/html/
+      #- uses: actions/upload-artifact@v1
+      #  with:
+      #    name: DocumentationHTML
+      #    path: docsrc/_build/html/
       # Create an artifact out of the previously built pdf.
-      - uses: actions/upload-artifact@v1
-        with:
-          name: Documentation
-          path: docsrc/_build/latex/pdfexample.pdf
+      #- uses: actions/upload-artifact@v1
+      #  with:
+      #    name: Documentation
+      #    path: docsrc/_build/latex/pdfexample.pdf
       # Publish built docs to gh-pages branch.
       # ===============================
       - name: Commit documentation changes
