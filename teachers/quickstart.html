@@ -97,12 +97,11 @@
 <li class="toctree-l2"><a class="reference internal" href="#core-feedback-functions">Core Feedback Functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#finding-ast-patterns">Finding AST Patterns</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#checking-execution-results">Checking Execution Results</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#checking-execution-output">Checking Execution Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#calling-students-functions">Calling Students’ Functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#simple-assertions">Simple Assertions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#simple-unit-testing">Simple Unit Testing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#other-toolkit-tools">Other Toolkit Tools</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#resolver-the-feedback">Resolver the Feedback</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#other-assertions">Other Assertions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#resolver-feedback">Resolver Feedback</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Teacher Examples</a></li>
@@ -250,13 +249,11 @@ BlockPy environment:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span>&gt; pedal feedback grade_assignment.py student_submission.py --environment blockpy
 </pre></div>
 </div>
-<p>Now our instructor script can become just the following:</p>
+<p>Now that same instructor script from before can literally just be:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Always start by importing Pedal</span>
 <span class="kn">from</span> <span class="nn">pedal</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="c1"># ... More instructor logic can go here ...</span>
-
-<span class="n">resolve</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>After just the lines above, the learners’ submission will have been:</p>
@@ -264,7 +261,7 @@ BlockPy environment:</p>
 <li><p>Checked for <cite>Source</cite> code errors that prevent parsing, with relevant syntax error messages generated.</p></li>
 <li><p>Executed in our <cite>Sandbox</cite> (relatively safely), with relevant runtime error messages generated and student data stored in a <cite>student</cite> variable.</p></li>
 <li><p>Reviewed by <cite>TIFA</cite>, which detects and provides feedback on common algorithmic errors (e.g., unused variables).</p></li>
-<li><p>A default <cite>Resolver</cite> is provided to be called at the end of your script.</p></li>
+<li><p>A default <cite>Resolver</cite> is called at the end of your script.</p></li>
 </ul>
 <p>We’ll talk about what you get from the features above, but first, let’s talk about how you provide
 custom feedback.</p>
@@ -282,26 +279,22 @@ deliver negative feedback; the name <cite>gently</cite> refers to the fact that 
 Resolvers will prioritize this feedback lower than runtime errors, syntax
 errors, etc. Its high-priority complement is <cite>explain</cite> which will totally
 supplant most other kinds of errors.</p>
-<p>Notice that we provide a label as a second argument.
-Although optional, we encourage you to label feedback to enhance your subsequent analysis.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">gently</span><span class="p">(</span><span class="s2">&quot;You failed to solve the question correctly!&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;incorrect_answer&quot;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">gently</span><span class="p">(</span><span class="s2">&quot;You failed to solve the question correctly!&quot;</span><span class="p">,</span>
+       <span class="n">label</span><span class="o">=</span><span class="s2">&quot;incorrect_answer&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Wrong!&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The next is <cite>set_success</cite>, which allows you to establish that the learner has completed the problem
-successfully. The default resolver will prioritize this feedback above all others.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">set_success</span><span class="p">()</span>
+<p>Notice that we provide a <cite>label</cite> and <cite>title</cite> (both optional).
+We encourage you to label feedback to enhance your subsequent analysis.
+Any Feedback Function can take in <cite>label</cite>, <cite>title</cite>, and many other useful
+settings.</p>
+<p><strong>Compliment</strong>: You can give the student compliments on things that are going well.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">compliment</span><span class="p">(</span><span class="s2">&quot;Good use of a `for` loop!&quot;</span><span class="p">,</span> <span class="n">score</span><span class="o">=</span><span class="s2">&quot;+10%&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Along the way, you can give students partial credit with <cite>give_partial</cite>. You’ll need to check whether
-your autograder expects the sum to be 1 or 100.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">give_partial</span><span class="p">(</span><span class="mi">45</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Finally, you can give the student compliments on things that are going well.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">compliment</span><span class="p">(</span><span class="s2">&quot;You&#39;ve almost got it!&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>There are several other core commands, so check out the <a class="reference internal" href="reference.html"><span class="doc">Teacher Reference</span></a> for more.</p>
+<p>In this example, we have also included some partial credit using the optional <cite>score</cite>
+parameter.</p>
+<p>There are many other core commands, and many other optional parameters to enhance them.
+Check out the <a class="reference internal" href="reference.html"><span class="doc">Teacher Reference</span></a> for more.</p>
 </div>
 <div class="section" id="finding-ast-patterns">
 <h2>Finding AST Patterns<a class="headerlink" href="#finding-ast-patterns" title="Permalink to this headline">¶</a></h2>
@@ -345,40 +338,16 @@ You can get the expression’s AST node name via the <cite>name</cite> attribute
 preventing access to the instructor control script and the grading functionality.
 Once run, you can get access to students’ final variables’ values via the <cite>data</cite> attribute:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="s1">&#39;sum&#39;</span> <span class="ow">in</span> <span class="n">student</span><span class="o">.</span><span class="n">data</span> <span class="ow">and</span> <span class="n">student</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;sum&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">47</span><span class="p">:</span>
-    <span class="n">set_success</span><span class="p">()</span>
-</pre></div>
-</div>
-<p>You can also check for variable’s in a few other ways:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">integer_variables</span> <span class="o">=</span> <span class="n">student</span><span class="o">.</span><span class="n">get_variables_by_type</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">integer_variables</span><span class="p">:</span>
-    <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="mi">47</span><span class="p">:</span>
-        <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;You should not have assigned the value 47 to the variable &quot;</span><span class="o">+</span><span class="n">name</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>However, you should be aware that true sandboxing is impossible in a dynamic language like Python
-We recommend setting course policies that disincentivize cheating and ensuring your autograding environment
-has multiple lines of defense, such as proper file system permissions.</p>
-</div>
-<div class="section" id="checking-execution-output">
-<h2>Checking Execution Output<a class="headerlink" href="#checking-execution-output" title="Permalink to this headline">¶</a></h2>
-<p>The <cite>output</cite> attribute provides a list of strings representation of all the lines printed by the students’
-code, minus the trailing newlines.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="s2">&quot;Hello world!&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">student</span><span class="o">.</span><span class="n">output</span><span class="p">:</span>
-    <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;You need to print the string &#39;Hello world!&#39;&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>There is also <cite>raw_output</cite> to get a single string, including newline characters.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="s2">&quot;Complex</span><span class="se">\n</span><span class="s2">Text&quot;</span> <span class="ow">in</span> <span class="n">student</span><span class="o">.</span><span class="n">raw_output</span><span class="p">:</span>
-    <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;You should have the precise text we gave you in there.&quot;</span><span class="p">)</span>
+    <span class="n">compliment</span><span class="p">(</span><span class="s2">&quot;You have summed correctly!&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="calling-students-functions">
 <h2>Calling Students’ Functions<a class="headerlink" href="#calling-students-functions" title="Permalink to this headline">¶</a></h2>
 <p>You can call students’ functions and pass in arguments.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">student</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s2">&quot;add_numbers&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
-<span class="k">if</span> <span class="n">result</span> <span class="o">==</span> <span class="mi">13</span><span class="p">:</span>
-    <span class="n">set_success</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">call</span><span class="p">(</span><span class="s2">&quot;add_numbers&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">result</span> <span class="o">==</span> <span class="mi">35</span><span class="p">:</span>
+    <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;You are multiplying instead of adding.&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>If you inspect the result of calling a student function, it will appear to be a simple Python
@@ -393,73 +362,81 @@ which you can see in the Assertions.</p>
 unit testing framework.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.assertions</span> <span class="kn">import</span> <span class="o">*</span>
 
-<span class="n">assert_equal</span><span class="p">(</span><span class="n">student</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;add&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">),</span> <span class="mi">13</span><span class="p">)</span>
+<span class="n">assert_equal</span><span class="p">(</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;add&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">),</span> <span class="mi">13</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The <cite>assert_*</cite> functions have a large amount of extra machinery to produce vastly improved error messages.
 When a students’ code causes an error, the traceback will not show any instructor lines.</p>
-<div class="admonition-todo admonition" id="id1">
-<p class="admonition-title">Todo</p>
-<p>produce an example feedback message.</p>
-</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<strong>Failed Instructor Test</strong>
+<pre>Student code failed instructor test.
+I ran the code:
+    add(1, 2)
+The value of the result was:
+    -1
+But I expected the result to be equal to:
+    3</pre></div>
 <p>There are also some more advanced assertions:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">assert_prints</span><span class="p">(</span><span class="n">student</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s2">&quot;print_values&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span> <span class="p">[</span><span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="s2">&quot;2&quot;</span><span class="p">,</span> <span class="s2">&quot;3&quot;</span><span class="p">])</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">assert_output</span><span class="p">(</span><span class="n">call</span><span class="p">(</span><span class="s2">&quot;print_values&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span> <span class="s2">&quot;1</span><span class="se">\n</span><span class="s2">2</span><span class="se">\n</span><span class="s2">3&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="simple-unit-testing">
 <h2>Simple Unit Testing<a class="headerlink" href="#simple-unit-testing" title="Permalink to this headline">¶</a></h2>
 <p>Assertions are a convenient way to check an individual aspect of code, but sometimes you want to
-bundle up a series of input/output tests (whether that means stdin/stdout or arguments/return values).
-The <cite>Toolkit</cite> module is a collection of useful functions, including <cite>unit_test</cite> and <cite>output_test</cite>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.toolkit.functions</span> <span class="kn">import</span> <span class="n">unit_test</span><span class="p">,</span> <span class="n">output_test</span>
-
-<span class="k">if</span> <span class="n">unit_test</span><span class="p">(</span><span class="s1">&#39;add&#39;</span><span class="p">,</span> <span class="p">[</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">7</span><span class="p">),</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">6</span><span class="p">)</span> <span class="p">]):</span>
-    <span class="n">set_success</span><span class="p">()</span>
+bundle up a series of arguments/return values.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">unit_test</span><span class="p">(</span><span class="s1">&#39;add&#39;</span><span class="p">,</span> <span class="p">[((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="mi">7</span><span class="p">),</span>
+                  <span class="p">((</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="mi">10</span><span class="p">),</span>
+                  <span class="p">((</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">),</span> <span class="o">-</span><span class="mi">6</span><span class="p">)</span>
+<span class="p">])</span>
 </pre></div>
 </div>
-<p>These Feedback Functions return True if all unit tests pass, but generate Responses depending on how
-they failed. The results of failed tests are placed into an HTML table.</p>
+<p>The results of failed tests are placed into an HTML table.</p>
 </div>
-<div class="section" id="other-toolkit-tools">
-<h2>Other Toolkit Tools<a class="headerlink" href="#other-toolkit-tools" title="Permalink to this headline">¶</a></h2>
-<p>There are a large number of other tools in the toolkit. For example, you can quickly perform
-a check of the source code that a function has the appropriate signature:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.toolkit.functions</span> <span class="kn">import</span> <span class="n">match_signature</span>
-
-<span class="k">if</span> <span class="ow">not</span> <span class="n">match_signature</span><span class="p">(</span><span class="s1">&#39;add&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
-    <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;The `add` function should have 2 parameters.&quot;</span><span class="p">)</span>
+<div class="section" id="other-assertions">
+<h2>Other Assertions<a class="headerlink" href="#other-assertions" title="Permalink to this headline">¶</a></h2>
+<p>There are many other kinds of assertions:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Ensure the function has two parameters</span>
+<span class="n">ensure_function</span><span class="p">(</span><span class="s1">&#39;add&#39;</span><span class="p">,</span> <span class="n">arity</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="c1"># Ensure the functions&#39; parameters are typed</span>
+<span class="n">ensure_function</span><span class="p">(</span><span class="s1">&#39;add&#39;</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">returns</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+<span class="c1"># Make sure all functions are documented</span>
+<span class="n">ensure_documented_functions</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>Or assert that all functions must have a docstring:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.toolkit.functions</span> <span class="kn">import</span> <span class="n">all_documented</span>
-
-<span class="n">all_documented</span><span class="p">()</span>
-</pre></div>
-</div>
-<p>Worried that students are printing out a literal value instead of relying on variables?</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.toolkit.utilities</span> <span class="kn">import</span> <span class="n">only_printing_variables</span>
-
-<span class="k">if</span> <span class="ow">not</span> <span class="n">only_printing_variables</span><span class="p">():</span>
-    <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;You should only be printing variables&#39; values, not literal values.&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Are they not allowed to use certain operators for this question?</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.toolkit.utilities</span> <span class="kn">import</span> <span class="n">prevent_operation</span>
-
+<p>Are they not allowed to use certain operators, literals, or functions for
+this question?</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Give operations as strings</span>
 <span class="n">prevent_operation</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
-<span class="n">prevent_operation</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">)</span>
+<span class="n">ensure_operation</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">)</span>
+<span class="c1"># You can limit the quantity</span>
+<span class="n">ensure_function_call</span><span class="p">(</span><span class="s2">&quot;print&quot;</span><span class="p">,</span> <span class="n">at_least</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">prevent_function_call</span><span class="p">(</span><span class="s2">&quot;print&quot;</span><span class="p">,</span> <span class="n">at_most</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="c1"># You can check literal values</span>
+<span class="n">ensure_literal</span><span class="p">(</span><span class="mi">27</span><span class="p">)</span>
+<span class="n">prevent_literal</span><span class="p">(</span><span class="mi">29</span><span class="p">)</span>
+<span class="n">ensure_literal_type</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="n">prevent_literal_type</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+<span class="c1"># Or check AST nodes</span>
+<span class="n">ensure_ast</span><span class="p">(</span><span class="s2">&quot;For&quot;</span><span class="p">)</span>
+<span class="n">prevent_ast</span><span class="p">(</span><span class="s2">&quot;While&quot;</span><span class="p">)</span>
+<span class="c1"># You can statically check modules</span>
+<span class="n">ensure_import</span><span class="p">(</span><span class="s1">&#39;math&#39;</span><span class="p">)</span>
+<span class="n">prevent_import</span><span class="p">(</span><span class="s1">&#39;statistics&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The toolkit is rich and extensive, although somewhat situational. Refer to the complete
 <a class="reference internal" href="reference.html"><span class="doc">Teacher Reference</span></a> for more information.</p>
 </div>
-<div class="section" id="resolver-the-feedback">
-<h2>Resolver the Feedback<a class="headerlink" href="#resolver-the-feedback" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="resolver-feedback">
+<h2>Resolver Feedback<a class="headerlink" href="#resolver-feedback" title="Permalink to this headline">¶</a></h2>
 <p>Ultimately, when you’re done detecting conditions and generating responses, you need to
-resolve the feedback into some output. The Simple Environment provides access to the
-Simple Resolver, which has a prioritization scheme to choose a single, most important piece of feedback.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">resolve</span><span class="p">()</span>
+resolve the feedback into some output. Most environments automatically call
+the resolver, so it is not necessary to call this yourself. However, the default
+environment does not, so you would need to use the following:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.resolvers.simple</span> <span class="kn">import</span> <span class="n">resolve</span>
+<span class="n">resolve</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>

@@ -192,27 +192,6 @@ if you want to just clear out its data, then instead use
 </dd></dl>
 
 <span class="target" id="module-pedal.sandbox.sandbox"></span><p>File containing the Sandbox class.</p>
-<p>Student attributes:</p>
-<p>student.data
-student.functions
-student.vars
-student.result
-student.output (list[str]): The list of strings that have been printed to the</p>
-<blockquote>
-<div><p>console by <a class="reference external" href="https://docs.python.org/3/library/functions.html#print" title="(in Python v3.9)"><code class="xref py py-func docutils literal notranslate"><span class="pre">print()</span></code></a>. Note that line endings have been removed
-using <code class="xref py py-func docutils literal notranslate"><span class="pre">string.rstrip()</span></code>.</p>
-</div></blockquote>
-<dl class="simple">
-<dt>student.inputs (list[str]): The list of strings that will be passed to</dt><dd><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#input" title="(in Python v3.9)"><code class="xref py py-func docutils literal notranslate"><span class="pre">input()</span></code></a>.</p>
-</dd>
-<dt>student.raw_output (str): A concatenated string of all the text that was printed</dt><dd><p>to console. No changes have been made to the text.</p>
-</dd>
-<dt>student.exception (Exception or None): The exception that occurred during the</dt><dd><p>most recent execution, or None if nothing happened.</p>
-</dd>
-</dl>
-<p>student.modules.plots
-student.modules.turtles</p>
-<p>student.settings</p>
 <p>TODO: Handle sys.argv</p>
 <dl class="class">
 <dt id="pedal.sandbox.sandbox.Sandbox">
@@ -223,6 +202,119 @@ student.modules.turtles</p>
 Sandbox is attached to.</p>
 </dd>
 </dl>
+<dl class="attribute">
+<dt id="pedal.sandbox.sandbox.Sandbox.data">
+<code class="sig-name descname">data</code><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.data" title="Permalink to this definition">¶</a></dt>
+<dd><p>The namespace that the context are occurring in.
+Note that this is mutable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a>, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.sandbox.sandbox.Sandbox.result">
+<code class="sig-name descname">result</code><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.result" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.sandbox.sandbox.Sandbox.output">
+<code class="sig-name descname">output</code><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.output" title="Permalink to this definition">¶</a></dt>
+<dd><p>The list of strings that have been printed to the
+console by <a class="reference external" href="https://docs.python.org/3/library/functions.html#print" title="(in Python v3.9)"><code class="xref py py-func docutils literal notranslate"><span class="pre">print()</span></code></a>. Note that line endings have been removed
+using <code class="xref py py-func docutils literal notranslate"><span class="pre">string.rstrip()</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.sandbox.sandbox.Sandbox.inputs">
+<code class="sig-name descname">inputs</code><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.inputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>The list of strings that will be passed to
+<a class="reference external" href="https://docs.python.org/3/library/functions.html#input" title="(in Python v3.9)"><code class="xref py py-func docutils literal notranslate"><span class="pre">input()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.sandbox.sandbox.Sandbox.raw_output">
+<code class="sig-name descname">raw_output</code><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.raw_output" title="Permalink to this definition">¶</a></dt>
+<dd><p>A concatenated string of all the text that was printed
+to console. No changes have been made to the text.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.sandbox.sandbox.Sandbox.exception">
+<code class="sig-name descname">exception</code><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.exception" title="Permalink to this definition">¶</a></dt>
+<dd><p>The exception that occurred during the
+most recent execution, or None if nothing happened.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.9)">Exception</a> or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)">None</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.sandbox.sandbox.Sandbox.feedback">
+<code class="sig-name descname">feedback</code><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.feedback" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.sandbox.sandbox.Sandbox.modules.plots">
+<code class="sig-prename descclassname">modules.</code><code class="sig-name descname">plots</code><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.modules.plots" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.sandbox.sandbox.Sandbox.modules.turtles">
+<code class="sig-prename descclassname">modules.</code><code class="sig-name descname">turtles</code><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.modules.turtles" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.sandbox.sandbox.Sandbox.target">
+<code class="sig-name descname">target</code><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.target" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.sandbox.sandbox.Sandbox.allowed_time">
+<code class="sig-name descname">allowed_time</code><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.allowed_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>How long to allow before stopping execution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.sandbox.sandbox.Sandbox.tracer_style">
+<code class="sig-name descname">tracer_style</code><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.tracer_style" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="pedal.sandbox.sandbox.Sandbox._context">
 <code class="sig-name descname">_context</code><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox._context" title="Permalink to this definition">¶</a></dt>
@@ -259,25 +351,13 @@ being used. This allows recursive patching behavior.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="pedal.sandbox.sandbox.Sandbox.data">
-<code class="sig-name descname">data</code><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.data" title="Permalink to this definition">¶</a></dt>
-<dd><p>The namespace that the context are occurring in.
-Note that this is mutable.</p>
+<dt id="pedal.sandbox.sandbox.Sandbox.MAXIMUM_TEMPORARY_LENGTH">
+<code class="sig-name descname">MAXIMUM_TEMPORARY_LENGTH</code><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.MAXIMUM_TEMPORARY_LENGTH" title="Permalink to this definition">¶</a></dt>
+<dd><p>How long to allow arguments to be before
+turning them into temporary variables.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a>, Any]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="pedal.sandbox.sandbox.Sandbox.exception">
-<code class="sig-name descname">exception</code><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.exception" title="Permalink to this definition">¶</a></dt>
-<dd><p>The exception that occurred during the
-most recent execution, or None if nothing happened.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.9)">Exception</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -472,17 +552,17 @@ In other words, get a list of all the functions the student defined.</p>
 <dl class="method">
 <dt id="pedal.sandbox.sandbox.Sandbox.get_context">
 <code class="sig-name descname">get_context</code><span class="sig-paren">(</span><em class="sig-param">context_id: int = None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/sandbox.html#Sandbox.get_context"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.get_context" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieve the most recent contexts
-:returns:</p>
-<blockquote>
-<div><dl class="simple">
+<dd><p>Retrieve the most recent contexts.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
 <dt>The</dt><dd><p>most recent execution, or executions if currently in a group.</p>
 </dd>
 </dl>
-</div></blockquote>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list[<code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.sandbox.sandbox_mixins.SandboxContext</span></code>]</p>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list[<code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.sandbox.sandbox_mixins.SandboxContext</span></code>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -687,25 +767,77 @@ reference to <code class="docutils literal notranslate"><span class="pre">data</
 <dt id="pedal.sandbox.feedbacks.runtime_error">
 <em class="property">class </em><code class="sig-name descname">runtime_error</code><span class="sig-paren">(</span><em class="sig-param">exception</em>, <em class="sig-param">context</em>, <em class="sig-param">traceback</em>, <em class="sig-param">location</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/feedbacks.html#runtime_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.feedbacks.runtime_error" title="Permalink to this definition">¶</a></dt>
 <dd><p>Used to create all runtime errors.</p>
-<dl>
-<dt>Fields:</dt><dd><p>exception (Exception): The original exception.
-exception_name (str): The original name of the exception.
-exception_message (str): the original error message from the exception.
-traceback (<code class="xref py py-class docutils literal notranslate"><span class="pre">ExpandedTraceback</span></code>):</p>
-<blockquote>
-<div><p>An enhanced version of the builtin Traceback object. Has a number
+<dl class="attribute">
+<dt id="pedal.sandbox.feedbacks.runtime_error.exception">
+<code class="sig-name descname">exception</code><a class="headerlink" href="#pedal.sandbox.feedbacks.runtime_error.exception" title="Permalink to this definition">¶</a></dt>
+<dd><p>The original exception.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.9)">Exception</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.sandbox.feedbacks.runtime_error.exception_name">
+<code class="sig-name descname">exception_name</code><a class="headerlink" href="#pedal.sandbox.feedbacks.runtime_error.exception_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>The original name of the exception.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.sandbox.feedbacks.runtime_error.exception_message">
+<code class="sig-name descname">exception_message</code><a class="headerlink" href="#pedal.sandbox.feedbacks.runtime_error.exception_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>the original error message from the exception.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.sandbox.feedbacks.runtime_error.traceback">
+<code class="sig-name descname">traceback</code><a class="headerlink" href="#pedal.sandbox.feedbacks.runtime_error.traceback" title="Permalink to this definition">¶</a></dt>
+<dd><p>An enhanced version of the builtin Traceback object. Has a number
 of additional fields.</p>
-</div></blockquote>
-<p>traceback_message (str): A nicely formatted version of the traceback.
-context (list[<code class="xref py py-class docutils literal notranslate"><span class="pre">SandboxContext</span></code>]): The</p>
-<blockquote>
-<div><p>history of inputs, outputs, executed code, and other information
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ExpandedTraceback</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.sandbox.feedbacks.runtime_error.traceback_message">
+<code class="sig-name descname">traceback_message</code><a class="headerlink" href="#pedal.sandbox.feedbacks.runtime_error.traceback_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>A nicely formatted version of the traceback.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.sandbox.feedbacks.runtime_error.context">
+<code class="sig-name descname">context</code><a class="headerlink" href="#pedal.sandbox.feedbacks.runtime_error.context" title="Permalink to this definition">¶</a></dt>
+<dd><p>The
+history of inputs, outputs, executed code, and other information
 from when this runtime error occurred. Usually just a single
 element, but sometimes longer if created in a grouping context.
 If the code was run from a file, then the filename is given.</p>
-</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list[<code class="xref py py-class docutils literal notranslate"><span class="pre">SandboxContext</span></code>]</p>
 </dd>
 </dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">

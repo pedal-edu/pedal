@@ -168,26 +168,6 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">File containing the Sandbox class.</span>
 
-<span class="sd">Student attributes:</span>
-
-<span class="sd">student.data</span>
-<span class="sd">student.functions</span>
-<span class="sd">student.vars</span>
-<span class="sd">student.result</span>
-<span class="sd">student.output (list[str]): The list of strings that have been printed to the</span>
-<span class="sd">    console by :py:func:`print`. Note that line endings have been removed</span>
-<span class="sd">    using :py:func:`string.rstrip`.</span>
-<span class="sd">student.inputs (list[str]): The list of strings that will be passed to</span>
-<span class="sd">    :py:func:`input`.</span>
-<span class="sd">student.raw_output (str): A concatenated string of all the text that was printed</span>
-<span class="sd">    to console. No changes have been made to the text.</span>
-<span class="sd">student.exception (Exception or None): The exception that occurred during the</span>
-<span class="sd">    most recent execution, or None if nothing happened.</span>
-<span class="sd">student.modules.plots</span>
-<span class="sd">student.modules.turtles</span>
-
-<span class="sd">student.settings</span>
-
 <span class="sd">TODO: Handle sys.argv</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
@@ -218,16 +198,31 @@
 <span class="sd">            Sandbox is attached to.</span>
 
 <span class="sd">    Attributes:</span>
+<span class="sd">        data (dict[str, Any]): The namespace that the context are occurring in.</span>
+<span class="sd">            Note that this is mutable.</span>
+<span class="sd">        result: TODO</span>
+<span class="sd">        output (list[str]): The list of strings that have been printed to the</span>
+<span class="sd">            console by :py:func:`print`. Note that line endings have been removed</span>
+<span class="sd">            using :py:func:`string.rstrip`.</span>
+<span class="sd">        inputs (list[str]): The list of strings that will be passed to</span>
+<span class="sd">            :py:func:`input`.</span>
+<span class="sd">        raw_output (str): A concatenated string of all the text that was printed</span>
+<span class="sd">            to console. No changes have been made to the text.</span>
+<span class="sd">        exception (Exception or None): The exception that occurred during the</span>
+<span class="sd">            most recent execution, or None if nothing happened.</span>
+<span class="sd">        feedback: TODO</span>
+<span class="sd">        modules.plots: TODO</span>
+<span class="sd">        modules.turtles: TODO</span>
+<span class="sd">        target: TODO</span>
+<span class="sd">        allowed_time (int): How long to allow before stopping execution.</span>
+<span class="sd">        tracer_style (str): TODO</span>
 <span class="sd">        _context (list[SandboxContext]): The history of executions made in</span>
 <span class="sd">            this sandbox.</span>
 <span class="sd">        _next_context_id (int): The ID of the next execution context.</span>
 <span class="sd">        _current_patches (list[Patch]): A stack of patches that are currently</span>
 <span class="sd">            being used. This allows recursive patching behavior.</span>
-<span class="sd">        data (dict[str, Any]): The namespace that the context are occurring in.</span>
-<span class="sd">            Note that this is mutable.</span>
-
-<span class="sd">        exception (Exception): The exception that occurred during the</span>
-<span class="sd">            most recent execution, or None if nothing happened.</span>
+<span class="sd">        MAXIMUM_TEMPORARY_LENGTH (int): How long to allow arguments to be before</span>
+<span class="sd">            turning them into temporary variables.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">MAXIMUM_TEMPORARY_LENGTH</span> <span class="o">=</span> <span class="mi">25</span>
@@ -491,10 +486,12 @@
 
 <div class="viewcode-block" id="Sandbox.get_context"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.get_context">[docs]</a>    <span class="k">def</span> <span class="nf">get_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Retrieve the most recent contexts</span>
+<span class="sd">        Retrieve the most recent contexts.</span>
+
 <span class="sd">        Returns:</span>
 <span class="sd">            list[:py:class:`pedal.sandbox.sandbox_mixins.SandboxContext`]: The</span>
 <span class="sd">                most recent execution, or executions if currently in a group.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># TODO: Test off-by-one-errors</span>
         <span class="k">if</span> <span class="n">context_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>

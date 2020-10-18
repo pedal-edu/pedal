@@ -254,12 +254,10 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">main_code</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Retrieves the submission&#39;s main code &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_file</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
 
     <span class="nd">@main_code</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">main_code</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Changes the submission&#39;s main code &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">main_file</span><span class="p">]</span> <span class="o">=</span> <span class="n">code</span>
 
 <div class="viewcode-block" id="Submission.set_line_offset"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.submission.Submission.set_line_offset">[docs]</a>    <span class="k">def</span> <span class="nf">set_line_offset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lineno</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>

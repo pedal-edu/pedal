@@ -636,6 +636,21 @@ TODO: Should we also have an else_message_template? Probably.</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="pedal.core.commands.Feedback.activate">
+<code class="sig-name descname">activate</code><a class="headerlink" href="#pedal.core.commands.Feedback.activate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used for default feedback objects without a custom
+condition, to indicate whether they should be considered triggered.
+Defaults to True; setting this to False means that the feedback
+object will be deactivated. Note that most inheriting Feedback
+Functions will not respect this parameter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="pedal.core.commands.Feedback.author">
 <code class="sig-name descname">author</code><a class="headerlink" href="#pedal.core.commands.Feedback.author" title="Permalink to this definition">¶</a></dt>
 <dd><p>A list of names/emails that indicate who created this piece of feedback. They can be
@@ -1382,6 +1397,21 @@ TODO: Should we also have an else_message_template? Probably.</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="pedal.core.feedback.Feedback.activate">
+<code class="sig-name descname">activate</code><a class="headerlink" href="#pedal.core.feedback.Feedback.activate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used for default feedback objects without a custom
+condition, to indicate whether they should be considered triggered.
+Defaults to True; setting this to False means that the feedback
+object will be deactivated. Note that most inheriting Feedback
+Functions will not respect this parameter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="pedal.core.feedback.Feedback.author">
 <code class="sig-name descname">author</code><a class="headerlink" href="#pedal.core.feedback.Feedback.author" title="Permalink to this definition">¶</a></dt>
 <dd><p>A list of names/emails that indicate who created this piece of feedback. They can be
@@ -1809,12 +1839,6 @@ lines of code.</p>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a>]</p>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="method">
-<dt>
-<em class="property">property </em><code class="sig-name descname">main_code</code></dt>
-<dd><p>Retrieves the submission’s main code</p>
 </dd></dl>
 
 <dl class="method">
