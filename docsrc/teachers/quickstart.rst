@@ -81,7 +81,7 @@ BlockPy environment:
 
     $> pedal feedback grade_assignment.py student_submission.py --environment blockpy
 
-Now our instructor script can become just the following:
+Now that same instructor script from before can literally just be:
 
 .. code-block:: python
 
@@ -90,14 +90,12 @@ Now our instructor script can become just the following:
 
     # ... More instructor logic can go here ...
 
-    resolve()
-
 After just the lines above, the learners' submission will have been:
 
 * Checked for `Source` code errors that prevent parsing, with relevant syntax error messages generated.
 * Executed in our `Sandbox` (relatively safely), with relevant runtime error messages generated and student data stored in a `student` variable.
 * Reviewed by `TIFA`, which detects and provides feedback on common algorithmic errors (e.g., unused variables).
-* A default `Resolver` is provided to be called at the end of your script.
+* A default `Resolver` is called at the end of your script.
 
 We'll talk about what you get from the features above, but first, let's talk about how you provide
 custom feedback.
@@ -118,34 +116,28 @@ Resolvers will prioritize this feedback lower than runtime errors, syntax
 errors, etc. Its high-priority complement is `explain` which will totally
 supplant most other kinds of errors.
 
-Notice that we provide a label as a second argument.
-Although optional, we encourage you to label feedback to enhance your subsequent analysis.
+.. code:: python
+
+    gently("You failed to solve the question correctly!",
+           label="incorrect_answer", title="Wrong!")
+
+Notice that we provide a `label` and `title` (both optional).
+We encourage you to label feedback to enhance your subsequent analysis.
+Any Feedback Function can take in `label`, `title`, and many other useful
+settings.
+
+**Compliment**: You can give the student compliments on things that are going well.
 
 .. code:: python
 
-    gently("You failed to solve the question correctly!", label="incorrect_answer")
+    compliment("Good use of a `for` loop!", score="+10%")
 
-The next is `set_success`, which allows you to establish that the learner has completed the problem
-successfully. The default resolver will prioritize this feedback above all others.
+In this example, we have also included some partial credit using the optional `score`
+parameter.
 
-.. code:: python
 
-    set_success()
-
-Along the way, you can give students partial credit with `give_partial`. You'll need to check whether
-your autograder expects the sum to be 1 or 100.
-
-.. code:: python
-
-    give_partial(45)
-
-Finally, you can give the student compliments on things that are going well.
-
-.. code:: python
-
-    compliment("You've almost got it!")
-
-There are several other core commands, so check out the :doc:`reference` for more.
+There are many other core commands, and many other optional parameters to enhance them.
+Check out the :doc:`reference` for more.
 
 Finding AST Patterns
 ^^^^^^^^^^^^^^^^^^^^
@@ -202,38 +194,7 @@ Once run, you can get access to students' final variables' values via the `data`
 .. code:: python
 
     if 'sum' in student.data and student.data['sum'] == 47:
-        set_success()
-
-You can also check for variable's in a few other ways:
-
-.. code:: python
-
-    integer_variables = student.get_variables_by_type(int)
-    for name, value in integer_variables:
-        if value == 47:
-            gently("You should not have assigned the value 47 to the variable "+name)
-
-However, you should be aware that true sandboxing is impossible in a dynamic language like Python
-We recommend setting course policies that disincentivize cheating and ensuring your autograding environment
-has multiple lines of defense, such as proper file system permissions.
-
-Checking Execution Output
-^^^^^^^^^^^^^^^^^^^^^^^^^
-
-The `output` attribute provides a list of strings representation of all the lines printed by the students'
-code, minus the trailing newlines.
-
-.. code:: python
-
-    if "Hello world!" not in student.output:
-        gently("You need to print the string 'Hello world!'")
-
-There is also `raw_output` to get a single string, including newline characters.
-
-.. code:: python
-
-    if "Complex\nText" in student.raw_output:
-        gently("You should have the precise text we gave you in there.")
+        compliment("You have summed correctly!")
 
 Calling Students' Functions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -242,9 +203,9 @@ You can call students' functions and pass in arguments.
 
 .. code:: python
 
-    result = student.call("add_numbers", 5, 7)
-    if result == 13:
-        set_success()
+    result = call("add_numbers", 5, 7)
+    if result == 35:
+        gently("You are multiplying instead of adding.")
 
 If you inspect the result of calling a student function, it will appear to be a simple Python
 value - in the case above, if the students' code returned an integer, you could add or divide
@@ -262,85 +223,98 @@ unit testing framework.
 
     from pedal.assertions import *
 
-    assert_equal(student.call('add', 5, 7), 13)
+    assert_equal(call('add', 5, 7), 13)
 
 The `assert_*` functions have a large amount of extra machinery to produce vastly improved error messages.
 When a students' code causes an error, the traceback will not show any instructor lines.
 
-.. todo:: produce an example feedback message.
+.. warning::
+
+    .. raw:: html
+
+        <strong>Failed Instructor Test</strong>
+        <pre>Student code failed instructor test.
+        I ran the code:
+            add(1, 2)
+        The value of the result was:
+            -1
+        But I expected the result to be equal to:
+            3</pre>
 
 There are also some more advanced assertions:
 
 .. code:: python
 
-    assert_prints(student.call("print_values", [1,2,3]), ["1", "2", "3"])
+    assert_output(call("print_values", [1,2,3]), "1\n2\n3")
 
 Simple Unit Testing
 ^^^^^^^^^^^^^^^^^^^
 
 Assertions are a convenient way to check an individual aspect of code, but sometimes you want to
-bundle up a series of input/output tests (whether that means stdin/stdout or arguments/return values).
-The `Toolkit` module is a collection of useful functions, including `unit_test` and `output_test`.
+bundle up a series of arguments/return values.
 
 .. code:: python
 
-    from pedal.toolkit.functions import unit_test, output_test
+    unit_test('add', [((3, 4), 7),
+                      ((5, 5), 10),
+                      ((-3, -3), -6)
+    ])
 
-    if unit_test('add', [ (3, 4, 7), (5, 5, 10), (-3, -3, -6) ]):
-        set_success()
+The results of failed tests are placed into an HTML table.
 
-These Feedback Functions return True if all unit tests pass, but generate Responses depending on how
-they failed. The results of failed tests are placed into an HTML table.
+Other Assertions
+^^^^^^^^^^^^^^^^
 
-Other Toolkit Tools
-^^^^^^^^^^^^^^^^^^^
-
-There are a large number of other tools in the toolkit. For example, you can quickly perform
-a check of the source code that a function has the appropriate signature:
+There are many other kinds of assertions:
 
 .. code:: python
 
-    from pedal.toolkit.functions import match_signature
+    # Ensure the function has two parameters
+    ensure_function('add', arity=2)
+    # Ensure the functions' parameters are typed
+    ensure_function('add', parameters=[str, int], returns=bool)
+    # Make sure all functions are documented
+    ensure_documented_functions()
 
-    if not match_signature('add', 2):
-        gently("The `add` function should have 2 parameters.")
 
-Or assert that all functions must have a docstring:
 
-.. code:: python
-
-    from pedal.toolkit.functions import all_documented
-
-    all_documented()
-
-Worried that students are printing out a literal value instead of relying on variables?
+Are they not allowed to use certain operators, literals, or functions for
+this question?
 
 .. code:: python
 
-    from pedal.toolkit.utilities import only_printing_variables
-
-    if not only_printing_variables():
-        gently("You should only be printing variables' values, not literal values.")
-
-Are they not allowed to use certain operators for this question?
-
-.. code:: python
-
-    from pedal.toolkit.utilities import prevent_operation
-
+    # Give operations as strings
     prevent_operation("/")
-    prevent_operation("*")
+    ensure_operation("*")
+    # You can limit the quantity
+    ensure_function_call("print", at_least=2)
+    prevent_function_call("print", at_most=4)
+    # You can check literal values
+    ensure_literal(27)
+    prevent_literal(29)
+    ensure_literal_type(int)
+    prevent_literal_type(str)
+    # Or check AST nodes
+    ensure_ast("For")
+    prevent_ast("While")
+    # You can statically check modules
+    ensure_import('math')
+    prevent_import('statistics')
+
 
 The toolkit is rich and extensive, although somewhat situational. Refer to the complete
 :doc:`reference` for more information.
 
-Resolver the Feedback
-^^^^^^^^^^^^^^^^^^^^^
+
+Resolver Feedback
+^^^^^^^^^^^^^^^^^
 
 Ultimately, when you're done detecting conditions and generating responses, you need to
-resolve the feedback into some output. The Simple Environment provides access to the
-Simple Resolver, which has a prioritization scheme to choose a single, most important piece of feedback.
+resolve the feedback into some output. Most environments automatically call
+the resolver, so it is not necessary to call this yourself. However, the default
+environment does not, so you would need to use the following:
 
 .. code:: python
 
+    from pedal.resolvers.simple import resolve
     resolve()

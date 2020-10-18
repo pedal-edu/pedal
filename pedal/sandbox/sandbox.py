@@ -1,26 +1,6 @@
 """
 File containing the Sandbox class.
 
-Student attributes:
-
-student.data
-student.functions
-student.vars
-student.result
-student.output (list[str]): The list of strings that have been printed to the
-    console by :py:func:`print`. Note that line endings have been removed
-    using :py:func:`string.rstrip`.
-student.inputs (list[str]): The list of strings that will be passed to
-    :py:func:`input`.
-student.raw_output (str): A concatenated string of all the text that was printed
-    to console. No changes have been made to the text.
-student.exception (Exception or None): The exception that occurred during the
-    most recent execution, or None if nothing happened.
-student.modules.plots
-student.modules.turtles
-
-student.settings
-
 TODO: Handle sys.argv
 
 """
@@ -51,16 +31,31 @@ class Sandbox:
             Sandbox is attached to.
 
     Attributes:
+        data (dict[str, Any]): The namespace that the context are occurring in.
+            Note that this is mutable.
+        result: TODO
+        output (list[str]): The list of strings that have been printed to the
+            console by :py:func:`print`. Note that line endings have been removed
+            using :py:func:`string.rstrip`.
+        inputs (list[str]): The list of strings that will be passed to
+            :py:func:`input`.
+        raw_output (str): A concatenated string of all the text that was printed
+            to console. No changes have been made to the text.
+        exception (Exception or None): The exception that occurred during the
+            most recent execution, or None if nothing happened.
+        feedback: TODO
+        modules.plots: TODO
+        modules.turtles: TODO
+        target: TODO
+        allowed_time (int): How long to allow before stopping execution.
+        tracer_style (str): TODO
         _context (list[SandboxContext]): The history of executions made in
             this sandbox.
         _next_context_id (int): The ID of the next execution context.
         _current_patches (list[Patch]): A stack of patches that are currently
             being used. This allows recursive patching behavior.
-        data (dict[str, Any]): The namespace that the context are occurring in.
-            Note that this is mutable.
-
-        exception (Exception): The exception that occurred during the
-            most recent execution, or None if nothing happened.
+        MAXIMUM_TEMPORARY_LENGTH (int): How long to allow arguments to be before
+            turning them into temporary variables.
     """
 
     MAXIMUM_TEMPORARY_LENGTH = 25
@@ -324,10 +319,12 @@ class Sandbox:
 
     def get_context(self, context_id: int = None):
         """
-        Retrieve the most recent contexts
+        Retrieve the most recent contexts.
+
         Returns:
             list[:py:class:`pedal.sandbox.sandbox_mixins.SandboxContext`]: The
                 most recent execution, or executions if currently in a group.
+
         """
         # TODO: Test off-by-one-errors
         if context_id is None:

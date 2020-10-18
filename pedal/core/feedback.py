@@ -74,6 +74,12 @@ class Feedback:
             feedback IS triggered.
             TODO: Should we also have an else_message_template? Probably.
 
+        activate (bool): Used for default feedback objects without a custom
+            condition, to indicate whether they should be considered triggered.
+            Defaults to True; setting this to False means that the feedback
+            object will be deactivated. Note that most inheriting Feedback
+            Functions will not respect this parameter.
+
         author (List[str]): A list of names/emails that indicate who created this piece of feedback. They can be
             either names, emails, or combinations in the style of `"Cory Bart <acbart@udel.edu>"`.
         version (str): A version string in the style of Semantic Version (semvar) such as `"0.0.1"`. The last (third)

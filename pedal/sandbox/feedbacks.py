@@ -21,7 +21,7 @@ class runtime_error(FeedbackResponse):
     """
     Used to create all runtime errors.
 
-    Fields:
+    Attributes:
         exception (Exception): The original exception.
         exception_name (str): The original name of the exception.
         exception_message (str): the original error message from the exception.

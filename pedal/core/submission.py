@@ -89,12 +89,10 @@ class Submission:
 
     @property
     def main_code(self):
-        """ Retrieves the submission's main code """
         return self.files.get(self.main_file, "")
 
     @main_code.setter
     def main_code(self, code):
-        """ Changes the submission's main code """
         self.files[self.main_file] = code
 
     def set_line_offset(self, lineno, filename=None):
