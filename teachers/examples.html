@@ -92,7 +92,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../everyone/installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Teacher Quick Start Guide</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Teacher Examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#single-problem">Single Problem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#basic-arithmetic-question">Basic Arithmetic Question</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#basic-function-call-question">Basic Function Call Question</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#student-defined-function">Student Defined Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#complex-question">Complex Question</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#large-project">Large Project</a></li>
 </ul>
 </li>
@@ -174,23 +177,116 @@
 <h1>Teacher Examples<a class="headerlink" href="#teacher-examples" title="Permalink to this headline">¶</a></h1>
 <p>This document goes over some common scenarios that you might have. Or more accurately right now, it’s showing off
 some random examples I grabbed from our courses.</p>
-<div class="section" id="single-problem">
-<h2>Single Problem<a class="headerlink" href="#single-problem" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="basic-arithmetic-question">
+<h2>Basic Arithmetic Question<a class="headerlink" href="#basic-arithmetic-question" title="Permalink to this headline">¶</a></h2>
+<p>Instructions:</p>
+<blockquote>
+<div><p>Using the + operator, print out the result of 7+3. Do not embed the result
+in your code. Let Python do the calculation for you.</p>
+</div></blockquote>
+<p>Correct answer:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="mi">7</span><span class="o">+</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Instructor grading code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1"># Make sure they don&#39;t embed the answer</span>
+<span class="n">prevent_literal</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="c1"># Make sure they DO use these integers</span>
+<span class="n">ensure_literal</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+<span class="n">ensure_literal</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="c1"># Make sure they print</span>
+<span class="n">ensure_function_call</span><span class="p">(</span><span class="s1">&#39;print&#39;</span><span class="p">)</span>
+<span class="c1"># Make sure they used addition operator</span>
+<span class="n">ensure_operation</span><span class="p">(</span><span class="s2">&quot;+&quot;</span><span class="p">)</span>
+<span class="c1"># Give message if they try to use strings instead of numbers</span>
+<span class="n">prevent_ast</span><span class="p">(</span><span class="s2">&quot;Str&quot;</span><span class="p">)</span>
+<span class="c1"># Check the actual output</span>
+<span class="n">assert_output</span><span class="p">(</span><span class="n">student</span><span class="p">,</span> <span class="s2">&quot;7&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="basic-function-call-question">
+<h2>Basic Function Call Question<a class="headerlink" href="#basic-function-call-question" title="Permalink to this headline">¶</a></h2>
 <p>Here’s a random simple example grading script for a problem where students use the <cite>round</cite> function to convert a
 dollar amount stored as a string literal without a dollar sign, and then print the result. It’s trivial, but we
 do use it in one of courses.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">prevent_code</span>
-
-<span class="k">if</span> <span class="s2">&quot;$&quot;</span> <span class="ow">in</span> <span class="n">get_program</span><span class="p">():</span>
-    <span class="n">explain</span><span class="p">(</span><span class="s2">&quot;You should not use the dollar sign ($) anywhere in your code!&quot;</span><span class="p">,</span>
-            <span class="n">priority</span><span class="o">=</span><span class="s1">&#39;verifier&#39;</span><span class="p">)</span>
-
-<span class="n">ensure_function_call</span><span class="p">(</span><span class="s1">&#39;round&#39;</span><span class="p">)</span>
-<span class="n">ensure_literal</span><span class="p">(</span><span class="mf">9.5</span><span class="p">)</span>
-<span class="n">prevent_ast</span><span class="p">(</span><span class="s2">&quot;Str&quot;</span><span class="p">)</span>
-<span class="n">assert_output</span><span class="p">(</span><span class="n">student</span><span class="p">,</span> <span class="s2">&quot;10.0&quot;</span><span class="p">)</span>
+<p>Instructions:</p>
+<blockquote>
+<div><p>The function <cite>round</cite> consumes a float number and returns it rounded to
+the nearest whole number. You are buying some food and want to know
+roughly how much it will cost. Use the round function to
+round $9.50 to the nearest whole number.</p>
+</div></blockquote>
+<p>Student answer:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="mf">9.5</span><span class="p">))</span>
 </pre></div>
 </div>
+<p>Instructor control script:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1"># Common mistake is that students put a $ in their code</span>
+<span class="k">if</span> <span class="s2">&quot;$&quot;</span> <span class="ow">in</span> <span class="n">get_program</span><span class="p">():</span>
+    <span class="n">explain</span><span class="p">(</span><span class="s2">&quot;You should not use the dollar sign ($) anywhere in your code!&quot;</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Do Not Use Dollar Sign&quot;</span>
+            <span class="n">priority</span><span class="o">=</span><span class="s1">&#39;syntax&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;used_dollar_sign&quot;</span><span class="p">)</span>
+
+<span class="c1"># They must call the round function</span>
+<span class="n">ensure_function_call</span><span class="p">(</span><span class="s1">&#39;round&#39;</span><span class="p">)</span>
+<span class="c1"># They must call the print function</span>
+<span class="n">ensure_function_call</span><span class="p">(</span><span class="s1">&#39;print&#39;</span><span class="p">)</span>
+<span class="c1"># They must have the float value 9.5 in their code</span>
+<span class="n">ensure_literal</span><span class="p">(</span><span class="mf">9.5</span><span class="p">)</span>
+<span class="c1"># They can only have one number in their code</span>
+<span class="n">prevent_ast</span><span class="p">(</span><span class="s2">&quot;Num&quot;</span><span class="p">,</span> <span class="n">at_most</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="c1"># They cannot have any strings embedded in their code.</span>
+<span class="n">prevent_ast</span><span class="p">(</span><span class="s2">&quot;Str&quot;</span><span class="p">)</span>
+<span class="c1"># Check that the output is correct</span>
+<span class="n">assert_output</span><span class="p">(</span><span class="n">student</span><span class="p">,</span> <span class="s2">&quot;10&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="student-defined-function">
+<h2>Student Defined Function<a class="headerlink" href="#student-defined-function" title="Permalink to this headline">¶</a></h2>
+<p>Instructions:</p>
+<blockquote>
+<div><p>Create a function named <cite>add_3</cite> that takes in three integers and returns
+their sum. Make sure you unit test the function a suitable number of times!</p>
+</div></blockquote>
+<p>Student Answer:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">add_3</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">a</span><span class="o">+</span><span class="n">b</span><span class="o">+</span><span class="n">c</span>
+
+<span class="c1"># You might use a different unittest style!</span>
+<span class="k">assert</span> <span class="n">add_3</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="mi">6</span>
+<span class="k">assert</span> <span class="n">add_3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+<span class="k">assert</span> <span class="n">add_3</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>Instructor Control Script:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">ensure_function</span><span class="p">(</span><span class="s1">&#39;add_3&#39;</span><span class="p">,</span> <span class="n">arity</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="c1"># Or if you teach them to annotate their parameters/returns</span>
+<span class="c1"># ensure_function(&#39;add_3&#39;, parameters=[int,int,int], returns=int)</span>
+<span class="c1"># Did they write at least three tests?</span>
+<span class="n">ensure_function_call</span><span class="p">(</span><span class="s1">&#39;add_3&#39;</span><span class="p">,</span> <span class="n">at_least</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">ensure_ast</span><span class="p">(</span><span class="s2">&quot;Assert&quot;</span><span class="p">,</span> <span class="n">at_least</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="c1"># Use coverage module to check their code coverage</span>
+<span class="n">ensure_coverage</span><span class="p">(</span><span class="o">.</span><span class="mi">9</span><span class="p">)</span>
+<span class="c1"># Actually unit test their result</span>
+<span class="n">unit_test</span><span class="p">(</span><span class="s2">&quot;add_3&quot;</span><span class="p">,</span> <span class="p">[</span>
+    <span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="mi">6</span><span class="p">),</span>
+    <span class="p">([</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="mi">2</span><span class="p">),</span>
+    <span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">),</span>
+    <span class="p">([</span><span class="mi">7</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">10</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
+<span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="complex-question">
+<h2>Complex Question<a class="headerlink" href="#complex-question" title="Permalink to this headline">¶</a></h2>
 <p>Here’s a much more sophisicated problem where they have to read open two files and mangle their contents to
 make MadLibs.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">suppress</span><span class="p">(</span><span class="s2">&quot;analyzer&quot;</span><span class="p">,</span> <span class="s2">&quot;Iterating over non-list&quot;</span><span class="p">)</span>

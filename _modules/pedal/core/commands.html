@@ -244,7 +244,13 @@
 
 
 <div class="viewcode-block" id="gently"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.gently">[docs]</a><span class="k">class</span> <span class="nc">gently</span><span class="p">(</span><span class="n">FeedbackResponse</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Give a low-priority piece of negative feedback to the student. &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Give a low-priority piece of negative feedback to the student.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        message (str): The feedback message to show to the student.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Instructor Feedback&quot;</span>
     <span class="n">priority</span> <span class="o">=</span> <span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">STUDENT</span>
     <span class="n">muted</span> <span class="o">=</span> <span class="kc">False</span>

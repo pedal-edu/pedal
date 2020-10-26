@@ -773,9 +773,12 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">was_empty</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_visit_collection_loop</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
         <span class="c1"># Handle the bodies</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">was_empty</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">visit_statements</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">visit_statements</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">orelse</span><span class="p">)</span></div>
+        <span class="c1">#if not was_empty:</span>
+        <span class="c1">#this_path_id = self.path_chain[0]</span>
+        <span class="c1">#non_empty_path = NewPath(self, this_path_id, &quot;f&quot;)</span>
+        <span class="c1">#with non_empty_path:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">visit_statements</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">visit_statements</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">orelse</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Tifa.visit_FunctionDef"><a class="viewcode-back" href="../../../developers/tools/tifa.html#pedal.tifa.Tifa.visit_FunctionDef">[docs]</a>    <span class="k">def</span> <span class="nf">visit_FunctionDef</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>

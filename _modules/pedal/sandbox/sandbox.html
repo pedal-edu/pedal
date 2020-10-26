@@ -236,6 +236,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">feedback</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="c1"># Contextualization</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_context</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_current_context</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_next_context_id</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_context_group_start</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="c1"># Patching</span>
@@ -297,8 +298,8 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">clear_exception</span><span class="p">()</span>
         <span class="n">context</span> <span class="o">=</span> <span class="n">SandboxContext</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_next_context_id</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">kind</span><span class="p">,</span>
-                                 <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="p">,</span> <span class="p">[],</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">exception</span><span class="p">,</span>
-                                 <span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">submission</span><span class="p">,</span> <span class="o">**</span><span class="n">meta</span><span class="p">)</span>
+                                 <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="p">,</span> <span class="p">[],</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                                 <span class="bp">self</span><span class="o">.</span><span class="n">exception</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">submission</span><span class="p">,</span> <span class="o">**</span><span class="n">meta</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_context</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
 
         <span class="c1"># Patch in dangerous built-ins</span>
@@ -985,7 +986,8 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="c1"># TODO: Make this smarter, more elegant in choosing IF we should repeat 0</span>
                 <span class="n">value_entered</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span>
-            <span class="n">context_inputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value_entered</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_context</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value_entered</span><span class="p">)</span>
+            <span class="c1">#context_inputs.append(value_entered)</span>
             <span class="k">return</span> <span class="n">value_entered</span>
 
         <span class="k">return</span> <span class="n">_input_tracker</span>

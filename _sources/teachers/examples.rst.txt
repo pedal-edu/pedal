@@ -4,25 +4,132 @@ Teacher Examples
 This document goes over some common scenarios that you might have. Or more accurately right now, it's showing off
 some random examples I grabbed from our courses.
 
-Single Problem
---------------
+Basic Arithmetic Question
+-------------------------
+
+Instructions:
+
+    Using the + operator, print out the result of 7+3. Do not embed the result
+    in your code. Let Python do the calculation for you.
+
+Correct answer:
+
+.. code:: python
+
+    print(7+3)
+
+Instructor grading code:
+
+.. code:: python
+
+    from pedal import *
+
+    # Make sure they don't embed the answer
+    prevent_literal(10)
+    # Make sure they DO use these integers
+    ensure_literal(7)
+    ensure_literal(3)
+    # Make sure they print
+    ensure_function_call('print')
+    # Make sure they used addition operator
+    ensure_operation("+")
+    # Give message if they try to use strings instead of numbers
+    prevent_ast("Str")
+    # Check the actual output
+    assert_output(student, "7")
+
+
+Basic Function Call Question
+----------------------------
 
 Here's a random simple example grading script for a problem where students use the `round` function to convert a
 dollar amount stored as a string literal without a dollar sign, and then print the result. It's trivial, but we
 do use it in one of courses.
 
+Instructions:
+
+    The function `round` consumes a float number and returns it rounded to
+    the nearest whole number. You are buying some food and want to know
+    roughly how much it will cost. Use the round function to
+    round $9.50 to the nearest whole number.
+
+Student answer:
+
 .. code:: python
 
-    prevent_code
+    print(round(9.5))
 
+Instructor control script:
+
+.. code:: python
+
+    from pedal import *
+
+    # Common mistake is that students put a $ in their code
     if "$" in get_program():
         explain("You should not use the dollar sign ($) anywhere in your code!",
-                priority='verifier')
+                title="Do Not Use Dollar Sign"
+                priority='syntax', label="used_dollar_sign")
 
+    # They must call the round function
     ensure_function_call('round')
+    # They must call the print function
+    ensure_function_call('print')
+    # They must have the float value 9.5 in their code
     ensure_literal(9.5)
+    # They can only have one number in their code
+    prevent_ast("Num", at_most=1)
+    # They cannot have any strings embedded in their code.
     prevent_ast("Str")
-    assert_output(student, "10.0")
+    # Check that the output is correct
+    assert_output(student, "10")
+
+Student Defined Function
+------------------------
+
+Instructions:
+
+    Create a function named `add_3` that takes in three integers and returns
+    their sum. Make sure you unit test the function a suitable number of times!
+
+Student Answer:
+
+.. code:: python
+
+    def add_3(a, b, c):
+        return a+b+c
+
+    # You might use a different unittest style!
+    assert add_3(1, 2, 3) == 6
+    assert add_3(0, 0, 0) == 0
+    assert add_3(-1, -1, 3) == 1
+
+Instructor Control Script:
+
+.. code:: python
+
+    from pedal import *
+
+    ensure_function('add_3', arity=3)
+    # Or if you teach them to annotate their parameters/returns
+    # ensure_function('add_3', parameters=[int,int,int], returns=int)
+    # Did they write at least three tests?
+    ensure_function_call('add_3', at_least=3)
+    ensure_ast("Assert", at_least=3)
+    # Use coverage module to check their code coverage
+    ensure_coverage(.9)
+    # Actually unit test their result
+    unit_test("add_3", [
+        ([1, 2, 3], 6),
+        ([-5, 5, 2], 2),
+        ([0, 0, 0], 0),
+        ([7, 3, -10], 0)
+    ])
+
+
+Complex Question
+----------------
+
 
 Here's a much more sophisicated problem where they have to read open two files and mangle their contents to
 make MadLibs.
