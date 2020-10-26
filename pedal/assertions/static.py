@@ -90,6 +90,9 @@ class ensure_function_call(EnsureAssertionFeedback):
     Determine that a function was definitely called by statically checking
     the students' code.
 
+    # TODO: Allow parameter to force this to be a method xor/or function call
+    # TODO: Allow set to be passed in for OR, or list for AND, for multiples
+
     # TODO: also check the TIFA records to see if the function was read
 
     Args:

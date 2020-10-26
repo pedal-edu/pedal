@@ -113,6 +113,7 @@ class RuntimeAssertionFeedback(AssertionFeedback):
                         "{context_message}"
                         "{assertion_message}"
                         "{explanation}")
+    # TODO: The explanation field is broken, because it's not a keyword parameter
     _expected_verb: str
     _aggregate_verb = "Expected"
     _inverse_operator: str
