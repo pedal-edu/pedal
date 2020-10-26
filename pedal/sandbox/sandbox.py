@@ -69,6 +69,7 @@ class Sandbox:
         self.feedback = None
         # Contextualization
         self._context = []
+        self._current_context = None
         self._next_context_id = 0
         self._context_group_start = []
         # Patching
@@ -130,8 +131,8 @@ class Sandbox:
 
         self.clear_exception()
         context = SandboxContext(self._next_context_id, code, filename, kind,
-                                 self.target, [], "", self.exception,
-                                 self.report.submission, **meta)
+                                 self.target, [], "",
+                                 self.exception, self.report.submission, **meta)
         self._context.append(context)
 
         # Patch in dangerous built-ins
@@ -818,7 +819,8 @@ class Sandbox:
             else:
                 # TODO: Make this smarter, more elegant in choosing IF we should repeat 0
                 value_entered = '0'
-            context_inputs.append(value_entered)
+            self._context[-1].inputs.append(value_entered)
+            #context_inputs.append(value_entered)
             return value_entered
 
         return _input_tracker
