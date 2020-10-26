@@ -100,6 +100,7 @@ Suggestion: To fix a type error, you should trace through your code. Make sure e
         student = Sandbox()
         student.run()
         result = student.call("get_input", inputs="Banana")
+        print("--", [c.inputs for c in student._context])
         self.assertEqual(3, student.feedback.location.line)
         self.assertEqual(dedent(
             """
@@ -257,6 +258,36 @@ Suggestion: Read the error message to see which function had the issue. Check wh
         student.run(student_code, filename='student.py')
         self.assertEqual(len(student.trace.calls['x']), 6)
 
+    def test_runtime_error_inputs(self):
+        student_code = dedent('''
+                    def x():
+                        value = input("Gimme a number")
+                        return 7 % value
+                    x
+                ''')
+        student = Sandbox()
+        set_source(student_code)
+        student.run()
+        result = student.call("x", inputs=["0"])
+        print([[c.kind, c.inputs] for c in student._context])
+
+        self.assertEqual("""A TypeError occurred:
+
+<pre class='pedal-exception'>Unsupported operand type(s) for %: 'int' and 'str'</pre>
+
+I ran the code:
+<pre class='pedal-python-code python'><code>x()</code></pre>
+
+And I entered as input:<pre class='pedal-inputs'>0</pre>
+The traceback was:
+<div class='pedal-traceback'>Line 4 of file <code class='pedal-filename'>answer.py</code> in <code class='pedal-frame'>x</code>
+<pre class='pedal-python-code python'><code>    return 7 % value</code></pre>
+</div>
+
+Type errors occur when you use an operator or function on the wrong type of value. For example, using `+` to add to a list (instead of `.append`), or dividing a string by a number.
+
+Suggestion: To fix a type error, you should trace through your code. Make sure each expression has the type you expect it to have.""", student.feedback.message)
+
     def test_unittest(self):
         student_code = dedent('''
             x = 0
@@ -380,6 +411,8 @@ Suggestion: Read the error message to see which function had the issue. Check wh
         self.assertIsNone(student.exception)
         self.assertEqual(student.modules.turtles.calls[0][0], 'forward')
         self.assertEqual(student.modules.turtles.calls[0][1][0], 100)
+
+
 
     # TODO: test `import builtins` strategy to access original builtins
 
