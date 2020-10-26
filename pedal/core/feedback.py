@@ -308,6 +308,19 @@ class Feedback:
         The ``active`` parameter controls whether or not the condition for the
         feedback was met. """
 
+    def __xor__(self, other):
+        if isinstance(other, Feedback):
+            self.muted = bool(self) and not bool(other)
+            self.unscored = self.muted
+            other.muted = bool(other) and not bool(self)
+            other.unscored = other.muted
+        if isinstance(other, bool):
+            self.muted = bool(self) and not bool(other)
+            self.unscored = self.muted
+
+    def __rxor__(self, other):
+        return self.__xor__(other)
+
     def __bool__(self):
         return bool(self._met_condition)
 
