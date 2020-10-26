@@ -608,9 +608,12 @@ class Tifa(TifaCore, ast.NodeVisitor):
         """
         was_empty = self._visit_collection_loop(node)
         # Handle the bodies
-        if not was_empty:
-            self.visit_statements(node.body)
-            self.visit_statements(node.orelse)
+        #if not was_empty:
+        #this_path_id = self.path_chain[0]
+        #non_empty_path = NewPath(self, this_path_id, "f")
+        #with non_empty_path:
+        self.visit_statements(node.body)
+        self.visit_statements(node.orelse)
 
     def visit_FunctionDef(self, node):
         """
