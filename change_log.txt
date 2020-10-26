@@ -4,6 +4,10 @@ Version 2.2.1
 * Separated built documentation into a distinct branch
 * Minor fixes for python 3.6 and 3.9 compatibility
 * Updated documentation for latest version
+* Fixed bug in ensure_correct_plot (failed for even correct plot)
+* Now support ^ operator for XORing feedbacks
+* Introduced new find_asts
+* New environment, GradeScope
 
 Version 2.2.0
 -------------
