@@ -81,6 +81,8 @@ def ensure_correct_plot(function_name, report=MAIN_REPORT, **kwargs):
     ensure_function_call(function_name, **kwargs)
     as_code = report.format.python_expression
     for name, description in PLOT_LABEL.items():
+        if name == function_name:
+            continue
         prevent_function_call(name, **kwargs,
                               message=(f"You have called the {as_code(name)} "
                                        f"function, which makes a {description}."))
