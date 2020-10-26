@@ -79,7 +79,13 @@ class explain(FeedbackResponse):
 
 
 class gently(FeedbackResponse):
-    """ Give a low-priority piece of negative feedback to the student. """
+    """
+    Give a low-priority piece of negative feedback to the student.
+
+    Args:
+        message (str): The feedback message to show to the student.
+
+    """
     title = "Instructor Feedback"
     priority = Feedback.CATEGORIES.STUDENT
     muted = False
