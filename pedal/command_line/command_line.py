@@ -89,7 +89,7 @@ def parse_args(reduced_mode=False):
                         default=None)
     parser.add_argument('--config', '-c',
                         help="Uses the configuration file to get settings.")
-    parser.add_argument('--create_output',
+    parser.add_argument('--create_output', '-m',
                         help="In verify mode, creates any missing outputs.",
                         action='store_true')
     parser.add_argument('--environment', '-e',
