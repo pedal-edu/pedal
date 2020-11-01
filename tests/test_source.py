@@ -35,6 +35,7 @@ class TestCode(unittest.TestCase):
         self.assertTrue(feedback)
         self.assertEqual(feedback[0].label, 'syntax_error')
 
+    def test_syntax_traceback_good(self):
         with Execution('a=0\nb b b\nc = 0') as e:
             pass
         self.assertFalse(e.final.success)
@@ -47,6 +48,21 @@ The traceback was:
 </div>
 
 Suggestion: Check line 2, the line before it, and the line after it.""", e.final.message)
+
+    def test_no_more_input(self):
+        contextualize_report('def x():')
+        verify()
+        feedback = get_all_feedback()
+        self.assertTrue(feedback)
+        self.assertEqual(feedback[0].label, 'syntax_error')
+        self.assertEqual(feedback[0].message, """Bad syntax on line 1
+
+The traceback was:
+<div class='pedal-traceback'>Line 1 of file <code class='pedal-filename'>answer.py</code>
+<pre class='pedal-python-code python'><code>def x():</code></pre>
+</div>
+
+Suggestion: Check line 1, the line before it, and the line after it.""")
 
     def test_sections_syntax_errors(self):
         contextualize_report(dedent('''
