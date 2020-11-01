@@ -1,3 +1,9 @@
+Version 2.3.0
+-------------
+* Added ProgSnap SQL-format support to command line
+* Added shortcut for --create_output (-m)
+* Fixed bug with normalizing string literal type annotations
+
 Version 2.2.1
 -------------
 * Added find_asts(node) to replace parse_program().find_all(node)
