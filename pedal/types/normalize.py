@@ -246,7 +246,7 @@ def get_pedal_type_from_ast(value: ast.AST, type_space=None) -> Type:
     if isinstance(value, ast.Name):
         return get_pedal_type_from_str(value.id, type_space)
     elif isinstance(value, ast.Str):
-        return StrType(bool(value.v))
+        return StrType(bool(value.s))
     elif isinstance(value, ast.List):
         return ListType(subtype=(get_pedal_type_from_ast(value.elts[0], type_space)
                                  if value.elts else None),
