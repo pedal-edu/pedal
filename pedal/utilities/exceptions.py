@@ -167,7 +167,12 @@ class ExpandedTraceback:
         else:
             # print(frame.filename, self.student_files, frame.lineno)
             if frame.filename in self.student_files:
-                frame._line = self.student_files[frame.filename][frame.lineno - 1]
+                if frame.lineno - 1 < len(self.original_code_lines):
+                    frame._line = self.student_files[frame.filename][frame.lineno - 1]
+                else:
+                    # Not actually possible in CPython, but Skulpt gives weird
+                    #   SyntaxErrors that are technically the "next" line.
+                    frame._line = ""
 
     def _count_relevant_tb_levels(self, tb):
         length = 0
