@@ -146,10 +146,10 @@ class AbstractPipeline:
     def load_progsnap(self, path):
         script_file_name, script_file_extension = os.path.splitext(path)
         if script_file_extension in ('.db',):
-            assert "TODO: ProgSnap DB files not yet supported"
+            raise ValueError("TODO: ProgSnap DB files not yet supported")
             # Progsnap Zip
         elif script_file_extension in ('.zip',):
-            assert "TODO: Zip files not yet supported"
+            raise ValueError("TODO: Zip files not yet supported")
 
     def load_submissions(self):
         given_script = self.config.instructor
