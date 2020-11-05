@@ -15,6 +15,7 @@
       <w>orderable</w>
       <w>orelse</w>
       <w>postcondition</w>
+      <w>progsnap</w>
       <w>pyplot</w>
       <w>sandboxed</w>
       <w>showable</w>
@@ -23,6 +24,7 @@
       <w>suppressions</w>
       <w>tifa</w>
       <w>tifa's</w>
+      <w>tqdm</w>
       <w>unaryop</w>
       <w>uncategorized</w>
       <w>unscored</w>
