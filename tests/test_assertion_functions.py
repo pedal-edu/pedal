@@ -22,14 +22,14 @@ class TestAssertions(ExecutionTestCase):
             self.assertTrue(ensure_function('x', 3, (int, str, [str]),
                                              str))
         self.assertFeedback(e, """Wrong Parameter Type
-The function named <code class='pedal-name'>x</code> has a parameter named <code class='pedal-name'>c</code> that is a list of a number, but should be a list of a string.""")
+The function named x has a parameter named c that is a list of a number, but should be a list of a string.""")
 
     def test_function_missing_parameter(self):
         with Execution('def x(a: int, b, c: [int]) -> str: pass\nx') as e:
             self.assertTrue(ensure_function('x', 3, (int, str, 'list[int]'), str))
         self.assertFeedback(e, "Missing Parameter Type\n"
-                               "The function named <code class='pedal-name'>x</code> "
-                               "has a parameter named <code class='pedal-name'>b</code>, "
+                               "The function named x "
+                               "has a parameter named b, "
                                "but that parameter does not have a type specified.")
 
     @unittest.skip("This is currently broken!")
@@ -39,8 +39,8 @@ The function named <code class='pedal-name'>x</code> has a parameter named <code
             self.assertTrue(f)
         print(f.fields)
         self.assertFeedback(e, "Wrong Parameter Type\n"
-                               "The function named <code class='pedal-name'>x</code> "
-                               "has a parameter named <code class='pedal-name'>c</code> "
+                               "The function named x "
+                               "has a parameter named c "
                                "that is a 'D' type, but should be a number.")
 
     def test_assert_type_custom_record_passes(self):
@@ -56,9 +56,8 @@ The function named <code class='pedal-name'>x</code> has a parameter named <code
             f = ensure_function('pet', parameters=('Dog',), returns=str)
             self.assertTrue(f)
         self.assertFeedback(e, "Wrong Parameter Type\n"
-                               "The function named <code class='pedal-name'>pet</code> "
-                               "has a parameter named <code class='pedal-name'>d</code> "
-                               "that is a string, but should be Dog.")
+                               "The function named pet has a parameter named d"
+                               " that is a string, but should be Dog.")
 
     def test_unit_test_partial_credit_true(self):
         with Execution('def add(a, b): return b', run_tifa=False) as e:

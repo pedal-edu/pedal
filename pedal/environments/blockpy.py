@@ -44,6 +44,7 @@ HIDE = final.hide_correctness
 """
 from pedal import verify
 from pedal.core.environment import Environment
+from pedal.core.formatting import HtmlFormatter
 from pedal.core.report import MAIN_REPORT
 from pedal.sandbox import run, get_sandbox, set_input, start_trace
 from pedal.tifa import tifa_analysis
@@ -64,6 +65,7 @@ class BlockPyEnvironment(Environment):
                          user=user, assignment=assignment, course=course,
                          execution=execution, instructor_file=instructor_file,
                          report=report)
+        report.set_formatter(HtmlFormatter(report))
         verify(report=self.report)
         if not skip_tifa:
             tifa_analysis(report=self.report)

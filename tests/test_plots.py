@@ -116,11 +116,10 @@ class TestPlots(ExecutionTestCase):
         with Execution(student_code) as e:
             self.assertTrue(prevent_incorrect_plt())
         self.assertFeedback(e, "Wrong MatPlotLib Import\n"
-                               "You have imported the "
-                               "<code class='pedal-name'>plt</code> module, but"
+                               "You have imported the plt module, but"
                                " you did not rename it to "
-                               "<code class='pedal-name'>matplotlib.pyplot</code>"
-                               " using <code>import matplotlib.pyplot as plt</code>.")
+                               "matplotlib.pyplot"
+                               " using import matplotlib.pyplot as plt.")
 
     def test_prevent_incorrect_plt_missing_plt(self):
         student_code = dedent('''
@@ -133,13 +132,12 @@ class TestPlots(ExecutionTestCase):
             self.assertTrue(prevent_incorrect_plt())
         self.assertFeedback(e, "Missing MatPlotLib Import\n"
                                "You have attempted to use the MatPlotLib "
-                               "function named "
-                               "<code class='pedal-name'>plt.scatter</code>. "
+                               "function named plt.scatter. "
                                "However, you imported MatPlotLib in a way that "
                                "does not allow you to use the function "
                                "directly. I recommend you use "
-                               "<code>scatter</code> instead, after you use "
-                               "<code>import matplotlib.pyplot as plt</code>.")
+                               "scatter instead, after you use "
+                               "import matplotlib.pyplot as plt.")
 
     def test_prevent_incorrect_plt_success(self):
         student_code = dedent('''

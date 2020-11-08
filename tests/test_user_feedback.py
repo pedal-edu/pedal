@@ -29,14 +29,14 @@ class TestFeedback(unittest.TestCase):
                          """Type Error
 A TypeError occurred:
 
-<pre class='pedal-exception'>Unsupported operand type(s) for +: 'int' and 'str'</pre>
+    Unsupported operand type(s) for +: 'int' and 'str'
 
 I ran your code.
 
 The traceback was:
-<div class='pedal-traceback'>Line 1 of file <code class='pedal-filename'>answer.py</code>
-<pre class='pedal-python-code python'><code>0+"A"</code></pre>
-</div>
+Line 1 of file answer.py
+    0+"A"
+
 
 Type errors occur when you use an operator or function on the wrong type of value. For example, using `+` to add to a list (instead of `.append`), or dividing a string by a number.
 

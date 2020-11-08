@@ -569,7 +569,7 @@ class TestVariables(unittest.TestCase):
         result = tifa.process_code('def a(x):\n    return x\n')
         issues = result.issues
         self.assertEqual(issues['unused_variable'][0].message,
-                         "The function <code class='pedal-name'>a</code> was "
+                         "The function a was "
                          "given a definition on line 1, but was never used "
                          "after that.")
 

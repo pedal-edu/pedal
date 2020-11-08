@@ -227,9 +227,9 @@ Syntax Error
 Bad syntax on line 5
 
 The traceback was:
-<div class='pedal-traceback'>Line 5 of file <code class='pedal-filename'>answer.py</code>
-<pre class='pedal-python-code python'><code>syntax error</code></pre>
-</div>
+Line 5 of file answer.py
+    syntax error
+
 
 Suggestion: Check line 5, the line before it, and the line after it.""",
                          "\n".join(f"# {g.section_number if g is not None else 'Global'}\n{f.title}\n{f.message}"

@@ -54,21 +54,75 @@ class FeedbackFieldWrapper:
 
 class Formatter:
     """ Utility class for wrapping a feedback message with HTML or other
-    extra information. Can be subclassed by a different environment and
-    attached to a Report, in order to change how we create feedback. """
+            extra information. Can be subclassed by a different environment and
+            attached to a Report, in order to change how we create feedback. """
 
     available = ['exception', 'filename', 'frame', 'traceback',
-                 #'html_code', 'html_div', 'html_pre', 'html_span', 'html_tag',
+                 # 'html_code', 'html_div', 'html_pre', 'html_span', 'html_tag',
                  'inputs', 'line', 'name', 'output',
                  'python_code', 'python_expression', 'python_value',
                  'table']
 
     def __init__(self, report=None):
-        """ Can optionally specify a report, in order to do more sophisicated things. """
+        """ Can optionally specify a report, in order to look over current
+        feedback and settings. """
         self.report = report
 
     def update_report(self, report):
+        """ Change the currently set report for this formatter. """
         self.report = report
+
+    def pre(self, text):
+        return "\n".join(["    " + line for line in text.split("\n")])
+
+    def python_code(self, code):
+        return self.pre(code)
+
+    def python_expression(self, code):
+        return str(code)
+
+    def filename(self, filename):
+        return filename
+
+    def python_value(self, code):
+        return self.pre(code)
+
+    def inputs(self, inputs):
+        return self.pre(inputs)
+
+    def output(self, output):
+        return self.pre(output)
+
+    def traceback(self, traceback):
+        return traceback
+
+    def name(self, name):
+        return name
+
+    def line(self, line_number):
+        return line_number
+
+    def frame(self, name):
+        return name
+
+    def exception(self, exception):
+        return self.pre(exception)
+
+    def table(self, rows, columns):
+        result = []
+        result.append(" | ".join(columns))
+        for row in rows:
+            result.append(" | ".join(row))
+        return "\n" + ("\n".join(result))
+
+    def check_mark(self):
+        return " "
+
+    def negative_mark(self):
+        return "×"
+
+
+class HtmlFormatter(Formatter):
 
     def html_tag(self, tag, contents, classes=None):
         if classes is None:
@@ -148,8 +202,8 @@ class Formatter:
                 continue
             row_text = []
             # If we miss some columns, expand the last one.
-            length_difference = max(len(columns)-len(row)+1, 0)
-            colspan = " colspan={length_difference}" if length_difference>1 else ""
+            length_difference = max(len(columns) - len(row) + 1, 0)
+            colspan = " colspan={length_difference}" if length_difference > 1 else ""
             # Make the cells, but we'll treat the last one as special
             for cell in row[:-1]:
                 row_text.append(f"    <td{cell_class}>{cell}</td>")
@@ -162,3 +216,13 @@ class Formatter:
                 f"   <tr{header_class}>\n{header}\n  </tr>"
                 f"   {body}"
                 f"</table>")
+
+    def check_mark(self):
+        return self.html_span("&#10004;", "pedal-positive-mark")
+
+    def negative_mark(self):
+        return self.html_span("&#10060;", "pedal-negative-mark")
+
+
+class TextFormatter(Formatter):
+    pass

@@ -74,17 +74,16 @@ class TestCode(unittest.TestCase):
         self.assertIsInstance(student.exception, TypeError)
         self.assertEqual(1, student.feedback.location.line)
         self.assertEqual(dedent(
-            """
-            A TypeError occurred:
+            """A TypeError occurred:
 
-<pre class='pedal-exception'>Unsupported operand type(s) for +: 'int' and 'str'</pre>
+    Unsupported operand type(s) for +: 'int' and 'str'
 
-I ran the file <code class='pedal-filename'>_sandbox_test_student.py</code>.
+I ran the file _sandbox_test_student.py.
 
 The traceback was:
-<div class='pedal-traceback'>Line 1 of file <code class='pedal-filename'>_sandbox_test_student.py</code>
-<pre class='pedal-python-code python'><code>1+'0'</code></pre>
-</div>
+Line 1 of file _sandbox_test_student.py
+    1+'0'
+
 
 Type errors occur when you use an operator or function on the wrong type of value. For example, using `+` to add to a list (instead of `.append`), or dividing a string by a number.
 
@@ -103,19 +102,18 @@ Suggestion: To fix a type error, you should trace through your code. Make sure e
         print("--", [c.inputs for c in student._context])
         self.assertEqual(3, student.feedback.location.line)
         self.assertEqual(dedent(
-            """
-            A ValueError occurred:
+            """A ValueError occurred:
 
-<pre class='pedal-exception'>Invalid literal for int() with base 10: 'banana'</pre>
+    Invalid literal for int() with base 10: 'banana'
 
 I ran the code:
-<pre class='pedal-python-code python'><code>get_input()</code></pre>
+    get_input()
 
-And I entered as input:<pre class='pedal-inputs'>Banana</pre>
+And I entered as input:    Banana
 The traceback was:
-<div class='pedal-traceback'>Line 3 of file <code class='pedal-filename'>student.py</code> in <code class='pedal-frame'>get_input</code>
-<pre class='pedal-python-code python'><code>    return int(input("Gimme the number"))</code></pre>
-</div>
+Line 3 of file student.py in get_input
+        return int(input("Gimme the number"))
+
 
 A ValueError occurs when you pass the wrong type of value to a function. For example, you try to convert a string without numbers to an integer (like `int('Five')`).
 
@@ -273,20 +271,21 @@ Suggestion: Read the error message to see which function had the issue. Check wh
 
         self.assertEqual("""A TypeError occurred:
 
-<pre class='pedal-exception'>Unsupported operand type(s) for %: 'int' and 'str'</pre>
+    Unsupported operand type(s) for %: 'int' and 'str'
 
 I ran the code:
-<pre class='pedal-python-code python'><code>x()</code></pre>
+    x()
 
-And I entered as input:<pre class='pedal-inputs'>0</pre>
+And I entered as input:    0
 The traceback was:
-<div class='pedal-traceback'>Line 4 of file <code class='pedal-filename'>answer.py</code> in <code class='pedal-frame'>x</code>
-<pre class='pedal-python-code python'><code>    return 7 % value</code></pre>
-</div>
+Line 4 of file answer.py in x
+        return 7 % value
+
 
 Type errors occur when you use an operator or function on the wrong type of value. For example, using `+` to add to a list (instead of `.append`), or dividing a string by a number.
 
-Suggestion: To fix a type error, you should trace through your code. Make sure each expression has the type you expect it to have.""", student.feedback.message)
+Suggestion: To fix a type error, you should trace through your code. Make sure each expression has the type you expect it to have.
+""".strip(), student.feedback.message)
 
     def test_unittest(self):
         student_code = dedent('''

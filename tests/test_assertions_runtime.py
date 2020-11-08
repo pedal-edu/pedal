@@ -20,7 +20,7 @@ class TestAssertions(ExecutionTestCase):
             assert_equal(5, 4)
         self.assertFeedback(e, """Failed Instructor Test
 Student code failed instructor test.
-<pre class='pedal-output'>5 != 4</pre>""")
+    5 != 4""")
 
     def test_assert_equal_missing_function(self):
         with Execution('def add(a, b): return a+b', run_tifa=False) as e:
@@ -28,7 +28,7 @@ Student code failed instructor test.
         self.assertFeedback(e, """Failed Instructor Test
 Student code failed instructor test.
 The following exception occurred:
-<pre class='pedal-output'>The function minus does not exist.</pre>""")
+    The function minus does not exist.""")
 
     def test_assert_equal_call_left_fails(self):
         with Execution('def add(a, b): return a-b', run_tifa=False) as e:
@@ -36,11 +36,11 @@ The following exception occurred:
         self.assertFeedback(e, """Failed Instructor Test
 Student code failed instructor test.
 I ran the code:
-<pre class='pedal-python-code python'><code>add(1, 2)</code></pre>
+    add(1, 2)
 The value of the result was:
-<pre class='pedal-python-value'>-1</pre>
+    -1
 But I expected the result to be equal to:
-<pre class='pedal-python-value'>3</pre>""")
+    3""")
 
     def test_assert_equal_call_left_passes(self):
         with Execution('def add(a, b): return a+b', run_tifa=False) as e:
@@ -53,11 +53,11 @@ But I expected the result to be equal to:
         self.assertFeedback(e, """Failed Instructor Test
 Student code failed instructor test.
 I ran the code:
-<pre class='pedal-python-code python'><code>add(1, 2)</code></pre>
+    add(1, 2)
 The value of the result was:
-<pre class='pedal-python-value'>-1</pre>
+    -1
 But I expected the result to be equal to:
-<pre class='pedal-python-value'>3</pre>""")
+    3""")
 
     def test_assert_equal_call_right_passes(self):
         with Execution('def add(a, b): return a+b', run_tifa=False) as e:
@@ -70,11 +70,11 @@ But I expected the result to be equal to:
         self.assertFeedback(e, """Failed Instructor Test
 Student code failed instructor test.
 I ran the code:
-<pre class='pedal-python-code python'><code>make_int()</code></pre>
+    make_int()
 The value of the result was:
-<pre class='pedal-python-value'>7</pre>
+    7
 But I expected the result to be in:
-<pre class='pedal-python-value'>[1, 2, 3]</pre>""")
+    [1, 2, 3]""")
 
     def test_assert_in_call_right_fails(self):
         with Execution('def make_ints(): return [1,2,3]', run_tifa=False) as e:
@@ -82,11 +82,11 @@ But I expected the result to be in:
         self.assertFeedback(e, """Failed Instructor Test
 Student code failed instructor test.
 I ran the code:
-<pre class='pedal-python-code python'><code>make_ints()</code></pre>
+    make_ints()
 The value of the result was:
-<pre class='pedal-python-value'>[1, 2, 3]</pre>
+    [1, 2, 3]
 But I expected the result to contain:
-<pre class='pedal-python-value'>10</pre>""")
+    10""")
 
     def test_assert_is_none_call_left_fails(self):
         with Execution('def do_math(): return 1+2', run_tifa=False) as e:
@@ -94,9 +94,9 @@ But I expected the result to contain:
         self.assertFeedback(e, """Failed Instructor Test
 Student code failed instructor test.
 I ran the code:
-<pre class='pedal-python-code python'><code>do_math()</code></pre>
+    do_math()
 The value of the result was:
-<pre class='pedal-python-value'>3</pre>
+    3
 But I expected the result to be None""")
 
     def test_assert_is_none_call_left_passes(self):
@@ -125,11 +125,11 @@ But I expected the result to be None""")
         self.assertFeedback(e, """Failed Instructor Test
 Student code failed instructor test.
 I ran the code:
-<pre class='pedal-python-code python'><code>get_list()</code></pre>
+    get_list()
 The value of the result was:
-<pre class='pedal-python-value'>[1, 2]</pre>
+    [1, 2]
 But I expected the result to be identical to:
-<pre class='pedal-python-value'>[1, 2]</pre>""")
+    [1, 2]""")
 
     def test_assert_length_equal_basic_passes(self):
         with Execution('5') as e:
@@ -141,7 +141,7 @@ But I expected the result to be identical to:
             assert_length_equal([1, 2, 3], 4)
         self.assertFeedback(e, """Failed Instructor Test
 Student code failed instructor test.
-<pre class='pedal-output'>[1, 2, 3] did not have the length 4</pre>""")
+    [1, 2, 3] did not have the length 4""")
 
     def test_assert_length_equal_call_left_fails(self):
         with Execution('def get(a, b): return [a,b]', run_tifa=False) as e:
@@ -149,11 +149,11 @@ Student code failed instructor test.
         self.assertFeedback(e, """Failed Instructor Test
 Student code failed instructor test.
 I ran the code:
-<pre class='pedal-python-code python'><code>get(1, 2)</code></pre>
+    get(1, 2)
 The value of the result was:
-<pre class='pedal-python-value'>[1, 2]</pre>
+    [1, 2]
 But I expected the result to have the length:
-<pre class='pedal-python-value'>3</pre>""")
+    3""")
 
     def test_assert_length_equal_call_left_passes(self):
         with Execution('def get(a, b): return "test"', run_tifa=False) as e:
@@ -166,11 +166,11 @@ But I expected the result to have the length:
         self.assertFeedback(e, """Failed Instructor Test
 Student code failed instructor test.
 I ran the code:
-<pre class='pedal-python-code python'><code>get()</code></pre>
+    get()
 The value of the result was:
-<pre class='pedal-python-value'>5</pre>
+    5
 But I expected the result to be the length of:
-<pre class='pedal-python-value'>[1, 2, 3]</pre>""")
+    [1, 2, 3]""")
 
     def test_assert_length_equal_call_right_passes(self):
         with Execution('def get(): return 3', run_tifa=False) as e:
@@ -188,11 +188,11 @@ But I expected the result to be the length of:
         self.assertFeedback(e, """Failed Instructor Test
 Student code failed instructor test.
 I ran the code:
-<pre class='pedal-python-code python'><code>get()</code></pre>
+    get()
 The value of the result was:
-<pre class='pedal-python-value'>[1, 2, 3]</pre>
+    [1, 2, 3]
 But I expected the result to be in:
-<pre class='pedal-python-value'>[1, 2]</pre>""")
+    [1, 2]""")
 
     def test_assert_not_contains_subset_call_left_passes(self):
         with Execution('def get(): return [1,2,3,4,5]', run_tifa=False) as e:
@@ -205,11 +205,11 @@ But I expected the result to be in:
         self.assertFeedback(e, """Failed Instructor Test
 Student code failed instructor test.
 I ran the code:
-<pre class='pedal-python-code python'><code>get()</code></pre>
+    get()
 The value of the result was:
-<pre class='pedal-python-value'>[1, 2]</pre>
+    [1, 2]
 But I expected the result to not be in:
-<pre class='pedal-python-value'>[1, 2, 3]</pre>""")
+    [1, 2, 3]""")
 
     def test_assert_output_call_left_passes(self):
         with Execution('def hi(): print("Hello world!")', run_tifa=False) as e:
@@ -222,11 +222,11 @@ But I expected the result to not be in:
         self.assertFeedback(e, """Failed Instructor Test
 Student code failed instructor test.
 I ran the code:
-<pre class='pedal-python-code python'><code>hi()</code></pre>
+    hi()
 The function printed:
-<pre class='pedal-output'>Hello world!</pre>
+    Hello world!
 But I expected the output to be:
-<pre class='pedal-output'>Oh Hi There</pre>""")
+    Oh Hi There""")
 
     def test_assert_has_function_passes(self):
         with Execution('def hi(): print("Hello world!")', run_tifa=False) as e:
@@ -239,10 +239,10 @@ But I expected the output to be:
         self.assertFeedback(e, """Failed Instructor Test
 Student code failed instructor test.
 I ran your code.
-The value of <code class='pedal-name'>alpha</code> was:
-<pre class='pedal-python-value'>4</pre>
-But I expected <code class='pedal-name'>alpha</code> to be equal to:
-<pre class='pedal-python-value'>5</pre>""")
+The value of alpha was:
+    4
+But I expected alpha to be equal to:
+    5""")
 
     def test_assert_group_fails_some_errors(self):
         with Execution('def add(a, b): return a+b', run_tifa=False) as e:
@@ -254,30 +254,11 @@ But I expected <code class='pedal-name'>alpha</code> to be equal to:
 Student code failed instructor tests.
 You passed 1/3 tests.
 
-I ran your function <code class='pedal-name'>add</code> on some new arguments.
-<table class='pedal-table'>   <tr class='pedal-header'>
-    <th class='pedal-cell'></th>
-    <th class='pedal-cell'>Arguments</th>
-    <th class='pedal-cell'>Returned</th>
-    <th class='pedal-cell'>Expected</th>
-  </tr>     <tr class='pedal-row'>
-    <td class='pedal-cell'><span class='pedal-positive-mark'>&#10004;</span></td>
-    <td class='pedal-cell'><pre class='pedal-python-code python'><code>1, 2</code></pre></td>
-    <td class='pedal-cell'>3</td>
-    <td class='pedal-cell'>3</td>
-  </tr>
-  <tr class='pedal-row'>
-    <td class='pedal-cell'><span class='pedal-negative-mark'>&#10060;</span></td>
-    <td class='pedal-cell'><pre class='pedal-python-code python'><code>1, 4</code></pre></td>
-    <td class='pedal-cell'>5</td>
-    <td class='pedal-cell'>6</td>
-  </tr>
-  <tr class='pedal-row'>
-    <td class='pedal-cell'><span class='pedal-negative-mark'>&#10060;</span></td>
-    <td class='pedal-cell'><pre class='pedal-python-code python'><code>1, '2'</code></pre></td>
-    <td class='pedal-cell'>unsupported operand type(s) for +: 'int' and 'str'</td>
-    <td class='pedal-cell'>3</td>
-  </tr></table>""")
+I ran your function add on some new arguments.
+ | Arguments | Returned | Expected
+  |     1, 2 | 3 | 3
+× |     1, 4 | 5 | 6
+× |     1, '2' | unsupported operand type(s) for +: 'int' and 'str' | 3""")
 
     def test_assert_group_fails_all(self):
         with Execution('def add(a, b): return a+b', run_tifa=False) as e:
@@ -289,30 +270,11 @@ I ran your function <code class='pedal-name'>add</code> on some new arguments.
 Student code failed instructor tests.
 You passed 0/3 tests.
 
-I ran your function <code class='pedal-name'>add</code> on some new arguments.
-<table class='pedal-table'>   <tr class='pedal-header'>
-    <th class='pedal-cell'></th>
-    <th class='pedal-cell'>Arguments</th>
-    <th class='pedal-cell'>Returned</th>
-    <th class='pedal-cell'>Expected</th>
-  </tr>     <tr class='pedal-row'>
-    <td class='pedal-cell'><span class='pedal-negative-mark'>&#10060;</span></td>
-    <td class='pedal-cell'><pre class='pedal-python-code python'><code>1, 3</code></pre></td>
-    <td class='pedal-cell'>4</td>
-    <td class='pedal-cell'>3</td>
-  </tr>
-  <tr class='pedal-row'>
-    <td class='pedal-cell'><span class='pedal-negative-mark'>&#10060;</span></td>
-    <td class='pedal-cell'><pre class='pedal-python-code python'><code>1, 4</code></pre></td>
-    <td class='pedal-cell'>5</td>
-    <td class='pedal-cell'>6</td>
-  </tr>
-  <tr class='pedal-row'>
-    <td class='pedal-cell'><span class='pedal-negative-mark'>&#10060;</span></td>
-    <td class='pedal-cell'><pre class='pedal-python-code python'><code>1, 3</code></pre></td>
-    <td class='pedal-cell'>4</td>
-    <td class='pedal-cell'>3</td>
-  </tr></table>""")
+I ran your function add on some new arguments.
+ | Arguments | Returned | Expected
+× |     1, 3 | 4 | 3
+× |     1, 4 | 5 | 6
+× |     1, 3 | 4 | 3""")
 
     def test_assert_group_passes(self):
         with Execution('def add(a, b): return a+b', run_tifa=False) as e:
@@ -343,11 +305,11 @@ Your code coverage is not adequate. You must cover at least 90% of your code to 
         self.assertFeedback(e, """Failed Instructor Test
 Student code failed instructor test.
 I ran the code:
-<pre class='pedal-python-code python'><code>add(4, 1)</code></pre>
+    add(4, 1)
 The value of the result was:
-<pre class='pedal-python-value'>5</pre>
+    5
 But I expected the result to be equal to:
-<pre class='pedal-python-value'>7</pre>""")
+    7""")
 
     def test_assert_equal_variable_passes(self):
         with Execution('x=7\nprint(x)') as e:
@@ -371,11 +333,11 @@ The variable x was not created.""")
         self.assertFeedback(e, """Failed Instructor Test
 Student code failed instructor test.
 I evaluated the expression:
-<pre class='pedal-python-code python'><code>x</code></pre>
+    x
 The value of the result was:
-<pre class='pedal-python-value'>3</pre>
+    3
 But I expected the result to be equal to:
-<pre class='pedal-python-value'>7</pre>""")
+    7""")
 
 
     def test_assert_type_passes_int(self):
@@ -389,11 +351,11 @@ But I expected the result to be equal to:
         self.assertFeedback(e, """Failed Instructor Test
 Student code failed instructor test.
 I evaluated the expression:
-<pre class='pedal-python-code python'><code>x</code></pre>
+    x
 The value of the result was:
-<pre class='pedal-python-value'>'a string'</pre>
+    'a string'
 But I expected the result to not be a value of type:
-<pre class='pedal-python-value'>'a number'</pre>""")
+    'a number'""")
 
     def test_assert_chain_passes(self):
         with Execution('x=3\nprint(x)') as e:
@@ -420,11 +382,11 @@ The variable x was not created.""")
         self.assertFeedback(e, """Failed Instructor Test
 Student code failed instructor test.
 I evaluated the expression:
-<pre class='pedal-python-code python'><code>x</code></pre>
+    x
 The value of the result was:
-<pre class='pedal-python-value'>'a number'</pre>
+    'a number'
 But I expected the result to not be a value of type:
-<pre class='pedal-python-value'>'a list'</pre>""")
+    'a list'""")
 
     def test_command_block(self):
         with Execution('''
@@ -448,16 +410,16 @@ def weigh_fruits(fruits):
         self.assertFeedback(e, """Failed Instructor Test
 Student code failed instructor test.
 I ran the code:
-<pre class='pedal-python-code python'><code>orange = Fruit('Orange', 30)
-pineapple = Fruit('Pineapple', 60)
-fruits = [orange, pineapple]
-weigh_fruits(fruits)</code></pre>
+    orange = Fruit('Orange', 30)
+    pineapple = Fruit('Pineapple', 60)
+    fruits = [orange, pineapple]
+    weigh_fruits(fruits)
 I evaluated the expression:
-<pre class='pedal-python-code python'><code>pineapple.weight</code></pre>
+    pineapple.weight
 The value of the result was:
-<pre class='pedal-python-value'>60</pre>
+    60
 But I expected the result to be equal to:
-<pre class='pedal-python-value'>61</pre>""")
+    61""")
 
 if __name__ == '__main__':
     unittest.main(buffer=False)

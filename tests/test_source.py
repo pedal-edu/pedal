@@ -43,9 +43,9 @@ class TestCode(unittest.TestCase):
         self.assertEqual("""Bad syntax on line 2
 
 The traceback was:
-<div class='pedal-traceback'>Line 2 of file <code class='pedal-filename'>answer.py</code>
-<pre class='pedal-python-code python'><code>b b b</code></pre>
-</div>
+Line 2 of file answer.py
+    b b b
+
 
 Suggestion: Check line 2, the line before it, and the line after it.""", e.final.message)
 
@@ -58,9 +58,9 @@ Suggestion: Check line 2, the line before it, and the line after it.""", e.final
         self.assertEqual(feedback[0].message, """Bad syntax on line 1
 
 The traceback was:
-<div class='pedal-traceback'>Line 1 of file <code class='pedal-filename'>answer.py</code>
-<pre class='pedal-python-code python'><code>def x():</code></pre>
-</div>
+Line 1 of file answer.py
+    def x():
+
 
 Suggestion: Check line 1, the line before it, and the line after it.""")
 
@@ -137,9 +137,9 @@ Suggestion: Check line 1, the line before it, and the line after it.""")
         self.assertEqual("""FeedbackSourceSection
 Feedback separated into groups
 Unused Variable
-The variable <code class='pedal-name'>a</code> was given a value on line 3, but was never used after that.
+The variable a was given a value on line 3, but was never used after that.
 Initialization Problem
-The variable <code class='pedal-name'>b</code> was used on line 7, but it was not given a value on a previous line. You cannot use a variable until it has been given a value.""",
+The variable b was used on line 7, but it was not given a value on a previous line. You cannot use a variable until it has been given a value.""",
                          "\n".join(f.title+"\n"+f.message for f in finals.values()))
 
 

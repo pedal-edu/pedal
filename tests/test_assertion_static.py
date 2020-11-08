@@ -9,7 +9,7 @@ class TestAssertions(ExecutionTestCase):
         with Execution('sum([1,2,3])') as e:
             self.assertTrue(prevent_function_call('sum'))
         self.assertFeedback(e, "May Not Use Function\n"
-                               "You used the function <code class='pedal-name'>sum</code> on line 1. "
+                               "You used the function sum on line 1. "
                                "You may not use that function.")
 
         with Execution('max([1,2,3])') as e:
@@ -20,7 +20,7 @@ class TestAssertions(ExecutionTestCase):
         with Execution('2+3') as e:
             self.assertTrue(prevent_operation('+'))
         self.assertFeedback(e, "May Not Use Operator\n"
-                               "You used the operator <code>+</code> on line 1. "
+                               "You used the operator + on line 1. "
                                "You may not use that operator.")
 
     def test_prevent_operator_not_used(self):
@@ -37,7 +37,7 @@ class TestAssertions(ExecutionTestCase):
         with Execution('2+3+4\n1+2') as e:
             self.assertTrue(prevent_operation('+', at_most=2))
         self.assertFeedback(e, "May Not Use Operator\n"
-                               "You used the operator <code>+</code> on line 2. "
+                               "You used the operator + on line 2. "
                                "You may not use that operator more than "
                                "2 times, but you used it 3 times.")
 
@@ -45,7 +45,7 @@ class TestAssertions(ExecutionTestCase):
         with Execution('2+3+4\n1+2') as e:
             self.assertTrue(ensure_operation('+', at_least=5))
         self.assertFeedback(e, "Must Use Operator\n"
-                               "You must use the operator <code>+</code> at least "
+                               "You must use the operator + at least "
                                "5 times, but you used it 3 times.")
 
     def test_prevent_muted(self):
@@ -57,14 +57,14 @@ class TestAssertions(ExecutionTestCase):
         with Execution('a = 5\na') as e:
             self.assertTrue(prevent_literal(5))
         self.assertFeedback(e, "May Not Use Literal Value\n"
-                               "You used the literal value <code>5</code> on line 1. "
+                               "You used the literal value 5 on line 1. "
                                "You may not use that value.")
 
     def test_prevent_literal_used_str(self):
         with Execution('print("Hello")') as e:
             self.assertTrue(prevent_literal("Hello"))
         self.assertFeedback(e, "May Not Use Literal Value\n"
-                               "You used the literal value <code>'Hello'</code> on line 1."
+                               "You used the literal value 'Hello' on line 1."
                                " You may not use that value.")
 
     def test_prevent_literal_unused(self):
@@ -76,27 +76,27 @@ class TestAssertions(ExecutionTestCase):
         with Execution('a = -1+2\na') as e:
             self.assertTrue(prevent_literal(-1))
         self.assertFeedback(e, "May Not Use Literal Value\n"
-                               "You used the literal value <code>-1</code> on line 1. "
+                               "You used the literal value -1 on line 1. "
                                "You may not use that value.")
 
     def test_prevent_literal_used_boolean(self):
         with Execution('a = True\na') as e:
             self.assertTrue(prevent_literal(True))
         self.assertFeedback(e, "May Not Use Literal Value\n"
-                               "You used the literal value <code>True</code> on line 1. "
+                               "You used the literal value True on line 1. "
                                "You may not use that value.")
 
     def test_ensure_literal_used_int(self):
         with Execution('a = 6\na') as e:
             self.assertTrue(ensure_literal(5))
         self.assertFeedback(e, "Must Use Literal Value\n"
-                               "You must use the literal value <code>5</code>.")
+                               "You must use the literal value 5.")
 
     def test_ensure_literal_used_str(self):
         with Execution('print("Helo")') as e:
             self.assertTrue(ensure_literal("Hello"))
         self.assertFeedback(e, "Must Use Literal Value\n"
-                               "You must use the literal value <code>'Hello'</code>.")
+                               "You must use the literal value 'Hello'.")
 
     def test_ensure_literal_unused(self):
         with Execution('print("Hello", 5)') as e:
@@ -107,10 +107,10 @@ class TestAssertions(ExecutionTestCase):
         with Execution('a = -15+2\na') as e:
             self.assertTrue(ensure_literal(-1))
         self.assertFeedback(e, "Must Use Literal Value\n"
-                               "You must use the literal value <code>-1</code>.")
+                               "You must use the literal value -1.")
 
     def test_ensure_literal_used_boolean(self):
         with Execution('a = False\na') as e:
             self.assertTrue(ensure_literal(True))
         self.assertFeedback(e, "Must Use Literal Value\n"
-                               "You must use the literal value <code>True</code>.")
+                               "You must use the literal value True.")

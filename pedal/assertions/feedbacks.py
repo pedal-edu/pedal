@@ -445,9 +445,9 @@ class assert_group(AssertionFeedback, FeedbackGroup):
                     arguments = right.context[-1].args
                     actual, expected = str(right.value), str(left.value)
                 if feedback._status == FeedbackStatus.INACTIVE:
-                    outcome = self.report.format.html_span("&#10004;", "pedal-positive-mark")
+                    outcome = self.report.format.check_mark()
                 else:
-                    outcome = self.report.format.html_span("&#10060;", "pedal-negative-mark")
+                    outcome = self.report.format.negative_mark()
                 rows.append([outcome, self.report.format.python_code(arguments), actual, expected])
             table = self.report.format.table(rows, columns)
             table = (f"I ran your function {called} on some new arguments."
