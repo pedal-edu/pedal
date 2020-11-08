@@ -3,6 +3,11 @@ Version 2.3.0
 * Added ProgSnap SQL-format support to command line
 * Added shortcut for --create_output (-m)
 * Fixed bug with normalizing string literal type annotations
+* Fixed set literal support for Tifa/type normalizer
+* Added support for `run` command line mode
+* Fixed support for `sandbox` command line mode
+* Fix default Formatter to be command-line friendly (no HTML output)
+* Make Standard environment the default for the command line.
 
 Version 2.2.1
 -------------
