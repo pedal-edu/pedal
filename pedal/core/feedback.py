@@ -357,6 +357,26 @@ class Feedback:
         self.location = location
         self.fields['location'] = location
 
+    def to_json(self):
+        return {
+            'correct': self.correct,
+            'score': self.score,
+            'title': self.title,
+            'message': self.message,
+            'label': self.label,
+            'active': bool(self),
+            'muted': self.muted,
+            'unscored': self.unscored,
+            'category': self.category,
+            'kind': self.kind,
+            'valence': self.valence,
+            'version': self.version,
+            'fields': self.fields.copy(),
+            'justification': self.justification,
+            'priority': self.priority,
+            'location': self.location.to_json() if self.location is not None else None
+        }
+
 
 class FeedbackResponse(Feedback):
     """
