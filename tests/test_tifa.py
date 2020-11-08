@@ -248,6 +248,9 @@ unit_tests = {
 
     # Sets
     'set_creation': ['a = set([1,2,3])\nprint(a)', ['initialization_problem'], []],
+    'set_addition': ['a = {"dog"}\na+"cat"', [], ['incompatible_types']],
+    'set_union_good': ['a = {"dog"}\na|{"cat"}', ['incompatible_types'], []],
+    'set_union_bad': ['a = {"dog"}\na|"cat"', [], ['incompatible_types']],
 
     # Dictionaries
     'set_key_in_dict': ['a = {}\na[1] = 0', [], []],
@@ -416,7 +419,9 @@ unit_tests = {
     'add_list_to_list_comprehension':
         ['[1]+[a for a in [1,2,3]]', ['unused_variable', "incompatible_types"], []],
     'add_set_to_set_comprehension':
-        ['{4}+{a for a in [1,2,3]}', ['unused_variable', "incompatible_types"], []],
+        ['{4}+{a for a in [1,2,3]}', ['unused_variable'], ["incompatible_types"]],
+    'union_set_to_set_comprehension':
+        ['{4}|{a for a in [1,2,3]}', ['unused_variable', "incompatible_types"], []],
     'int_membership_in_dictionary':
         ['3 in {a:a for a in [1,2,3]}', ['unused_variable', "incompatible_types"], []],
     'int_membership_in_comprehension':

@@ -958,6 +958,10 @@ class Tifa(TifaCore, ast.NodeVisitor):
         else:
             self.return_variable(NoneType())
 
+    def visit_Set(self, node):
+        # Fun fact, it's impossible to make a literal empty set
+        return SetType(subtype=self.visit(node.elts[0]), empty=False)
+
     def visit_SetComp(self, node):
         """
 
@@ -970,7 +974,7 @@ class Tifa(TifaCore, ast.NodeVisitor):
         # TODO: Handle comprehension scope
         for generator in node.generators:
             self.visit(generator)
-        return SetType(self.visit(node.elt))
+        return SetType(subtype=self.visit(node.elt))
 
     def visit_statements(self, nodes):
         """

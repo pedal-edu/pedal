@@ -208,6 +208,8 @@ def get_pedal_type_from_value(value, type_space=None) -> Type:
         return NoneType()
     if isinstance(value, tuple):
         return TupleType((get_pedal_type_from_value(t, type_space) for t in value))
+    if isinstance(value, set):
+        return SetType((get_pedal_type_from_value(t, type_space) for t in value))
     if isinstance(value, frozenset):
         return FrozenSetType((get_pedal_type_from_value(t, type_space) for t in value))
     if isinstance(value, list):
