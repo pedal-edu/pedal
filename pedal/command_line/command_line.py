@@ -95,7 +95,7 @@ def parse_args(reduced_mode=False):
     parser.add_argument('--environment', '-e',
                         help="Sets the environment context for this script, which"
                              " can run special setups and override tools as"
-                             " needed.", default=None)
+                             " needed.", default='standard')
     parser.add_argument('--instructor_name',
                         help="Sets the name of the instructor file to something"
                              " more friendly. If not given, then will default"

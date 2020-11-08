@@ -82,4 +82,4 @@ class StandardEnvironment(Environment):
         return self.ast, self.student, self.print_resolve
 
 
-setup_pedal = StandardEnvironment
+setup_environment = StandardEnvironment

@@ -29,4 +29,8 @@ def default_pipeline(tifa=False, cait=True, sandbox=True):
     return tuple(results)
 '''
 
-from pedal.environments.standard import setup_pedal
+from pedal.environments.standard import setup_environment
+
+ALL_ENVIRONMENTS = [
+    'blockpy', 'gradescope', 'jupyter', 'standard', 'vpl'
+]
