@@ -155,7 +155,7 @@ class overwritten_variable(TifaFeedback):
     """ Overwritten Variable """
     title = "Overwritten Variable"
     message_template = ("The variable {name_message} was given a value, but "
-                        "{name_message} was changed on line {location.line}"
+                        "{name_message} was changed on line {location.line} "
                         "before it was used. One of the times that you gave "
                         "{name_message} a value was incorrect."
                         )
