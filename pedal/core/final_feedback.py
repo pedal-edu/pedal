@@ -26,6 +26,8 @@ class FinalFeedback:
     DEFAULT_NO_FEEDBACK_TITLE = "No Errors"
     DEFAULT_NO_FEEDBACK_MESSAGE = "No errors reported."
 
+    # TODO: Change all these so that FinalFeedback also logs considered feedback
+
     def __init__(self, success=None, score=None, category=None, label=None, title=None,
                  message=None, data=None, hide_correctness=None,
                  suppressions=None, suppressed_labels=None):
