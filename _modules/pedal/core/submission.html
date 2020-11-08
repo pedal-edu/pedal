@@ -196,7 +196,7 @@
 <span class="sd">        user (dict): Additional information about the user.</span>
 <span class="sd">        assignment (dict): Additional information about the assignment.</span>
 <span class="sd">        course (dict): Additional information about the course.</span>
-<span class="sd">        execution (dict): Additional information about the results of previously executing the students&#39; code.</span>
+<span class="sd">        execution (dict): Additional information about the results of executing the students&#39; code.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">files</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">main_file</span><span class="o">=</span><span class="s1">&#39;answer.py&#39;</span><span class="p">,</span> <span class="n">main_code</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -268,7 +268,16 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">line_offsets</span><span class="p">[</span><span class="n">filename</span><span class="p">]</span> <span class="o">=</span> <span class="n">lineno</span></div>
 
     <span class="k">def</span> <span class="nf">clear_line_offsets</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">line_offsets</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">line_offsets</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">,</span>
+            <span class="n">assignment</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">assignment</span><span class="p">,</span>
+            <span class="n">course</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">course</span><span class="p">,</span>
+            <span class="n">execution</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">execution</span><span class="p">,</span>
+            <span class="n">files</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="p">)</span></div>
 </pre></div>
 
            </div>
