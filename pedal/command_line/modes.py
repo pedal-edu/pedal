@@ -393,6 +393,9 @@ class VerifyPipeline(AbstractPipeline):
         error = bundle_result.error if bundle_result.error else None
         if error:
             print(error)
+        if 'MAIN_REPORT' not in bundle_result.data:
+            # TODO: Better error message here
+            raise Exception("No MAIN_REPORT found; did you import Pedal?")
         actual = bundle_result.data['MAIN_REPORT'].result.to_json()
         error = bundle_result.error
         expected_fields = verifier.get_final()
