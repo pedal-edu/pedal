@@ -31,7 +31,7 @@ class Submission:
         user (dict): Additional information about the user.
         assignment (dict): Additional information about the assignment.
         course (dict): Additional information about the course.
-        execution (dict): Additional information about the results of previously executing the students' code.
+        execution (dict): Additional information about the results of executing the students' code.
     """
 
     def __init__(self, files=None, main_file='answer.py', main_code=None,
@@ -104,3 +104,12 @@ class Submission:
 
     def clear_line_offsets(self):
         self.line_offsets.clear()
+
+    def to_json(self):
+        return dict(
+            user=self.user,
+            assignment=self.assignment,
+            course=self.course,
+            execution=self.execution,
+            files=self.files.copy()
+        )
