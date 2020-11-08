@@ -32,8 +32,12 @@ fun_student_edits = progsnap.get_events(
     }
 )
 """
+import hashlib
+import os
+import pickle
 import sqlite3
 import re
+
 
 class BaseProgSnap2:
     def __init__(self, path: str):
@@ -46,22 +50,78 @@ class BaseProgSnap2:
     def close(self):
         pass
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.close()
+
+
 class SqlProgSnap2(BaseProgSnap2):
-    def __init__(self, path: str):
+    PROFILES = {
+        'blockpy': dict(link_filters={
+            'Subject': {
+                'X-IsStaff': "False",
+            },
+        },
+            link_selections={
+                'Subject': {
+                    'X-Email': 'student_email',
+                    'X-Name.First': 'student_first',
+                    'X-Name.Last': 'student_last',
+                },
+                'Assignment': {
+                    'X-Name': 'assignment_name',
+                    'X-URL': 'assignment_url',
+                    'X-Code.OnRun': 'on_run'
+                }
+            })
+    }
+
+    def set_profile(self, profile):
+        if profile not in self.PROFILES:
+            raise ValueError(f"Unknown ProgSnap Profile specified: {profile}")
+        self.profile = profile
+
+    def __init__(self, path: str, cache=False):
         super().__init__(path)
         self._connection = sqlite3.connect(self.path)
         self._cursor = self._connection.cursor()
+        self.profile = None
+        self.cache = cache
+        # To see executed queries:
+        # self._connection.set_trace_callback(print)
 
     def close(self):
         self._connection.close()
 
+    def _merge(self, key, overrides):
+        result = {}
+        for k, v in self.PROFILES.get(self.profile, {}).get(key, {}).items():
+            result[k] = v
+        if overrides is not None:
+            for k, v in overrides.items():
+                result[k] = v
+        return result
+
+    def get_code(self, query):
+        #flat_filters = {k + k2: v
+        #                for k, vs in link_filters.items()
+        #                for k2, v in vs
+        #                }
+        #codes = tuple(sorted(event_filter.items() | flat_filters))
+        return "pedal_cache_"+hashlib.md5(query.encode('utf-8')).hexdigest()+".pickle"
+
     def get_events(self, event_filter=None, link_filters=None,
-                   link_selections=None, with_code=True):
+                   link_selections=None, with_code=True, limit=None):
+        # Load in profile defaults
+        link_selections = self._merge('link_selections', link_selections)
+        link_filters = self._merge('link_filters', link_filters)
         # Setup data
         tables = ['MainTable']
-        filters = [] #"MainTable.EventType=?"
-        selections = ['MainTable.EventID']
-        fields = ['event_id']
+        filters = []  # "MainTable.EventType=?"
+        selections = ['MainTable.EventID', 'MainTable.ClientTimestamp']
+        fields = ['event_id', 'client_timestamp']
         data = []
         # Add in event filters
         for column, value_filter in event_filter.items():
@@ -98,16 +158,35 @@ class SqlProgSnap2(BaseProgSnap2):
             filters = "WHERE " + " AND ".join(filters)
         else:
             filters = ""
+        # And a limit for testing purposes
+        query_limit = ""
+        if limit:
+            query_limit = f"LIMIT {limit}"
         # And execute
         query = f"""
-        SELECT {', '.join(selections)}
-        FROM {', '.join(tables)}
-        {filters}
+            SELECT {', '.join(selections)}
+            FROM {', '.join(tables)}
+            {filters}
+            {query_limit}
         """
-        print(query)
+        # Is it is in our cache?
+        if isinstance(self.cache, str):
+            key = self.get_code(query)
+            cache_path = os.path.join(self.cache, key)
+            if os.path.exists(cache_path):
+                with open(cache_path, 'rb') as cache_file:
+                    return pickle.load(cache_file)
         result = self._cursor.execute(query, data)
+        result = [dict(zip(fields, row)) for row in result.fetchall()]
+        # Store it in our cache for the future
+        if isinstance(self.cache, str):
+            key = self.get_code(query)
+            cache_path = os.path.join(self.cache, key)
+            with open(cache_path, 'wb') as cache_file:
+                pickle.dump(result, cache_file)
         # Process result
-        return [dict(zip(fields, row)) for row in result.fetchall()]
+        return result
+
 
 class ZipProgSnap2(BaseProgSnap2):
     pass

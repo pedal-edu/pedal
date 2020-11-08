@@ -1,20 +1,38 @@
 """
 Simple enumeration of the Modes available for Pedal's command line.
 """
+import json
 import os
 import sys
+import traceback
 from contextlib import redirect_stdout
 from io import StringIO
 import unittest
 from textwrap import indent
 from unittest.mock import patch
 from pprint import pprint
+import warnings
+import argparse
 
 from pedal.command_line.verify import generate_report_out, ReportVerifier
 from pedal.core.report import MAIN_REPORT
 from pedal.core.submission import Submission
+from pedal.sandbox.result import is_sandbox_result
 from pedal.utilities.files import normalize_path
+from pedal.utilities.progsnap import SqlProgSnap2
 from pedal.utilities.text import chomp
+
+try:
+    from tqdm import tqdm
+except ImportError:
+    def tqdm(values):
+        """ Trivial helper function to replace TQDM's behavior """
+        yield from values
+
+
+# Disable all warnings from student files
+# TODO: Move this strictly into ICS and Submission execution
+warnings.filterwarnings("ignore")
 
 
 def is_progsnap(path):
@@ -40,20 +58,37 @@ def get_python_files(paths):
 
 
 class BundleResult:
-    def __init__(self, data, output, error):
+    def __init__(self, data, output, error, resolution):
         self.data = data
         self.output = output
         self.error = error
+        self.resolution = resolution
+
+    def to_json(self):
+        return dict(
+            output=self.output,
+            error=self.error,
+            resolution= self.resolution.copy()
+        )
 
 
 class Bundle:
-    def __init__(self, script, submission):
+    def __init__(self, config, script, submission):
+        self.config = config
         self.script = script
         self.submission = submission
         self.environment = None
         self.result = None
 
-    def run_ics_bundle(self):
+    def to_json(self):
+        return dict(
+            script=self.script,
+            submission=self.submission.to_json(),
+            environment=self.environment,
+            result=self.result.to_json()
+        )
+
+    def run_ics_bundle(self, resolver='resolve', skip_tifa=False):
         """
         Runs the given instructor control script on the given submission, with the
         accompany contextualizations.
@@ -62,10 +97,12 @@ class Bundle:
         captured_output = StringIO()
         global_data = {}
         error = None
+        resolution = None
         if self.environment:
-            env = __import__('pedal.environments.'+self.environment,
+            env = __import__('pedal.environments.' + self.environment,
                              fromlist=[''])
-            global_data.update(env.setup_environment(self.submission).fields)
+            global_data.update(env.setup_environment(self.submission,
+                                                     skip_tifa=skip_tifa).fields)
         else:
             MAIN_REPORT.contextualize(self.submission)
         with redirect_stdout(captured_output):
@@ -74,20 +111,30 @@ class Bundle:
                     grader_exec = compile(self.script,
                                           self.submission.instructor_file, 'exec')
                     exec(grader_exec, global_data)
-                    if ('MAIN_REPORT' in global_data and
-                            not global_data['MAIN_REPORT'].resolves and
-                            'resolve' in global_data):
-                        global_data['resolve']()
+                    if 'MAIN_REPORT' in global_data:
+                        if not global_data['MAIN_REPORT'].resolves:
+                            if resolver in global_data:
+                                resolution = global_data[resolver]()
+                            # TODO: Need more elegance/configurability here
+                            elif self.config.resolver == 'resolve':
+                                exec("from pedal.resolvers.simple import resolve", global_data)
+                                resolution = global_data["resolve"]()
+                        else:
+                            resolution = global_data['MAIN_REPORT'].resolves[-1]
                 except Exception as e:
                     error = e
         actual_output = captured_output.getvalue()
-        self.result = BundleResult(global_data, actual_output, error)
+        self.result = BundleResult(global_data, actual_output, error, resolution)
 
 
 class AbstractPipeline:
     """ Generic pipeline for handling all the phases of executing instructor
     control scripts on submissions, and reformating the output. """
+
     def __init__(self, config):
+        if isinstance(config, dict):
+            # TODO: Include default argument automatically
+            config = argparse.Namespace(**config)
         self.config = config
         self.submissions = []
         self.result = None
@@ -124,8 +171,13 @@ class AbstractPipeline:
                         main_file=main_file, main_code=main_code,
                         instructor_file=script
                     )
-                    self.submissions.append(Bundle(scripts_contents, new_submission))
+                    self.submissions.append(Bundle(self.config, scripts_contents, new_submission))
         # Otherwise, if the submission is a single file:
+        # Maybe it's a Progsnap DB file?
+        elif given_submissions.endswith('.db'):
+            for script, scripts_contents in all_scripts:
+                self.load_progsnap(given_submissions, instructor_code=scripts_contents)
+        # Otherwise, must just be a single python file.
         else:
             main_file = given_submissions
             load_error = None
@@ -141,19 +193,65 @@ class AbstractPipeline:
                     main_file=main_file, main_code=main_code,
                     instructor_file=script, load_error=load_error
                 )
-                self.submissions.append(Bundle(scripts_contents, new_submission))
+                self.submissions.append(Bundle(self.config, scripts_contents, new_submission))
 
-    def load_progsnap(self, path):
+    progsnap_events_map = {
+        'run': 'Run.Program',
+        'edit': 'File.Edit',
+        'last': 'File.Edit'
+    }
+
+    def load_progsnap(self, path, instructor_code=None):
         script_file_name, script_file_extension = os.path.splitext(path)
         if script_file_extension in ('.db',):
-            raise ValueError("TODO: ProgSnap DB files not yet supported")
+            with SqlProgSnap2(path, cache=self.config.cache) as progsnap:
+                if self.config.progsnap_profile:
+                    progsnap.set_profile(self.config.progsnap_profile)
+                link_filters = {}
+                include_scripts = self.config.include_scripts
+                if include_scripts:
+                    link_filters['Assignment'] = {}
+                    if include_scripts.startswith('name='):
+                        link_filters['Assignment']['X-Name'] = include_scripts[5:]
+                    elif include_scripts.startswith('id='):
+                        link_filters['Assignment']['AssignmentId'] = include_scripts[3:]
+                    elif include_scripts.startswith('url='):
+                        link_filters['Assignment']['X-URL'] = include_scripts[4:]
+                    else:
+                        link_filters['Assignment']['X-URL'] = include_scripts
+                event_type = self.progsnap_events_map[self.config.progsnap_events]
+                events = progsnap.get_events(event_filter={'EventType': event_type},
+                                             link_filters=link_filters, limit=self.config.limit)
+            if self.config.progsnap_events == 'last':
+                events = [e for e in {
+                    (event['student_email'], event['assignment_name']): event
+                    for event in sorted(events, key=lambda e: e['event_id'])}.values()]
+            for event in events:
+                if instructor_code is None:
+                    scripts_contents = event['on_run']
+                new_submission = Submission(
+                    main_file='answer.py', main_code=event['submission_code'].decode('utf-8'),
+                    instructor_file='instructor.py',
+                    execution=dict(client_timestamp=event['client_timestamp'],
+                                   event_id=event['event_id']),
+                    user=dict(email=event['student_email'],
+                              first=event['student_first'],
+                              last=event['student_last']),
+                    assignment=dict(name=event['assignment_name'],
+                                    url=event['assignment_url']),
+                )
+                self.submissions.append(Bundle(self.config, instructor_code, new_submission))
+            # raise ValueError("TODO: ProgSnap DB files not yet supported")
             # Progsnap Zip
         elif script_file_extension in ('.zip',):
             raise ValueError("TODO: Zip files not yet supported")
 
     def load_submissions(self):
         given_script = self.config.instructor
-        if is_progsnap(given_script):
+        if self.config.ics_direct:
+            # TODO: Allow non-progsnap ics_direct
+            self.load_progsnap(self.config.submissions, instructor_code=given_script)
+        elif is_progsnap(given_script):
             self.load_progsnap(given_script)
         elif os.path.isfile(given_script):
             self.load_file_submissions([given_script])
@@ -161,14 +259,13 @@ class AbstractPipeline:
             python_files = os.listdir(given_script)
             self.load_file_submissions(python_files)
 
-
     def setup_execution(self):
         for bundle in self.submissions:
             bundle.environment = self.config.environment
 
     def run_control_scripts(self):
         for bundle in self.submissions:
-            bundle.run_ics_bundle()
+            bundle.run_ics_bundle(resolver=self.config.resolver, skip_tifa=self.config.skip_tifa)
 
     def process_output(self):
         for bundle in self.submissions:
@@ -184,32 +281,88 @@ class FeedbackPipeline(AbstractPipeline):
                   bundle.submission.main_file)
             if bundle.result.error:
                 print(bundle.result.error)
+            elif bundle.result.resolution:
+                # report = bundle.result.data['MAIN_REPORT']
+                print(bundle.result.resolution.title)
+                print(bundle.result.resolution.message)
             else:
+                print("No feedback determined.")
+
+
+class RunPipeline(AbstractPipeline):
+    def process_output(self):
+        for bundle in self.submissions:
+            print(bundle.submission.instructor_file,
+                  bundle.submission.main_file)
+            if bundle.result.error:
+                print(bundle.result.error)
+            elif bundle.result.resolution:
                 report = bundle.result.data['MAIN_REPORT']
-                print(report.result.title)
-                print(report.result.message)
+                generate_report_out(None, self.config.environment, report)
+            else:
+                print("No feedback determined.")
 
 
 class StatsPipeline(AbstractPipeline):
-    pass
+    def run_control_scripts(self):
+        for bundle in tqdm(self.submissions):
+            bundle.run_ics_bundle(resolver='stats_resolve', skip_tifa=self.config.skip_tifa)
+
+    def process_output(self):
+        total = 0
+        errors = 0
+        final = []
+        for bundle in self.submissions:
+            if bundle.result.error:
+                print(bundle.result.error)
+                errors += 1
+            else:
+                final.append(bundle.to_json())
+            total += 1
+        if self.config.output is not None:
+            print(final)
+            print("Total Processed:", total)
+            print("Errors:", errors)
+            pedal_json_encoder = PedalJSONEncoder()
+            if self.config.output == 'stdout':
+                print(pedal_json_encoder.encode(final))
+            else:
+                with open(self.config.output, 'w') as output_file:
+                    print(pedal_json_encoder.encode(final), file=output_file)
+        return final
+
+
+class PedalJSONEncoder(json.JSONEncoder):
+    """
+    Custom JSON Encoder to handle weird Pedal values nested in Feedback Functions,
+    including things like SandboxResult.
+    """
+    def _iterencode(self, o, markers=None):
+        if is_sandbox_result(o):
+            return super()._iterencode(o._actual_value, markers)
+        else:
+            return super()._iterencode(o, markers)
+
+    def default(self, obj):
+        return '<not serializable>'
 
 
 class VerifyPipeline(AbstractPipeline):
     def process_output(self):
         for bundle in self.submissions:
-            bundle.run_ics_bundle()
+            bundle.run_ics_bundle(resolver=self.config.resolver, skip_tifa=self.config.skip_tifa)
             if bundle.result.error:
                 raise bundle.result.error
             # Now get the expected output
             base = os.path.splitext(bundle.submission.main_file)[0]
             test_name = os.path.basename(base)
-            if os.path.exists(base+".out"):
-                verifier = ReportVerifier(base+".out", self.config.environment)
+            if os.path.exists(base + ".out"):
+                verifier = ReportVerifier(base + ".out", self.config.environment)
                 self.add_case(test_name, bundle.result, verifier)
             else:
                 if self.config.create_output:
                     report = bundle.result.data['MAIN_REPORT']
-                    generate_report_out(base+".out", self.config.environment, report)
+                    generate_report_out(base + ".out", self.config.environment, report)
                     self.skip_case(test_name)
                 else:
                     self.error_case(test_name, bundle.result)
@@ -222,11 +375,14 @@ class VerifyPipeline(AbstractPipeline):
             __module__ = 'VerifyTestCase'
             __qualname__ = config.instructor_name
             maxDiff = None
+
             def __str__(self):
                 return f"{config.instructor}, using {self._testMethodName[5:]}.py"
-                #return f"{self.id().__name__} (Test{config.instructor})"
+                # return f"{self.id().__name__} (Test{config.instructor})"
+
             def __repr__(self):
                 return str(self)
+
         self.TestReferenceSolutions = TestReferenceSolutions
         self.tests = []
 
@@ -240,6 +396,7 @@ class VerifyPipeline(AbstractPipeline):
         actual = bundle_result.data['MAIN_REPORT'].result.to_json()
         error = bundle_result.error
         expected_fields = verifier.get_final()
+
         def new_test(self):
             if error:
                 raise error
@@ -249,8 +406,8 @@ class VerifyPipeline(AbstractPipeline):
                 self.assertIn(field, actual, msg="Field was not in feedback.")
                 actual_value = chomp(str(actual[field]).strip())
                 expected_value = chomp(str(value))
-                entire_actual += field+": "+actual_value+"\n"
-                entire_expected += field+": "+expected_value+"\n"
+                entire_actual += field + ": " + actual_value + "\n"
+                entire_expected += field + ": " + expected_value + "\n"
                 if expected_value != actual_value:
                     differing_fields.append(field)
             differing_fields = ', '.join(f"'{field}'" for field in differing_fields)
@@ -263,12 +420,15 @@ class VerifyPipeline(AbstractPipeline):
     def skip_case(self, name):
         def new_test(self):
             self.skipTest("Output did not exist; created.")
+
         setattr(self.TestReferenceSolutions, "test_" + name, new_test)
         self.tests.append("test_" + name)
 
     def error_case(self, name, bundle_result):
         def new_test(self):
-            self.fail("Expected output file was not found next to the instructor file. Perhaps you meant to use --create_output?")
+            self.fail(
+                "Expected output file was not found next to the instructor file. Perhaps you meant to use --create_output?")
+
         setattr(self.TestReferenceSolutions, "test_" + name, new_test)
         self.tests.append("test_" + name)
 
@@ -287,28 +447,56 @@ class GradePipeline(AbstractPipeline):
                     raise bundle.result.error
                 print(bundle.submission.instructor_file,
                       bundle.submission.main_file,
-                      bundle.result.data['MAIN_REPORT'].result.score*
+                      bundle.result.data['MAIN_REPORT'].result.score *
                       bundle.result.data['MAIN_REPORT'].result.success,
                       sep=", ")
 
 
 class SandboxPipeline(AbstractPipeline):
     """ Run the given script in a sandbox. """
+
+    ICS = """from pedal import *
+verify()
+run()"""
+
     def load_submissions(self):
-        self.control_scripts = [
-            """
-            
-            """
-        ]
+        # Use first argument as student submissions
+        given_script = self.config.instructor
+        # ... either a single file
+        if os.path.isfile(given_script):
+            scripts = [given_script]
+        # ... or a directory of files
+        else:
+            scripts = os.listdir(given_script)
+        # Then create submission to run
+        for script in scripts:
+            script_file_name, script_file_extension = os.path.splitext(script)
+            if script_file_extension in ('.py',):
+                load_error = None
+                try:
+                    with open(script, 'r') as scripts_file:
+                        scripts_contents = scripts_file.read()
+                except Exception as e:
+                    load_error = e
+                new_submission = Submission(
+                    main_file="answer.py", main_code=scripts_contents,
+                    instructor_file=script, load_error=load_error
+                )
+                self.submissions.append(Bundle(self.config, self.ICS, new_submission))
 
     def process_output(self):
         # Print output
         # Print runtime exceptions, if any
-        sandbox = self.result['report']['sandbox']
-        output = [sandbox.raw_output]
-        if sandbox.error:
-            output.append(str(sandbox.error))
-        return "\n".join(output)
+        for bundle in self.submissions:
+            if bundle.result.error:
+                traceback.print_tb(bundle.result.error.__traceback__)
+                print(bundle.result.error)
+                continue
+            sandbox = bundle.result.data['MAIN_REPORT']['sandbox']['sandbox']
+            output = [sandbox.raw_output]
+            if sandbox.feedback:
+                output.append(sandbox.feedback.message)
+            print("\n".join(output))
 
 
 class DebugPipeline(AbstractPipeline):
@@ -321,7 +509,7 @@ class DebugPipeline(AbstractPipeline):
                     print(bundle.result.error)
                 else:
                     print("Output:")
-                    print(indent(bundle.result.output, " "*4))
+                    print(indent(bundle.result.output, " " * 4))
                     report = bundle.result.data['MAIN_REPORT']
                     print("Feedback:")
                     for feedback in report.feedback:
@@ -334,6 +522,8 @@ class MODES:
     """
     The possible modes that Pedal can be run in.
     """
+    # Runs the instructor control script and outputs all feedback
+    RUN = 'run'
     # Get just the feedback for submissions
     FEEDBACK = 'feedback'
     # Get just the score/correctness
@@ -348,6 +538,7 @@ class MODES:
     DEBUG = 'debug'
 
     PIPELINES = {
+        RUN: RunPipeline,
         FEEDBACK: FeedbackPipeline,
         GRADE: GradePipeline,
         STATS: StatsPipeline,

@@ -85,8 +85,8 @@ def parse_args(reduced_mode=False):
                         nargs='?')
     # TODO: Handle output to file
     parser.add_argument('--output', '-o',
-                        help='The output path for the result. Defaults to stdout.',
-                        default=None)
+                        help='The output file path for the result. Defaults to stdout.',
+                        default='stdout')
     parser.add_argument('--config', '-c',
                         help="Uses the configuration file to get settings.")
     parser.add_argument('--create_output', '-m',
@@ -100,6 +100,33 @@ def parse_args(reduced_mode=False):
                         help="Sets the name of the instructor file to something"
                              " more friendly. If not given, then will default"
                              " to the instructor filename.", default=None)
+    parser.add_argument('--progsnap_profile',
+                        default='blockpy', # TODO: Change this biased default
+                        help="Uses the given profile's default settings for"
+                             " loading in a ProgSnap2 dataset",
+                        )
+    parser.add_argument('--include_scripts', help='An optional filter to '
+                                                  'only include certain scripts',
+                        default=None)
+    parser.add_argument('--limit', help='An optional limit to how many'
+                                        ' submissions are run. Mostly for testing'
+                                        ' purposes.',
+                        default=None)
+    parser.add_argument('--resolver', help='Choose a different resolver to use.',
+                        default='resolve', choices=['resolve', 'stats_resolve'])
+    parser.add_argument('--ics_direct', help="Give the instructor code directly"
+                                             " instead of loading from a file.",
+                        default=False, action='store_true')
+    # TODO: Elegant way of skipping specific, common phases
+    parser.add_argument('--skip_tifa', help="Skip using TIFA in the environment",
+                        default=False, action='store_true')
+    parser.add_argument('--progsnap_events', help="Choose what level of event"
+                                                  " to capture from Progsnap event"
+                                                  " logs.",
+                        default='run', choices=['run', 'edit', 'last'])
+    parser.add_argument('--cache', help='Use the given directory to hold the cache.'
+                                        ' You can use "./" to use the current directory.',
+                        default=False)
     '''
     parser.add_argument('--include_submissions', help='An optional REGEX filter '
                                                       'to only include certain submissions')
