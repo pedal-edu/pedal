@@ -1,4 +1,5 @@
 import os
+import sys
 from textwrap import indent, dedent
 
 
@@ -41,19 +42,18 @@ def parse_out_file(path):
     return sections
 
 
-def generate_out_file(path, sections):
-    with open(path, 'w') as outfile:
-        for section_name, section in sections.items():
-            outfile.write(f"[{section_name}]\n")
-            for field, value in section.items():
-                outfile.write(f"{field}:")
-                value = str(value)
-                if '\n' in value:
-                    outfile.write("\n")
-                    for line in value.split("\n"):
-                        outfile.write(f"    {line}\n")
-                else:
-                    outfile.write(f" {value}\n")
+def generate_out_file(outfile, sections):
+    for section_name, section in sections.items():
+        outfile.write(f"[{section_name}]\n")
+        for field, value in section.items():
+            outfile.write(f"{field}:")
+            value = str(value)
+            if '\n' in value:
+                outfile.write("\n")
+                for line in value.split("\n"):
+                    outfile.write(f"    {line}\n")
+            else:
+                outfile.write(f" {value}\n")
 
 
 def _make_final(environment):
@@ -83,7 +83,7 @@ class ReportVerifier:
 def generate_report_out(path, environment, report):
     result = {}
     # Allow graceful appending
-    if os.path.exists(path):
+    if path is not None and os.path.exists(path):
         result = parse_out_file(path)
     final_environment = _make_final(environment)
     try:
@@ -96,4 +96,9 @@ def generate_report_out(path, environment, report):
     result[final_environment] = fields
     # TODO: Support ``forbid`` and ``available`` fields for finer grained
     #   output checking.
-    generate_out_file(path, result)
+    if path is not None:
+        with open(path, 'w') as outfile:
+            generate_out_file(outfile, result)
+    else:
+        generate_out_file(sys.stdout, result)
+        return result
