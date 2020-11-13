@@ -301,7 +301,7 @@
     <span class="n">report</span><span class="o">.</span><span class="n">suppress</span><span class="p">(</span><span class="n">category</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="log"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.log">[docs]</a><span class="k">def</span> <span class="nf">log</span><span class="p">(</span><span class="o">*</span><span class="n">items</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="log"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.log">[docs]</a><span class="k">def</span> <span class="nf">log</span><span class="p">(</span><span class="o">*</span><span class="n">items</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Attach logging information to the Report as a piece of feedback.</span>
 
@@ -313,13 +313,11 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;category&#39;</span><span class="p">,</span> <span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">SYSTEM</span><span class="p">)</span>
-    <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;muted&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;unscored&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
     <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;valence&#39;</span><span class="p">,</span> <span class="n">Feedback</span><span class="o">.</span><span class="n">NEUTRAL_VALENCE</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
-        <span class="n">item</span> <span class="o">=</span> <span class="n">item</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
-        <span class="n">cloned_kwargs</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="n">cloned_kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;message&#39;</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
-        <span class="n">feedback</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;log&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+    <span class="n">message</span> <span class="o">=</span> <span class="n">sep</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">item</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+                       <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span><span class="p">)</span>
+    <span class="n">feedback</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;log&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="debug"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.debug">[docs]</a><span class="k">def</span> <span class="nf">debug</span><span class="p">(</span><span class="o">*</span><span class="n">items</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -327,6 +325,8 @@
 <span class="sd">    Attach logging information to the Report as a piece of feedback.</span>
 <span class="sd">    Works at a higher priority than :py:func:`~pedal.core.commands.log` and</span>
 <span class="sd">    does not attempt to convert to strings.</span>
+
+<span class="sd">    TODO: Consider updating to match `log`</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        items (Any): Any set of values to log information about. Will be</span>

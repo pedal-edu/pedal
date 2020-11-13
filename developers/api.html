@@ -313,7 +313,7 @@ suppress information within.</p></li>
 
 <dl class="function">
 <dt id="pedal.core.commands.log">
-<code class="sig-name descname">log</code><span class="sig-paren">(</span><em class="sig-param">*items</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pedal/core/commands.html#log"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.commands.log" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">log</code><span class="sig-paren">(</span><em class="sig-param">*items</em>, <em class="sig-param">sep=' '</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pedal/core/commands.html#log"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.commands.log" title="Permalink to this definition">¶</a></dt>
 <dd><p>Attach logging information to the Report as a piece of feedback.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -330,6 +330,7 @@ converted to strings using <cite>str</cite> if not already strings.</p>
 <dd><p>Attach logging information to the Report as a piece of feedback.
 Works at a higher priority than <a class="reference internal" href="#pedal.core.commands.log" title="pedal.core.commands.log"><code class="xref py py-func docutils literal notranslate"><span class="pre">log()</span></code></a> and
 does not attempt to convert to strings.</p>
+<p>TODO: Consider updating to match <cite>log</cite></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>items</strong> (<em>Any</em>) – Any set of values to log information about. Will be
