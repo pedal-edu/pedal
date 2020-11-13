@@ -136,7 +136,7 @@ def suppress(category=None, label=True, report=MAIN_REPORT):
     report.suppress(category, label)
 
 
-def log(*items, **kwargs):
+def log(*items, sep=" ", **kwargs):
     """
     Attach logging information to the Report as a piece of feedback.
 
@@ -148,13 +148,11 @@ def log(*items, **kwargs):
 
     """
     kwargs.setdefault('category', Feedback.CATEGORIES.SYSTEM)
-    kwargs.setdefault('muted', True)
+    kwargs.setdefault('unscored', True)
     kwargs.setdefault('valence', Feedback.NEUTRAL_VALENCE)
-    for item in items:
-        item = item if isinstance(item, str) else str(item)
-        cloned_kwargs = kwargs.copy()
-        cloned_kwargs.setdefault('message', item)
-        feedback(label="log", **kwargs)
+    message = sep.join(item if isinstance(item, str) else str(item)
+                       for item in items)
+    feedback(message=message, label="log", **kwargs)
 
 
 def debug(*items, **kwargs):
@@ -162,6 +160,8 @@ def debug(*items, **kwargs):
     Attach logging information to the Report as a piece of feedback.
     Works at a higher priority than :py:func:`~pedal.core.commands.log` and
     does not attempt to convert to strings.
+
+    TODO: Consider updating to match `log`
 
     Args:
         items (Any): Any set of values to log information about. Will be
