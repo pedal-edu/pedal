@@ -94,7 +94,7 @@ class VPLFormatter(Formatter):
         return self.pre(code)
 
     def python_expression(self, code):
-        return self.html_code(code)
+        return code
 
     def filename(self, filename):
         return filename
