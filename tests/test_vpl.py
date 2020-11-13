@@ -15,7 +15,8 @@ here = "" if os.path.basename(os.getcwd()) == "tests" else "tests/"
 from tests.execution_helper import ExecutionTestCase
 from pedal.environments.vpl import VPLEnvironment, VPLFormatter, resolve
 from pedal.source import next_section, verify_section, check_section_exists, set_source_file, separate_into_sections
-from pedal.core.commands import compliment, clear_report, contextualize_report
+from pedal.core.commands import compliment, clear_report, contextualize_report, log
+from pedal.assertions import assert_equal
 
 
 class TestVPL(ExecutionTestCase):
@@ -45,6 +46,23 @@ Grade :=>> 0
             self.assertEqual("""<|--
 -Source File Not Found
 The given filename datafiles/banana_cream_pudding.py was either not found or could not be opened. Please make sure the file is available.
+--|>
+Grade :=>> 0
+""", f.getvalue())
+
+    def test_simple_system(self):
+        clear_report()
+        vpl = VPLEnvironment(main_code='1+2')
+        with io.StringIO() as f, redirect_stdout(f):
+            log("Message Printed")
+            assert_equal(1, 2)
+            vpl.resolve()
+            self.assertEqual("""<|--
+-System Notes
+Message Printed
+-Failed Instructor Test
+Student code failed instructor test.
+>1 != 2
 --|>
 Grade :=>> 0
 """, f.getvalue())

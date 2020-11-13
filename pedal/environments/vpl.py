@@ -157,6 +157,15 @@ def resolve(report=MAIN_REPORT, priority_key=by_priority):
         print("-Positive Notes")
         for positive in final.positives:
             print(positive)
+    if final.systems:
+        print("-System Notes")
+        for system in final.systems:
+            if system.label and system.label != "log":
+                print(system.title)
+            if system.label and system.label != "log":
+                print(system.label)
+            if system.message:
+                print(system.message)
     print("-"+final.title)
     print(final.message)
     print("--|>")
