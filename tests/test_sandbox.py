@@ -411,7 +411,15 @@ Suggestion: To fix a type error, you should trace through your code. Make sure e
         self.assertEqual(student.modules.turtles.calls[0][0], 'forward')
         self.assertEqual(student.modules.turtles.calls[0][1][0], 100)
 
-
+    def test_weird_module_behavior(self):
+        student_code = dedent('''
+                    import pprint
+                    pprint.pprint(5)
+                ''')
+        set_source(student_code)
+        student = Sandbox()
+        student.run(student_code, filename='student.py')
+        self.assertIsNone(student.exception)
 
     # TODO: test `import builtins` strategy to access original builtins
 
