@@ -421,6 +421,13 @@ Suggestion: To fix a type error, you should trace through your code. Make sure e
         student.run(student_code, filename='student.py')
         self.assertIsNone(student.exception)
 
+    def test_range_requires_integer(self):
+        contextualize_report("x = 5")
+        commands.run()
+        x = commands.evaluate("x")
+        range(x)
+        self.assertIsNone(commands.get_exception())
+
     # TODO: test `import builtins` strategy to access original builtins
 
 if __name__ == '__main__':

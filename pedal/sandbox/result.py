@@ -378,6 +378,9 @@ class SandboxResult:
     def __aexit__(self, exc_type, exc_value, traceback):
         return self.value.__aexit__(exc_type, exc_value, traceback)
 
+    def __index__(self):
+        return self.value.__index__()
+
 
 def is_sandbox_result(value) -> bool:
     """
