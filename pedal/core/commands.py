@@ -148,7 +148,7 @@ def log(*items, sep=" ", **kwargs):
 
     """
     kwargs.setdefault('category', Feedback.CATEGORIES.SYSTEM)
-    kwargs.setdefault('unscored', True)
+    kwargs.setdefault('muted', True)
     kwargs.setdefault('valence', Feedback.NEUTRAL_VALENCE)
     message = sep.join(item if isinstance(item, str) else str(item)
                        for item in items)

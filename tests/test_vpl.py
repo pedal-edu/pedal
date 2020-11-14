@@ -67,6 +67,21 @@ Student code failed instructor test.
 Grade :=>> 0
 """, f.getvalue())
 
+    def test_simple_system_correct(self):
+            clear_report()
+            vpl = VPLEnvironment(main_code='1+2')
+            with io.StringIO() as f, redirect_stdout(f):
+                log("Message Printed")
+                vpl.resolve()
+                self.assertEqual("""<|--
+-System Notes
+Message Printed
+-Complete
+Great work!
+--|>
+Grade :=>> 1
+""", f.getvalue())
+
     def test_resolve(self):
         clear_report()
         vpl = VPLEnvironment(main_file=here+'datafiles/student_example.py')
