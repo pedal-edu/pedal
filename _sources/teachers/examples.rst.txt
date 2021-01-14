@@ -1,3 +1,5 @@
+.. _examples:
+
 Teacher Examples
 ================
 
@@ -15,12 +17,14 @@ Instructions:
 Correct answer:
 
 .. code:: python
+    :caption: student.py
 
     print(7+3)
 
 Instructor grading code:
 
 .. code:: python
+    :caption: grade_assignment.py
 
     from pedal import *
 
@@ -56,12 +60,14 @@ Instructions:
 Student answer:
 
 .. code:: python
+    :caption: student.py
 
     print(round(9.5))
 
 Instructor control script:
 
 .. code:: python
+    :caption: grade_assignment.py
 
     from pedal import *
 
@@ -95,6 +101,7 @@ Instructions:
 Student Answer:
 
 .. code:: python
+    :caption: student.py
 
     def add_3(a, b, c):
         return a+b+c
@@ -107,6 +114,7 @@ Student Answer:
 Instructor Control Script:
 
 .. code:: python
+    :caption: grade_assignment.py
 
     from pedal import *
 
@@ -135,6 +143,7 @@ Here's a much more sophisicated problem where they have to read open two files a
 make MadLibs.
 
 .. code:: python
+    :caption: grade_assignment.py
 
     suppress("analyzer", "Iterating over non-list")
     suppress("analyzer", "Iterating over empty list")
@@ -174,7 +183,10 @@ Large Project
 The following code is a long example of a real project that we've created using Pedal.
 This is Pedal version 2, however the version 3 code will look different.
 
+.. warning:: This is out of date for Pedal version 3!
+
 .. code:: python
+    :caption: grade_assignment.py
 
     '''
     Instructor control script for Project 5- Text Adventure Beta

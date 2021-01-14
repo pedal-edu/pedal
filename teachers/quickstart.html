@@ -109,11 +109,10 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Teacher Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference.html">Teacher Reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Teacher Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="integrations.html">Autograder Integrations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="practices.html">Best Practices</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers/guide.html">Developer Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers/api.html">Developer API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developers/integrations.html">Developer Integrations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers/tools.html">Tools</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers/conventions.html">Naming Conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../everyone/glossary.html">Glossary</a></li>
@@ -191,7 +190,7 @@ by detecting <cite>Conditions</cite> in your learners’ <cite>Submission</cite>
 appropriate <cite>Response</cite>. As a grader, you just have to write the Instructor
 Control Script (or “Grading Script”). In this Quick Start Guide, we’ll show you
 how you can make this happen in just a few lines of code. Once you’ve got the
-basics, you can check out the <a class="reference internal" href="tutorial.html"><span class="doc">Teacher Tutorial</span></a> for a more in-depth coverage.</p>
+basics, you can check out the <a class="reference internal" href="examples.html"><span class="doc">Teacher Examples</span></a> for a more detailed examples.</p>
 <div class="section" id="command-line-usage">
 <h2>Command Line Usage<a class="headerlink" href="#command-line-usage" title="Permalink to this headline">¶</a></h2>
 <p>Pedal is meant to be integrated into existing autograders (see integrations),
@@ -223,25 +222,6 @@ more info.</p>
 script. This is our Instructor Control Script (or a “grading script”, if you
 prefer). If you’re not using a custom environment, then you will probably
 want to run the following at the minimum:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Always start by importing Pedal</span>
-<span class="kn">from</span> <span class="nn">pedal</span> <span class="kn">import</span> <span class="o">*</span>
-
-<span class="c1"># Load the students&#39; code</span>
-<span class="n">student_code</span> <span class="o">=</span> <span class="s2">&quot;print(&#39;Hello world!&#39;)&quot;</span>
-<span class="n">contextualize_report</span><span class="p">(</span><span class="n">student_code</span><span class="p">)</span>
-
-<span class="c1"># Check their source code for syntax errors</span>
-<span class="n">verify</span><span class="p">()</span>
-<span class="c1"># Run their code</span>
-<span class="n">student</span> <span class="o">=</span> <span class="n">run</span><span class="p">(</span><span class="n">student_code</span><span class="p">)</span>
-
-<span class="c1"># ... More instructor logic can go here ...</span>
-
-<span class="c1"># Resolve output and print</span>
-<span class="kn">from</span> <span class="nn">pedal.resolvers</span> <span class="kn">import</span> <span class="n">print_resolve</span>
-<span class="n">print_resolve</span><span class="p">()</span>
-</pre></div>
-</div>
 </div>
 <div class="section" id="custom-environments">
 <h2>Custom Environments<a class="headerlink" href="#custom-environments" title="Permalink to this headline">¶</a></h2>
@@ -255,11 +235,14 @@ BlockPy environment:</p>
 </pre></div>
 </div>
 <p>Now that same instructor script from before can literally just be:</p>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">grade_assignment.py</span><a class="headerlink" href="#id1" title="Permalink to this code">¶</a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Always start by importing Pedal</span>
 <span class="kn">from</span> <span class="nn">pedal</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="c1"># ... More instructor logic can go here ...</span>
 </pre></div>
+</div>
 </div>
 <p>After just the lines above, the learners’ submission will have been:</p>
 <ul class="simple">
@@ -284,18 +267,11 @@ deliver negative feedback; the name <cite>gently</cite> refers to the fact that 
 Resolvers will prioritize this feedback lower than runtime errors, syntax
 errors, etc. Its high-priority complement is <cite>explain</cite> which will totally
 supplant most other kinds of errors.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">gently</span><span class="p">(</span><span class="s2">&quot;You failed to solve the question correctly!&quot;</span><span class="p">,</span>
-       <span class="n">label</span><span class="o">=</span><span class="s2">&quot;incorrect_answer&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Wrong!&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
 <p>Notice that we provide a <cite>label</cite> and <cite>title</cite> (both optional).
 We encourage you to label feedback to enhance your subsequent analysis.
 Any Feedback Function can take in <cite>label</cite>, <cite>title</cite>, and many other useful
 settings.</p>
 <p><strong>Compliment</strong>: You can give the student compliments on things that are going well.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">compliment</span><span class="p">(</span><span class="s2">&quot;Good use of a `for` loop!&quot;</span><span class="p">,</span> <span class="n">score</span><span class="o">=</span><span class="s2">&quot;+10%&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
 <p>In this example, we have also included some partial credit using the optional <cite>score</cite>
 parameter.</p>
 <p>There are many other core commands, and many other optional parameters to enhance them.
@@ -305,56 +281,28 @@ Check out the <a class="reference internal" href="reference.html"><span class="d
 <h2>Finding AST Patterns<a class="headerlink" href="#finding-ast-patterns" title="Permalink to this headline">¶</a></h2>
 <p>CAIT can also be used to declaratively identify regions of source using a Regular-expression style
 function named <cite>find_matches</cite> (or <cite>find_match</cite> to get the first result):</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">matches</span> <span class="o">=</span> <span class="n">find_matches</span><span class="p">(</span><span class="s2">&quot;answer = 5&quot;</span><span class="p">)</span>
-<span class="k">if</span> <span class="n">matches</span><span class="p">:</span>
-    <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;The variable `answer` should not be assigned the value `5`.&quot;</span><span class="p">,</span> <span class="s2">&quot;assigned_literal_value_to_answer&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
 <p>The <cite>find_matches</cite> function supports several kinds of wildcards, and gives you access to
 identifiers in the learners’ code.</p>
 <p><strong>Wild Card Match</strong>:  The triple underscore is used as a wild match card.
 It will match to any node or subtree.
 If you wish to access such data, you should use expressions instead.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">find_matches</span><span class="p">(</span><span class="s2">&quot;answer = ___&quot;</span><span class="p">):</span>
-    <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;You assigned something to the variable `answer`&quot;</span><span class="p">,</span> <span class="s2">&quot;assigned_to_answer&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
 <p><strong>Variable Name Match</strong>: A place holder for variables, denoted by single underscores on both sides.
 Many instructor variables are allowed to map to one variable in student code,
 but each variable in student code can only map to one instructor variable.
 You can get a variable’s name via its <cite>id</cite> attribute.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">match</span> <span class="o">=</span> <span class="n">find_match</span><span class="p">(</span><span class="s2">&quot;_accumulator_ = 0&quot;</span><span class="p">)</span>
-<span class="k">if</span> <span class="n">match</span><span class="p">[</span><span class="s2">&quot;_accumulator_&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="s2">&quot;sum&quot;</span><span class="p">:</span>
-    <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;Do not name your accumulating variable `sum`, since that is a reserved word.&quot;</span><span class="p">,</span> <span class="s2">&quot;shadowed_builtin&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
 <p><strong>Subtree Expressions Match</strong>: A place holder for subtree expressions.
 An expression is denoted by a double underscore before and after the name of the expression.
 You can get the expression’s AST node name via the <cite>name</cite> attribute.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">match</span> <span class="o">=</span> <span class="n">find_match</span><span class="p">(</span><span class="s2">&quot;_accumulator_ = __initial__&quot;</span><span class="p">)</span>
-<span class="k">if</span> <span class="n">match</span><span class="p">[</span><span class="s2">&quot;__initial__&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;List&quot;</span><span class="p">:</span>
-    <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;You initialized your accumulator as a list literal.&quot;</span><span class="p">,</span> <span class="s2">&quot;initialized_accumulator&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
 </div>
 <div class="section" id="checking-execution-results">
 <h2>Checking Execution Results<a class="headerlink" href="#checking-execution-results" title="Permalink to this headline">¶</a></h2>
 <p>The <cite>Sandbox</cite> module is responsible for running student code as safely as possible,
 preventing access to the instructor control script and the grading functionality.
 Once run, you can get access to students’ final variables’ values via the <cite>data</cite> attribute:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="s1">&#39;sum&#39;</span> <span class="ow">in</span> <span class="n">student</span><span class="o">.</span><span class="n">data</span> <span class="ow">and</span> <span class="n">student</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;sum&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">47</span><span class="p">:</span>
-    <span class="n">compliment</span><span class="p">(</span><span class="s2">&quot;You have summed correctly!&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
 </div>
 <div class="section" id="calling-students-functions">
 <h2>Calling Students’ Functions<a class="headerlink" href="#calling-students-functions" title="Permalink to this headline">¶</a></h2>
 <p>You can call students’ functions and pass in arguments.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">call</span><span class="p">(</span><span class="s2">&quot;add_numbers&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
-<span class="k">if</span> <span class="n">result</span> <span class="o">==</span> <span class="mi">35</span><span class="p">:</span>
-    <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;You are multiplying instead of adding.&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
 <p>If you inspect the result of calling a student function, it will appear to be a simple Python
 value - in the case above, if the students’ code returned an integer, you could add or divide
 the result normally. However, it’s secretly a heavily-proxied wrapper object that pretends to be
@@ -365,11 +313,6 @@ which you can see in the Assertions.</p>
 <h2>Simple Assertions<a class="headerlink" href="#simple-assertions" title="Permalink to this headline">¶</a></h2>
 <p>Most instructors will already be comfortable with writing assertions, as they would with a
 unit testing framework.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.assertions</span> <span class="kn">import</span> <span class="o">*</span>
-
-<span class="n">assert_equal</span><span class="p">(</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;add&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">),</span> <span class="mi">13</span><span class="p">)</span>
-</pre></div>
-</div>
 <p>The <cite>assert_*</cite> functions have a large amount of extra machinery to produce vastly improved error messages.
 When a students’ code causes an error, the traceback will not show any instructor lines.</p>
 <div class="admonition warning">
@@ -383,54 +326,18 @@ The value of the result was:
 But I expected the result to be equal to:
     3</pre></div>
 <p>There are also some more advanced assertions:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">assert_output</span><span class="p">(</span><span class="n">call</span><span class="p">(</span><span class="s2">&quot;print_values&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span> <span class="s2">&quot;1</span><span class="se">\n</span><span class="s2">2</span><span class="se">\n</span><span class="s2">3&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
 </div>
 <div class="section" id="simple-unit-testing">
 <h2>Simple Unit Testing<a class="headerlink" href="#simple-unit-testing" title="Permalink to this headline">¶</a></h2>
 <p>Assertions are a convenient way to check an individual aspect of code, but sometimes you want to
 bundle up a series of arguments/return values.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">unit_test</span><span class="p">(</span><span class="s1">&#39;add&#39;</span><span class="p">,</span> <span class="p">[((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="mi">7</span><span class="p">),</span>
-                  <span class="p">((</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="mi">10</span><span class="p">),</span>
-                  <span class="p">((</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">),</span> <span class="o">-</span><span class="mi">6</span><span class="p">)</span>
-<span class="p">])</span>
-</pre></div>
-</div>
 <p>The results of failed tests are placed into an HTML table.</p>
 </div>
 <div class="section" id="other-assertions">
 <h2>Other Assertions<a class="headerlink" href="#other-assertions" title="Permalink to this headline">¶</a></h2>
 <p>There are many other kinds of assertions:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Ensure the function has two parameters</span>
-<span class="n">ensure_function</span><span class="p">(</span><span class="s1">&#39;add&#39;</span><span class="p">,</span> <span class="n">arity</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="c1"># Ensure the functions&#39; parameters are typed</span>
-<span class="n">ensure_function</span><span class="p">(</span><span class="s1">&#39;add&#39;</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">returns</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
-<span class="c1"># Make sure all functions are documented</span>
-<span class="n">ensure_documented_functions</span><span class="p">()</span>
-</pre></div>
-</div>
 <p>Are they not allowed to use certain operators, literals, or functions for
 this question?</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Give operations as strings</span>
-<span class="n">prevent_operation</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
-<span class="n">ensure_operation</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">)</span>
-<span class="c1"># You can limit the quantity</span>
-<span class="n">ensure_function_call</span><span class="p">(</span><span class="s2">&quot;print&quot;</span><span class="p">,</span> <span class="n">at_least</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">prevent_function_call</span><span class="p">(</span><span class="s2">&quot;print&quot;</span><span class="p">,</span> <span class="n">at_most</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
-<span class="c1"># You can check literal values</span>
-<span class="n">ensure_literal</span><span class="p">(</span><span class="mi">27</span><span class="p">)</span>
-<span class="n">prevent_literal</span><span class="p">(</span><span class="mi">29</span><span class="p">)</span>
-<span class="n">ensure_literal_type</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
-<span class="n">prevent_literal_type</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
-<span class="c1"># Or check AST nodes</span>
-<span class="n">ensure_ast</span><span class="p">(</span><span class="s2">&quot;For&quot;</span><span class="p">)</span>
-<span class="n">prevent_ast</span><span class="p">(</span><span class="s2">&quot;While&quot;</span><span class="p">)</span>
-<span class="c1"># You can statically check modules</span>
-<span class="n">ensure_import</span><span class="p">(</span><span class="s1">&#39;math&#39;</span><span class="p">)</span>
-<span class="n">prevent_import</span><span class="p">(</span><span class="s1">&#39;statistics&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
 <p>The toolkit is rich and extensive, although somewhat situational. Refer to the complete
 <a class="reference internal" href="reference.html"><span class="doc">Teacher Reference</span></a> for more information.</p>
 </div>
@@ -440,10 +347,6 @@ this question?</p>
 resolve the feedback into some output. Most environments automatically call
 the resolver, so it is not necessary to call this yourself. However, the default
 environment does not, so you would need to use the following:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.resolvers.simple</span> <span class="kn">import</span> <span class="n">resolve</span>
-<span class="n">resolve</span><span class="p">()</span>
-</pre></div>
-</div>
 </div>
 </div>
 

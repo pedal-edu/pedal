@@ -3,7 +3,7 @@
 Teacher Tutorial
 ================
 
-.. warning:: This document is out of date, please refer to the QuickStart and Reference pages for now.
+.. warning:: This document is out of date, please refer to the QuickStart and Reference pages for now!
 
 Using Pedal
 ###########

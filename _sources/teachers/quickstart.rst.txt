@@ -6,7 +6,7 @@ by detecting `Conditions` in your learners' `Submission` and providing an
 appropriate `Response`. As a grader, you just have to write the Instructor
 Control Script (or "Grading Script"). In this Quick Start Guide, we'll show you
 how you can make this happen in just a few lines of code. Once you've got the
-basics, you can check out the :doc:`tutorial` for a more in-depth coverage.
+basics, you can check out the :doc:`examples` for a more detailed examples.
 
 Command Line Usage
 ^^^^^^^^^^^^^^^^^^
@@ -47,6 +47,7 @@ prefer). If you're not using a custom environment, then you will probably
 want to run the following at the minimum:
 
 .. code:: python
+    :caption: grade_assignment.py
 
     # Always start by importing Pedal
     from pedal import *
@@ -84,6 +85,7 @@ BlockPy environment:
 Now that same instructor script from before can literally just be:
 
 .. code-block:: python
+    :caption: grade_assignment.py
 
     # Always start by importing Pedal
     from pedal import *
@@ -117,6 +119,7 @@ errors, etc. Its high-priority complement is `explain` which will totally
 supplant most other kinds of errors.
 
 .. code:: python
+    :caption: grade_assignment.py
 
     gently("You failed to solve the question correctly!",
            label="incorrect_answer", title="Wrong!")
@@ -129,6 +132,7 @@ settings.
 **Compliment**: You can give the student compliments on things that are going well.
 
 .. code:: python
+    :caption: grade_assignment.py
 
     compliment("Good use of a `for` loop!", score="+10%")
 
@@ -146,6 +150,7 @@ CAIT can also be used to declaratively identify regions of source using a Regula
 function named `find_matches` (or `find_match` to get the first result):
 
 .. code:: python
+    :caption: grade_assignment.py
 
     matches = find_matches("answer = 5")
     if matches:
@@ -159,6 +164,7 @@ It will match to any node or subtree.
 If you wish to access such data, you should use expressions instead.
 
 .. code:: python
+    :caption: grade_assignment.py
 
     if find_matches("answer = ___"):
         gently("You assigned something to the variable `answer`", "assigned_to_answer")
@@ -169,6 +175,7 @@ but each variable in student code can only map to one instructor variable.
 You can get a variable's name via its `id` attribute.
 
 .. code:: python
+    :caption: grade_assignment.py
 
     match = find_match("_accumulator_ = 0")
     if match["_accumulator_"].id == "sum":
@@ -179,6 +186,7 @@ An expression is denoted by a double underscore before and after the name of the
 You can get the expression's AST node name via the `name` attribute.
 
 .. code:: python
+    :caption: grade_assignment.py
 
     match = find_match("_accumulator_ = __initial__")
     if match["__initial__"].name == "List":
@@ -192,6 +200,7 @@ preventing access to the instructor control script and the grading functionality
 Once run, you can get access to students' final variables' values via the `data` attribute:
 
 .. code:: python
+    :caption: grade_assignment.py
 
     if 'sum' in student.data and student.data['sum'] == 47:
         compliment("You have summed correctly!")
@@ -201,7 +210,8 @@ Calling Students' Functions
 
 You can call students' functions and pass in arguments.
 
-.. code:: python
+.. code::
+    :caption: grade_assignment.py
 
     result = call("add_numbers", 5, 7)
     if result == 35:
@@ -220,6 +230,7 @@ Most instructors will already be comfortable with writing assertions, as they wo
 unit testing framework.
 
 .. code:: python
+    :caption: grade_assignment.py
 
     from pedal.assertions import *
 
@@ -244,6 +255,7 @@ When a students' code causes an error, the traceback will not show any instructo
 There are also some more advanced assertions:
 
 .. code:: python
+    :caption: grade_assignment.py
 
     assert_output(call("print_values", [1,2,3]), "1\n2\n3")
 
@@ -254,6 +266,7 @@ Assertions are a convenient way to check an individual aspect of code, but somet
 bundle up a series of arguments/return values.
 
 .. code:: python
+    :caption: grade_assignment.py
 
     unit_test('add', [((3, 4), 7),
                       ((5, 5), 10),
@@ -268,6 +281,7 @@ Other Assertions
 There are many other kinds of assertions:
 
 .. code:: python
+    :caption: grade_assignment.py
 
     # Ensure the function has two parameters
     ensure_function('add', arity=2)
@@ -282,6 +296,7 @@ Are they not allowed to use certain operators, literals, or functions for
 this question?
 
 .. code:: python
+    :caption: grade_assignment.py
 
     # Give operations as strings
     prevent_operation("/")
@@ -315,6 +330,7 @@ the resolver, so it is not necessary to call this yourself. However, the default
 environment does not, so you would need to use the following:
 
 .. code:: python
+    :caption: grade_assignment.py
 
     from pedal.resolvers.simple import resolve
     resolve()

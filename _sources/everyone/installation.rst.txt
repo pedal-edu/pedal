@@ -10,6 +10,8 @@ We have added a few *optional* dependencies that can improve the feedback
 generated. All of these dependencies should work in almost any Python
 environment, however.
 
+You should also refer to the :doc:`integrations`
+
 PyPi
 ----
 

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Teacher Reference &mdash; Pedal 1.0 documentation</title>
+  <title>Autograder Integrations &mdash; Pedal 1.0 documentation</title>
   
 
   
@@ -39,8 +39,8 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Core Commands" href="tools/core.html" />
-    <link rel="prev" title="Teacher Examples" href="examples.html" /> 
+    <link rel="next" title="Best Practices" href="practices.html" />
+    <link rel="prev" title="Sandbox" href="tools/sandbox.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -95,16 +95,15 @@
 <li class="toctree-l1"><a class="reference internal" href="../everyone/installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Teacher Quick Start Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Teacher Examples</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Teacher Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="tools/core.html">Core Commands</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tools/tifa.html">TIFA</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tools/cait.html">CAIT</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tools/source.html">Source</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tools/assertions.html">Assertions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tools/sandbox.html">Sandbox</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">Teacher Reference</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Autograder Integrations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#vpl">VPL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#gradescope">GradeScope</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#blockpy">BlockPy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#web-cat">Web-CAT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#jupyter-notebooks">Jupyter Notebooks</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="integrations.html">Autograder Integrations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="practices.html">Best Practices</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers/guide.html">Developer Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers/api.html">Developer API</a></li>
@@ -159,13 +158,13 @@
     
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
-      <li>Teacher Reference</li>
+      <li>Autograder Integrations</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../_sources/teachers/reference.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/teachers/integrations.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -178,39 +177,53 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="teacher-reference">
-<span id="quick-reference"></span><h1>Teacher Reference<a class="headerlink" href="#teacher-reference" title="Permalink to this headline">¶</a></h1>
-<p>This section describes the functions and tools available within Pedal for the
-benefit of an instructor authoring feedback. It does not attempt to exhaustively
-document all the features available - for that, you should refer to the <a class="reference internal" href="../developers/api.html#full-api"><span class="std std-ref">Developer API</span></a>.</p>
-<div class="toctree-wrapper compound">
-<p class="caption"><span class="caption-text">Contents</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="tools/core.html">Core Commands</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tools/tifa.html">TIFA</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tools/cait.html">CAIT</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="tools/cait.html#list-of-pedal-data-types">List of Pedal Data Types</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tools/cait.html#save-and-reference-variable">Save and reference variable</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tools/cait.html#reference-a-function-call">Reference a function call</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tools/cait.html#reference-a-function-definition">Reference a function definition</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tools/cait.html#subtree-matching">Subtree matching</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tools/cait.html#finding-data-types">Finding Data types</a></li>
+  <div class="section" id="autograder-integrations">
+<span id="integrations"></span><h1>Autograder Integrations<a class="headerlink" href="#autograder-integrations" title="Permalink to this headline">¶</a></h1>
+<p>Pedal is not tied to a single autograding platform, our vision is that it should be usable anywhere. This
+is largely achieved through “environments”, which can be set as command line parameters to reconfigure Pedal
+for the desired autograding platform. If you want to see a new platform, then please raise an Issue on our GitHub!</p>
+<div class="section" id="vpl">
+<h2>VPL<a class="headerlink" href="#vpl" title="Permalink to this headline">¶</a></h2>
+<p>You will need to create an instructor control script (e.g., <cite>ics.py</cite>), and upload it along with a <cite>vpl_evaluate.sh</cite> file:</p>
+<p>You should configure the assignment as follows:</p>
+<ul class="simple">
+<li><p>Include the <cite>ics.py</cite> file in the “Files to keep when running”</p></li>
+<li><p>Under “Execution Options”, enable Evaluate and Automatic Grade.</p></li>
 </ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="tools/source.html">Source</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="tools/source.html#sections">Sections</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tools/source.html#source-feedbacks">Source Feedbacks</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="tools/assertions.html">Assertions</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="tools/assertions.html#static">Static</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tools/assertions.html#runtime">Runtime</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="tools/sandbox.html">Sandbox</a></li>
+<p>When you use the VPL environment, you can expect the following:</p>
+<ul class="simple">
+<li><p>Most HTML tags are not available; only headers and preformatted text blocks are available.</p></li>
 </ul>
 </div>
-<p>tools/assertions</p>
+<div class="section" id="gradescope">
+<h2>GradeScope<a class="headerlink" href="#gradescope" title="Permalink to this headline">¶</a></h2>
+<p>You will need to create an instructor control script (e.g., <cite>ics.py</cite>) and upload it along with the following files:</p>
+<p>An example Instructor Control Script looks like this:</p>
+<p>By default, the GradeScope environment will:</p>
+<ul class="simple">
+<li><p>Run both TIFA and the student’s code (the first file it finds)</p></li>
+<li><p>Produces HTML output</p></li>
+<li><p>Will only show the highest priority feedback message, rather than all possible feedback</p></li>
+</ul>
+</div>
+<div class="section" id="blockpy">
+<h2>BlockPy<a class="headerlink" href="#blockpy" title="Permalink to this headline">¶</a></h2>
+<p>BlockPy comes preloaded with Pedal. No special configuration is required!</p>
+</div>
+<div class="section" id="web-cat">
+<h2>Web-CAT<a class="headerlink" href="#web-cat" title="Permalink to this headline">¶</a></h2>
+<p>We have not tried the latest version of Pedal on Web-CAT. However, we believe that it should be possible to install
+Pedal and have it generate appropriate documentation, based on our success with an earlier version. If you are
+interested in this effort, please check our GitHub Issues!</p>
+</div>
+<div class="section" id="jupyter-notebooks">
+<h2>Jupyter Notebooks<a class="headerlink" href="#jupyter-notebooks" title="Permalink to this headline">¶</a></h2>
+<p>Jupyter Notebook integration has been achieved, but we have not really prepared this for other people to use.
+If you are interested, then you will need to make sure that the Jupyter server preloads the Grade Magic command we
+have created. From there, you can create custom notebooks with the instructor grading code at the bottom. We wrote
+a <cite>simple extension &lt;https://github.com/acbart/jn-student-toolbar&gt;`_</cite> to hide these cells (along with
+other interface changes).</p>
+</div>
 </div>
 
 
@@ -219,8 +232,8 @@ document all the features available - for that, you should refer to the <a class
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="tools/core.html" class="btn btn-neutral float-right" title="Core Commands" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="examples.html" class="btn btn-neutral float-left" title="Teacher Examples" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="practices.html" class="btn btn-neutral float-right" title="Best Practices" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="tools/sandbox.html" class="btn btn-neutral float-left" title="Sandbox" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>
