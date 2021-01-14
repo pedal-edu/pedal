@@ -39,6 +39,8 @@ def _parse_source(code, report=MAIN_REPORT):
     """
     try:
         parsed = ast.parse(code)
+        report[TOOL_NAME]['success'] = True
+        report[TOOL_NAME]['error'] = None
     except SyntaxError as e:
         system_error(TOOL_NAME, "Could not parse code:" + str(e), report=report)
         report[TOOL_NAME]['success'] = False
