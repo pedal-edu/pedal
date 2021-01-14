@@ -362,6 +362,14 @@ Suggestion: To fix a type error, you should trace through your code. Make sure e
         student = Sandbox()
         student.run(student_code, filename='student.py')
         self.assertEqual(str(student.exception), "The filename you passed to 'open' is restricted.")
+        # Then can we turn it back on?
+        student.allow_function('open')
+        student.run(student_code, filename='student.py')
+        self.assertIsNone(student.exception)
+        # And off again
+        student.block_function('open')
+        student.run(student_code, filename='student.py')
+        self.assertEqual(str(student.exception), "You are not allowed to call 'open'.")
 
     def test_sandboxing_pedal(self):
         student_code = dedent('''
@@ -426,6 +434,12 @@ Suggestion: To fix a type error, you should trace through your code. Make sure e
         commands.run()
         x = commands.evaluate("x")
         range(x)
+        self.assertIsNone(commands.get_exception())
+
+    def test_int_requires_integer(self):
+        contextualize_report("x = '5'")
+        commands.run()
+        x = int(commands.evaluate("x"))
         self.assertIsNone(commands.get_exception())
 
     # TODO: test `import builtins` strategy to access original builtins
