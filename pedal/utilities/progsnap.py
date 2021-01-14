@@ -83,7 +83,7 @@ class SqlProgSnap2(BaseProgSnap2):
             raise ValueError(f"Unknown ProgSnap Profile specified: {profile}")
         self.profile = profile
 
-    def __init__(self, path: str, cache=False):
+    def __init__(self, path: str, cache=False, status_update=None):
         super().__init__(path)
         self._connection = sqlite3.connect(self.path)
         self._cursor = self._connection.cursor()
@@ -91,6 +91,8 @@ class SqlProgSnap2(BaseProgSnap2):
         self.cache = cache
         # To see executed queries:
         # self._connection.set_trace_callback(print)
+        if status_update:
+            self._connection.set_progress_handler(status_update, 1000)
 
     def close(self):
         self._connection.close()
@@ -110,7 +112,8 @@ class SqlProgSnap2(BaseProgSnap2):
         #                for k2, v in vs
         #                }
         #codes = tuple(sorted(event_filter.items() | flat_filters))
-        return "pedal_cache_"+hashlib.md5(query.encode('utf-8')).hexdigest()+".pickle"
+        encoded = "pedal_cache_"+hashlib.md5(query.encode('utf-8')).hexdigest()+".pickle"
+        return encoded
 
     def get_events(self, event_filter=None, link_filters=None,
                    link_selections=None, with_code=True, limit=None):
