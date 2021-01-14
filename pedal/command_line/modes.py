@@ -448,16 +448,23 @@ class VerifyPipeline(AbstractPipeline):
 
 class GradePipeline(AbstractPipeline):
     def process_output(self):
+        if self.config.output == 'stdout':
+            self.print_bundles(sys.stdout)
+        else:
+            with open(self.config.output, 'w') as output_file:
+                self.print_bundles(output_file)
+
+    def print_bundles(self, target):
         for bundle in self.submissions:
-            for bundle in self.submissions:
-                print(bundle.result.output)
-                if bundle.result.error:
-                    raise bundle.result.error
-                print(bundle.submission.instructor_file,
-                      bundle.submission.main_file,
-                      bundle.result.data['MAIN_REPORT'].result.score *
-                      bundle.result.data['MAIN_REPORT'].result.success,
-                      sep=", ")
+            print(bundle.result.output, file=target)
+            if bundle.result.error:
+                raise bundle.result.error
+            # This info is not sent to the output target, just to stdout
+            print(bundle.submission.instructor_file,
+                  bundle.submission.main_file,
+                  bundle.result.data['MAIN_REPORT'].result.score *
+                  bundle.result.data['MAIN_REPORT'].result.success,
+                  sep=", ")
 
 
 class SandboxPipeline(AbstractPipeline):
