@@ -1,6 +1,13 @@
+Version 2.3.3
+-------------
+* Fixes for Sandbox's block/allow function mocking
+* Fixing up GradeScope environment
+* Feedback's field serialization can now be overridden
+
 Version 2.3.2
 -------------
 * Add missing __index__ method to SandboxResult
+* Fix SandboxResult's __int__ to return an integer
 
 Version 2.3.1
 -------------
