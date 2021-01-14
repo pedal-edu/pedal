@@ -185,6 +185,16 @@ for the desired autograding platform. If you want to see a new platform, then pl
 <div class="section" id="vpl">
 <h2>VPL<a class="headerlink" href="#vpl" title="Permalink to this headline">¶</a></h2>
 <p>You will need to create an instructor control script (e.g., <cite>ics.py</cite>), and upload it along with a <cite>vpl_evaluate.sh</cite> file:</p>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">vpl_evaluate.sh</span><a class="headerlink" href="#id1" title="Permalink to this code">¶</a></div>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">#</span> Run the environment variable initializer to get access to its variables
+<span class="go">source ./vpl_environment.sh</span>
+<span class="go">echo &quot;#!/bin/bash&quot; &gt; vpl_execution</span>
+<span class="go">echo &quot;python3.6 -m pedal grade ics.py $VPL_SUBFILE0 --environment vpl&quot;&gt;&gt; vpl_execution</span>
+<span class="go">chmod +x vpl_execution</span>
+</pre></div>
+</div>
+</div>
 <p>You should configure the assignment as follows:</p>
 <ul class="simple">
 <li><p>Include the <cite>ics.py</cite> file in the “Files to keep when running”</p></li>
@@ -198,7 +208,42 @@ for the desired autograding platform. If you want to see a new platform, then pl
 <div class="section" id="gradescope">
 <h2>GradeScope<a class="headerlink" href="#gradescope" title="Permalink to this headline">¶</a></h2>
 <p>You will need to create an instructor control script (e.g., <cite>ics.py</cite>) and upload it along with the following files:</p>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">setup.sh</span><a class="headerlink" href="#id2" title="Permalink to this code">¶</a></div>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python3 -m pip install pedal</span>
+<span class="gp">#</span> Or use the development version of Pedal
+<span class="gp">#</span> python3 -m pip install git+git://github.com/pedal-edu/pedal.git
+<span class="gp">#</span> We also have these additional curriculum libraries available
+<span class="gp">#</span> python3 -m pip install git+git://github.com/pedal-edu/curriculum-sneks.git
+<span class="gp">#</span> python3 -m pip install git+git://github.com/pedal-edu/curriculum-ctvt.git
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">run_autograder</span><a class="headerlink" href="#id3" title="Permalink to this code">¶</a></div>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">#</span>!/usr/bin/env bash
+<span class="gp">#</span> Runs the first python file that the student submitted
+<span class="go">files=( /autograder/submission/*.py )</span>
+<span class="go">pedal grade \</span>
+<span class="go">        /autograder/source/ics.py \</span>
+<span class="go">        &quot;${files[0]}&quot; \</span>
+<span class="go">        --environment gradescope \</span>
+<span class="go">        --output &quot;/autograder/results/results.json&quot;</span>
+</pre></div>
+</div>
+</div>
 <p>An example Instructor Control Script looks like this:</p>
+<div class="literal-block-wrapper docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-text">ics.py</span><a class="headerlink" href="#id4" title="Permalink to this code">¶</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1"># Set the maximum score for the assignment here</span>
+<span class="n">set_maximum_score</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+
+<span class="c1"># ...</span>
+</pre></div>
+</div>
+</div>
 <p>By default, the GradeScope environment will:</p>
 <ul class="simple">
 <li><p>Run both TIFA and the student’s code (the first file it finds)</p></li>

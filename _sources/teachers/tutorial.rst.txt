@@ -18,7 +18,7 @@ Tools
 Source
 ^^^^^^
 
-.. code:: python
+.. code-block:: python
 
   from pedal.source import set_source
   STUDENT_CODE = "message='Hello World'\nprint(message)"
@@ -34,7 +34,7 @@ Tifa is a Type Inferencer and Flow Analyzer. Its goal is not to be a general pur
 CAIT
 ^^^^
 
-.. code:: python
+.. code-block:: python
 
     from pedal.cait import parse_program, find_matches
 
@@ -44,7 +44,7 @@ CAIT
 
     matches = find_matches("_var_ = __expr__")
 
-.. code:: python
+.. code-block:: python
 
     from pedal.source import set_source
     from pedal.cait import parse_program, find_matches
@@ -60,13 +60,13 @@ For the following explanations, source refers to the code you are trying to find
 
 `find_matches` takes regular python code, defined as "instructor code", but creates special placeholders shown below
 
-.. code:: python
+.. code-block:: python
 
     ___
 
 The triple underscore is used as a wild match card. It will match to any node or subtree. If you wish to access such data, you should use expressions instead (described further down)
 
-.. code:: python
+.. code-block:: python
 
     _var_
 
@@ -74,7 +74,7 @@ is a place holder for variables, denoted by single under scores. Many source var
 
 example:
 
-.. code:: python
+.. code-block:: python
 
     # Matcher 1
     _var1_ = _var2_/_var3_
@@ -97,14 +97,14 @@ Matcher 2 will NOT map to Source 1 and will only map to Source 2, Source 3 becau
 
 In more simple terms, if you are familiar with regular expressions, these variable markers work similarly to groupings in regular expressions. The values of the groups marked denoted by say $1 and $2 might be the exact same string internally, but are referenced by two different groups in practice. e.g. "fun,fun," can map to (.*,)(.*,), which gets to two different groups, $1 and $2.
 
-.. code:: python
+.. code-block:: python
 
     __expr__
 
 is a place holder for subtree expressions. An expression is denoted by a double underscore before and after the name of the expression. Example:
 
 
-.. code:: python
+.. code-block:: python
 
     # source 1
     summer = 0
@@ -133,7 +133,7 @@ is a place holder for subtree expressions. An expression is denoted by a double 
 
 In this example, matches would return a list of three matches, as shown above (match 1, match 2, and match 3). Note that the matcher will save these expressions for later reference (discussed below). Another special note is that unlike the variable place holder, each expression reference is expected to only be used once in any given match. The following example matcher will produce undefined behavior:
 
-.. code:: python
+.. code-block:: python
 
     # matcher 1
     matches = find_matches("for ___ in ___:\n"
@@ -143,7 +143,7 @@ In this example, matches would return a list of three matches, as shown above (m
 
 Retrieving variables, functions, and expressions is another operation supported in Cait
 
-.. code:: python
+.. code-block:: python
 
     matches = find_matches("for _item_ in ___:\n"
                            "    __expr__\n"
@@ -160,7 +160,7 @@ Retrieval of variables and functions will return an AstSymbolList, which can be 
 
 Finally, for subtree matching, you can use the `find_matches` function of the expression. When calling `find_matches` on an expression, you can perform deep searches, such as if you are looking for a specific expression in a subtree and you don't care where that expression is in that subtree. For example:
 
-.. code:: python
+.. code-block:: python
 
     # source 1
     summer = 0
@@ -195,7 +195,7 @@ supports `Feedback Condition` authoring through two mechanisms.
 
 The first major feature is `find_all`:
 
-.. code:: python
+.. code-block:: python
 
     if ast.find_all("For"):
         gently("It looks like your code is using a `for` loop; don't do that!", "used_for_loop")
@@ -205,7 +205,7 @@ You can access attributes of these nodes; we recommend you refer to the
 `GreenTreeSnakes <https://greentreesnakes.readthedocs.io/en/latest/nodes.html>`_ documentation
 for more information about what is available.
 
-.. code:: python
+.. code-block:: python
 
     loops = ast.find_all("For")
     for loop in loops:

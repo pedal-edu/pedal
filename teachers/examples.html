@@ -189,7 +189,33 @@ some random examples I grabbed from our courses.</p>
 in your code. Let Python do the calculation for you.</p>
 </div></blockquote>
 <p>Correct answer:</p>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">student.py</span><a class="headerlink" href="#id1" title="Permalink to this code">¶</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="mi">7</span><span class="o">+</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
 <p>Instructor grading code:</p>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">grade_assignment.py</span><a class="headerlink" href="#id2" title="Permalink to this code">¶</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1"># Make sure they don&#39;t embed the answer</span>
+<span class="n">prevent_literal</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="c1"># Make sure they DO use these integers</span>
+<span class="n">ensure_literal</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+<span class="n">ensure_literal</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="c1"># Make sure they print</span>
+<span class="n">ensure_function_call</span><span class="p">(</span><span class="s1">&#39;print&#39;</span><span class="p">)</span>
+<span class="c1"># Make sure they used addition operator</span>
+<span class="n">ensure_operation</span><span class="p">(</span><span class="s2">&quot;+&quot;</span><span class="p">)</span>
+<span class="c1"># Give message if they try to use strings instead of numbers</span>
+<span class="n">prevent_ast</span><span class="p">(</span><span class="s2">&quot;Str&quot;</span><span class="p">)</span>
+<span class="c1"># Check the actual output</span>
+<span class="n">assert_output</span><span class="p">(</span><span class="n">student</span><span class="p">,</span> <span class="s2">&quot;7&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
 </div>
 <div class="section" id="basic-function-call-question">
 <h2>Basic Function Call Question<a class="headerlink" href="#basic-function-call-question" title="Permalink to this headline">¶</a></h2>
@@ -204,7 +230,38 @@ roughly how much it will cost. Use the round function to
 round $9.50 to the nearest whole number.</p>
 </div></blockquote>
 <p>Student answer:</p>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">student.py</span><a class="headerlink" href="#id3" title="Permalink to this code">¶</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="mf">9.5</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
 <p>Instructor control script:</p>
+<div class="literal-block-wrapper docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-text">grade_assignment.py</span><a class="headerlink" href="#id4" title="Permalink to this code">¶</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1"># Common mistake is that students put a $ in their code</span>
+<span class="k">if</span> <span class="s2">&quot;$&quot;</span> <span class="ow">in</span> <span class="n">get_program</span><span class="p">():</span>
+    <span class="n">explain</span><span class="p">(</span><span class="s2">&quot;You should not use the dollar sign ($) anywhere in your code!&quot;</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Do Not Use Dollar Sign&quot;</span>
+            <span class="n">priority</span><span class="o">=</span><span class="s1">&#39;syntax&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;used_dollar_sign&quot;</span><span class="p">)</span>
+
+<span class="c1"># They must call the round function</span>
+<span class="n">ensure_function_call</span><span class="p">(</span><span class="s1">&#39;round&#39;</span><span class="p">)</span>
+<span class="c1"># They must call the print function</span>
+<span class="n">ensure_function_call</span><span class="p">(</span><span class="s1">&#39;print&#39;</span><span class="p">)</span>
+<span class="c1"># They must have the float value 9.5 in their code</span>
+<span class="n">ensure_literal</span><span class="p">(</span><span class="mf">9.5</span><span class="p">)</span>
+<span class="c1"># They can only have one number in their code</span>
+<span class="n">prevent_ast</span><span class="p">(</span><span class="s2">&quot;Num&quot;</span><span class="p">,</span> <span class="n">at_most</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="c1"># They cannot have any strings embedded in their code.</span>
+<span class="n">prevent_ast</span><span class="p">(</span><span class="s2">&quot;Str&quot;</span><span class="p">)</span>
+<span class="c1"># Check that the output is correct</span>
+<span class="n">assert_output</span><span class="p">(</span><span class="n">student</span><span class="p">,</span> <span class="s2">&quot;10&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
 </div>
 <div class="section" id="student-defined-function">
 <h2>Student Defined Function<a class="headerlink" href="#student-defined-function" title="Permalink to this headline">¶</a></h2>
@@ -214,12 +271,81 @@ round $9.50 to the nearest whole number.</p>
 their sum. Make sure you unit test the function a suitable number of times!</p>
 </div></blockquote>
 <p>Student Answer:</p>
+<div class="literal-block-wrapper docutils container" id="id5">
+<div class="code-block-caption"><span class="caption-text">student.py</span><a class="headerlink" href="#id5" title="Permalink to this code">¶</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">add_3</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">a</span><span class="o">+</span><span class="n">b</span><span class="o">+</span><span class="n">c</span>
+
+<span class="c1"># You might use a different unittest style!</span>
+<span class="k">assert</span> <span class="n">add_3</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="mi">6</span>
+<span class="k">assert</span> <span class="n">add_3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+<span class="k">assert</span> <span class="n">add_3</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div>
 <p>Instructor Control Script:</p>
+<div class="literal-block-wrapper docutils container" id="id6">
+<div class="code-block-caption"><span class="caption-text">grade_assignment.py</span><a class="headerlink" href="#id6" title="Permalink to this code">¶</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">ensure_function</span><span class="p">(</span><span class="s1">&#39;add_3&#39;</span><span class="p">,</span> <span class="n">arity</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="c1"># Or if you teach them to annotate their parameters/returns</span>
+<span class="c1"># ensure_function(&#39;add_3&#39;, parameters=[int,int,int], returns=int)</span>
+<span class="c1"># Did they write at least three tests?</span>
+<span class="n">ensure_function_call</span><span class="p">(</span><span class="s1">&#39;add_3&#39;</span><span class="p">,</span> <span class="n">at_least</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">ensure_ast</span><span class="p">(</span><span class="s2">&quot;Assert&quot;</span><span class="p">,</span> <span class="n">at_least</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="c1"># Use coverage module to check their code coverage</span>
+<span class="n">ensure_coverage</span><span class="p">(</span><span class="o">.</span><span class="mi">9</span><span class="p">)</span>
+<span class="c1"># Actually unit test their result</span>
+<span class="n">unit_test</span><span class="p">(</span><span class="s2">&quot;add_3&quot;</span><span class="p">,</span> <span class="p">[</span>
+    <span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="mi">6</span><span class="p">),</span>
+    <span class="p">([</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="mi">2</span><span class="p">),</span>
+    <span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">),</span>
+    <span class="p">([</span><span class="mi">7</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">10</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
+<span class="p">])</span>
+</pre></div>
+</div>
+</div>
 </div>
 <div class="section" id="complex-question">
 <h2>Complex Question<a class="headerlink" href="#complex-question" title="Permalink to this headline">¶</a></h2>
 <p>Here’s a much more sophisicated problem where they have to read open two files and mangle their contents to
 make MadLibs.</p>
+<div class="literal-block-wrapper docutils container" id="id7">
+<div class="code-block-caption"><span class="caption-text">grade_assignment.py</span><a class="headerlink" href="#id7" title="Permalink to this code">¶</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">suppress</span><span class="p">(</span><span class="s2">&quot;analyzer&quot;</span><span class="p">,</span> <span class="s2">&quot;Iterating over non-list&quot;</span><span class="p">)</span>
+<span class="n">suppress</span><span class="p">(</span><span class="s2">&quot;analyzer&quot;</span><span class="p">,</span> <span class="s2">&quot;Iterating over empty list&quot;</span><span class="p">)</span>
+
+<span class="n">words_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;words.txt&quot;</span><span class="p">)</span>
+<span class="n">story_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;story.txt&quot;</span><span class="p">)</span>
+<span class="n">words</span> <span class="o">=</span> <span class="p">[</span><span class="n">w</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">words_file</span><span class="p">]</span>
+<span class="n">story</span> <span class="o">=</span> <span class="p">[</span><span class="n">l</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">story_file</span><span class="p">]</span>
+<span class="n">correct_story</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">story</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">words</span><span class="p">:</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="s1">&#39;____&#39;</span><span class="p">)</span>
+    <span class="n">correct_story</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">get_output</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="n">find_match</span><span class="p">(</span><span class="s1">&#39;___.strip()&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">find_match</span><span class="p">(</span><span class="s1">&#39;___.replace()&#39;</span><span class="p">):</span>
+    <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;Remember! You cannot modify a string directly. Instead, you should assign the result back to the string variable.&quot;</span><span class="p">)</span>
+
+<span class="n">prevent_ast</span><span class="p">(</span><span class="s2">&quot;If&quot;</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;You do not need any &lt;code&gt;if&lt;/code&gt; statements. The &lt;code&gt;replace&lt;/code&gt; method works regardless of whether the text contains the string.&quot;</span><span class="p">)</span>
+
+<span class="n">ensure_function_call</span><span class="p">(</span><span class="s2">&quot;replace&quot;</span><span class="p">)</span>
+<span class="n">assert_output</span><span class="p">(</span><span class="n">student</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">correct_story</span><span class="p">))</span>
+<span class="n">ensure_ast</span><span class="p">(</span><span class="s2">&quot;For&quot;</span><span class="p">,</span> <span class="n">at_least</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">prevent_ast</span><span class="p">(</span><span class="s2">&quot;For&quot;</span><span class="p">,</span> <span class="n">at_most</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">prevent_function_call</span><span class="p">(</span><span class="s2">&quot;read&quot;</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;You should not use the built-in &lt;code&gt;read&lt;/code&gt; method.&quot;</span><span class="p">)</span>
+<span class="n">prevent_function_call</span><span class="p">(</span><span class="s2">&quot;readlines&quot;</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;You should not use the built-in &lt;code&gt;readlines&lt;/code&gt; method.&quot;</span><span class="p">)</span>
+
+<span class="n">stripping</span> <span class="o">=</span> <span class="n">ensure_function_call</span><span class="p">(</span><span class="s1">&#39;strip&#39;</span><span class="p">,</span> <span class="n">muted</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">unscored</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">rstripping</span> <span class="o">=</span> <span class="n">ensure_function_call</span><span class="p">(</span><span class="s1">&#39;rstrip&#39;</span><span class="p">,</span> <span class="n">muted</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">unscored</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">stripping</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">rstripping</span><span class="p">:</span>
+    <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;Make sure you are stripping the new lines before you print!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
 </div>
 <div class="section" id="large-project">
 <h2>Large Project<a class="headerlink" href="#large-project" title="Permalink to this headline">¶</a></h2>
@@ -228,6 +354,248 @@ This is Pedal version 2, however the version 3 code will look different.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>This is out of date for Pedal version 3!</p>
+</div>
+<div class="literal-block-wrapper docutils container" id="id8">
+<div class="code-block-caption"><span class="caption-text">grade_assignment.py</span><a class="headerlink" href="#id8" title="Permalink to this code">¶</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Instructor control script for Project 5- Text Adventure Beta</span>
+
+<span class="sd">@author: acbart</span>
+<span class="sd">@requires: pedal</span>
+<span class="sd">@title: Project 5- Text Adventure- Control Script</span>
+<span class="sd">@version: 4/4/2019 10:29am</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="n">__version__</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="kn">from</span> <span class="nn">pedal.resolvers.simple</span> <span class="kn">import</span> <span class="n">resolve</span>
+<span class="kn">from</span> <span class="nn">pedal</span> <span class="kn">import</span> <span class="p">(</span><span class="n">explain</span><span class="p">,</span> <span class="n">contextualize_report</span><span class="p">,</span> <span class="n">set_success</span><span class="p">,</span> <span class="n">give_partial</span><span class="p">,</span>
+                   <span class="n">compliment</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">pedal.sandbox</span> <span class="kn">import</span> <span class="n">run</span>
+<span class="kn">from</span> <span class="nn">pedal.assertions.organizers</span> <span class="kn">import</span> <span class="n">phase</span><span class="p">,</span> <span class="n">postcondition</span><span class="p">,</span> <span class="n">precondition</span>
+<span class="kn">from</span> <span class="nn">pedal.assertions.setup</span> <span class="kn">import</span> <span class="n">resolve_all</span><span class="p">,</span> <span class="n">set_assertion_mode</span>
+<span class="kn">from</span> <span class="nn">pedal.assertions.assertions</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pedal.toolkit.imports</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pedal.toolkit.utilities</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pedal.toolkit.functions</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pedal.toolkit.signatures</span> <span class="kn">import</span> <span class="n">function_signature</span>
+<span class="kn">from</span> <span class="nn">pedal.sandbox.mocked</span> <span class="kn">import</span> <span class="n">disabled_builtin</span><span class="p">,</span> <span class="n">MockPedal</span><span class="p">,</span> <span class="n">BlockedModule</span>
+<span class="kn">from</span> <span class="nn">pedal.cait</span> <span class="kn">import</span> <span class="n">parse_program</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="kn">from</span> <span class="nn">pedal.environments</span> <span class="kn">import</span> <span class="n">setup_pedal</span>
+
+<span class="n">set_assertion_mode</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">ast</span><span class="p">,</span> <span class="n">student</span><span class="p">,</span> <span class="n">resolver</span> <span class="o">=</span> <span class="n">setup_pedal</span><span class="p">(</span><span class="n">skip_tifa</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Start with some sanity checks</span>
+
+<span class="n">sanity</span> <span class="o">=</span> <span class="n">student</span><span class="o">.</span><span class="n">exception</span> <span class="ow">is</span> <span class="kc">None</span>
+
+<span class="n">assertGenerally</span><span class="p">(</span><span class="ow">not</span> <span class="n">ensure_imports</span><span class="p">(</span><span class="s1">&#39;cisc108&#39;</span><span class="p">))</span>
+
+<span class="c1"># Is there a triple quoted top-level string that starts with Records:?</span>
+<span class="c1"># All functions defined? Documented? Covered?</span>
+
+<span class="c1"># render_introduction() -&gt; string</span>
+<span class="c1"># create_world() -&gt; dict</span>
+<span class="c1"># render(world) -&gt; str</span>
+<span class="c1"># get_options(world) -&gt; list[str]</span>
+<span class="c1"># update(world, command) -&gt; str</span>
+<span class="c1"># render_ending(world) -&gt; str</span>
+<span class="c1"># choose(list[str]) -&gt; str</span>
+
+<span class="c1"># WIN_PATH</span>
+<span class="c1"># LOSE_PATH</span>
+<span class="c1"># Can we play through the given paths and win/lose/quit them?</span>
+
+<span class="n">FUNCTION_VALUE</span> <span class="o">=</span> <span class="mi">2</span>
+
+<span class="nd">@phase</span><span class="p">(</span><span class="s2">&quot;records&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">grade_records</span><span class="p">():</span>
+    <span class="n">body</span> <span class="o">=</span> <span class="n">parse_program</span><span class="p">()</span><span class="o">.</span><span class="n">body</span>
+    <span class="k">for</span> <span class="n">statement</span> <span class="ow">in</span> <span class="n">body</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">statement</span><span class="o">.</span><span class="n">ast_name</span> <span class="o">==</span> <span class="s2">&quot;Expr&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">statement</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">ast_name</span> <span class="o">==</span> <span class="s2">&quot;Str&quot;</span><span class="p">:</span>
+                <span class="n">contents</span> <span class="o">=</span> <span class="n">statement</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">s</span>
+                <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">contents</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;records:&quot;</span><span class="p">):</span>
+                        <span class="n">give_partial</span><span class="p">(</span><span class="n">FUNCTION_VALUE</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="kc">True</span>
+    <span class="n">explain</span><span class="p">(</span><span class="s2">&quot;You have not created a Records definition at the top level.&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">False</span>
+
+<span class="nd">@phase</span><span class="p">(</span><span class="s2">&quot;render_introduction&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">grade_render_introduction</span><span class="p">():</span>
+    <span class="n">assertGenerally</span><span class="p">(</span><span class="n">match_signature</span><span class="p">(</span><span class="s1">&#39;render_introduction&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="n">assertHasFunction</span><span class="p">(</span><span class="n">student</span><span class="p">,</span> <span class="s1">&#39;render_introduction&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[],</span> <span class="n">returns</span><span class="o">=</span><span class="s1">&#39;str&#39;</span><span class="p">)</span>
+    <span class="n">introduction</span> <span class="o">=</span> <span class="n">student</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;render_introduction&#39;</span><span class="p">)</span>
+    <span class="n">assertIsInstance</span><span class="p">(</span><span class="n">introduction</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+    <span class="n">give_partial</span><span class="p">(</span><span class="n">FUNCTION_VALUE</span><span class="p">)</span>
+
+<span class="nd">@phase</span><span class="p">(</span><span class="s2">&quot;create_world&quot;</span><span class="p">,</span> <span class="n">before</span><span class="o">=</span><span class="s1">&#39;create_world_components&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">grade_create_world</span><span class="p">():</span>
+    <span class="n">assertGenerally</span><span class="p">(</span><span class="n">match_signature</span><span class="p">(</span><span class="s1">&#39;create_world&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="n">assertHasFunction</span><span class="p">(</span><span class="n">student</span><span class="p">,</span> <span class="s1">&#39;create_world&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[],</span> <span class="n">returns</span><span class="o">=</span><span class="s1">&#39;World&#39;</span><span class="p">)</span>
+    <span class="n">initial_world</span> <span class="o">=</span> <span class="n">student</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;create_world&#39;</span><span class="p">)</span>
+    <span class="n">assertIsInstance</span><span class="p">(</span><span class="n">initial_world</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
+
+<span class="nd">@phase</span><span class="p">(</span><span class="s2">&quot;create_world_components&quot;</span><span class="p">,</span> <span class="n">after</span><span class="o">=</span><span class="s2">&quot;create_world&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">grade_create_world_status</span><span class="p">():</span>
+    <span class="n">initial_world</span> <span class="o">=</span> <span class="n">student</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;create_world&#39;</span><span class="p">)</span>
+    <span class="n">assertIn</span><span class="p">(</span><span class="s1">&#39;status&#39;</span><span class="p">,</span> <span class="n">initial_world</span><span class="p">)</span>
+    <span class="n">assertEqual</span><span class="p">(</span><span class="n">initial_world</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">],</span> <span class="s1">&#39;playing&#39;</span><span class="p">)</span>
+
+<span class="nd">@phase</span><span class="p">(</span><span class="s2">&quot;create_world_components&quot;</span><span class="p">,</span> <span class="n">after</span><span class="o">=</span><span class="s2">&quot;create_world&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">grade_create_world_map</span><span class="p">():</span>
+    <span class="n">initial_world</span> <span class="o">=</span> <span class="n">student</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;create_world&#39;</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s1">&#39;world&#39;</span><span class="p">)</span>
+    <span class="c1"># Map</span>
+    <span class="n">assertIn</span><span class="p">(</span><span class="s1">&#39;map&#39;</span><span class="p">,</span> <span class="n">initial_world</span><span class="p">)</span>
+    <span class="n">assertIsInstance</span><span class="p">(</span><span class="n">initial_world</span><span class="p">[</span><span class="s1">&#39;map&#39;</span><span class="p">],</span> <span class="nb">dict</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">initial_world</span><span class="p">[</span><span class="s1">&#39;map&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+    <span class="n">assertGreaterEqual</span><span class="p">(</span><span class="n">initial_world</span><span class="p">[</span><span class="s1">&#39;map&#39;</span><span class="p">],</span> <span class="mi">1</span><span class="p">,</span>
+                  <span class="n">message</span><span class="o">=</span><span class="s2">&quot;I expected there to be more than one location in your world.&quot;</span><span class="p">)</span>
+    <span class="c1"># Confirm locations</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">location</span> <span class="ow">in</span> <span class="n">initial_world</span><span class="p">[</span><span class="s1">&#39;map&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">assertIsInstance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+        <span class="n">assertIsInstance</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
+        <span class="c1"># Neighbors</span>
+        <span class="n">assertIn</span><span class="p">(</span><span class="s1">&#39;neighbors&#39;</span><span class="p">,</span> <span class="n">location</span><span class="p">)</span>
+        <span class="n">assertIsInstance</span><span class="p">(</span><span class="n">location</span><span class="p">[</span><span class="s1">&#39;neighbors&#39;</span><span class="p">],</span> <span class="nb">list</span><span class="p">)</span>
+        <span class="c1"># About</span>
+        <span class="n">assertIn</span><span class="p">(</span><span class="s1">&#39;about&#39;</span><span class="p">,</span> <span class="n">location</span><span class="p">)</span>
+        <span class="n">assertIsInstance</span><span class="p">(</span><span class="n">location</span><span class="p">[</span><span class="s1">&#39;about&#39;</span><span class="p">],</span> <span class="nb">str</span><span class="p">)</span>
+        <span class="c1"># Stuff</span>
+        <span class="n">assertIn</span><span class="p">(</span><span class="s1">&#39;stuff&#39;</span><span class="p">,</span> <span class="n">location</span><span class="p">)</span>
+        <span class="n">assertIsInstance</span><span class="p">(</span><span class="n">location</span><span class="p">[</span><span class="s1">&#39;stuff&#39;</span><span class="p">],</span> <span class="nb">list</span><span class="p">)</span>
+
+<span class="nd">@phase</span><span class="p">(</span><span class="s2">&quot;create_world_components&quot;</span><span class="p">,</span> <span class="n">after</span><span class="o">=</span><span class="s2">&quot;create_world&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">grade_create_world_player</span><span class="p">():</span>
+    <span class="n">initial_world</span> <span class="o">=</span> <span class="n">student</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;create_world&#39;</span><span class="p">)</span>
+    <span class="c1"># Player</span>
+    <span class="n">assertIn</span><span class="p">(</span><span class="s1">&#39;player&#39;</span><span class="p">,</span> <span class="n">initial_world</span><span class="p">)</span>
+    <span class="n">assertIsInstance</span><span class="p">(</span><span class="n">initial_world</span><span class="p">[</span><span class="s1">&#39;player&#39;</span><span class="p">],</span> <span class="nb">dict</span><span class="p">)</span>
+    <span class="c1"># Location</span>
+    <span class="n">assertIn</span><span class="p">(</span><span class="s1">&#39;location&#39;</span><span class="p">,</span> <span class="n">initial_world</span><span class="p">[</span><span class="s1">&#39;player&#39;</span><span class="p">])</span>
+    <span class="n">assertIsInstance</span><span class="p">(</span><span class="n">initial_world</span><span class="p">[</span><span class="s1">&#39;player&#39;</span><span class="p">][</span><span class="s1">&#39;location&#39;</span><span class="p">],</span> <span class="nb">str</span><span class="p">)</span>
+    <span class="c1"># Inventory</span>
+    <span class="n">assertIn</span><span class="p">(</span><span class="s1">&#39;location&#39;</span><span class="p">,</span> <span class="n">initial_world</span><span class="p">[</span><span class="s1">&#39;player&#39;</span><span class="p">])</span>
+    <span class="n">assertIsInstance</span><span class="p">(</span><span class="n">initial_world</span><span class="p">[</span><span class="s1">&#39;player&#39;</span><span class="p">][</span><span class="s1">&#39;inventory&#39;</span><span class="p">],</span> <span class="nb">list</span><span class="p">)</span>
+
+<span class="nd">@phase</span><span class="p">(</span><span class="s2">&quot;create_world_done&quot;</span><span class="p">,</span> <span class="n">after</span><span class="o">=</span><span class="s1">&#39;create_world_components&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">grade_create_world_finished</span><span class="p">():</span>
+    <span class="n">give_partial</span><span class="p">(</span><span class="n">FUNCTION_VALUE</span><span class="p">)</span>
+
+<span class="nd">@phase</span><span class="p">(</span><span class="s2">&quot;render&quot;</span><span class="p">,</span> <span class="n">after</span><span class="o">=</span><span class="s1">&#39;create_world_done&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">grade_render</span><span class="p">():</span>
+    <span class="n">assertGenerally</span><span class="p">(</span><span class="n">match_signature</span><span class="p">(</span><span class="s1">&#39;render&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">assertHasFunction</span><span class="p">(</span><span class="n">student</span><span class="p">,</span> <span class="s1">&#39;render&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;World&#39;</span><span class="p">],</span> <span class="n">returns</span><span class="o">=</span><span class="s1">&#39;str&#39;</span><span class="p">)</span>
+    <span class="n">initial_world</span> <span class="o">=</span> <span class="n">student</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;create_world&#39;</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s1">&#39;world&#39;</span><span class="p">)</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="n">student</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;render&#39;</span><span class="p">,</span> <span class="n">initial_world</span><span class="p">,</span> <span class="n">keep_context</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                           <span class="n">target</span><span class="o">=</span><span class="s1">&#39;message&#39;</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="s1">&#39;message = render(world)&#39;</span><span class="p">)</span>
+    <span class="n">assertIsInstance</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+    <span class="n">give_partial</span><span class="p">(</span><span class="n">FUNCTION_VALUE</span><span class="p">)</span>
+
+<span class="nd">@phase</span><span class="p">(</span><span class="s2">&quot;get_options&quot;</span><span class="p">,</span> <span class="n">after</span><span class="o">=</span><span class="s1">&#39;create_world_done&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">grade_get_options</span><span class="p">():</span>
+    <span class="n">assertGenerally</span><span class="p">(</span><span class="n">match_signature</span><span class="p">(</span><span class="s1">&#39;get_options&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">assertHasFunction</span><span class="p">(</span><span class="n">student</span><span class="p">,</span> <span class="s1">&#39;get_options&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;World&#39;</span><span class="p">],</span> <span class="n">returns</span><span class="o">=</span><span class="s1">&#39;list[str]&#39;</span><span class="p">)</span>
+    <span class="n">initial_world</span> <span class="o">=</span> <span class="n">student</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;create_world&#39;</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s1">&#39;world&#39;</span><span class="p">)</span>
+    <span class="n">options</span> <span class="o">=</span> <span class="n">student</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;get_options&#39;</span><span class="p">,</span> <span class="n">initial_world</span><span class="p">,</span> <span class="n">keep_context</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                           <span class="n">target</span><span class="o">=</span><span class="s1">&#39;options&#39;</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="s1">&#39;options = get_options(world)&#39;</span><span class="p">)</span>
+    <span class="n">assertIsInstance</span><span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
+    <span class="n">assertGreater</span><span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+                  <span class="n">message</span><span class="o">=</span><span class="s2">&quot;I expected there to be more than one option.&quot;</span><span class="p">)</span>
+    <span class="n">assertIsInstance</span><span class="p">(</span><span class="n">options</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">str</span><span class="p">)</span>
+    <span class="n">assertIn</span><span class="p">(</span><span class="s1">&#39;Quit&#39;</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
+    <span class="n">give_partial</span><span class="p">(</span><span class="n">FUNCTION_VALUE</span><span class="p">)</span>
+
+<span class="nd">@phase</span><span class="p">(</span><span class="s2">&quot;choose&quot;</span><span class="p">,</span> <span class="n">after</span><span class="o">=</span><span class="s1">&#39;get_options&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">grade_choose</span><span class="p">():</span>
+    <span class="n">assertGenerally</span><span class="p">(</span><span class="n">match_signature</span><span class="p">(</span><span class="s1">&#39;choose&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">assertHasFunction</span><span class="p">(</span><span class="n">student</span><span class="p">,</span> <span class="s1">&#39;choose&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;list[str]&#39;</span><span class="p">],</span> <span class="n">returns</span><span class="o">=</span><span class="s1">&#39;str&#39;</span><span class="p">)</span>
+    <span class="n">assertEqual</span><span class="p">(</span><span class="n">student</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;choose&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Quit&#39;</span><span class="p">,</span> <span class="s1">&#39;Run&#39;</span><span class="p">,</span> <span class="s1">&#39;Fight&#39;</span><span class="p">],</span>
+                             <span class="n">inputs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Walk&#39;</span><span class="p">,</span> <span class="s1">&#39;Skip&#39;</span><span class="p">,</span> <span class="s1">&#39;Fight&#39;</span><span class="p">]),</span>
+                <span class="s1">&#39;Fight&#39;</span><span class="p">)</span>
+    <span class="n">assertEqual</span><span class="p">(</span><span class="n">student</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;choose&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Quit&#39;</span><span class="p">,</span> <span class="s1">&#39;Run&#39;</span><span class="p">,</span> <span class="s1">&#39;Fight&#39;</span><span class="p">],</span>
+                             <span class="n">inputs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Quit&#39;</span><span class="p">]),</span>
+                <span class="s1">&#39;Quit&#39;</span><span class="p">)</span>
+    <span class="n">assertEqual</span><span class="p">(</span><span class="n">student</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;choose&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Open&#39;</span><span class="p">,</span> <span class="s1">&#39;Close&#39;</span><span class="p">,</span> <span class="s1">&#39;Sleep&#39;</span><span class="p">],</span>
+                             <span class="n">inputs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Walk&#39;</span><span class="p">,</span> <span class="s1">&#39;Walk&#39;</span><span class="p">,</span> <span class="s1">&#39;Sleep&#39;</span><span class="p">]),</span>
+                <span class="s1">&#39;Sleep&#39;</span><span class="p">)</span>
+    <span class="n">give_partial</span><span class="p">(</span><span class="n">FUNCTION_VALUE</span><span class="p">)</span>
+
+<span class="nd">@phase</span><span class="p">(</span><span class="s2">&quot;update&quot;</span><span class="p">,</span> <span class="n">after</span><span class="o">=</span><span class="s1">&#39;get_options&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">grade_update</span><span class="p">():</span>
+    <span class="n">assertGenerally</span><span class="p">(</span><span class="n">match_signature</span><span class="p">(</span><span class="s1">&#39;update&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="n">assertHasFunction</span><span class="p">(</span><span class="n">student</span><span class="p">,</span> <span class="s1">&#39;update&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;World&#39;</span><span class="p">,</span> <span class="s1">&#39;str&#39;</span><span class="p">],</span> <span class="n">returns</span><span class="o">=</span><span class="s1">&#39;str&#39;</span><span class="p">)</span>
+    <span class="n">initial_world</span> <span class="o">=</span> <span class="n">student</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;create_world&#39;</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s1">&#39;world&#39;</span><span class="p">)</span>
+    <span class="n">options</span> <span class="o">=</span> <span class="n">student</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;get_options&#39;</span><span class="p">,</span> <span class="n">initial_world</span><span class="p">,</span> <span class="n">keep_context</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                           <span class="n">target</span><span class="o">=</span><span class="s1">&#39;options&#39;</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="s1">&#39;options = get_options(world)&#39;</span><span class="p">)</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="n">student</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;update&#39;</span><span class="p">,</span> <span class="n">initial_world</span><span class="p">,</span> <span class="n">options</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">keep_context</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                           <span class="n">target</span><span class="o">=</span><span class="s1">&#39;message&#39;</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="s1">&#39;message = update(world, options[0])&#39;</span><span class="p">)</span>
+    <span class="n">assertIsInstance</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+    <span class="n">give_partial</span><span class="p">(</span><span class="n">FUNCTION_VALUE</span><span class="p">)</span>
+
+<span class="nd">@phase</span><span class="p">(</span><span class="s2">&quot;render_ending&quot;</span><span class="p">,</span> <span class="n">after</span><span class="o">=</span><span class="s1">&#39;update&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">grade_render_ending</span><span class="p">():</span>
+    <span class="n">assertGenerally</span><span class="p">(</span><span class="n">match_signature</span><span class="p">(</span><span class="s1">&#39;render_ending&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">assertHasFunction</span><span class="p">(</span><span class="n">student</span><span class="p">,</span> <span class="s1">&#39;render_ending&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;World&#39;</span><span class="p">],</span> <span class="n">returns</span><span class="o">=</span><span class="s1">&#39;str&#39;</span><span class="p">)</span>
+    <span class="n">initial_world</span> <span class="o">=</span> <span class="n">student</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;create_world&#39;</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s1">&#39;world&#39;</span><span class="p">)</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="n">student</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;update&#39;</span><span class="p">,</span> <span class="n">initial_world</span><span class="p">,</span> <span class="s1">&#39;Quit&#39;</span><span class="p">,</span> <span class="n">keep_context</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                           <span class="n">target</span><span class="o">=</span><span class="s1">&#39;message&#39;</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="s1">&#39;message = update(world, &quot;Quit&quot;)&#39;</span><span class="p">)</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="n">student</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;render_ending&#39;</span><span class="p">,</span> <span class="n">initial_world</span><span class="p">,</span> <span class="n">keep_context</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                           <span class="n">target</span><span class="o">=</span><span class="s1">&#39;message&#39;</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="s1">&#39;message = render_ending(world)&#39;</span><span class="p">)</span>
+    <span class="n">assertIsInstance</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+    <span class="n">give_partial</span><span class="p">(</span><span class="n">FUNCTION_VALUE</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">test_path</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">outcome</span><span class="p">,</span> <span class="n">path_name</span><span class="p">):</span>
+    <span class="n">world</span> <span class="o">=</span> <span class="n">student</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;create_world&#39;</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s1">&#39;world&#39;</span><span class="p">,</span> <span class="n">keep_context</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">command</span> <span class="ow">in</span> <span class="n">path</span><span class="p">:</span>
+        <span class="n">assertIn</span><span class="p">(</span><span class="s1">&#39;status&#39;</span><span class="p">,</span> <span class="n">world</span><span class="p">)</span>
+        <span class="n">assertEqual</span><span class="p">(</span><span class="n">world</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">],</span> <span class="s1">&#39;playing&#39;</span><span class="p">)</span>
+        <span class="n">assertIsInstance</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="n">student</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;render&#39;</span><span class="p">,</span> <span class="n">world</span><span class="p">,</span> <span class="n">keep_context</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                           <span class="n">target</span><span class="o">=</span><span class="s1">&#39;message&#39;</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="s1">&#39;message = render(world)&#39;</span><span class="p">)</span>
+        <span class="n">assertIsInstance</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="n">student</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;get_options&#39;</span><span class="p">,</span> <span class="n">world</span><span class="p">,</span> <span class="n">keep_context</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                           <span class="n">target</span><span class="o">=</span><span class="s1">&#39;options&#39;</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="s1">&#39;options = get_options(world)&#39;</span><span class="p">)</span>
+        <span class="n">assertIsInstance</span><span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
+        <span class="n">assertIn</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="n">student</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;update&#39;</span><span class="p">,</span> <span class="n">world</span><span class="p">,</span> <span class="n">command</span><span class="p">,</span> <span class="n">keep_context</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                           <span class="n">target</span><span class="o">=</span><span class="s1">&#39;message&#39;</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="s1">&#39;message = update(world, </span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">command</span><span class="p">))</span>
+        <span class="n">assertIsInstance</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+    <span class="n">assertEqual</span><span class="p">(</span><span class="n">world</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">outcome</span><span class="p">,</span>
+        <span class="n">message</span><span class="o">=</span><span class="s2">&quot;I tried your </span><span class="si">{path_name}</span><span class="s2"> path, but your world&#39;s status ended as &#39;</span><span class="si">{outcome}</span><span class="s2">&#39; instead of &#39;</span><span class="si">{expected}</span><span class="s2">&#39;.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path_name</span><span class="o">=</span><span class="n">path_name</span><span class="p">,</span> <span class="n">outcome</span><span class="o">=</span><span class="n">world</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">expected</span><span class="o">=</span><span class="n">outcome</span><span class="p">))</span>
+
+<span class="nd">@phase</span><span class="p">(</span><span class="s2">&quot;win_and_lose_paths&quot;</span><span class="p">,</span> <span class="n">after</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;create_world&#39;</span><span class="p">,</span> <span class="s1">&#39;get_options&#39;</span><span class="p">,</span>
+                                    <span class="s1">&#39;render&#39;</span><span class="p">,</span> <span class="s1">&#39;choose&#39;</span><span class="p">,</span> <span class="s1">&#39;update&#39;</span><span class="p">,</span>
+                                    <span class="s1">&#39;render_ending&#39;</span><span class="p">,</span> <span class="s1">&#39;render_introduction&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">grade_win_and_lose_paths</span><span class="p">():</span>
+    <span class="n">assertHas</span><span class="p">(</span><span class="n">student</span><span class="p">,</span> <span class="s2">&quot;WIN_PATH&quot;</span><span class="p">,</span> <span class="n">types</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+    <span class="n">assertHas</span><span class="p">(</span><span class="n">student</span><span class="p">,</span> <span class="s2">&quot;LOSE_PATH&quot;</span><span class="p">,</span> <span class="n">types</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+    <span class="n">student</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;render_introduction&#39;</span><span class="p">)</span>
+    <span class="n">student</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;# I am going to try your WIN_PATH&quot;</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">test_path</span><span class="p">(</span><span class="n">student</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;WIN_PATH&#39;</span><span class="p">],</span> <span class="s1">&#39;won&#39;</span><span class="p">,</span> <span class="s1">&#39;WIN_PATH&#39;</span><span class="p">)</span>
+    <span class="n">student</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;render_introduction&#39;</span><span class="p">)</span>
+    <span class="n">student</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;# I am going to try your LOSE_PATH&quot;</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">test_path</span><span class="p">(</span><span class="n">student</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;LOSE_PATH&#39;</span><span class="p">],</span> <span class="s1">&#39;lost&#39;</span><span class="p">,</span> <span class="s1">&#39;LOSE_PATH&#39;</span><span class="p">)</span>
+    <span class="n">compliment</span><span class="p">(</span><span class="s2">&quot;I was able to play your game!&quot;</span><span class="p">)</span>
+    <span class="n">give_partial</span><span class="p">(</span><span class="n">FUNCTION_VALUE</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
+
+
+<span class="nd">@phase</span><span class="p">(</span><span class="s1">&#39;conclusion&#39;</span><span class="p">,</span> <span class="n">after</span><span class="o">=</span><span class="s1">&#39;win_and_lose_paths&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">finish_grading</span><span class="p">():</span>
+    <span class="c1"># 2</span>
+    <span class="n">assertGenerally</span><span class="p">(</span><span class="n">all_documented</span><span class="p">(),</span> <span class="n">score</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">sanity</span><span class="p">:</span>
+    <span class="n">resolve_all</span><span class="p">(</span><span class="n">set_successful</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">resolver</span><span class="p">()</span>
+</pre></div>
+</div>
 </div>
 </div>
 </div>
