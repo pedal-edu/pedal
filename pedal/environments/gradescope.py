@@ -53,7 +53,7 @@ from pedal.source.sections import FeedbackSourceSection
 from pedal.tifa import tifa_analysis
 from pedal.resolvers.simple import resolve as simple_resolve, by_priority
 from pedal.resolvers.sectional import resolve as original_sectional_resolve
-from pedal.core.formatting import Formatter
+from pedal.core.formatting import Formatter, HtmlFormatter
 
 
 class GradeScopeEnvironment(Environment):
@@ -152,7 +152,7 @@ def resolve(report=MAIN_REPORT, priority_key=by_priority):
 
     dump_feedback(
         score=round(final.score*score_maximum),
-        output=final.title+"\n"+final.message,
+        output=f"<strong>{final.title}</strong><br>\n{final.message}",
         tests=tests
     )
 
@@ -204,7 +204,7 @@ def set_maximum_score(number):
     score_maximum = number
 
 
-class GradeScopeFormatter(Formatter):
+class GradeScopeFormatter(HtmlFormatter):
 
     def pre(self, text):
         return "\n".join(["    "+line for line in text.split("\n")])
