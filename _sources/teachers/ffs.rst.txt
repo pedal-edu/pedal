@@ -1,17 +1,21 @@
-Feedback Functions
-==================
-
-The most important unit of Pedal are its Feedback Functions.
-This document walks through all of the features available on a Feedback Function.
+Just the good bit of Feedback Functions
 
 
-Message
-^^^^^^^
+priority
 
-The Response to show to students.
+title
 
-Message Template
-^^^^^^^^^^^^^^^^
+message
 
-An interpolatable string, with any fields automatically injected.
-Has a lower priority than the ``message``.
+score
+
+correct
+
+muted
+
+unscored
+
+else_message
+
+activate
+

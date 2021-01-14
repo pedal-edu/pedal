@@ -1,0 +1,298 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Feedback Functions &mdash; Pedal 1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Pedal
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../everyone/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../everyone/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../teachers/quickstart.html">Teacher Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../teachers/examples.html">Teacher Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../teachers/reference.html">Teacher Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../teachers/tutorial.html">Teacher Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../teachers/practices.html">Best Practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guide.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">Developer API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="integrations.html">Developer Integrations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conventions.html">Naming Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../everyone/glossary.html">Glossary</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Pedal</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Feedback Functions</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/developers/ffs.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="feedback-functions">
+<h1>Feedback Functions<a class="headerlink" href="#feedback-functions" title="Permalink to this headline">¶</a></h1>
+<p>The most important unit of Pedal are its Feedback Functions.
+This document walks through all of the features available on a Feedback Function.</p>
+<div class="section" id="why-feedback-functions">
+<h2>Why Feedback Functions?<a class="headerlink" href="#why-feedback-functions" title="Permalink to this headline">¶</a></h2>
+<p>When we first giving automated feedback, our scripts became a pile of <code class="docutils literal notranslate"><span class="pre">if</span></code> statements
+and messages. The complex logic was very delicate, and any reordering could
+potentially break the chain. Large chunks of code were clearly representing very
+atomic ideas, and we desired more code reuse between problems. All of our analysis
+had to be ad-hoc and suffered.</p>
+<p>This led to the development of Feedback Functions, which encapsulate the detection
+of issues in student code and the desired response (a Function in the relational,
+Discrete Mathematics sense). By elevating Feedback to be a first-class object,
+we can approach the development process in a declarative, data-driven
+manner without sacrificing the power and flexibility of instructor logic.
+Not only are Feedback Functions reusable, but they are also easier to analyze.</p>
+</div>
+<div class="section" id="feedback-function-concepts">
+<h2>Feedback Function Concepts<a class="headerlink" href="#feedback-function-concepts" title="Permalink to this headline">¶</a></h2>
+<p>This section details the structure and interface of Feedback Functions.</p>
+<dl>
+<dt>Inheritance</dt><dd><p>All Feedback Functions descend from the main <cite>Feedback</cite> class. This class
+has a huge number of fields and default behavior. Many of Pedal’s Tools subclass
+the Feedback class, and Feedback Developers are encouraged to build their own hierarchy.
+Then, teachers writing their Instructor Control Scripts can call Feedback Functions
+in order to create instances of feedback, which are automatically attached to the
+Report.</p>
+</dd>
+<dt>Composition</dt><dd><p>Fundamentally, a FF is composed of the <em>condition</em>, <em>response</em>, and
+<em>metadata</em>. The condition indicates whether the FF should be active. The response
+is what should happen as a result of detecting or not detecting the condition.
+The metadata provides additional information about the FF.</p>
+</dd>
+<dt>Truthiness</dt><dd><p>When a FF is evaluated in a boolean context (e.g., as the conditional of an
+<code class="docutils literal notranslate"><span class="pre">if</span></code> statement), the FF returns whether its condition was detected.</p>
+</dd>
+<dt>Hierarchy</dt><dd><p>Any given FF can be a member of a group or be a parent to a group
+of other FFs. Groups allow FFs to be controlled as an aggregate. This is particularly
+useful for things like grouped unit tests, assignments with independent sections, or
+phases of feedback evaluation.</p>
+<p>Feedback functions also support the bitwise exclusive or (XOR) operator (the caret, <code class="docutils literal notranslate"><span class="pre">^</span></code>)
+in order to “turn off” their response based on the condition of another FF.</p>
+</dd>
+<dt>Serialization</dt><dd><p>Feedback Functions can be serialized and deserialized into JSON
+data so their results can be passed to other systems for analysis.</p>
+</dd>
+<dt>Report</dt><dd><p>Feedback Functions are expected to be attached to a report object.
+By default, they are all attached to the <cite>MAIN_REPORT</cite>. Attempting to reuse
+an instance of FF is undefined behavior.</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="the-metadata-of-feedback-functions">
+<h2>The Metadata of Feedback Functions<a class="headerlink" href="#the-metadata-of-feedback-functions" title="Permalink to this headline">¶</a></h2>
+<dl class="simple">
+<dt>Label</dt><dd><p>Every Feedback Function needs to be given a semi-unique name for
+identification. The label should be an underscore-separated string
+following the same conventions as names in Python. They do not
+have to be globally unique, but labels should be unique within a
+category or risk being treated as equivalent. Often the label will
+be the name of the underlying Python class or function that creates
+instances of that Feedback.</p>
+</dd>
+<dt>Category</dt><dd><p>An internal name for indicating the tool that created
+this feedback. Should be taken directly from the Tool itself. If <cite>None</cite>, then
+this was not created by a tool but directly by the control script.</p>
+</dd>
+</dl>
+<p>Tool</p>
+<div class="section" id="message">
+<h3>Message<a class="headerlink" href="#message" title="Permalink to this headline">¶</a></h3>
+<p>The Response to show to students.</p>
+</div>
+<div class="section" id="message-template">
+<h3>Message Template<a class="headerlink" href="#message-template" title="Permalink to this headline">¶</a></h3>
+<p>An interpolatable string, with any fields automatically injected.
+Has a lower priority than the <code class="docutils literal notranslate"><span class="pre">message</span></code>.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2018, acbart, lukesg08.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
