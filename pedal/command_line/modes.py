@@ -88,7 +88,7 @@ class Bundle:
             result=self.result.to_json()
         )
 
-    def run_ics_bundle(self, resolver='resolve', skip_tifa=False):
+    def run_ics_bundle(self, resolver='resolve', skip_tifa=False, skip_run=False):
         """
         Runs the given instructor control script on the given submission, with the
         accompany contextualizations.
@@ -102,7 +102,8 @@ class Bundle:
             env = __import__('pedal.environments.' + self.environment,
                              fromlist=[''])
             global_data.update(env.setup_environment(self.submission,
-                                                     skip_tifa=skip_tifa).fields)
+                                                     skip_tifa=skip_tifa,
+                                                     skip_run=skip_run).fields)
         else:
             MAIN_REPORT.contextualize(self.submission)
         with redirect_stdout(captured_output):
@@ -265,7 +266,9 @@ class AbstractPipeline:
 
     def run_control_scripts(self):
         for bundle in self.submissions:
-            bundle.run_ics_bundle(resolver=self.config.resolver, skip_tifa=self.config.skip_tifa)
+            bundle.run_ics_bundle(resolver=self.config.resolver,
+                                  skip_tifa=self.config.skip_tifa,
+                                  skip_run=self.config.skip_run)
 
     def process_output(self):
         for bundle in self.submissions:
@@ -306,7 +309,8 @@ class RunPipeline(AbstractPipeline):
 class StatsPipeline(AbstractPipeline):
     def run_control_scripts(self):
         for bundle in tqdm(self.submissions):
-            bundle.run_ics_bundle(resolver='stats_resolve', skip_tifa=self.config.skip_tifa)
+            bundle.run_ics_bundle(resolver='stats_resolve', skip_tifa=self.config.skip_tifa,
+                                  skip_run=self.config.skip_run)
 
     def process_output(self):
         total = 0
@@ -350,7 +354,8 @@ class PedalJSONEncoder(json.JSONEncoder):
 class VerifyPipeline(AbstractPipeline):
     def process_output(self):
         for bundle in self.submissions:
-            bundle.run_ics_bundle(resolver=self.config.resolver, skip_tifa=self.config.skip_tifa)
+            bundle.run_ics_bundle(resolver=self.config.resolver, skip_tifa=self.config.skip_tifa,
+                                  skip_run=self.config.skip_run)
             if bundle.result.error:
                 raise bundle.result.error
             # Now get the expected output

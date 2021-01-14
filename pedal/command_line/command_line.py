@@ -120,6 +120,8 @@ def parse_args(reduced_mode=False):
     # TODO: Elegant way of skipping specific, common phases
     parser.add_argument('--skip_tifa', help="Skip using TIFA in the environment",
                         default=False, action='store_true')
+    parser.add_argument('--skip_run', help="Skip automatically running student code in the environment",
+                        default=False, action='store_true')
     parser.add_argument('--progsnap_events', help="Choose what level of event"
                                                   " to capture from Progsnap event"
                                                   " logs.",
