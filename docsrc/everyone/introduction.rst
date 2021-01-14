@@ -10,22 +10,23 @@ the system spits out::
             self.assertEqual(result, 5)
     AssertionError: 7 != 5
 
-Pretty disorienting, right?
+This might be disorienting, without any other context, right?
+
 We believe that autograding feedback should be *more* than just unit tests.
 Program analysis can give us deeper insight into students' issues, and allow
 us to write more accurate feedback.
-Research has shown that many existing error messages are unhelpful - can't we
+Research has shown that many `existing error messages are unhelpful <https://dl.acm.org/doi/abs/10.1145/3344429.3372508>`_ - can't we
 provide more context, details, and pedagogically-friendly language? Our goal is
 to make it easier for instructors to write sophisticated feedback and make
 measurable progress towards helping learners.
 
 The Pedal library is a pure Python library that let's instructors create grading
 scripts that analyze a students' submission to provide custom feedback.
-Using declarative Python statement, the instructors specify conditions that should
-trigger different responses. The system chooses the most appropriate feedback
+Using declarative Python statements, the instructors specify conditions that should
+trigger feedback responses. The system chooses the most appropriate feedback
 (in addition to tracking alternatives).
 Since Pedal itself is written in Python, it is compatible with a wide range of
-autograding platforms - as long as they allow you to execute arbitrary Python code.
+:doc:`autograding platforms <integrations>` - as long as they allow you to execute arbitrary Python code.
 
 An Example
 ----------
@@ -40,13 +41,39 @@ Let's look at an example.
             total = book + books
             return total
 
-The student's code above has a number of errors - they failed to initialize a
-variable, they added the list to the iteration varaible, they returned
+The student tried to write a function to sum up a list of numbers, but
+their code has a number of errors - they failed to initialize a
+variable, they added the list to the iteration variable, they returned
 inside of a loop... There's a lot wrong here!
 Pedal could detect many of these scenarios and provide different kinds of feedback.
 
-Let's take a look a quick look at a complex Pedal script that could provide
-feedback on this code.
+Below you can see a minimalistic Instructor Control Script that, when loaded in one of our custom Environments, will
+automatically provide feedback on not only syntax and runtime errors, but also do typechecking,
+liveness checking, and several custom instructor checks.
+
+.. code-block:: python
+    :caption: Instructor Control Script
+
+    from pedal import *
+
+    # Partial credit for good progress
+    if find_asts("For"):
+        compliment("Good, you have a `for` loop!", score="+10%")
+
+    # Give feedback by finding a common problem-specific mistake
+    matches = find_matches("for _expr_ in _list_:\n"
+                           "    ___ = ____ + _list_")
+    if matches:
+        explain("You shouldn't use the list inside the for loop.",
+                label="list_inside_loop", title="List Inside Loop")
+
+    # Check they defined the function with the right type
+    ensure_function(student, 'add_prices', arity=1, returns=int)
+    # Unit test their function
+    assert_equal(call('add_prices', [1,2,3]), 6)
+
+An instructor could also grasp more control of the grading process by running without a Pedal Environment. This may
+look a little more complex, but you can see clearly all the phases of checking that a BlockPy program can do:
 
 .. code-block:: python
     :caption: Instructor Control Script

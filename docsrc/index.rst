@@ -32,7 +32,7 @@ rather than an afterthought.
     teachers/reference
     teachers/integrations
     teachers/practices
-    developers/guide
+    developers/ffs
     developers/api
     developers/tools
     developers/conventions

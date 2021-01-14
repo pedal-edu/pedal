@@ -1,5 +1,5 @@
-Naming Conventions
-==================
+Internal Naming Conventions
+===========================
 
 Labels
     Should be valid Python identifiers when possible. Treat them like

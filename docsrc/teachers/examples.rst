@@ -171,11 +171,166 @@ make MadLibs.
     prevent_function_call("read", message="You should not use the built-in <code>read</code> method.")
     prevent_function_call("readlines", message="You should not use the built-in <code>readlines</code> method.")
 
+    # Note how we can mute and unscore a feedback function
+    # Now we can use it as a check without producing feedback!
     stripping = ensure_function_call('strip', muted=True, unscored=True)
     rstripping = ensure_function_call('rstrip', muted=True, unscored=True)
     if not stripping and not rstripping:
         gently("Make sure you are stripping the new lines before you print!")
 
+
+Medium Project
+--------------
+
+The following project had students write a function to compare two string dates and determine which one
+was earlier. In order to do so, they had to complete a number of helper functions along the way.
+
+.. code-block:: python
+    :caption: grade_assignment.py
+
+    """
+    Instructor control script for Project- Dates and Times
+
+    @author: acbart
+    @requires: pedal
+    @title: Project- Dates and Times- Control Script
+    @version: 9/6/2020 12:38pm
+    """
+
+    __version__ = 1
+
+    from pedal import *
+    from curriculum_sneks import ensure_functions_return, prevent_printing_functions
+    from curriculum_sneks.tests import ensure_cisc108_tests
+
+
+    prevent_import('re', message="Using Regular Expressions would be a good idea."
+                                 " But no, you may not use them here.",
+                   label="imported_re", title="No Regular Expressions")
+    prevent_import('datetime', message="No using the built-in `datetime` module!",
+                   label="imported_datetime", title="No Datetime Module")
+    prevent_import('arrow', message="No using the fancy `arrow` module!",
+                   label="imported_arrow", title="No Arrow Module")
+    prevent_import('pandas', message="Wow, okay, no super can't use `pandas`.",
+                   label="imported_pandas", title="No Pandas")
+    ensure_import('cisc108')
+
+    prevent_ast('Try', message=" I noticed you used a Try/Except block. It's great that"
+                               " you found another way, but we'd appreciate it if you"
+                               " used this project to practice IF statements and string"
+                               " indexing.",
+                label="used_try", title="Do Not Use Try/Except")
+
+    prevent_printing_functions()
+    ensure_functions_return()
+
+    if ensure_coverage(.8, priority='lowest'):
+        compliment("Good unit test coverage so far",
+                   label="good_coverage_so_far")
+
+    ensure_function('parse_date_month', parameters=[str], returns=int)
+    ensure_function_call('parse_date_month', at_least=4,
+                         message="Write at least 4 unit tests for `parse_date_month` please.")
+    if unit_test('parse_date_month',
+                  (["1/1/2020"], 1),
+                  (["5/12/2020"], 5),
+                  (["10/9/1998"], 10),
+                  (["11/30/2010"], 11),
+                  (["10/30/15"], 10),
+                  (["01/2/05"], 1),
+                  (["12/31/9999"], 12),
+                  #(["1/32/2013"], 1),
+                  (["13/32/2013"], -1),
+                  (["13/1/2013"], -1),
+                  (["Newark, DE"], -1),
+                  (["0/0/0000"], -1),
+                 ):
+        compliment("Finished parse_date_month!", label="done_parse_date_month")
+
+
+    ensure_function('parse_date_day', parameters=[str], returns=int)
+    ensure_function_call('parse_date_day', at_least=4,
+                         message="Write at least 4 unit tests for `parse_date_day` please.")
+    if unit_test('parse_date_day',
+                  (["1/1/2020"], 1),
+                  (["5/12/2020"], 12),
+                  (["10/9/1998"], 9),
+                  (["11/30/2010"], 30),
+                  (["10/31/15"], 31),
+                  (["01/2/05"], 2),
+                  (["12/31/9999"], 31),
+                  (["13/32/2013"], -1),
+                  (["1/32/2013"], -1),
+                  (["0/0/0000"], -1),
+                  ):
+        compliment("Finished parse_date_day!", label="done_parse_date_day")
+
+    ensure_function('parse_date_year', parameters=[str], returns=int)
+    ensure_function_call('parse_date_year', at_least=4,
+                         message="Write at least 4 unit tests for `parse_date_year` please.")
+    if unit_test('parse_date_year',
+                  (["1/1/2020"], 2020),
+                  (["5/12/2021"], 2021),
+                  (["10/9/1998"], 1998),
+                  (["11/30/2010"], 2010),
+                  (["10/31/15"], 2015),
+                  (["01/2/05"], 2005),
+                  (["12/31/9999"], 9999),
+                  (["13/32/013"], -1),
+                  (["1/32/3"], -1),
+                  (["0/0/"], -1),
+                  ):
+        compliment("Finished parse_date_year!", label="done_parse_date_year")
+
+    ensure_function('is_date', parameters=[str], returns=bool)
+    ensure_function_call('is_date', at_least=4,
+                         message="Write at least 4 unit tests for `is_date` please.")
+    if unit_test('is_date',
+                  (["1/1/2020"], True),
+                  (["5/12/2020"], True),
+                  (["10/9/1998"], True),
+                  (["11/30/2010"], True),
+                  (["10/31/15"], True),
+                  (["01/2/05"], True),
+                  (["12/31/9999"], True),
+                  (["13/32/2013"], False),
+                  (["13/2/2013"], False),
+                  (["1/2/201"], False),
+                  (["1/2/3"], False),
+                  (["1/32/2013"], False),
+                  (["0/0/0000"], False),
+                  ):
+        compliment("Finished is_date!", label="done_is_date")
+
+    ensure_function('earlier', parameters=[str, str], returns=str)
+    ensure_function_call('earlier', at_least=4,
+                         message="Write at least 4 unit tests for `earlier` please.")
+    if unit_test('earlier',
+                  # Same
+                  (["1/1/2020", "1/1/2020"], "equal"),
+                  (["5/12/2020", "05/12/2020"], "equal"),
+                  (["10/9/1998", "10/9/1998"], "equal"),
+                  (["11/30/2010", "11/30/10"], "equal"),
+                  # Simple cases
+                  (["11/30/2010", "11/31/2010"], "11/30/2010"),
+                  (["11/30/2010", "11/29/2010"], "11/29/2010"),
+                  (["10/3/2020", "10/4/2020"], "10/3/2020"),
+                  (["10/3/2020", "10/2/2020"], "10/2/2020"),
+                  # Complex failures
+                  (["10/3/2020", "10/20/2020"], "10/3/2020"),
+                  (["2/2/2020", "10/10/2020"], "2/2/2020"),
+                  (["10/2/2020", "10/10/2020"], "10/2/2020"),
+                  (["12/1/2019", "1/1/2020"], "12/1/2019"),
+                  # Errors
+                  (["1/2/3", "1/32/2013"], "error"),
+                  (["1/32/2013", "1/2/3000"], "error"),
+                  (["1/2/3000", "1/32/2013"], "error")
+                  ):
+        compliment("Finished earlier!", label="done_earlier")
+
+
+    ensure_documented_functions()
+    ensure_cisc108_tests(4)
 
 Large Project
 -------------
