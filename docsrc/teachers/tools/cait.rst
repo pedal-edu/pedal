@@ -58,7 +58,7 @@ Reference a function call
 
 Reference a function definition
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.. code:: python
+.. code-block:: python
 
   match = find_match("def _my_func_():\n"
                      "    pass\n")
@@ -66,7 +66,7 @@ Reference a function definition
 
 Note that by modifying this example, you can also check to see if the function is called, e.g.
 
-.. code:: python
+.. code-block:: python
 
   match = find_match("def _my_func_():\n"
                      "    pass\n"
@@ -80,7 +80,7 @@ an ast sibling (so same indentation level as definition
 Subtree matching
 ^^^^^^^^^^^^^^^^
 
-.. code:: python
+.. code-block:: python
 
   match = find_match("for _item_ in _list_:\n"
                      "    __exp__")

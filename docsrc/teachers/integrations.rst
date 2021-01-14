@@ -13,7 +13,7 @@ VPL
 
 You will need to create an instructor control script (e.g., `ics.py`), and upload it along with a `vpl_evaluate.sh` file:
 
-.. code:: console
+.. code-block:: console
     :caption: vpl_evaluate.sh
 
     # Run the environment variable initializer to get access to its variables
@@ -36,7 +36,7 @@ GradeScope
 
 You will need to create an instructor control script (e.g., `ics.py`) and upload it along with the following files:
 
-.. code:: console
+.. code-block:: console
     :caption: setup.sh
 
     python3 -m pip install pedal
@@ -46,7 +46,7 @@ You will need to create an instructor control script (e.g., `ics.py`) and upload
     # python3 -m pip install git+git://github.com/pedal-edu/curriculum-sneks.git
     # python3 -m pip install git+git://github.com/pedal-edu/curriculum-ctvt.git
 
-.. code:: console
+.. code-block:: console
     :caption: run_autograder
 
     #!/usr/bin/env bash
@@ -60,7 +60,7 @@ You will need to create an instructor control script (e.g., `ics.py`) and upload
 
 An example Instructor Control Script looks like this:
 
-.. code:: python
+.. code-block:: python
     :caption: ics.py
 
     from pedal import *

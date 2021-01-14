@@ -16,14 +16,14 @@ but works perfectly fine on its own through the command line. For example,
 after you create a grading script named `grade_assignment.py`, you can run a
 single student submission through it to get the recommended feedback:
 
-.. code:: console
+.. code-block:: console
 
     $> pedal feedback grade_assignment.py student_submission.py
     You created a variable on line 3 named `sum`, but never ended up using it.
 
 Or you could regrade a folder of student submissions:
 
-.. code:: console
+.. code-block:: console
 
     $> ls submissions/
     Ada Bart.py
@@ -46,7 +46,7 @@ script. This is our Instructor Control Script (or a "grading script", if you
 prefer). If you're not using a custom environment, then you will probably
 want to run the following at the minimum:
 
-.. code:: python
+.. code-block:: python
     :caption: grade_assignment.py
 
     # Always start by importing Pedal
@@ -78,7 +78,7 @@ command line arguments, or an autograding platform can provide them automaticall
 For example, let's say we ran the following on the command line to emulate the
 BlockPy environment:
 
-.. code:: console
+.. code-block:: console
 
     $> pedal feedback grade_assignment.py student_submission.py --environment blockpy
 
@@ -118,7 +118,7 @@ Resolvers will prioritize this feedback lower than runtime errors, syntax
 errors, etc. Its high-priority complement is `explain` which will totally
 supplant most other kinds of errors.
 
-.. code:: python
+.. code-block:: python
     :caption: grade_assignment.py
 
     gently("You failed to solve the question correctly!",
@@ -131,7 +131,7 @@ settings.
 
 **Compliment**: You can give the student compliments on things that are going well.
 
-.. code:: python
+.. code-block:: python
     :caption: grade_assignment.py
 
     compliment("Good use of a `for` loop!", score="+10%")
@@ -149,7 +149,7 @@ Finding AST Patterns
 CAIT can also be used to declaratively identify regions of source using a Regular-expression style
 function named `find_matches` (or `find_match` to get the first result):
 
-.. code:: python
+.. code-block:: python
     :caption: grade_assignment.py
 
     matches = find_matches("answer = 5")
@@ -163,7 +163,7 @@ identifiers in the learners' code.
 It will match to any node or subtree.
 If you wish to access such data, you should use expressions instead.
 
-.. code:: python
+.. code-block:: python
     :caption: grade_assignment.py
 
     if find_matches("answer = ___"):
@@ -174,7 +174,7 @@ Many instructor variables are allowed to map to one variable in student code,
 but each variable in student code can only map to one instructor variable.
 You can get a variable's name via its `id` attribute.
 
-.. code:: python
+.. code-block:: python
     :caption: grade_assignment.py
 
     match = find_match("_accumulator_ = 0")
@@ -185,7 +185,7 @@ You can get a variable's name via its `id` attribute.
 An expression is denoted by a double underscore before and after the name of the expression.
 You can get the expression's AST node name via the `name` attribute.
 
-.. code:: python
+.. code-block:: python
     :caption: grade_assignment.py
 
     match = find_match("_accumulator_ = __initial__")
@@ -199,7 +199,7 @@ The `Sandbox` module is responsible for running student code as safely as possib
 preventing access to the instructor control script and the grading functionality.
 Once run, you can get access to students' final variables' values via the `data` attribute:
 
-.. code:: python
+.. code-block:: python
     :caption: grade_assignment.py
 
     if 'sum' in student.data and student.data['sum'] == 47:
@@ -210,7 +210,7 @@ Calling Students' Functions
 
 You can call students' functions and pass in arguments.
 
-.. code::
+.. code-block::
     :caption: grade_assignment.py
 
     result = call("add_numbers", 5, 7)
@@ -229,7 +229,7 @@ Simple Assertions
 Most instructors will already be comfortable with writing assertions, as they would with a
 unit testing framework.
 
-.. code:: python
+.. code-block:: python
     :caption: grade_assignment.py
 
     from pedal.assertions import *
@@ -254,7 +254,7 @@ When a students' code causes an error, the traceback will not show any instructo
 
 There are also some more advanced assertions:
 
-.. code:: python
+.. code-block:: python
     :caption: grade_assignment.py
 
     assert_output(call("print_values", [1,2,3]), "1\n2\n3")
@@ -265,7 +265,7 @@ Simple Unit Testing
 Assertions are a convenient way to check an individual aspect of code, but sometimes you want to
 bundle up a series of arguments/return values.
 
-.. code:: python
+.. code-block:: python
     :caption: grade_assignment.py
 
     unit_test('add', [((3, 4), 7),
@@ -280,7 +280,7 @@ Other Assertions
 
 There are many other kinds of assertions:
 
-.. code:: python
+.. code-block:: python
     :caption: grade_assignment.py
 
     # Ensure the function has two parameters
@@ -295,7 +295,7 @@ There are many other kinds of assertions:
 Are they not allowed to use certain operators, literals, or functions for
 this question?
 
-.. code:: python
+.. code-block:: python
     :caption: grade_assignment.py
 
     # Give operations as strings
@@ -329,7 +329,7 @@ resolve the feedback into some output. Most environments automatically call
 the resolver, so it is not necessary to call this yourself. However, the default
 environment does not, so you would need to use the following:
 
-.. code:: python
+.. code-block:: python
     :caption: grade_assignment.py
 
     from pedal.resolvers.simple import resolve

@@ -7,7 +7,7 @@ Typically, your environment will handle running the Sandbox for you. Sometimes, 
 the students' code using Pedal in favor of its own execution environment. However, they evaluate the students'
 code, most environments will provide a `student` variable that holds information about the executed code.
 
-.. code:: python
+.. code-block:: python
 
     from pedal.sandbox import run
 
