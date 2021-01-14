@@ -70,6 +70,7 @@ def disabled_builtin(name):
     return _disabled_version
 
 
+# TODO: This needs to be a field in the Sandbox object's data
 _OPEN_FORBIDDEN_NAMES = re.compile(r"(^[./])|(\.py$)")
 _OPEN_FORBIDDEN_MODES = re.compile(r"[wa+]")
 
@@ -355,6 +356,12 @@ class MockPlt(MockModule):
         self.active_plot['data'].append({'type': 'scatter', 'x': xs,
                                          'y': ys, 'label': label})
 
+    def bar(self, xs, ys, **kwargs):
+        """ Make a scatter plot """
+        label = kwargs.get('label', None)
+        self.active_plot['data'].append({'type': 'bar', 'x': xs,
+                                         'y': ys, 'label': label})
+
     def xlabel(self, label, **kwargs):
         """ Label the x-axis """
         self.active_plot['xlabel'] = label
@@ -380,6 +387,7 @@ class MockPlt(MockModule):
             """ This function does nothing. """
 
         return dict(hist=self.hist, plot=self.plot,
+                    bar=self.bar,
                     scatter=self.scatter, show=self.show,
                     xlabel=self.xlabel, ylabel=self.ylabel,
                     title=self.title, legend=self.legend,

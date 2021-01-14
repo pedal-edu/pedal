@@ -5,6 +5,8 @@ as possible.
 
 # This module provides a version of ``len`` that handles SandboxResult
 #   correctly, requiring us to hold a reference to the original ``len``.
+import math
+
 _original_len = len
 
 
@@ -340,7 +342,9 @@ class SandboxResult:
         return self._clone_this_result(self.value.__complex__())
 
     def __int__(self):
-        return self._clone_this_result(self.value.__int__())
+        return int(self.value)
+        #return self._clone_this_result(int(self.value))
+        #return self._clone_this_result(self.value.__int__())
 
     def __float__(self):
         return self._clone_this_result(self.value.__float__())
@@ -349,7 +353,7 @@ class SandboxResult:
         return self._clone_this_result(self.value.__round__(*ndigits))
 
     def __trunc__(self):
-        return self._clone_this_result(self.value.__trunc__())
+        return math.truncate(self.value)
 
     def __floor__(self):
         return self._clone_this_result(self.value.__floor__())
