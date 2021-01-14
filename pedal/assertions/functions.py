@@ -18,8 +18,8 @@ class missing_function(AssertionFeedback):
 class duplicate_function_definition(AssertionFeedback):
     """ Unconditionally assert that the function is redefined somewhere. """
     title = "Duplicate Function Definition"
-    message_template = ("The function {name_message} was defined on lines "
-                        "{lines_message}.")
+    message_template = ("The function {name_message} was defined multiple times, "
+                        "on lines {lines_message}.")
 
     def __init__(self, name, lines, **kwargs):
         report = kwargs.get("report", MAIN_REPORT)
@@ -29,7 +29,7 @@ class duplicate_function_definition(AssertionFeedback):
         lines_message = ", ".join(str(line) for line in lines[:-1])
         lines_message += " and " + str(lines[-1])
         fields['lines'] = lines
-        fields['lines_message'] = report.format.name(name)
+        fields['lines_message'] = lines
         super().__init__(fields=fields, **kwargs)
 
 
