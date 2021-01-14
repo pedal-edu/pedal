@@ -72,7 +72,7 @@ class GradeScopeEnvironment(Environment):
         self.skip_run = skip_run
         self.skip_tifa = skip_tifa
         self.trace = trace
-        report.set_formatter(GradeScopeFormatter(report))
+        report.set_formatter(HtmlFormatter(report))
         verify(report=self.report)
         if not skip_tifa:
             tifa_analysis(report=self.report)
@@ -205,9 +205,6 @@ def set_maximum_score(number):
 
 
 class GradeScopeFormatter(HtmlFormatter):
-
-    def pre(self, text):
-        return "\n".join(["    "+line for line in text.split("\n")])
 
     def python_code(self, code):
         return self.pre(code)
