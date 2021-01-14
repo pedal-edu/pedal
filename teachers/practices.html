@@ -39,7 +39,7 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Developer Guide" href="../developers/guide.html" />
+    <link rel="next" title="Feedback Functions" href="../developers/ffs.html" />
     <link rel="prev" title="Autograder Integrations" href="integrations.html" /> 
 </head>
 
@@ -98,13 +98,14 @@
 <li class="toctree-l1"><a class="reference internal" href="reference.html">Teacher Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="integrations.html">Autograder Integrations</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Best Practices</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#documentening-feedback">Documentening Feedback</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#documenting-feedback">Documenting Feedback</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#use-novice-friendly-language">Use Novice-Friendly Language</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../developers/guide.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers/ffs.html">Feedback Functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers/api.html">Developer API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developers/tools.html">Tools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developers/conventions.html">Naming Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers/tools.html">Developer Tools Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers/conventions.html">Internal Naming Conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../everyone/glossary.html">Glossary</a></li>
 </ul>
 
@@ -177,12 +178,31 @@
 <h1>Best Practices<a class="headerlink" href="#best-practices" title="Permalink to this headline">¶</a></h1>
 <p>This document attempts to summarize our positions on the best practices
 for using Pedal.</p>
-<div class="section" id="documentening-feedback">
-<h2>Documentening Feedback<a class="headerlink" href="#documentening-feedback" title="Permalink to this headline">¶</a></h2>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>We aren’t quite ready with this page yet, sorry!</p>
+</div>
+<div class="section" id="documenting-feedback">
+<h2>Documenting Feedback<a class="headerlink" href="#documenting-feedback" title="Permalink to this headline">¶</a></h2>
 <p><strong>Provide as much metadata about feedback as you can.</strong></p>
-<p>When creating any piece of feedback, there are a lot of fields you can use.</p>
-<p>The most critical one is <code class="docutils literal notranslate"><span class="pre">label</span></code>:</p>
+<p>When creating any piece of feedback, there are a lot of fields you can use. A particularly critical one is <code class="docutils literal notranslate"><span class="pre">label</span></code>, since
+that will allow you to track usages of a piece of feedback:</p>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">grade_assignment.py</span><a class="headerlink" href="#id1" title="Permalink to this code">¶</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">gently</span><span class="p">(</span><span class="s2">&quot;The output is wrong!&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;wrong_output&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
 <p>If possible, you can also label the condition category and response kind:</p>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">grade_assignment.py</span><a class="headerlink" href="#id2" title="Permalink to this code">¶</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">gently</span><span class="p">(</span><span class="s2">&quot;Try to avoid type errors.&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="s1">&#39;runtime&#39;</span><span class="p">,</span> <span class="n">response</span><span class="o">=</span><span class="s1">&#39;hint&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="use-novice-friendly-language">
+<h2>Use Novice-Friendly Language<a class="headerlink" href="#use-novice-friendly-language" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -192,7 +212,7 @@ for using Pedal.</p>
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="../developers/guide.html" class="btn btn-neutral float-right" title="Developer Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../developers/ffs.html" class="btn btn-neutral float-right" title="Feedback Functions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
         <a href="integrations.html" class="btn btn-neutral float-left" title="Autograder Integrations" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 

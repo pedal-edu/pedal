@@ -11,7 +11,7 @@ basics, you can check out the :doc:`examples` for a more detailed examples.
 Command Line Usage
 ^^^^^^^^^^^^^^^^^^
 
-Pedal is meant to be integrated into existing autograders (see integrations),
+Pedal is meant to be integrated into existing autograders (see :ref:`integrations`),
 but works perfectly fine on its own through the command line. For example,
 after you create a grading script named `grade_assignment.py`, you can run a
 single student submission through it to get the recommended feedback:
@@ -268,9 +268,10 @@ bundle up a series of arguments/return values.
 .. code-block:: python
     :caption: grade_assignment.py
 
-    unit_test('add', [((3, 4), 7),
-                      ((5, 5), 10),
-                      ((-3, -3), -6)
+    unit_test('add', [
+        ((3, 4), 7),
+        ((5, 5), 10),
+        ((-3, -3), -6)
     ])
 
 The results of failed tests are placed into an HTML table.
@@ -334,3 +335,19 @@ environment does not, so you would need to use the following:
 
     from pedal.resolvers.simple import resolve
     resolve()
+
+There are many ways that a resolver could choose among pieces of collected feedback.
+The default resolver prioritizes things as follows:
+
+* Highest priority is any feedback given the `'highest'` priority explicitly
+* Next up are syntax errors
+* Then any custom Instructor feedback (e.g., forbidding `for` loops)
+* Then TIFA's algorithmic feedback (e.g., unused variables, incompatible type operations)
+* Any Runtime errors
+* Any feedback that is given through `gently`
+* Finally, any feedback given the `'lowest'` priority explicitly
+
+If no issues are detected, then by default the resolver will mark the submission as correct.
+Other custom resolvers can behave differently, and ultimately might want to show more than one
+piece of feedback, or not default to marking the submission as correct. However, we have found
+this default resolver to be largely effective (anecdotally).

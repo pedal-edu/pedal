@@ -102,10 +102,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../teachers/reference.html">Teacher Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../teachers/integrations.html">Autograder Integrations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../teachers/practices.html">Best Practices</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developers/guide.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers/ffs.html">Feedback Functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers/api.html">Developer API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developers/tools.html">Tools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developers/conventions.html">Naming Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers/tools.html">Developer Tools Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers/conventions.html">Internal Naming Conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
 </ul>
 
@@ -185,21 +185,21 @@ the system spits out:</p>
 <span class="ne">AssertionError</span><span class="p">:</span> <span class="mi">7</span> <span class="o">!=</span> <span class="mi">5</span>
 </pre></div>
 </div>
-<p>Pretty disorienting, right?
-We believe that autograding feedback should be <em>more</em> than just unit tests.
+<p>This might be disorienting, without any other context, right?</p>
+<p>We believe that autograding feedback should be <em>more</em> than just unit tests.
 Program analysis can give us deeper insight into students’ issues, and allow
 us to write more accurate feedback.
-Research has shown that many existing error messages are unhelpful - can’t we
+Research has shown that many <a class="reference external" href="https://dl.acm.org/doi/abs/10.1145/3344429.3372508">existing error messages are unhelpful</a> - can’t we
 provide more context, details, and pedagogically-friendly language? Our goal is
 to make it easier for instructors to write sophisticated feedback and make
 measurable progress towards helping learners.</p>
 <p>The Pedal library is a pure Python library that let’s instructors create grading
 scripts that analyze a students’ submission to provide custom feedback.
-Using declarative Python statement, the instructors specify conditions that should
-trigger different responses. The system chooses the most appropriate feedback
+Using declarative Python statements, the instructors specify conditions that should
+trigger feedback responses. The system chooses the most appropriate feedback
 (in addition to tracking alternatives).
 Since Pedal itself is written in Python, it is compatible with a wide range of
-autograding platforms - as long as they allow you to execute arbitrary Python code.</p>
+<span class="xref std std-doc">autograding platforms</span> - as long as they allow you to execute arbitrary Python code.</p>
 <div class="section" id="an-example">
 <h2>An Example<a class="headerlink" href="#an-example" title="Permalink to this headline">¶</a></h2>
 <p>Let’s look at an example.</p>
@@ -212,14 +212,40 @@ autograding platforms - as long as they allow you to execute arbitrary Python co
 </pre></div>
 </div>
 </div>
-<p>The student’s code above has a number of errors - they failed to initialize a
-variable, they added the list to the iteration varaible, they returned
+<p>The student tried to write a function to sum up a list of numbers, but
+their code has a number of errors - they failed to initialize a
+variable, they added the list to the iteration variable, they returned
 inside of a loop… There’s a lot wrong here!
 Pedal could detect many of these scenarios and provide different kinds of feedback.</p>
-<p>Let’s take a look a quick look at a complex Pedal script that could provide
-feedback on this code.</p>
+<p>Below you can see a minimalistic Instructor Control Script that, when loaded in one of our custom Environments, will
+automatically provide feedback on not only syntax and runtime errors, but also do typechecking,
+liveness checking, and several custom instructor checks.</p>
 <div class="literal-block-wrapper docutils container" id="id2">
 <div class="code-block-caption"><span class="caption-text">Instructor Control Script</span><a class="headerlink" href="#id2" title="Permalink to this code">¶</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1"># Partial credit for good progress</span>
+<span class="k">if</span> <span class="n">find_asts</span><span class="p">(</span><span class="s2">&quot;For&quot;</span><span class="p">):</span>
+    <span class="n">compliment</span><span class="p">(</span><span class="s2">&quot;Good, you have a `for` loop!&quot;</span><span class="p">,</span> <span class="n">score</span><span class="o">=</span><span class="s2">&quot;+10%&quot;</span><span class="p">)</span>
+
+<span class="c1"># Give feedback by finding a common problem-specific mistake</span>
+<span class="n">matches</span> <span class="o">=</span> <span class="n">find_matches</span><span class="p">(</span><span class="s2">&quot;for _expr_ in _list_:</span><span class="se">\n</span><span class="s2">&quot;</span>
+                       <span class="s2">&quot;    ___ = ____ + _list_&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">matches</span><span class="p">:</span>
+    <span class="n">explain</span><span class="p">(</span><span class="s2">&quot;You shouldn&#39;t use the list inside the for loop.&quot;</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="s2">&quot;list_inside_loop&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;List Inside Loop&quot;</span><span class="p">)</span>
+
+<span class="c1"># Check they defined the function with the right type</span>
+<span class="n">ensure_function</span><span class="p">(</span><span class="n">student</span><span class="p">,</span> <span class="s1">&#39;add_prices&#39;</span><span class="p">,</span> <span class="n">arity</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">returns</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+<span class="c1"># Unit test their function</span>
+<span class="n">assert_equal</span><span class="p">(</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;add_prices&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span> <span class="mi">6</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>An instructor could also grasp more control of the grading process by running without a Pedal Environment. This may
+look a little more complex, but you can see clearly all the phases of checking that a BlockPy program can do:</p>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">Instructor Control Script</span><a class="headerlink" href="#id3" title="Permalink to this code">¶</a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="c1"># Check for syntax errors</span>

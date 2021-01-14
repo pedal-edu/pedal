@@ -73,8 +73,10 @@ An example Instructor Control Script looks like this:
 By default, the GradeScope environment will:
 
 * Run both TIFA and the student's code (the first file it finds)
-* Produces HTML output
-* Will only show the highest priority feedback message, rather than all possible feedback
+* Produce HTML output
+* Only show the highest priority feedback message, rather than all possible feedback
+
+.. image:: ../_static/gradescope_example.png
 
 BlockPy
 -------

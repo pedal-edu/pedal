@@ -79,6 +79,7 @@ Category
     this was not created by a tool but directly by the control script.
 
 Tool
+    What Tool was responsible for creating this feedback function.
 
 Message
 ^^^^^^^

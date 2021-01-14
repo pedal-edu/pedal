@@ -111,10 +111,10 @@
 <li class="toctree-l1"><a class="reference internal" href="reference.html">Teacher Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="integrations.html">Autograder Integrations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="practices.html">Best Practices</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developers/guide.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers/ffs.html">Feedback Functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers/api.html">Developer API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developers/tools.html">Tools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developers/conventions.html">Naming Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers/tools.html">Developer Tools Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers/conventions.html">Internal Naming Conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../everyone/glossary.html">Glossary</a></li>
 </ul>
 
@@ -193,7 +193,7 @@ how you can make this happen in just a few lines of code. Once you’ve got the
 basics, you can check out the <a class="reference internal" href="examples.html"><span class="doc">Teacher Examples</span></a> for a more detailed examples.</p>
 <div class="section" id="command-line-usage">
 <h2>Command Line Usage<a class="headerlink" href="#command-line-usage" title="Permalink to this headline">¶</a></h2>
-<p>Pedal is meant to be integrated into existing autograders (see integrations),
+<p>Pedal is meant to be integrated into existing autograders (see <a class="reference internal" href="integrations.html#integrations"><span class="std std-ref">Autograder Integrations</span></a>),
 but works perfectly fine on its own through the command line. For example,
 after you create a grading script named <cite>grade_assignment.py</cite>, you can run a
 single student submission through it to get the recommended feedback:</p>
@@ -428,9 +428,10 @@ But I expected the result to be equal to:
 bundle up a series of arguments/return values.</p>
 <div class="literal-block-wrapper docutils container" id="id13">
 <div class="code-block-caption"><span class="caption-text">grade_assignment.py</span><a class="headerlink" href="#id13" title="Permalink to this code">¶</a></div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">unit_test</span><span class="p">(</span><span class="s1">&#39;add&#39;</span><span class="p">,</span> <span class="p">[((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="mi">7</span><span class="p">),</span>
-                  <span class="p">((</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="mi">10</span><span class="p">),</span>
-                  <span class="p">((</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">),</span> <span class="o">-</span><span class="mi">6</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">unit_test</span><span class="p">(</span><span class="s1">&#39;add&#39;</span><span class="p">,</span> <span class="p">[</span>
+    <span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="mi">7</span><span class="p">),</span>
+    <span class="p">((</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="mi">10</span><span class="p">),</span>
+    <span class="p">((</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">),</span> <span class="o">-</span><span class="mi">6</span><span class="p">)</span>
 <span class="p">])</span>
 </pre></div>
 </div>
@@ -491,6 +492,21 @@ environment does not, so you would need to use the following:</p>
 </pre></div>
 </div>
 </div>
+<p>There are many ways that a resolver could choose among pieces of collected feedback.
+The default resolver prioritizes things as follows:</p>
+<ul class="simple">
+<li><p>Highest priority is any feedback given the <cite>‘highest’</cite> priority explicitly</p></li>
+<li><p>Next up are syntax errors</p></li>
+<li><p>Then any custom Instructor feedback (e.g., forbidding <cite>for</cite> loops)</p></li>
+<li><p>Then TIFA’s algorithmic feedback (e.g., unused variables, incompatible type operations)</p></li>
+<li><p>Any Runtime errors</p></li>
+<li><p>Any feedback that is given through <cite>gently</cite></p></li>
+<li><p>Finally, any feedback given the <cite>‘lowest’</cite> priority explicitly</p></li>
+</ul>
+<p>If no issues are detected, then by default the resolver will mark the submission as correct.
+Other custom resolvers can behave differently, and ultimately might want to show more than one
+piece of feedback, or not default to marking the submission as correct. However, we have found
+this default resolver to be largely effective (anecdotally).</p>
 </div>
 </div>
 

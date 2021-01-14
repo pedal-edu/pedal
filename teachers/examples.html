@@ -99,16 +99,17 @@
 <li class="toctree-l2"><a class="reference internal" href="#basic-function-call-question">Basic Function Call Question</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#student-defined-function">Student Defined Function</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#complex-question">Complex Question</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#medium-project">Medium Project</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#large-project">Large Project</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="reference.html">Teacher Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="integrations.html">Autograder Integrations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="practices.html">Best Practices</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developers/guide.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers/ffs.html">Feedback Functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers/api.html">Developer API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developers/tools.html">Tools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developers/conventions.html">Naming Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers/tools.html">Developer Tools Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers/conventions.html">Internal Naming Conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../everyone/glossary.html">Glossary</a></li>
 </ul>
 
@@ -339,10 +340,165 @@ make MadLibs.</p>
 <span class="n">prevent_function_call</span><span class="p">(</span><span class="s2">&quot;read&quot;</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;You should not use the built-in &lt;code&gt;read&lt;/code&gt; method.&quot;</span><span class="p">)</span>
 <span class="n">prevent_function_call</span><span class="p">(</span><span class="s2">&quot;readlines&quot;</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;You should not use the built-in &lt;code&gt;readlines&lt;/code&gt; method.&quot;</span><span class="p">)</span>
 
+<span class="c1"># Note how we can mute and unscore a feedback function</span>
+<span class="c1"># Now we can use it as a check without producing feedback!</span>
 <span class="n">stripping</span> <span class="o">=</span> <span class="n">ensure_function_call</span><span class="p">(</span><span class="s1">&#39;strip&#39;</span><span class="p">,</span> <span class="n">muted</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">unscored</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">rstripping</span> <span class="o">=</span> <span class="n">ensure_function_call</span><span class="p">(</span><span class="s1">&#39;rstrip&#39;</span><span class="p">,</span> <span class="n">muted</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">unscored</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">if</span> <span class="ow">not</span> <span class="n">stripping</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">rstripping</span><span class="p">:</span>
     <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;Make sure you are stripping the new lines before you print!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="medium-project">
+<h2>Medium Project<a class="headerlink" href="#medium-project" title="Permalink to this headline">¶</a></h2>
+<p>The following project had students write a function to compare two string dates and determine which one
+was earlier. In order to do so, they had to complete a number of helper functions along the way.</p>
+<div class="literal-block-wrapper docutils container" id="id8">
+<div class="code-block-caption"><span class="caption-text">grade_assignment.py</span><a class="headerlink" href="#id8" title="Permalink to this code">¶</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Instructor control script for Project- Dates and Times</span>
+
+<span class="sd">@author: acbart</span>
+<span class="sd">@requires: pedal</span>
+<span class="sd">@title: Project- Dates and Times- Control Script</span>
+<span class="sd">@version: 9/6/2020 12:38pm</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">__version__</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="kn">from</span> <span class="nn">pedal</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">curriculum_sneks</span> <span class="kn">import</span> <span class="n">ensure_functions_return</span><span class="p">,</span> <span class="n">prevent_printing_functions</span>
+<span class="kn">from</span> <span class="nn">curriculum_sneks.tests</span> <span class="kn">import</span> <span class="n">ensure_cisc108_tests</span>
+
+
+<span class="n">prevent_import</span><span class="p">(</span><span class="s1">&#39;re&#39;</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Using Regular Expressions would be a good idea.&quot;</span>
+                             <span class="s2">&quot; But no, you may not use them here.&quot;</span><span class="p">,</span>
+               <span class="n">label</span><span class="o">=</span><span class="s2">&quot;imported_re&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;No Regular Expressions&quot;</span><span class="p">)</span>
+<span class="n">prevent_import</span><span class="p">(</span><span class="s1">&#39;datetime&#39;</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;No using the built-in `datetime` module!&quot;</span><span class="p">,</span>
+               <span class="n">label</span><span class="o">=</span><span class="s2">&quot;imported_datetime&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;No Datetime Module&quot;</span><span class="p">)</span>
+<span class="n">prevent_import</span><span class="p">(</span><span class="s1">&#39;arrow&#39;</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;No using the fancy `arrow` module!&quot;</span><span class="p">,</span>
+               <span class="n">label</span><span class="o">=</span><span class="s2">&quot;imported_arrow&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;No Arrow Module&quot;</span><span class="p">)</span>
+<span class="n">prevent_import</span><span class="p">(</span><span class="s1">&#39;pandas&#39;</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Wow, okay, no super can&#39;t use `pandas`.&quot;</span><span class="p">,</span>
+               <span class="n">label</span><span class="o">=</span><span class="s2">&quot;imported_pandas&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;No Pandas&quot;</span><span class="p">)</span>
+<span class="n">ensure_import</span><span class="p">(</span><span class="s1">&#39;cisc108&#39;</span><span class="p">)</span>
+
+<span class="n">prevent_ast</span><span class="p">(</span><span class="s1">&#39;Try&#39;</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot; I noticed you used a Try/Except block. It&#39;s great that&quot;</span>
+                           <span class="s2">&quot; you found another way, but we&#39;d appreciate it if you&quot;</span>
+                           <span class="s2">&quot; used this project to practice IF statements and string&quot;</span>
+                           <span class="s2">&quot; indexing.&quot;</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="s2">&quot;used_try&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Do Not Use Try/Except&quot;</span><span class="p">)</span>
+
+<span class="n">prevent_printing_functions</span><span class="p">()</span>
+<span class="n">ensure_functions_return</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="n">ensure_coverage</span><span class="p">(</span><span class="o">.</span><span class="mi">8</span><span class="p">,</span> <span class="n">priority</span><span class="o">=</span><span class="s1">&#39;lowest&#39;</span><span class="p">):</span>
+    <span class="n">compliment</span><span class="p">(</span><span class="s2">&quot;Good unit test coverage so far&quot;</span><span class="p">,</span>
+               <span class="n">label</span><span class="o">=</span><span class="s2">&quot;good_coverage_so_far&quot;</span><span class="p">)</span>
+
+<span class="n">ensure_function</span><span class="p">(</span><span class="s1">&#39;parse_date_month&#39;</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">returns</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+<span class="n">ensure_function_call</span><span class="p">(</span><span class="s1">&#39;parse_date_month&#39;</span><span class="p">,</span> <span class="n">at_least</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                     <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Write at least 4 unit tests for `parse_date_month` please.&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">unit_test</span><span class="p">(</span><span class="s1">&#39;parse_date_month&#39;</span><span class="p">,</span>
+              <span class="p">([</span><span class="s2">&quot;1/1/2020&quot;</span><span class="p">],</span> <span class="mi">1</span><span class="p">),</span>
+              <span class="p">([</span><span class="s2">&quot;5/12/2020&quot;</span><span class="p">],</span> <span class="mi">5</span><span class="p">),</span>
+              <span class="p">([</span><span class="s2">&quot;10/9/1998&quot;</span><span class="p">],</span> <span class="mi">10</span><span class="p">),</span>
+              <span class="p">([</span><span class="s2">&quot;11/30/2010&quot;</span><span class="p">],</span> <span class="mi">11</span><span class="p">),</span>
+              <span class="p">([</span><span class="s2">&quot;10/30/15&quot;</span><span class="p">],</span> <span class="mi">10</span><span class="p">),</span>
+              <span class="p">([</span><span class="s2">&quot;01/2/05&quot;</span><span class="p">],</span> <span class="mi">1</span><span class="p">),</span>
+              <span class="p">([</span><span class="s2">&quot;12/31/9999&quot;</span><span class="p">],</span> <span class="mi">12</span><span class="p">),</span>
+              <span class="c1">#([&quot;1/32/2013&quot;], 1),</span>
+              <span class="p">([</span><span class="s2">&quot;13/32/2013&quot;</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+              <span class="p">([</span><span class="s2">&quot;13/1/2013&quot;</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+              <span class="p">([</span><span class="s2">&quot;Newark, DE&quot;</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+              <span class="p">([</span><span class="s2">&quot;0/0/0000&quot;</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+             <span class="p">):</span>
+    <span class="n">compliment</span><span class="p">(</span><span class="s2">&quot;Finished parse_date_month!&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;done_parse_date_month&quot;</span><span class="p">)</span>
+
+
+<span class="n">ensure_function</span><span class="p">(</span><span class="s1">&#39;parse_date_day&#39;</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">returns</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+<span class="n">ensure_function_call</span><span class="p">(</span><span class="s1">&#39;parse_date_day&#39;</span><span class="p">,</span> <span class="n">at_least</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                     <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Write at least 4 unit tests for `parse_date_day` please.&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">unit_test</span><span class="p">(</span><span class="s1">&#39;parse_date_day&#39;</span><span class="p">,</span>
+              <span class="p">([</span><span class="s2">&quot;1/1/2020&quot;</span><span class="p">],</span> <span class="mi">1</span><span class="p">),</span>
+              <span class="p">([</span><span class="s2">&quot;5/12/2020&quot;</span><span class="p">],</span> <span class="mi">12</span><span class="p">),</span>
+              <span class="p">([</span><span class="s2">&quot;10/9/1998&quot;</span><span class="p">],</span> <span class="mi">9</span><span class="p">),</span>
+              <span class="p">([</span><span class="s2">&quot;11/30/2010&quot;</span><span class="p">],</span> <span class="mi">30</span><span class="p">),</span>
+              <span class="p">([</span><span class="s2">&quot;10/31/15&quot;</span><span class="p">],</span> <span class="mi">31</span><span class="p">),</span>
+              <span class="p">([</span><span class="s2">&quot;01/2/05&quot;</span><span class="p">],</span> <span class="mi">2</span><span class="p">),</span>
+              <span class="p">([</span><span class="s2">&quot;12/31/9999&quot;</span><span class="p">],</span> <span class="mi">31</span><span class="p">),</span>
+              <span class="p">([</span><span class="s2">&quot;13/32/2013&quot;</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+              <span class="p">([</span><span class="s2">&quot;1/32/2013&quot;</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+              <span class="p">([</span><span class="s2">&quot;0/0/0000&quot;</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+              <span class="p">):</span>
+    <span class="n">compliment</span><span class="p">(</span><span class="s2">&quot;Finished parse_date_day!&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;done_parse_date_day&quot;</span><span class="p">)</span>
+
+<span class="n">ensure_function</span><span class="p">(</span><span class="s1">&#39;parse_date_year&#39;</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">returns</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+<span class="n">ensure_function_call</span><span class="p">(</span><span class="s1">&#39;parse_date_year&#39;</span><span class="p">,</span> <span class="n">at_least</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                     <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Write at least 4 unit tests for `parse_date_year` please.&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">unit_test</span><span class="p">(</span><span class="s1">&#39;parse_date_year&#39;</span><span class="p">,</span>
+              <span class="p">([</span><span class="s2">&quot;1/1/2020&quot;</span><span class="p">],</span> <span class="mi">2020</span><span class="p">),</span>
+              <span class="p">([</span><span class="s2">&quot;5/12/2021&quot;</span><span class="p">],</span> <span class="mi">2021</span><span class="p">),</span>
+              <span class="p">([</span><span class="s2">&quot;10/9/1998&quot;</span><span class="p">],</span> <span class="mi">1998</span><span class="p">),</span>
+              <span class="p">([</span><span class="s2">&quot;11/30/2010&quot;</span><span class="p">],</span> <span class="mi">2010</span><span class="p">),</span>
+              <span class="p">([</span><span class="s2">&quot;10/31/15&quot;</span><span class="p">],</span> <span class="mi">2015</span><span class="p">),</span>
+              <span class="p">([</span><span class="s2">&quot;01/2/05&quot;</span><span class="p">],</span> <span class="mi">2005</span><span class="p">),</span>
+              <span class="p">([</span><span class="s2">&quot;12/31/9999&quot;</span><span class="p">],</span> <span class="mi">9999</span><span class="p">),</span>
+              <span class="p">([</span><span class="s2">&quot;13/32/013&quot;</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+              <span class="p">([</span><span class="s2">&quot;1/32/3&quot;</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+              <span class="p">([</span><span class="s2">&quot;0/0/&quot;</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+              <span class="p">):</span>
+    <span class="n">compliment</span><span class="p">(</span><span class="s2">&quot;Finished parse_date_year!&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;done_parse_date_year&quot;</span><span class="p">)</span>
+
+<span class="n">ensure_function</span><span class="p">(</span><span class="s1">&#39;is_date&#39;</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">returns</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+<span class="n">ensure_function_call</span><span class="p">(</span><span class="s1">&#39;is_date&#39;</span><span class="p">,</span> <span class="n">at_least</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                     <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Write at least 4 unit tests for `is_date` please.&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">unit_test</span><span class="p">(</span><span class="s1">&#39;is_date&#39;</span><span class="p">,</span>
+              <span class="p">([</span><span class="s2">&quot;1/1/2020&quot;</span><span class="p">],</span> <span class="kc">True</span><span class="p">),</span>
+              <span class="p">([</span><span class="s2">&quot;5/12/2020&quot;</span><span class="p">],</span> <span class="kc">True</span><span class="p">),</span>
+              <span class="p">([</span><span class="s2">&quot;10/9/1998&quot;</span><span class="p">],</span> <span class="kc">True</span><span class="p">),</span>
+              <span class="p">([</span><span class="s2">&quot;11/30/2010&quot;</span><span class="p">],</span> <span class="kc">True</span><span class="p">),</span>
+              <span class="p">([</span><span class="s2">&quot;10/31/15&quot;</span><span class="p">],</span> <span class="kc">True</span><span class="p">),</span>
+              <span class="p">([</span><span class="s2">&quot;01/2/05&quot;</span><span class="p">],</span> <span class="kc">True</span><span class="p">),</span>
+              <span class="p">([</span><span class="s2">&quot;12/31/9999&quot;</span><span class="p">],</span> <span class="kc">True</span><span class="p">),</span>
+              <span class="p">([</span><span class="s2">&quot;13/32/2013&quot;</span><span class="p">],</span> <span class="kc">False</span><span class="p">),</span>
+              <span class="p">([</span><span class="s2">&quot;13/2/2013&quot;</span><span class="p">],</span> <span class="kc">False</span><span class="p">),</span>
+              <span class="p">([</span><span class="s2">&quot;1/2/201&quot;</span><span class="p">],</span> <span class="kc">False</span><span class="p">),</span>
+              <span class="p">([</span><span class="s2">&quot;1/2/3&quot;</span><span class="p">],</span> <span class="kc">False</span><span class="p">),</span>
+              <span class="p">([</span><span class="s2">&quot;1/32/2013&quot;</span><span class="p">],</span> <span class="kc">False</span><span class="p">),</span>
+              <span class="p">([</span><span class="s2">&quot;0/0/0000&quot;</span><span class="p">],</span> <span class="kc">False</span><span class="p">),</span>
+              <span class="p">):</span>
+    <span class="n">compliment</span><span class="p">(</span><span class="s2">&quot;Finished is_date!&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;done_is_date&quot;</span><span class="p">)</span>
+
+<span class="n">ensure_function</span><span class="p">(</span><span class="s1">&#39;earlier&#39;</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">returns</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+<span class="n">ensure_function_call</span><span class="p">(</span><span class="s1">&#39;earlier&#39;</span><span class="p">,</span> <span class="n">at_least</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                     <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Write at least 4 unit tests for `earlier` please.&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">unit_test</span><span class="p">(</span><span class="s1">&#39;earlier&#39;</span><span class="p">,</span>
+              <span class="c1"># Same</span>
+              <span class="p">([</span><span class="s2">&quot;1/1/2020&quot;</span><span class="p">,</span> <span class="s2">&quot;1/1/2020&quot;</span><span class="p">],</span> <span class="s2">&quot;equal&quot;</span><span class="p">),</span>
+              <span class="p">([</span><span class="s2">&quot;5/12/2020&quot;</span><span class="p">,</span> <span class="s2">&quot;05/12/2020&quot;</span><span class="p">],</span> <span class="s2">&quot;equal&quot;</span><span class="p">),</span>
+              <span class="p">([</span><span class="s2">&quot;10/9/1998&quot;</span><span class="p">,</span> <span class="s2">&quot;10/9/1998&quot;</span><span class="p">],</span> <span class="s2">&quot;equal&quot;</span><span class="p">),</span>
+              <span class="p">([</span><span class="s2">&quot;11/30/2010&quot;</span><span class="p">,</span> <span class="s2">&quot;11/30/10&quot;</span><span class="p">],</span> <span class="s2">&quot;equal&quot;</span><span class="p">),</span>
+              <span class="c1"># Simple cases</span>
+              <span class="p">([</span><span class="s2">&quot;11/30/2010&quot;</span><span class="p">,</span> <span class="s2">&quot;11/31/2010&quot;</span><span class="p">],</span> <span class="s2">&quot;11/30/2010&quot;</span><span class="p">),</span>
+              <span class="p">([</span><span class="s2">&quot;11/30/2010&quot;</span><span class="p">,</span> <span class="s2">&quot;11/29/2010&quot;</span><span class="p">],</span> <span class="s2">&quot;11/29/2010&quot;</span><span class="p">),</span>
+              <span class="p">([</span><span class="s2">&quot;10/3/2020&quot;</span><span class="p">,</span> <span class="s2">&quot;10/4/2020&quot;</span><span class="p">],</span> <span class="s2">&quot;10/3/2020&quot;</span><span class="p">),</span>
+              <span class="p">([</span><span class="s2">&quot;10/3/2020&quot;</span><span class="p">,</span> <span class="s2">&quot;10/2/2020&quot;</span><span class="p">],</span> <span class="s2">&quot;10/2/2020&quot;</span><span class="p">),</span>
+              <span class="c1"># Complex failures</span>
+              <span class="p">([</span><span class="s2">&quot;10/3/2020&quot;</span><span class="p">,</span> <span class="s2">&quot;10/20/2020&quot;</span><span class="p">],</span> <span class="s2">&quot;10/3/2020&quot;</span><span class="p">),</span>
+              <span class="p">([</span><span class="s2">&quot;2/2/2020&quot;</span><span class="p">,</span> <span class="s2">&quot;10/10/2020&quot;</span><span class="p">],</span> <span class="s2">&quot;2/2/2020&quot;</span><span class="p">),</span>
+              <span class="p">([</span><span class="s2">&quot;10/2/2020&quot;</span><span class="p">,</span> <span class="s2">&quot;10/10/2020&quot;</span><span class="p">],</span> <span class="s2">&quot;10/2/2020&quot;</span><span class="p">),</span>
+              <span class="p">([</span><span class="s2">&quot;12/1/2019&quot;</span><span class="p">,</span> <span class="s2">&quot;1/1/2020&quot;</span><span class="p">],</span> <span class="s2">&quot;12/1/2019&quot;</span><span class="p">),</span>
+              <span class="c1"># Errors</span>
+              <span class="p">([</span><span class="s2">&quot;1/2/3&quot;</span><span class="p">,</span> <span class="s2">&quot;1/32/2013&quot;</span><span class="p">],</span> <span class="s2">&quot;error&quot;</span><span class="p">),</span>
+              <span class="p">([</span><span class="s2">&quot;1/32/2013&quot;</span><span class="p">,</span> <span class="s2">&quot;1/2/3000&quot;</span><span class="p">],</span> <span class="s2">&quot;error&quot;</span><span class="p">),</span>
+              <span class="p">([</span><span class="s2">&quot;1/2/3000&quot;</span><span class="p">,</span> <span class="s2">&quot;1/32/2013&quot;</span><span class="p">],</span> <span class="s2">&quot;error&quot;</span><span class="p">)</span>
+              <span class="p">):</span>
+    <span class="n">compliment</span><span class="p">(</span><span class="s2">&quot;Finished earlier!&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;done_earlier&quot;</span><span class="p">)</span>
+
+
+<span class="n">ensure_documented_functions</span><span class="p">()</span>
+<span class="n">ensure_cisc108_tests</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -355,8 +511,8 @@ This is Pedal version 2, however the version 3 code will look different.</p>
 <p class="admonition-title">Warning</p>
 <p>This is out of date for Pedal version 3!</p>
 </div>
-<div class="literal-block-wrapper docutils container" id="id8">
-<div class="code-block-caption"><span class="caption-text">grade_assignment.py</span><a class="headerlink" href="#id8" title="Permalink to this code">¶</a></div>
+<div class="literal-block-wrapper docutils container" id="id9">
+<div class="code-block-caption"><span class="caption-text">grade_assignment.py</span><a class="headerlink" href="#id9" title="Permalink to this code">¶</a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">Instructor control script for Project 5- Text Adventure Beta</span>
 
