@@ -16,12 +16,14 @@ When creating any piece of feedback, there are a lot of fields you can use.
 The most critical one is ``label``:
 
 .. code-block::python
+    :caption: grade_assignment.py
 
     gently("The output is wrong!", label="wrong_output")
 
 If possible, you can also label the condition category and response kind:
 
 .. code-block::python
+    :caption: grade_assignment.py
 
     gently("Try to avoid type errors.", category='runtime', response='hint')
 

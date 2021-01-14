@@ -30,11 +30,10 @@ rather than an afterthought.
     teachers/quickstart
     teachers/examples
     teachers/reference
-    teachers/tutorial
+    teachers/integrations
     teachers/practices
     developers/guide
     developers/api
-    developers/integrations
     developers/tools
     developers/conventions
     everyone/glossary
