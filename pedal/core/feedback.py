@@ -357,6 +357,9 @@ class Feedback:
         self.location = location
         self.fields['location'] = location
 
+    def _fields_to_json(self):
+        return self.fields.copy()
+
     def to_json(self):
         return {
             'correct': self.correct,
@@ -371,7 +374,7 @@ class Feedback:
             'kind': self.kind,
             'valence': self.valence,
             'version': self.version,
-            'fields': self.fields.copy(),
+            'fields': self._fields_to_json(),
             'justification': self.justification,
             'priority': self.priority,
             'location': self.location.to_json() if self.location is not None else None
