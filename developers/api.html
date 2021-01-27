@@ -894,6 +894,19 @@ been resolved, or do something with that data.</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="pedal.core.report.Report.result">
+<code class="sig-name descname">result</code><a class="headerlink" href="#pedal.core.report.Report.result" title="Permalink to this definition">¶</a></dt>
+<dd><p>The FinalFeedback (distinct from a Feedback) that was
+generated as a result of resolving this Report, or None if the Report is
+not yet resolved.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>FinalFeedback</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="pedal.core.report.Report.TOOLS">
 <code class="sig-name descname">TOOLS</code><em class="property"> = {'assertions': &lt;pedal.core.tool.ToolRegistration object&gt;, 'cait': &lt;pedal.core.tool.ToolRegistration object&gt;, 'sandbox': &lt;pedal.core.tool.ToolRegistration object&gt;, 'source': &lt;pedal.core.tool.ToolRegistration object&gt;}</em><a class="headerlink" href="#pedal.core.report.Report.TOOLS" title="Permalink to this definition">¶</a></dt>
 <dd><p>The
@@ -995,7 +1008,7 @@ submission to attach to this report.</p>
 
 <dl class="method">
 <dt id="pedal.core.report.Report.execute_hooks">
-<code class="sig-name descname">execute_hooks</code><span class="sig-paren">(</span><em class="sig-param">tool</em>, <em class="sig-param">event_name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pedal/core/report.html#Report.execute_hooks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.report.Report.execute_hooks" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">execute_hooks</code><span class="sig-paren">(</span><em class="sig-param">tool</em>, <em class="sig-param">event_name</em>, <em class="sig-param">arguments=None</em>, <em class="sig-param">keyword_arguments=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pedal/core/report.html#Report.execute_hooks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.core.report.Report.execute_hooks" title="Permalink to this definition">¶</a></dt>
 <dd><p>Trigger the functions for all of the associated hooks.
 Hooks will be called with this report as a keyword <cite>report</cite> argument.</p>
 <dl class="field-list simple">
@@ -1003,6 +1016,8 @@ Hooks will be called with this report as a keyword <cite>report</cite> argument.
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>tool</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The name of the tool, to namespace events by.</p></li>
 <li><p><strong>event_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The event name (separate words with periods).</p></li>
+<li><p><strong>arguments</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)"><em>tuple</em></a><em>[</em><em>any</em><em>]</em>) – The arguments to be passed to the callback function.</p></li>
+<li><p><strong>keyword_arguments</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>any</em><em>]</em>) – The keyword arguments to be passed to the callback funciton.</p></li>
 </ul>
 </dd>
 </dl>

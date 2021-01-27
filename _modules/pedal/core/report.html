@@ -219,6 +219,9 @@
 <span class="sd">        resolves (list[Any]): The result of having previously called a</span>
 <span class="sd">            resolver. This allows you to check if a report has previously</span>
 <span class="sd">            been resolved, or do something with that data.</span>
+<span class="sd">        result (FinalFeedback): The FinalFeedback (distinct from a Feedback) that was</span>
+<span class="sd">            generated as a result of resolving this Report, or None if the Report is</span>
+<span class="sd">            not yet resolved.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1">#: dict[str, dict]: The</span>
     <span class="c1">#: tools registered for this report, available via their names.</span>
@@ -303,6 +306,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">feedback</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">feedback</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">feedback</span><span class="o">.</span><span class="n">parent</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">))</span> <span class="ow">and</span> <span class="n">feedback</span><span class="o">.</span><span class="n">parent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">feedback</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">_get_child_feedback</span><span class="p">(</span><span class="n">feedback</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">execute_hooks</span><span class="p">(</span><span class="s1">&#39;pedal.report&#39;</span><span class="p">,</span> <span class="s1">&#39;add_feedback&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">feedback</span><span class="p">,))</span>
         <span class="k">return</span> <span class="n">feedback</span></div>
 
 <div class="viewcode-block" id="Report.add_ignored_feedback"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.report.Report.add_ignored_feedback">[docs]</a>    <span class="k">def</span> <span class="nf">add_ignored_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feedback</span><span class="p">):</span>
@@ -374,7 +378,7 @@
             <span class="bp">cls</span><span class="o">.</span><span class="n">class_hooks</span><span class="p">[</span><span class="n">event</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">cls</span><span class="o">.</span><span class="n">class_hooks</span><span class="p">[</span><span class="n">event</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">function</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Report.execute_hooks"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.report.Report.execute_hooks">[docs]</a>    <span class="k">def</span> <span class="nf">execute_hooks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tool</span><span class="p">,</span> <span class="n">event_name</span><span class="p">):</span>
+<div class="viewcode-block" id="Report.execute_hooks"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.report.Report.execute_hooks">[docs]</a>    <span class="k">def</span> <span class="nf">execute_hooks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tool</span><span class="p">,</span> <span class="n">event_name</span><span class="p">,</span> <span class="n">arguments</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">keyword_arguments</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Trigger the functions for all of the associated hooks.</span>
 <span class="sd">        Hooks will be called with this report as a keyword `report` argument.</span>
@@ -382,14 +386,20 @@
 <span class="sd">        Args:</span>
 <span class="sd">            tool (str): The name of the tool, to namespace events by.</span>
 <span class="sd">            event_name (str): The event name (separate words with periods).</span>
+<span class="sd">            arguments (tuple[any]): The arguments to be passed to the callback function.</span>
+<span class="sd">            keyword_arguments (dict[str, any]): The keyword arguments to be passed to the callback funciton.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">arguments</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">arguments</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">keyword_arguments</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">keyword_arguments</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">event</span> <span class="o">=</span> <span class="n">tool</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="n">event_name</span>
         <span class="k">if</span> <span class="n">event</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">class_hooks</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">function</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">class_hooks</span><span class="p">[</span><span class="n">event</span><span class="p">]:</span>
-                <span class="n">function</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+                <span class="n">function</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">arguments</span><span class="p">,</span> <span class="o">**</span><span class="n">keyword_arguments</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">event</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hooks</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">function</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hooks</span><span class="p">[</span><span class="n">event</span><span class="p">]:</span>
-                <span class="n">function</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span></div>
+                <span class="n">function</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">arguments</span><span class="p">,</span> <span class="o">**</span><span class="n">keyword_arguments</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tool_name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
