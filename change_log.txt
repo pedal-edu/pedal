@@ -1,3 +1,12 @@
+Version 2.3.4
+-------------
+* New environment: NBGrader (prototype)
+* New hook for adding feedback to reports
+* New Pedal logo (not yet integrated)
+* New silent resolver
+* New tracing mode for Sandbox that can track functions
+* Remove dependency on Coverage module
+
 Version 2.3.3
 -------------
 * Fixes for Sandbox's block/allow function mocking
