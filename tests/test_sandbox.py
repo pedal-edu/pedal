@@ -167,6 +167,21 @@ Suggestion: Read the error message to see which function had the issue. Check wh
         commands.run()
         self.assertIsNotNone(commands.get_exception())
 
+
+    def test_good_unique_calls(self):
+        student_code = dedent("""
+        def x(n):
+            if n > 0:
+                return x(n-1)
+            return 0
+        x(5)
+        x(4)
+        """)
+        set_source(student_code)
+        commands.start_trace()
+        commands.run()
+        self.assertEqual(commands.count_unique_calls('x'), 6)
+
     def test_get_by_types(self):
         student_code = dedent('''
             my_int = 0
@@ -240,8 +255,21 @@ Suggestion: Read the error message to see which function had the issue. Check wh
         student.tracer_style = 'coverage'
         student.run(student_code, filename=test_filename)
         self.assertIsNone(student.exception)
-        self.assertEqual(student.trace.pc_covered, 80.0)
-        self.assertEqual(student.trace.lines, {1, 2, 4, 7, 10, 11, 12, 13})
+        self.assertEqual(round(student.trace.pc_covered), 85)
+        self.assertEqual(student.trace.lines, {1, 2, 3, 4, 6, 9, 12, 14, 15, 16, 17})
+
+
+    def test_coverage_native(self):
+        test_filename = here+'_sandbox_test_coverage.py'
+        with open(test_filename) as student_file:
+            student_code = student_file.read()
+        contextualize_report(student_code)
+        student = Sandbox()
+        student.tracer_style = 'native'
+        student.run(student_code, filename=test_filename)
+        self.assertIsNone(student.exception)
+        self.assertEqual(student.trace.lines, [1, 2, 3, 4, 6, 9, 12, 16, 14, 15, 17])
+        self.assertEqual(student.trace.calls, {'z': [{'args': (0,), 'banana': 2, 'kwargs': {'apple': 8}, 'p': 3}]})
 
     def test_calls(self):
         student_code = dedent('''
@@ -255,6 +283,7 @@ Suggestion: Read the error message to see which function had the issue. Check wh
         student.tracer_style = 'calls'
         student.run(student_code, filename='student.py')
         self.assertEqual(len(student.trace.calls['x']), 6)
+
 
     def test_runtime_error_inputs(self):
         student_code = dedent('''

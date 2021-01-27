@@ -1,5 +1,7 @@
-a = 0
+a = 3
 y = 0
+t = 7
+k = 9
 if True:
     print("Ran")
 else:
@@ -7,7 +9,9 @@ else:
 def x():
     b = 0
     return b
-def z():
+def z(p, *args, banana=2, **kwargs):
+    global t
     a = 0
-z()
+    j = k
+z(a, y, apple=8)
 print(a)

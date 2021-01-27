@@ -246,24 +246,65 @@ def clear_sandbox(report=MAIN_REPORT):
 
 def get_trace(report=MAIN_REPORT):
     """
-    Retrieves the set of line that have been traced (recognized as executed).
+    Retrieves the list of line numbers that have been traced (recognized as executed).
 
     Args:
         report (:py:class:`pedal.core.report.Report`): The report with the
             sandbox instance.
 
     Returns:
-        set[int]: The set of lines that have been executed in the student's
+        list[int]: The list of lines that have been executed in the student's
             code.
     """
     sandbox: Sandbox = report[TOOL_NAME]['sandbox']
-    return sandbox.trace.lines - sandbox.trace.missing
+    return sandbox.trace.lines
+    # Coverage version:
+    # return sandbox.trace.lines - sandbox.trace.missing
 
 
-def start_trace(report=MAIN_REPORT):
+def get_call_arguments(function_name, report=MAIN_REPORT):
+    """
+    Retrieves all the arguments that were passed into the given function when it
+    was called.
+
+    Args:
+        function_name (str): The name of the function to check.
+        report (:py:class:`pedal.core.report.Report`): The report with the
+            sandbox instance.
+
+    Returns:
+        list[dict[str, any]]: The outer list will have any entry for each function call.
+            The inner list will be the arguments passed into that call.
+            Pretty sure that any *args and **kwargs are the last elements of that list,
+            if they exist.
+    """
+    sandbox: Sandbox = report[TOOL_NAME]['sandbox']
+    return sandbox.trace.calls.get(function_name, [])
+
+
+def count_unique_calls(function_name, report=MAIN_REPORT):
+    """
+    Counts how many times the given function was called with unique arguments.
+    TODO: What about also tracking the number of "top-level" calls? So we know
+        whether they were actually testing it explicitly or not.
+
+    Args:
+        function_name (str): The name of the function to check for calls.
+        report (:py:class:`pedal.core.report.Report`): The report with the
+            sandbox instance.
+
+    Returns:
+        int: The number of unique calls
+    """
+    calls = get_call_arguments(function_name, report)
+    return len(set([tuple(args.values()) for args in calls]))
+
+
+def start_trace(tracer_style='native', report=MAIN_REPORT):
     """ Start tracing using the coverage module. """
     sandbox: Sandbox = report[TOOL_NAME]['sandbox']
-    sandbox.tracer_style = 'coverage'
+    sandbox.tracer_style = tracer_style
+    print(sandbox.tracer_style)
 
 
 def stop_trace(report=MAIN_REPORT):

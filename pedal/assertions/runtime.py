@@ -13,7 +13,7 @@ from pedal.assertions.feedbacks import (RuntimeAssertionFeedback,
                                         RuntimePrintingAssertionFeedback, AssertionFeedback, assert_group)
 from pedal.core.report import MAIN_REPORT
 from pedal.sandbox import Sandbox
-from pedal.sandbox.commands import check_coverage
+from pedal.sandbox.commands import check_coverage, get_call_arguments
 from pedal.sandbox.result import share_sandbox_context
 from pedal.types.normalize import normalize_type, get_pedal_type_from_value
 from pedal.types.operations import are_types_equal
@@ -681,6 +681,59 @@ class ensure_coverage(AssertionFeedback):
 
     def condition(self, coverage, at_least):
         return coverage <= at_least
+
+
+
+class ensure_called_uniquely(AssertionFeedback):
+    """
+    Verifies that the most recent executed and traced student code has
+    ``at_least`` called the given function uniquely that number of times.
+    In other words, it prevents students from calling the same function repeatedly
+    WITHOUT changing the arguments.
+
+    TODO: Allow instructor to ignore certain collection of arguments
+    TODO: Report how many calls it has seen so far.
+
+    Args:
+        function_name (str): The name of the function to check.
+        at_least (int): The number of calls that have to have unique arguments
+            between them.
+        ignore (set[tuple]): A sequence of argument sets to ignore.
+        why_ignored (str): If you want to explain why you are ignoring some of
+            the tests, you can provide some text here. For example,
+            `" because they overlap with examples you were given"`.
+    """
+    title = "You Must Test Your Code"
+    message_template = ("You have not tested the function {function_name} enough. "
+                        "You should test it at least {at_least} times. Each time you"
+                        " test it, you should be using a new set of arguments."
+                        " So far, you have called it {total_calls} times in total and"
+                        " {unique_calls} times distinctively{instructor_ignore_message}.")
+
+    def __init__(self, function_name, at_least=1, ignore=None, why_ignored="", **kwargs):
+        report = kwargs.get("report", MAIN_REPORT)
+        fields = kwargs.setdefault('fields', {})
+        fields['function_name'] = function_name
+        fields['at_least'] = at_least
+        if ignore is None:
+            ignore = set()
+        else:
+            ignore = set(ignore)
+        fields['ignore'] = ignore
+        calls = get_call_arguments(function_name, report)
+        unique_calls = set([tuple(args.values()) for args in calls])
+        fields['instructor_ignored'] = instructor_ignored = len(unique_calls & ignore)
+        if instructor_ignored:
+            fields['instructor_ignore_message'] = f" (but your instructor did not count {instructor_ignored} of the tests{why_ignored})"
+        else:
+            fields['instructor_ignore_message'] = ""
+        fields['total_calls'] = len(calls)
+        unique_call_count = len(unique_calls - ignore)
+        fields['unique_calls'] = unique_call_count
+        super().__init__(unique_call_count, at_least, **kwargs)
+
+    def condition(self, unique_call_count, at_least):
+        return unique_call_count <= at_least
 
 
 # Alias conventional camel-case names to our functions

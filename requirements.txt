@@ -1,3 +1,2 @@
-# Both of these are optional, but most environments support them
-coverage
+# This is actual optional, only used in certain environments (to make nice tables)
 tabulate

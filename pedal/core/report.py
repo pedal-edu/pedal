@@ -50,6 +50,9 @@ class Report:
         resolves (list[Any]): The result of having previously called a
             resolver. This allows you to check if a report has previously
             been resolved, or do something with that data.
+        result (FinalFeedback): The FinalFeedback (distinct from a Feedback) that was
+            generated as a result of resolving this Report, or None if the Report is
+            not yet resolved.
     """
     #: dict[str, dict]: The
     #: tools registered for this report, available via their names.
@@ -134,6 +137,7 @@ class Report:
         self.feedback.append(feedback)
         if not isinstance(feedback.parent, (int, str)) and feedback.parent is not None:
             feedback.parent._get_child_feedback(feedback, True)
+        self.execute_hooks('pedal.report', 'add_feedback', (feedback,))
         return feedback
 
     def add_ignored_feedback(self, feedback):
@@ -205,7 +209,7 @@ class Report:
             cls.class_hooks[event] = []
         cls.class_hooks[event].append(function)
 
-    def execute_hooks(self, tool, event_name):
+    def execute_hooks(self, tool, event_name, arguments=None, keyword_arguments=None):
         """
         Trigger the functions for all of the associated hooks.
         Hooks will be called with this report as a keyword `report` argument.
@@ -213,14 +217,20 @@ class Report:
         Args:
             tool (str): The name of the tool, to namespace events by.
             event_name (str): The event name (separate words with periods).
+            arguments (tuple[any]): The arguments to be passed to the callback function.
+            keyword_arguments (dict[str, any]): The keyword arguments to be passed to the callback funciton.
         """
+        if arguments is None:
+            arguments = tuple()
+        if keyword_arguments is None:
+            keyword_arguments = {}
         event = tool + '.' + event_name
         if event in self.class_hooks:
             for function in self.class_hooks[event]:
-                function(report=self)
+                function(report=self, *arguments, **keyword_arguments)
         if event in self.hooks:
             for function in self.hooks[event]:
-                function(report=self)
+                function(report=self, *arguments, **keyword_arguments)
 
     def __getitem__(self, tool_name):
         """

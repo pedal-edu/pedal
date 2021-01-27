@@ -339,6 +339,23 @@ class MockPlt(MockModule):
         self.active_plot['data'].append({'type': 'hist', 'values': data,
                                          'label': label})
 
+    def boxplot(self, data, **kwargs):
+        label = kwargs.get('label', None)
+        self.active_plot['data'].append({'type': 'boxplot', 'values': data,
+                                         'label': label})
+
+    def hlines(self, y, xmin, xmax, **kwargs):
+        label = kwargs.get('label')
+        self.active_plot['data'].append({'type': 'hlines', 'y': y,
+                                         'xmin': xmin, 'xmax': xmax,
+                                         'label': label})
+
+    def vlines(self, x, ymin, ymax, **kwargs):
+        label = kwargs.get('label')
+        self.active_plot['data'].append({'type': 'vlines', 'x': x,
+                                         'ymin': ymin, 'ymax': ymax,
+                                         'label': label})
+
     def plot(self, xs, ys=None, **kwargs):
         """ Make a line plot """
         label = kwargs.get('label', None)
@@ -387,7 +404,8 @@ class MockPlt(MockModule):
             """ This function does nothing. """
 
         return dict(hist=self.hist, plot=self.plot,
-                    bar=self.bar,
+                    bar=self.bar, boxplot=self.boxplot,
+                    hlines=self.hlines, vlines=self.vlines,
                     scatter=self.scatter, show=self.show,
                     xlabel=self.xlabel, ylabel=self.ylabel,
                     title=self.title, legend=self.legend,

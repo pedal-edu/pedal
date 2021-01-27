@@ -58,7 +58,7 @@ from pedal.core.formatting import Formatter, HtmlFormatter
 
 class GradeScopeEnvironment(Environment):
     """
-    Configures the BlockPy programming environment.
+    Configures the GradeScope programming environment.
     """
     def __init__(self, files=None, main_file='answer.py', main_code=None,
                  user=None, assignment=None, course=None, execution=None,

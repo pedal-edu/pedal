@@ -103,6 +103,48 @@ class SandboxCoverageTracer(SandboxBasicTracer):
         return self.pc_covered
 
 
+class SandboxNativeTracer(SandboxBasicTracer):
+    """
+    Tracks lines covered and function calls. Possibly other things? We could track variables, if that
+    was something people wanted.
+
+    TODO: Handle multiple submission files?
+    """
+    def __init__(self):
+        super().__init__()
+        self.calls = {}
+        self.lines = []
+        self.old_tracer = None
+        self.step_index = 1
+
+    def __enter__(self):
+        self.old_tracer = sys.gettrace()
+        sys.settrace(self.tracer)
+
+    def __exit__(self, exc_type, exc_val, traceback):
+        sys.settrace(self.old_tracer)
+
+    def is_tracked_file(self, frame):
+        left = os.path.basename(frame.f_code.co_filename)
+        right = os.path.basename(self.filename)
+        return left == right
+
+    def tracer(self, frame, event, args):
+        if event == 'line' and self.is_tracked_file(frame):
+            line = frame.f_lineno
+            self.lines.append(line)
+            self.step_index += 1
+        if event == 'call' and self.is_tracked_file(frame):
+            called_function = frame.f_code.co_name
+            if called_function != '<module>':
+                if called_function not in self.calls:
+                    self.calls[called_function] = []
+                arguments = {name: frame.f_locals[name] for name in frame.f_code.co_varnames
+                             if name in frame.f_locals}
+                self.calls[called_function].append(arguments)
+        return self.tracer
+
+
 class SandboxCallTracer(SandboxBasicTracer, Bdb):
     """
 
@@ -140,4 +182,5 @@ TRACER_STYLES = {
     'coverage': SandboxCoverageTracer,
     'calls': SandboxCallTracer,
     'none': SandboxBasicTracer,
+    'native': SandboxNativeTracer
 }

@@ -16,7 +16,7 @@ setuptools.setup(
               ],
     license='Creative Commons Attribution-Noncommercial-Share Alike license',
     long_description=open('README.rst').read(),
-    install_requires=["coverage", "tabulate"],
+    install_requires=["tabulate"],
     entry_points={
           'console_scripts': [
               'pedal = pedal.command_line.command_line:main'
