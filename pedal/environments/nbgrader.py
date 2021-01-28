@@ -1,6 +1,7 @@
 import re
 import sys
 import json
+import unittest
 
 from pedal.core.final_feedback import FinalFeedback
 from pedal.resolvers.core import make_resolver
@@ -198,14 +199,24 @@ class NBGraderEnvironment(Environment):
             return False
 
         final = simple_resolve()
-        if in_notebook():
-            from IPython.display import HTML, display
-            display(HTML(f"""<strong>{final.title}</strong><br><div>{final.message}</div>"""))
-            ipy_exit()
-        else:
-            print(final.title, file=sys.stderr)
-            print(final.message, file=sys.stderr)
-            sys.exit(1)
+        tc = unittest.TestCase()
+        with tc.subTest():
+            try:
+                tc.fail(final.message)
+            except:
+                # Remove traceback info as we don't need it
+                exc_type, value, traceback = sys.exc_info()
+                traceback.tb_next = None
+                raise exc_type(value).with_traceback(traceback) from None
+
+        #if in_notebook():
+        #    from IPython.display import HTML, display
+        #    display(HTML(f"""<strong>{final.title}</strong><br><div>{final.message}</div>"""))
+        #    ipy_exit()
+        #else:
+        #    print(final.title, file=sys.stderr)
+        #    print(final.message, file=sys.stderr)
+        #    sys.exit(1)
 
     def load_main(self, path):
         """
@@ -217,7 +228,7 @@ class NBGraderEnvironment(Environment):
         except OSError as file_error:
             return file_error
 
-def setup_environment():
+def setup_environment(*cells, **kwargs):
     if in_notebook():
         get_source_code()
         return False
@@ -228,5 +239,5 @@ def setup_environment():
         with open(student_filename) as student_file:
             main_code = student_file.read()
         # TODO: If WebCAT doesn't want HTML output, then we should switch the default formatter
-        environment = NBGraderEnvironment(main_code=main_code, main_file=student_filename)
+        environment = NBGraderEnvironment(main_code=main_code, main_file=student_filename, **kwargs)
         return environment
