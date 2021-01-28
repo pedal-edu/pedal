@@ -285,13 +285,13 @@ I ran your function add on some new arguments.
         self.assertFeedback(e, SUCCESS_MESSAGE)
 
     def test_assert_coverage_fails(self):
-        with Execution('def add(a, b):\n  return a+b', run_tifa=False, tracer_style='coverage') as e:
+        with Execution('def add(a, b):\n  return a+b', run_tifa=False, tracer_style='native') as e:
             ensure_coverage(.9)
         self.assertFeedback(e, """You Must Test Your Code
 Your code coverage is not adequate. You must cover at least 90% of your code to receive feedback. So far, you have only covered 50%.""")
 
     def test_assert_coverage_passes(self):
-        with Execution('def add(a, b):\n  return a+b\nadd(1,2)', run_tifa=False, tracer_style='coverage') as e:
+        with Execution('def add(a, b):\n  return a+b\nadd(1,2)', run_tifa=False, tracer_style='native') as e:
             ensure_coverage()
         self.assertFeedback(e, SUCCESS_MESSAGE)
 
