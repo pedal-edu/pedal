@@ -205,13 +205,7 @@ class NBGraderEnvironment(Environment):
         final = simple_resolve()
         tc = unittest.TestCase()
         with tc.subTest():
-            try:
-                tc.fail(final.message)
-            except:
-                # Remove traceback info as we don't need it
-                exc_type, value, traceback = sys.exc_info()
-                traceback.tb_next = None
-                raise exc_type(value).with_traceback(traceback) from None
+            tc.fail(final.message)
 
         # if in_notebook():
         #    from IPython.display import HTML, display
