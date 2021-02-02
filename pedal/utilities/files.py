@@ -17,3 +17,10 @@ def normalize_path(first: str, second: str):
         return first
     else:
         return os.path.join(os.path.dirname(second), first)
+
+
+def get_extension(filename: str, default_extension="py") -> str:
+    """ Get a file's extension (assumed to be after a period) """
+    if not filename:
+        return default_extension
+    return filename.lower().split(".")[-1]
