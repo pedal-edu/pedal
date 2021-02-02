@@ -11,6 +11,35 @@ get_evaluation()
 
 __all__ = ['Submission']
 
+from pedal.utilities.files import get_extension
+
+DEFAULT_EXTENSION = "py"
+
+
+def python_submission_parser(code: str, filename: str) -> (str, str):
+    return code, filename
+
+
+def create_ipynb_submission_parser(metadata_filter=None):
+    def ipynb_submission_parser(code: str, filename: str) -> (str, str):
+        # TODO: What happens if we have a syntax error in the file?
+        # TODO: Consider making a fallback JSON parser, since the structure is known.
+        try:
+            import nbformat
+        except ImportError:
+            raise ImportError("You have attempted to read an IPYNB file, but did not install `nbformat`. Is Jupyter installed?")
+        nb = nbformat.reads(code, as_version=nbformat.current_nbformat)
+        result = []
+        for cell in nb.cells:
+            if metadata_filter is not None and not metadata_filter(cell, nb.cells):
+                continue
+            if cell.cell_type == 'markdown':
+                result.append(f'"""{cell.source}"""')
+            elif cell.cell_type == 'code':
+                result.append(cell.source)
+        return "\n".join(result), filename
+    return ipynb_submission_parser
+
 
 class Submission:
     """
@@ -34,6 +63,11 @@ class Submission:
         execution (dict): Additional information about the results of executing the students' code.
     """
 
+    PARSERS = {
+        "py": python_submission_parser,
+        "ipynb": create_ipynb_submission_parser()
+    }
+
     def __init__(self, files=None, main_file='answer.py', main_code=None,
                  user=None, assignment=None, course=None, execution=None,
                  instructor_file='instructor_tests.py', load_error=None):
@@ -44,8 +78,14 @@ class Submission:
         self.load_error = load_error
         if main_code is not None:
             self.main_code = main_code
+        if not self.main_code:
+            self.main_code = ""
         if self.main_file not in self.files:
-            self.files[self.main_file] = self.main_code or ""
+            self.main_code, self.main_file = self._preprocess_file(self.main_code, self.main_file)
+            self.files[self.main_file] = self.main_code
+        else:
+            self.files[self.main_file], self.main_file = self._preprocess_file(self.files[self.main_file], self.main_file)
+        # TODO: Non-main files are not going to be pre-processed; is that a problem for anyone?
         self._original_main_code = self.main_code
         self.user = user
         self.assignment = assignment
@@ -85,7 +125,24 @@ class Submission:
         self.main_code = code
         if file is not None:
             self.main_file = file
+        code, self.main_file = self._preprocess_file(code, self.main_file)
         self.files[self.main_file] = code
+
+    def _preprocess_file(self, code, filename):
+        """
+        Give the system a chance to potentially preprocess the given file, based on its extension.
+        For example, to turn an IPYNB file into more conventional python code.
+
+        Args:
+            code:
+            filename:
+
+        Returns:
+
+        """
+        extension = get_extension(filename, DEFAULT_EXTENSION)
+        parser = self.PARSERS.get(extension, python_submission_parser)
+        return parser(code, filename)
 
     @property
     def main_code(self):
@@ -113,3 +170,5 @@ class Submission:
             execution=self.execution,
             files=self.files.copy()
         )
+
+

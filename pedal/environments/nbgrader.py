@@ -3,7 +3,9 @@ import sys
 import json
 import unittest
 
+from pedal import Submission
 from pedal.core.final_feedback import FinalFeedback
+from pedal.core.submission import create_ipynb_submission_parser
 from pedal.resolvers.core import make_resolver
 from pedal.source import verify, next_section as original_next_section
 from pedal.core.feedback import Feedback
@@ -48,7 +50,7 @@ def get_source_code():
     let instructor_cell = Jupyter.notebook.get_cell(cell_idx);
     let instructor_text = instructor_cell.get_text();
     instructor_text = instructor_text.split("\\n")
-                                     .slice("""+split_line+""")
+                                     .slice(""" + split_line + """)
                                      .join("\\n");
     console.log('>>>', instructor_text);
     let source_code = "";
@@ -104,26 +106,25 @@ if True:
     console.log("FINISHED SETTING UP JS");
     """)
 
-
-    #class UglyException(Exception):
+    # class UglyException(Exception):
     #    pass
 
-    #def handle(*args, **kwargs):
+    # def handle(*args, **kwargs):
     #    import ctypes
     #    frame = inspect.stack()[2].frame
     #    frame.f_locals['outflag'] = True
     #    ctypes.pythonapi.PyFrame_LocalsToFast(ctypes.py_object(frame), ctypes.c_bool(True))
 
-    #from IPython import get_ipython
-    #get_ipython().set_custom_exc((UglyException,), handle)
+    # from IPython import get_ipython
+    # get_ipython().set_custom_exc((UglyException,), handle)
 
     display(get_source_code_js)
-    #import time
-    #time.sleep(4)
-    #raise UglyException()
-    #print("FINISHED SET UP")
+    # import time
+    # time.sleep(4)
+    # raise UglyException()
+    # print("FINISHED SET UP")
     return ""
-    #return os.environ['STUDENT_SOURCE_CODE'] #student_code
+    # return os.environ['STUDENT_SOURCE_CODE'] #student_code
 
 
 from io import StringIO
@@ -134,6 +135,7 @@ class PedalNotebookException(SystemExit):
 
     Exception temporarily redirects stderr to buffer.
     """
+
     def __init__(self):
         # print("exiting")  # optionally print some message to stdout, too
         # ... or do other stuff before exit
@@ -155,13 +157,14 @@ def in_notebook():
     """
     from IPython import get_ipython
     return bool(get_ipython())
-    #return 'ipykernel' in sys.modules #or 'IPython' in sys.modules
+    # return 'ipykernel' in sys.modules #or 'IPython' in sys.modules
 
 
 class NBGraderEnvironment(Environment):
     """
     Configures the NBGrader programming environment.
     """
+
     def __init__(self, files=None, main_file='answer.py', main_code=None,
                  user=None, assignment=None, course=None, execution=None,
                  instructor_file='on_run.py', skip_tifa=True, skip_run=True,
@@ -171,11 +174,12 @@ class NBGraderEnvironment(Environment):
                          user=user, assignment=assignment, course=course,
                          execution=execution, instructor_file=instructor_file,
                          report=report)
+        # TODO: If WebCAT doesn't want HTML output, then we should switch the default formatter
         self.report.add_hook('pedal.report.add_feedback', self.force_immediate_errors)
         self.skip_run = skip_run
         self.skip_tifa = skip_tifa
         self.trace = trace
-        report.set_formatter(HtmlFormatter(report))
+        report.set_formatter(Formatter(report))
         verify(report=self.report)
         if not skip_tifa:
             tifa_analysis(report=self.report)
@@ -209,11 +213,11 @@ class NBGraderEnvironment(Environment):
                 traceback.tb_next = None
                 raise exc_type(value).with_traceback(traceback) from None
 
-        #if in_notebook():
+        # if in_notebook():
         #    from IPython.display import HTML, display
         #    display(HTML(f"""<strong>{final.title}</strong><br><div>{final.message}</div>"""))
         #    ipy_exit()
-        #else:
+        # else:
         #    print(final.title, file=sys.stderr)
         #    print(final.message, file=sys.stderr)
         #    sys.exit(1)
@@ -228,16 +232,55 @@ class NBGraderEnvironment(Environment):
         except OSError as file_error:
             return file_error
 
-def setup_environment(*cells, **kwargs):
+
+def setup_environment(cells=None, **kwargs):
+    """
+
+    Args:
+        cells: The subset of cells to get. Defaults to ALL cells (None, or '**'), including the non-solution cells.
+            To limit to just solution cells, use '*'. You can also pass a single cell ID or a list of cell IDs
+            to grab a specific subset of the notebook.
+        ipynb_file:
+        main_code:
+        main_file:
+        **kwargs:
+
+    Returns:
+
+    """
     if in_notebook():
         get_source_code()
         return False
-        #print("END NORMAL EXECUTION HERE")
     else:
-        import inspect
-        student_filename = inspect.stack()[-1].filename
-        with open(student_filename) as student_file:
-            main_code = student_file.read()
-        # TODO: If WebCAT doesn't want HTML output, then we should switch the default formatter
-        environment = NBGraderEnvironment(main_code=main_code, main_file=student_filename, **kwargs)
+        # Logic for parsing the `cells` parameter
+        all_cells, all_solutions = False, False
+        chosen_cells = []
+        if cells is None or cells == '**':
+            all_cells = True
+        else:
+            if isinstance(cells, str):
+                chosen_cells.append(cells)
+            else:
+                chosen_cells.extend(cells)
+            for cell in chosen_cells[:]:
+                if cell == '*':
+                    all_solutions = True
+            # TODO: Support "<=" and ">=" to get adjacent cells?
+
+        def metadata_filter(cell, other_cells) -> bool:
+            if all_cells:
+                return True
+            nbgrader = cell.metadata.get('nbgrader', {})
+            if all_solutions and nbgrader.get('solution', False):
+                return True
+            return nbgrader.get('grade_id') in chosen_cells
+
+        Submission.PARSERS['ipynb'] = create_ipynb_submission_parser(metadata_filter)
+        environment = NBGraderEnvironment(**kwargs)
         return environment
+
+# # Old approach: inspecting the stack to get filename - yikes!
+# import inspect
+# student_filename = inspect.stack()[-1].filename
+# with open(student_filename) as student_file:
+#    main_code = student_file.read()
