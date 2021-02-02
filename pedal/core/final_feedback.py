@@ -45,6 +45,8 @@ class FinalFeedback:
         self.systems = []
         self.suppressions = suppressions
         self.suppressed_labels = suppressed_labels
+        self.considered = []
+        self.used = []
 
     def merge(self, feedback):
         category = feedback.category.lower()
@@ -81,6 +83,7 @@ class FinalFeedback:
             self.category = feedback.category
             self.label = feedback.label
             self.data = data
+            self.used.append(feedback)
 
     def finalize(self):
         if self.message is None:

@@ -150,6 +150,13 @@ def resolve(report=MAIN_REPORT, priority_key=by_priority):
                 test['output'] = positive.message
             tests.append(test)
 
+    for feedback in final.used:
+        if feedback.parent is None:
+            test = {"name": feedback.title}
+            if feedback.title != feedback.message:
+                test['output'] = feedback.message
+            tests.append(test)
+
     dump_feedback(
         score=round(final.score*score_maximum),
         output=f"<strong>{final.title}</strong><br>\n{final.message}",
