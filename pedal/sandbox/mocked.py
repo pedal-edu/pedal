@@ -5,6 +5,7 @@ behavior.
 import re
 import types
 
+from pedal.core.report import Report
 from pedal.sandbox.exceptions import (SandboxNoMoreInputsException,
                                       SandboxPreventModule)
 from pedal.utilities.system import IS_PYTHON_36
@@ -74,25 +75,49 @@ def disabled_builtin(name):
 _OPEN_FORBIDDEN_NAMES = re.compile(r"(^[./])|(\.py$)")
 _OPEN_FORBIDDEN_MODES = re.compile(r"[wa+]")
 
-# TODO: Turn this into a function that lets us more elegantly specify valid and
-# invalid filenames/paths
+# TODO: Allow the user to give a function instead of a REGEX
+# TODO: We need to mock the whole OS library, honestly, not just `open`
+def create_open_function(report: Report, forbidden_names=_OPEN_FORBIDDEN_NAMES, forbidden_modes=_OPEN_FORBIDDEN_MODES):
+    """
+    Creates a new version of the `open` built-in that will avoid looking at certain filenames,
+    and will also respect the given Report's Submission's Files.
 
+    Args:
+        report:
 
-def _restricted_open(name, mode='r', buffering=-1):
-    if _OPEN_FORBIDDEN_NAMES.search(name):
-        raise RuntimeError("The filename you passed to 'open' is restricted.")
-    elif _OPEN_FORBIDDEN_MODES.search(mode):
-        raise RuntimeError("You are not allowed to 'open' files for writing.")
-    else:
-        return ORIGINAL_BUILTINS['open'](name, mode, buffering)
+    Returns:
+
+    """
+    def _restricted_open(name, mode='r', buffering=-1):
+        if forbidden_names.search(name):
+            raise RuntimeError("The filename you passed to 'open' is restricted.")
+        elif forbidden_modes.search(mode):
+            raise RuntimeError("You are not allowed to 'open' files for writing.")
+        elif report.submission and name in report.submission.files:
+            return report.submission.files[name]
+        else:
+            return ORIGINAL_BUILTINS['open'](name, mode, buffering)
+    return _restricted_open
 
 # TODO: Allow this to be flexible
 
 
-def _restricted_import(name, globals=None, locals=None, fromlist=(), level=0):
-    if name == 'pedal' or name.startswith('pedal.'):
-        raise RuntimeError("You cannot import pedal!")
-    return ORIGINAL_BUILTINS['__import__'](name, globals, locals, fromlist, level)
+def create_import_function(report: Report):
+    """
+    Creates a new version of the `__import__` function (which is used by the import keyword)
+    that will not let students import Pedal or its submodules.
+
+    Args:
+        report:
+
+    Returns:
+
+    """
+    def _restricted_import(name, globals=None, locals=None, fromlist=(), level=0):
+        if name == 'pedal' or name.startswith('pedal.'):
+            raise RuntimeError("You cannot import pedal!")
+        return ORIGINAL_BUILTINS['__import__'](name, globals, locals, fromlist, level)
+    return _restricted_import
 
 
 try:

@@ -511,9 +511,8 @@ class Sandbox:
         self.block_function('eval')
         self.block_function('exec')
         self.block_function('globals')
-        self.mock_function('open', mocked._restricted_open)
-        self.mock_function('__import__', mocked._restricted_import)
-        # TODO: This breaks coverage for some reason; it's a builtin?
+        self.mock_function('open', mocked.create_open_function(self.report))
+        self.mock_function('__import__', mocked.create_import_function(self.report))
         self.block_module('pedal')
         self.mock_module('turtle', mocked.MockTurtle(), 'turtles')
         self.mock_module('matplotlib.pyplot', mocked.MockPlt(), 'plotting')
