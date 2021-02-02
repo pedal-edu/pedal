@@ -54,7 +54,10 @@ def set_source(code, filename=DEFAULT_STUDENT_FILENAME, sections=False,
                independent=False, report=MAIN_REPORT):
     """
     Sets the contents of the Source to be the given code. Can also be
-    optionally given a filename.
+    optionally given a filename. If there is no existing Submission,
+    this contextualizes the Report with a new Submission containing the given
+    code. Otherwise, it creates a Substitution and temporarily replaces
+    the Submission's current main code.
 
     Args:
         code (str): The contents of the source file.
