@@ -1,3 +1,11 @@
+Version 2.3.5
+-------------
+* Pedal now supports loading IPYNB files directly
+* NBGrader Environment can filter IPYNB cells
+* Sandbox's open function will now respect Submission files better
+* Online tests will now respect requirements_dev.txt
+* GradeScope environment now outputs all Used feedback
+
 Version 2.3.4
 -------------
 * New environment: NBGrader (prototype)
