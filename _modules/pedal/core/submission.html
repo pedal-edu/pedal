@@ -180,6 +180,35 @@
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Submission&#39;</span><span class="p">]</span>
 
+<span class="kn">from</span> <span class="nn">pedal.utilities.files</span> <span class="kn">import</span> <span class="n">get_extension</span>
+
+<span class="n">DEFAULT_EXTENSION</span> <span class="o">=</span> <span class="s2">&quot;py&quot;</span>
+
+
+<span class="k">def</span> <span class="nf">python_submission_parser</span><span class="p">(</span><span class="n">code</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">code</span><span class="p">,</span> <span class="n">filename</span>
+
+
+<span class="k">def</span> <span class="nf">create_ipynb_submission_parser</span><span class="p">(</span><span class="n">metadata_filter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">ipynb_submission_parser</span><span class="p">(</span><span class="n">code</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="c1"># TODO: What happens if we have a syntax error in the file?</span>
+        <span class="c1"># TODO: Consider making a fallback JSON parser, since the structure is known.</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">nbformat</span>
+        <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s2">&quot;You have attempted to read an IPYNB file, but did not install `nbformat`. Is Jupyter installed?&quot;</span><span class="p">)</span>
+        <span class="n">nb</span> <span class="o">=</span> <span class="n">nbformat</span><span class="o">.</span><span class="n">reads</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">as_version</span><span class="o">=</span><span class="n">nbformat</span><span class="o">.</span><span class="n">current_nbformat</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">nb</span><span class="o">.</span><span class="n">cells</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">metadata_filter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">metadata_filter</span><span class="p">(</span><span class="n">cell</span><span class="p">,</span> <span class="n">nb</span><span class="o">.</span><span class="n">cells</span><span class="p">):</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">cell</span><span class="o">.</span><span class="n">cell_type</span> <span class="o">==</span> <span class="s1">&#39;markdown&#39;</span><span class="p">:</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;&quot;&quot;&quot;</span><span class="si">{cell.source}</span><span class="s1">&quot;&quot;&quot;&#39;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">cell</span><span class="o">.</span><span class="n">cell_type</span> <span class="o">==</span> <span class="s1">&#39;code&#39;</span><span class="p">:</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cell</span><span class="o">.</span><span class="n">source</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">result</span><span class="p">),</span> <span class="n">filename</span>
+    <span class="k">return</span> <span class="n">ipynb_submission_parser</span>
+
 
 <div class="viewcode-block" id="Submission"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.submission.Submission">[docs]</a><span class="k">class</span> <span class="nc">Submission</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -203,6 +232,11 @@
 <span class="sd">        execution (dict): Additional information about the results of executing the students&#39; code.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="n">PARSERS</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;py&quot;</span><span class="p">:</span> <span class="n">python_submission_parser</span><span class="p">,</span>
+        <span class="s2">&quot;ipynb&quot;</span><span class="p">:</span> <span class="n">create_ipynb_submission_parser</span><span class="p">()</span>
+    <span class="p">}</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">files</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">main_file</span><span class="o">=</span><span class="s1">&#39;answer.py&#39;</span><span class="p">,</span> <span class="n">main_code</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">user</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">assignment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">course</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">execution</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">instructor_file</span><span class="o">=</span><span class="s1">&#39;instructor_tests.py&#39;</span><span class="p">,</span> <span class="n">load_error</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -213,8 +247,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">load_error</span> <span class="o">=</span> <span class="n">load_error</span>
         <span class="k">if</span> <span class="n">main_code</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">main_code</span> <span class="o">=</span> <span class="n">main_code</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_code</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">main_code</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_file</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">main_file</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_code</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">main_code</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_preprocess_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_code</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_file</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">main_file</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_code</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">main_file</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_preprocess_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">main_file</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_file</span><span class="p">)</span>
+        <span class="c1"># TODO: Non-main files are not going to be pre-processed; is that a problem for anyone?</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_original_main_code</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_code</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">user</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assignment</span> <span class="o">=</span> <span class="n">assignment</span>
@@ -254,7 +294,24 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">main_code</span> <span class="o">=</span> <span class="n">code</span>
         <span class="k">if</span> <span class="n">file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">main_file</span> <span class="o">=</span> <span class="n">file</span>
+        <span class="n">code</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_preprocess_file</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_file</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">main_file</span><span class="p">]</span> <span class="o">=</span> <span class="n">code</span></div>
+
+    <span class="k">def</span> <span class="nf">_preprocess_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Give the system a chance to potentially preprocess the given file, based on its extension.</span>
+<span class="sd">        For example, to turn an IPYNB file into more conventional python code.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            code:</span>
+<span class="sd">            filename:</span>
+
+<span class="sd">        Returns:</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">extension</span> <span class="o">=</span> <span class="n">get_extension</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">DEFAULT_EXTENSION</span><span class="p">)</span>
+        <span class="n">parser</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">PARSERS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">extension</span><span class="p">,</span> <span class="n">python_submission_parser</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">parser</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">main_code</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -282,6 +339,8 @@
             <span class="n">execution</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">execution</span><span class="p">,</span>
             <span class="n">files</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="p">)</span></div>
+
+
 </pre></div>
 
            </div>

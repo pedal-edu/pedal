@@ -260,7 +260,10 @@ previously stored code/parses/section info.</p>
 <dt id="pedal.source.source.set_source">
 <code class="sig-name descname">set_source</code><span class="sig-paren">(</span><em class="sig-param">code</em>, <em class="sig-param">filename='answer.py'</em>, <em class="sig-param">sections=False</em>, <em class="sig-param">independent=False</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/source/source.html#set_source"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.source.source.set_source" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets the contents of the Source to be the given code. Can also be
-optionally given a filename.</p>
+optionally given a filename. If there is no existing Submission,
+this contextualizes the Report with a new Submission containing the given
+code. Otherwise, it creates a Substitution and temporarily replaces
+the Submission’s current main code.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">

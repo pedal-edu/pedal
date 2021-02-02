@@ -223,7 +223,10 @@
                <span class="n">independent</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Sets the contents of the Source to be the given code. Can also be</span>
-<span class="sd">    optionally given a filename.</span>
+<span class="sd">    optionally given a filename. If there is no existing Submission,</span>
+<span class="sd">    this contextualizes the Report with a new Submission containing the given</span>
+<span class="sd">    code. Otherwise, it creates a Substitution and temporarily replaces</span>
+<span class="sd">    the Submission&#39;s current main code.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        code (str): The contents of the source file.</span>
