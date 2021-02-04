@@ -24,3 +24,23 @@ def get_extension(filename: str, default_extension="py") -> str:
     if not filename:
         return default_extension
     return filename.lower().split(".")[-1]
+
+
+def find_possible_filenames(filenames, wildcard="*.py", alt_separator=";"):
+    """ Yield all possible filenames that we could get from the given single/list of semicolon-separated string."""
+    if isinstance(filenames, str):
+        if alt_separator in filenames:
+            filenames = filenames.split(alt_separator)
+        else:
+            filenames = [filenames]
+    for a_filename in filenames:
+        if a_filename.lower().strip().endswith(wildcard):
+            a_filename = a_filename[:-len(wildcard)] or "."
+            potentials = [f for f in os.listdir(a_filename) if f.endswith(wildcard)]
+            if not potentials:
+                continue
+            a_filename = os.path.join(a_filename, potentials[0])
+            yield a_filename
+        else:
+            yield a_filename
+

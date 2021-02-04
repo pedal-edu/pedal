@@ -1,3 +1,4 @@
+from pedal.core.final_feedback import FinalFeedback
 from pedal.resolvers.core import make_resolver
 from pedal.core.report import MAIN_REPORT
 from pedal.core.feedback import Feedback
@@ -37,13 +38,27 @@ def resolve(report=MAIN_REPORT):
     Returns:
 
     """
-    grouped = {}
-    for feedback in report.feedback:
-        if feedback.category not in grouped:
-            grouped[feedback.category] = []
-        grouped[feedback.category].append(feedback)
-    result = []
-    for group, feedbacks in grouped.items():
-        result.append(group.title())
-        result.extend([resolve_feedback(feedback) for feedback in feedbacks])
-    return "\n".join(result)
+
+    # Prepare feedbacks
+    feedbacks = report.feedback + report.ignored_feedback
+
+    # Create the initial final feedback
+    final = FinalFeedback(success=True, score=0,
+                          title=None, message=None,
+                          category=Feedback.CATEGORIES.COMPLETE,
+                          label='set_success_no_errors',
+                          data=[], hide_correctness=False,
+                          suppressions=report.suppressions,
+                          suppressed_labels=report.suppressed_labels)
+    # Process each feedback in turn
+    used = []
+    for feedback in feedbacks:
+        partial = final.merge(feedback)
+        if partial is not None:
+            used.append(partial)
+    # Override empty message
+    final.finalize()
+    final.used = used
+    report.result = final
+    report.resolves.append(final)
+    return final

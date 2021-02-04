@@ -49,7 +49,7 @@ class source_file_not_found(SourceFeedback):
 
     def __init__(self, name, sections, **kwargs):
         report = kwargs.get("report", MAIN_REPORT)
-        fields = {'name': name, 'sections': sections }
+        fields = {'name': name, 'sections': sections}
         group = 0 if sections else kwargs.get('group')
         super().__init__(fields=fields, group=group, **kwargs)
 

@@ -54,7 +54,15 @@ class InterpolatedValue:
     def __init__(self, value):
         self.value = value
         self.is_sandboxed = is_sandbox_result(value)
-        self.is_error = not self.is_sandboxed and isinstance(value, Exception)
+        if isinstance(value, Exception):
+            self.is_error = True
+        # Sandboxes with exceptions become their exception
+        elif isinstance(value, Sandbox) and value.exception:
+            self.is_error = True
+            self.value = value.exception
+            self.is_sandboxed = False
+        else:
+            self.is_error = False
         self.report = MAIN_REPORT
         if self.is_sandboxed:
             context_id = value._actual_context_id
@@ -247,9 +255,15 @@ class RuntimeAssertionFeedback(AssertionFeedback):
         assertion = "The following exception occurred:\n"
         if left.is_error:
             assertion += self.report.format.output(str(left.value))
+            self.suppress_runtime_error(left.value)
         if right.is_error:
             assertion += self.report.format.output(str(right.value))
+            self.suppress_runtime_error(right.value)
         return assertion
+
+    def suppress_runtime_error(self, exception):
+        if hasattr(exception, "feedback"):
+            exception.feedback.parent = self
 
 
 class RuntimePrintingAssertionFeedback(RuntimeAssertionFeedback):
@@ -267,6 +281,7 @@ class RuntimePrintingAssertionFeedback(RuntimeAssertionFeedback):
         # Handle whether either side had an error
         if left.is_error or right.is_error:
             assertion = self.format_exception(left, right)
+            return assertion
         # Sandbox
         if isinstance(left.value, Sandbox):
             actual_output = chomp(left.value.raw_output)

@@ -304,7 +304,6 @@ def start_trace(tracer_style='native', report=MAIN_REPORT):
     """ Start tracing using the coverage module. """
     sandbox: Sandbox = report[TOOL_NAME]['sandbox']
     sandbox.tracer_style = tracer_style
-    print(sandbox.tracer_style)
 
 
 def stop_trace(report=MAIN_REPORT):

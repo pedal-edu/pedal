@@ -18,7 +18,7 @@ from pedal.command_line.verify import generate_report_out, ReportVerifier
 from pedal.core.report import MAIN_REPORT
 from pedal.core.submission import Submission
 from pedal.sandbox.result import is_sandbox_result
-from pedal.utilities.files import normalize_path
+from pedal.utilities.files import normalize_path, find_possible_filenames
 from pedal.utilities.progsnap import SqlProgSnap2
 from pedal.utilities.text import chomp
 
@@ -181,20 +181,33 @@ class AbstractPipeline:
         # Otherwise, must just be a single python file.
         else:
             main_file = given_submissions
-            load_error = None
-            try:
-                with open(given_submissions, 'r') as single_submission_file:
-                    main_code = single_submission_file.read()
-            except OSError as e:
+            load_error, possible_load_error = None, None
+            alternatives = [given_submissions]
+            # if alternative filenames given, we'll queue them up
+            if self.config.alternate_filenames:
+                alternatives.extend(find_possible_filenames(self.config.alternate_filenames))
+            # Run through all possible filenames
+            for possible in alternatives:
+                try:
+                    with open(possible, 'r') as single_submission_file:
+                        main_code = single_submission_file.read()
+                        main_file = possible
+                    break
+                except OSError as e:
+                    # Only capture the first possible load error
+                    if possible_load_error is None:
+                        possible_load_error = e
+            else:
                 # Okay, file does not exist. Load error gets triggered.
                 main_code = None
-                load_error = e
+                load_error = possible_load_error
             for script, scripts_contents in all_scripts:
                 new_submission = Submission(
                     main_file=main_file, main_code=main_code,
                     instructor_file=script, load_error=load_error
                 )
                 self.submissions.append(Bundle(self.config, scripts_contents, new_submission))
+            return load_error
 
     progsnap_events_map = {
         'run': 'Run.Program',
@@ -256,9 +269,17 @@ class AbstractPipeline:
             self.load_progsnap(given_script)
         elif os.path.isfile(given_script):
             self.load_file_submissions([given_script])
-        else:
+        elif os.path.isdir(given_script):
             python_files = os.listdir(given_script)
             self.load_file_submissions(python_files)
+        else:
+            potential_filenames = list(find_possible_filenames(given_script))
+            for filename in potential_filenames:
+                load_error = self.load_file_submissions([filename])
+                if load_error is None:
+                    return
+            from pedal.source.feedbacks import source_file_not_found
+            source_file_not_found(potential_filenames[0], False)
 
     def setup_execution(self):
         for bundle in self.submissions:

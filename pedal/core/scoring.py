@@ -85,7 +85,7 @@ def combine_scores(scores, invert_scores=None) -> float:
         invert_scores ():
 
     Returns:
-
+        total_score (float): Two decimal place float of final result.
     """
     total = 0
     for score in scores:

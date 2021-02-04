@@ -43,6 +43,8 @@ import json
 from html.parser import HTMLParser
 import tabulate
 
+from pedal import Score
+from pedal.core.final_feedback import parse_feedback
 from pedal.resolvers.core import make_resolver
 from pedal.source import verify, next_section as original_next_section
 from pedal.core.feedback import Feedback
@@ -52,6 +54,7 @@ from pedal.sandbox import run, get_sandbox, set_input, start_trace, get_output
 from pedal.source.sections import FeedbackSourceSection
 from pedal.tifa import tifa_analysis
 from pedal.resolvers.simple import resolve as simple_resolve, by_priority
+from pedal.resolvers.full import resolve as full_resolve
 from pedal.resolvers.sectional import resolve as original_sectional_resolve
 from pedal.core.formatting import Formatter, HtmlFormatter
 
@@ -59,6 +62,8 @@ from pedal.core.formatting import Formatter, HtmlFormatter
 class GradeScopeEnvironment(Environment):
     """
     Configures the GradeScope programming environment.
+
+    # TODO: Add command line argument to use "simple" resolver instead of full
     """
     def __init__(self, files=None, main_file='answer.py', main_code=None,
                  user=None, assignment=None, course=None, execution=None,
@@ -72,7 +77,7 @@ class GradeScopeEnvironment(Environment):
         self.skip_run = skip_run
         self.skip_tifa = skip_tifa
         self.trace = trace
-        report.set_formatter(HtmlFormatter(report))
+        report.set_formatter(Formatter(report))
         verify(report=self.report)
         if not skip_tifa:
             tifa_analysis(report=self.report)
@@ -121,7 +126,7 @@ setup_environment = GradeScopeEnvironment
 
 
 def dump_feedback(**results):
-    print(json.dumps(results))
+    print(json.dumps(results, indent=2))
 
 
 score_maximum = 1
@@ -141,24 +146,32 @@ def resolve(report=MAIN_REPORT, priority_key=by_priority):
         report:
         custom_success_message:
     """
-    final = simple_resolve(report, priority_key=priority_key)
+    final = full_resolve(report)
     tests = []
-    if final.positives:
-        for positive in final.positives:
-            test = {"name": positive.title}
-            if positive.title != positive.message:
-                test['output'] = positive.message
-            tests.append(test)
-
     for feedback in final.used:
         if feedback.parent is None:
             test = {"name": feedback.title}
-            if feedback.title != feedback.message:
-                test['output'] = feedback.message
+            message = feedback.message if feedback else (feedback.else_message or "Correct")
+            if feedback.title != message:
+                test['output'] = message
+            # Handle scoring
+            success, partial, message, title, data = parse_feedback(feedback)
+            if not feedback.unscored and feedback.score is not None:
+                # Triggered Negative leads to opposite behavior for operator
+                # Also untriggered positive feedback
+                invert_logic = ((feedback.valence != feedback.NEGATIVE_VALENCE) == (not feedback))
+                inversion = "!" if invert_logic else ""
+                score = Score.parse(f"{inversion}{partial}")
+                if not score.invert:
+                    test['score'] = score.add_to_current(0) * score_maximum
+                else:
+                    test['score'] = 0
             tests.append(test)
-
+    if not final.success or final.score < 1:
+        final.title = "Failed Instructor Tests"
+        final.message = "Check the results below to see what you have failed."
     dump_feedback(
-        score=round(final.score*score_maximum),
+        score=round(final.score*score_maximum, 2),
         output=f"<strong>{final.title}</strong><br>\n{final.message}",
         tests=tests
     )

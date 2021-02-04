@@ -83,6 +83,9 @@ def parse_args(reduced_mode=False):
                                             'instructor control script.',
                         default='submissions',
                         nargs='?')
+    parser.add_argument("--alternate_filenames",
+                        help="A semicolon separated list of potential filenames to try if the main isn't found.",
+                        default="")
     # TODO: Handle output to file
     parser.add_argument('--output', '-o',
                         help='The output file path for the result. Defaults to stdout.',

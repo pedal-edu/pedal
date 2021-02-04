@@ -9,7 +9,7 @@
     "ast", "ast.Ast", "None", "The root node of the latest successfully parsed chunk of code."
 
 """
-
+import os
 import sys
 import ast
 
@@ -20,6 +20,7 @@ from pedal.source.constants import TOOL_NAME, DEFAULT_STUDENT_FILENAME
 from pedal.source.sections import separate_into_sections
 from pedal.source.feedbacks import blank_source, syntax_error, source_file_not_found
 from pedal.source.substitutions import Substitution
+from pedal.utilities.files import find_possible_filenames
 
 
 def reset(report=MAIN_REPORT):
@@ -167,13 +168,20 @@ def get_original_program(report=MAIN_REPORT) -> str:
     return report[TOOL_NAME]['substitutions'][0].code
 
 
+
 @CompositeFeedbackFunction(source_file_not_found)
 def set_source_file(filename: str, sections=False, independent=False, report=MAIN_REPORT):
     """
     Uses the given `filename` on the filesystem as the new main file.
 
     Args:
-        filename:
+        filename (str or list[str]): Checks the files, in the given order, to be loaded.
+            If a single string is given, we check if there is a ";" and separate it as multiple options.
+            If a file isn't found, then the next option in the list is tried.
+            If "*.py" is the ending of a given option, then the first Python file found will be used,
+            respecting any directories given (e.g., `"*.py"` finds any in this directory, while
+            `"source/*.py"` finds the first Python file in the `source/` directory).
+            If no files are found, the `source_file_not_found` feedback will be delivered.
         sections:
         independent:
         report:
@@ -181,11 +189,15 @@ def set_source_file(filename: str, sections=False, independent=False, report=MAI
     Returns:
 
     """
-    try:
-        with open(filename, 'r') as student_file:
-            set_source(student_file.read(), filename=filename,
-                       sections=sections, independent=independent,
-                       report=report)
-    except IOError:
+    for a_filename in find_possible_filenames(filename):
+        try:
+            with open(a_filename, 'r') as student_file:
+                set_source(student_file.read(), filename=a_filename,
+                           sections=sections, independent=independent,
+                           report=report)
+                return
+        except IOError:
+            continue
+    else:
         source_file_not_found(filename, sections, report=report)
         report[TOOL_NAME]['success'] = False

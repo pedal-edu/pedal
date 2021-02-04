@@ -34,6 +34,7 @@ class FinalFeedback:
         self.success = success
         self.score = score
         self._scores = []
+        self._scores_feedback = []
         self.category = category
         self.label = label
         self.title = title
@@ -68,12 +69,12 @@ class FinalFeedback:
             self._scores.append(f"{inversion}{partial}")
         if not feedback and feedback.else_message:
             self.positives.append(feedback)
-            return
+            return feedback
         if not feedback or feedback.muted:
             return
         if feedback.kind == Feedback.KINDS.COMPLIMENT:
             self.positives.append(feedback)
-            return
+            return feedback
         if feedback.kind == Feedback.KINDS.INSTRUCTIONAL:
             self.instructions.append(feedback)
         self.success = success and self.success
@@ -84,6 +85,7 @@ class FinalFeedback:
             self.label = feedback.label
             self.data = data
             self.used.append(feedback)
+        return feedback
 
     def finalize(self):
         if self.message is None:

@@ -160,6 +160,9 @@ class Sandbox:
         main file will be executed. If ``code`` is given but ``filename`` is
         not, then it is assumed to be instructor code.
 
+        TODO: This should actually return the ExecutionContext that was generated, right?
+            But the user should be able to treat that as if it were the Sandbox...
+
         Args:
             code (str or :py:class:`~pedal.cait.cait_node.CaitNode` or None):
                 The code to execute.
@@ -431,6 +434,7 @@ class Sandbox:
         self.feedback = runtime_error_function(exception=self.exception, context=[context],
                                                traceback=traceback, location=traceback.line_number,
                                                report=self.report, priority=priority)
+        self.exception.feedback = self.feedback
         return False
 
     def clear_exception(self):
