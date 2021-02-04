@@ -88,7 +88,7 @@ class Formatter:
         return self.pre(code)
 
     def inputs(self, inputs):
-        return self.pre(inputs)
+        return "\n"+self.pre(inputs)+"\n"
 
     def output(self, output):
         return self.pre(output)

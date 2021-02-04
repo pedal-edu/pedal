@@ -800,8 +800,10 @@ class Sandbox:
             self.inputs.clear()
         if isinstance(inputs, str):
             self.inputs.append(inputs)
+        elif isinstance(inputs, (int, float, bool)):
+            self.inputs.append(str(inputs))
         elif isinstance(inputs, (list, tuple)):
-            self.inputs.extend(inputs)
+            self.inputs.extend([str(value) for value in inputs])
         elif inputs is not None:
             self.inputs = inputs
         return self

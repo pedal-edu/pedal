@@ -109,7 +109,9 @@ Suggestion: To fix a type error, you should trace through your code. Make sure e
 I ran the code:
     get_input()
 
-And I entered as input:    Banana
+And I entered as input:
+    Banana
+
 The traceback was:
 Line 3 of file student.py in get_input
         return int(input("Gimme the number"))
@@ -305,7 +307,9 @@ Suggestion: Read the error message to see which function had the issue. Check wh
 I ran the code:
     x()
 
-And I entered as input:    0
+And I entered as input:
+    0
+
 The traceback was:
 Line 4 of file answer.py in x
         return 7 % value
