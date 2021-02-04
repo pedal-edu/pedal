@@ -292,7 +292,13 @@ left None, defaults to the global MAIN_REPORT.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>filename</strong> – </p></li>
+<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em>) – Checks the files, in the given order, to be loaded.
+If a single string is given, we check if there is a “;” and separate it as multiple options.
+If a file isn’t found, then the next option in the list is tried.
+If “<em>.py” is the ending of a given option, then the first Python file found will be used,
+respecting any directories given (e.g., `”</em>.py”` finds any in this directory, while
+<cite>“source/*.py”</cite> finds the first Python file in the <cite>source/</cite> directory).
+If no files are found, the <cite>source_file_not_found</cite> feedback will be delivered.</p></li>
 <li><p><strong>sections</strong> – </p></li>
 <li><p><strong>independent</strong> – </p></li>
 <li><p><strong>report</strong> – </p></li>

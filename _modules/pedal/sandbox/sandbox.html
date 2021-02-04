@@ -331,6 +331,9 @@
 <span class="sd">        main file will be executed. If ``code`` is given but ``filename`` is</span>
 <span class="sd">        not, then it is assumed to be instructor code.</span>
 
+<span class="sd">        TODO: This should actually return the ExecutionContext that was generated, right?</span>
+<span class="sd">            But the user should be able to treat that as if it were the Sandbox...</span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            code (str or :py:class:`~pedal.cait.cait_node.CaitNode` or None):</span>
 <span class="sd">                The code to execute.</span>
@@ -602,6 +605,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">feedback</span> <span class="o">=</span> <span class="n">runtime_error_function</span><span class="p">(</span><span class="n">exception</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">exception</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="p">[</span><span class="n">context</span><span class="p">],</span>
                                                <span class="n">traceback</span><span class="o">=</span><span class="n">traceback</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="n">traceback</span><span class="o">.</span><span class="n">line_number</span><span class="p">,</span>
                                                <span class="n">report</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="p">,</span> <span class="n">priority</span><span class="o">=</span><span class="n">priority</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">exception</span><span class="o">.</span><span class="n">feedback</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">feedback</span>
         <span class="k">return</span> <span class="kc">False</span>
 
 <div class="viewcode-block" id="Sandbox.clear_exception"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.clear_exception">[docs]</a>    <span class="k">def</span> <span class="nf">clear_exception</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

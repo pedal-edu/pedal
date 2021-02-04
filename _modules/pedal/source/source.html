@@ -178,7 +178,7 @@
 <span class="sd">    &quot;ast&quot;, &quot;ast.Ast&quot;, &quot;None&quot;, &quot;The root node of the latest successfully parsed chunk of code.&quot;</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-
+<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">ast</span>
 
@@ -189,6 +189,7 @@
 <span class="kn">from</span> <span class="nn">pedal.source.sections</span> <span class="kn">import</span> <span class="n">separate_into_sections</span>
 <span class="kn">from</span> <span class="nn">pedal.source.feedbacks</span> <span class="kn">import</span> <span class="n">blank_source</span><span class="p">,</span> <span class="n">syntax_error</span><span class="p">,</span> <span class="n">source_file_not_found</span>
 <span class="kn">from</span> <span class="nn">pedal.source.substitutions</span> <span class="kn">import</span> <span class="n">Substitution</span>
+<span class="kn">from</span> <span class="nn">pedal.utilities.files</span> <span class="kn">import</span> <span class="n">find_possible_filenames</span>
 
 
 <div class="viewcode-block" id="reset"><a class="viewcode-back" href="../../../developers/tools/source.html#pedal.source.source.reset">[docs]</a><span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
@@ -336,13 +337,20 @@
     <span class="k">return</span> <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;substitutions&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">code</span></div>
 
 
+
 <div class="viewcode-block" id="set_source_file"><a class="viewcode-back" href="../../../developers/tools/source.html#pedal.source.source.set_source_file">[docs]</a><span class="nd">@CompositeFeedbackFunction</span><span class="p">(</span><span class="n">source_file_not_found</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">set_source_file</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">sections</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">independent</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Uses the given `filename` on the filesystem as the new main file.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        filename:</span>
+<span class="sd">        filename (str or list[str]): Checks the files, in the given order, to be loaded.</span>
+<span class="sd">            If a single string is given, we check if there is a &quot;;&quot; and separate it as multiple options.</span>
+<span class="sd">            If a file isn&#39;t found, then the next option in the list is tried.</span>
+<span class="sd">            If &quot;*.py&quot; is the ending of a given option, then the first Python file found will be used,</span>
+<span class="sd">            respecting any directories given (e.g., `&quot;*.py&quot;` finds any in this directory, while</span>
+<span class="sd">            `&quot;source/*.py&quot;` finds the first Python file in the `source/` directory).</span>
+<span class="sd">            If no files are found, the `source_file_not_found` feedback will be delivered.</span>
 <span class="sd">        sections:</span>
 <span class="sd">        independent:</span>
 <span class="sd">        report:</span>
@@ -350,12 +358,16 @@
 <span class="sd">    Returns:</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">student_file</span><span class="p">:</span>
-            <span class="n">set_source</span><span class="p">(</span><span class="n">student_file</span><span class="o">.</span><span class="n">read</span><span class="p">(),</span> <span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span>
-                       <span class="n">sections</span><span class="o">=</span><span class="n">sections</span><span class="p">,</span> <span class="n">independent</span><span class="o">=</span><span class="n">independent</span><span class="p">,</span>
-                       <span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span>
-    <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">a_filename</span> <span class="ow">in</span> <span class="n">find_possible_filenames</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">a_filename</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">student_file</span><span class="p">:</span>
+                <span class="n">set_source</span><span class="p">(</span><span class="n">student_file</span><span class="o">.</span><span class="n">read</span><span class="p">(),</span> <span class="n">filename</span><span class="o">=</span><span class="n">a_filename</span><span class="p">,</span>
+                           <span class="n">sections</span><span class="o">=</span><span class="n">sections</span><span class="p">,</span> <span class="n">independent</span><span class="o">=</span><span class="n">independent</span><span class="p">,</span>
+                           <span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span>
+                <span class="k">return</span>
+        <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
+            <span class="k">continue</span>
+    <span class="k">else</span><span class="p">:</span>
         <span class="n">source_file_not_found</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">sections</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span>
         <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;success&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span></div>
 </pre></div>
