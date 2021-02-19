@@ -20,6 +20,12 @@ from pedal.types.operations import are_types_equal
 from pedal.utilities.comparisons import equality_test
 
 
+def errors(*executions):
+    for e in executions:
+        if e.is_error:
+            return True
+    return False
+
 class assert_equal(RuntimeAssertionFeedback):
     """
     Determine if the ``left`` and ``right`` values are equal.
@@ -44,7 +50,7 @@ class assert_equal(RuntimeAssertionFeedback):
 
     def condition(self, left, right, exact_strings, delta):
         """ Tests if the left and right are equal """
-        return not equality_test(left.value, right.value, exact_strings, delta)
+        return errors(left, right) or not equality_test(left.value, right.value, exact_strings, delta)
 
 
 class assert_not_equal(RuntimeAssertionFeedback):
@@ -529,7 +535,7 @@ class assert_output(RuntimePrintingAssertionFeedback):
 
     def condition(self, execution, text, exact_strings):
         """ Tests if the regex does not match the text """
-        return not equality_test(self.get_output(execution), text.value,
+        return errors(execution) or not equality_test(self.get_output(execution), text.value,
                                  _exact_strings=exact_strings, _delta=None)
 
 

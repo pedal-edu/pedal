@@ -254,10 +254,12 @@ class RuntimeAssertionFeedback(AssertionFeedback):
         """ Create a simple formatted exception message """
         assertion = "The following exception occurred:\n"
         if left.is_error:
-            assertion += self.report.format.output(str(left.value))
+            assertion += left.value.feedback._get_message()
+            #assertion += self.report.format.output(str(left.value))
             self.suppress_runtime_error(left.value)
         if right.is_error:
-            assertion += self.report.format.output(str(right.value))
+            assertion += right.value.feedback._get_message()
+            #assertion += self.report.format.output(str(right.value))
             self.suppress_runtime_error(right.value)
         return assertion
 

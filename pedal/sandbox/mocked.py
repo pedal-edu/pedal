@@ -399,7 +399,10 @@ class MockPlt(MockModule):
                                          'y': ys, 'label': label})
 
     def bar(self, xs, ys, **kwargs):
-        """ Make a scatter plot """
+        """ Make a scatter plot
+         TODO: Need to capture the other kwargs and dump them somewhere
+            in case people want to analyze them.
+         """
         label = kwargs.get('label', None)
         self.active_plot['data'].append({'type': 'bar', 'x': xs,
                                          'y': ys, 'label': label})
