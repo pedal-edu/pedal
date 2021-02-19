@@ -138,6 +138,7 @@ class Sandbox:
         # Patch in dangerous built-ins
         # Override builtins and mock stuff out
         self._start_mocking(context)
+        self.data['__name__'] = "__main__"
         try:
             # TODO: Support CaitNode and Ast (needs skulpt to support compile better)
             compiled_code = compile(code, filename, 'exec')
