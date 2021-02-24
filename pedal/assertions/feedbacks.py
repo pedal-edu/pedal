@@ -42,6 +42,7 @@ from pedal.core.feedback_category import FeedbackStatus
 from pedal.core.report import MAIN_REPORT
 from pedal.sandbox import Sandbox
 from pedal.sandbox.data import format_contexts
+from pedal.sandbox.exceptions import SandboxException
 from pedal.sandbox.result import is_sandbox_result
 from pedal.assertions.constants import TOOL_NAME
 from pedal.utilities.text import chomp
@@ -254,11 +255,17 @@ class RuntimeAssertionFeedback(AssertionFeedback):
         """ Create a simple formatted exception message """
         assertion = "The following exception occurred:\n"
         if left.is_error:
-            assertion += left.value.feedback._get_message()
+            if not isinstance(left.value, SandboxException):
+                assertion += left.value.feedback._get_message()
+            else:
+                assertion += str(left.value)
             #assertion += self.report.format.output(str(left.value))
             self.suppress_runtime_error(left.value)
         if right.is_error:
-            assertion += right.value.feedback._get_message()
+            if not isinstance(right.value, SandboxException):
+                assertion += right.value.feedback._get_message()
+            else:
+                assertion == str(right.value)
             #assertion += self.report.format.output(str(right.value))
             self.suppress_runtime_error(right.value)
         return assertion

@@ -28,7 +28,7 @@ Student code failed instructor test.
         self.assertFeedback(e, """Failed Instructor Test
 Student code failed instructor test.
 The following exception occurred:
-    The function minus does not exist.""")
+The function minus does not exist.""")
 
     def test_assert_equal_call_left_fails(self):
         with Execution('def add(a, b): return a-b', run_tifa=False) as e:
