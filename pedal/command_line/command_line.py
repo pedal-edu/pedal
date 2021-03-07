@@ -132,6 +132,10 @@ def parse_args(reduced_mode=False):
     parser.add_argument('--cache', help='Use the given directory to hold the cache.'
                                         ' You can use "./" to use the current directory.',
                         default=False)
+    # TODO: Want to allow for multiple threads too to parallel process data (faster!)
+    parser.add_argument('--threaded', help='Run the instructor script in a separate thread to avoid'
+                                           ' timeout crashes.',
+                        default=False)
     '''
     parser.add_argument('--include_submissions', help='An optional REGEX filter '
                                                       'to only include certain submissions')

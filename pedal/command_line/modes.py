@@ -103,7 +103,8 @@ class Bundle:
                              fromlist=[''])
             global_data.update(env.setup_environment(self.submission,
                                                      skip_tifa=skip_tifa,
-                                                     skip_run=skip_run).fields)
+                                                     skip_run=skip_run,
+                                                     threaded=self.config.threaded).fields)
         else:
             MAIN_REPORT.contextualize(self.submission)
         with redirect_stdout(captured_output):
@@ -242,7 +243,7 @@ class AbstractPipeline:
                     for event in sorted(events, key=lambda e: e['event_id'])}.values()]
             for event in events:
                 if instructor_code is None:
-                    scripts_contents = event['on_run']
+                    instructor_code = event['on_run']
                 new_submission = Submission(
                     main_file='answer.py', main_code=event['submission_code'].decode('utf-8'),
                     instructor_file='instructor.py',
