@@ -7,6 +7,13 @@ from pedal.assertions.static import *
 from pedal.assertions.runtime import *
 
 
+class unit_test(assert_group):
+    pass
+
+
+_unit_test_class = unit_test
+
+
 def unit_test(function, *tests, else_message=None, score=None, partial_credit=False, **kwargs):
     """
     Helper function for quickly unit testing.
@@ -48,7 +55,8 @@ def unit_test(function, *tests, else_message=None, score=None, partial_credit=Fa
     else:
         # Specify exact score for each test case, individually | list[str]
         each_score = partial_credit
-    with assert_group(function, else_message=else_message, **kwargs) as group_result:
+    # TODO: Make it so unit_test can document its cases
+    with _unit_test_class(function, else_message=else_message, **kwargs) as group_result:
         for test_index, test in enumerate(tests):
             args, expected = test
             assert_equal(call(function, *args), expected, score=each_score[test_index], **kwargs)
