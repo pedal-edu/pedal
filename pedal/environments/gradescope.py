@@ -69,11 +69,11 @@ class GradeScopeEnvironment(Environment):
                  user=None, assignment=None, course=None, execution=None,
                  instructor_file='on_run.py', skip_tifa=False, skip_run=False,
                  inputs=None, set_success=True,
-                 report=MAIN_REPORT, trace=True):
+                 report=MAIN_REPORT, trace=True, threaded=True, **kwargs):
         super().__init__(files=files, main_file=main_file, main_code=main_code,
                          user=user, assignment=assignment, course=course,
                          execution=execution, instructor_file=instructor_file,
-                         report=report)
+                         report=report, **kwargs)
         self.skip_run = skip_run
         self.skip_tifa = skip_tifa
         self.trace = trace
@@ -85,10 +85,12 @@ class GradeScopeEnvironment(Environment):
             set_input(inputs)
         if skip_run:
             student = get_sandbox(report=report)
+            student.threaded = threaded
         else:
             if trace:
                 start_trace()
-            student = run(report=report)
+            student = run(report=report, threaded=threaded)
+            student.threaded = threaded
         self.fields = {
             'student': student,
             'resolve': resolve,
