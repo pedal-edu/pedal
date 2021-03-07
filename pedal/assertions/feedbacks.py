@@ -271,7 +271,7 @@ class RuntimeAssertionFeedback(AssertionFeedback):
         return assertion
 
     def suppress_runtime_error(self, exception):
-        if hasattr(exception, "feedback"):
+        if hasattr(exception, "feedback") and exception.feedback is not None:
             exception.feedback.parent = self
 
 
