@@ -240,6 +240,8 @@ class Sandbox:
                 value). If the function call failed, the exception will be
                 returned instead.
         """
+        if threaded is None:
+            threaded = self.threaded
         # Confirm that the function_name exists
         if function not in self.functions:
             if function not in self.data:
@@ -295,6 +297,8 @@ class Sandbox:
                 value). If the function call failed, the exception will be
                 returned instead.
         """
+        if threaded is None:
+            threaded = self.threaded
         self.target = target
         code = f"{target} = {code}"
         context_id = self._next_context_id
@@ -516,6 +520,7 @@ class Sandbox:
         self.block_function('eval')
         self.block_function('exec')
         self.block_function('globals')
+        self.block_function('exit')
         self.mock_function('open', mocked.create_open_function(self.report))
         self.mock_function('__import__', mocked.create_import_function(self.report))
         self.block_module('pedal')
