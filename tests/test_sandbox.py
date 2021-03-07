@@ -475,6 +475,23 @@ Suggestion: To fix a type error, you should trace through your code. Make sure e
         x = int(commands.evaluate("x"))
         self.assertIsNone(commands.get_exception())
 
+    def test_block_exit(self):
+        contextualize_report("exit()")
+        commands.run()
+        self.assertIsNotNone(commands.get_exception())
+
+    @unittest.skip("TODO: Something weird with recursion")
+    def test_bad_recursion(self):
+        contextualize_report("""
+def to_pig_latin(str):
+    first = str[0]
+    str = str[1:]
+    str = str + first + "ay"
+    to_pig_latin("hello")""")
+        commands.run()
+        commands.call('to_pig_latin', 'test', threaded=True)
+        self.assertNotIsInstance(commands.get_exception(), RecursionError)
+
     # TODO: test `import builtins` strategy to access original builtins
 
 if __name__ == '__main__':
