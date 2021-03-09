@@ -37,6 +37,7 @@ rather than an afterthought.
     developers/tools
     developers/conventions
     everyone/glossary
+    everyone/contact
 
 
 Indices and tables
