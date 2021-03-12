@@ -5,6 +5,7 @@ import ast
 import re
 from pedal.cait.ast_map import AstMap
 from pedal.cait.cait_node import CaitNode
+from pedal.cait.ast_map import SymTables
 
 # "Enums" for _name_regex
 _VAR = "var"
@@ -682,7 +683,25 @@ class StretchyTreeMatcher:
         meta_matched = self.metas_match(ins_node, std_node, check_meta)
         is_match = type(ins).__name__ == type(std).__name__ and meta_matched
         mapping = self.shallow_match_main(ins_node, std_node, check_meta, ignores=['name', 'args'])
-        return self.shallow_match_xDef(is_match, mapping, ins_node, std_node, meta_matched, "add_func_to_sym_table")
+        return self.shallow_match_xDef(is_match, mapping, ins_node, std_node, meta_matched, SymTables['FUNC'])
+
+    def shallow_match_ClassDef(self, ins_node, std_node, check_meta=True):
+        """
+
+        Args:
+            ins_node:
+            std_node:
+            check_meta:
+
+        Returns:
+
+        """
+        ins = ins_node.astNode
+        std = std_node.astNode
+        meta_matched = self.metas_match(ins_node, std_node, check_meta)
+        is_match = type(ins).__name__ == type(std).__name__ and meta_matched
+        mapping = self.shallow_match_main(ins_node, std_node, check_meta, ignores=['name'])
+        return self.shallow_match_xDef(is_match, mapping, ins_node, std_node, meta_matched, SymTables['CLASS'])
 
     # noinspection PyMethodMayBeStatic
     def shallow_match_generic(self, ins_node, std_node, check_meta=True):
