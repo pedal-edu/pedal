@@ -420,3 +420,12 @@ def share_sandbox_context(new_value, original_value):
                              original_value._actual_context_id,
                              original_value._actual_sandbox)
     return new_value
+
+
+def unwrap_value(value):
+    """ Given either a SandboxResult or a regular value, make sure we have
+    the actual value. """
+    if is_sandbox_result(value):
+        return value._actual_value
+    else:
+        return value

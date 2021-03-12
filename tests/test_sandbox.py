@@ -492,6 +492,8 @@ def to_pig_latin(str):
         commands.call('to_pig_latin', 'test', threaded=True)
         self.assertNotIsInstance(commands.get_exception(), RecursionError)
 
+
+
     # TODO: test `import builtins` strategy to access original builtins
 
 if __name__ == '__main__':

@@ -71,6 +71,35 @@ The function named x has a parameter named c that is a list of a number, but sho
                       partial_credit=True)
         self.assertEqual(3/5, e.final.score)
 
+    def test_bad_name_error_concatenation(self):
+        with Execution("""
+def make_polite(message: str) -> str:
+    return ", please"+make_polite
+
+make_polite("Pet the dog")""", run_tifa=False) as e:
+            unit_test('make_polite',
+                      ([""], ", please"),
+                      (["Pet the dog"], "Pet the dog, please"),
+                      (["Walk the dog"], "Walk the dog, please"))
+        self.assertFeedback(e, """Type Error
+A TypeError occurred:
+
+    Can only concatenate str (not "function") to str
+
+I ran your code.
+
+The traceback was:
+Line 5 of file answer.py
+    make_polite("Pet the dog")
+
+Line 3 of file answer.py in make_polite
+        return ", please"+make_polite
+
+
+Type errors occur when you use an operator or function on the wrong type of value. For example, using `+` to add to a list (instead of `.append`), or dividing a string by a number.
+
+Suggestion: To fix a type error, you should trace through your code. Make sure each expression has the type you expect it to have.""")
+
 
 if __name__ == '__main__':
     unittest.main(buffer=False)
