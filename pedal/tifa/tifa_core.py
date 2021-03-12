@@ -440,7 +440,7 @@ class TifaCore:
                 definitions = actual_module._tifa_definitions()
                 return get_pedal_type_from_json(definitions)
             except Exception as e:
-                print(e)
+                #print(e)
                 self._issue(module_not_found(self.locate(), chain, True, e, report=self.report))
                 return ModuleType()
 
