@@ -64,7 +64,7 @@ class AstSymbolList:
 
 class AstMap:
     """
-
+    TODO: Seriously think about redoing this mapping system.
     """
     def __init__(self):
         self.mappings = {}
@@ -74,6 +74,23 @@ class AstMap:
         self.conflict_keys = []
         self.match_root = None
         self.diagnosis = ""
+
+    def add_x_to_sym_table(self, key, value, x_table):
+        if key in x_table:
+            new_list = x_table[key]
+            if value not in new_list:
+                new_list.append(value)
+            if not (key in self.conflict_keys):
+                for other in new_list:
+                    if value.id != other.id:
+                        self.conflict_keys.append(key)
+                        break
+        else:
+            new_list = AstSymbolList()
+            new_list.append(value)
+
+        x_table[key] = new_list
+        return len(self.conflict_keys)
 
     def add_func_to_sym_table(self, ins_node, std_node):
         """
@@ -115,21 +132,7 @@ class AstMap:
                 node = node.parent
                 node._id = std_node._id
             value = AstSymbol(std_node._id, node)
-        if key in self.func_table:
-            new_list = self.func_table[key]
-            if value not in new_list:
-                new_list.append(value)
-            if not (key in self.conflict_keys):
-                for other in new_list:
-                    if value.id != other.id:
-                        self.conflict_keys.append(key)
-                        break
-        else:
-            new_list = AstSymbolList()
-            new_list.append(value)
-
-        self.func_table[key] = new_list
-        return len(self.conflict_keys)
+        return self.add_x_to_sym_table(key, value, self.func_table)
 
     def add_var_to_sym_table(self, ins_node, std_node):
         """
@@ -152,20 +155,7 @@ class AstMap:
         else:
             key = ins_node.astNode._id
         value = AstSymbol(std_node.astNode._id, std_node)
-        if key in self.symbol_table:
-            new_list = self.symbol_table[key]
-            new_list.append(value)
-            if not (key in self.conflict_keys):
-                for other in new_list:
-                    if value._id != other._id:
-                        self.conflict_keys.append(key)
-                        break
-        else:
-            new_list = AstSymbolList()
-            new_list.append(value)
-
-        self.symbol_table[key] = new_list
-        return len(self.conflict_keys)
+        return self.add_x_to_sym_table(key, value, self.symbol_table)
 
     def add_exp_to_sym_table(self, ins_node, std_node):
         """
