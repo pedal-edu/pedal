@@ -5,6 +5,8 @@ Version 2.3.5
 * Sandbox's open function will now respect Submission files better
 * Online tests will now respect requirements_dev.txt
 * GradeScope environment now outputs all Used feedback
+* Fixed assert_group label in unit_test
+* Bug fix for CAIT in classes
 
 Version 2.3.4
 -------------
