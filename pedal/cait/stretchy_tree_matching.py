@@ -5,6 +5,7 @@ import ast
 import re
 from pedal.cait.ast_map import AstMap
 from pedal.cait.cait_node import CaitNode
+from pedal.cait.ast_map import SymTables
 
 # "Enums" for _name_regex
 _VAR = "var"
@@ -631,6 +632,40 @@ class StretchyTreeMatcher:
         # return None
         # TODO: Make this handle Calls more intelligently
 
+    def shallow_match_xDef(self, is_match, mapping, ins_node, std_node, meta_matched, table_func):
+        """
+        This function is for ClassDef, FuncDef, and any similar type of ast node that has a name
+        Args:
+            is_match ():
+            mapping ():
+            ins_node ():
+            std_node ():
+            meta_matched ():
+            table_func (str): the name of the table function to add (see ast_map)
+        Returns:
+
+        """
+        ins = ins_node.astNode
+        std = std_node.astNode
+        matched = False
+        if is_match and mapping:
+            name = ins.name
+            match = _name_regex(name)
+            if match[_VAR] and meta_matched:  # variable
+                ins._id = name
+                std._id = std.name
+                target_func = getattr(mapping[0], table_func, mapping[0].add_func_to_sym_table)
+                target_func(ins_node, std_node)  # TODO: Capture result?
+                matched = True
+            elif match[_WILD] and meta_matched:
+                matched = True
+            elif name == std.name and meta_matched:
+                matched = True
+        if matched:
+            return mapping
+        else:
+            return []
+
     # noinspection PyPep8Naming
     def shallow_match_FunctionDef(self, ins_node, std_node, check_meta=True):
         """
@@ -648,23 +683,25 @@ class StretchyTreeMatcher:
         meta_matched = self.metas_match(ins_node, std_node, check_meta)
         is_match = type(ins).__name__ == type(std).__name__ and meta_matched
         mapping = self.shallow_match_main(ins_node, std_node, check_meta, ignores=['name', 'args'])
-        matched = False
-        if is_match and mapping:
-            name = ins.name
-            match = _name_regex(name)
-            if match[_VAR] and meta_matched:  # variable
-                ins._id = name
-                std._id = std.name
-                mapping[0].add_func_to_sym_table(ins_node, std_node)  # TODO: Capture result?
-                matched = True
-            elif match[_WILD] and meta_matched:
-                matched = True
-            elif name == std.name and meta_matched:
-                matched = True
-        if matched:
-            return mapping
-        else:
-            return []
+        return self.shallow_match_xDef(is_match, mapping, ins_node, std_node, meta_matched, SymTables['FUNC'])
+
+    def shallow_match_ClassDef(self, ins_node, std_node, check_meta=True):
+        """
+
+        Args:
+            ins_node:
+            std_node:
+            check_meta:
+
+        Returns:
+
+        """
+        ins = ins_node.astNode
+        std = std_node.astNode
+        meta_matched = self.metas_match(ins_node, std_node, check_meta)
+        is_match = type(ins).__name__ == type(std).__name__ and meta_matched
+        mapping = self.shallow_match_main(ins_node, std_node, check_meta, ignores=['name'])
+        return self.shallow_match_xDef(is_match, mapping, ins_node, std_node, meta_matched, SymTables['CLASS'])
 
     # noinspection PyMethodMayBeStatic
     def shallow_match_generic(self, ins_node, std_node, check_meta=True):

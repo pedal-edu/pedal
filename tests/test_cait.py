@@ -710,6 +710,20 @@ class CaitTests(unittest.TestCase):
         var = matches[0]["_var_"]
         self.assertTrue(var.ast_name == "Name", "is: '{}' instead of Name".format(var.ast_name))
 
+    def test_class_Names(self):
+        contextualize_report("class myClass:\n"
+                             "    def f(self):\n"
+                             "        return 'hello world'")
+        parse_program()
+        matches = find_matches("class myClass:\n\tpass")
+        matches_wildcard = find_matches("class _name_:\n\tpass")
+
+        self.assertTrue(len(matches) == 1, "exact class name matching not working")
+        self.assertTrue(len(matches_wildcard) == 1, "wild card class name matching not working")
+        # Added functionality for matching class names
+        var = matches_wildcard[0]["_name_"]
+        self.assertTrue(var.id == "myClass", "is: '{}' instead of Name".format(var.id))
+
     def test_attribute_names(self):
         contextualize_report("import weather\n"
                              "weather_reports = get_weather('Data')\n"

@@ -5,6 +5,10 @@ that are used to model names and matched expressions.
 from pedal.cait.cait_node import CaitNode
 from pedal.core.location import Location
 
+SymTables = {"FUNC": "add_func_to_sym_table",
+             "VAR": "add_var_to_sym_table",
+             "CLASS": "add_class_to_sym_table"}
+
 
 class AstSymbol:
     """
@@ -64,16 +68,68 @@ class AstSymbolList:
 
 class AstMap:
     """
-
+    TODO: Seriously think about redoing this mapping system.
     """
     def __init__(self):
         self.mappings = {}
         self.symbol_table = {}
         self.exp_table = {}
         self.func_table = {}
+        self.class_table = {}
         self.conflict_keys = []
         self.match_root = None
         self.diagnosis = ""
+
+    def add_x_to_sym_table(self, key, value, x_table):
+        if key in x_table:
+            new_list = x_table[key]
+            if value not in new_list:
+                new_list.append(value)
+            if not (key in self.conflict_keys):
+                for other in new_list:
+                    if value.id != other.id:
+                        self.conflict_keys.append(key)
+                        break
+        else:
+            new_list = AstSymbolList()
+            new_list.append(value)
+
+        x_table[key] = new_list
+        return len(self.conflict_keys)
+
+    def add_class_to_sym_table(self, ins_node, std_node):
+        """
+        Adds ins_node.name to the symbol table if it doesn't already exist, mapping it to a set of ins_node. Updates a
+        second dictionary that maps ins_node to an std_node, and overwrites the current std_node since there should only
+        be one mapping.
+
+        Args:
+            ins_node: instructor node or str representing a class name
+            std_node: student node representing function
+
+        Returns:
+            int: number of conflicts generated
+
+        """
+        if not isinstance(std_node, CaitNode):
+            raise TypeError
+        if isinstance(ins_node, str):
+            key = ins_node
+        else:
+            try:
+                if ins_node.ast_name == "ClassDef":
+                    key = ins_node.astNode.name
+                else:  # TODO: Little skulpt artifact that doesn't raise Attribute Errors...
+                    key = ins_node._id
+                    raise AttributeError
+            except AttributeError:
+                key = ins_node.astNode._id
+
+        if std_node.ast_name == "ClassDef":
+            value = AstSymbol(std_node.astNode.name, std_node)
+        else:  # TODO: Little skulpt artifact that doesn't raise Attribute Errors...
+            raise AttributeError
+        return self.add_x_to_sym_table(key, value, self.class_table)
 
     def add_func_to_sym_table(self, ins_node, std_node):
         """
@@ -108,28 +164,13 @@ class AstMap:
                 value = AstSymbol(std_node.astNode.name, std_node)
             else:  # TODO: Little skulpt artifact that doesn't raise Attribute Errors...
                 raise AttributeError
-#            value = AstSymbol(std_node.astNode.name, std_node)
         except AttributeError:
             node = std_node
             if type(node.astNode).__name__ != "Call":
                 node = node.parent
                 node._id = std_node._id
             value = AstSymbol(std_node._id, node)
-        if key in self.func_table:
-            new_list = self.func_table[key]
-            if value not in new_list:
-                new_list.append(value)
-            if not (key in self.conflict_keys):
-                for other in new_list:
-                    if value.id != other.id:
-                        self.conflict_keys.append(key)
-                        break
-        else:
-            new_list = AstSymbolList()
-            new_list.append(value)
-
-        self.func_table[key] = new_list
-        return len(self.conflict_keys)
+        return self.add_x_to_sym_table(key, value, self.func_table)
 
     def add_var_to_sym_table(self, ins_node, std_node):
         """
@@ -152,20 +193,7 @@ class AstMap:
         else:
             key = ins_node.astNode._id
         value = AstSymbol(std_node.astNode._id, std_node)
-        if key in self.symbol_table:
-            new_list = self.symbol_table[key]
-            new_list.append(value)
-            if not (key in self.conflict_keys):
-                for other in new_list:
-                    if value._id != other._id:
-                        self.conflict_keys.append(key)
-                        break
-        else:
-            new_list = AstSymbolList()
-            new_list.append(value)
-
-        self.symbol_table[key] = new_list
-        return len(self.conflict_keys)
+        return self.add_x_to_sym_table(key, value, self.symbol_table)
 
     def add_exp_to_sym_table(self, ins_node, std_node):
         """
@@ -252,6 +280,11 @@ class AstMap:
             for sub_value in value:
                 self.add_func_to_sym_table(str(key), sub_value.astNode)
 
+        # merge all classes
+        for key, value in other.class_table.items():
+            for sub_value in value:
+                self.add_class_to_sym_table(str(key), sub_value.astNode)
+
     @property
     def match_lineno(self):
         """
@@ -295,8 +328,10 @@ class AstMap:
         else:
             if id_n in self.symbol_table:
                 return self.symbol_table[id_n]
-            else:
+            elif id_n in self.func_table:
                 return self.func_table[id_n]
+            else:
+                return self.class_table[id_n]
 
     def __contains__(self, id_n):
         if id_n.startswith('__'):
