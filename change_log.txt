@@ -1,3 +1,10 @@
+Version 2.3.6
+-------------
+* GradeScope environment has hidden unit tests
+* unit_test can now take in an assertion function
+* Suppressed TIFA warning message for unknown modules
+* Fixed bug with error messages not rendering correctly in runtime errors
+
 Version 2.3.5
 -------------
 * Pedal now supports loading IPYNB files directly
