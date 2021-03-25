@@ -73,7 +73,7 @@ class GradeScopeEnvironment(Environment):
         super().__init__(files=files, main_file=main_file, main_code=main_code,
                          user=user, assignment=assignment, course=course,
                          execution=execution, instructor_file=instructor_file,
-                         report=report, **kwargs)
+                         report=report)
         self.skip_run = skip_run
         self.skip_tifa = skip_tifa
         self.trace = trace
@@ -95,7 +95,8 @@ class GradeScopeEnvironment(Environment):
             'student': student,
             'resolve': resolve,
             'next_section': self.next_section,
-            'sectional_resolve': sectional_resolve
+            'sectional_resolve': sectional_resolve,
+            'show_as_hidden': show_as_hidden
         }
 
     def next_section(self, name=""):
@@ -144,6 +145,8 @@ def detailed_resolver(report=MAIN_REPORT, priority_key=by_priority):
 def resolve(report=MAIN_REPORT, priority_key=by_priority):
     """
 
+    TODO: Support some hidden tests for instructors
+
     Args:
         report:
         custom_success_message:
@@ -151,23 +154,27 @@ def resolve(report=MAIN_REPORT, priority_key=by_priority):
     final = full_resolve(report)
     tests = []
     for feedback in final.used:
+        test = {"name": feedback.title}
+        message = feedback.message if feedback else (feedback.else_message or "Correct")
+        if feedback.title != message:
+            test['output'] = message
+        # Handle scoring
+        success, partial, message, title, data = parse_feedback(feedback)
+        if not feedback.unscored and feedback.score is not None:
+            # Triggered Negative leads to opposite behavior for operator
+            # Also untriggered positive feedback
+            invert_logic = ((feedback.valence != feedback.NEGATIVE_VALENCE) == (not feedback))
+            inversion = "!" if invert_logic else ""
+            score = Score.parse(f"{inversion}{partial}")
+            if not score.invert:
+                test['score'] = score.add_to_current(0) * score_maximum
+            else:
+                test['score'] = 0
+        # But do we actually show it?
         if feedback.parent is None:
-            test = {"name": feedback.title}
-            message = feedback.message if feedback else (feedback.else_message or "Correct")
-            if feedback.title != message:
-                test['output'] = message
-            # Handle scoring
-            success, partial, message, title, data = parse_feedback(feedback)
-            if not feedback.unscored and feedback.score is not None:
-                # Triggered Negative leads to opposite behavior for operator
-                # Also untriggered positive feedback
-                invert_logic = ((feedback.valence != feedback.NEGATIVE_VALENCE) == (not feedback))
-                inversion = "!" if invert_logic else ""
-                score = Score.parse(f"{inversion}{partial}")
-                if not score.invert:
-                    test['score'] = score.add_to_current(0) * score_maximum
-                else:
-                    test['score'] = 0
+            tests.append(test)
+        elif getattr(feedback, 'gradescope_visibility', 'visible') == 'hidden':
+            test['visibility'] = 'hidden'
             tests.append(test)
     if not final.success or final.score < 1:
         final.title = "Failed Instructor Tests"
@@ -177,6 +184,10 @@ def resolve(report=MAIN_REPORT, priority_key=by_priority):
         output=f"<strong>{final.title}</strong><br>\n{final.message}",
         tests=tests
     )
+
+
+def show_as_hidden(feedback):
+    feedback.gradescope_visibility = 'hidden'
 
 
 @make_resolver
