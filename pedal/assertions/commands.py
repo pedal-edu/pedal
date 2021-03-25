@@ -14,7 +14,8 @@ class unit_test(assert_group):
 _unit_test_class = unit_test
 
 
-def unit_test(function, *tests, else_message=None, score=None, partial_credit=False, **kwargs):
+def unit_test(function, *tests, else_message=None, score=None, partial_credit=False,
+              assert_function=None, **kwargs):
     """
     Helper function for quickly unit testing.
 
@@ -24,6 +25,7 @@ def unit_test(function, *tests, else_message=None, score=None, partial_credit=Fa
     * Specify total score for all test cases, divide by # of cases passed | True, using `score`
 
     Args:
+        assert_function: Override the assert function (defaults to assert_equal)
         function ():
         *tests ():
         else_message (str): The message to present as a positive if the
@@ -39,6 +41,8 @@ def unit_test(function, *tests, else_message=None, score=None, partial_credit=Fa
     Returns:
 
     """
+    if assert_function is None:
+        assert_function = assert_equal
     if isinstance(partial_credit, bool):
         if partial_credit:
             # Specify total score for all test cases, divide by # of cases passed | True, using `score`
@@ -59,7 +63,7 @@ def unit_test(function, *tests, else_message=None, score=None, partial_credit=Fa
     with _unit_test_class(function, else_message=else_message, **kwargs) as group_result:
         for test_index, test in enumerate(tests):
             args, expected = test
-            assert_equal(call(function, *args), expected, score=each_score[test_index], **kwargs)
+            assert_function(call(function, *args), expected, score=each_score[test_index], **kwargs)
     if partial_credit is False:
         group_result.score = score
     else:
