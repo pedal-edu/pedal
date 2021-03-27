@@ -160,7 +160,6 @@ def resolve(report=MAIN_REPORT, priority_key=by_priority):
             test['output'] = message
         # Handle scoring
         success, partial, message, title, data = parse_feedback(feedback)
-        print(title, not feedback.unscored, feedback.score)
         if not feedback.unscored and feedback.score is not None:
             # Triggered Negative leads to opposite behavior for operator
             # Also untriggered positive feedback
