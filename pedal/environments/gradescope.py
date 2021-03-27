@@ -160,6 +160,7 @@ def resolve(report=MAIN_REPORT, priority_key=by_priority):
             test['output'] = message
         # Handle scoring
         success, partial, message, title, data = parse_feedback(feedback)
+        print(title, not feedback.unscored, feedback.score)
         if not feedback.unscored and feedback.score is not None:
             # Triggered Negative leads to opposite behavior for operator
             # Also untriggered positive feedback
@@ -171,12 +172,13 @@ def resolve(report=MAIN_REPORT, priority_key=by_priority):
             else:
                 test['score'] = 0
         # But do we actually show it?
-        if feedback.parent is None:
-            tests.append(test)
-        elif getattr(feedback, 'gradescope_visibility', 'visible') == 'hidden':
+        if getattr(feedback, 'gradescope_visibility', 'visible') == 'hidden':
             test['visibility'] = 'hidden'
             tests.append(test)
-    if not final.success or final.score < 1:
+        elif feedback.parent is None:
+            tests.append(test)
+
+    if not final.success and final.score < 1:
         final.title = "Failed Instructor Tests"
         final.message = "Check the results below to see what you have failed."
     dump_feedback(
