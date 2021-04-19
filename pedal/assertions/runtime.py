@@ -536,7 +536,7 @@ class assert_output(RuntimePrintingAssertionFeedback):
     def condition(self, execution, text, exact_strings):
         """ Tests if the regex does not match the text """
         return errors(execution) or not equality_test(self.get_output(execution), text.value,
-                                 _exact_strings=exact_strings, _delta=None)
+                                                      _exact_strings=exact_strings, _delta=None)
 
 
 class assert_prints(assert_output):
