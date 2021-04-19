@@ -2,6 +2,7 @@ from pedal.core.final_feedback import FinalFeedback
 from pedal.resolvers.core import make_resolver
 from pedal.core.report import MAIN_REPORT
 from pedal.core.feedback import Feedback
+from pedal.resolvers.simple import by_priority
 
 DEFAULT_CATEGORY_PRIORITY = [
     Feedback.CATEGORIES.INSTRUCTIONS,
@@ -29,7 +30,7 @@ def resolve_feedback(feedback):
 
 
 @make_resolver
-def resolve(report=MAIN_REPORT):
+def resolve(report=MAIN_REPORT, priority_key=by_priority):
     """
 
     Args:
@@ -41,7 +42,7 @@ def resolve(report=MAIN_REPORT):
 
     # Prepare feedbacks
     feedbacks = report.feedback + report.ignored_feedback
-
+    feedbacks.sort(key=priority_key)
     # Create the initial final feedback
     final = FinalFeedback(success=True, score=0,
                           title=None, message=None,
