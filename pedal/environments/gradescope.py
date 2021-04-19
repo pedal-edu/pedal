@@ -142,7 +142,7 @@ def detailed_resolver(report=MAIN_REPORT, priority_key=by_priority):
 
 
 @make_resolver
-def resolve(report=MAIN_REPORT, priority_key=by_priority):
+def resolve(report=MAIN_REPORT, customize_failure_message= None, priority_key=by_priority):
     """
 
     TODO: Support some hidden tests for instructors
@@ -178,8 +178,11 @@ def resolve(report=MAIN_REPORT, priority_key=by_priority):
             tests.append(test)
 
     if not final.success and final.score < 1:
-        final.title = "Failed Instructor Tests"
-        final.message = "Check the results below to see what you have failed."
+        if customize_failure_message is not None:
+            customize_failure_message(final)
+        else:
+            final.title = "Failed Instructor Tests"
+            final.message = "Check the results below to see what you have failed."
     dump_feedback(
         score=round(final.score*score_maximum, 2),
         output=f"<strong>{final.title}</strong><br>\n{final.message}",
