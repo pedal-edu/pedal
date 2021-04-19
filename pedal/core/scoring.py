@@ -60,8 +60,11 @@ class Score:
             # TODO: Being careless with rounding here.
             value *= 100
         value = str(round(value))
+        operator = self.operator
+        if operator is None:
+            operator = "+"
         return (
-            ("!" if self.invert else "")+self.operator+value+
+            ("!" if self.invert else "")+operator+value +
             ("%" if self.percentage else "")+self.leftovers
         )
 
