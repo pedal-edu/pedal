@@ -142,7 +142,7 @@ def detailed_resolver(report=MAIN_REPORT, priority_key=by_priority):
 
 
 @make_resolver
-def resolve(report=MAIN_REPORT, customize_failure_message= None, priority_key=by_priority):
+def resolve(report=MAIN_REPORT, customize_failure_message= None, leaderboard=None, priority_key=by_priority):
     """
 
     TODO: Support some hidden tests for instructors
@@ -183,10 +183,17 @@ def resolve(report=MAIN_REPORT, customize_failure_message= None, priority_key=by
         else:
             final.title = "Failed Instructor Tests"
             final.message = "Check the results below to see what you have failed."
+    extra = {}
+    if isinstance(leaderboard, list):
+        extra['leaderboard'] = leaderboard
+    elif leaderboard is not None:
+        extra['leaderboard'] = leaderboard(final)
+
     dump_feedback(
         score=round(final.score*score_maximum, 2),
         output=f"<strong>{final.title}</strong><br>\n{final.message}",
-        tests=tests
+        tests=tests,
+        **extra
     )
 
 

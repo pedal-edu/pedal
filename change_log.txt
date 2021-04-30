@@ -3,6 +3,7 @@ Version 2.3.7
 (Unreleased so far)
 * Fixed bug with Full Feedback Resolver not sorting feedback by priority
 * GradeScope resolver now allows custom messages (pre-alpha)
+* GradeScope resolver now supports leaderboard
 
 Version 2.3.6
 -------------
