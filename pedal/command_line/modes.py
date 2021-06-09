@@ -14,6 +14,7 @@ from pprint import pprint
 import warnings
 import argparse
 
+from pedal.command_line.report import StatReport
 from pedal.command_line.verify import generate_report_out, ReportVerifier
 from pedal.core.report import MAIN_REPORT
 from pedal.core.submission import Submission
@@ -68,7 +69,7 @@ class BundleResult:
         return dict(
             output=self.output,
             error=self.error,
-            resolution= self.resolution.copy()
+            resolution=self.resolution.copy()
         )
 
 
@@ -355,7 +356,7 @@ class StatsPipeline(AbstractPipeline):
             else:
                 with open(self.config.output, 'w') as output_file:
                     print(pedal_json_encoder.encode(final), file=output_file)
-        return final
+        return StatReport(final)
 
 
 class PedalJSONEncoder(json.JSONEncoder):
