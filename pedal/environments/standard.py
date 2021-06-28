@@ -11,7 +11,9 @@ from pedal.source import verify
 from pedal.cait import parse_program
 from pedal.sandbox.commands import run
 from pedal.resolvers import simple
-
+from pedal.sandbox import run, get_sandbox, set_input, start_trace
+from pedal.tifa import tifa_analysis
+from pedal.resolvers.simple import resolve
 
 def parse_argv():
     """ Retrieve fields from sys.argv """
@@ -38,8 +40,8 @@ class StandardEnvironment(Environment):
     """
     def __init__(self, files=None, main_file='answer.py', main_code=None,
                  user=None, assignment=None, course=None, execution=None,
-                 instructor_file='on_run.py', skip_tifa=False, set_success=True,
-                 report=MAIN_REPORT):
+                 instructor_file='on_run.py', skip_tifa=False, set_success=True, skip_run=False,
+                 report=MAIN_REPORT, trace=True, threaded=False):
         # Possibly user passed in stuff via the command line.
         if files is None and main_code is None:
             (instructor_file, files, main_file, main_code, user, assignment,
@@ -51,12 +53,20 @@ class StandardEnvironment(Environment):
         # Then default custom stuff
         verify(report=report)
         self.ast = parse_program(report=report)
-        if skip_tifa:
-            self.tifa = None
+        if not skip_tifa:
+            tifa_analysis(report=self.report)
+        if skip_run:
+            student = get_sandbox(report=report)
+            student.threaded = threaded
         else:
-            from pedal.tifa import tifa_analysis
-            self.tifa = tifa_analysis(report=report)
-        self.student = run(threaded=True, report=report)
+            if trace:
+                start_trace()
+            student = run(report=report, threaded=threaded)
+            student.threaded = threaded
+        self.fields = {
+            'student': student,
+            'resolve': resolve
+        }
         self.set_success = set_success
 
     def print_resolve(self, *args, **kwargs):
