@@ -380,7 +380,7 @@ class VerifyPipeline(AbstractPipeline):
             bundle.run_ics_bundle(resolver=self.config.resolver, skip_tifa=self.config.skip_tifa,
                                   skip_run=self.config.skip_run)
             if bundle.result.error:
-                raise (bundle.result.error)
+                raise bundle.result.error
             # Now get the expected output
             base = os.path.splitext(bundle.submission.main_file)[0]
             test_name = os.path.basename(base)

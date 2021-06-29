@@ -26,6 +26,7 @@ def errors(*executions):
             return True
     return False
 
+
 class assert_equal(RuntimeAssertionFeedback):
     """
     Determine if the ``left`` and ``right`` values are equal.
