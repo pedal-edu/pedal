@@ -1,6 +1,10 @@
+Version 2.3.8
+-------------
+* Bug fix for metadata of threaded Sandboxed function calls
+* Bug fix for Standard environment's execution
+
 Version 2.3.7
 -------------
-(Unreleased so far)
 * Fixed bug with Full Feedback Resolver not sorting feedback by priority
 * GradeScope resolver now allows custom messages (pre-alpha)
 * GradeScope resolver now supports leaderboard
