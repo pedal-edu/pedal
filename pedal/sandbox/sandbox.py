@@ -104,7 +104,7 @@ class Sandbox:
     ############################################################################
     # Execution (run/call/eval)
 
-    def _execute_with_timeout(self, code, filename, kind):
+    def _execute_with_timeout(self, code, filename, kind, **meta):
         """
         Execute the given code, but stop after `self.allowed_time`.
         Args:
@@ -117,7 +117,7 @@ class Sandbox:
         """
         try:
             return timeout(self.allowed_time, self._execute,
-                           code, filename, kind, False)
+                           code, filename, kind, False, **meta)
         except TimeoutError as timeout_exception:
             self._stop_patches()
             self._capture_exception(timeout_exception, sys.exc_info(),
@@ -127,9 +127,10 @@ class Sandbox:
     def _execute(self, code, filename, kind, threaded, **meta):
         # Handle any threading if necessary
         if threaded:
-            return self._execute_with_timeout(code, filename, kind)
+            return self._execute_with_timeout(code, filename, kind, **meta)
 
         self.clear_exception()
+
         context = SandboxContext(self._next_context_id, code, filename, kind,
                                  self.target, [], "",
                                  self.exception, self.report.submission, **meta)
@@ -268,8 +269,9 @@ class Sandbox:
                                                           args_locals, kwargs_locals,
                                                           target)
         context_id = self._next_context_id
+
         self._execute(actual, self.report.submission.instructor_file,
-                      SandboxContextKind.CALL, threaded=threaded,
+                      SandboxContextKind.CALL, threaded,
                       called=function, args=arguments)
         self._purge_temporaries()
         return self._handle_result(target, context_id)

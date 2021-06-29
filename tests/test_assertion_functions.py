@@ -70,6 +70,18 @@ The function named x has a parameter named c that is a list of a number, but sho
                       score="+100%",
                       partial_credit=True)
         self.assertEqual(3/5, e.final.score)
+        self.assertFeedback(e, """
+Failed Instructor Test
+Student code failed instructor tests.
+You passed 3/5 tests.
+
+I ran your function add on some new arguments.
+ | Arguments | Returned | Expected
+× |     1, 2 | 2 | 3
+  |     0, 0 | 0 | 0
+  |     0, 3 | 3 | 3
+  |     0, 5 | 5 | 5
+× |     1, 3 | 3 | 4""")
 
     def test_bad_name_error_concatenation(self):
         with Execution("""
