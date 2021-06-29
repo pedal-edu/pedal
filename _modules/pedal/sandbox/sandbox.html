@@ -276,7 +276,7 @@
     <span class="c1">############################################################################</span>
     <span class="c1"># Execution (run/call/eval)</span>
 
-    <span class="k">def</span> <span class="nf">_execute_with_timeout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">kind</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_execute_with_timeout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">kind</span><span class="p">,</span> <span class="o">**</span><span class="n">meta</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Execute the given code, but stop after `self.allowed_time`.</span>
 <span class="sd">        Args:</span>
@@ -289,7 +289,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">timeout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">allowed_time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute</span><span class="p">,</span>
-                           <span class="n">code</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">kind</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+                           <span class="n">code</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">kind</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">meta</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">TimeoutError</span> <span class="k">as</span> <span class="n">timeout_exception</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_stop_patches</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_capture_exception</span><span class="p">(</span><span class="n">timeout_exception</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">(),</span>
@@ -299,9 +299,10 @@
     <span class="k">def</span> <span class="nf">_execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">kind</span><span class="p">,</span> <span class="n">threaded</span><span class="p">,</span> <span class="o">**</span><span class="n">meta</span><span class="p">):</span>
         <span class="c1"># Handle any threading if necessary</span>
         <span class="k">if</span> <span class="n">threaded</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute_with_timeout</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">kind</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute_with_timeout</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">kind</span><span class="p">,</span> <span class="o">**</span><span class="n">meta</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">clear_exception</span><span class="p">()</span>
+
         <span class="n">context</span> <span class="o">=</span> <span class="n">SandboxContext</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_next_context_id</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">kind</span><span class="p">,</span>
                                  <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="p">,</span> <span class="p">[],</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
                                  <span class="bp">self</span><span class="o">.</span><span class="n">exception</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">submission</span><span class="p">,</span> <span class="o">**</span><span class="n">meta</span><span class="p">)</span>
@@ -440,8 +441,9 @@
                                                           <span class="n">args_locals</span><span class="p">,</span> <span class="n">kwargs_locals</span><span class="p">,</span>
                                                           <span class="n">target</span><span class="p">)</span>
         <span class="n">context_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_next_context_id</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">_execute</span><span class="p">(</span><span class="n">actual</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">instructor_file</span><span class="p">,</span>
-                      <span class="n">SandboxContextKind</span><span class="o">.</span><span class="n">CALL</span><span class="p">,</span> <span class="n">threaded</span><span class="o">=</span><span class="n">threaded</span><span class="p">,</span>
+                      <span class="n">SandboxContextKind</span><span class="o">.</span><span class="n">CALL</span><span class="p">,</span> <span class="n">threaded</span><span class="p">,</span>
                       <span class="n">called</span><span class="o">=</span><span class="n">function</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="n">arguments</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_purge_temporaries</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_result</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">context_id</span><span class="p">)</span></div>
