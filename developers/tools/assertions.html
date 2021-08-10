@@ -194,6 +194,378 @@
 </dl>
 </dd></dl>
 
+<span class="target" id="module-pedal.assertions.static"></span><p>Collection of feedback functions related to static checks of student code.</p>
+<dl class="class">
+<dt id="pedal.assertions.static.EnsureAssertionFeedback">
+<em class="property">class </em><code class="sig-name descname">EnsureAssertionFeedback</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">at_least=1</em>, <em class="sig-param">root=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/static.html#EnsureAssertionFeedback"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.static.EnsureAssertionFeedback" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract base class for assertions preventing things.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.static.PreventAssertionFeedback">
+<em class="property">class </em><code class="sig-name descname">PreventAssertionFeedback</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">at_most=0</em>, <em class="sig-param">root=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/static.html#PreventAssertionFeedback"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.static.PreventAssertionFeedback" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract base class for assertions preventing things.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.static.ensure_ast">
+<em class="property">class </em><code class="sig-name descname">ensure_ast</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">at_least=1</em>, <em class="sig-param">root=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/static.html#ensure_ast"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.static.ensure_ast" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determines if the given ast <cite>name</cite> is used anywhere, returning
+the node of it if it is. You can refer to Green Tree Snakes documentation
+for more information about AST Names:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://greentreesnakes.readthedocs.io/en/latest/nodes.html">https://greentreesnakes.readthedocs.io/en/latest/nodes.html</a></p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The name of the node.</p></li>
+<li><p><strong>at_least</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – The minimum number of times you must use this
+node. Defaults to <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="pedal.assertions.static.ensure_ast.condition">
+<code class="sig-name descname">condition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/static.html#ensure_ast.condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.static.ensure_ast.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use find_all to check number of occurrences.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.static.ensure_documented_functions">
+<em class="property">class </em><code class="sig-name descname">ensure_documented_functions</code><span class="sig-paren">(</span><em class="sig-param">root=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/static.html#ensure_documented_functions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.static.ensure_documented_functions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks that all of the functions in the source code are documented.</p>
+<dl class="method">
+<dt id="pedal.assertions.static.ensure_documented_functions.condition">
+<code class="sig-name descname">condition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/static.html#ensure_documented_functions.condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.static.ensure_documented_functions.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Traverse the AST to find matches.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.assertions.static.ensure_function">
+<code class="sig-name descname">ensure_function</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">arity=None</em>, <em class="sig-param">parameters=None</em>, <em class="sig-param">returns=None</em>, <em class="sig-param">root=None</em>, <em class="sig-param">compliment=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/static.html#ensure_function"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.static.ensure_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks that the function exists and has the right signature.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.static.ensure_function_call">
+<em class="property">class </em><code class="sig-name descname">ensure_function_call</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">at_least=1</em>, <em class="sig-param">root=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/static.html#ensure_function_call"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.static.ensure_function_call" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine that a function was definitely called by statically checking
+the students’ code.</p>
+<p># TODO: Allow parameter to force this to be a method xor/or function call
+# TODO: Allow set to be passed in for OR, or list for AND, for multiples</p>
+<p># TODO: also check the TIFA records to see if the function was read</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The name of the function (e.g., <code class="docutils literal notranslate"><span class="pre">'sum'</span></code>)</p></li>
+<li><p><strong>at_most</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – The maximum number of times you are allowed to call this
+function. Defaults to <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="pedal.assertions.static.ensure_function_call.condition">
+<code class="sig-name descname">condition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/static.html#ensure_function_call.condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.static.ensure_function_call.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use find_matches to check number of occurrences.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.static.ensure_import">
+<em class="property">class </em><code class="sig-name descname">ensure_import</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">at_least=1</em>, <em class="sig-param">root=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/static.html#ensure_import"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.static.ensure_import" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verify that the given <code class="docutils literal notranslate"><span class="pre">module</span></code> has been imported, by statically
+checking the import statements in the code. The <code class="docutils literal notranslate"><span class="pre">at_least</span></code> parameter
+is ignored.</p>
+<dl class="method">
+<dt id="pedal.assertions.static.ensure_import.condition">
+<code class="sig-name descname">condition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/static.html#ensure_import.condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.static.ensure_import.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Traverse the AST to find matches.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.static.ensure_literal">
+<em class="property">class </em><code class="sig-name descname">ensure_literal</code><span class="sig-paren">(</span><em class="sig-param">literal</em>, <em class="sig-param">at_least=1</em>, <em class="sig-param">root=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/static.html#ensure_literal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.static.ensure_literal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make sure that the given literal value does appear in the student’s
+code.</p>
+<dl class="method">
+<dt id="pedal.assertions.static.ensure_literal.condition">
+<code class="sig-name descname">condition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/static.html#ensure_literal.condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.static.ensure_literal.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Detect if this feedback is present in the code.
+Defaults to true through the <cite>activate</cite> parameter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Whether or not this feedback’s condition was detected.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.static.ensure_literal_type">
+<em class="property">class </em><code class="sig-name descname">ensure_literal_type</code><span class="sig-paren">(</span><em class="sig-param">literal_type</em>, <em class="sig-param">at_least=1</em>, <em class="sig-param">root=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/static.html#ensure_literal_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.static.ensure_literal_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make sure that the given type of literal value does appear in the
+student’s code.</p>
+<dl class="method">
+<dt id="pedal.assertions.static.ensure_literal_type.condition">
+<code class="sig-name descname">condition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/static.html#ensure_literal_type.condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.static.ensure_literal_type.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Detect if this feedback is present in the code.
+Defaults to true through the <cite>activate</cite> parameter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Whether or not this feedback’s condition was detected.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.static.ensure_operation">
+<em class="property">class </em><code class="sig-name descname">ensure_operation</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">at_least=1</em>, <em class="sig-param">root=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/static.html#ensure_operation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.static.ensure_operation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determines if the given operator <cite>op_name</cite> is used somewhere. You can
+specify the operator as a string like <cite>“+”</cite> or <cite>“&lt;&lt;”</cite>. Supports all
+comparison, boolean, binary, and unary operators.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The name of the function (e.g., <code class="docutils literal notranslate"><span class="pre">'sum'</span></code>)</p></li>
+<li><p><strong>at_least</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – The minimum number of times you must call this
+function. Defaults to <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="pedal.assertions.static.ensure_operation.condition">
+<code class="sig-name descname">condition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/static.html#ensure_operation.condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.static.ensure_operation.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use find_matches to check number of occurrences.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.assertions.static.ensure_prints_exactly">
+<code class="sig-name descname">ensure_prints_exactly</code><span class="sig-paren">(</span><em class="sig-param">count</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/static.html#ensure_prints_exactly"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.static.ensure_prints_exactly" title="Permalink to this definition">¶</a></dt>
+<dd><p>DEPRECATED.</p>
+<p>Used to ensure that the student’s code calls the print function a certain
+number of times.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>count</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – The minimum and maximum number of times you can call print.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Whether or not both the maximum and minimum was met.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.static.ensure_starting_code">
+<em class="property">class </em><code class="sig-name descname">ensure_starting_code</code><span class="sig-paren">(</span><em class="sig-param">code</em>, <em class="sig-param">root=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/static.html#ensure_starting_code"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.static.ensure_starting_code" title="Permalink to this definition">¶</a></dt>
+<dd><p>Detects if the given code is missing.</p>
+<dl class="method">
+<dt id="pedal.assertions.static.ensure_starting_code.condition">
+<code class="sig-name descname">condition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/static.html#ensure_starting_code.condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.static.ensure_starting_code.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Traverse the AST to find matches.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.assertions.static.function_prints">
+<code class="sig-name descname">function_prints</code><span class="sig-paren">(</span><em class="sig-param">function_name</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/static.html#function_prints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.static.function_prints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine that the print function is called within this function, by
+tracing its code statically. Does not actually verify that the function
+was ever called in practice.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>function_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The name of the function to search.</p>
+</dd>
+</dl>
+<p>Returns:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.assertions.static.has_import">
+<code class="sig-name descname">has_import</code><span class="sig-paren">(</span><em class="sig-param">ast</em>, <em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/static.html#has_import"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.static.has_import" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if the given module name is in the code.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ast</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.cait.cait_node.CaitNode</span></code>) – The starting point
+to search.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The name of the module to match against.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Whether or not the module name was matched.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.static.prevent_ast">
+<em class="property">class </em><code class="sig-name descname">prevent_ast</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">at_most=0</em>, <em class="sig-param">root=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/static.html#prevent_ast"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.static.prevent_ast" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determines if the given ast <cite>name</cite> is not used anywhere, returning
+the node of it if it is. You can refer to Green Tree Snakes documentation
+for more information about AST Names:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://greentreesnakes.readthedocs.io/en/latest/nodes.html">https://greentreesnakes.readthedocs.io/en/latest/nodes.html</a></p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The name of the function (e.g., <code class="docutils literal notranslate"><span class="pre">'sum'</span></code>)</p></li>
+<li><p><strong>at_most</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – The maximum number of times you are allowed to use this
+AST. Defaults to <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="pedal.assertions.static.prevent_ast.condition">
+<code class="sig-name descname">condition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/static.html#prevent_ast.condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.static.prevent_ast.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use find_all to check number of occurrences.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.static.prevent_embedded_answer">
+<em class="property">class </em><code class="sig-name descname">prevent_embedded_answer</code><span class="sig-paren">(</span><em class="sig-param">code</em>, <em class="sig-param">root=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/static.html#prevent_embedded_answer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.static.prevent_embedded_answer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Detects if the given code is present.</p>
+<dl class="method">
+<dt id="pedal.assertions.static.prevent_embedded_answer.condition">
+<code class="sig-name descname">condition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/static.html#prevent_embedded_answer.condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.static.prevent_embedded_answer.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Traverse the AST to find matches.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.static.prevent_function_call">
+<em class="property">class </em><code class="sig-name descname">prevent_function_call</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">at_most=0</em>, <em class="sig-param">root=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/static.html#prevent_function_call"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.static.prevent_function_call" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if a function was ever called by statically checking
+the students’ code.</p>
+<p># TODO: also check the TIFA records to see if the function was read</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The name of the function (e.g., <code class="docutils literal notranslate"><span class="pre">'sum'</span></code>)</p></li>
+<li><p><strong>at_most</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – The maximum number of times you are allowed to call this
+function. Defaults to <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="pedal.assertions.static.prevent_function_call.condition">
+<code class="sig-name descname">condition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/static.html#prevent_function_call.condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.static.prevent_function_call.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use find_matches to check number of occurrences.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.static.prevent_import">
+<em class="property">class </em><code class="sig-name descname">prevent_import</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">at_most=0</em>, <em class="sig-param">root=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/static.html#prevent_import"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.static.prevent_import" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verify that the given <code class="docutils literal notranslate"><span class="pre">module</span></code> has not been imported, by statically
+checking the import statements in the code. The <code class="docutils literal notranslate"><span class="pre">at_most</span></code> parameter
+is ignored.</p>
+<dl class="method">
+<dt id="pedal.assertions.static.prevent_import.condition">
+<code class="sig-name descname">condition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/static.html#prevent_import.condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.static.prevent_import.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Traverse the AST to find matches.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.static.prevent_literal">
+<em class="property">class </em><code class="sig-name descname">prevent_literal</code><span class="sig-paren">(</span><em class="sig-param">literal</em>, <em class="sig-param">at_most=0</em>, <em class="sig-param">root=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/static.html#prevent_literal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.static.prevent_literal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make sure that the given literal value does not appear in the student’s
+code.</p>
+<dl class="method">
+<dt id="pedal.assertions.static.prevent_literal.condition">
+<code class="sig-name descname">condition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/static.html#prevent_literal.condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.static.prevent_literal.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Detect if this feedback is present in the code.
+Defaults to true through the <cite>activate</cite> parameter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Whether or not this feedback’s condition was detected.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.static.prevent_literal_type">
+<em class="property">class </em><code class="sig-name descname">prevent_literal_type</code><span class="sig-paren">(</span><em class="sig-param">literal_type</em>, <em class="sig-param">at_most=0</em>, <em class="sig-param">root=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/static.html#prevent_literal_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.static.prevent_literal_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make sure that the given literal value does not appear in the student’s
+code.</p>
+<dl class="method">
+<dt id="pedal.assertions.static.prevent_literal_type.condition">
+<code class="sig-name descname">condition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/static.html#prevent_literal_type.condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.static.prevent_literal_type.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Detect if this feedback is present in the code.
+Defaults to true through the <cite>activate</cite> parameter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Whether or not this feedback’s condition was detected.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.static.prevent_operation">
+<em class="property">class </em><code class="sig-name descname">prevent_operation</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">at_most=0</em>, <em class="sig-param">root=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/static.html#prevent_operation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.static.prevent_operation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determines if the given operator <cite>op_name</cite> is not used anywhere, returning
+the node of it if it is. Otherwise, returns <cite>None</cite>. You can specify the
+operator as a string like <cite>“+”</cite> or <cite>“&lt;&lt;”</cite>. Supports all comparison,
+boolean, binary, and unary operators.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The name of the function (e.g., <code class="docutils literal notranslate"><span class="pre">'sum'</span></code>)</p></li>
+<li><p><strong>at_most</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – The maximum number of times you are allowed to call this
+function. Defaults to <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="pedal.assertions.static.prevent_operation.condition">
+<code class="sig-name descname">condition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/static.html#prevent_operation.condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.static.prevent_operation.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use find_matches to check number of occurrences.</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 
 
