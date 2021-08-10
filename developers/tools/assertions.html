@@ -196,18 +196,6 @@
 
 <span class="target" id="module-pedal.assertions.static"></span><p>Collection of feedback functions related to static checks of student code.</p>
 <dl class="class">
-<dt id="pedal.assertions.static.EnsureAssertionFeedback">
-<em class="property">class </em><code class="sig-name descname">EnsureAssertionFeedback</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">at_least=1</em>, <em class="sig-param">root=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/static.html#EnsureAssertionFeedback"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.static.EnsureAssertionFeedback" title="Permalink to this definition">¶</a></dt>
-<dd><p>Abstract base class for assertions preventing things.</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="pedal.assertions.static.PreventAssertionFeedback">
-<em class="property">class </em><code class="sig-name descname">PreventAssertionFeedback</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">at_most=0</em>, <em class="sig-param">root=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/static.html#PreventAssertionFeedback"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.static.PreventAssertionFeedback" title="Permalink to this definition">¶</a></dt>
-<dd><p>Abstract base class for assertions preventing things.</p>
-</dd></dl>
-
-<dl class="class">
 <dt id="pedal.assertions.static.ensure_ast">
 <em class="property">class </em><code class="sig-name descname">ensure_ast</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">at_least=1</em>, <em class="sig-param">root=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/static.html#ensure_ast"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.static.ensure_ast" title="Permalink to this definition">¶</a></dt>
 <dd><p>Determines if the given ast <cite>name</cite> is used anywhere, returning
@@ -564,6 +552,841 @@ function. Defaults to <code class="docutils literal notranslate"><span class="pr
 <dd><p>Use find_matches to check number of occurrences.</p>
 </dd></dl>
 
+</dd></dl>
+
+<span class="target" id="module-pedal.assertions.runtime"></span><p>Runtime assertions.</p>
+<p>TODO: assert_has_class
+TODO: assertGraphType, assertGraphValues
+TODO: assert_coverage
+TODO: assert_ran (latest run produced no expections)</p>
+<dl class="attribute">
+<dt id="pedal.assertions.runtime.assertAlmostEqual">
+<code class="sig-name descname">assertAlmostEqual</code><a class="headerlink" href="#pedal.assertions.runtime.assertAlmostEqual" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pedal.assertions.runtime.assert_equal" title="pedal.assertions.runtime.assert_equal"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.assertions.runtime.assert_equal</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.assertions.runtime.assertEqual">
+<code class="sig-name descname">assertEqual</code><a class="headerlink" href="#pedal.assertions.runtime.assertEqual" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pedal.assertions.runtime.assert_equal" title="pedal.assertions.runtime.assert_equal"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.assertions.runtime.assert_equal</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.assertions.runtime.assertFalse">
+<code class="sig-name descname">assertFalse</code><a class="headerlink" href="#pedal.assertions.runtime.assertFalse" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pedal.assertions.runtime.assert_false" title="pedal.assertions.runtime.assert_false"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.assertions.runtime.assert_false</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.assertions.runtime.assertGreater">
+<code class="sig-name descname">assertGreater</code><a class="headerlink" href="#pedal.assertions.runtime.assertGreater" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pedal.assertions.runtime.assert_greater" title="pedal.assertions.runtime.assert_greater"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.assertions.runtime.assert_greater</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.assertions.runtime.assertGreaterEqual">
+<code class="sig-name descname">assertGreaterEqual</code><a class="headerlink" href="#pedal.assertions.runtime.assertGreaterEqual" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pedal.assertions.runtime.assert_greater_equal" title="pedal.assertions.runtime.assert_greater_equal"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.assertions.runtime.assert_greater_equal</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.assertions.runtime.assertHasAttr">
+<code class="sig-name descname">assertHasAttr</code><a class="headerlink" href="#pedal.assertions.runtime.assertHasAttr" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pedal.assertions.runtime.assert_has_attr" title="pedal.assertions.runtime.assert_has_attr"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.assertions.runtime.assert_has_attr</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.assertions.runtime.assertHasFunction">
+<code class="sig-name descname">assertHasFunction</code><a class="headerlink" href="#pedal.assertions.runtime.assertHasFunction" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pedal.assertions.runtime.assert_has_function" title="pedal.assertions.runtime.assert_has_function"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.assertions.runtime.assert_has_function</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.assertions.runtime.assertHasVariable">
+<code class="sig-name descname">assertHasVariable</code><a class="headerlink" href="#pedal.assertions.runtime.assertHasVariable" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pedal.assertions.runtime.assert_has_variable" title="pedal.assertions.runtime.assert_has_variable"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.assertions.runtime.assert_has_variable</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.assertions.runtime.assertIn">
+<code class="sig-name descname">assertIn</code><a class="headerlink" href="#pedal.assertions.runtime.assertIn" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pedal.assertions.runtime.assert_in" title="pedal.assertions.runtime.assert_in"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.assertions.runtime.assert_in</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.assertions.runtime.assertIs">
+<code class="sig-name descname">assertIs</code><a class="headerlink" href="#pedal.assertions.runtime.assertIs" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pedal.assertions.runtime.assert_is" title="pedal.assertions.runtime.assert_is"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.assertions.runtime.assert_is</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.assertions.runtime.assertIsInstance">
+<code class="sig-name descname">assertIsInstance</code><a class="headerlink" href="#pedal.assertions.runtime.assertIsInstance" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pedal.assertions.runtime.assert_is_instance" title="pedal.assertions.runtime.assert_is_instance"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.assertions.runtime.assert_is_instance</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.assertions.runtime.assertIsNone">
+<code class="sig-name descname">assertIsNone</code><a class="headerlink" href="#pedal.assertions.runtime.assertIsNone" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pedal.assertions.runtime.assert_is_none" title="pedal.assertions.runtime.assert_is_none"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.assertions.runtime.assert_is_none</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.assertions.runtime.assertIsNot">
+<code class="sig-name descname">assertIsNot</code><a class="headerlink" href="#pedal.assertions.runtime.assertIsNot" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pedal.assertions.runtime.assert_is_not" title="pedal.assertions.runtime.assert_is_not"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.assertions.runtime.assert_is_not</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.assertions.runtime.assertIsNotInstance">
+<code class="sig-name descname">assertIsNotInstance</code><a class="headerlink" href="#pedal.assertions.runtime.assertIsNotInstance" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pedal.assertions.runtime.assert_not_is_instance" title="pedal.assertions.runtime.assert_not_is_instance"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.assertions.runtime.assert_not_is_instance</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.assertions.runtime.assertIsNotNone">
+<code class="sig-name descname">assertIsNotNone</code><a class="headerlink" href="#pedal.assertions.runtime.assertIsNotNone" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pedal.assertions.runtime.assert_is_not_none" title="pedal.assertions.runtime.assert_is_not_none"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.assertions.runtime.assert_is_not_none</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.assertions.runtime.assertLengthEqual">
+<code class="sig-name descname">assertLengthEqual</code><a class="headerlink" href="#pedal.assertions.runtime.assertLengthEqual" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pedal.assertions.runtime.assert_length_equal" title="pedal.assertions.runtime.assert_length_equal"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.assertions.runtime.assert_length_equal</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.assertions.runtime.assertLengthGreater">
+<code class="sig-name descname">assertLengthGreater</code><a class="headerlink" href="#pedal.assertions.runtime.assertLengthGreater" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pedal.assertions.runtime.assert_length_greater" title="pedal.assertions.runtime.assert_length_greater"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.assertions.runtime.assert_length_greater</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.assertions.runtime.assertLengthGreaterEqual">
+<code class="sig-name descname">assertLengthGreaterEqual</code><a class="headerlink" href="#pedal.assertions.runtime.assertLengthGreaterEqual" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pedal.assertions.runtime.assert_length_greater_equal" title="pedal.assertions.runtime.assert_length_greater_equal"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.assertions.runtime.assert_length_greater_equal</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.assertions.runtime.assertLengthLess">
+<code class="sig-name descname">assertLengthLess</code><a class="headerlink" href="#pedal.assertions.runtime.assertLengthLess" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pedal.assertions.runtime.assert_length_less" title="pedal.assertions.runtime.assert_length_less"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.assertions.runtime.assert_length_less</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.assertions.runtime.assertLengthLessEqual">
+<code class="sig-name descname">assertLengthLessEqual</code><a class="headerlink" href="#pedal.assertions.runtime.assertLengthLessEqual" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pedal.assertions.runtime.assert_length_less_equal" title="pedal.assertions.runtime.assert_length_less_equal"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.assertions.runtime.assert_length_less_equal</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.assertions.runtime.assertLengthNotEqual">
+<code class="sig-name descname">assertLengthNotEqual</code><a class="headerlink" href="#pedal.assertions.runtime.assertLengthNotEqual" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pedal.assertions.runtime.assert_length_not_equal" title="pedal.assertions.runtime.assert_length_not_equal"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.assertions.runtime.assert_length_not_equal</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.assertions.runtime.assertLess">
+<code class="sig-name descname">assertLess</code><a class="headerlink" href="#pedal.assertions.runtime.assertLess" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pedal.assertions.runtime.assert_less" title="pedal.assertions.runtime.assert_less"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.assertions.runtime.assert_less</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.assertions.runtime.assertLessEqual">
+<code class="sig-name descname">assertLessEqual</code><a class="headerlink" href="#pedal.assertions.runtime.assertLessEqual" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pedal.assertions.runtime.assert_less_equal" title="pedal.assertions.runtime.assert_less_equal"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.assertions.runtime.assert_less_equal</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.assertions.runtime.assertNotAlmostEqual">
+<code class="sig-name descname">assertNotAlmostEqual</code><a class="headerlink" href="#pedal.assertions.runtime.assertNotAlmostEqual" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pedal.assertions.runtime.assert_not_equal" title="pedal.assertions.runtime.assert_not_equal"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.assertions.runtime.assert_not_equal</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.assertions.runtime.assertNotEqual">
+<code class="sig-name descname">assertNotEqual</code><a class="headerlink" href="#pedal.assertions.runtime.assertNotEqual" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pedal.assertions.runtime.assert_not_equal" title="pedal.assertions.runtime.assert_not_equal"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.assertions.runtime.assert_not_equal</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.assertions.runtime.assertNotIn">
+<code class="sig-name descname">assertNotIn</code><a class="headerlink" href="#pedal.assertions.runtime.assertNotIn" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pedal.assertions.runtime.assert_not_in" title="pedal.assertions.runtime.assert_not_in"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.assertions.runtime.assert_not_in</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.assertions.runtime.assertNotOutput">
+<code class="sig-name descname">assertNotOutput</code><a class="headerlink" href="#pedal.assertions.runtime.assertNotOutput" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pedal.assertions.runtime.assert_not_output" title="pedal.assertions.runtime.assert_not_output"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.assertions.runtime.assert_not_output</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.assertions.runtime.assertNotOutputContains">
+<code class="sig-name descname">assertNotOutputContains</code><a class="headerlink" href="#pedal.assertions.runtime.assertNotOutputContains" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pedal.assertions.runtime.assert_not_output_contains" title="pedal.assertions.runtime.assert_not_output_contains"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.assertions.runtime.assert_not_output_contains</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.assertions.runtime.assertNotRegex">
+<code class="sig-name descname">assertNotRegex</code><a class="headerlink" href="#pedal.assertions.runtime.assertNotRegex" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pedal.assertions.runtime.assert_not_regex" title="pedal.assertions.runtime.assert_not_regex"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.assertions.runtime.assert_not_regex</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.assertions.runtime.assertNotType">
+<code class="sig-name descname">assertNotType</code><a class="headerlink" href="#pedal.assertions.runtime.assertNotType" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pedal.assertions.runtime.assert_not_type" title="pedal.assertions.runtime.assert_not_type"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.assertions.runtime.assert_not_type</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.assertions.runtime.assertOutput">
+<code class="sig-name descname">assertOutput</code><a class="headerlink" href="#pedal.assertions.runtime.assertOutput" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pedal.assertions.runtime.assert_output" title="pedal.assertions.runtime.assert_output"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.assertions.runtime.assert_output</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.assertions.runtime.assertOutputContains">
+<code class="sig-name descname">assertOutputContains</code><a class="headerlink" href="#pedal.assertions.runtime.assertOutputContains" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pedal.assertions.runtime.assert_output_contains" title="pedal.assertions.runtime.assert_output_contains"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.assertions.runtime.assert_output_contains</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.assertions.runtime.assertPrints">
+<code class="sig-name descname">assertPrints</code><a class="headerlink" href="#pedal.assertions.runtime.assertPrints" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pedal.assertions.runtime.assert_prints" title="pedal.assertions.runtime.assert_prints"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.assertions.runtime.assert_prints</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.assertions.runtime.assertRegex">
+<code class="sig-name descname">assertRegex</code><a class="headerlink" href="#pedal.assertions.runtime.assertRegex" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pedal.assertions.runtime.assert_regex" title="pedal.assertions.runtime.assert_regex"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.assertions.runtime.assert_regex</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.assertions.runtime.assertTrue">
+<code class="sig-name descname">assertTrue</code><a class="headerlink" href="#pedal.assertions.runtime.assertTrue" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pedal.assertions.runtime.assert_true" title="pedal.assertions.runtime.assert_true"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.assertions.runtime.assert_true</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pedal.assertions.runtime.assertType">
+<code class="sig-name descname">assertType</code><a class="headerlink" href="#pedal.assertions.runtime.assertType" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pedal.assertions.runtime.assert_type" title="pedal.assertions.runtime.assert_type"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.assertions.runtime.assert_type</span></code></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.runtime.assert_almost_equal">
+<em class="property">class </em><code class="sig-name descname">assert_almost_equal</code><span class="sig-paren">(</span><em class="sig-param">left</em>, <em class="sig-param">right</em>, <em class="sig-param">exact_strings=False</em>, <em class="sig-param">delta=0.001</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_almost_equal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_almost_equal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test if the two values are almost equal; equivalent to assert_equal.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.runtime.assert_contains_subset">
+<em class="property">class </em><code class="sig-name descname">assert_contains_subset</code><span class="sig-paren">(</span><em class="sig-param">needles</em>, <em class="sig-param">haystack</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_contains_subset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_contains_subset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if the <code class="docutils literal notranslate"><span class="pre">needles</span></code> are in the <code class="docutils literal notranslate"><span class="pre">haystack</span></code>.</p>
+<dl class="method">
+<dt id="pedal.assertions.runtime.assert_contains_subset.condition">
+<code class="sig-name descname">condition</code><span class="sig-paren">(</span><em class="sig-param">needles</em>, <em class="sig-param">haystack</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_contains_subset.condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_contains_subset.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if the needle is not in the haystack</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.runtime.assert_equal">
+<em class="property">class </em><code class="sig-name descname">assert_equal</code><span class="sig-paren">(</span><em class="sig-param">left</em>, <em class="sig-param">right</em>, <em class="sig-param">exact_strings=False</em>, <em class="sig-param">delta=0.001</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_equal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_equal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if the <code class="docutils literal notranslate"><span class="pre">left</span></code> and <code class="docutils literal notranslate"><span class="pre">right</span></code> values are equal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>exact_strings</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Whether to require that strings be exactly the
+same, for each character. If False (the default), then strings will
+be normalized (lowercased, trailing decimals chopped, punctuation
+removed, lines are flattened, and all characters are sorted).</p></li>
+<li><p><strong>delta</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – When comparing floats, how close the values must be.
+If delta is None, then the default Delta will be used (.001).</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="pedal.assertions.runtime.assert_equal.condition">
+<code class="sig-name descname">condition</code><span class="sig-paren">(</span><em class="sig-param">left</em>, <em class="sig-param">right</em>, <em class="sig-param">exact_strings</em>, <em class="sig-param">delta</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_equal.condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_equal.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if the left and right are equal</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.runtime.assert_false">
+<em class="property">class </em><code class="sig-name descname">assert_false</code><span class="sig-paren">(</span><em class="sig-param">value</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_false"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_false" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if the <code class="docutils literal notranslate"><span class="pre">value</span></code> is false.</p>
+<dl class="method">
+<dt id="pedal.assertions.runtime.assert_false.condition">
+<code class="sig-name descname">condition</code><span class="sig-paren">(</span><em class="sig-param">left</em>, <em class="sig-param">right</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_false.condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_false.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if the left evaluates to true</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.runtime.assert_greater">
+<em class="property">class </em><code class="sig-name descname">assert_greater</code><span class="sig-paren">(</span><em class="sig-param">left</em>, <em class="sig-param">right</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_greater"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_greater" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if the <code class="docutils literal notranslate"><span class="pre">left</span></code> is greater than the <code class="docutils literal notranslate"><span class="pre">right</span></code>.</p>
+<dl class="method">
+<dt id="pedal.assertions.runtime.assert_greater.condition">
+<code class="sig-name descname">condition</code><span class="sig-paren">(</span><em class="sig-param">left</em>, <em class="sig-param">right</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_greater.condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_greater.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if the left is less than or equal to the right</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.runtime.assert_greater_equal">
+<em class="property">class </em><code class="sig-name descname">assert_greater_equal</code><span class="sig-paren">(</span><em class="sig-param">left</em>, <em class="sig-param">right</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_greater_equal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_greater_equal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if the <code class="docutils literal notranslate"><span class="pre">left</span></code> is greater than or equal to the <code class="docutils literal notranslate"><span class="pre">right</span></code>.</p>
+<dl class="method">
+<dt id="pedal.assertions.runtime.assert_greater_equal.condition">
+<code class="sig-name descname">condition</code><span class="sig-paren">(</span><em class="sig-param">left</em>, <em class="sig-param">right</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_greater_equal.condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_greater_equal.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if the left is less than the right</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.runtime.assert_has_attr">
+<em class="property">class </em><code class="sig-name descname">assert_has_attr</code><span class="sig-paren">(</span><em class="sig-param">left</em>, <em class="sig-param">right</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_has_attr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_has_attr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if the <code class="docutils literal notranslate"><span class="pre">object</span></code> has the <code class="docutils literal notranslate"><span class="pre">name</span></code></p>
+<dl class="method">
+<dt id="pedal.assertions.runtime.assert_has_attr.condition">
+<code class="sig-name descname">condition</code><span class="sig-paren">(</span><em class="sig-param">obj</em>, <em class="sig-param">attr</em>, <em class="sig-param">exact_strings</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_has_attr.condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_has_attr.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if the regex does not match the text</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.runtime.assert_has_function">
+<em class="property">class </em><code class="sig-name descname">assert_has_function</code><span class="sig-paren">(</span><em class="sig-param">sandbox</em>, <em class="sig-param">function_name</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_has_function"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_has_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if the student’s code has the function.</p>
+<dl class="method">
+<dt id="pedal.assertions.runtime.assert_has_function.condition">
+<code class="sig-name descname">condition</code><span class="sig-paren">(</span><em class="sig-param">sandbox</em>, <em class="sig-param">function_name</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_has_function.condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_has_function.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Detect if this feedback is present in the code.
+Defaults to true through the <cite>activate</cite> parameter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Whether or not this feedback’s condition was detected.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pedal.assertions.runtime.assert_has_function.format_assertion">
+<code class="sig-name descname">format_assertion</code><span class="sig-paren">(</span><em class="sig-param">sandbox</em>, <em class="sig-param">function_name</em>, <em class="sig-param">contexts</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_has_function.format_assertion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_has_function.format_assertion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a textual explanation of the difference between left and right,
+using any targets from the contexts. The <code class="docutils literal notranslate"><span class="pre">expected_verb</span></code> is the
+human-friendly description of the comparison being made between the two
+sides, while <code class="docutils literal notranslate"><span class="pre">inverse_operator</span></code> is the actual comparison that was
+performed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>left</strong> (<em>InterpolatedValue</em>) – </p></li>
+<li><p><strong>right</strong> (<em>InterpolatedValue</em>) – </p></li>
+<li><p><strong>contexts</strong> (list[<code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.sandbox.data.SandboxContext</span></code>]) – </p></li>
+</ul>
+</dd>
+</dl>
+<p>Returns:</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.runtime.assert_has_variable">
+<em class="property">class </em><code class="sig-name descname">assert_has_variable</code><span class="sig-paren">(</span><em class="sig-param">sandbox</em>, <em class="sig-param">variable_name</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_has_variable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_has_variable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if the student’s data has the name.</p>
+<dl class="method">
+<dt id="pedal.assertions.runtime.assert_has_variable.condition">
+<code class="sig-name descname">condition</code><span class="sig-paren">(</span><em class="sig-param">sandbox</em>, <em class="sig-param">variable_name</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_has_variable.condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_has_variable.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Detect if this feedback is present in the code.
+Defaults to true through the <cite>activate</cite> parameter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Whether or not this feedback’s condition was detected.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pedal.assertions.runtime.assert_has_variable.format_assertion">
+<code class="sig-name descname">format_assertion</code><span class="sig-paren">(</span><em class="sig-param">sandbox</em>, <em class="sig-param">variable_name</em>, <em class="sig-param">contexts</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_has_variable.format_assertion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_has_variable.format_assertion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a textual explanation of the difference between left and right,
+using any targets from the contexts. The <code class="docutils literal notranslate"><span class="pre">expected_verb</span></code> is the
+human-friendly description of the comparison being made between the two
+sides, while <code class="docutils literal notranslate"><span class="pre">inverse_operator</span></code> is the actual comparison that was
+performed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>left</strong> (<em>InterpolatedValue</em>) – </p></li>
+<li><p><strong>right</strong> (<em>InterpolatedValue</em>) – </p></li>
+<li><p><strong>contexts</strong> (list[<code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.sandbox.data.SandboxContext</span></code>]) – </p></li>
+</ul>
+</dd>
+</dl>
+<p>Returns:</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.runtime.assert_in">
+<em class="property">class </em><code class="sig-name descname">assert_in</code><span class="sig-paren">(</span><em class="sig-param">needle</em>, <em class="sig-param">haystack</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_in"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_in" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if the <code class="docutils literal notranslate"><span class="pre">needle</span></code> is in the <code class="docutils literal notranslate"><span class="pre">haystack</span></code>.</p>
+<dl class="method">
+<dt id="pedal.assertions.runtime.assert_in.condition">
+<code class="sig-name descname">condition</code><span class="sig-paren">(</span><em class="sig-param">needle</em>, <em class="sig-param">haystack</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_in.condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_in.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if the needle is not in the haystack</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.runtime.assert_is">
+<em class="property">class </em><code class="sig-name descname">assert_is</code><span class="sig-paren">(</span><em class="sig-param">left</em>, <em class="sig-param">right</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_is"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_is" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if the <code class="docutils literal notranslate"><span class="pre">left</span></code> and <code class="docutils literal notranslate"><span class="pre">right</span></code> values are identical.</p>
+<dl class="method">
+<dt id="pedal.assertions.runtime.assert_is.condition">
+<code class="sig-name descname">condition</code><span class="sig-paren">(</span><em class="sig-param">left</em>, <em class="sig-param">right</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_is.condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_is.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if the left and right are equal</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.runtime.assert_is_instance">
+<em class="property">class </em><code class="sig-name descname">assert_is_instance</code><span class="sig-paren">(</span><em class="sig-param">obj</em>, <em class="sig-param">cls</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_is_instance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_is_instance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if the <code class="docutils literal notranslate"><span class="pre">obj</span></code> is an instance of <code class="docutils literal notranslate"><span class="pre">cls</span></code></p>
+<dl class="method">
+<dt id="pedal.assertions.runtime.assert_is_instance.condition">
+<code class="sig-name descname">condition</code><span class="sig-paren">(</span><em class="sig-param">obj</em>, <em class="sig-param">cls</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_is_instance.condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_is_instance.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if the left and right are equal</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.runtime.assert_is_none">
+<em class="property">class </em><code class="sig-name descname">assert_is_none</code><span class="sig-paren">(</span><em class="sig-param">value</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_is_none"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_is_none" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if the <code class="docutils literal notranslate"><span class="pre">value</span></code> is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+<dl class="method">
+<dt id="pedal.assertions.runtime.assert_is_none.condition">
+<code class="sig-name descname">condition</code><span class="sig-paren">(</span><em class="sig-param">left</em>, <em class="sig-param">right</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_is_none.condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_is_none.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if the left and right are equal</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.runtime.assert_is_not">
+<em class="property">class </em><code class="sig-name descname">assert_is_not</code><span class="sig-paren">(</span><em class="sig-param">left</em>, <em class="sig-param">right</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_is_not"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_is_not" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if the <code class="docutils literal notranslate"><span class="pre">left</span></code> and <code class="docutils literal notranslate"><span class="pre">right</span></code> values are not identical.</p>
+<dl class="method">
+<dt id="pedal.assertions.runtime.assert_is_not.condition">
+<code class="sig-name descname">condition</code><span class="sig-paren">(</span><em class="sig-param">left</em>, <em class="sig-param">right</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_is_not.condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_is_not.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if the left and right are equal</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.runtime.assert_is_not_none">
+<em class="property">class </em><code class="sig-name descname">assert_is_not_none</code><span class="sig-paren">(</span><em class="sig-param">value</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_is_not_none"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_is_not_none" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if the <code class="docutils literal notranslate"><span class="pre">value</span></code> is not <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+<dl class="method">
+<dt id="pedal.assertions.runtime.assert_is_not_none.condition">
+<code class="sig-name descname">condition</code><span class="sig-paren">(</span><em class="sig-param">left</em>, <em class="sig-param">right</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_is_not_none.condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_is_not_none.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if the left and right are equal</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.runtime.assert_length_equal">
+<em class="property">class </em><code class="sig-name descname">assert_length_equal</code><span class="sig-paren">(</span><em class="sig-param">sequence</em>, <em class="sig-param">length</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_length_equal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_length_equal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if the <code class="docutils literal notranslate"><span class="pre">sequence</span></code> has the <code class="docutils literal notranslate"><span class="pre">length</span></code>.</p>
+<dl class="method">
+<dt id="pedal.assertions.runtime.assert_length_equal.condition">
+<code class="sig-name descname">condition</code><span class="sig-paren">(</span><em class="sig-param">sequence</em>, <em class="sig-param">length</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_length_equal.condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_length_equal.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if the needle is not in the haystack</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.runtime.assert_length_greater">
+<em class="property">class </em><code class="sig-name descname">assert_length_greater</code><span class="sig-paren">(</span><em class="sig-param">sequence</em>, <em class="sig-param">length</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_length_greater"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_length_greater" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if the <code class="docutils literal notranslate"><span class="pre">sequence</span></code> has greater than the <code class="docutils literal notranslate"><span class="pre">length</span></code>.</p>
+<dl class="method">
+<dt id="pedal.assertions.runtime.assert_length_greater.condition">
+<code class="sig-name descname">condition</code><span class="sig-paren">(</span><em class="sig-param">sequence</em>, <em class="sig-param">length</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_length_greater.condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_length_greater.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if the needle is not in the haystack</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.runtime.assert_length_greater_equal">
+<em class="property">class </em><code class="sig-name descname">assert_length_greater_equal</code><span class="sig-paren">(</span><em class="sig-param">sequence</em>, <em class="sig-param">length</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_length_greater_equal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_length_greater_equal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if the <code class="docutils literal notranslate"><span class="pre">sequence</span></code> has greater than or equal to the <code class="docutils literal notranslate"><span class="pre">length</span></code>.</p>
+<dl class="method">
+<dt id="pedal.assertions.runtime.assert_length_greater_equal.condition">
+<code class="sig-name descname">condition</code><span class="sig-paren">(</span><em class="sig-param">sequence</em>, <em class="sig-param">length</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_length_greater_equal.condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_length_greater_equal.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if the needle is not in the haystack</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.runtime.assert_length_less">
+<em class="property">class </em><code class="sig-name descname">assert_length_less</code><span class="sig-paren">(</span><em class="sig-param">sequence</em>, <em class="sig-param">length</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_length_less"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_length_less" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if the <code class="docutils literal notranslate"><span class="pre">sequence</span></code> has less than the <code class="docutils literal notranslate"><span class="pre">length</span></code>.</p>
+<dl class="method">
+<dt id="pedal.assertions.runtime.assert_length_less.condition">
+<code class="sig-name descname">condition</code><span class="sig-paren">(</span><em class="sig-param">sequence</em>, <em class="sig-param">length</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_length_less.condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_length_less.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if the needle is not in the haystack</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.runtime.assert_length_less_equal">
+<em class="property">class </em><code class="sig-name descname">assert_length_less_equal</code><span class="sig-paren">(</span><em class="sig-param">sequence</em>, <em class="sig-param">length</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_length_less_equal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_length_less_equal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if the <code class="docutils literal notranslate"><span class="pre">sequence</span></code> has less or equal than the <code class="docutils literal notranslate"><span class="pre">length</span></code>.</p>
+<dl class="method">
+<dt id="pedal.assertions.runtime.assert_length_less_equal.condition">
+<code class="sig-name descname">condition</code><span class="sig-paren">(</span><em class="sig-param">sequence</em>, <em class="sig-param">length</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_length_less_equal.condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_length_less_equal.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if the needle is not in the haystack</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.runtime.assert_length_not_equal">
+<em class="property">class </em><code class="sig-name descname">assert_length_not_equal</code><span class="sig-paren">(</span><em class="sig-param">sequence</em>, <em class="sig-param">length</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_length_not_equal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_length_not_equal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if the <code class="docutils literal notranslate"><span class="pre">sequence</span></code> does not have the <code class="docutils literal notranslate"><span class="pre">length</span></code>.</p>
+<dl class="method">
+<dt id="pedal.assertions.runtime.assert_length_not_equal.condition">
+<code class="sig-name descname">condition</code><span class="sig-paren">(</span><em class="sig-param">sequence</em>, <em class="sig-param">length</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_length_not_equal.condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_length_not_equal.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if the needle is not in the haystack</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.runtime.assert_less">
+<em class="property">class </em><code class="sig-name descname">assert_less</code><span class="sig-paren">(</span><em class="sig-param">left</em>, <em class="sig-param">right</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_less"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_less" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if the <code class="docutils literal notranslate"><span class="pre">left</span></code> is less than the <code class="docutils literal notranslate"><span class="pre">right</span></code>.</p>
+<dl class="method">
+<dt id="pedal.assertions.runtime.assert_less.condition">
+<code class="sig-name descname">condition</code><span class="sig-paren">(</span><em class="sig-param">left</em>, <em class="sig-param">right</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_less.condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_less.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if the left is greater or equal</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.runtime.assert_less_equal">
+<em class="property">class </em><code class="sig-name descname">assert_less_equal</code><span class="sig-paren">(</span><em class="sig-param">left</em>, <em class="sig-param">right</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_less_equal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_less_equal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if the <code class="docutils literal notranslate"><span class="pre">left</span></code> is less than or equal to the <code class="docutils literal notranslate"><span class="pre">right</span></code>.</p>
+<dl class="method">
+<dt id="pedal.assertions.runtime.assert_less_equal.condition">
+<code class="sig-name descname">condition</code><span class="sig-paren">(</span><em class="sig-param">left</em>, <em class="sig-param">right</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_less_equal.condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_less_equal.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if the left is greater than the right</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.runtime.assert_not_almost_equal">
+<em class="property">class </em><code class="sig-name descname">assert_not_almost_equal</code><span class="sig-paren">(</span><em class="sig-param">left</em>, <em class="sig-param">right</em>, <em class="sig-param">exact_strings=False</em>, <em class="sig-param">delta=0.001</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_not_almost_equal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_not_almost_equal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test if the two values are not almost equal; equivalent to
+assert_not_equal.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.runtime.assert_not_contains_subset">
+<em class="property">class </em><code class="sig-name descname">assert_not_contains_subset</code><span class="sig-paren">(</span><em class="sig-param">needles</em>, <em class="sig-param">haystack</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_not_contains_subset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_not_contains_subset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if the <code class="docutils literal notranslate"><span class="pre">needles</span></code> are not in the <code class="docutils literal notranslate"><span class="pre">haystack</span></code>.</p>
+<dl class="method">
+<dt id="pedal.assertions.runtime.assert_not_contains_subset.condition">
+<code class="sig-name descname">condition</code><span class="sig-paren">(</span><em class="sig-param">needles</em>, <em class="sig-param">haystack</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_not_contains_subset.condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_not_contains_subset.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if the needle is not in the haystack</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.runtime.assert_not_equal">
+<em class="property">class </em><code class="sig-name descname">assert_not_equal</code><span class="sig-paren">(</span><em class="sig-param">left</em>, <em class="sig-param">right</em>, <em class="sig-param">exact_strings=False</em>, <em class="sig-param">delta=0.001</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_not_equal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_not_equal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if the <code class="docutils literal notranslate"><span class="pre">left</span></code> and <code class="docutils literal notranslate"><span class="pre">right</span></code> values are not equal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>exact_strings</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Whether to require that strings be exactly the
+same, for each character. If False (the default), then strings will
+be normalized (lowercased, trailing decimals chopped, punctuation
+removed, lines are flattened, and all characters are sorted).</p></li>
+<li><p><strong>delta</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – When comparing floats, how close the values must be.
+If delta is None, then the default Delta will be used (.001).</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="pedal.assertions.runtime.assert_not_equal.condition">
+<code class="sig-name descname">condition</code><span class="sig-paren">(</span><em class="sig-param">left</em>, <em class="sig-param">right</em>, <em class="sig-param">exact_strings</em>, <em class="sig-param">delta</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_not_equal.condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_not_equal.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if the left and right are not equal</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.runtime.assert_not_in">
+<em class="property">class </em><code class="sig-name descname">assert_not_in</code><span class="sig-paren">(</span><em class="sig-param">needle</em>, <em class="sig-param">haystack</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_not_in"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_not_in" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if the <code class="docutils literal notranslate"><span class="pre">needle</span></code> is in the <code class="docutils literal notranslate"><span class="pre">haystack</span></code>.</p>
+<dl class="method">
+<dt id="pedal.assertions.runtime.assert_not_in.condition">
+<code class="sig-name descname">condition</code><span class="sig-paren">(</span><em class="sig-param">needle</em>, <em class="sig-param">haystack</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_not_in.condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_not_in.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if the needle is in the haystack</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.runtime.assert_not_is_instance">
+<em class="property">class </em><code class="sig-name descname">assert_not_is_instance</code><span class="sig-paren">(</span><em class="sig-param">obj</em>, <em class="sig-param">cls</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_not_is_instance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_not_is_instance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if the <code class="docutils literal notranslate"><span class="pre">obj</span></code> is an instance of <code class="docutils literal notranslate"><span class="pre">cls</span></code></p>
+<dl class="method">
+<dt id="pedal.assertions.runtime.assert_not_is_instance.condition">
+<code class="sig-name descname">condition</code><span class="sig-paren">(</span><em class="sig-param">obj</em>, <em class="sig-param">cls</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_not_is_instance.condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_not_is_instance.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if the left and right are equal</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.runtime.assert_not_output">
+<em class="property">class </em><code class="sig-name descname">assert_not_output</code><span class="sig-paren">(</span><em class="sig-param">execution</em>, <em class="sig-param">text</em>, <em class="sig-param">exact_strings=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_not_output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_not_output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if the <code class="docutils literal notranslate"><span class="pre">execution</span></code> does not output <code class="docutils literal notranslate"><span class="pre">text</span></code></p>
+<dl class="method">
+<dt id="pedal.assertions.runtime.assert_not_output.condition">
+<code class="sig-name descname">condition</code><span class="sig-paren">(</span><em class="sig-param">execution</em>, <em class="sig-param">text</em>, <em class="sig-param">exact_strings</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_not_output.condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_not_output.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if the regex does not match the text</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.runtime.assert_not_output_contains">
+<em class="property">class </em><code class="sig-name descname">assert_not_output_contains</code><span class="sig-paren">(</span><em class="sig-param">execution</em>, <em class="sig-param">text</em>, <em class="sig-param">exact_strings=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_not_output_contains"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_not_output_contains" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if the <code class="docutils literal notranslate"><span class="pre">execution</span></code> outputs <code class="docutils literal notranslate"><span class="pre">text</span></code></p>
+<dl class="method">
+<dt id="pedal.assertions.runtime.assert_not_output_contains.condition">
+<code class="sig-name descname">condition</code><span class="sig-paren">(</span><em class="sig-param">execution</em>, <em class="sig-param">text</em>, <em class="sig-param">exact_strings</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_not_output_contains.condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_not_output_contains.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if the regex does not match the text</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.runtime.assert_not_regex">
+<em class="property">class </em><code class="sig-name descname">assert_not_regex</code><span class="sig-paren">(</span><em class="sig-param">regex</em>, <em class="sig-param">text</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_not_regex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_not_regex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if the <code class="docutils literal notranslate"><span class="pre">regex</span></code> does not match <code class="docutils literal notranslate"><span class="pre">text</span></code>.</p>
+<dl class="method">
+<dt id="pedal.assertions.runtime.assert_not_regex.condition">
+<code class="sig-name descname">condition</code><span class="sig-paren">(</span><em class="sig-param">regex</em>, <em class="sig-param">text</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_not_regex.condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_not_regex.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if the regex does not match the text</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.runtime.assert_not_type">
+<em class="property">class </em><code class="sig-name descname">assert_not_type</code><span class="sig-paren">(</span><em class="sig-param">value</em>, <em class="sig-param">expected_type</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_not_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_not_type" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="pedal.assertions.runtime.assert_not_type.condition">
+<code class="sig-name descname">condition</code><span class="sig-paren">(</span><em class="sig-param">value</em>, <em class="sig-param">expected_type</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_not_type.condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_not_type.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if the left and right are equal</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.runtime.assert_output">
+<em class="property">class </em><code class="sig-name descname">assert_output</code><span class="sig-paren">(</span><em class="sig-param">execution</em>, <em class="sig-param">text</em>, <em class="sig-param">exact_strings=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if the <code class="docutils literal notranslate"><span class="pre">execution</span></code> outputs <code class="docutils literal notranslate"><span class="pre">text</span></code></p>
+<dl class="method">
+<dt id="pedal.assertions.runtime.assert_output.condition">
+<code class="sig-name descname">condition</code><span class="sig-paren">(</span><em class="sig-param">execution</em>, <em class="sig-param">text</em>, <em class="sig-param">exact_strings</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_output.condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_output.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if the regex does not match the text</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.runtime.assert_output_contains">
+<em class="property">class </em><code class="sig-name descname">assert_output_contains</code><span class="sig-paren">(</span><em class="sig-param">execution</em>, <em class="sig-param">text</em>, <em class="sig-param">exact_strings=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_output_contains"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_output_contains" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if the <code class="docutils literal notranslate"><span class="pre">execution</span></code> outputs <code class="docutils literal notranslate"><span class="pre">text</span></code></p>
+<dl class="method">
+<dt id="pedal.assertions.runtime.assert_output_contains.condition">
+<code class="sig-name descname">condition</code><span class="sig-paren">(</span><em class="sig-param">execution</em>, <em class="sig-param">text</em>, <em class="sig-param">exact_strings</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_output_contains.condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_output_contains.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if the regex does not match the text</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.runtime.assert_prints">
+<em class="property">class </em><code class="sig-name descname">assert_prints</code><span class="sig-paren">(</span><em class="sig-param">execution</em>, <em class="sig-param">text</em>, <em class="sig-param">exact_strings=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_prints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_prints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deprecated version of assert_output</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.runtime.assert_regex">
+<em class="property">class </em><code class="sig-name descname">assert_regex</code><span class="sig-paren">(</span><em class="sig-param">regex</em>, <em class="sig-param">text</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_regex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_regex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if the <code class="docutils literal notranslate"><span class="pre">regex</span></code> matches <code class="docutils literal notranslate"><span class="pre">text</span></code>.</p>
+<dl class="method">
+<dt id="pedal.assertions.runtime.assert_regex.condition">
+<code class="sig-name descname">condition</code><span class="sig-paren">(</span><em class="sig-param">regex</em>, <em class="sig-param">text</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_regex.condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_regex.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if the regex matches the text</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.runtime.assert_true">
+<em class="property">class </em><code class="sig-name descname">assert_true</code><span class="sig-paren">(</span><em class="sig-param">value</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_true"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_true" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if the <code class="docutils literal notranslate"><span class="pre">value</span></code> is true.</p>
+<dl class="method">
+<dt id="pedal.assertions.runtime.assert_true.condition">
+<code class="sig-name descname">condition</code><span class="sig-paren">(</span><em class="sig-param">left</em>, <em class="sig-param">right</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_true.condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_true.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if the left evaluates to true</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.runtime.assert_type">
+<em class="property">class </em><code class="sig-name descname">assert_type</code><span class="sig-paren">(</span><em class="sig-param">value</em>, <em class="sig-param">expected_type</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as assert_is_instance, but has a slightly different wording.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.runtime.ensure_called_uniquely">
+<em class="property">class </em><code class="sig-name descname">ensure_called_uniquely</code><span class="sig-paren">(</span><em class="sig-param">function_name</em>, <em class="sig-param">at_least=1</em>, <em class="sig-param">ignore=None</em>, <em class="sig-param">why_ignored=''</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#ensure_called_uniquely"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.ensure_called_uniquely" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verifies that the most recent executed and traced student code has
+<code class="docutils literal notranslate"><span class="pre">at_least</span></code> called the given function uniquely that number of times.
+In other words, it prevents students from calling the same function repeatedly
+WITHOUT changing the arguments.</p>
+<p>TODO: Allow instructor to ignore certain collection of arguments
+TODO: Report how many calls it has seen so far.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>function_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The name of the function to check.</p></li>
+<li><p><strong>at_least</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – The number of calls that have to have unique arguments
+between them.</p></li>
+<li><p><strong>ignore</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.9)"><em>set</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)"><em>tuple</em></a><em>]</em>) – A sequence of argument sets to ignore.</p></li>
+<li><p><strong>why_ignored</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – If you want to explain why you are ignoring some of
+the tests, you can provide some text here. For example,
+<cite>” because they overlap with examples you were given”</cite>.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="pedal.assertions.runtime.ensure_called_uniquely.condition">
+<code class="sig-name descname">condition</code><span class="sig-paren">(</span><em class="sig-param">unique_call_count</em>, <em class="sig-param">at_least</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#ensure_called_uniquely.condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.ensure_called_uniquely.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Detect if this feedback is present in the code.
+Defaults to true through the <cite>activate</cite> parameter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Whether or not this feedback’s condition was detected.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pedal.assertions.runtime.ensure_coverage">
+<em class="property">class </em><code class="sig-name descname">ensure_coverage</code><span class="sig-paren">(</span><em class="sig-param">at_least=0.5</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#ensure_coverage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.ensure_coverage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verifies that the most recent executed and traced student code has
+<code class="docutils literal notranslate"><span class="pre">at_least</span></code> the given ratio of covered (executed) lines.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>at_least</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – The ratio of covered lines. A value of 1.0 is all
+lines covered, 0.0 is no lines covered, and .5 is half the lines
+covered.</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="pedal.assertions.runtime.ensure_coverage.condition">
+<code class="sig-name descname">condition</code><span class="sig-paren">(</span><em class="sig-param">coverage</em>, <em class="sig-param">at_least</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#ensure_coverage.condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.runtime.ensure_coverage.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Detect if this feedback is present in the code.
+Defaults to true through the <cite>activate</cite> parameter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Whether or not this feedback’s condition was detected.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-pedal.assertions.commands"></span><p>Unifying collection of all the commands in <code class="docutils literal notranslate"><span class="pre">pedal.assertions</span></code>.</p>
+<dl class="function">
+<dt id="pedal.assertions.commands.unit_test">
+<code class="sig-name descname">unit_test</code><span class="sig-paren">(</span><em class="sig-param">function</em>, <em class="sig-param">*tests</em>, <em class="sig-param">else_message=None</em>, <em class="sig-param">score=None</em>, <em class="sig-param">partial_credit=False</em>, <em class="sig-param">assert_function=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/commands.html#unit_test"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.assertions.commands.unit_test" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper function for quickly unit testing.</p>
+<ul class="simple">
+<li><p>Specify exact score for each test case, individually | list[str]</p></li>
+<li><p>Specify exact score for each test case, with single value | str</p></li>
+<li><p>Specify total score for all test cases, no partial credit | False, using <cite>score</cite></p></li>
+<li><p>Specify total score for all test cases, divide by # of cases passed | True, using <cite>score</cite></p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>assert_function</strong> – Override the assert function (defaults to assert_equal)</p></li>
+<li><p><strong>(</strong><strong>)</strong> (<em>**kwargs</em>) – </p></li>
+<li><p><strong>(</strong><strong>)</strong> – </p></li>
+<li><p><strong>else_message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The message to present as a positive if the
+tests all pass.</p></li>
+<li><p><strong>score</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The score to give overall/per test case, depending on
+partial_credit.</p></li>
+<li><p><strong>partial_credit</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em>) – Whether or not to give credit for
+each unit test as a percentage of the whole (True), or to only give
+points for passing all the tests (False). Defaults to False.
+If a list is passed, those scores will be used per test case.</p></li>
+<li><p><strong>(</strong><strong>)</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+<p>Returns:</p>
 </dd></dl>
 
 </div>

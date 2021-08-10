@@ -1,0 +1,292 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>pedal.assertions.commands &mdash; Pedal 1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Pedal
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../everyone/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../everyone/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../teachers/quickstart.html">Teacher Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../teachers/examples.html">Teacher Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../teachers/reference.html">Teacher Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../teachers/integrations.html">Autograder Integrations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../teachers/practices.html">Best Practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers/ffs.html">Feedback Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers/api.html">Developer API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers/tools.html">Developer Tools Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers/conventions.html">Internal Naming Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../everyone/glossary.html">Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../everyone/contact.html">Contact</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Pedal</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../assertions.html">pedal.assertions</a> &raquo;</li>
+        
+      <li>pedal.assertions.commands</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pedal.assertions.commands</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Unifying collection of all the commands in ``pedal.assertions``.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">pedal.core.scoring</span> <span class="kn">import</span> <span class="n">Score</span><span class="p">,</span> <span class="n">combine_scores</span>
+<span class="kn">from</span> <span class="nn">pedal.sandbox.commands</span> <span class="kn">import</span> <span class="n">call</span>
+<span class="kn">from</span> <span class="nn">pedal.assertions.static</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pedal.assertions.runtime</span> <span class="kn">import</span> <span class="o">*</span>
+
+
+<span class="k">class</span> <span class="nc">unit_test</span><span class="p">(</span><span class="n">assert_group</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+
+<span class="n">_unit_test_class</span> <span class="o">=</span> <span class="n">unit_test</span>
+
+
+<div class="viewcode-block" id="unit_test"><a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.commands.unit_test">[docs]</a><span class="k">def</span> <span class="nf">unit_test</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="o">*</span><span class="n">tests</span><span class="p">,</span> <span class="n">else_message</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">score</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">partial_credit</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+              <span class="n">assert_function</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Helper function for quickly unit testing.</span>
+
+<span class="sd">    * Specify exact score for each test case, individually | list[str]</span>
+<span class="sd">    * Specify exact score for each test case, with single value | str</span>
+<span class="sd">    * Specify total score for all test cases, no partial credit | False, using `score`</span>
+<span class="sd">    * Specify total score for all test cases, divide by # of cases passed | True, using `score`</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        assert_function: Override the assert function (defaults to assert_equal)</span>
+<span class="sd">        function ():</span>
+<span class="sd">        *tests ():</span>
+<span class="sd">        else_message (str): The message to present as a positive if the</span>
+<span class="sd">             tests all pass.</span>
+<span class="sd">        score (str): The score to give overall/per test case, depending on</span>
+<span class="sd">            partial_credit.</span>
+<span class="sd">        partial_credit (bool or str or list[str]): Whether or not to give credit for</span>
+<span class="sd">            each unit test as a percentage of the whole (True), or to only give</span>
+<span class="sd">            points for passing all the tests (False). Defaults to False.</span>
+<span class="sd">            If a list is passed, those scores will be used per test case.</span>
+<span class="sd">        **kwargs ():</span>
+
+<span class="sd">    Returns:</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">assert_function</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">assert_function</span> <span class="o">=</span> <span class="n">assert_equal</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">partial_credit</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">partial_credit</span><span class="p">:</span>
+            <span class="c1"># Specify total score for all test cases, divide by # of cases passed | True, using `score`</span>
+            <span class="k">if</span> <span class="n">score</span><span class="p">:</span>
+                <span class="n">each_score</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">Score</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">score</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">tests</span><span class="p">))</span> <span class="k">for</span> <span class="n">test</span> <span class="ow">in</span> <span class="n">tests</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">each_score</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span> <span class="k">for</span> <span class="n">test</span> <span class="ow">in</span> <span class="n">tests</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Specify total score for all test cases, no partial credit | False, using `score`</span>
+            <span class="n">each_score</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span> <span class="k">for</span> <span class="n">test</span> <span class="ow">in</span> <span class="n">tests</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">partial_credit</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+        <span class="c1"># Specify exact score for each test case, with single value | str</span>
+        <span class="n">each_score</span> <span class="o">=</span> <span class="p">[</span><span class="n">partial_credit</span> <span class="k">for</span> <span class="n">test</span> <span class="ow">in</span> <span class="n">tests</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Specify exact score for each test case, individually | list[str]</span>
+        <span class="n">each_score</span> <span class="o">=</span> <span class="n">partial_credit</span>
+    <span class="c1"># TODO: Make it so unit_test can document its cases</span>
+    <span class="k">with</span> <span class="n">_unit_test_class</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="n">else_message</span><span class="o">=</span><span class="n">else_message</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="k">as</span> <span class="n">group_result</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">test_index</span><span class="p">,</span> <span class="n">test</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tests</span><span class="p">):</span>
+            <span class="n">args</span><span class="p">,</span> <span class="n">expected</span> <span class="o">=</span> <span class="n">test</span>
+            <span class="n">assert_function</span><span class="p">(</span><span class="n">call</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">),</span> <span class="n">expected</span><span class="p">,</span> <span class="n">score</span><span class="o">=</span><span class="n">each_score</span><span class="p">[</span><span class="n">test_index</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">partial_credit</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="n">group_result</span><span class="o">.</span><span class="n">score</span> <span class="o">=</span> <span class="n">score</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">group_result</span><span class="o">.</span><span class="n">valence</span> <span class="o">=</span> <span class="n">group_result</span><span class="o">.</span><span class="n">POSITIVE_VALENCE</span>
+        <span class="n">group_result</span><span class="o">.</span><span class="n">score</span> <span class="o">=</span> <span class="n">combine_scores</span><span class="p">([</span><span class="n">success</span><span class="o">.</span><span class="n">score</span> <span class="k">for</span> <span class="n">success</span> <span class="ow">in</span> <span class="n">group_result</span><span class="o">.</span><span class="n">successes</span><span class="p">],</span>
+                                            <span class="p">[</span><span class="n">failure</span><span class="o">.</span><span class="n">score</span> <span class="k">for</span> <span class="n">failure</span> <span class="ow">in</span> <span class="n">group_result</span><span class="o">.</span><span class="n">failures</span><span class="p">]</span> <span class="o">+</span>
+                                            <span class="p">[</span><span class="n">error</span><span class="o">.</span><span class="n">score</span> <span class="k">for</span> <span class="n">error</span> <span class="ow">in</span> <span class="n">group_result</span><span class="o">.</span><span class="n">errors</span><span class="p">])</span>
+    <span class="k">return</span> <span class="ow">not</span> <span class="n">group_result</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2018, acbart, lukesg08.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

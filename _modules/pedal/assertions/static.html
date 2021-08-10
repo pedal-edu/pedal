@@ -186,7 +186,7 @@
 <span class="kn">from</span> <span class="nn">pedal.utilities.ast_tools</span> <span class="kn">import</span> <span class="n">AST_NODE_NAMES</span>
 
 
-<div class="viewcode-block" id="EnsureAssertionFeedback"><a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.EnsureAssertionFeedback">[docs]</a><span class="k">class</span> <span class="nc">EnsureAssertionFeedback</span><span class="p">(</span><span class="n">AssertionFeedback</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">EnsureAssertionFeedback</span><span class="p">(</span><span class="n">AssertionFeedback</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Abstract base class for assertions preventing things. &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">at_least</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">report</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;report&#39;</span><span class="p">,</span> <span class="n">MAIN_REPORT</span><span class="p">)</span>
@@ -205,10 +205,10 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;capacity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot; at least </span><span class="si">{at_least}</span><span class="s2"> times, but&quot;</span>
                                            <span class="sa">f</span><span class="s2">&quot; you used it </span><span class="si">{use_count}</span><span class="s2"> times&quot;</span><span class="p">)</span>
                 <span class="k">return</span> <span class="kc">True</span>
-        <span class="k">return</span> <span class="kc">False</span></div>
+        <span class="k">return</span> <span class="kc">False</span>
 
 
-<div class="viewcode-block" id="PreventAssertionFeedback"><a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.PreventAssertionFeedback">[docs]</a><span class="k">class</span> <span class="nc">PreventAssertionFeedback</span><span class="p">(</span><span class="n">AssertionFeedback</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">PreventAssertionFeedback</span><span class="p">(</span><span class="n">AssertionFeedback</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Abstract base class for assertions preventing things. &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">at_most</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">report</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;report&#39;</span><span class="p">,</span> <span class="n">MAIN_REPORT</span><span class="p">)</span>
@@ -227,7 +227,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;capacity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot; more than </span><span class="si">{at_most}</span><span class="s2"> times, but&quot;</span>
                                            <span class="sa">f</span><span class="s2">&quot; you used it </span><span class="si">{use_count}</span><span class="s2"> times&quot;</span><span class="p">)</span>
                 <span class="k">return</span> <span class="kc">True</span>
-        <span class="k">return</span> <span class="kc">False</span></div>
+        <span class="k">return</span> <span class="kc">False</span>
 
 
 <div class="viewcode-block" id="prevent_function_call"><a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.prevent_function_call">[docs]</a><span class="k">class</span> <span class="nc">prevent_function_call</span><span class="p">(</span><span class="n">PreventAssertionFeedback</span><span class="p">):</span>
