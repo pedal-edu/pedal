@@ -188,7 +188,7 @@
 <dd><p>Resets (or initializes) the Sandbox instance for this report.
 Completely destroys the existing Sandbox instance attached to this report;
 if you want to just clear out its data, then instead use
-<code class="xref py py-func docutils literal notranslate"><span class="pre">pedal.sandbox.commands.clear_sandbox()</span></code>.</p>
+<a class="reference internal" href="#pedal.sandbox.commands.clear_sandbox" title="pedal.sandbox.commands.clear_sandbox"><code class="xref py py-func docutils literal notranslate"><span class="pre">pedal.sandbox.commands.clear_sandbox()</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>report</strong> – </p>
@@ -871,6 +871,460 @@ If the code was run from a file, then the filename is given.</p>
 <dt id="pedal.sandbox.feedbacks.zero_division_error">
 <em class="property">class </em><code class="sig-name descname">zero_division_error</code><span class="sig-paren">(</span><em class="sig-param">exception</em>, <em class="sig-param">context</em>, <em class="sig-param">traceback</em>, <em class="sig-param">location</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/feedbacks.html#zero_division_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.feedbacks.zero_division_error" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runtime ZeroDivisionError</p>
+</dd></dl>
+
+<span class="target" id="module-pedal.sandbox.commands"></span><p>The collection of top-level commands for the Sandbox module. Note that
+most of these simply act on the current MAIN_REPORT’s Sandbox instance, without
+doing any logic themselves.</p>
+<dl class="class">
+<dt id="pedal.sandbox.commands.CommandBlock">
+<em class="property">class </em><code class="sig-name descname">CommandBlock</code><span class="sig-paren">(</span><em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#CommandBlock"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.CommandBlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Context Manager for creating instructor blocks of code that will
+be shown together to the student.</p>
+<p>TODO: What about named points where you can “rewind” the state to?</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.sandbox.commands.allow_function">
+<code class="sig-name descname">allow_function</code><span class="sig-paren">(</span><em class="sig-param">function_name</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#allow_function"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.allow_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Explicitly allow students to use the given function.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.sandbox.commands.allow_module">
+<code class="sig-name descname">allow_module</code><span class="sig-paren">(</span><em class="sig-param">module_name</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#allow_module"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.allow_module" title="Permalink to this definition">¶</a></dt>
+<dd><p>Explicitly allow students to use the given module.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.sandbox.commands.block_function">
+<code class="sig-name descname">block_function</code><span class="sig-paren">(</span><em class="sig-param">function_name</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#block_function"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.block_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cause an error if students call the given function.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.sandbox.commands.block_module">
+<code class="sig-name descname">block_module</code><span class="sig-paren">(</span><em class="sig-param">module_name</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#block_module"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.block_module" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cause an error if students use the given module.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.sandbox.commands.call">
+<code class="sig-name descname">call</code><span class="sig-paren">(</span><em class="sig-param">function</em>, <em class="sig-param">*args</em>, <em class="sig-param">target='_'</em>, <em class="sig-param">threaded=None</em>, <em class="sig-param">inputs=None</em>, <em class="sig-param">function_kwargs=None</em>, <em class="sig-param">args_locals=None</em>, <em class="sig-param">kwargs_locals=None</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#call"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.call" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute the given function from the student’s namespace.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">args_locals</span></code> and <code class="docutils literal notranslate"><span class="pre">kwargs_locals</span></code> values allow you to
+use student’s local variables as arguments, instead of literal values.
+They actually support any arbitrary Python code, it will be injected
+without modification.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>function</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The name of the function to call.</p></li>
+<li><p><strong>*args</strong> (<em>Any</em>) – Any number of positional arguments to be passed to
+the called function.</p></li>
+<li><p><strong>target</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The variable to assign the result of this call to.
+Defaults to <code class="docutils literal notranslate"><span class="pre">&quot;_&quot;</span></code>.</p></li>
+<li><p><strong>threaded</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Whether or not to run this code in a threaded
+environment, which allows for timeouts.</p></li>
+<li><p><strong>inputs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em>) – </p></li>
+<li><p><strong>function_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>Any</em><em>]</em>) – Additional keyword arguments
+that could not be passed in directly via <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code> (perhaps
+because they conflict with an existing parameter like
+<code class="docutils literal notranslate"><span class="pre">target</span></code>).</p></li>
+<li><p><strong>args_locals</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em>) – A list of names (or any valid Python
+expression) that will be passed as positional arguments to
+the function (as opposed to actual values). If any value is
+None (or if the list is too short), then the corresponding
+position argument from <code class="docutils literal notranslate"><span class="pre">*args</span></code> will be used instead.</p></li>
+<li><p><strong>kwargs_locals</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em>) – A dictionary of keyword argument
+names mapped to local names (or any valid Python expression),
+that will be used as keyword parameters similar to
+<code class="docutils literal notranslate"><span class="pre">args_locals</span></code>.</p></li>
+<li><p><strong>(</strong><strong>)</strong> (<em>**kwargs</em>) – Additional keyword arguments passed to the called
+function.</p></li>
+<li><p><strong>report</strong> (<a class="reference internal" href="../api.html#pedal.core.report.Report" title="pedal.core.report.Report"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.core.report.Report</span></code></a>) – The report with the
+sandbox instance.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>The</dt><dd><p>result of calling the function will be returned, proxied behind
+a SandboxResult (which attempts to perfectly emulate that
+value). If the function call failed, the exception will be
+returned instead.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Exception or <code class="xref py py-class docutils literal notranslate"><span class="pre">SandboxResult</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.sandbox.commands.check_coverage">
+<code class="sig-name descname">check_coverage</code><span class="sig-paren">(</span><em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#check_coverage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.check_coverage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks that all the statements in the program have been executed.
+This function only works when a tracer_style has been set in the sandbox,
+or you are using an environment that automatically traces calls (e.g.,
+BlockPy).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>report</strong> (<a class="reference internal" href="../api.html#pedal.core.report.Report" title="pedal.core.report.Report"><em>Report</em></a>) – The Report to draw source code from; if not given,
+defaults to MAIN_REPORT.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>If the source file was not parsed, None is returned.</dt><dd><p>Otherwise, returnes the set of unexecuted lines.</p>
+</dd>
+</dl>
+<p>float: The ratio of unexected to total executable lines.</p>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.9)">set</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.sandbox.commands.clear_input">
+<code class="sig-name descname">clear_input</code><span class="sig-paren">(</span><em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#clear_input"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.clear_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes any existing inputs set up for the sandbox.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.sandbox.commands.clear_mocks">
+<code class="sig-name descname">clear_mocks</code><span class="sig-paren">(</span><em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#clear_mocks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.clear_mocks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset mocked modules and functions to their defaults.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.sandbox.commands.clear_output">
+<code class="sig-name descname">clear_output</code><span class="sig-paren">(</span><em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#clear_output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.clear_output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes any existing outputs associated with the sandbox.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.sandbox.commands.clear_sandbox">
+<code class="sig-name descname">clear_sandbox</code><span class="sig-paren">(</span><em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#clear_sandbox"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.clear_sandbox" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes any existing data within the current sandbox instance.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.sandbox.commands.clear_student_data">
+<code class="sig-name descname">clear_student_data</code><span class="sig-paren">(</span><em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#clear_student_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.clear_student_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes any data in the student namespace.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.sandbox.commands.count_unique_calls">
+<code class="sig-name descname">count_unique_calls</code><span class="sig-paren">(</span><em class="sig-param">function_name</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#count_unique_calls"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.count_unique_calls" title="Permalink to this definition">¶</a></dt>
+<dd><p>Counts how many times the given function was called with unique arguments.
+TODO: What about also tracking the number of “top-level” calls? So we know</p>
+<blockquote>
+<div><p>whether they were actually testing it explicitly or not.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>function_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The name of the function to check for calls.</p></li>
+<li><p><strong>report</strong> (<a class="reference internal" href="../api.html#pedal.core.report.Report" title="pedal.core.report.Report"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.core.report.Report</span></code></a>) – The report with the
+sandbox instance.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The number of unique calls</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.sandbox.commands.evaluate">
+<code class="sig-name descname">evaluate</code><span class="sig-paren">(</span><em class="sig-param">code</em>, <em class="sig-param">target='_'</em>, <em class="sig-param">threaded=None</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#evaluate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.evaluate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluates the given code and assigns the result to the given target.
+Will cause an error if <code class="docutils literal notranslate"><span class="pre">code</span></code> is not a valid expression.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>code</strong> (str or <code class="xref py py-class docutils literal notranslate"><span class="pre">CaitNode</span></code>) – The code to execute. If a CaitNode, then that will be executed
+directly instead of being compiled.</p></li>
+<li><p><strong>target</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The name of the variable to assign the result to.
+Note that the result is also returned by this function.</p></li>
+<li><p><strong>threaded</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Whether or not to run this code in a threaded
+environment, which allows for timeouts.</p></li>
+<li><p><strong>report</strong> (<a class="reference internal" href="../api.html#pedal.core.report.Report" title="pedal.core.report.Report"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.core.report.Report</span></code></a>) – The report with the
+sandbox instance.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>The</dt><dd><p>result of evaluating the code will be returned, proxied behind
+a SandboxResult (which attempts to perfectly emulate that
+value). If the function call failed, the exception will be
+returned instead.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Exception or <code class="xref py py-class docutils literal notranslate"><span class="pre">SandboxResult</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.sandbox.commands.get_call_arguments">
+<code class="sig-name descname">get_call_arguments</code><span class="sig-paren">(</span><em class="sig-param">function_name</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#get_call_arguments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.get_call_arguments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves all the arguments that were passed into the given function when it
+was called.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>function_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The name of the function to check.</p></li>
+<li><p><strong>report</strong> (<a class="reference internal" href="../api.html#pedal.core.report.Report" title="pedal.core.report.Report"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.core.report.Report</span></code></a>) – The report with the
+sandbox instance.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>The outer list will have any entry for each function call.</dt><dd><p>The inner list will be the arguments passed into that call.
+Pretty sure that any <a href="#id1"><span class="problematic" id="id2">*</span></a>args and <a href="#id3"><span class="problematic" id="id4">**</span></a>kwargs are the last elements of that list,
+if they exist.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a>, any]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.sandbox.commands.get_exception">
+<code class="sig-name descname">get_exception</code><span class="sig-paren">(</span><em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#get_exception"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.get_exception" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an exception if one occurred during the last execution,
+otherwise returns None.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.sandbox.commands.get_input">
+<code class="sig-name descname">get_input</code><span class="sig-paren">(</span><em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#get_input"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.get_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the current inputs that are available for execution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>report</strong> (<a class="reference internal" href="../api.html#pedal.core.report.Report" title="pedal.core.report.Report"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.core.report.Report</span></code></a>) – The report with the
+sandbox instance.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>The current list of inputs available for execution. The first</dt><dd><p>element of this list is the next string that will be passed to the
+next student call of <a class="reference external" href="https://docs.python.org/3/library/functions.html#input" title="(in Python v3.9)"><code class="xref py py-func docutils literal notranslate"><span class="pre">input()</span></code></a>.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.sandbox.commands.get_output">
+<code class="sig-name descname">get_output</code><span class="sig-paren">(</span><em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#get_output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.get_output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the current output (whatever the student has printed) since
+execution began.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.sandbox.commands.get_sandbox">
+<code class="sig-name descname">get_sandbox</code><span class="sig-paren">(</span><em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#get_sandbox"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.get_sandbox" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the current sandbox instance attached to this report.
+Typically, this is used to retrieve the sandbox without running the
+students’ code.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>report</strong> (<a class="reference internal" href="../api.html#pedal.core.report.Report" title="pedal.core.report.Report"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.core.report.Report</span></code></a>) – The report with the
+sandbox instance.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The sandbox instance.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.sandbox.Sandbox</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.sandbox.commands.get_student_data">
+<code class="sig-name descname">get_student_data</code><span class="sig-paren">(</span><em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#get_student_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.get_student_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the current data in the student namespace. Note that this is
+the data itself - modifying the dictionary will modify the data in the
+students’ namespace for subsequent executions!</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>report</strong> (<a class="reference internal" href="../api.html#pedal.core.report.Report" title="pedal.core.report.Report"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.core.report.Report</span></code></a>) – The report with the
+sandbox instance.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>The student’s data namespace, mapping names to the</dt><dd><p>values themselves.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a>, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.sandbox.commands.get_trace">
+<code class="sig-name descname">get_trace</code><span class="sig-paren">(</span><em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#get_trace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.get_trace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the list of line numbers that have been traced (recognized as executed).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>report</strong> (<a class="reference internal" href="../api.html#pedal.core.report.Report" title="pedal.core.report.Report"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.core.report.Report</span></code></a>) – The report with the
+sandbox instance.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>The list of lines that have been executed in the student’s</dt><dd><p>code.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.sandbox.commands.mock_function">
+<code class="sig-name descname">mock_function</code><span class="sig-paren">(</span><em class="sig-param">function_name</em>, <em class="sig-param">new_version</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#mock_function"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.mock_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Provide a custom version of the built-in function.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.sandbox.commands.mock_module">
+<code class="sig-name descname">mock_module</code><span class="sig-paren">(</span><em class="sig-param">module_name</em>, <em class="sig-param">new_version</em>, <em class="sig-param">friendly_name=None</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#mock_module"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.mock_module" title="Permalink to this definition">¶</a></dt>
+<dd><p>Provide an alternative version of the given module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>module_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The importable name of the module.</p></li>
+<li><p><strong>new_version</strong> (dict | <code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.sandbox.mocked.MockModule</span></code>) – The
+new version of the module, either as a dictionary of fields/values
+or a fully created MockModule.</p></li>
+<li><p><strong>friendly_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The internal name to use to store the data for this
+module, accessible via Sandbox’s <cite>modules</cite> field.</p></li>
+<li><p><strong>report</strong> (<a class="reference internal" href="../api.html#pedal.core.report.Report" title="pedal.core.report.Report"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.core.report.Report</span></code></a>) – The report with the
+sandbox instance.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.sandbox.commands.queue_input">
+<code class="sig-name descname">queue_input</code><span class="sig-paren">(</span><em class="sig-param">*inputs</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#queue_input"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.queue_input" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Adds the given <code class="docutils literal notranslate"><span class="pre">*inputs</span></code> to be used as input during subsequent</dt><dd><p>executions (e.g., <a class="reference internal" href="#pedal.sandbox.commands.run" title="pedal.sandbox.commands.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">pedal.sandbox.commands.run()</span></code></a>) if the
+student’s code calls <a class="reference external" href="https://docs.python.org/3/library/functions.html#input" title="(in Python v3.9)"><code class="xref py py-func docutils literal notranslate"><span class="pre">input()</span></code></a>. This does not remove existing
+inputs.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*inputs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – One or more strings that will be set. The first string
+passed in is the first string that will be passed in as input.</p></li>
+<li><p><strong>report</strong> (<a class="reference internal" href="../api.html#pedal.core.report.Report" title="pedal.core.report.Report"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.core.report.Report</span></code></a>) – The report with the
+sandbox instance.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.sandbox.commands.reset_output">
+<code class="sig-name descname">reset_output</code><span class="sig-paren">(</span><em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#pedal.sandbox.commands.reset_output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes any existing outputs associated with the sandbox.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.sandbox.commands.run">
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param">code=None</em>, <em class="sig-param">filename=None</em>, <em class="sig-param">inputs=None</em>, <em class="sig-param">threaded=None</em>, <em class="sig-param">after=None</em>, <em class="sig-param">before=None</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>If both <code class="docutils literal notranslate"><span class="pre">code</span></code> and <code class="docutils literal notranslate"><span class="pre">filename</span></code> are None, then the submission’s
+main file will be executed. If <code class="docutils literal notranslate"><span class="pre">code</span></code> is given but <code class="docutils literal notranslate"><span class="pre">filename</span></code> is
+not, then it is assumed to be instructor code.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>code</strong> (str or <code class="xref py py-class docutils literal notranslate"><span class="pre">CaitNode</span></code> or None) – The code to execute.</p></li>
+<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><em>None</em></a>) – The filename to use for this code.</p></li>
+<li><p><strong>inputs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em>) – Optional inputs to be passed to
+<code class="xref py py-func docutils literal notranslate"><span class="pre">set_input()</span></code>.</p></li>
+<li><p><strong>threaded</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Whether or not to run this code in a threaded
+environment, which allows for timeouts.</p></li>
+<li><p><strong>after</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Code to run after this code (without a filename).</p></li>
+<li><p><strong>before</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Code to run before this code (without a filename).</p></li>
+<li><p><strong>report</strong> (<a class="reference internal" href="../api.html#pedal.core.report.Report" title="pedal.core.report.Report"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.core.report.Report</span></code></a>) – The report with the
+sandbox instance.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The sandbox instance that this was run in.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pedal.sandbox.sandbox.Sandbox" title="pedal.sandbox.sandbox.Sandbox">Sandbox</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.sandbox.commands.set_input">
+<code class="sig-name descname">set_input</code><span class="sig-paren">(</span><em class="sig-param">inputs</em>, <em class="sig-param">clear=True</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#set_input"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.set_input" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Sets the given <code class="docutils literal notranslate"><span class="pre">inputs</span></code> to be used as input during subsequent</dt><dd><p>executions (e.g., <a class="reference internal" href="#pedal.sandbox.commands.run" title="pedal.sandbox.commands.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">pedal.sandbox.commands.run()</span></code></a>) if the
+student’s code calls <a class="reference external" href="https://docs.python.org/3/library/functions.html#input" title="(in Python v3.9)"><code class="xref py py-func docutils literal notranslate"><span class="pre">input()</span></code></a>. Unless the <code class="docutils literal notranslate"><span class="pre">clear</span></code> parameter
+is set to False, this removes existing inputs.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>inputs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em>) – One or more strings that will be set. The
+first string passed in is the first string that will be passed in
+as input.</p></li>
+<li><p><strong>clear</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Whether or not to remove any existing inputs set up
+in the sandbox.</p></li>
+<li><p><strong>report</strong> (<a class="reference internal" href="../api.html#pedal.core.report.Report" title="pedal.core.report.Report"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.core.report.Report</span></code></a>) – The report with the
+sandbox instance.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.sandbox.commands.start_trace">
+<code class="sig-name descname">start_trace</code><span class="sig-paren">(</span><em class="sig-param">tracer_style='native'</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#start_trace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.start_trace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Start tracing using the coverage module.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pedal.sandbox.commands.stop_trace">
+<code class="sig-name descname">stop_trace</code><span class="sig-paren">(</span><em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#stop_trace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.stop_trace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stop whatever tracing is going on.</p>
 </dd></dl>
 
 </div>

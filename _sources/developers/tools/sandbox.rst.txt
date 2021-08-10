@@ -9,3 +9,7 @@ Sandbox
 
 .. automodule:: pedal.sandbox.feedbacks
     :members:
+
+
+.. automodule:: pedal.sandbox.commands
+    :members:
