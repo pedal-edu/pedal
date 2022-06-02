@@ -125,7 +125,7 @@ def equality_test(actual, expected, _exact_strings, _delta):
 
     # Float comparison
     if isinstance(expected, float) and isinstance(actual, (float, int)):
-        error = 10 ** (-_delta)
+        error = _delta
         return abs(expected - actual) < error
     # Other numerics
     elif isinstance(expected, Number) and isinstance(actual, Number) and isinstance(expected, type(actual)):
