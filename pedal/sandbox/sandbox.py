@@ -7,6 +7,7 @@ TODO: Handle sys.argv
 
 import sys
 import io
+import types
 from itertools import zip_longest
 from unittest.mock import patch
 
@@ -58,7 +59,8 @@ class Sandbox:
             turning them into temporary variables.
     """
 
-    MAXIMUM_TEMPORARY_LENGTH = 25
+    MAXIMUM_TEMPORARY_LENGTH = 70
+    MAXIMUM_INPUTS = 100000
 
     def __init__(self, report=MAIN_REPORT):
         self.report = report
@@ -103,6 +105,44 @@ class Sandbox:
 
     ############################################################################
     # Execution (run/call/eval)
+
+    def _import(self, code, module_name, filename, threaded, **meta):
+        """
+        Import the code as a new module. Requires prior `_execute` of some
+        manner to have already started (e.g., a `call`, `run`, or `evaluate`).
+        This does NOT reset the context, setup output capturing, or handle exceptions.
+        Instead, it relies on the existing infrastructure to do so.
+
+        Args:
+            code:
+            module_name:
+            threaded:
+            **meta:
+
+        Returns:
+
+        """
+        if threaded:
+            return timeout(self.allowed_time, self._import, code, module_name, filename, False, **meta)
+        # TODO: Skulpt doesn't support `module.__dict__` manipulation,
+        #   but once it does we don't need to manually copy over the attrs afterwards
+        imported_module = types.ModuleType(module_name)
+        # Patch the builtins using the same rules as `execute`
+        #    EXCEPT only the builtins, not the other stuff?
+        imported_module_data = {}
+        self._reset_builtins(imported_module_data)
+        builtins = self._module_overrides.get('__builtins__', {})
+        self._mock_builtins(imported_module_data, builtins)
+        # Compile and execute code
+        compiled_code = compile(code, filename, 'exec')
+        with self.trace.as_filename(filename, code):
+            exec(compiled_code, imported_module_data)
+        # Copy over data to module
+        for key, value in imported_module_data.items():
+            setattr(imported_module, key, value)
+        # And get them back the module
+        return imported_module
+
 
     def _execute_with_timeout(self, code, filename, kind, **meta):
         """
@@ -452,23 +492,31 @@ class Sandbox:
     ############################################################################
     # Patching and Mocking
 
+    # TODO: Need to make this cover the `builtins` module, and look into best practices
+    #   for modern Python mocking, to prevent evil access.
+
+    def _mock_builtins(self, data: dict, builtins: dict):
+        builtins = builtins
+        for name, value in builtins.items():
+            if value is True:
+                data['__builtins__'][name] = mocked.ORIGINAL_BUILTINS[name]
+                data[name] = mocked.ORIGINAL_BUILTINS[name]
+            elif value is False:
+                data['__builtins__'][name] = mocked.disabled_builtin(name)
+                data[name] = mocked.disabled_builtin(name)
+            else:
+                data['__builtins__'][name] = value
+                data[name] = value
+
+
     def _start_mocking(self, context: SandboxContext):
         """ Mock input, output, builtins, and modules """
         # Handle input tracking
         self.mock_function('input', self._track_inputs(context.inputs))
         # Override builtin functions
-        self.reset_builtins()
+        self._reset_builtins(self.data)
         builtins = self._module_overrides.pop('__builtins__', {})
-        for name, value in builtins.items():
-            if value is True:
-                self.data['__builtins__'][name] = mocked.ORIGINAL_BUILTINS[name]
-                self.data[name] = mocked.ORIGINAL_BUILTINS[name]
-            elif value is False:
-                self.data['__builtins__'][name] = mocked.disabled_builtin(name)
-                self.data[name] = mocked.disabled_builtin(name)
-            else:
-                self.data['__builtins__'][name] = value
-                self.data[name] = value
+        self._mock_builtins(self.data, builtins)
         # Override sys modules
         overridden_modules = sys.modules.copy()
         for name, value in self._module_overrides.items():
@@ -524,10 +572,11 @@ class Sandbox:
         self.block_function('globals')
         self.block_function('exit')
         self.mock_function('open', mocked.create_open_function(self.report))
-        self.mock_function('__import__', mocked.create_import_function(self.report))
+        self.mock_function('__import__', mocked.create_import_function(self.report, self))
         self.block_module('pedal')
         self.mock_module('turtle', mocked.MockTurtle(), 'turtles')
         self.mock_module('matplotlib.pyplot', mocked.MockPlt(), 'plotting')
+        self.mock_module('designer', mocked.MockDesigner(), 'designer')
 
     def mock_function(self, function_name, new_version):
         self._module_overrides['__builtins__'][function_name] = new_version
@@ -560,7 +609,7 @@ class Sandbox:
                 self._module_overrides[name] = mocked_version
         return self
 
-    def block_module(self, module_name):
+    def block_module(self, module_name, friendly_name=None):
         """
         Prevent the module from being loaded in student code.
 
@@ -571,7 +620,14 @@ class Sandbox:
         Returns:
             Sandbox: This sandbox.
         """
-        self._module_overrides[module_name] = mocked.BlockedModule(module_name)
+        if friendly_name is None:
+            friendly_name = module_name
+        mocked_modules = self.modules.new_module(mocked.BlockedModule(module_name), module_name, friendly_name)
+        for name, mocked_version in mocked_modules.items():
+            if name not in self._module_overrides or not self._module_overrides[name]:
+                self._module_overrides[name] = mocked_version
+
+        #self._module_overrides[module_name] = mocked.BlockedModule(module_name)
         return self
 
     ############################################################################
@@ -669,12 +725,21 @@ class Sandbox:
         self.data.clear()
         self._temporary_variables.clear()
         self._backup_variables.clear()
-        self.reset_builtins()
+        self._reset_builtins(self.data)
 
-    def reset_builtins(self):
-        self.data['__builtins__'] = {}
+    @staticmethod
+    def _reset_builtins(data: dict):
+        """
+        Replace all the existing given `data` with the builtin mocked data.
+        Args:
+            data:
+
+        Returns:
+
+        """
+        data['__builtins__'] = {}
         for name, value in mocked._default_builtins.items():
-            self.data['__builtins__'][name] = value
+            data['__builtins__'][name] = value
 
     def set_student_data(self, new_data):
         """
@@ -820,7 +885,7 @@ class Sandbox:
         """
         Wraps an input function with a tracker.
         """
-
+        self._called_inputs = 0
         def _input_tracker(*args, **kwargs):
             if args:
                 prompt = args[0]
@@ -833,6 +898,10 @@ class Sandbox:
                 # TODO: Make this smarter, more elegant in choosing IF we should repeat 0
                 value_entered = '0'
             self._context[-1].inputs.append(value_entered)
+            self._called_inputs += 1
+            if self.MAXIMUM_INPUTS is not None:
+                if self.MAXIMUM_INPUTS <= self._called_inputs:
+                    raise IOError(f"Asked for user input too many times ({self._called_inputs} times). Perhaps you have an infinite loop?")
             #context_inputs.append(value_entered)
             return value_entered
 

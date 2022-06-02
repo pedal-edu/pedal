@@ -422,3 +422,6 @@ class CommandBlock:
 
 # TODO: Deprecate these!
 reset_output = clear_output
+
+
+# TODO: Add function to get PREVIOUS inputs

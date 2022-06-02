@@ -132,6 +132,7 @@ class ExecutionTextHolder:
         self._finish_body()
         return "".join(self._result)
 
+INPUT_MAXIMUM_LINES = 30
 
 def format_contexts(contexts, format):
     """
@@ -162,7 +163,11 @@ def format_contexts(contexts, format):
             inputs_text.extend(context.inputs)
     final_text = [execution_text.get_lines()]
     if inputs_text:
-        inputs = "\n".join(inputs_text)
+        if len(inputs_text) > INPUT_MAXIMUM_LINES:
+            midpoint = int(INPUT_MAXIMUM_LINES / 2)
+            missed = len(inputs_text) - INPUT_MAXIMUM_LINES
+            inputs_text = inputs_text[:midpoint] + [f"... (Skipping {missed} other inputs) ..."] + inputs_text[-midpoint:]
+        inputs = "\n".join(inputs_text) + " "
         inputs_message = format.inputs(inputs)
         final_text.append(f"And I entered as input:{inputs_message}")
     return "\n".join(final_text)

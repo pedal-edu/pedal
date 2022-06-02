@@ -113,6 +113,8 @@ class SandboxNativeTracer(SandboxBasicTracer):
     def __init__(self):
         super().__init__()
         self.calls = {}
+        self.returns = {}
+        self.call_stack = []
         self.lines = []
         self.old_tracer = None
         self.step_index = 1
@@ -139,9 +141,19 @@ class SandboxNativeTracer(SandboxBasicTracer):
             if called_function != '<module>':
                 if called_function not in self.calls:
                     self.calls[called_function] = []
+                if called_function not in self.returns:
+                    self.returns[called_function] = []
                 arguments = {name: frame.f_locals[name] for name in frame.f_code.co_varnames
                              if name in frame.f_locals}
                 self.calls[called_function].append(arguments)
+                # Haha oh god why would you do this? Abusing mutable state!
+                placeholder = []
+                self.returns[called_function].append(placeholder)
+                self.call_stack.append(placeholder)
+        if event == 'return' and self.is_tracked_file(frame):
+            if self.call_stack:
+                placeholder = self.call_stack.pop()
+                placeholder.append(args)
         return self.tracer
 
 
