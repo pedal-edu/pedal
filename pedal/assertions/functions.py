@@ -171,3 +171,31 @@ class wrong_return_type(AssertionFeedback):
         fields['expected'] = expected
         fields['expected_message'] = expected.precise_description()
         super().__init__(fields=fields, **kwargs)
+
+
+class name_is_not_a_function(AssertionFeedback):
+    """ The name is not a function """
+    title = "Name Is Not a Function"
+    message_template = "You defined `{name_message}`, but did not define it as a function."
+
+    def __init__(self, name, **kwargs):
+        report = kwargs.get("report", MAIN_REPORT)
+        fields = kwargs.get("fields", {})
+        fields['name'] = name
+        fields['name_message'] = report.format.name(name)
+        super().__init__(fields=fields, **kwargs)
+
+
+class function_not_available(AssertionFeedback):
+    """ The name is not a function """
+    title = "Function Not Available"
+    message_template = ("You may have defined `{name_message}`, but it was not available"
+                        " to be called in the top-level scope. Perhaps you mistakenly defined"
+                        " it inside another function or scope?")
+
+    def __init__(self, name, **kwargs):
+        report = kwargs.get("report", MAIN_REPORT)
+        fields = kwargs.get("fields", {})
+        fields['name'] = name
+        fields['name_message'] = report.format.name(name)
+        super().__init__(fields=fields, **kwargs)
