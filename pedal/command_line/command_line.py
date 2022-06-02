@@ -128,7 +128,7 @@ def parse_args(reduced_mode=False):
     parser.add_argument('--progsnap_events', help="Choose what level of event"
                                                   " to capture from Progsnap event"
                                                   " logs.",
-                        default='run', choices=['run', 'edit', 'last'])
+                        default='run', choices=['run', 'edit', 'last', 'compile'])
     parser.add_argument('--cache', help='Use the given directory to hold the cache.'
                                         ' You can use "./" to use the current directory.',
                         default=False)
