@@ -8,12 +8,19 @@ TODO: assert_ran (latest run produced no expections)
 """
 import re
 
+try:
+    from dataclasses import _FIELDS
+except ImportError:
+    _FIELDS = '__dataclass_fields__'
+
 from pedal.assertions.feedbacks import (RuntimeAssertionFeedback,
                                         SandboxedValue, ExactValue,
                                         RuntimePrintingAssertionFeedback, AssertionFeedback, assert_group)
+from pedal.assertions.functions import function_not_available, name_is_not_a_function
 from pedal.core.report import MAIN_REPORT
+from pedal.core.feedback import CompositeFeedbackFunction
 from pedal.sandbox import Sandbox
-from pedal.sandbox.commands import check_coverage, get_call_arguments
+from pedal.sandbox.commands import check_coverage, get_call_arguments, get_student_data
 from pedal.sandbox.result import share_sandbox_context
 from pedal.types.normalize import normalize_type, get_pedal_type_from_value
 from pedal.types.operations import are_types_equal
@@ -281,6 +288,38 @@ class assert_is_not_none(RuntimeAssertionFeedback):
         return left.value is None
 
 
+class assert_is_dataclass(RuntimeAssertionFeedback):
+    """
+    Determine if the ``value`` is a dataclass.
+    """
+    justification = "Value does not evaluate to a dataclass"
+    _expected_verb = "to evaluate to"
+    _inverse_operator = "to not evaluate to"
+
+    def __init__(self, value, **kwargs):
+        super().__init__(SandboxedValue(value), ExactValue("a dataclass"), **kwargs)
+
+    def condition(self, left, right):
+        """ Tests if the left evaluates to true """
+        return not hasattr(left.value, _FIELDS)
+
+
+class assert_is_not_dataclass(RuntimeAssertionFeedback):
+    """
+    Determine if the ``value`` is not a dataclass.
+    """
+    justification = "Value does not evaluate to a dataclass"
+    _expected_verb = "to not evaluate to"
+    _inverse_operator = "to evaluate to"
+
+    def __init__(self, value, **kwargs):
+        super().__init__(SandboxedValue(value), ExactValue("a dataclass"), **kwargs)
+
+    def condition(self, left, right):
+        """ Tests if the left evaluates to true """
+        return hasattr(left.value, _FIELDS)
+
+
 class assert_true(RuntimeAssertionFeedback):
     """
     Determine if the ``value`` is true.
@@ -472,13 +511,13 @@ class _compare_type(RuntimeAssertionFeedback):
 class assert_type(_compare_type):
     """ Same as assert_is_instance, but has a slightly different wording. """
     justification = "Value is not of type"
-    _expected_verb = ("to not be a value of type", "to not be the type of")
+    _expected_verb = ("to be a value of type", "to be the type of")
     _inverse_operator = "is a value of type"
 
 
 class assert_not_type(_compare_type):
     justification = "Value is of type"
-    _expected_verb = ("to be a value of type", "to be the type of")
+    _expected_verb = ("to not be a value of type", "to not be the type of")
     _inverse_operator = "is not a value of type"
 
     def condition(self, value, expected_type):
@@ -637,7 +676,6 @@ class assert_has_function(RuntimeAssertionFeedback):
 
     def format_assertion(self, sandbox, function_name, contexts):
         sandbox = sandbox.value
-        function_name = function_name.value
         if isinstance(sandbox, Sandbox):
             return "Sandbox does not contain the function."
         else:
@@ -655,7 +693,6 @@ class assert_has_function(RuntimeAssertionFeedback):
         else:
             function = None
         return not callable(function)
-
 
 # TODO: This one is at Runtime, but is not an assertion... Should these be "tests"?
 
@@ -688,7 +725,6 @@ class ensure_coverage(AssertionFeedback):
 
     def condition(self, coverage, at_least):
         return coverage <= at_least
-
 
 
 class ensure_called_uniquely(AssertionFeedback):
@@ -728,7 +764,7 @@ class ensure_called_uniquely(AssertionFeedback):
             ignore = set(ignore)
         fields['ignore'] = ignore
         calls = get_call_arguments(function_name, report)
-        unique_calls = set([tuple(args.values()) for args in calls])
+        unique_calls = set([tuple(map(repr, args.values())) for args in calls])
         fields['instructor_ignored'] = instructor_ignored = len(unique_calls & ignore)
         if instructor_ignored:
             fields['instructor_ignore_message'] = f" (but your instructor did not count {instructor_ignored} of the tests{why_ignored})"
@@ -740,8 +776,20 @@ class ensure_called_uniquely(AssertionFeedback):
         super().__init__(unique_call_count, at_least, **kwargs)
 
     def condition(self, unique_call_count, at_least):
-        return unique_call_count <= at_least
+        return unique_call_count < at_least
 
+
+@CompositeFeedbackFunction(function_not_available, name_is_not_a_function)
+def ensure_function_callable(name, **kwargs):
+    report = kwargs.get("report", MAIN_REPORT)
+    values = get_student_data(report)
+    # 2.1. Does the name exist in the values?
+    if name not in values:
+        return function_not_available(name, **kwargs)
+    function_value = values[name]
+    # 2.2. Is the name bound to a callable?
+    if not callable(function_value):
+        return name_is_not_a_function(name)
 
 # Alias conventional camel-case names to our functions
 
