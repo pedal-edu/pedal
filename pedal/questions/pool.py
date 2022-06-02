@@ -1,7 +1,7 @@
 from pedal.core.commands import gently
 from pedal.core.report import MAIN_REPORT
 from pedal.questions import _name_hash, SETTING_SHOW_CASE_DETAILS, load_question
-from pedal.questions.questions import show_question
+from pedal.questions.feedbacks import show_question
 
 
 class Pool:
@@ -9,16 +9,31 @@ class Pool:
 
     """
     _POOL_TRACKER = 0
+    _CURRENT = []
+    # TODO: Attach to report instead!
 
-    def __init__(self, name, choices, seed=None, report=MAIN_REPORT, position=None):
+    def __init__(self, name, choices=None, seed=None, report=MAIN_REPORT, position=None):
         self.name = name
-        self.choices = choices
+        self.choices = choices if choices else []
         self.seed = seed
         self.report = report
         if position is None:
             position = Pool._POOL_TRACKER
             Pool._POOL_TRACKER += 1
         self.position = position
+
+    def __enter__(self):
+        Pool._CURRENT.append(self)
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        Pool._CURRENT.pop()
+        self.ask()
+
+    @classmethod
+    def add_question_via_context(cls, question):
+        if cls._CURRENT:
+            cls._CURRENT[-1].choices.append(question)
 
     def choose(self, force=None):
         """
@@ -40,6 +55,10 @@ class Pool:
             else:
                 force = self.seed
         return self.choices[force % len(self.choices)]
+
+    def ask(self):
+        question = self.choose()
+        return question.ask()
 
     @property
     def answered(self):
@@ -67,7 +86,7 @@ def check_pool_exam(name, questions, force=None, seed=None, report=MAIN_REPORT):
     # Choose a question
     if force is None:
         if seed is None:
-            force = MAIN_REPORT['questions']['seed']
+            force = report['questions']['seed']
             if isinstance(force, str):
                 force = _name_hash(force + name)
         else:

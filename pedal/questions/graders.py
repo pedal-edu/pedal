@@ -1,4 +1,5 @@
-from pedal.core.commands import compliment, explain, gently
+from pedal.core.commands import compliment, explain, gently, give_partial, suppress
+from pedal.core.feedback_category import FeedbackCategory
 from pedal.core.report import MAIN_REPORT
 from pedal.sandbox.commands import run
 from pedal.assertions.runtime import *
@@ -13,8 +14,7 @@ class QuestionGrader:
 
     def _test(self, question):
         methods = self._get_functions_with_filter()
-        for method in methods:
-            method(question)
+        return [method(question) for method in methods]
 
 
 class FunctionGrader(QuestionGrader):
@@ -31,12 +31,14 @@ class FunctionGrader(QuestionGrader):
     UNIT_TEST_TYPE_RATIO = .5
     UNIT_TEST_COMPLETION_POINTS = 2
 
-    def __init__(self, function_name, signature, tests):
+    def __init__(self, function_name, signature, tests, config=None):
         super().__init__()
         self.function_name = function_name
         self.signature = signature
         self.tests = tests
         self.points = 0
+        self.config = config or {}
+        self.config.setdefault('suppress_function_unused', True)
 
     def _test(self, question):
         defined = self.grade_definition(question)
@@ -58,7 +60,7 @@ class FunctionGrader(QuestionGrader):
         Args:
             question:
         """
-        pass
+        give_partial(self.points/self.MAX_POINTS)
 
     def report_success(self, question):
         """
@@ -79,15 +81,18 @@ class FunctionGrader(QuestionGrader):
         """
         self.student = run()
 
-        if not ensure_function(self.function_name, *self.signature):
+        if ensure_function(self.function_name, *self.signature):
             gently("Function not defined")
             return False
 
         if self.student.exception:
             return False
-        if not assertHasFunction(self.student, self.function_name):
+        if assertHasFunction(self.student, self.function_name):
             gently("Function defined incorrectly")
             return False
+
+        if self.config.get('suppress_function_unused', True):
+            suppress(FeedbackCategory.ALGORITHMIC, 'unused_variable', {'name': self.function_name})
 
         self.points += self.DEFINITION_POINTS
         return True
@@ -136,17 +141,17 @@ class FunctionGrader(QuestionGrader):
         for arguments, expected in self.tests:
             # import sys
             # print(repr(arguments), file=sys.stderr)
-            result = self.student.call(self.function_name, *arguments, context=False)
+            result = self.student.call(self.function_name, *arguments)
             # print(repr(self.student.exception), file=sys.stderr)
             if self.student.exception:
                 all_good = False
                 continue
-            if assertIsInstance(result, type(expected)):
+            if not assertIsInstance(result, type(expected)):
                 self.points += TYPE_POINT_ADD
             else:
                 all_good = False
                 continue
-            if self.assertEqual(result, expected):
+            if not self.assertEqual(result, expected):
                 self.points += VALUE_POINT_ADD
             else:
                 all_good = False
