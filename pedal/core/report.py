@@ -66,7 +66,7 @@ class Report:
         self.feedback = []
         self.ignored_feedback = []
         self.suppressions = {}
-        self.suppressed_labels = []
+        self.suppressed_labels = {}
         self.hiddens = set()
         self.groups = []
         self.group = None
@@ -159,7 +159,7 @@ class Report:
             feedback.parent._get_child_feedback(feedback, False)
         return feedback
 
-    def suppress(self, category=None, label=True):
+    def suppress(self, category=None, label=True, fields=None):
         """
         Suggest that an entire category or label within a category ignored by
         the resolver.
@@ -168,9 +168,15 @@ class Report:
         Args:
             category (str): The category of feedback to suppress.
             label (bool or str): A specific label to match against and suppress.
+            fields (dict of key/values): The fields that will be matched exactly to
+                suppress.
         """
+        if fields is None:
+            fields = {}
         if category is None:
-            self.suppressed_labels.append(label)
+            if label not in self.suppressed_labels:
+                self.suppressed_labels[label] = []
+            self.suppressed_labels[label].append(fields)
         else:
             category = category.lower()
             if isinstance(label, str):
@@ -178,8 +184,10 @@ class Report:
             if category in FeedbackCategory.ALIASES:
                 category = FeedbackCategory.ALIASES[category]
             if category not in self.suppressions:
-                self.suppressions[category] = []
-            self.suppressions[category].append(label)
+                self.suppressions[category] = {}
+            if label not in self.suppressions[category]:
+                self.suppressions[category][label] = []
+            self.suppressions[category][label].append(fields)
 
     def add_hook(self, event, function):
         """

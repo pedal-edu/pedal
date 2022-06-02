@@ -119,7 +119,7 @@ def hide_correctness(report=MAIN_REPORT):
     report.hide_correctness()
 
 
-def suppress(category=None, label=True, report=MAIN_REPORT):
+def suppress(category=None, label=True, fields=None, report=MAIN_REPORT):
     """
     Hides a given category or label within a category from being considered
     by the resolver.
@@ -130,10 +130,12 @@ def suppress(category=None, label=True, report=MAIN_REPORT):
             :py:class:`pedal.core.feedback_category.FeedbackCategory`.
         label (str or bool): The specific feedback label to suppress, or
             True if all the labels within this category should be suppressed.
+        fields (dict): The fields that will be exactly matched to suppress a
+            given feedback. The keys should be strings.
         report (:py:class:`~pedal.core.report.Report`): The report object to
             suppress information within.
     """
-    report.suppress(category, label)
+    report.suppress(category, label, fields)
 
 
 def log(*items, sep=" ", **kwargs):
@@ -250,3 +252,6 @@ class system_error(FeedbackResponse):
     kind = FeedbackKind.META
     valence = Feedback.NEUTRAL_VALENCE
     muted = True
+
+
+# TODO: set_line_offset(offset, filename='answer.py')

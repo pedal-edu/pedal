@@ -54,10 +54,29 @@ class FinalFeedback:
         if category in self.suppressions:
             if True in self.suppressions[category]:
                 return
-            elif feedback.label.lower() in self.suppressions[category]:
-                return
+            else:
+                looking_for = feedback.label.lower()
+                if looking_for in self.suppressions[category]:
+                    list_of_fields = self.suppressions[category][looking_for]
+                    # Go through each of the sets of fields
+                    for fields in list_of_fields:
+                        # Do any of them NOT match?
+                        for field, value in fields.items():
+                            if feedback.fields.get(field, None) != value:
+                                break
+                        else:
+                            # Oh hey, a match, let's skip this guy
+                            return
         if feedback.label in self.suppressed_labels:
-            return
+            list_of_fields = self.suppressed_labels[feedback.label]
+            # Go through each of the sets of fields
+            for fields in list_of_fields:
+                # Do any of them not match?
+                for field, value in fields.items():
+                    if feedback['fields'].get(field, None) != value:
+                        break
+                else:
+                    return
         success, partial, message, title, data = parse_feedback(feedback)
         if feedback and feedback.category == Feedback.CATEGORIES.SYSTEM:
             self.systems.append(feedback)
