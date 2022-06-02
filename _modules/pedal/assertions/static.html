@@ -1,73 +1,33 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>pedal.assertions.static &mdash; Pedal 1.0 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>pedal.assertions.static &mdash; Pedal 1.0 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
-
-    
+    <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../../../index.html" class="icon icon-home"> Pedal
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
                 1.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -75,18 +35,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption"><span class="caption-text">Contents</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../everyone/introduction.html">Introduction</a></li>
@@ -104,71 +53,31 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../everyone/contact.html">Contact</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../index.html">Pedal</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-        
           <li><a href="../../index.html">Module code</a> &raquo;</li>
-        
           <li><a href="../assertions.html">pedal.assertions</a> &raquo;</li>
-        
       <li>pedal.assertions.static</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   <h1>Source code for pedal.assertions.static</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Collection of feedback functions related to static checks of student code.</span>
@@ -334,6 +243,10 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_usage</span><span class="p">(</span><span class="s1">&#39;use_count&#39;</span><span class="p">,</span> <span class="n">uses</span><span class="p">)</span></div></div>
 
 
+<span class="n">ensure_operator</span> <span class="o">=</span> <span class="n">ensure_operation</span>
+<span class="n">prevent_operator</span> <span class="o">=</span> <span class="n">prevent_operation</span>
+
+
 <div class="viewcode-block" id="prevent_literal"><a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.prevent_literal">[docs]</a><span class="k">class</span> <span class="nc">prevent_literal</span><span class="p">(</span><span class="n">PreventAssertionFeedback</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Make sure that the given literal value does not appear in the student&#39;s</span>
 <span class="sd">    code. &quot;&quot;&quot;</span>
@@ -357,6 +270,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_usage</span><span class="p">(</span><span class="s1">&#39;use_count&#39;</span><span class="p">,</span> <span class="n">uses</span><span class="p">)</span></div></div>
 
 
+<span class="c1"># TODO: ensure_literal does not recognize None?</span>
 <div class="viewcode-block" id="ensure_literal"><a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.ensure_literal">[docs]</a><span class="k">class</span> <span class="nc">ensure_literal</span><span class="p">(</span><span class="n">EnsureAssertionFeedback</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Make sure that the given literal value does appear in the student&#39;s</span>
 <span class="sd">        code. &quot;&quot;&quot;</span>
@@ -630,7 +544,11 @@
 
 <span class="c1"># TODO: wait, is this a positive feedback group waiting to happen?</span>
 
-<div class="viewcode-block" id="ensure_function"><a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.ensure_function">[docs]</a><span class="nd">@CompositeFeedbackFunction</span><span class="p">(</span><span class="n">missing_function</span><span class="p">,</span> <span class="n">duplicate_function_definition</span><span class="p">)</span>
+<div class="viewcode-block" id="ensure_function"><a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.ensure_function">[docs]</a><span class="nd">@CompositeFeedbackFunction</span><span class="p">(</span><span class="n">missing_function</span><span class="p">,</span> <span class="n">duplicate_function_definition</span><span class="p">,</span>
+                           <span class="n">too_few_parameters</span><span class="p">,</span> <span class="n">too_many_parameters</span><span class="p">,</span>
+                           <span class="n">missing_parameter_type</span><span class="p">,</span> <span class="n">invalid_parameter_type</span><span class="p">,</span>
+                           <span class="n">wrong_parameter_type</span><span class="p">,</span> <span class="n">wrong_return_type</span><span class="p">,</span>
+                           <span class="n">missing_return_type</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">ensure_function</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">arity</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                     <span class="n">returns</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">compliment</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Checks that the function exists and has the right signature. &quot;&quot;&quot;</span>
@@ -756,46 +674,30 @@
 </pre></div>
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2018, acbart, lukesg08.
-
-    </p>
+    <p>&#169; Copyright 2018, acbart, lukesg08.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>
