@@ -70,7 +70,7 @@ class Tifa(TifaCore, ast.NodeVisitor):
         if reset or self.analysis is None:
             self.analysis = TifaAnalysis()
         filename = filename or self.report.submission.main_file
-        self.line_offset = self.report.submission.line_offsets.get(filename, 0)
+        self.line_offset = self.report.submission.line_offsets.get(filename, 0) if self.report.submission else 0
 
         # Attempt parsing - might fail!
         try:
@@ -386,7 +386,7 @@ class Tifa(TifaCore, ast.NodeVisitor):
         # Handle ctx
         # TODO: Handling contexts
         # Handle attr
-        result = value_type.load_attr(node.attr)
+        result = value_type.load_attr(node.attr, self)
         return result
 
     def visit_BinOp(self, node):
@@ -503,7 +503,8 @@ class Tifa(TifaCore, ast.NodeVisitor):
             node:
         """
         class_name = node.name
-        new_class_type = ClassType(class_name)
+        parents = [self.visit(base) for base in node.bases]
+        new_class_type = ClassType(class_name, parents)
         self.store_variable(class_name, new_class_type)
         # TODO: Define a new scope definition that executes the body
         # TODO: find __init__, execute that
@@ -652,7 +653,7 @@ class Tifa(TifaCore, ast.NodeVisitor):
                 for arg, parameter in zip(args, parameters):
                     name = arg.arg
                     if arg.annotation:
-                        self.visit(arg.annotation)
+                        arg_type = self.visit(arg.annotation)
                         annotation = get_pedal_type_from_annotation(arg.annotation, self)
                         # TODO: Use parameter information to "fill in" empty lists
                         if isinstance(parameter, ListType) and isinstance(annotation, ListType):
@@ -800,7 +801,7 @@ class Tifa(TifaCore, ast.NodeVisitor):
                 module_name = node.module
                 asname = alias.asname or alias.name
                 module_type = self.load_module(module_name)
-            name_type = module_type.load_attr(alias.name)
+            name_type = module_type.load_attr(alias.name, self)
             self.store_variable(asname, name_type)
 
     def visit_Lambda(self, node):

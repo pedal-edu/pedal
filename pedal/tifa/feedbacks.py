@@ -132,17 +132,22 @@ class possible_initialization_problem(TifaFeedback):
 class unused_variable(TifaFeedback):
     """ Unused Variable """
     title = "Unused Variable"
-    message_template = ("The {kind} {name_message} was given a {initialization} on line "
+    message_template = ("The {kind} {name_message} was {initialization} on line "
                         "{location.line}, but was never used after that.")
     justification = ("TIFA stored a variable but it was not read any other time "
                      "in the program.")
 
     def __init__(self, location, name, variable_type, **kwargs):
         report = kwargs.get("report", MAIN_REPORT)
-        if variable_type.is_equal('function'):
-            kind, initialization = 'function', 'definition'
+        if variable_type.is_equal('module'):
+            kind, initialization = 'module', 'imported'
+        elif variable_type.is_equal('function'):
+            kind, initialization = 'function', 'given a definition'
+        elif variable_type.is_equal('class'):
+            kind, initialization = 'class', 'given a definition'
+        # TODO: Handle classes... anything else?
         else:
-            kind, initialization = 'variable', 'value'
+            kind, initialization = 'variable', 'given a value'
         fields = {'location': location, 'name': name, 'type': variable_type,
                   'name_message': report.format.name(name),
                   'kind': kind, 'initialization': initialization}
@@ -263,6 +268,8 @@ class parameter_type_mismatch(TifaFeedback):
         report = kwargs.get("report", MAIN_REPORT)
         parameter_type_name = parameter.singular_name
         argument_type_name = argument.singular_name
+        if parameter_type_name == argument_type_name:
+            argument_type_name = "a different kind of " + argument_type_name
         fields = {'location': location,
                   'parameter_name': parameter_name,
                   'parameter_name_message': report.format.name(parameter_name),

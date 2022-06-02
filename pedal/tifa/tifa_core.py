@@ -434,15 +434,21 @@ class TifaCore:
                     self._issue(module_not_found(self.locate(), chain, False, None, report=self.report))
             return base_module
         else:
-            try:
-                actual_module = __import__(chain, globals(), {},
-                                           ['_tifa_definitions'])
-                definitions = actual_module._tifa_definitions()
-                return get_pedal_type_from_json(definitions)
-            except Exception as e:
-                #print(e)
-                self._issue(module_not_found(self.locate(), chain, True, e, report=self.report))
+            filename = chain.replace('.', '/') + ".py"
+            if self.report.submission and filename in self.report.submission.files:
+                # TODO: Try running TIFA over the code
                 return ModuleType()
+            else:
+                # Non-student file, maybe it has _tifa_definitions?
+                try:
+                    actual_module = __import__(chain, globals(), {},
+                                               ['_tifa_definitions'])
+                    definitions = actual_module._tifa_definitions()
+                    return get_pedal_type_from_json(definitions)
+                except Exception as e:
+                    #print(e)
+                    self._issue(module_not_found(self.locate(), chain, True, e, report=self.report))
+                    return ModuleType()
 
     def combine_states(self, left, right):
         """
@@ -492,7 +498,8 @@ class TifaCore:
                 right_state = right_identifier.state
             else:
                 # Was only on IF path, potentially on the parent path
-                right_state = self.name_map[parent_path_id].get(left_name)
+                right_state = self.search_parents(parent_path_id, left_name)
+                # right_state = self.name_map[parent_path_id].get(left_name)
             combined = self.combine_states(left_state, right_state)
             self.name_map[parent_path_id][left_name] = combined
         # Check for names that are on the ELSE path but not the IF path
@@ -500,9 +507,20 @@ class TifaCore:
             if right_name not in self.name_map[left_path_id]:
                 right_state = self.name_map[right_path_id][right_name]
                 # Potentially on the parent path
-                parent_state = self.name_map[parent_path_id].get(right_name)
+                #parent_state = self.name_map[parent_path_id].get(right_name)
+                parent_state = self.search_parents(parent_path_id, right_name)
                 combined = self.combine_states(right_state, parent_state)
                 self.name_map[parent_path_id][right_name] = combined
+
+    def search_parents(self, parent_id, seeking_name):
+        possible = self.name_map[parent_id]
+        if seeking_name in possible:
+            return possible[seeking_name]
+        elif parent_id in self.path_parents:
+            parent_id = self.path_parents[parent_id]
+            return self.search_parents(parent_id, seeking_name)
+        else:
+            return None
 
     @staticmethod
     def trace_state(state, method, position):

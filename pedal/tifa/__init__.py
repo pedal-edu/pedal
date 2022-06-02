@@ -70,6 +70,7 @@ Important concepts:
 """
 from pedal.core.report import MAIN_REPORT, Report
 from pedal.tifa.constants import TOOL_NAME
+from pedal.tifa.settings import get_default_tifa_settings
 from pedal.tifa.tifa_visitor import Tifa
 from pedal.tifa.commands import *
 
@@ -85,7 +86,8 @@ def reset(report=MAIN_REPORT):
     report[TOOL_NAME] = {
         'analyses': {},
         'latest': None,
-        'instance': Tifa(report=report)
+        'instance': Tifa(report=report),
+        'settings': get_default_tifa_settings()
     }
     return report[TOOL_NAME]
 

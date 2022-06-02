@@ -7,7 +7,7 @@ from pedal.types.definitions import (UnknownType, FunctionType,
                                      TupleType, ListType, StrType,
                                      FileType, DictType, ModuleType,
                                      SetType, DayType, TimeType,
-                                     LiteralNum)
+                                     LiteralNum, RecordType)
 
 BUILTIN_MODULES = {
     'pprint': ModuleType('pprint',
@@ -226,6 +226,9 @@ def get_builtin_function(name):
         return FunctionType(name=name, returns='identity')
     elif name in ("__name__",):
         return StrType()
+    # Special record function available through CISC108 library
+    elif name in ("record",):
+        return RecordType()
 
 
 # MatPlotLib Support
@@ -250,4 +253,8 @@ BUILTIN_MODULES['matplotlib'] = ModuleType('matplotlib',
 BUILTIN_MODULES['cisc108'] = ModuleType('cisc108', fields={
     'assert_equal': FunctionType(name='assert_equal', returns=NoneType()),
     'assert_type': FunctionType(name='assert_type', returns=NoneType()),
+})
+
+BUILTIN_MODULES['designer'] = ModuleType('designer', fields={
+    'set_window_size': FunctionType(name='set_window_size', returns=NoneType())
 })

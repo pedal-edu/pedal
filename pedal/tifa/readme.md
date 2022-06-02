@@ -8,3 +8,27 @@ Tifa is supported by Skulpt. This means that Tifa is a Python library that
 can be passed in a string of Python source code in order to traverse its
 AST using underlying JavaScript libraries. If that isn't confusing,
 then we invite you to make pull requests.
+
+
+# Type System Settings
+
+[ ] Accept Generics for lists/dicts
+[ ] Numeric type equality (float/int interchangeable?)
+[ ] Which record type to accept?
+[ ] Nominal or structural typing for records?
+[ ] Evaluate string literals in type expressions?
+[ ] Allow type changes for names
+
+# Flow System Settings
+
+[ ] Allow global writes
+[ ] Allow unused variables (True, or a list of exceptions)
+
+# Bad Code
+
+[ ] Redundant ==True
+[ ] Redundant elif/else empty body
+[ ] Redundant IF/return
+[ ] Unused return value
+[ ] Unused expression value
+[ ] Equality instead of assignment

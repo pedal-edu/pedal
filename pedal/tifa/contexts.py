@@ -6,7 +6,7 @@ Context managers for dealing with paths and scopes.
 class NewPath:
     """
     Context manager for entering and leaving execution paths (e.g., if
-    statements).)
+    statements).
 
     Args:
         tifa (Tifa): The tifa instance, so we can modify some of its
@@ -41,7 +41,7 @@ class NewPath:
 class NewScope:
     """
     Context manager for entering and leaving scopes (e.g., inside of
-    function calls).
+    function calls, class bodies).
 
     Args:
         tifa (Tifa): The tifa instance, so we can modify some of its

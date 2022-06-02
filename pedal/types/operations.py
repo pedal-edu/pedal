@@ -3,7 +3,8 @@ import ast
 from pedal.types.definitions import (UnknownType, NumType, BoolType,
                                      TupleType, ListType, StrType,
                                      DictType, SetType, GeneratorType,
-                                     DayType, TimeType, FunctionType, TYPE_STRINGS)
+                                     DayType, TimeType, FunctionType, TYPE_STRINGS,
+                                     InstanceType, ClassType)
 
 
 def merge_types(left, right):
@@ -115,13 +116,17 @@ def are_types_equal(left, right, formal=False):
         return False
     elif isinstance(left, UnknownType) or isinstance(right, UnknownType):
         return False
+    elif isinstance(left, InstanceType) and isinstance(right, ClassType):
+        return left.has_parent(right)
+    elif isinstance(right, InstanceType) and isinstance(left, ClassType):
+        return right.has_parent(left)
     elif not isinstance(left, type(right)):
         return False
     elif isinstance(left, (GeneratorType, ListType)):
         if left.empty or right.empty:
             return True
         else:
-            return are_types_equal(left.subtype, right.subtype)
+            return are_types_equal(left.subtype, right.subtype, formal=formal)
     elif isinstance(left, TupleType):
         if left.empty or right.empty:
             return True
@@ -129,7 +134,7 @@ def are_types_equal(left, right, formal=False):
             return False
         else:
             for l, r in zip(left.subtypes, right.subtypes):
-                if not are_types_equal(l, r):
+                if not are_types_equal(l, r, formal=formal):
                     return False
             return True
     elif isinstance(left, DictType):
@@ -148,7 +153,7 @@ def are_types_equal(left, right, formal=False):
                 return False
             else:
                 for l, r in zip(left.literals, right.literals):
-                    if not are_types_equal(l, r):
+                    if not are_types_equal(l, r, formal=formal):
                         return False
                 for l, r in zip(left.values, right.values):
                     if formal:
@@ -156,14 +161,14 @@ def are_types_equal(left, right, formal=False):
                             l = TYPE_STRINGS[l.name]()
                         if isinstance(r, FunctionType) and r.name in TYPE_STRINGS:
                             r = TYPE_STRINGS[r.name]()
-                    if not are_types_equal(l, r):
+                    if not are_types_equal(l, r, formal=formal):
                         return False
                 return True
         elif left.literals is not None or right.literals is not None:
             return False
         else:
-            keys_equal = are_types_equal(left.keys, right.keys)
-            values_equal = are_types_equal(left.values, right.values)
+            keys_equal = are_types_equal(left.keys, right.keys, formal=formal)
+            values_equal = are_types_equal(left.values, right.values, formal=formal)
             return keys_equal and values_equal
     else:
         return True

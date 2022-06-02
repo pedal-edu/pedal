@@ -6,9 +6,8 @@ For example, SetType should not descend from ListType, that's just lazy.
 Instead, create a hierachy based on form and not just function.
 """
 
-import ast
-
 from pedal.utilities.dictionaries import extend_dictionary
+from pedal.utilities.text import add_indefinite_article
 
 
 def are_literals_equal(first, second):
@@ -168,7 +167,7 @@ class Type:
         """
         return self.index(i)
 
-    def load_attr(self, attr):
+    def load_attr(self, attr, tifa):
         """
 
         Args:
@@ -284,10 +283,12 @@ class ClassType(Type):
     """
     singular_name = 'a class'
 
-    def __init__(self, name):
+    def __init__(self, name, parents):
         self.name = name
+        self.singular_name = add_indefinite_article(name)
         self.fields = {}
         self.scope_id = None
+        self.parents = parents
 
     def add_attr(self, name, type):
         """
@@ -304,6 +305,13 @@ class ClassType(Type):
         Returns:
 
         """
+        if '__init__' in self.fields:
+            return self.fields['__init__']
+        # Check parents
+        constructor = self.lookup_parents('__init__')
+        if constructor:
+            return constructor
+        # Default constructor
         i = InstanceType(self)
         return FunctionType(name='__init__', returns=i)
 
@@ -315,6 +323,42 @@ class ClassType(Type):
         """
         return ClassType(self.name)
 
+    def lookup_parents(self, field):
+        seen = set()
+        def search(parents):
+            for parent in parents:
+                if field in parent.fields:
+                    return parent
+                result = search(parent.parents)
+                if result is not None:
+                    return result
+                seen.add(parent)
+        return search(self.parents)
+
+
+class RecordType(ClassType):
+    def __init__(self):
+        ClassType.__init__(self, "record", [])
+        self.fields['__init__'] = self.get_constructor()
+
+    def get_constructor(self):
+        """
+
+        Returns:
+
+        """
+        print("APPLE JACKS")
+        if '__init__' in self.fields:
+            return self.fields['__init__']
+        def definition(ti, ty, na, args, ca):
+            """ Element function definition """
+            print("MUST HAVE", self.fields)
+            print("GIVEN", args)
+            if args:
+                pass
+            return InstanceType(self)
+        return FunctionType(name='__init__', definition=definition)
+
 
 class InstanceType(Type):
     """
@@ -324,6 +368,8 @@ class InstanceType(Type):
     def __init__(self, parent):
         self.parent = parent
         self.fields = parent.fields
+        self.name = parent.name
+        self.singular_name = add_indefinite_article(parent.name)
 
     def __str__(self):
         return "InstanceTypeOf" + str(self.parent.name)
@@ -344,7 +390,48 @@ class InstanceType(Type):
             type:
         """
         # TODO: What if this is a type change?
+        # TODO: Allow it to be added to the parent?
         self.parent.add_attr(name, type)
+
+    def load_attr(self, field, tifa):
+        print("looking up", field)
+        parent = self.lookup_parents(field)
+        if parent is None:
+            return UnknownType()
+        else:
+            return parent.load_attr(field, tifa)
+
+    def lookup_parents(self, field):
+        seen = {self.parent}
+        def search(parent):
+            if field in parent.fields:
+                return parent
+            for p in parent.parents:
+                if p in seen:
+                    # TODO: Recursive parent structure, throw error
+                    return None
+                result = search(p)
+                if result is not None:
+                    return result
+                seen.add(p)
+        return search(self.parent)
+
+    def has_parent(self, target):
+        seen = {self.parent}
+
+        def search(parent):
+            if target == parent:
+                return parent
+            for p in parent.parents:
+                if p in seen:
+                    # TODO: Recursive parent structure, throw error
+                    return None
+                result = search(p)
+                if result is not None:
+                    return result
+                seen.add(p)
+
+        return search(self.parent)
 
 
 class NumType(Type):
@@ -464,7 +551,7 @@ class ListType(Type):
         """
         return ListType(self.subtype.clone(), self.empty)
 
-    def load_attr(self, attr):
+    def load_attr(self, attr, tifa):
         """
 
         Args:
@@ -489,7 +576,7 @@ class ListType(Type):
 
             return FunctionType(_append, 'append')
         # Extend, Pop
-        return Type.load_attr(self, attr)
+        return Type.load_attr(self, attr, tifa)
 
     def is_empty(self):
         """
@@ -522,7 +609,6 @@ class StrType(Type):
             return StrType()
         else:
             return UnknownType()
-
 
     def is_empty(self):
         """
@@ -714,7 +800,7 @@ class DictType(Type):
         self.literals.append(literal_key)
         self.values.append(type)
 
-    def load_attr(self, attr):
+    def load_attr(self, attr, tifa):
         """
 
         Args:
@@ -753,7 +839,7 @@ class DictType(Type):
                     return ListType(self.values[0], empty=False)
 
             return FunctionType(_values, 'values')
-        return Type.load_attr(self, attr)
+        return Type.load_attr(self, attr, tifa)
 
 
 class ModuleType(Type):
@@ -808,6 +894,7 @@ except Exception:
     Number = int
 
 TYPE_LOOKUPS = {
+    ModuleType: ('module', ModuleType, 'ModuleType'),
     FunctionType: ('function', FunctionType, 'FunctionType'),
     ClassType: ('class', ClassType, 'ClassType'),
     InstanceType: ('instance', InstanceType, 'InstanceType'),
