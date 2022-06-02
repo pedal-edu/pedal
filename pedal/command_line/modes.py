@@ -66,12 +66,16 @@ class BundleResult:
         self.resolution = resolution
 
     def to_json(self):
+        resolution = self.resolution.copy() if self.resolution else {}
+        #if 'considered' in resolution:
+        #    for c in resolution['considered']:
+        #        if 'fields' in c:
+        #            del c['fields']
         return dict(
             output=self.output,
             error=self.error,
-            resolution=self.resolution.copy()
+            **resolution
         )
-
 
 class Bundle:
     def __init__(self, config, script, submission):
@@ -114,6 +118,8 @@ class Bundle:
                     grader_exec = compile(self.script,
                                           self.submission.instructor_file, 'exec')
                     exec(grader_exec, global_data)
+                    #print(repr(self.script), file=x)
+                    #print(list(global_data.keys()), file=x)
                     if 'MAIN_REPORT' in global_data:
                         if not global_data['MAIN_REPORT'].resolves:
                             if resolver in global_data:
@@ -213,6 +219,7 @@ class AbstractPipeline:
 
     progsnap_events_map = {
         'run': 'Run.Program',
+        'compile': 'Compile',
         'edit': 'File.Edit',
         'last': 'File.Edit'
     }
@@ -240,23 +247,27 @@ class AbstractPipeline:
                                              link_filters=link_filters, limit=self.config.limit)
             if self.config.progsnap_events == 'last':
                 events = [e for e in {
-                    (event['student_email'], event['assignment_name']): event
+                    (event[progsnap.profile['link_primary']['user']], event['assignment_name']): event
                     for event in sorted(events, key=lambda e: e['event_id'])}.values()]
             for event in events:
                 if instructor_code is None:
-                    instructor_code = event['on_run']
+                    instructor_code_for_this_run = event['on_run']
+                else:
+                    instructor_code_for_this_run = instructor_code
+                link_selections = progsnap._merge('link_selections', {})
                 new_submission = Submission(
                     main_file='answer.py', main_code=event['submission_code'].decode('utf-8'),
                     instructor_file='instructor.py',
                     execution=dict(client_timestamp=event['client_timestamp'],
                                    event_id=event['event_id']),
-                    user=dict(email=event['student_email'],
-                              first=event['student_first'],
-                              last=event['student_last']),
+                    #user=dict(email=event['student_email'],
+                    #          first=event['student_first'],
+                    #          last=event['student_last']),
+                    user={key: event[key] for key in link_selections['Subject'].values()},
                     assignment=dict(name=event['assignment_name'],
                                     url=event['assignment_url']),
                 )
-                self.submissions.append(Bundle(self.config, instructor_code, new_submission))
+                self.submissions.append(Bundle(self.config, instructor_code_for_this_run, new_submission))
             # raise ValueError("TODO: ProgSnap DB files not yet supported")
             # Progsnap Zip
         elif script_file_extension in ('.zip',):
@@ -346,11 +357,12 @@ class StatsPipeline(AbstractPipeline):
             else:
                 final.append(bundle.to_json())
             total += 1
+        final = clean_json(final)
         if self.config.output is not None:
-            print(final)
+            #print(final)
             print("Total Processed:", total)
             print("Errors:", errors)
-            pedal_json_encoder = PedalJSONEncoder()
+            pedal_json_encoder = PedalJSONEncoder(indent=2, skipkeys=True)
             if self.config.output == 'stdout':
                 print(pedal_json_encoder.encode(final))
             else:
@@ -372,6 +384,17 @@ class PedalJSONEncoder(json.JSONEncoder):
 
     def default(self, obj):
         return '<not serializable>'
+
+
+def clean_json(obj):
+    if is_sandbox_result(obj):
+        return clean_json(obj._actual_value)
+    if isinstance(obj, dict):
+        return {clean_json(key): clean_json(value) for key, value in obj.items()}
+    elif isinstance(obj, (set, list, tuple)):
+        return [clean_json(value) for value in obj]
+    else:
+        return obj
 
 
 class VerifyPipeline(AbstractPipeline):

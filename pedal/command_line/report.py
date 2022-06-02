@@ -81,12 +81,12 @@ class StatReport:
         data = [dict(**e) if not with_submissions else
                 dict(**e, **flatten_nested_json('submission', r['submission']))
                 for r in self._raw
-                for e in r['result']['resolution']['considered']]
+                for e in r['result']['considered']]
         return data
 
     def get_final_feedback(self, with_submissions=True):
-        data = [dict(**r['result']['resolution']['final']) if not with_submissions else
-                dict(**r['result']['resolution']['final'],
+        data = [dict(**r['result']['final']) if not with_submissions else
+                dict(**r['result']['final'],
                      **flatten_nested_json('submission', r['submission']))
                 for r in self._raw]
         return data
