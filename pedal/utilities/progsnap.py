@@ -59,13 +59,18 @@ class BaseProgSnap2:
 
 class SqlProgSnap2(BaseProgSnap2):
     PROFILES = {
-        'blockpy': dict(link_filters={
-            'Subject': {
-                'X-IsStaff': "False",
+        'blockpy': dict(
+            link_filters={
+                'Subject': {
+                    'X-IsStaff': "False",
+                },
+                "Assignment": {
+                    "X-Course.Id": "4"
+                }
             },
-        },
             link_selections={
                 'Subject': {
+                    #'X-Pokemon': 'student_pokemon',
                     'X-Email': 'student_email',
                     'X-Name.First': 'student_first',
                     'X-Name.Last': 'student_last',
@@ -75,7 +80,11 @@ class SqlProgSnap2(BaseProgSnap2):
                     'X-URL': 'assignment_url',
                     'X-Code.OnRun': 'on_run'
                 }
-            })
+            },
+            link_primary={
+                'user': 'student_pokemon'
+            },
+        ),
     }
 
     def set_profile(self, profile):
