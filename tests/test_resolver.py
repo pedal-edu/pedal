@@ -289,6 +289,61 @@ Great work!""",
         final = simple.resolve()
         self.assertEqual(.11, final.score)
 
+    def test_suppress_specific_function(self):
+        with Execution("""
+def x():
+    pass
+def y():
+    pass
+def z():
+    pass
+z""", run_tifa=True) as e:
+            suppress("analyzer", "unused_variable", {"name": "x"})
+        self.assertFeedback(e, """Unused Variable
+The function y was given a definition on line 4, but was never used after that.""")
+
+    def test_suppress_specific_function_twice(self):
+        with Execution("""
+def x():
+    pass
+def y():
+    pass
+def z():
+    pass
+def q():
+    pass
+z""", run_tifa=True) as e:
+            suppress("analyzer", "unused_variable", {"name": "x"})
+            suppress("analyzer", "unused_variable", {"name": "y"})
+        self.assertFeedback(e, """Unused Variable
+The function q was given a definition on line 8, but was never used after that.""")
+
+    def test_suppress_all_individually(self):
+        with Execution("""
+p = 0
+def x():
+    pass
+def y():
+    pass
+""", run_tifa=True) as e:
+            suppress("analyzer", "unused_variable", {"name": "x"})
+            suppress("analyzer", "unused_variable", {"name": "y"})
+        self.assertFeedback(e, """Unused Variable
+The variable p was given a value on line 2, but was never used after that.""")
+
+        with Execution("""
+def x():
+    pass
+def y():
+    pass
+p = 0
+    """, run_tifa=True) as e:
+            suppress("analyzer", "unused_variable", {"name": "x"})
+            suppress("analyzer", "unused_variable", {"name": "y"})
+        self.assertFeedback(e, """Unused Variable
+The variable p was given a value on line 6, but was never used after that.""")
+
+
 
 if __name__ == '__main__':
     unittest.main(buffer=False)

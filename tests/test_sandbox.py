@@ -110,7 +110,7 @@ I ran the code:
     get_input()
 
 And I entered as input:
-    Banana
+    Banana 
 
 The traceback was:
 Line 3 of file student.py in get_input
@@ -184,6 +184,24 @@ Suggestion: Read the error message to see which function had the issue. Check wh
         commands.run()
         self.assertEqual(commands.count_unique_calls('x'), 6)
 
+    def test_tracing_returns(self):
+        student_code = dedent("""
+        def x(n):
+            if n > 0:
+                return x(n-1)*2
+            return 1
+        x(5)
+        x(4)""")
+        set_source(student_code)
+        commands.start_trace()
+        student = commands.run()
+        self.assertEqual(len(student.trace.calls), 1)
+        self.assertEqual(len(student.trace.calls['x']), 11)
+        self.assertEqual(len(student.trace.returns), 1)
+        self.assertEqual(len(student.trace.returns['x']), 11)
+        self.assertEqual(student.trace.calls['x'][0], {'n': 5})
+        self.assertEqual(student.trace.returns['x'][0], [32])
+
     def test_get_by_types(self):
         student_code = dedent('''
             my_int = 0
@@ -223,6 +241,7 @@ Suggestion: Read the error message to see which function had the issue. Check wh
         self.assertIn('plotting', dir(student.modules))
         plt = student.modules.plotting
         self.assertEqual(len(plt.plots), 1)
+        self.assertIsNone(student.exception)
 
     def test_matplotlib_commands(self):
         student_code = dedent('''
@@ -308,7 +327,7 @@ I ran the code:
     x()
 
 And I entered as input:
-    0
+    0 
 
 The traceback was:
 Line 4 of file answer.py in x
@@ -404,6 +423,25 @@ Suggestion: To fix a type error, you should trace through your code. Make sure e
         student.run(student_code, filename='student.py')
         self.assertEqual(str(student.exception), "You are not allowed to call 'open'.")
 
+    def test_block_requests_module(self):
+        student_code = dedent('''
+            import os
+            print(os.listdir())
+        ''')
+        set_source(student_code)
+        student = Sandbox()
+        student.block_module('os')
+        student.run(student_code, filename='student.py')
+        self.assertEqual(str(student.exception), "You cannot import `os` from student code.")
+        # Then can we turn it back on?
+        student.allow_module('os')
+        student.run(student_code, filename='student.py')
+        self.assertIsNone(student.exception)
+        # And off again
+        student.block_module('os')
+        student.run(student_code, filename='student.py')
+        self.assertEqual(str(student.exception), "You cannot import `os` from student code.")
+
     def test_sandboxing_pedal(self):
         student_code = dedent('''
             from pedal.report import MAIN_REPORT
@@ -492,7 +530,21 @@ def to_pig_latin(str):
         commands.call('to_pig_latin', 'test', threaded=True)
         self.assertNotIsInstance(commands.get_exception(), RecursionError)
 
+    def test_duplicate_parameters(self):
+        contextualize_report("def x(y,y): pass")
+        commands.run()
+        self.assertIsNotNone(commands.get_exception())
 
+    def test_imported_input_is_mocked(self):
+        contextualize_report(Submission({
+            "answer.py": "from another import call_input\nprint(call_input())",
+            "another.py": "def call_input():\n return input()"
+        }))
+        #commands.mock_module("another", {"call_input": lambda: input()}, "another")
+        commands.queue_input("XYZ")
+        commands.run()
+        self.assertIsNone(commands.get_exception())
+        self.assertEqual(["", "XYZ"], commands.get_output())
 
     # TODO: test `import builtins` strategy to access original builtins
 

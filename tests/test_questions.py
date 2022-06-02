@@ -26,22 +26,58 @@ class TestQuestions(ExecutionTestCase):
     def test_choose_ask(self):
         with Execution('0') as e:
             set_seed(0)
-            question_A = Question("QA", "Create a for loop.", [])
-            question_B = Question("QB", "Create an if statement.", [])
+            question_A = Question("QA", "Create a for loop.", [lambda q: False])
+            question_B = Question("QB", "Create an if statement.", [lambda q: False])
             pool_1 = Pool("P1", [question_A, question_B])
             pool_1.choose().ask()
         self.assertFeedback(e, "Show Question\nCreate a for loop.")
         
         with Execution('0') as e:
             set_seed(1)
-            question_A = Question("QA", "Create a for loop.", [])
-            question_B = Question("QB", "Create an if statement.", [])
+            question_A = Question("QA", "Create a for loop.", [lambda q: False])
+            question_B = Question("QB", "Create an if statement.", [lambda q: False])
             pool_1 = Pool("P1", [question_A, question_B])
             pool_1.choose().ask()
         self.assertFeedback(e, "Show Question\nCreate an if statement.")
 
+    def test_choose_ask_using_with(self):
+        with Execution('0') as e:
+            set_seed(0)
+            with Pool("P2") as pool_2:
+                with Question("QA", "Create a for loop") as question_A:
+                    gently("No answer")
+                with Question("QB", "Create an if statement") as question_B:
+                    gently("Different answer")
+            pool_2.ask()
+        self.assertFeedback(e, "Instructor Feedback\nNo answer")
+
+    def test_function_grader_tifa(self):
+        # Defaults to ignoring the grading function
+        with Execution('def x(a: int) -> int:\n return a') as e:
+            fg = FunctionGrader("x", [1, [int], int], [ [[1], 1], [[3], 3] ])
+            pool_1 = Pool("P1", [Question("Q1", "Identity function", fg)])
+            pool_1.choose().ask()
+        self.assertFeedback(e, "Complete\nGreat work!")
+
+        # Detects when not suppressed
+        with Execution('def x(a: int) -> int:\n return a') as e:
+            fg = FunctionGrader("x", [1, [int], int], [ [[1], 1], [[3], 3] ], {
+                'suppress_function_unused': False
+            })
+            pool_1 = Pool("P1", [Question("Q1", "Identity function", fg)])
+            pool_1.choose().ask()
+        self.assertFeedback(e, "Unused Variable\nThe function x was given a definition on line 1, but was never used after that.")
+
+        # Still detects other suppressed variables
+        with Execution('def x(a: int) -> int:\n return 0\ny=0') as e:
+            fg = FunctionGrader("x", [1, [int], int], [ [[1], 0], [[3], 0] ])
+            pool_1 = Pool("P1", [Question("Q1", "Identity function", fg)])
+            pool_1.choose().ask()
+        self.assertFeedback(e, "Unused Variable\nThe variable y was given a value on line 3, but was never used after that.")
+
     # TODO: Finish this test once the functionality is ready!
-    @unittest.skip
+
+    @unittest.skip("Question system is incomplete, finish testing!")
     def test_exam_progress(self):
         def test_has_loop(question):
             ast = parse_program()

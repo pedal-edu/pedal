@@ -102,21 +102,26 @@ unit_tests = {
          ['overwritten_variable'], []],
 
     # TODO: This test case still fails! Investigate why, it's something quite complex.
-    #'take_pattern':
-    #    ['def take(l):\n'
-    #     ' t=True\n'
-    #     ' r=[]\n'
-    #     ' for i in l:\n'
-    #     '  if i==".":\n'
-    #     '    t=False\n'
-    #     '  else:\n'
-    #     '    r.append(i)\n'
-    #     ' return r', ['unused_variable', 'possible_initialization_problem', 'initialization_problem'], []],
+    'take_pattern':
+        ['def take(l):\n'
+         ' t=True\n'
+         ' r=[]\n'
+         ' for i in l:\n'
+         '  if i==".":\n'
+         '    t=False\n'
+         '  elif t:\n'
+         '    r.append(i)\n'
+         ' return r\n'
+         'take([1,2,3, ".", 5, 6])', ['unused_variable', 'possible_initialization_problem', 'initialization_problem'], []],
 
     # TODO: This test case still fails! Investigate why, it's something quite complex.
-    #'possibly_overwritten_in_elif_branch':
-    #    ['highest = 0\nfor score in [1,2]:\n    if False:\n        pass\n    elif False:\n        pass\n    else:\n        highest = 0\nhighest',
-    #     ['possible_initialization_problem'], []],
+    'possibly_overwritten_in_elif_branch':
+        ['highest = 0\nfor score in [1,2]:\n    if False:\n        pass\n    elif False:\n        pass\n    else:\n        highest = 0\nhighest',
+         ['possible_initialization_problem'], []],
+
+    'andy_overwritten_in_elif_branch':
+    ['from rates import bill_small,bill_medium,bill_large\n# do not delete the above line\nfrom cisc106 import assert_equal\n\ndef total_bill(data,base):\n    ''\n    if data < 100:\n        bill= bill_small(data,base)\n        return bill\n    elif data <= 1000 and data>100:\n        return bill_medium(data,base)\n    elif data > 1000:\n        bill = bill_large(data,base)\n        return float(bill)\n\nassert_equal(total_bill(30,80.),80.)\nassert_equal(total_bill(150,80.),95.5)\nassert_equal(total_bill(3000,80.0),160.)',
+     ['possible_initialization_problem'], []],
 
     # Iterating over the result of a builtin
     'print_range':
@@ -291,6 +296,13 @@ unit_tests = {
          '    counts[word] += 1\n'
          '  return counts\n'
          'count_words("alpha,alpha,beta,alpha")'), ['multiple_return_types'], []
+    ],
+    'record_type_in_list': [
+        ('Test = {"a": str}\n'
+         'def x(y: [Test]):\n'
+         '  return y[0]["a"]\n'
+         'x([{"a": "apple"}])'),
+         ['Parameter Type Mismatch'], []
     ],
 
     # While
@@ -471,7 +483,7 @@ class TestCode(unittest.TestCase):
     pass
 
 
-SILENCE_EXCEPT = None  # 'read_not_out_of_scope'
+SILENCE_EXCEPT = None # 'possibly_overwritten_in_elif_branch' # None  # 'read_not_out_of_scope'
 
 
 def make_tester(code, nones, somes):
@@ -857,6 +869,119 @@ else:
         result = tifa.process_code(program, filename="student.py")
         self.assertTrue(result.issues)
 
+    def test_complex_record_type(self):
+        program = dedent("""
+Test = {"a": str}
+
+def x(y: [Test]):
+    return y[0]['a']
+
+print(x([{"a": "apple"}]))""")
+        tifa = pedal.tifa.Tifa()
+        result = tifa.process_code(program, filename="student.py")
+        self.assertFalse(result.issues)
+
+    def test_new_class_record_type(self):
+        program = dedent("""
+        class Dog(record):
+            name: str
+            age: int
+            fuzzy: bool
+            
+        def is_fuzzy(a_dog: Dog) -> bool:
+            return a_dog.fuzzy
+            
+        ada = Dog('Ada Bart', 4, True)
+        print(ada.name)
+        
+        print(is_fuzzy(ada))
+        """)
+        tifa = pedal.tifa.Tifa()
+        result = tifa.process_code(program, filename="student.py")
+        self.assertFalse(result.issues)
+
+    def test_new_class_record_type_bad_instance(self):
+        program = dedent("""
+        class Dog(record):
+            name: str
+            age: int
+            fuzzy: bool
+
+        def is_fuzzy(a_dog: Dog) -> bool:
+            return a_dog.fuzzy
+
+        ada = Dog('Ada Bart', 4)
+        print(ada.name)
+
+        print(is_fuzzy(ada))
+        """)
+        tifa = pedal.tifa.Tifa()
+        result = tifa.process_code(program, filename="student.py")
+        self.assertTrue(result.issues)
+
+    def test_dataclass_mistake(self):
+        program = dedent("""
+        from dataclasses import dataclass
+        
+        @dataclass
+        class Dog:
+            name: str
+            age: int
+            fuzzy: bool
+            
+        @dataclass
+        class Cat:
+            name: str
+            age: int
+            fuzzy: bool
+
+        def is_fuzzy(a_dog: Dog) -> bool:
+            return a_dog.fuzzy
+
+        ada = Dog('Ada Bart', 4, True)
+        print(ada.name)
+
+        print(is_fuzzy(ada))
+        
+        adacat = Cat("Ada Bart", 4, True)
+        print(is_fuzzy(adacat))
+        """)
+        tifa = pedal.tifa.Tifa()
+        result = tifa.process_code(program, filename="student.py")
+        self.assertIsNone(result.error)
+        self.assertTrue(result.issues)
+
+    def test_dataclass_mistake_lists(self):
+        program = dedent("""
+        from dataclasses import dataclass
+
+        @dataclass
+        class Dog:
+            name: str
+            age: int
+            fuzzy: bool
+
+        @dataclass
+        class Cat:
+            name: str
+            age: int
+            fuzzy: bool
+
+        def all_fuzzy(dogs: list[Dog]) -> bool:
+            return all(a_dog.fuzzy for a_dog in dogs)
+
+        ada = Dog('Ada Bart', 4, True)
+        print(ada.name)
+
+        print(all_fuzzy([ada]))
+
+        adacat = Cat("Ada Bart", 4, True)
+        print(all_fuzzy([adacat]))
+        """)
+        tifa = pedal.tifa.Tifa()
+        result = tifa.process_code(program, filename="student.py")
+        self.assertIsNone(result.error)
+        self.assertFalse(result.issues)
 
 if __name__ == '__main__':
     unittest.main(buffer=False)

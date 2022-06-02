@@ -354,7 +354,7 @@ I evaluated the expression:
     x
 The value of the result was:
     'a string'
-But I expected the result to not be a value of type:
+But I expected the result to be a value of type:
     'a number'""")
 
     def test_assert_chain_passes(self):
@@ -385,7 +385,7 @@ I evaluated the expression:
     x
 The value of the result was:
     'a number'
-But I expected the result to not be a value of type:
+But I expected the result to be a value of type:
     'a list'""")
 
     def test_command_block(self):
@@ -420,6 +420,27 @@ The value of the result was:
     60
 But I expected the result to be equal to:
     61""")
+
+    def test_empty_string_input(self):
+        with Execution('''
+def adder():
+    return input() + input()
+adder
+''') as e:
+            assert_equal(call('adder', inputs=['A', '', 'B']), 'AB')
+        self.assertFeedback(e, """Failed Instructor Test
+Student code failed instructor test.
+I ran the code:
+    adder()
+
+And I entered as input:
+    A
+
+The value of the result was:
+    'A'
+But I expected the result to be equal to:
+    'AB'""")
+
 
 if __name__ == '__main__':
     unittest.main(buffer=False)

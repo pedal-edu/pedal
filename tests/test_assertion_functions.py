@@ -4,7 +4,7 @@ Tests related to checking function definitions
 
 import unittest
 
-from pedal import unit_test
+from pedal import unit_test, block_function
 from pedal.assertions.static import *
 from pedal.types.definitions import DictType, LiteralStr, StrType
 from tests.execution_helper import Execution, ExecutionTestCase, SUCCESS_MESSAGE
@@ -112,6 +112,21 @@ Type errors occur when you use an operator or function on the wrong type of valu
 
 Suggestion: To fix a type error, you should trace through your code. Make sure each expression has the type you expect it to have.""")
 
+    def test_unit_test_blocked_function(self):
+        with Execution("""
+def summate(numbers: [int]) -> int:
+    return sum(numbers)
+
+print(summate([1,2,3]))""", run_tifa=False) as e:
+            block_function('sum')
+            unit_test('summate', [([1, 2, 3],), 6])
+        self.assertFeedback(e, """Failed Instructor Test
+Student code failed instructor tests.
+You passed 0/1 tests.
+
+I ran your function summate on some new arguments.
+ | Arguments | Returned | Expected
+× |     [1, 2, 3] | You are not allowed to call 'sum'. | 6""")
 
 if __name__ == '__main__':
     unittest.main(buffer=False)
