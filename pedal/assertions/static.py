@@ -162,6 +162,10 @@ class ensure_operation(EnsureAssertionFeedback):
         return self._check_usage('use_count', uses)
 
 
+ensure_operator = ensure_operation
+prevent_operator = prevent_operation
+
+
 class prevent_literal(PreventAssertionFeedback):
     """ Make sure that the given literal value does not appear in the student's
     code. """
@@ -185,6 +189,7 @@ class prevent_literal(PreventAssertionFeedback):
         return self._check_usage('use_count', uses)
 
 
+# TODO: ensure_literal does not recognize None?
 class ensure_literal(EnsureAssertionFeedback):
     """ Make sure that the given literal value does appear in the student's
         code. """
@@ -458,7 +463,11 @@ function_prints => ensure_function_call('print', root=match_signature('name')
 
 # TODO: wait, is this a positive feedback group waiting to happen?
 
-@CompositeFeedbackFunction(missing_function, duplicate_function_definition)
+@CompositeFeedbackFunction(missing_function, duplicate_function_definition,
+                           too_few_parameters, too_many_parameters,
+                           missing_parameter_type, invalid_parameter_type,
+                           wrong_parameter_type, wrong_return_type,
+                           missing_return_type)
 def ensure_function(name, arity=None, parameters=None,
                     returns=None, root=None, compliment=False, **kwargs):
     """ Checks that the function exists and has the right signature. """
