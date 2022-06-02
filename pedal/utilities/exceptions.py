@@ -235,5 +235,5 @@ class ExpandedTraceback:
               else "\n") +
              f"{formatter.python_code(frame.line)}\n")
             for frame in traceback_stack
-        ])
+        ]) or "missing"
         return formatter.traceback(traceback_message)
