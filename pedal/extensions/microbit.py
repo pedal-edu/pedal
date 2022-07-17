@@ -17,6 +17,12 @@ Image formats:
 
     You can also specify via a dictionary:
         Points (x, y) => Brightness value
+
+
+microbit.display.scroll - in addition to capturing the screen history, also capture the message history
+microbit.display.show - and in general here too, capture any strings being show so they can be queries.
+
+assert_microbit_display could also take additional args so that a timeline is established?
 """
 from pedal.core.feedback import Feedback
 from pedal.core.report import MAIN_REPORT
@@ -116,7 +122,7 @@ def match_image(target, candidate, **kwargs):
     return match_image_2d(target, candidate, **kwargs)
 
 
-def assert_microbit_displayed(image, report_differences=5, report=MAIN_REPORT, **kwargs):
+def assert_microbit_displayed(image, *additional_images, report_differences=5, report=MAIN_REPORT, **kwargs):
     """
 
     Args:
@@ -132,14 +138,19 @@ def assert_microbit_displayed(image, report_differences=5, report=MAIN_REPORT, *
     """
     microbit = get_module('microbit', report=report)
     smallest_difference = None
-    for old_image in microbit.display.history:
-        differences = match_image(image, old_image, **kwargs)
-        if not differences:
-            return None
-        if smallest_difference is None or len(smallest_difference) > len(differences):
-            smallest_difference = differences
+    all_images = [image, *additional_images]
+    all_history = iter(microbit.display.history)
+    for image in all_images:
+        for old_image in all_history:
+            differences = match_image(image, old_image, **kwargs)
+            if not differences:
+                break
+            if smallest_difference is None or len(smallest_difference) > len(differences):
+                smallest_difference = differences
+        else:
+            return image_not_displayed(image, report_differences, smallest_difference)
     else:
-        return image_not_displayed(image, report_differences, smallest_difference)
+        return False
 
 
 def assert_microbit_displaying(image, report_differences=5, report=MAIN_REPORT, **kwargs):

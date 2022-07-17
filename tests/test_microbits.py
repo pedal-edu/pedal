@@ -20,7 +20,7 @@ class TestAssertions(ExecutionTestCase):
                                       " ███ "
                                       " █ █ "
                                       "  ██ "
-                                      "     ", True)
+                                      "     ", report_differences=True)
         self.assertIsNone(e.student.exception)
         self.assertFeedback(e, SUCCESS_MESSAGE)
 
@@ -34,7 +34,7 @@ class TestAssertions(ExecutionTestCase):
                                       " ██  "
                                       " █ █ "
                                       " ███ "
-                                      "     ", True)
+                                      "     ", report_differences=True)
         self.assertIsNone(e.student.exception)
         self.assertFeedback(e, """Image Not Displayed on Microbit
 The expected image was not displayed on the Microbit.
@@ -76,3 +76,61 @@ The image actually shown had 1 differences.
 The differences were at the following positions:
     2, 2: 9 instead of 0""")
 
+    def test_assert_microbit_displayed_animation_touches_corners(self):
+        with Execution(dedent("""
+        from microbit.display import show
+        # A 3x3 box with the bottom-left corner and center missing
+        show([[0, 0, 0, 0, 9], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]])
+        show([[9, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]])
+        show([[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [9, 0, 0, 0, 0]])
+        show([[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 9]])
+        """)) as e:
+            assert_microbit_displayed("    █:     :     :     :     ",
+                                      "█    :     :     :     :     ",
+                                      "     :     :     :     :█    ",
+                                      "     :     :     :     :    █", report_differences=True)
+        self.assertIsNone(e.student.exception)
+        self.assertFeedback(e, SUCCESS_MESSAGE)
+
+    def test_assert_microbit_displayed_animation_touches_corners_fails(self):
+        with Execution(dedent("""
+        from microbit.display import show
+        # A 3x3 box with the bottom-left corner and center missing
+        show([[0, 0, 0, 0, 9], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]])
+        show([[9, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]])
+        show([[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [9, 0, 0, 0, 0]])
+        show([[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 9]])
+        """)) as e:
+            assert_microbit_displayed("    █:     :     :     :     ",
+                                      "█    :     :     :     :     ",
+                                      "     :     :     :     :     ",
+                                      "     :     :     :     :    █", report_differences=True)
+        self.assertIsNone(e.student.exception)
+        self.assertFeedback(e, """Image Not Displayed on Microbit
+The expected image was not displayed on the Microbit.
+The closest actual image shown had 1 differences.
+The differences were at the following positions:
+    4, 0: 0 instead of 9""")
+
+    def test_assert_microbit_displayed_animation_touches_corners_loop(self):
+        with Execution(dedent("""
+        from microbit.display import show
+        # A 3x3 box with the bottom-left corner and center missing
+        STARTS = [(4, 0), (0, 0), (0, 4), (4, 4)]
+        DIRECTIONS = [(-1, 0), (0, 1), (1, 0), (0, -1)]
+        current = [[0, 0, 0, 0, 0] for _ in range(5)]
+        previous_x, previous_y = (0, 0)
+        for (start_x, start_y), (dx, dy) in zip(STARTS, DIRECTIONS):
+            for i in range(0, 5):
+                current[previous_y][previous_x] = 0
+                previous_x, previous_y = start_x + dx*i, start_y + dy*i
+                current[previous_y][previous_x] = 9
+                show(current)
+        """)) as e:
+            assert_microbit_displayed("    █:     :     :     :     ",
+                                      " █   :     :     :     :     ",
+                                      "█    :     :     :     :     ",
+                                      "     :     :     :     :█    ",
+                                      "     :     :     :     :    █", report_differences=True)
+        self.assertIsNone(e.student.exception)
+        self.assertFeedback(e, SUCCESS_MESSAGE)
