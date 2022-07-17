@@ -347,6 +347,8 @@ class Feedback:
             metadata += ", priority=" + self.priority
         if self.parent is not None:
             metadata += ", parent=" + str(self.parent.label)
+        if self.fields is not None:
+            metadata += ", " + ", ".join(f"{field}={value!r}" for field, value in self.fields.items())
         return "Feedback({}{})".format(self.label, metadata)
 
     def update_location(self, location):

@@ -9,8 +9,9 @@ can be passed in a string of Python source code in order to traverse its
 AST using underlying JavaScript libraries. If that isn't confusing,
 then we invite you to make pull requests.
 
+# Settings
 
-# Type System Settings
+## Type System Settings
 
 [ ] Accept Generics for lists/dicts
 [ ] Numeric type equality (float/int interchangeable?)
@@ -19,12 +20,12 @@ then we invite you to make pull requests.
 [ ] Evaluate string literals in type expressions?
 [ ] Allow type changes for names
 
-# Flow System Settings
+## Flow System Settings
 
 [ ] Allow global writes
 [ ] Allow unused variables (True, or a list of exceptions)
 
-# Bad Code
+## Bad Code
 
 [ ] Redundant ==True
 [ ] Redundant elif/else empty body
@@ -32,3 +33,33 @@ then we invite you to make pull requests.
 [ ] Unused return value
 [ ] Unused expression value
 [ ] Equality instead of assignment
+
+
+# Examples of Assignments
+
+```python
+a = 0
+grades = [1, 2, 3, 4]
+grades[0] = 7
+
+person = {'name': "Dr. Bart"}
+person['name'] = "Cory Bart"
+
+potions = [{"name": "Fire Breath", "rarity": 3}]
+potions[0]['name'] = "Flame Breath"
+
+from dataclasses import dataclass
+@dataclass
+class Dog:
+    name: str
+    age: int
+    
+ada = Dog("Ada", 4)
+ada.name = "Ada Bart"
+
+kennel = [ada]
+kennel[0].age = 4 * 7
+
+
+
+```

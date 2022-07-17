@@ -29,6 +29,12 @@ class Location:
         self.end_col = end_col
         self.filename = filename
 
+    def __str__(self):
+        return f"<Location({self.line}, {self.col}, {self.filename})>"
+
+    def __repr__(self):
+        return str(self)
+
     @classmethod
     def from_ast(cls, node):
         """

@@ -1,30 +1,22 @@
 import ast
 
-from pedal.types.definitions import (UnknownType, NumType, BoolType,
-                                     TupleType, ListType, StrType,
-                                     DictType, SetType, GeneratorType,
-                                     DayType, TimeType, FunctionType, TYPE_STRINGS,
-                                     InstanceType, ClassType)
+from pedal.types.new_types import (AnyType, ImpossibleType,
+                                   NumType, BoolType,
+                                   TupleType, ListType, StrType,
+                                   DictType, SetType, GeneratorType,
+                                   FunctionType,
+                                   InstanceType, ClassType, LiteralValue,
+                                   IntType, FloatType)
 
 
-def merge_types(left, right):
-    """
+def add_tuples(left, right):
+    """ Literally just concatenate the types """
+    return tuple(left.element_types) + tuple(right.element_types)
 
-    Args:
-        left:
-        right:
 
-    Returns:
-
-    """
-    # TODO: Check that lists/sets have the same subtypes
-    if isinstance(left, (ListType, SetType, GeneratorType)):
-        if left.empty:
-            return right.subtype
-        else:
-            return left.subtype.clone()
-    elif isinstance(left, TupleType):
-        return left.subtypes + right.subtypes
+def add_element_container_types(left, right):
+    """ Use whichever type is not empty """
+    return right.element_type.clone() if left.is_empty else left.element_type.clone()
 
 
 def NumType_any(*x):
@@ -32,9 +24,17 @@ def NumType_any(*x):
     return NumType()
 
 
+def FloatType_any(*x):
+    return FloatType()
+
+
+def IntType_any(*x):
+    return IntType()
+
+
 def StrType_any(*x):
     """ Ignores all parameters to return a StrType """
-    return StrType()
+    return StrType(False)
 
 
 def BoolType_any(*x):
@@ -55,125 +55,149 @@ def keep_right(left, right):
 # Maps the operations to their return types, based on the values.
 # The *_any functions don't use the parameters, they return values unconditionally.
 VALID_BINOP_TYPES = {
-    ast.Add: {NumType: {NumType: NumType_any},
+    ast.Add: {NumType: {NumType: NumType_any,
+                        IntType: NumType_any,
+                        FloatType: FloatType_any},
+              IntType: {NumType: NumType_any,
+                        IntType: IntType_any,
+                        FloatType: FloatType_any},
+              FloatType: {NumType: NumType_any,
+                          IntType: FloatType_any,
+                          FloatType: FloatType_any},
               StrType: {StrType: StrType_any},
-              ListType: {ListType: merge_types},
-              TupleType: {TupleType: merge_types}},
-    ast.Sub: {NumType: {NumType: NumType_any},
-              SetType: {SetType: merge_types}},
-    ast.Div: {NumType: {NumType: NumType_any}},
-    ast.FloorDiv: {NumType: {NumType: NumType_any}},
+              ListType: {ListType: add_element_container_types},
+              TupleType: {TupleType: add_tuples}},
+    ast.Sub: {NumType: {NumType: NumType_any,
+                        IntType: NumType_any,
+                        FloatType: FloatType_any},
+              IntType: {NumType: NumType_any,
+                        IntType: IntType_any,
+                        FloatType: FloatType_any},
+              FloatType: {NumType: NumType_any,
+                          IntType: FloatType_any,
+                          FloatType: FloatType_any},
+              SetType: {SetType: add_element_container_types}},
+    ast.Div: {NumType: {NumType: NumType_any,
+                        IntType: NumType_any,
+                        FloatType: FloatType_any},
+              IntType: {NumType: NumType_any,
+                        IntType: FloatType_any,
+                        FloatType: FloatType_any},
+              FloatType: {NumType: NumType_any,
+                          IntType: FloatType_any,
+                          FloatType: FloatType_any}},
+    ast.FloorDiv: {NumType: {NumType: IntType_any,
+                             IntType: IntType_any,
+                             FloatType: IntType_any},
+                   IntType: {NumType: IntType_any,
+                             IntType: IntType_any,
+                             FloatType: IntType_any},
+                   FloatType: {NumType: IntType_any,
+                               IntType: IntType_any,
+                               FloatType: IntType_any}},
     ast.Mult: {NumType: {NumType: NumType_any,
+                         IntType: NumType_any,
+                         FloatType: NumType_any,
                          StrType: StrType_any,
                          ListType: keep_right,
                          TupleType: keep_right},
-               StrType: {NumType: StrType_any},
+               FloatType: {NumType: NumType_any,
+                           IntType: FloatType_any,
+                           FloatType: FloatType_any},
+               IntType: {NumType: NumType_any,
+                         IntType: IntType_any,
+                         FloatType: FloatType_any,
+                         StrType: keep_right,
+                         ListType: keep_right,
+                         TupleType: keep_right},
+               StrType: {NumType: keep_left,
+                         IntType: keep_left},
                ListType: {NumType: keep_left},
                TupleType: {NumType: keep_left}},
-    ast.Pow: {NumType: {NumType: NumType_any}},
+    ast.Pow: {NumType: {NumType: NumType_any,
+                        IntType: NumType_any,
+                        FloatType: NumType_any},
+              IntType: {NumType: NumType_any,
+                        IntType: IntType_any,
+                        FloatType: FloatType_any},
+              FloatType: {NumType: NumType_any,
+                          IntType: FloatType_any,
+                          FloatType: FloatType_any}},
     # TODO: Should we allow old-fashioned string interpolation?
     # Currently, I vote no because it makes the code harder and is bad form.
-    ast.Mod: {NumType: {NumType: NumType_any}},
-    ast.LShift: {NumType: {NumType: NumType_any}},
-    ast.RShift: {NumType: {NumType: NumType_any}},
-    ast.BitOr: {NumType: {NumType: NumType_any},
+    ast.Mod: {NumType: {NumType: NumType_any,
+                        IntType: NumType_any,
+                        FloatType: NumType_any},
+              IntType: {NumType: NumType_any,
+                        IntType: IntType_any,
+                        FloatType: FloatType_any},
+              FloatType: {NumType: NumType_any,
+                          IntType: FloatType_any,
+                          FloatType: FloatType_any}},
+    ast.LShift: {NumType: {NumType: NumType_any,
+                           IntType: NumType_any},
+                 IntType: {NumType: NumType_any,
+                           IntType: IntType_any}},
+    ast.RShift: {NumType: {NumType: NumType_any,
+                           IntType: NumType_any},
+                 IntType: {NumType: NumType_any,
+                           IntType: IntType_any}},
+    ast.BitOr: {NumType: {NumType: NumType_any,
+                           IntType: NumType_any},
+                 IntType: {NumType: NumType_any,
+                           IntType: IntType_any},
                 BoolType: {NumType: NumType_any,
                            BoolType: BoolType_any},
-                SetType: {SetType: merge_types}},
-    ast.BitXor: {NumType: {NumType: NumType_any},
+                SetType: {SetType: add_element_container_types}},
+    ast.BitXor: {NumType: {NumType: NumType_any,
+                           IntType: NumType_any},
+                 IntType: {NumType: NumType_any,
+                           IntType: IntType_any},
                  BoolType: {NumType: NumType_any,
                             BoolType: BoolType_any},
-                 SetType: {SetType: merge_types}},
-    ast.BitAnd: {NumType: {NumType: NumType_any},
+                 SetType: {SetType: add_element_container_types}},
+    ast.BitAnd: {NumType: {NumType: NumType_any,
+                           IntType: NumType_any},
+                 IntType: {NumType: NumType_any,
+                           IntType: IntType_any},
                  BoolType: {NumType: NumType_any,
                             BoolType: BoolType_any},
-                 SetType: {SetType: merge_types}}
+                 SetType: {SetType: add_element_container_types}}
 }
 
 VALID_UNARYOP_TYPES = {
-    ast.UAdd: {NumType: NumType},
-    ast.USub: {NumType: NumType},
-    ast.Invert: {NumType: NumType}
+    ast.UAdd: {NumType: NumType, IntType: IntType, FloatType: FloatType},
+    ast.USub: {NumType: NumType, IntType: IntType, FloatType: FloatType},
+    ast.Invert: {NumType: NumType, IntType: IntType, FloatType: FloatType}
 }
 
 
-def are_types_equal(left, right, formal=False):
-    """
-    Determine if two types are equal.
-
-    This could be more Polymorphic - move the code for each type into
-    its respective class instead.
-
-    Unknown types are not equal to anything, even other unknowns.
-
-    Args:
-        right:
-        left:
-        formal (bool): Whether the left argument is formal, indicating that it can accept
-            type names.
-    """
-    if left is None or right is None:
-        return False
-    elif isinstance(left, UnknownType) or isinstance(right, UnknownType):
-        return False
-    elif isinstance(left, InstanceType) and isinstance(right, ClassType):
-        return left.has_parent(right)
-    elif isinstance(right, InstanceType) and isinstance(left, ClassType):
-        return right.has_parent(left)
-    elif not isinstance(left, type(right)):
-        return False
-    elif isinstance(left, (GeneratorType, ListType)):
-        if left.empty or right.empty:
-            return True
-        else:
-            return are_types_equal(left.subtype, right.subtype, formal=formal)
-    elif isinstance(left, TupleType):
-        if left.empty or right.empty:
-            return True
-        elif len(left.subtypes) != len(right.subtypes):
-            return False
-        else:
-            for l, r in zip(left.subtypes, right.subtypes):
-                if not are_types_equal(l, r, formal=formal):
-                    return False
-            return True
-    elif isinstance(left, DictType):
-        # print(left.empty, left.keys, left.literals, right)
-        if not left.keys and not left.literals:
-            return isinstance(right, DictType)
-        # print("L", [literal.value for literal in left.literals], [v.singular_name
-        #                                                          if not formal and not isinstance(v, FunctionType)
-        #                                                          else TYPE_STRINGS[v.name]().singular_name
-        #                                                          for v in left.values])
-        # print("R", [literal.value for literal in right.literals], [v.singular_name for v in right.values])
-        if left.empty or right.empty:
-            return True
-        elif left.literals is not None and right.literals is not None:
-            if len(left.literals) != len(right.literals):
-                return False
-            else:
-                for l, r in zip(left.literals, right.literals):
-                    if not are_types_equal(l, r, formal=formal):
-                        return False
-                for l, r in zip(left.values, right.values):
-                    if formal:
-                        if isinstance(l, FunctionType) and l.name in TYPE_STRINGS:
-                            l = TYPE_STRINGS[l.name]()
-                        if isinstance(r, FunctionType) and r.name in TYPE_STRINGS:
-                            r = TYPE_STRINGS[r.name]()
-                    if not are_types_equal(l, r, formal=formal):
-                        return False
-                return True
-        elif left.literals is not None or right.literals is not None:
-            return False
-        else:
-            keys_equal = are_types_equal(left.keys, right.keys, formal=formal)
-            values_equal = are_types_equal(left.values, right.values, formal=formal)
-            return keys_equal and values_equal
-    else:
-        return True
+def apply_unary_operation(operation, operand):
+    if isinstance(operation, ast.Not):
+        return BoolType()
+    elif isinstance(operand, AnyType):
+        return AnyType()
+    operand = operand.promote() if isinstance(operand, LiteralValue) else operand
+    if type(operation) in VALID_UNARYOP_TYPES:
+        op_lookup = VALID_UNARYOP_TYPES[type(operation)]
+        if type(operand) in op_lookup:
+            return op_lookup[type(operand)]()
+    return ImpossibleType()
 
 
-ORDERABLE_TYPES = (NumType, BoolType, StrType, ListType, DayType, TimeType,
-                   SetType, TupleType)
-INDEXABLE_TYPES = (StrType, ListType, SetType, TupleType, DictType)
+def apply_binary_operation(operation, left, right):
+    if isinstance(left, AnyType):
+        return right
+    elif isinstance(right, AnyType):
+        return left
+    left = left.promote() if isinstance(left, LiteralValue) else left
+    right = right.promote() if isinstance(right, LiteralValue) else right
+    if type(operation) in VALID_BINOP_TYPES:
+        op_lookup = VALID_BINOP_TYPES[type(operation)]
+        if type(left) in op_lookup:
+            op_lookup = op_lookup[type(left)]
+            if type(right) in op_lookup:
+                op_lookup = op_lookup[type(right)]
+                result_type = op_lookup(left, right)
+                return result_type
+    return ImpossibleType()

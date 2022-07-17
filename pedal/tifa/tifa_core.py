@@ -5,26 +5,13 @@ TODO: JoinedStr
 """
 
 import ast
-# TODO: FileType, DayType, TimeType,
-from pedal.core.commands import system_error
 from pedal.core.report import MAIN_REPORT
 from pedal.core.location import Location
-from pedal.types.definitions import (UnknownType,
-                                     FunctionType, ClassType, InstanceType,
-                                     NumType, NoneType, BoolType, TupleType,
-                                     ListType, StrType, GeneratorType,
-                                     DictType, ModuleType, SetType,
-                                     LiteralNum, LiteralBool,
-                                     LiteralNone, LiteralStr,
-                                     LiteralTuple, Type)
-from pedal.types.normalize import (get_pedal_type_from_json,
-                                   get_pedal_literal_from_pedal_type,
-                                   get_pedal_type_from_annotation,
-                                   get_pedal_type_from_value)
-from pedal.types.builtin import (get_builtin_module, get_builtin_function)
-from pedal.types.operations import (are_types_equal,
-                                    VALID_UNARYOP_TYPES, VALID_BINOP_TYPES,
-                                    ORDERABLE_TYPES, INDEXABLE_TYPES)
+from pedal.types.normalize import (get_pedal_type_from_json)
+from pedal.types.builtin import (get_builtin_module)
+from pedal.types.new_types import (is_subtype, Type, AnyType, ImpossibleType, NoneType,
+                                   ListType, TupleType, ModuleType,
+                                   LiteralStr, LiteralInt, LiteralFloat, LiteralBool)
 from pedal.tifa.constants import TOOL_NAME
 from pedal.tifa.identifier import Identifier
 from pedal.tifa.state import State
@@ -40,7 +27,8 @@ from pedal.tifa.feedbacks import (action_after_return, return_outside_function,
                                   possible_initialization_problem,
                                   incorrect_arity, else_on_loop_body,
                                   module_not_found, nested_function_definition,
-                                  unused_returned_value, invalid_indexing, append_to_non_list)
+                                  unused_returned_value, invalid_indexing, append_to_non_list,
+                                  lookup_feedback)
 
 __all__ = ['TifaCore', 'TifaAnalysis']
 
@@ -81,8 +69,6 @@ class TifaCore:
         report (Report): The report object to store data and feedback in. If
                          left None, defaults to the global MAIN_REPORT.
     """
-    settings: dict
-
     path_id: int
     scope_id: int
     ast_id: int
@@ -102,10 +88,14 @@ class TifaCore:
 
     final_node: ast.AST or None
 
+    line_offset: int
+
     def __init__(self, report=MAIN_REPORT):
         self.report = report
-        self.settings = {}
         self.analysis = None
+
+    def get_setting(self, setting_name):
+        return self.report[TOOL_NAME]['settings'][setting_name]
 
     def locate(self, node: ast.AST = None):
         """
@@ -122,7 +112,11 @@ class TifaCore:
                 node = self.final_node
         return Location(node.lineno+self.line_offset, col=node.col_offset)
 
-    def _issue(self, feedback):
+    def _issue(self, *feedback):
+        if len(feedback) == 1:
+            feedback = feedback[0]
+        else:
+            feedback = lookup_feedback(feedback[0])(*feedback[1:])
         if feedback.label not in self.analysis.issues:
             self.analysis.issues[feedback.label] = []
         self.analysis.issues[feedback.label].append(feedback)
@@ -280,9 +274,10 @@ class TifaCore:
         """
         return self.load_variable(name, position)
 
-    def store_iter_variable(self, name, new_type, position=None):
+    def store_read_variable(self, name, new_type, position=None):
         """
-        Record that the variable was iterated upon. This counts as a Read.
+        Record that the variable was iterated (or otherwise stored in a way that is safe
+        to not read later on) upon. This counts as a Read. Another use case is class variables.
 
         Args:
             name (str): The name of the variable.
@@ -353,7 +348,7 @@ class TifaCore:
             if not variable.in_scope:
                 self._issue(write_out_of_scope(self.locate(), name, report=self.report))
             # Type change?
-            if not are_types_equal(store_type, variable.state.type):
+            if not is_subtype(store_type, variable.state.type):
                 self._issue(type_changes(position, name, variable.state.type, store_type))
             new_state.type = store_type
             # Overwritten?
@@ -395,7 +390,7 @@ class TifaCore:
                 self._issue(read_out_of_scope(self.locate(), name))
             else:
                 self._issue(initialization_problem(self.locate(), name))
-            new_state = State(name, [], UnknownType(), 'load', position,
+            new_state = State(name, [], AnyType(), 'load', position,
                               read='yes', set='no', over='no')
             self.name_map[current_path][full_name] = new_state
         else:
@@ -424,7 +419,7 @@ class TifaCore:
         """
         module_names = chain.split('.')
         potential_module = get_builtin_module(module_names[0])
-        if not isinstance(potential_module, UnknownType):
+        if potential_module is not None:
             base_module = potential_module
             for module in module_names[1:]:
                 if (isinstance(base_module, ModuleType) and
@@ -437,7 +432,7 @@ class TifaCore:
             filename = chain.replace('.', '/') + ".py"
             if self.report.submission and filename in self.report.submission.files:
                 # TODO: Try running TIFA over the code
-                return ModuleType()
+                return ModuleType(module_names[-1], {}, {})
             else:
                 # Non-student file, maybe it has _tifa_definitions?
                 try:
@@ -448,7 +443,7 @@ class TifaCore:
                 except Exception as e:
                     #print(e)
                     self._issue(module_not_found(self.locate(), chain, True, e, report=self.report))
-                    return ModuleType()
+                    return ModuleType(module_names[-1], {}, {})
 
     def combine_states(self, left, right):
         """
@@ -468,7 +463,7 @@ class TifaCore:
             state.set = 'no' if left.set == 'no' else 'maybe'
             state.over = 'no' if left.over == 'no' else 'maybe'
         else:
-            if not are_types_equal(left.type, right.type):
+            if not is_subtype(left.type, right.type):
                 self._issue(type_changes(self.locate(), left.name, left.type, right.type))
             state.read = self.match_rso(left.read, right.read)
             state.set = self.match_rso(left.set, right.set)
@@ -580,7 +575,7 @@ class TifaCore:
 
         """
         if isinstance(node, ast.Num):
-            return LiteralNum(node.n)
+            return LiteralInt(node.n) if isinstance(node.n, int) else LiteralFloat(node.n)
         elif isinstance(node, ast.Str):
             return LiteralStr(node.s)
         elif isinstance(node, ast.Tuple):
@@ -591,10 +586,10 @@ class TifaCore:
                     values.append(subvalue)
                 else:
                     return None
-            return LiteralTuple(values)
+            return TupleType(values)
         elif isinstance(node, ast.Name):
             if node.id == "None":
-                return LiteralNone(None)
+                return NoneType()
             elif node.id == "False":
                 return LiteralBool(False)
             elif node.id == "True":

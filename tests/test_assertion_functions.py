@@ -6,7 +6,7 @@ import unittest
 
 from pedal import unit_test, block_function
 from pedal.assertions.static import *
-from pedal.types.definitions import DictType, LiteralStr, StrType
+from pedal.types.new_types import DictType, LiteralStr, StrType
 from tests.execution_helper import Execution, ExecutionTestCase, SUCCESS_MESSAGE
 
 
@@ -22,7 +22,7 @@ class TestAssertions(ExecutionTestCase):
             self.assertTrue(ensure_function('x', 3, (int, str, [str]),
                                              str))
         self.assertFeedback(e, """Wrong Parameter Type
-The function named x has a parameter named c that is a list of a number, but should be a list of a string.""")
+The function named x has a parameter named c that is a list of integers, but should be a list of strings.""")
 
     def test_function_missing_parameter(self):
         with Execution('def x(a: int, b, c: [int]) -> str: pass\nx') as e:
@@ -44,20 +44,20 @@ The function named x has a parameter named c that is a list of a number, but sho
                                "that is a 'D' type, but should be a number.")
 
     def test_assert_type_custom_record_passes(self):
-        Dog = DictType(literals=[LiteralStr("Name")], values=[StrType()])
+        Dog = DictType({LiteralStr("Name"): StrType()})
         with Execution('Dog = {"Name": str}\ndef pet(d: Dog) -> str: return d["Name"]\npet({"Name": "Fido"})') as e:
             f = ensure_function('pet', parameters=('Dog',), returns=str)
             self.assertFalse(f)
         self.assertFeedback(e, SUCCESS_MESSAGE)
 
     def test_assert_type_custom_record_fails(self):
-        Dog = DictType(literals=[LiteralStr("Name")], values=[StrType()])
+        Dog = DictType({LiteralStr("Name"): StrType()})
         with Execution('def pet(d: str) -> str: return d\npet("Fido")') as e:
             f = ensure_function('pet', parameters=('Dog',), returns=str)
             self.assertTrue(f)
         self.assertFeedback(e, "Wrong Parameter Type\n"
                                "The function named pet has a parameter named d"
-                               " that is a string, but should be Dog.")
+                               " that is a string, but should be A Dog.")
 
     def test_unit_test_partial_credit_true(self):
         with Execution('def add(a, b): return b', run_tifa=False) as e:

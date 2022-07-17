@@ -2,259 +2,180 @@
 Type definitions of builtin functions and modules.
 """
 
-from pedal.types.definitions import (UnknownType, FunctionType,
-                                     NumType, NoneType, BoolType,
-                                     TupleType, ListType, StrType,
-                                     FileType, DictType, ModuleType,
-                                     SetType, DayType, TimeType,
-                                     LiteralNum, RecordType)
+from pedal.types.new_types import (make_dataclass, FunctionType, AnyType,
+                                   ImpossibleType, NumType, IntType, FloatType, NoneType, BoolType,
+                                   TupleType, ListType, StrType, FileType, DictType,
+                                   ModuleType, SetType, LiteralInt, LiteralFloat, LiteralStr, LiteralBool,
+                                   BUILTIN_MODULES, BUILTIN_NAMES,
+                                   int_function, float_function, num_function,
+                                   bool_function, void_function, TYPE_TYPE,
+                                   IntConstructor, FloatConstructor, BoolConstructor,
+                                   ListConstructor, StrConstructor, str_function, GeneratorType, SetConstructor,
+                                   FrozenSetConstructor, DictConstructor, TupleConstructor)
 
-BUILTIN_MODULES = {
+
+BUILTIN_MODULES.update({
+    'dataclasses': ModuleType('dataclasses', fields={
+        'dataclass': FunctionType('dataclass', definition=make_dataclass)
+    }),
     'pprint': ModuleType('pprint',
                          fields={
-                             'pprint': FunctionType(name='pprint', returns=NoneType())
+                             'pprint': FunctionType(name='pprint', returns=NoneType)
                          }),
     'json': ModuleType('json',
                        fields={
-                           'loads': FunctionType(name='loads', returns=UnknownType()),
-                           'dumps': FunctionType(name='dumps', returns=StrType())
+                           'loads': FunctionType(name='loads', returns=AnyType),
+                           'dumps': FunctionType(name='dumps', returns=StrType)
                        }),
     'random': ModuleType('random',
                          fields={
-                             'randint': FunctionType(name='randint', returns=NumType())
+                             'randint': FunctionType(name='randint', returns=NumType)
                          }),
     'string': ModuleType('string',
                          fields={
-                             'letters': StrType(empty=False),
-                             'digits': StrType(empty=False),
-                             'ascii_letters': StrType(empty=False),
-                             'punctuation': StrType(empty=False),
-                             'printable': StrType(empty=False),
-                             'whitespace': StrType(empty=False),
-                             'ascii_uppercase': StrType(empty=False),
-                             'ascii_lowercase': StrType(empty=False),
-                             'hexdigits': StrType(empty=False),
-                             'octdigits': StrType(empty=False),
+                             'letters': StrType(False),
+                             'digits': StrType(False),
+                             'ascii_letters': StrType(False),
+                             'punctuation': StrType(False),
+                             'printable': StrType(False),
+                             'whitespace': StrType(False),
+                             'ascii_uppercase': StrType(False),
+                             'ascii_lowercase': StrType(False),
+                             'hexdigits': StrType(False),
+                             'octdigits': StrType(False),
                          }),
-    # TODO: Make this an extension in curriculum-ctvt
-    'parking': ModuleType('parking',
-                          fields={
-                              'Time': FunctionType(name='Time', returns=TimeType()),
-                              'now': FunctionType(name='now', returns=TimeType()),
-                              'Day': FunctionType(name='Day', returns=DayType()),
-                              'today': FunctionType(name='today', returns=DayType()),
-                          }),
     'math': ModuleType('math',
                        fields={
-                           'ceil': FunctionType(name='ceil', returns=NumType()),
-                           'copysign': FunctionType(name='copysign', returns=NumType()),
-                           'fabs': FunctionType(name='fabs', returns=NumType()),
-                           'factorial': FunctionType(name='factorial', returns=NumType()),
-                           'floor': FunctionType(name='floor', returns=NumType()),
-                           'fmod': FunctionType(name='fmod', returns=NumType()),
-                           'frexp': FunctionType(name='frexp', returns=NumType()),
-                           'fsum': FunctionType(name='fsum', returns=NumType()),
-                           'gcd': FunctionType(name='gcd', returns=NumType()),
-                           'isclose': FunctionType(name='isclose', returns=BoolType()),
-                           'isfinite': FunctionType(name='isfinite', returns=BoolType()),
-                           'isinf': FunctionType(name='isinf', returns=BoolType()),
-                           'isnan': FunctionType(name='isnan', returns=BoolType()),
-                           'ldexp': FunctionType(name='ldexp', returns=NumType()),
-                           'modf': FunctionType(name='modf', returns=NumType()),
-                           'trunc': FunctionType(name='trunc', returns=NumType()),
-                           'log': FunctionType(name='log', returns=NumType()),
-                           'log1p': FunctionType(name='log1p', returns=NumType()),
-                           'log2': FunctionType(name='log2', returns=NumType()),
-                           'log10': FunctionType(name='log10', returns=NumType()),
-                           'pow': FunctionType(name='pow', returns=NumType()),
-                           'sqrt': FunctionType(name='sqrt', returns=NumType()),
-                           'sin': FunctionType(name='sin', returns=NumType()),
-                           'cos': FunctionType(name='cos', returns=NumType()),
-                           'tan': FunctionType(name='tan', returns=NumType()),
-                           'asin': FunctionType(name='asin', returns=NumType()),
-                           'acos': FunctionType(name='acos', returns=NumType()),
-                           'atan': FunctionType(name='atan', returns=NumType()),
-                           'atan2': FunctionType(name='atan2', returns=NumType()),
-                           'hypot': FunctionType(name='hypot', returns=NumType()),
-                           'degrees': FunctionType(name='degrees', returns=NumType()),
-                           'radians': FunctionType(name='radians', returns=NumType()),
-                           'sinh': FunctionType(name='sinh', returns=NumType()),
-                           'cosh': FunctionType(name='cosh', returns=NumType()),
-                           'tanh': FunctionType(name='tanh', returns=NumType()),
-                           'asinh': FunctionType(name='asinh', returns=NumType()),
-                           'acosh': FunctionType(name='acosh', returns=NumType()),
-                           'atanh': FunctionType(name='atanh', returns=NumType()),
-                           'erf': FunctionType(name='erf', returns=NumType()),
-                           'erfc': FunctionType(name='erfc', returns=NumType()),
-                           'gamma': FunctionType(name='gamma', returns=NumType()),
-                           'lgamma': FunctionType(name='lgamma', returns=NumType()),
-                           'pi': NumType(),
-                           'e': NumType(),
-                           'tau': NumType(),
-                           'inf': NumType(),
-                           'nan': NumType(),
-                       })
-}
+                           f.name: f for f in [
+                               int_function('ceil'),
+                               int_function('comb'),
+                               float_function('copysign'),
+                               num_function('fabs'),
+                               int_function('factorial'),
+                               int_function('floor'),
+                               num_function('fmod'),
+                               FunctionType('frexp', returns=lambda: TupleType([FloatType(), IntType()])),
+                               float_function('fsum'),
+                               int_function('gcd'),
+                               bool_function('isclose'),
+                               bool_function('isfinite'),
+                               bool_function('isinf'),
+                               bool_function('isnan'),
+                               int_function('isqrt'),
+                               int_function('lcm'),
+                               num_function('ldexp'),
+                               FunctionType('modf', returns=lambda: TupleType([FloatType(), FloatType()])),
+                               float_function('nextafter'),
+                               int_function('perm'),
+                               num_function('prod'),
+                               float_function('remainder'),
+                               int_function('trunc'),
+                               float_function('ulp'),
+                               float_function('exp'),
+                               float_function('expm1'),
+                               float_function('log'),
+                               float_function('log1p'),
+                               float_function('log2'),
+                               float_function('log10'),
+                               float_function('pow'),
+                               float_function('sqrt'),
+                               float_function('acos'),
+                               float_function('asin'),
+                               float_function('atan'),
+                               float_function('atan2'),
+                               float_function('cos'),
+                               float_function('dist'),
+                               float_function('hypot'),
+                               float_function('sin'),
+                               float_function('tan'),
+                               num_function('radians'),
+                               num_function('degrees'),
+                               float_function('acosh'),
+                               float_function('asinh'),
+                               float_function('atanh'),
+                               float_function('cosh'),
+                               float_function('sinh'),
+                               float_function('tanh'),
+                               float_function('erf'),
+                               float_function('erfc'),
+                               float_function('gamma'),
+                               float_function('lgamma')
+                       ]}
+   )
+})
+
+BUILTIN_MODULES['math'].fields.update({
+    'pi': FloatType(),
+    'e': FloatType(),
+    'tau': FloatType(),
+    'inf': FloatType(),
+    'nan': FloatType()
+})
+
+def round_definition(tifa, function, callee, arguments, named_arguments, location):
+    if len(arguments) == 1:
+        return IntType()
+    elif len(arguments) == 2:
+        return FloatType()
+    return ImpossibleType()
+
+
+def map_definition(tifa, function, callee, arguments, named_arguments, location):
+    if arguments:
+        return GeneratorType(arguments[0].is_empty, arguments[0].iterate())
+    return ImpossibleType()
+
+
+def zip_definition(tifa, function, callee, arguments, named_arguments, location):
+    tupled_types = TupleType((t.iterate() for t in arguments))
+    return GeneratorType(arguments and arguments[0].is_empty,
+                         tupled_types)
+
+
+# TODO: Type guard with `isinstance`
+
+
+BUILTIN_NAMES.update({
+    f.name: f for f in [
+        TYPE_TYPE,
+        IntConstructor(), FloatConstructor(), BoolConstructor(), StrConstructor(),
+        ListConstructor(), SetConstructor(), FrozenSetConstructor(),
+        DictConstructor(), TupleConstructor(),
+        void_function('print'), int_function("abs"), int_function('len'),
+        int_function('ord'), num_function('pow'), num_function('sum'),
+        bool_function('all'), bool_function('any'), bool_function('isinstance'),
+        str_function('chr'), str_function('bin'), str_function('repr'), str_function('input'),
+        FunctionType('open', returns=FileType),
+        FunctionType('map', definition=map_definition),
+        FunctionType('round', definition=round_definition),
+        FunctionType('sorted', definition='identity'),
+        FunctionType('reversed', definition='identity'),
+        FunctionType('filter', definition='identity'),
+        FunctionType('range', returns=lambda: ListType(False, IntType())),
+        FunctionType('dir', returns=lambda: ListType(False, StrType())),
+        FunctionType('max', returns='element'),
+        FunctionType('min', returns='element'),
+        FunctionType('zip', definition=zip_definition),
+        FunctionType('__import__', returns=ModuleType),
+        FunctionType('globals', returns=lambda: DictType([(StrType(), AnyType())])),
+        FunctionType('classmethod', returns='identity'),
+        FunctionType('staticmethod', returns='identity'),
+    ]
+})
+
+BUILTIN_NAMES['__name__'] = StrType()
 
 
 def get_builtin_module(name):
     """
     Given the name of the module, retrieve its TIFA representation.
-
-    Args:
-        name:
-
-    Returns:
-
     """
-    return BUILTIN_MODULES.get(name, UnknownType())
+    return BUILTIN_MODULES.get(name)
 
 
-def _builtin_sequence_constructor(sequence_type):
+def get_builtin_name(name):
     """
-    Helper function for creating constructors for the Set and List types.
-    These constructors use the subtype of the arguments.
-
-    Args:
-        sequence_type (Type): A function for creating new sequence types.
+    Given a name, retrieve a copy of its built-in implementation.
     """
-
-    def sequence_call(tifa, function_type, callee, args, position):
-        """
-
-        Args:
-            tifa:
-            function_type:
-            callee:
-            args:
-            position:
-
-        Returns:
-
-        """
-        # TODO: Should inherit the emptiness too
-        return_type = sequence_type(empty=True)
-        if args:
-            return_type.subtype = args[0].index(LiteralNum(0))
-            return_type.empty = False
-        return return_type
-
-    return sequence_call
-
-
-def _builtin_zip(tifa, function_type, callee, args, position):
-    """
-    Definition of the built-in zip function, which consumes a series of
-    sequences and returns a list of tuples, with each tuple composed of the
-    elements of the sequence paired (or rather, tupled) together.
-    """
-    if args:
-        tupled_types = TupleType(subtypes=[])
-        for arg in args:
-            tupled_types.subtypes.append(arg.index(0))
-        return ListType(tupled_types, empty=False)
-    return ListType(empty=True)
-
-
-# TODO: Exceptions
-
-def get_builtin_function(name):
-    """
-
-    Args:
-        name:
-
-    Returns:
-
-    """
-    # Void Functions
-    if name == "print":
-        return FunctionType(name="print", returns=NoneType())
-    # Math Functions
-    elif name in ("int", "abs", "float", "len", "ord", "pow", "round", "sum"):
-        return FunctionType(name=name, returns=NumType())
-    # Boolean Functions
-    elif name in ("bool", "all", "any", "isinstance"):
-        return FunctionType(name=name, returns=BoolType())
-    # String Functions
-    elif name in ("str", 'chr', 'bin', 'repr', 'input'):
-        return FunctionType(name=name, returns=StrType())
-    # File Functions
-    elif name == "open":
-        return FunctionType(name="open", returns=FileType())
-    # List Functions
-    elif name == "map":
-        return FunctionType(name="map", returns=ListType(empty=False))
-    elif name == "list":
-        return FunctionType(name="list",
-                            definition=_builtin_sequence_constructor(ListType))
-    # Set Functions
-    elif name == "set":
-        return FunctionType(name="set",
-                            definition=_builtin_sequence_constructor(SetType))
-    # Dict Functions
-    elif name == "dict":
-        return FunctionType(name="dict", returns=DictType())
-    # Pass through
-    elif name == "sorted":
-        return FunctionType(name="sorted", returns='identity')
-    elif name == "reversed":
-        return FunctionType(name="reversed", returns='identity')
-    elif name == "filter":
-        return FunctionType(name="filter", returns='identity')
-    # Special Functions
-    elif name == "type":
-        return FunctionType(name="type", returns=UnknownType())
-    elif name == "range":
-        return FunctionType(name="range", returns=ListType(NumType(), empty=False))
-    elif name == "dir":
-        return FunctionType(name="dir", returns=ListType(StrType(), empty=False))
-    elif name == "max":
-        return FunctionType(name="max", returns='element')
-    elif name == "min":
-        return FunctionType(name="min", returns='element')
-    elif name == "zip":
-        return FunctionType(name="zip", returns=_builtin_zip)
-    elif name == "__import__":
-        return FunctionType(name="__import__", returns=ModuleType())
-    elif name == "globals":
-        return FunctionType(name="globals",
-                            returns=DictType(keys=StrType(),
-                                             values=UnknownType(),
-                                             empty=False))
-    elif name in ("classmethod", "staticmethod"):
-        return FunctionType(name=name, returns='identity')
-    elif name in ("__name__",):
-        return StrType()
-    # Special record function available through CISC108 library
-    elif name in ("record",):
-        return RecordType()
-
-
-# MatPlotLib Support
-_PYPLOT_MODULE = ModuleType('pyplot', fields={
-    'plot': FunctionType(name='plot', returns=NoneType()),
-    'hist': FunctionType(name='hist', returns=NoneType()),
-    'scatter': FunctionType(name='scatter', returns=NoneType()),
-    'show': FunctionType(name='show', returns=NoneType()),
-    'xlabel': FunctionType(name='xlabel', returns=NoneType()),
-    'ylabel': FunctionType(name='ylabel', returns=NoneType()),
-    'title': FunctionType(name='title', returns=NoneType()),
-})
-
-BUILTIN_MODULES['matplotlib'] = ModuleType('matplotlib',
-                                           submodules={
-                                               'pyplot': _PYPLOT_MODULE
-                                           })
-
-
-# TODO: Have to figure out how to setup this to be an extension.
-#       Problem: It would be imported AFTER Tifa is run...
-BUILTIN_MODULES['cisc108'] = ModuleType('cisc108', fields={
-    'assert_equal': FunctionType(name='assert_equal', returns=NoneType()),
-    'assert_type': FunctionType(name='assert_type', returns=NoneType()),
-})
-
-BUILTIN_MODULES['designer'] = ModuleType('designer', fields={
-    'set_window_size': FunctionType(name='set_window_size', returns=NoneType())
-})
+    if name in BUILTIN_NAMES:
+        return BUILTIN_NAMES[name].clone_mutably()

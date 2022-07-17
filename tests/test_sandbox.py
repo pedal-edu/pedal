@@ -438,6 +438,7 @@ Suggestion: To fix a type error, you should trace through your code. Make sure e
         student.run(student_code, filename='student.py')
         self.assertIsNone(student.exception)
         # And off again
+        student.reset_default_overrides()
         student.block_module('os')
         student.run(student_code, filename='student.py')
         self.assertEqual(str(student.exception), "You cannot import `os` from student code.")

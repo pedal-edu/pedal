@@ -1,3 +1,4 @@
+from textwrap import dedent
 
 from pedal.assertions.static import *
 
@@ -114,3 +115,31 @@ class TestAssertions(ExecutionTestCase):
             self.assertTrue(ensure_literal(True))
         self.assertFeedback(e, "Must Use Literal Value\n"
                                "You must use the literal value True.")
+
+    def test_ensure_function_types(self):
+        # [int]
+        with Execution(dedent("""
+        def sum_high(numbers: list[int]) -> int:
+            total = 0
+            for num in numbers:
+                if num >= 50:
+                    total += num
+            return total
+        
+        sum_high([1,2,3])
+        """) )as e:
+            self.assertFalse(ensure_function('sum_high', parameters=[[int]], returns='int'))
+        self.assertFeedback(e, SUCCESS_MESSAGE)
+        # list[int]
+        with Execution(dedent("""
+        def sum_high(numbers: list[int]) -> int:
+            total = 0
+            for num in numbers:
+                if num >= 50:
+                    total += num
+            return total
+
+        sum_high([1,2,3])
+        """)) as e:
+            self.assertFalse(ensure_function('sum_high', parameters=[list[int]], returns='int'))
+        self.assertFeedback(e, SUCCESS_MESSAGE)

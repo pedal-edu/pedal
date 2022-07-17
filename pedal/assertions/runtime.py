@@ -10,7 +10,7 @@ import re
 
 try:
     from dataclasses import _FIELDS
-except ImportError:
+except Exception:
     _FIELDS = '__dataclass_fields__'
 
 from pedal.assertions.feedbacks import (RuntimeAssertionFeedback,
@@ -20,10 +20,10 @@ from pedal.assertions.functions import function_not_available, name_is_not_a_fun
 from pedal.core.report import MAIN_REPORT
 from pedal.core.feedback import CompositeFeedbackFunction
 from pedal.sandbox import Sandbox
-from pedal.sandbox.commands import check_coverage, get_call_arguments, get_student_data
+from pedal.sandbox.commands import check_coverage, get_call_arguments, get_student_data, evaluate
 from pedal.sandbox.result import share_sandbox_context
 from pedal.types.normalize import normalize_type, get_pedal_type_from_value
-from pedal.types.operations import are_types_equal
+from pedal.types.new_types import is_subtype
 from pedal.utilities.comparisons import equality_test
 
 
@@ -490,7 +490,8 @@ class _compare_type(RuntimeAssertionFeedback):
     def __init__(self, value, expected_type, **kwargs):
         fields = kwargs.setdefault('fields', {})
         value_pedal_type = get_pedal_type_from_value(value)
-        expected_pedal_type = normalize_type(expected_type)
+        evaluated_expected_type = evaluate(expected_type) if isinstance(expected_type, str) else expected_type
+        expected_pedal_type = normalize_type(evaluated_expected_type, evaluate).as_type()
         singular_name = share_sandbox_context(value_pedal_type.singular_name, value)
         fields['value_raw'] = value
         fields['value_type'] = value_pedal_type
@@ -505,7 +506,7 @@ class _compare_type(RuntimeAssertionFeedback):
         """ Tests if the left and right are equal """
         value_type = self.fields['value_type']
         expected_type = self.fields['expected_type']
-        return not are_types_equal(value_type, expected_type)
+        return not is_subtype(value_type, expected_type)
 
 
 class assert_type(_compare_type):
@@ -575,7 +576,7 @@ class assert_output(RuntimePrintingAssertionFeedback):
 
     def condition(self, execution, text, exact_strings):
         """ Tests if the regex does not match the text """
-        return errors(execution) or not equality_test(self.get_output(execution), text.value,
+        return errors(execution) or not equality_test(self.get_output(execution), str(text.value),
                                                       _exact_strings=exact_strings, _delta=None)
 
 
@@ -593,7 +594,7 @@ class assert_not_output(RuntimePrintingAssertionFeedback):
 
     def condition(self, execution, text, exact_strings):
         """ Tests if the regex does not match the text """
-        return equality_test(self.get_output(execution), text.value,
+        return equality_test(self.get_output(execution), str(text.value),
                              _exact_strings=exact_strings, _delta=None)
 
 
@@ -607,7 +608,9 @@ class assert_output_contains(RuntimePrintingAssertionFeedback):
 
     def condition(self, execution, text, exact_strings):
         """ Tests if the regex does not match the text """
-        return text.value not in self.get_output(execution)
+        if not exact_strings:
+            return str(text.value).lower() not in self.get_output(execution).lower()
+        return str(text.value) not in self.get_output(execution)
 
 
 class assert_not_output_contains(RuntimePrintingAssertionFeedback):
@@ -620,7 +623,9 @@ class assert_not_output_contains(RuntimePrintingAssertionFeedback):
 
     def condition(self, execution, text, exact_strings):
         """ Tests if the regex does not match the text """
-        return text.value in self.get_output(execution)
+        if not exact_strings:
+            return str(text.value).lower() in self.get_output(execution).lower()
+        return str(text.value) in self.get_output(execution)
 
 
 class assert_has_attr(RuntimeAssertionFeedback):

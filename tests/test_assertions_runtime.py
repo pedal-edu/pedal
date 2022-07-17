@@ -355,7 +355,7 @@ I evaluated the expression:
 The value of the result was:
     'a string'
 But I expected the result to be a value of type:
-    'a number'""")
+    'an integer'""")
 
     def test_assert_chain_passes(self):
         with Execution('x=3\nprint(x)') as e:
@@ -384,7 +384,7 @@ Student code failed instructor test.
 I evaluated the expression:
     x
 The value of the result was:
-    'a number'
+    'an integer'
 But I expected the result to be a value of type:
     'a list'""")
 
@@ -435,7 +435,7 @@ I ran the code:
 
 And I entered as input:
     A
-
+     
 The value of the result was:
     'A'
 But I expected the result to be equal to:

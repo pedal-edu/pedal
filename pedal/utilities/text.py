@@ -63,3 +63,17 @@ def chomp(text):
     if text[-1] == '\n':
         return text[:-1]
     return text
+
+
+def join_list_with_and(items):
+    """ Properly format the string with commas (oxford-style) and the word `and`."""
+    items = list(items)
+    if len(items) < 1:
+        return ""
+    elif len(items) == 1:
+        return items[0]
+    elif len(items) == 2:
+        return f"{items[0]} and {items[1]}"
+    else:
+        pre = ", ".join(items[:-1])
+        return f"{pre}, and {items[-1]}"

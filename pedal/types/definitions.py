@@ -910,23 +910,6 @@ TYPE_LOOKUPS = {
 }
 
 
-TYPE_STRINGS = {
-    "str": StrType, "string": StrType,
-    "num": NumType, "number": NumType,
-    "int": NumType, "integer": NumType, "float": NumType,
-    "complex": NumType,
-    "bool": BoolType, "boolean": BoolType,
-    "none": NoneType, "nonetype": NoneType,
-    "dict": DictType, "dictionary": DictType,
-    "list": ListType,
-    "tuple": TupleType,
-    "set": SetType,
-    "file": FileType,
-    "func": FunctionType, "function": FunctionType,
-    "class": ClassType,
-}
-
-
 class TypeSpace:
     def has(self, name):
         return False

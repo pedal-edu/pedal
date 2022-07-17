@@ -9,8 +9,9 @@ from pedal.core.feedback import CompositeFeedbackFunction
 from pedal.core.location import Location
 from pedal.core.report import MAIN_REPORT
 from pedal.core.commands import compliment as core_compliment, give_partial
+from pedal.tifa.commands import tifa_type_check
 from pedal.types.normalize import normalize_type
-from pedal.types.operations import are_types_equal
+from pedal.types.new_types import is_subtype
 from pedal.utilities.ast_tools import AST_NODE_NAMES
 
 
@@ -494,7 +495,7 @@ def ensure_function(name, arity=None, parameters=None,
     if parameters is not None:
         actual_parameters = definition.args.args
         for expected_parameter, actual_parameter in zip(parameters, actual_parameters):
-            expected_parameter_type = normalize_type(expected_parameter)
+            expected_parameter_type = normalize_type(expected_parameter, tifa_type_check).as_type()
             actual_parameter_name = (actual_parameter.id if actual_parameter.id is not None
                                      else actual_parameter.arg)
             if actual_parameter.annotation is None:
@@ -502,27 +503,29 @@ def ensure_function(name, arity=None, parameters=None,
                                               expected_parameter_type,
                                               **kwargs)
             try:
-                actual_parameter_type = normalize_type(actual_parameter.annotation.ast_node)
+                actual_parameter_type = normalize_type(actual_parameter.annotation.ast_node,
+                                                       tifa_type_check).as_type()
             except ValueError as e:
                 return invalid_parameter_type(name, actual_parameter_name,
                                               actual_parameter.annotation,
                                               expected_parameter_type,
                                               **kwargs)
-            if not are_types_equal(actual_parameter_type, expected_parameter_type):
+            if not is_subtype(actual_parameter_type, expected_parameter_type):
                 return wrong_parameter_type(name, actual_parameter_name,
                                             actual_parameter_type,
                                             expected_parameter_type, **kwargs)
     # 1.2.3. 'returns' style - checks the return type explicitly
     if returns is not None:
-        expected_returns = normalize_type(returns)
+        expected_returns = normalize_type(returns, tifa_type_check).as_type()
         if definition.returns is None:
             return missing_return_type(name, expected_returns, **kwargs)
         try:
-            actual_returns = normalize_type(definition.returns.ast_node)
+            actual_returns = normalize_type(definition.returns.ast_node,
+                                            tifa_type_check).as_type()
         except ValueError as e:
             return invalid_return_type(name, definition.returns,
                                        expected_returns, **kwargs)
-        if not are_types_equal(actual_returns, expected_returns):
+        if not is_subtype(actual_returns, expected_returns):
             return wrong_return_type(name, actual_returns, expected_returns,
                                      **kwargs)
     # Alternatively, returns positive FF?

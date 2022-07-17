@@ -9,7 +9,7 @@ from pedal import contextualize_report
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import pedal.tifa
-import pedal.types.definitions as defs
+import pedal.types.new_types as defs
 import pedal.types.normalize as normalize
 
 unit_tests = {
@@ -156,6 +156,22 @@ unit_tests = {
         ['a+=5\na', ['unused_variable', 'overwritten_variable'], ['initialization_problem']],
     'iadd_unread':
         ['a=0\na+=5', ['initialization_problem', 'overwritten_variable'], ['unused_variable']],
+    'string_in_string':
+        ['"" in ""', ['incompatible_types'], []],
+    "string_in_tuple_str":
+        ['"" in ("", "")', ['incompatible_types'], []],
+    "string_in_int":
+            ['"" in 5', [], ['incompatible_types']],
+    "string_in_tuple_int":
+        ['"" in (5, 4)', [], ['incompatible_types']],
+    "string_var_in_tuple_strings":
+        ['food = "fruitless"\nfood in ("apple", "banana")', ['incompatible_types'], []],
+    "iter_string_var_in_tuple_string":
+        ['x = [""]\nfor y in x:\n y in ("", "")', ['incompatible_types'], [] ],
+    "iter_int_var_in_tuple_int":
+        ['x = [5]\nfor y in x:\n y in (3,)', ['incompatible_types'], [] ],
+    "iter_int_var_in_tuple_string":
+        ['x = [4]\nfor y in x:\n y in ("", "")', [], ['incompatible_types'] ],
 
     # Lambda
     'lambda_add':
@@ -390,6 +406,10 @@ unit_tests = {
         ['l = []\nfor x in l:\n    if x > 0:\n        x', [], []],
     'append_iter_var_to_list':
         ['x = []\nx.append(x)\nx', [], []],
+    'append_multiple_types':
+        ['x = []\nx.append(7)\nx.append("F")\nx', [], ['type_change_append']],
+    'bad_append_iter_var_to_list':
+        ['x = []\nx.append(x)\nx.append(7)\nx', [], ['type_change_append']],
     'function_with_parameter':
         ['def x(y):\n    y\nx()', [], []],
     'function_returns_None':
@@ -475,7 +495,21 @@ unit_tests = {
     # Reused variable in outer scope
     'function_reused_outer_variable_write':
         ['def y(b): return b+"!"\ndef x(a): return y(a)+"?"\na="Hi"\nx(a)',
-         ['write_out_of_scope'], []]
+         ['write_out_of_scope'], []],
+
+    # Dictionary stuff
+    'dictionary_literal_key_access_int':
+        ['person = {"Name": "Charles", "Age": 4}\nperson["Age"] + 1',
+         ['incompatible_types'], []],
+    'dictionary_literal_key_access_int_bad':
+        ['person = {"Name": "Charles", "Age": 4}\nperson["Age"] + "1"',
+         [], ['incompatible_types']],
+    'dictionary_literal_key_access_str':
+        ['person = {"Name": "Charles", "Age": 4}\nperson["Name"] + 1',
+         [], ['incompatible_types']],
+    'dictionary_literal_key_access_str_bad':
+        ['person = {"Name": "Charles", "Age": 4}\nperson["Name"] + "1"',
+         ['incompatible_types'], []]
 }
 
 
@@ -483,20 +517,10 @@ class TestCode(unittest.TestCase):
     pass
 
 
-SILENCE_EXCEPT = None # 'possibly_overwritten_in_elif_branch' # None  # 'read_not_out_of_scope'
+SILENCE_EXCEPT = 'None' # 'possibly_overwritten_in_elif_branch' # None  # 'read_not_out_of_scope'
 
 
-def make_tester(code, nones, somes):
-    """
-
-    Args:
-        code:
-        nones:
-        somes:
-
-    Returns:
-
-    """
+def make_tester(internal_name, code, nones, somes):
     def test_code(self):
         contextualize_report(code)
         tifa = pedal.tifa.Tifa()
@@ -507,23 +531,24 @@ def make_tester(code, nones, somes):
                           ' in code:\n%s' % code)
         if not result.success:
             traceback.print_tb(result.error.__traceback__)
-            self.fail("Error message in\n" + code + "\n" +
-                      str(result.error))
+            #self.fail("Error message in\n" + code + "\n" +
+            #          str(result.error))
+            self.fail(f"Error occurred: {str(result.error)}\nName: {internal_name}\n----\n{code}\n----\n")
         for none in nones:
             if result.issues.get(none, []):
                 print("")
                 pprint(result.variables)
-                self.fail("Incorrectly detected " + none + "\n" + code + "\n")
+                self.fail(f"Incorrectly detected `{none}`\nName: {internal_name}\n----\n{code}\n----\n")
         for some in somes:
             if not result.issues.get(some, []):
-                self.fail("Failed to detect " + some + "\n" + code + "\n")
-
+                self.fail(f"Failed to detect `{some}`\nName: {internal_name}\n----\n{code}\n----\n")
+    test_code.__name__ = "test_code_"+str(internal_name)
     return test_code
 
 
 for name, (code, nones, somes) in unit_tests.items():
-    if SILENCE_EXCEPT is None or SILENCE_EXCEPT == name:
-        setattr(TestCode, 'test_code_{}'.format(name), make_tester(code, nones, somes))
+    if SILENCE_EXCEPT in (None, "None") or SILENCE_EXCEPT == name:
+        setattr(TestCode, 'test_code_{}'.format(name), make_tester(name, code, nones, somes))
 
 
 class TestVariables(unittest.TestCase):
@@ -537,7 +562,7 @@ class TestVariables(unittest.TestCase):
         self.assertTrue(my_int.is_equal('num'))
         self.assertTrue(my_int.is_equal('NumType'))
         self.assertTrue(my_int.is_equal(int))
-        self.assertTrue(my_int.is_equal(float))
+        self.assertFalse(my_int.is_equal(float))
         self.assertFalse(my_int.is_equal(str))
         # String variable
         my_str = variables['my_str'].type
@@ -550,10 +575,10 @@ class TestVariables(unittest.TestCase):
         self.assertTrue(my_list.is_equal('ListType'))
         self.assertTrue(my_list.is_equal(list))
         # List subtype
-        self.assertTrue(my_list.subtype.is_equal(int))
-        self.assertTrue(my_list.subtype.is_equal('num'))
-        self.assertTrue(my_list.subtype.is_equal(float))
-        self.assertTrue(my_list.subtype.is_equal('NumType'))
+        self.assertTrue(my_list.element_type.is_equal(int))
+        self.assertTrue(my_list.element_type.is_equal('num'))
+        self.assertFalse(my_list.element_type.is_equal(float))
+        self.assertTrue(my_list.element_type.is_equal('NumType'))
 
     def test_variable_def_use(self):
         tifa = pedal.tifa.Tifa()
@@ -584,6 +609,20 @@ class TestVariables(unittest.TestCase):
                          "The function a was "
                          "given a definition on line 1, but was never used "
                          "after that.")
+
+    def test_bad_parameter_found(self):
+        tifa = pedal.tifa.Tifa()
+        result = tifa.process_code('def a(x: int):\n    return x\na("hello")')
+        issues = result.issues
+        self.assertEqual(issues['parameter_type_mismatch'][0].message,
+                         "You defined the parameter x as an integer. However, the argument passed to that parameter on line 3 was a string. The formal parameter type must match the argument's type.")
+
+    def test_bad_parameter_found_complex(self):
+        tifa = pedal.tifa.Tifa()
+        result = tifa.process_code('def a(x: list[int]):\n    return x\na(5)')
+        issues = result.issues
+        self.assertEqual(issues['parameter_type_mismatch'][0].message,
+                         "You defined the parameter x as a list of integers. However, the argument passed to that parameter on line 3 was an integer. The formal parameter type must match the argument's type.")
 
     def test_weirdness_tate_import_example(self):
         tifa = pedal.tifa.Tifa()
@@ -617,7 +656,7 @@ class TestVariables(unittest.TestCase):
         t = normalize.get_pedal_type_from_json({'type': 'ListType',
                                  'subtype': {'type': 'NumType'}})
         self.assertIsInstance(t, defs.ListType)
-        self.assertIsInstance(t.subtype, defs.NumType)
+        self.assertIsInstance(t.element_type, defs.NumType)
 
         l1 = {'type': 'LiteralStr', 'value': 'First'}
         l2 = {'type': 'LiteralStr', 'value': 'Second'}
@@ -625,16 +664,16 @@ class TestVariables(unittest.TestCase):
         t = normalize.get_pedal_type_from_json({'type': 'DictType', 'literals': [l1, l2],
                                  'values': [v1, v2]})
         self.assertIsInstance(t, defs.DictType)
-        self.assertIsInstance(t.literals, list)
-        self.assertEqual(len(t.literals), 2)
-        self.assertIsInstance(t.literals[0], defs.LiteralStr)
-        self.assertEqual(t.literals[0].value, 'First')
-        self.assertIsInstance(t.literals[1], defs.LiteralStr)
-        self.assertEqual(t.literals[1].value, 'Second')
-        self.assertIsInstance(t.values, list)
-        self.assertEqual(len(t.values), 2)
-        self.assertIsInstance(t.values[0], defs.StrType)
-        self.assertIsInstance(t.values[1], defs.NumType)
+        self.assertIsInstance(t.element_types, list)
+        self.assertEqual(len(t.element_types), 2)
+        self.assertIsInstance(t.element_types[0][0], defs.LiteralStr)
+        self.assertEqual(t.element_types[0][0].value, 'First')
+        self.assertIsInstance(t.element_types[1][0], defs.LiteralStr)
+        self.assertEqual(t.element_types[1][0].value, 'Second')
+        self.assertIsInstance(t.element_types, list)
+        self.assertEqual(len(t.element_types), 2)
+        self.assertIsInstance(t.element_types[0][1], defs.StrType)
+        self.assertIsInstance(t.element_types[1][1], defs.NumType)
 
         # Try to parse the Broadway type definition
         complex_type = {"type": "ModuleType",
@@ -698,7 +737,7 @@ class TestVariables(unittest.TestCase):
                           'for r in rs:\n'
                           '  x=0+r["Person.Age"]\n'
                           'x', filename='student.py')
-        self.assertTrue(dir(result.top_level_variables['x'].type.is_equal('NumType')))
+        self.assertTrue(defs.is_subtype(result.top_level_variables['x'].type, defs.NumType()))
         self.assertTrue(result.success)
         self.assertNotIn('module_not_found', result.issues)
 
@@ -799,7 +838,7 @@ class TestVariables(unittest.TestCase):
         """)
         tifa = pedal.tifa.Tifa()
         result = tifa.process_code(program)
-        self.assertNotIn('incompatible_types', result.issues)
+        #self.assertNotIn('incompatible_types', result.issues)
         self.assertIn('invalid_indexing', result.issues)
 
     def test_not_finding_unused_return_value(self):
@@ -883,7 +922,10 @@ print(x([{"a": "apple"}]))""")
 
     def test_new_class_record_type(self):
         program = dedent("""
-        class Dog(record):
+        from dataclasses import dataclass
+        
+        @dataclass
+        class Dog:
             name: str
             age: int
             fuzzy: bool
@@ -981,7 +1023,12 @@ print(x([{"a": "apple"}]))""")
         tifa = pedal.tifa.Tifa()
         result = tifa.process_code(program, filename="student.py")
         self.assertIsNone(result.error)
-        self.assertFalse(result.issues)
+        self.assertTrue(result.issues)
+        self.assertEqual("You defined the parameter dogs as a list of Dog. "
+                         "However, the argument passed to that parameter on line 25 was a list of Cat. "
+                         "The formal parameter type must match the argument's type.",
+                         result.issues['parameter_type_mismatch'][0].message)
+
 
 if __name__ == '__main__':
     unittest.main(buffer=False)

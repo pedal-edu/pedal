@@ -28,7 +28,8 @@ class ExecutionTestCase(unittest.TestCase):
         Returns:
 
         """
-        return self.assertEqual(dedent(feedback_string).lstrip(), execution.feedback)
+        return self.assertEqual(dedent(feedback_string).lstrip(),
+                                dedent(execution.feedback).lstrip())
 
 
 

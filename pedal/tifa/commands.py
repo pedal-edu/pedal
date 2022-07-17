@@ -1,8 +1,10 @@
 """
 Commands related to navigating TIFA data.
 """
+import ast
 from pedal.core.report import MAIN_REPORT
 from pedal.tifa.constants import TOOL_NAME as TIFA_TOOL_NAME
+from pedal.types.new_types import ImpossibleType
 
 
 def tifa_analysis(code=None, report=MAIN_REPORT):
@@ -26,6 +28,12 @@ def tifa_analysis(code=None, report=MAIN_REPORT):
     report[TIFA_TOOL_NAME]['analyses'][code] = result
     report[TIFA_TOOL_NAME]['latest'] = result
     return result
+
+
+def tifa_type_check(name: str, report=MAIN_REPORT):
+    tifa_instance = report[TIFA_TOOL_NAME]['instance']
+    variable = tifa_instance.find_variable_scope(name)
+    return variable.state.type if variable.exists else ImpossibleType()
 
 
 def get_issues(category, report=MAIN_REPORT):

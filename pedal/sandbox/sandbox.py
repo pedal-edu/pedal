@@ -612,6 +612,8 @@ class Sandbox:
     def block_module(self, module_name, friendly_name=None):
         """
         Prevent the module from being loaded in student code.
+        Also unloads the module if it has been imported previously by
+        destroying the variable in the current student `data`.
 
         Args:
             module_name (str): The name of the module to prevent, as it would
@@ -624,9 +626,10 @@ class Sandbox:
             friendly_name = module_name
         mocked_modules = self.modules.new_module(mocked.BlockedModule(module_name), module_name, friendly_name)
         for name, mocked_version in mocked_modules.items():
-            if name not in self._module_overrides or not self._module_overrides[name]:
+            if name not in self._module_overrides or self._module_overrides[name] is True:
                 self._module_overrides[name] = mocked_version
-
+            if name in self.data:
+                del self.data[name]
         #self._module_overrides[module_name] = mocked.BlockedModule(module_name)
         return self
 

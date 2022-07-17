@@ -1,6 +1,4 @@
 
-
-
 """
 Main TIFA visitor-based algorithm here.
 
@@ -11,26 +9,18 @@ import ast
 # TODO: FileType, DayType, TimeType,
 from pedal.core.commands import system_error
 from pedal.tifa.tifa_core import TifaCore, TifaAnalysis
-from pedal.types.definitions import (UnknownType,
-                                     FunctionType, ClassType, InstanceType,
-                                     NumType, NoneType, BoolType, TupleType,
-                                     ListType, StrType, GeneratorType,
-                                     DictType, ModuleType, SetType,
-                                     LiteralNum, LiteralBool,
-                                     LiteralNone, LiteralStr,
-                                     LiteralTuple, Type)
-from pedal.types.normalize import (get_pedal_type_from_json,
-                                   get_pedal_literal_from_pedal_type,
-                                   get_pedal_type_from_annotation,
-                                   get_pedal_type_from_value)
-from pedal.types.builtin import (get_builtin_module, get_builtin_function)
-from pedal.types.operations import (are_types_equal,
-                                    VALID_UNARYOP_TYPES, VALID_BINOP_TYPES,
-                                    ORDERABLE_TYPES, INDEXABLE_TYPES)
+from pedal.types.new_types import (Type, AnyType, ImpossibleType, FunctionType, GeneratorType,
+                                   IntType, FloatType, BoolType, TupleType,
+                                   ListType, StrType, SetType, DictType,
+                                   ClassType, InstanceType, BuiltinConstructorType, NumType, NoneType,
+                                   LiteralValue, LiteralInt, LiteralFloat, LiteralStr, LiteralBool,
+                                   TypeUnion, widen_type, widest_type)
+from pedal.types.new_types import is_subtype, specify_subtype
+from pedal.types.normalize import get_pedal_type_from_value
+from pedal.types.builtin import get_builtin_name
+from pedal.types.operations import (VALID_UNARYOP_TYPES, apply_binary_operation, apply_unary_operation)
 from pedal.tifa.constants import TOOL_NAME
 from pedal.tifa.contexts import NewPath, NewScope
-from pedal.tifa.identifier import Identifier
-from pedal.tifa.state import State
 from pedal.tifa.feedbacks import (action_after_return, return_outside_function,
                                   write_out_of_scope, unconnected_blocks,
                                   iteration_problem, not_a_function,
@@ -44,7 +34,7 @@ from pedal.tifa.feedbacks import (action_after_return, return_outside_function,
                                   incorrect_arity, else_on_loop_body,
                                   module_not_found, nested_function_definition,
                                   unused_returned_value, invalid_indexing)
-from pedal.utilities.system import IS_PYTHON_39
+from pedal.utilities.system import IS_PYTHON_39, IS_AT_LEAST_PYTHON_38
 
 
 class Tifa(TifaCore, ast.NodeVisitor):
@@ -69,7 +59,7 @@ class Tifa(TifaCore, ast.NodeVisitor):
         """
         if reset or self.analysis is None:
             self.analysis = TifaAnalysis()
-        filename = filename or self.report.submission.main_file
+        filename = filename or (self.report.submission.main_file if self.report.submission else 'student.py')
         self.line_offset = self.report.submission.line_offsets.get(filename, 0) if self.report.submission else 0
 
         # Attempt parsing - might fail!
@@ -138,7 +128,7 @@ class Tifa(TifaCore, ast.NodeVisitor):
         result = ast.NodeVisitor.visit(self, node)
         # If a node failed to return something, return the UNKNOWN TYPE
         if result is None:
-            result = UnknownType()
+            result = AnyType()
         self.analysis.node_types[node] = result
 
         # Pop the node out of the chain
@@ -159,92 +149,6 @@ class Tifa(TifaCore, ast.NodeVisitor):
             if isinstance(node, ast.AST):
                 self.visit(node)
 
-    @staticmethod
-    def walk_targets(targets, target_type, walker):
-        """
-        Iterate through the targets and call the given function on each one.
-
-        Args:
-            targets (list of Ast nodes): A list of potential targets to be
-                                         traversed.
-            target_type (Type): The given type to be unraveled and applied to the
-                         targets.
-            walker (Ast Node, Type -> None): A function that will process
-                                             each target and unravel the type.
-        """
-        for target in targets:
-            walker(target, target_type)
-
-    def _walk_target(self, target, target_type):
-        """
-        Recursively apply the type to the target
-
-        Args:
-            target (Ast): The current AST node to process
-            target_type (Type): The type to apply to this node
-        """
-        if isinstance(target, ast.Name):
-            self.store_iter_variable(target.id, target_type, self.locate(target))
-            return target.id
-        elif isinstance(target, (ast.Tuple, ast.List)):
-            result = None
-            for i, elt in enumerate(target.elts):
-                elt_type = target_type.iterate(LiteralNum(i))
-                potential_name = self._walk_target(elt, elt_type)
-                if potential_name is not None and result is None:
-                    result = potential_name
-            return result
-
-    # TODO: Properly handle assignments with subscripts
-    def assign_target(self, target, target_type):
-        """
-        Assign the type to the target, handling all kinds of assignment
-        statements, including Names, Tuples/Lists, Subscripts, and
-        Attributes.
-
-        Args:
-            target (ast.AST): The target AST Node.
-            target_type (Type): The TIFA type.
-
-        Returns:
-
-        """
-        if isinstance(target, ast.Name):
-            self.store_variable(target.id, target_type)
-        elif isinstance(target, (ast.Tuple, ast.List)):
-            for i, elt in enumerate(target.elts):
-                elt_type = target_type.iterate(LiteralNum(i))
-                self.assign_target(elt, elt_type)
-        elif isinstance(target, ast.Subscript):
-            left_hand_type = self.visit(target.value)
-            if isinstance(left_hand_type, ListType):
-                # TODO: Handle updating value in list
-                pass
-            elif isinstance(left_hand_type, DictType):
-                # TODO: Update this for Python 3.9, now that Slice notation has changed
-                if not isinstance(target.slice, ast.Index):
-                    # TODO: Can't subscript a dictionary assignment
-                    return None
-                literal = self.get_literal(target.slice.value)
-                if not literal:
-                    key_type = self.visit(target.slice.value)
-                    left_hand_type.empty = False
-                    left_hand_type.keys = [key_type.clone()]
-                    left_hand_type.values = [target_type.clone()]
-                elif left_hand_type.literals:
-                    original_type = left_hand_type.has_literal(literal)
-                    if not original_type:
-                        left_hand_type.update_key(literal, target_type.clone())
-                    elif not are_types_equal(original_type, target_type):
-                        # TODO: Fix "Dictionary" to be the name of the variable
-                        self._issue(type_changes(self.locate(), 'Dictionary', original_type, target_type))
-        elif isinstance(target, ast.Attribute):
-            left_hand_type = self.visit(target.value)
-            if isinstance(left_hand_type, InstanceType):
-                left_hand_type.add_attr(target.attr, target_type)
-            # TODO: Otherwise we attempted to assign to a non-instance
-            # TODO: Handle minor type changes (e.g., appending to an inner list)
-
     def _visit_collection_loop(self, node):
         was_empty = False
         # Handle the iteration list
@@ -259,69 +163,145 @@ class Tifa(TifaCore, ast.NodeVisitor):
         else:
             iter_type = self.visit(iter_list)
 
-        if iter_type.is_empty():
+        if iter_type.is_empty:
             # TODO: It should check if its ONLY ever iterating over an empty list.
             # For now, only reports if we are NOT in a function
             was_empty = True
             if len(self.scope_chain) == 1:
                 self._issue(iterating_over_empty_list(self.locate(iter_list), iter_list_name))
 
-        if not isinstance(iter_type, INDEXABLE_TYPES):
+        iter_subtype = iter_type.iterate()
+        if isinstance(iter_subtype, ImpossibleType):
             self._issue(iterating_over_non_list(self.locate(iter_list), iter_list_name, report=self.report))
 
-        iter_subtype = iter_type.iterate(LiteralNum(0))
 
         # Handle the iteration variable
-        iter_variable_name = self._walk_target(node.target, iter_subtype)
+        self.assign_target(node.target, iter_subtype, store_with_read=True)
 
         # Check that the iteration list and variable are distinct
-        if iter_variable_name and iter_list_name:
-            if iter_variable_name == iter_list_name:
-                self._issue(iteration_problem(self.locate(node.target), iter_variable_name))
+        if isinstance(node.target, ast.Name) and node.target.id == iter_list_name:
+            self._issue(iteration_problem(self.locate(node.target), node.target.id))
 
         return was_empty
 
+    def break_starred(self, elements):
+        leading, starred, trailing = [], [], []
+        all_elements = iter(elements)
+        for elt in all_elements:
+            if isinstance(elt, ast.Starred):
+                starred.append(elt)
+                break
+            else:
+                leading.append(elt)
+        else:
+            return leading, starred, trailing
+        for elt in all_elements:
+            trailing.append(elt)
+        return leading, starred, trailing
+
+    # TODO: Properly handle assignments with subscripts
+    def assign_target(self, target, target_type, operation=None, store_with_read=False):
+        """
+        Assign the type to the target, handling all kinds of assignment
+        statements, including Names, Tuples/Lists, Subscripts, and
+        Attributes.
+
+        Args:
+            target (ast.AST): The target AST Node.
+            target_type (Type): The new TIFA type.
+            operation (None | ast.op): The AugAssign operation, if there is one
+
+        Returns:
+
+        """
+        if isinstance(target, ast.Name):
+            original_value_type = self.visit(target)
+            if operation:
+                new_target_type = apply_binary_operation(operation, original_value_type, target_type)
+                if isinstance(new_target_type, ImpossibleType):
+                    self._issue(incompatible_types(self.locate(), operation, original_value_type, target_type, report=self.report))
+            else:
+                new_target_type = target_type
+            if store_with_read:
+                self.store_read_variable(target.id, new_target_type)
+            else:
+                self.store_variable(target.id, new_target_type)
+        elif isinstance(target, (ast.Tuple, ast.List)):
+            original_type = self.visit(target)
+            leading, starred, trailing = self.break_starred(target.elts)
+            tt, ot = target_type.break_apart(), original_type.break_apart()
+            for elt, elt_type, old_type in zip(leading, tt, ot):
+                self.assign_target(elt, elt_type)
+            if starred:
+                # TODO: Handle starred node's type changes
+                # if not is_subtype(target_type, old_type):
+                    # self._issue(type_changes(self.locate(), 'an element of NODE', old_type.singular_name, elt_type.singular_name))
+                self.assign_target(starred[0], target_type)
+                for elt, elt_type, old_type in zip(trailing, tt, ot):
+                    # BUG: Any trailing elements will be incorrectly offset, so won't work with finite length stuff
+                    self.assign_target(elt, elt_type)
+        elif isinstance(target, ast.Subscript):
+            original_value_type = self.visit(target.value)
+            origin = self.identify_caller(target.value)
+            original_indexing_type = self.visit(target.slice)
+            original_type = original_value_type.index(original_indexing_type)
+            if operation:
+                new_target_type = apply_binary_operation(operation, original_type, target_type)
+                if isinstance(new_target_type, ImpossibleType):
+                    self._issue(incompatible_types(self.locate(), operation, original_type, target_type, report=self.report))
+            else:
+                new_target_type = target_type
+            original_type.set_index(original_indexing_type, new_target_type)
+            if origin:
+                origin_type = self.load_variable(origin)
+                self.store_variable(origin, origin_type.type)
+        elif isinstance(target, ast.Attribute):
+            original_type = self.visit(target.value)
+            origin = self.identify_caller(target.value)
+            if operation:
+                new_target_type = apply_binary_operation(operation, original_type, target_type)
+                if isinstance(new_target_type, ImpossibleType):
+                    self._issue(incompatible_types(self.locate(), operation, original_type, target_type, report=self.report))
+            else:
+                new_target_type = target_type
+            original_type.add_attr(target.attr, new_target_type)
+            if origin:
+                origin_type = self.load_variable(origin)
+                if origin_type:
+                    self.store_variable(origin, origin_type.type)
+
     def visit_AnnAssign(self, node):
         """
-        TODO: Implement!
+
+        Args:
+            node (ast.AnnAssign):
+
+        Returns:
+
         """
         # Name, Attribute, or SubScript
         target = node.target
         # Type
         annotation = node.annotation
+        annotation_type = self.evaluate_type(annotation)
+        was_class_attribute = False
         # Optional assigned value
         value = node.value
         # 0 or 1, with 1 indicating pure names (not expressions)
         simple = node.simple
+
         # If it's a class attribute, then build up the type!
         if simple:
-            self.visit(annotation)
-            annotation = get_pedal_type_from_annotation(annotation, self)
             current_scope = self.scope_chain[0]
             if current_scope in self.class_scopes:
-                # TODO: Treat it as a different kind of ClassType? TypedDict?
                 self.class_scopes[current_scope].add_attr(target.id, annotation)
-
-    def visit_Expr(self, node):
-        """
-        Any expression being used as a statement.
-
-        Args:
-            node (AST): An Expr node
-
-        Returns:
-
-        """
-        value = self.visit(node.value)
-        if isinstance(node.value, ast.Call) and not isinstance(value, NoneType):
-            # TODO: Helper function to get name with title ("append method")
-            if isinstance(node.value.func, ast.Name):
-                call_type = 'function'
-            else:
-                call_type = 'method'
-            name = self.identify_caller(node.value)
-            self._issue(unused_returned_value(self.locate(), name,
-                                              call_type, value))
+                was_class_attribute = True
+        # TODO: Allow setting for optional type coercion, or throw error
+        if value:
+            self.visit(value)
+            # self.assign_target(target, self.visit(value))
+        # Make local variable either way
+        self.assign_target(target, annotation_type, store_with_read=was_class_attribute)
 
     def visit_Assign(self, node):
         """
@@ -329,47 +309,30 @@ class Tifa(TifaCore, ast.NodeVisitor):
         __targets__ = __value__
 
         Args:
-            node (AST): An Assign node
+            node (ast.Assign): An Assign node
         Returns:
             None
         """
         # Handle value
         value_type = self.visit(node.value)
-        # Handle targets
-        self._visit_nodes(node.targets)
-
-        self.walk_targets(node.targets, value_type, self.assign_target)
+        # Apply value to all targets
+        for target in node.targets:
+            self.assign_target(target, value_type)
 
     def visit_AugAssign(self, node):
         """
 
         Args:
-            node:
+            node (ast.AugAssign):
 
         Returns:
 
         """
         # Handle value
         right = self.visit(node.value)
-        # Handle target
-        left = self.visit(node.target)
-        # Target is always a Name, Subscript, or Attribute
-        name = self.identify_caller(node.target)
-
-        # Handle operation
-        self.load_variable(name)
-        if isinstance(left, UnknownType) or isinstance(right, UnknownType):
-            return UnknownType()
-        elif type(node.op) in VALID_BINOP_TYPES:
-            op_lookup = VALID_BINOP_TYPES[type(node.op)]
-            if type(left) in op_lookup:
-                op_lookup = op_lookup[type(left)]
-                if type(right) in op_lookup:
-                    op_lookup = op_lookup[type(right)]
-                    result_type = op_lookup(left, right)
-                    self.assign_target(node.target, result_type)
-                    return result_type
-        self._issue(incompatible_types(self.locate(), node.op, left, right, report=self.report))
+        if isinstance(node.target, ast.Name):
+            self.load_variable(self.identify_caller(node.target))
+        self.assign_target(node.target, right, node.op)
 
     def visit_Attribute(self, node):
         """
@@ -383,10 +346,12 @@ class Tifa(TifaCore, ast.NodeVisitor):
         # Handle value
         value_type = self.visit(node.value)
         self.check_common_bad_lookups(value_type, node.attr, node.value)
-        # Handle ctx
-        # TODO: Handling contexts
         # Handle attr
-        result = value_type.load_attr(node.attr, self)
+        result = value_type.get_attr(node.attr)
+        # Set up self if this was a function (because now it's a method!)
+        # TODO: Handle static/class functions differently I guess?
+        if isinstance(result, FunctionType):
+            result = result.as_method(value_type)
         return result
 
     def visit_BinOp(self, node):
@@ -401,19 +366,12 @@ class Tifa(TifaCore, ast.NodeVisitor):
         # Handle left and right
         left = self.visit(node.left)
         right = self.visit(node.right)
+        operation = node.op
 
-        # Handle operation
-        if isinstance(left, UnknownType) or isinstance(right, UnknownType):
-            return UnknownType()
-        elif type(node.op) in VALID_BINOP_TYPES:
-            op_lookup = VALID_BINOP_TYPES[type(node.op)]
-            if type(left) in op_lookup:
-                op_lookup = op_lookup[type(left)]
-                if type(right) in op_lookup:
-                    op_lookup = op_lookup[type(right)]
-                    return op_lookup(left, right)
-        self._issue(incompatible_types(self.locate(), node.op, left, right, report=self.report))
-        return UnknownType()
+        new_target_type = apply_binary_operation(operation, left, right)
+        if isinstance(new_target_type, ImpossibleType):
+            self._issue(incompatible_types(self.locate(), operation, left, right, report=self.report))
+        return new_target_type
 
     def visit_Bool(self, node):
         """
@@ -437,64 +395,75 @@ class Tifa(TifaCore, ast.NodeVisitor):
 
         """
         # Handle left and right
-        values = []
-        for value in node.values:
-            values.append(self.visit(value))
-
-        # TODO: Truthiness is not supported! Probably need a Union type
-        # TODO: Literals used as truthy value
-
+        values = [self.visit(value) for value in node.values]
         # Handle operation
-        return BoolType()
+        # Actually, the operations are always the same behavior!
+        # Handle truthiness
+        if self.get_setting('truthiness_returns_booleans'):
+            return BoolType()
+        elif not values:
+            return ImpossibleType()
+        # All same type? Then return the first one!
+        elif all(is_subtype(values[0], other) for other in values[1:]):
+            return values[0]
+        # Oh no, type union is necessary!
+        else:
+            return TypeUnion(values)
+
+    def load_root_variable(self, node, position=None):
+        root_name = self.identify_caller(node)
+        if root_name is not None:
+            variable = self.find_variable_scope(root_name)
+            if variable.exists:
+                return variable.state
+        return None
 
     def visit_Call(self, node):
-        """
-
-        Args:
-            node:
-
-        Returns:
-
-        """
-        # Handle func part (Name or Attribute)
+        # Handle func part
         function_type = self.visit(node.func)
         # TODO: Need to grab the actual type in some situations
-        callee = self.identify_caller(node)
+        original_callee = self.load_root_variable(node)
 
         # Handle args
         arguments = [self.visit(arg) for arg in node.args] if node.args else []
+        keywords = [(kwarg.arg, self.visit(kwarg.value))
+                    for kwarg in node.keywords] if node.keywords else {}
 
         # Check special common mistakes
 
-        # TODO: Handle keywords
-        # TODO: Handle star args
-        # TODO: Handle kwargs
+        if isinstance(function_type, BuiltinConstructorType):
+            constructor = function_type.definition
+            return constructor(self, function_type, original_callee,
+                               arguments, keywords, self.locate())
         if isinstance(function_type, FunctionType):
             # Test if we have called this definition before
             if function_type.definition not in self.definition_chain:
                 self.definition_chain.append(function_type.definition)
                 # Function invocation
-                result = function_type.definition(self, function_type, callee,
-                                                  arguments, self.locate())
+                result = function_type.definition(self, function_type, original_callee,
+                                                  arguments, keywords, self.locate())
                 self.definition_chain.pop()
                 return result
             else:
-                self._issue(recursive_call(self.locate(), callee, report=self.report))
+                self._issue(recursive_call(self.locate(), original_callee, report=self.report))
         elif isinstance(function_type, ClassType):
             constructor = function_type.get_constructor().definition
             self.definition_chain.append(constructor)
-            result = constructor(self, constructor, callee, arguments, self.locate())
+            new_instance = constructor(self, constructor, original_callee, arguments, keywords, self.locate())
             self.definition_chain.pop()
             if '__init__' in function_type.fields:
-                initializer = function_type.fields['__init__']
+                initializer = function_type.fields['__init__'].as_method(new_instance)
                 if isinstance(initializer, FunctionType):
                     self.definition_chain.append(initializer)
-                    initializer.definition(self, initializer, result, [result] + arguments, self.locate())
+                    initializer.definition(self, initializer, new_instance, [new_instance] + arguments, keywords, self.locate())
                     self.definition_chain.pop()
-            return result
-        elif isinstance(function_type, (NumType, StrType, BoolType, NoneType)):
-            self._issue(not_a_function(self.locate(), callee, function_type, report=self.report))
-        return UnknownType()
+            return new_instance
+        elif isinstance(function_type, (IntType, FloatType, NumType, ListType,
+                                        DictType, SetType, TupleType, InstanceType,
+                                        StrType, BoolType, NoneType, LiteralValue)):
+            self._issue(not_a_function(self.locate(), original_callee, function_type, report=self.report))
+            return ImpossibleType()
+        return AnyType()
 
     def visit_ClassDef(self, node):
         """
@@ -504,15 +473,26 @@ class Tifa(TifaCore, ast.NodeVisitor):
         """
         class_name = node.name
         parents = [self.visit(base) for base in node.bases]
-        new_class_type = ClassType(class_name, parents)
+        new_class_type = ClassType(class_name, {}, parents)
         self.store_variable(class_name, new_class_type)
-        # TODO: Define a new scope definition that executes the body
-        # TODO: find __init__, execute that
-        # TODO: handle Record subclasses
         definitions_scope = self.scope_chain[:]
         class_scope = NewScope(self, definitions_scope, class_type=new_class_type)
+        # TODO: Handle metaclass... somehow?
+        #self._visit_nodes(node.keywords)
         with class_scope:
-            self.generic_visit(node)
+            self._visit_nodes(node.body)
+        new_class_type = self.apply_decorators(class_name, new_class_type, node.decorator_list)
+        return new_class_type
+
+    def apply_decorators(self, new_name, new_type, decorators):
+        for decorator in reversed(decorators):
+            old_type = self.load_variable(new_name)
+            decorator_type = self.visit(decorator)
+            original_callee = self.load_root_variable(decorator)
+            new_type = decorator_type.definition(self, decorator_type, original_callee,
+                                                 [new_type], {}, self.locate())
+            self.store_variable(new_name, new_type)
+        return new_type
 
     def visit_Compare(self, node):
         """
@@ -532,11 +512,10 @@ class Tifa(TifaCore, ast.NodeVisitor):
             if isinstance(op, (ast.Eq, ast.NotEq, ast.Is, ast.IsNot)):
                 continue
             elif isinstance(op, (ast.Lt, ast.LtE, ast.GtE, ast.Gt)):
-                if are_types_equal(left, right):
-                    if isinstance(left, ORDERABLE_TYPES):
-                        continue
+                if type(right) in left.orderable:
+                    continue
             elif isinstance(op, (ast.In, ast.NotIn)):
-                if isinstance(right, INDEXABLE_TYPES):
+                if right.allows_membership(left):
                     continue
             self._issue(incompatible_types(self.locate(), op, left, right, report=self.report))
         return BoolType()
@@ -547,10 +526,17 @@ class Tifa(TifaCore, ast.NodeVisitor):
         Args:
             node:
         """
+        self.fill_in_location(node, self.node_chain[-2])
         self._visit_collection_loop(node)
         # Handle ifs, unless they're blank (None in Skulpt :)
         if node.ifs:
             self.visit_statements(node.ifs)
+
+    def fill_in_location(self, node, source_node):
+        node.lineno = source_node.lineno
+        node.end_lineno = source_node.end_lineno
+        node.col_offset = source_node.col_offset
+        node.end_col_offset = source_node.end_col_offset
 
     def visit_Dict(self, node):
         """
@@ -560,30 +546,30 @@ class Tifa(TifaCore, ast.NodeVisitor):
         - record
         TODO: Handle records appropriately
         """
-        result_type = DictType()
-        if not node.keys:
-            result_type.empty = True
+        items = [(self.visit(key), self.visit(value))
+                 for key, value in zip(node.keys, node.values) if key is not None]
+        # Unpack starred dictionaries
+        for key, value in zip(node.keys, node.values):
+            if key is None:
+                value_type = self.visit(value)
+                if isinstance(value_type, DictType):
+                    items.extend([
+                        (k, v) for k, v in value_type.element_types
+                    ])
+        # Empty dictionary
+        if not items:
+            return DictType([])
+        # All literal keys
+        if all(isinstance(k, LiteralValue) for k, _ in items):
+            return DictType([(k, v) for k, v in items])
+        # Find if all matched type
+        first_key = widest_type([key for key, value in items])
+        first_value = widest_type([value for key, value in items])
+        if first_key is not None and first_value is not None:
+            return DictType([(first_key, first_value)])
         else:
-            result_type.empty = False
-            all_literals = True
-            keys, values, literals = [], [], []
-            for key, value in zip(node.keys, node.values):
-                literal = self.get_literal(key)
-                key, value = self.visit(key), self.visit(value)
-                values.append(value)
-                keys.append(key)
-                if literal is not None:
-                    literals.append(literal)
-                else:
-                    all_literals = False
-
-            if all_literals:
-                result_type.literals = literals
-                result_type.values = values
-            else:
-                result_type.keys = node.keys[0]
-                result_type.values = node.values[0]
-        return result_type
+            # Resort to just matching the types?
+            return DictType([(k, v) for k, v in items])
 
     def visit_DictComp(self, node):
         """
@@ -594,12 +580,33 @@ class Tifa(TifaCore, ast.NodeVisitor):
         Returns:
 
         """
-        # TODO: Handle comprehension scope
-        for generator in node.generators:
-            self.visit(generator)
-        keys = self.visit(node.key)
-        values = self.visit(node.value)
-        return DictType(keys=keys, values=values)
+        generator_scope = NewScope(self, self.scope_chain[:])
+        with generator_scope:
+            self._visit_nodes(node.generators)
+            keys = self.visit(node.key)
+            values = self.visit(node.value)
+            return DictType([(keys, values)])
+
+    def visit_Expr(self, node):
+        """
+        Any expression being used as a statement.
+
+        Args:
+            node (AST): An Expr node
+
+        Returns:
+
+        """
+        value = self.visit(node.value)
+        if isinstance(node.value, ast.Call) and not isinstance(value, NoneType):
+            # TODO: Helper function to get name with title ("append method")
+            if isinstance(node.value.func, ast.Name):
+                call_type = 'function'
+            else:
+                call_type = 'method'
+            name = self.identify_caller(node.value)
+            self._issue(unused_returned_value(self.locate(), name,
+                                              call_type, value))
 
     def visit_For(self, node):
         """
@@ -609,10 +616,10 @@ class Tifa(TifaCore, ast.NodeVisitor):
         """
         was_empty = self._visit_collection_loop(node)
         # Handle the bodies
-        #if not was_empty:
-        #this_path_id = self.path_chain[0]
-        #non_empty_path = NewPath(self, this_path_id, "f")
-        #with non_empty_path:
+        # if not was_empty:
+        # this_path_id = self.path_chain[0]
+        # non_empty_path = NewPath(self, this_path_id, "f")
+        # with non_empty_path:
         self.visit_statements(node.body)
         self.visit_statements(node.orelse)
 
@@ -625,59 +632,77 @@ class Tifa(TifaCore, ast.NodeVisitor):
         Returns:
 
         """
-        # Name
         function_name = node.name
         position = self.locate()
         definitions_scope = self.scope_chain[:]
+        definition = self.make_function(function_name, definitions_scope, position, node)
+        function = FunctionType(function_name, definition=definition)
+        self.store_variable(function_name, function)
 
-        def definition(tifa, call_type, call_name, parameters, call_position):
-            """
+        if len(self.node_chain) > 2:
+            self._issue(nested_function_definition(self.locate(), function_name))
 
-            Args:
-                tifa:
-                call_type:
-                call_name:
-                parameters:
-                call_position:
+        return self.apply_decorators(function_name, function, node.decorator_list)
 
-            Returns:
+    def make_function(self, function_name, definitions_scope, position, node):
+        is_lambda = function_name is None
 
-            """
+        class SkipType:
+            pass
+        # Pull apart args into a coherent set of data PRIOR to execution
+        args = node.args
+        pos_parameters = args.posonlyargs + args.args if IS_AT_LEAST_PYTHON_38 else args.args
+        none_padding = [SkipType] * (len(pos_parameters) - len(args.defaults))
+        pos_defaults = none_padding + [self.visit(d) for d in args.defaults]
+        kwarg_parameter = args.kwarg
+        vararg_parameter = args.vararg
+
+        # TODO: Finish kwargs
+        named_parameters = args.kwonlyargs
+        named_defaults = [self.visit(d) if d is not None else AnyType() for d in args.kw_defaults]
+        expected_returns = self.evaluate_type(node.returns) if not is_lambda and node.returns else None
+
+        def definition(tifa, function, callee_name, arguments, named_arguments, call_position):
             function_scope = NewScope(self, definitions_scope)
             with function_scope:
                 # Process arguments
-                args = node.args.args
-                if len(args) != len(parameters):
-                    self._issue(incorrect_arity(self.locate(), function_name, report=self.report))
-                # TODO: Handle special types of parameters
-                for arg, parameter in zip(args, parameters):
-                    name = arg.arg
-                    if arg.annotation:
-                        arg_type = self.visit(arg.annotation)
-                        annotation = get_pedal_type_from_annotation(arg.annotation, self)
-                        # TODO: Use parameter information to "fill in" empty lists
-                        if isinstance(parameter, ListType) and isinstance(annotation, ListType):
-                            if isinstance(parameter.subtype, UnknownType):
-                                parameter.subtype = annotation.subtype
-                        # TODO: Check that arg.type and parameter type match!
-                        if not are_types_equal(annotation, parameter, True):
-                            self._issue(parameter_type_mismatch(self.locate(), name, annotation, parameter))
-                    if parameter is not None:
-                        parameter = parameter.clone_mutably()
-                        self.create_variable(name, parameter, position)
-                # Too many arguments
-                if len(args) < len(parameters):
-                    for undefined_parameter in parameters[len(args):]:
-                        self.create_variable(name, UnknownType(), position)
-                # Not enough arguments
-                if len(args) > len(parameters):
-                    for arg in args[len(parameters):]:
-                        if arg.annotation:
-                            self.visit(arg.annotation)
-                            annotation = get_pedal_type_from_annotation(arg.annotation, self)
+                if len(arguments) + len(named_arguments) != len(pos_parameters) and not vararg_parameter:
+                    self._issue(incorrect_arity(self.locate(), function_name,
+                                                len(arguments), len(pos_parameters), report=self.report))
+                for parameter, default, argument in zip(pos_parameters, pos_defaults, arguments):
+                    parameter_name = parameter.arg
+                    if parameter.annotation:
+                        annotation = self.evaluate_type(parameter.annotation)
+                        if is_subtype(argument, annotation):
+                            specify_subtype(annotation, argument)
                         else:
-                            annotation = UnknownType()
-                        self.create_variable(arg.arg, annotation, position)
+                            self._issue(parameter_type_mismatch(self.locate(), parameter_name,
+                                                                annotation, argument))
+                    elif default is not SkipType:
+                        if is_subtype(argument, default):
+                            specify_subtype(default, argument)
+                        else:
+                            self._issue(parameter_type_mismatch(self.locate(), parameter_name,
+                                                                default, argument))
+                    if argument is not None:
+                        argument_type = argument.clone_mutably()
+                        self.create_variable(parameter_name, argument_type, position)
+                # Too many arguments
+                if len(pos_parameters) < len(arguments):
+                    if vararg_parameter:
+                        the_rest = arguments[len(pos_parameters):]
+                        self.create_variable(vararg_parameter.arg, TupleType(the_rest), position)
+                # Not enough arguments
+                if len(pos_parameters) > len(arguments):
+                    for parameter in pos_parameters[len(arguments):]:
+                        if parameter.annotation:
+                            annotation = self.evaluate_type(parameter.annotation)
+                        else:
+                            annotation = AnyType()
+                        self.create_variable(parameter.arg, annotation, position)
+                if is_lambda:
+                    return self.visit(node.body)
+
                 self.visit_statements(node.body)
                 return_state = self.find_variable_scope("*return")
                 return_value = NoneType()
@@ -686,23 +711,45 @@ class Tifa(TifaCore, ast.NodeVisitor):
                 if return_state.exists and return_state.in_scope:
                     return_state = self.load_variable("*return", call_position)
                     return_value = return_state.type
-                    if node.returns:
-                        # self.visit(node.returns)
-                        returns = get_pedal_type_from_annotation(node.returns, self)
-                        if not are_types_equal(return_value, returns, True):
+                    if expected_returns:
+                        if not is_subtype(return_value, expected_returns):
                             self._issue(multiple_return_types(return_state.position,
-                                                              returns.precise_description(),
-                                                              return_value.precise_description(),
+                                                              expected_returns.singular_name,
+                                                              return_value.singular_name,
                                                               report=self.report))
             return return_value
+        return definition
 
-        function = FunctionType(definition=definition, name=function_name)
-        self.store_variable(function_name, function)
-
-        if len(self.node_chain) > 2:
-            self._issue(nested_function_definition(self.locate(), function_name))
-
-        return function
+    def evaluate_type(self, node):
+        string_literal = False
+        if isinstance(node, ast.Str):
+            string_literal = node.s
+        elif isinstance(node, ast.Constant) and isinstance(node.value, str):
+            string_literal = node.value
+        if string_literal is not False:
+            if self.get_setting('evaluate_string_literal_types'):
+                # TODO: Handle string literal types properly!
+                pass
+            else:
+                return LiteralStr(string_literal)
+        elif isinstance(node, ast.List):
+            if node.elts:
+                return ListType(False, self.evaluate_type(node.elts[0]))
+            else:
+                return ListType(True)
+        elif isinstance(node, ast.Set) and node.elts:
+            return TypeUnion([self.evaluate_type(e) for e in node.elts])
+        elif isinstance(node, ast.Tuple) and node.elts:
+            return TupleType([self.evaluate_type(e) for e in node.elts])
+        elif isinstance(node, ast.Dict):
+            if node.keys and node.values:
+                return DictType([(self.evaluate_type(k), self.evaluate_type(v))
+                                 for k, v in zip(node.keys, node.values)])
+            else:
+                return DictType([])
+        else:
+            evaluated = self.visit(node)
+            return evaluated.as_type(self, self.locate(node))
 
     def visit_GeneratorExp(self, node):
         """
@@ -713,10 +760,10 @@ class Tifa(TifaCore, ast.NodeVisitor):
         Returns:
 
         """
-        # TODO: Handle comprehension scope
-        for generator in node.generators:
-            self.visit(generator)
-        return GeneratorType(self.visit(node.elt))
+        generator_scope = NewScope(self, self.scope_chain[:])
+        with generator_scope:
+            self._visit_nodes(node.generators)
+            return GeneratorType(False, self.visit(node.elt))
 
     def visit_If(self, node):
         """
@@ -768,11 +815,11 @@ class Tifa(TifaCore, ast.NodeVisitor):
         # Visit the orelse
         orelse = self.visit(node.orelse)
 
-        if are_types_equal(body, orelse):
+        if is_subtype(body, orelse):
             return body
 
         # TODO: Union type?
-        return UnknownType()
+        return TypeUnion([body, orelse])
 
     def visit_Import(self, node):
         """
@@ -801,7 +848,7 @@ class Tifa(TifaCore, ast.NodeVisitor):
                 module_name = node.module
                 asname = alias.asname or alias.name
                 module_type = self.load_module(module_name)
-            name_type = module_type.load_attr(alias.name, self)
+            name_type = module_type.get_attr(alias.name)
             self.store_variable(asname, name_type)
 
     def visit_Lambda(self, node):
@@ -813,42 +860,10 @@ class Tifa(TifaCore, ast.NodeVisitor):
         Returns:
 
         """
-        # Name
         position = self.locate()
         definitions_scope = self.scope_chain[:]
-
-        def definition(tifa, call_type, call_name, parameters, call_position):
-            """
-
-            Args:
-                tifa:
-                call_type:
-                call_name:
-                parameters:
-                call_position:
-
-            Returns:
-
-            """
-            function_scope = NewScope(self, definitions_scope)
-            with function_scope:
-                # Process arguments
-                args = node.args.args
-                if len(args) != len(parameters):
-                    self._issue(incorrect_arity(position, "lambda", report=self.report))
-                # TODO: Handle special types of parameters
-                for arg, parameter in zip(args, parameters):
-                    name = arg.arg
-                    if parameter is not None:
-                        parameter = parameter.clone_mutably()
-                        self.store_variable(name, parameter, position)
-                if len(args) < len(parameters):
-                    for undefined_parameter in parameters[len(args):]:
-                        self.store_variable(name, UnknownType(), position)
-                return_value = self.visit(node.body)
-            return return_value
-
-        return FunctionType(definition=definition)
+        definition = self.make_function(None, definitions_scope, position, node)
+        return FunctionType("*lambda", definition=definition)
 
     def visit_List(self, node):
         """
@@ -859,15 +874,21 @@ class Tifa(TifaCore, ast.NodeVisitor):
         Returns:
 
         """
-        result_type = ListType()
-        if node.elts:
-            result_type.empty = False
-            # TODO: confirm homogenous subtype
-            for elt in node.elts:
-                result_type.subtype = self.visit(elt)
+        if not node.elts:
+            return ListType(True)
+
+        # All literal keys
+        elements = [self.visit(v) for v in node.elts]
+        if all(isinstance(v, LiteralValue) for v in elements):
+            # TODO: Allow type union instead?
+            return ListType(False, elements[0].promote())
+        # Find if all matched type
+        first_value = widest_type(elements)
+        if first_value is not None:
+            return ListType(False, first_value)
         else:
-            result_type.empty = True
-        return result_type
+            # Resort to just matching the types?
+            return ListType(False, TypeUnion(elements))
 
     def visit_ListComp(self, node):
         """
@@ -879,9 +900,10 @@ class Tifa(TifaCore, ast.NodeVisitor):
 
         """
         # TODO: Handle comprehension scope
-        for generator in node.generators:
-            self.visit(generator)
-        return ListType(self.visit(node.elt))
+        generator_scope = NewScope(self, self.scope_chain[:])
+        with generator_scope:
+            self._visit_nodes(node.generators)
+            return ListType(False, self.visit(node.elt))
 
     def visit_NameConstant(self, node):
         """
@@ -894,7 +916,7 @@ class Tifa(TifaCore, ast.NodeVisitor):
         """
         value = node.value
         if isinstance(value, bool):
-            return BoolType()
+            return LiteralBool(value)
         else:
             return NoneType()
 
@@ -912,12 +934,12 @@ class Tifa(TifaCore, ast.NodeVisitor):
             self._issue(unconnected_blocks(self.locate()))
         if isinstance(node.ctx, ast.Load):
             if name == "True" or name == "False":
-                return BoolType()
+                return LiteralBool(name == "True")
             elif name == "None":
                 return NoneType()
             else:
                 variable = self.find_variable_scope(name)
-                builtin = get_builtin_function(name)
+                builtin = get_builtin_name(name)
                 if not variable.exists and builtin:
                     return builtin
                 else:
@@ -928,7 +950,7 @@ class Tifa(TifaCore, ast.NodeVisitor):
             if variable.exists:
                 return variable.state.type
             else:
-                return UnknownType()
+                return AnyType()
 
     def visit_Num(self, node):
         """
@@ -939,11 +961,11 @@ class Tifa(TifaCore, ast.NodeVisitor):
         Returns:
 
         """
-        return NumType()
+        return LiteralInt(node.n) if isinstance(node.n, int) else LiteralFloat(node.n)
 
     def visit_Constant(self, node) -> Type:
         """ Handle new 3.8's Constant node """
-        return get_pedal_type_from_value(node.value)
+        return get_pedal_type_from_value(node.value, self.evaluate_type)
 
     def visit_Return(self, node):
         """
@@ -961,7 +983,21 @@ class Tifa(TifaCore, ast.NodeVisitor):
 
     def visit_Set(self, node):
         # Fun fact, it's impossible to make a literal empty set
-        return SetType(subtype=self.visit(node.elts[0]), empty=False)
+        if not node.elts:
+            return SetType(True)
+
+        # All literal keys
+        elements = [self.visit(v) for v in node.elts]
+        if all(isinstance(v, LiteralValue) for v in elements):
+            # TODO: Allow type union instead?
+            return SetType(False, elements[0].promote())
+        # Find if all matched type
+        first_value = widest_type(elements)
+        if first_value is not None:
+            return SetType(False, first_value)
+        else:
+            # Resort to just matching the types?
+            return SetType(False, TypeUnion(elements))
 
     def visit_SetComp(self, node):
         """
@@ -973,9 +1009,10 @@ class Tifa(TifaCore, ast.NodeVisitor):
 
         """
         # TODO: Handle comprehension scope
-        for generator in node.generators:
-            self.visit(generator)
-        return SetType(subtype=self.visit(node.elt))
+        generator_scope = NewScope(self, self.scope_chain[:])
+        with generator_scope:
+            self._visit_nodes(node.generators)
+            return SetType(False, self.visit(node.elt))
 
     def visit_statements(self, nodes):
         """
@@ -1000,22 +1037,20 @@ class Tifa(TifaCore, ast.NodeVisitor):
         Returns:
 
         """
-        if node.s == "":
-            return StrType(True)
-        else:
-            return StrType(False)
+        return LiteralStr(node.s)
 
     def visit_JoinedStr(self, node):
         values = [self.visit(expr) for expr in node.values]
         # The result will be all StrType
-        return StrType(empty=all(n.empty for n in values))
+        return StrType(is_empty=all(isinstance(n, (StrType, LiteralStr)) and n.is_empty
+                                    for n in values))
 
     def visit_FormattedValue(self, node):
         value = self.visit(node.value)
         if isinstance(value, StrType):
             return value
         else:
-            return StrType(empty=False)
+            return StrType(is_empty=False)
 
     def visit_Subscript(self, node):
         """
@@ -1028,31 +1063,14 @@ class Tifa(TifaCore, ast.NodeVisitor):
         """
         # Handle value
         value_type = self.visit(node.value)
-        # Handle slice
-        if IS_PYTHON_39 and isinstance(node.slice, ast.Tuple):
-            # TODO: Do something about extslices (especially since students stumble into this accidentally)
-            pass
-        elif not IS_PYTHON_39 and isinstance(node.slice, ast.ExtSlice):
-            # TODO: Do something about extslices (especially since students stumble into this accidentally)
-            pass
-        elif isinstance(node.slice, ast.Slice):
-            self.visit_Slice(node.slice)
-            return value_type
+        slice_type = self.visit(node.slice)
+        result = value_type.index(slice_type)
+        if isinstance(result, ImpossibleType):
+            self._issue(invalid_indexing(self.locate(), value_type, slice_type))
+        if isinstance(node.slice, ast.Slice):
+            return value_type.shallow_clone()
         else:
-            if IS_PYTHON_39:
-                slice = node.slice
-            else:
-                slice = node.slice.value
-            literal = self.get_literal(slice)
-            if literal is None:
-                literal = get_pedal_literal_from_pedal_type(self.visit(slice))
-            result = value_type.index(literal)
-            # TODO: Is this sufficient? Maybe we should be throwing?
-            if isinstance(result, UnknownType):
-                self._issue(invalid_indexing(self.locate(), value_type,
-                                             literal.type()))
-            else:
-                return result
+            return result
 
     def visit_Slice(self, node):
         """ Handles a slice by visiting its components; cannot return a value
@@ -1065,17 +1083,22 @@ class Tifa(TifaCore, ast.NodeVisitor):
         if node.step is not None:
             self.visit(node.step)
 
+    def visit_Index(self, node):
+        return self.visit(node.value)
+
+    def visit_ExtSlice(self, node):
+        return TupleType([self.visit(d) for d in node.dims])
+
+    def visit_Starred(self, node):
+        return self.visit(node.value).break_apart()
+
     def visit_Tuple(self, node) -> TupleType:
-        """ Handle Tuple literal """
-        result_type = TupleType()
+        # Fun fact, it's impossible to make a literal empty set
         if not node.elts:
-            result_type.empty = True
-            result_type.subtypes = []
-        else:
-            result_type.empty = False
-            # TODO: confirm homogenous subtype
-            result_type.subtypes = [self.visit(elt) for elt in node.elts]
-        return result_type
+            return TupleType(True)
+
+        # All literal keys
+        return TupleType([self.visit(v) for v in node.elts])
 
     def visit_UnaryOp(self, node):
         """
@@ -1087,17 +1110,8 @@ class Tifa(TifaCore, ast.NodeVisitor):
 
         """
         # Handle operand
-        operand = self.visit(node.operand)
-
-        if isinstance(node.op, ast.Not):
-            return BoolType()
-        elif isinstance(operand, UnknownType):
-            return UnknownType()
-        elif type(node.op) in VALID_UNARYOP_TYPES:
-            op_lookup = VALID_UNARYOP_TYPES[type(node.op)]
-            if type(operand) in op_lookup:
-                return op_lookup[type(operand)]()
-        return UnknownType()
+        operand_type = self.visit(node.operand)
+        return apply_unary_operation(node.op, operand_type)
 
     def visit_While(self, node):
         """
@@ -1139,7 +1153,7 @@ class Tifa(TifaCore, ast.NodeVisitor):
         """
         for item in node.items:
             type_value = self.visit(item.context_expr)
-            self.visit(item.optional_vars)
-            self._walk_target(item.optional_vars, type_value)
+            if item.optional_vars is not None:
+                self.assign_target(item.optional_vars, type_value)
         # Handle the bodies
         self.visit_statements(node.body)

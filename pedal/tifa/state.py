@@ -1,6 +1,7 @@
 """
 Classes and functions for managing the State of a variable.
 """
+from pedal.types.new_types import is_subtype
 
 
 def check_trace(state):
@@ -89,5 +90,7 @@ class State:
         Retrieve all the types that this variable took on over its entire
         trace.
         """
+        from pedal.types.normalize import normalize_type
+        a_type = normalize_type(a_type).as_type()
         past_types = check_trace(self)
-        return any(past_type.is_equal(a_type) for past_type in past_types)
+        return any(is_subtype(past_type, a_type) for past_type in past_types)
