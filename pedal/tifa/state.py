@@ -13,7 +13,7 @@ def check_trace(state):
             history of.
 
     Returns:
-        list[:py:class:`pedal.types.definitions.Type`]: The list of all types
+        list[:py:class:`pedal.types.new_types.Type`]: The list of all types
             that this State ever took on.
     """
     past_types = [state.type]

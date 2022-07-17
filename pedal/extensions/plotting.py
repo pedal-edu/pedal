@@ -10,7 +10,7 @@ from pedal.assertions import ensure_function_call, prevent_function_call
 from pedal.core.feedback import FeedbackResponse
 from pedal.core.report import MAIN_REPORT
 from pedal.types.builtin import BUILTIN_MODULES
-from pedal.types.definitions import ModuleType, FunctionType, NoneType
+from pedal.types.new_types import ModuleType, FunctionType, NoneType
 from pedal.cait.find_node import function_is_called
 from pedal.cait.cait_api import parse_program, def_use_error
 from pedal.sandbox.commands import get_sandbox

@@ -121,6 +121,9 @@ class Formatter:
     def negative_mark(self):
         return "×"
 
+    def indent(self):
+        return "    "
+
 
 class HtmlFormatter(Formatter):
 
@@ -216,6 +219,9 @@ class HtmlFormatter(Formatter):
                 f"   <tr{header_class}>\n{header}\n  </tr>"
                 f"   {body}"
                 f"</table>")
+
+    def indent(self):
+        return "&nbsp;"*4
 
     def check_mark(self):
         return self.html_span("&#10004;", "pedal-positive-mark")

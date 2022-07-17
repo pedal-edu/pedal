@@ -188,13 +188,14 @@ def make_inputs(input_list, repeat=None):
     return mock_input
 
 
-def create_module(module_name):
+def create_module(module_names):
     """
     Creates empty ModuleTypes based on the ``module_name``. Correctly
     creates parent modules for submodules as needed to fill in the path.
 
     Args:
-        module_name: A dot-separated string of modules, as if for ``import``.
+        module_name: A dot-separated string of modules, as if for ``import``. A list of
+            names can also be passed in instead. If multiple names are given, they should all have the same root!
 
     Returns:
         :py:class:`types.ModuleType`: The root module created.
@@ -202,27 +203,45 @@ def create_module(module_name):
             modules, including the root and the actual target.
         :py:class:`types.ModuleType`: The target module created.
     """
-    submodule_names = module_name.split(".")
+    if isinstance(module_names, str):
+        module_names = [module_names]
+    if not module_names:
+        raise ValueError("No modules provided; need at least one module to create!")
+    root = None
     modules = {}
-    root = types.ModuleType(submodule_names[0])
-    modules[submodule_names[0]] = root
-    reconstructed_path = submodule_names[0]
-    for submodule_name in submodule_names[1:]:
-        reconstructed_path += "." + submodule_name
-        new_submodule = types.ModuleType(reconstructed_path)
-        setattr(root, submodule_name, new_submodule)
-        modules[reconstructed_path] = new_submodule
-    return root, modules, modules[module_name]
+    for module_name in module_names:
+        submodule_names = module_name.split(".")
+        if root is None:
+            root = types.ModuleType(submodule_names[0])
+        modules[submodule_names[0]] = root
+        reconstructed_path = submodule_names[0]
+        for submodule_name in submodule_names[1:]:
+            reconstructed_path += "." + submodule_name
+            new_submodule = types.ModuleType(reconstructed_path)
+            setattr(root, submodule_name, new_submodule)
+            modules[reconstructed_path] = new_submodule
+    return root, modules, modules[module_names[0]]
 
 
 class MockModule:
+    SUBMODULES = {}
+
     def _generate_patches(self):
         return {k: v for k, v in vars(self).items()
                 if not k.startswith('_')}
 
-    def add_to_module(self, module):
+    def add_to_module(self, main_module, submodules=None):
         for name, value in self._generate_patches().items():
-            setattr(module, name, value)
+            setattr(main_module, name, value)
+        for submodule_name in self.SUBMODULES:
+            property_name = submodule_name.split('.', maxsplit=1)[1]
+            mock_submodule = getattr(main_module, property_name)
+            # the actual created Module object
+            submodule = submodules[submodule_name]
+            # Populate the actual module object with the fake submodule's data
+            mock_submodule.add_to_module(submodule)
+            # Update the main module to point to the actual module, instead of the fake submodule
+            setattr(main_module, property_name, submodule)
 
 
 class MockDictModule(MockModule):
@@ -262,275 +281,5 @@ class MockPedal(BlockedModule):
     module_name = "pedal"
 
 
-class MockTurtle(MockModule):
-    """
-    Mock Turtle Module that can be used to trace turtle calls.
+from pedal.sandbox.library import *
 
-    Attributes:
-        calls (list of dict): The traced list of calls
-        # TODO: it'd be awesome to have a way to construct a representation
-        #       of the drawing result that we could autograde!
-    """
-    module_name = 'turtle'
-    if IS_PYTHON_36:
-        FIELDS = ["Canvas", "Pen", "RawPen", "RawTurtle", "Screen",
-                  "ScrolledCanvas", "Shape", "TK", "TNavigator", "TPen", "Tbuffer",
-                  "Terminator", "Turtle", "TurtleGraphicsError", "TurtleScreen",
-                  "TurtleScreenBase", "Vec2D", "addshape", "back", "backward",
-                  "begin_fill", "begin_poly", "bgcolor", "bgpic", "bk", "bye",
-                  "circle", "clear", "clearscreen", "clearstamp", "clearstamps",
-                  "clone", "color", "colormode", "config_dict", "deepcopy",
-                  "degrees", "delay", "distance", "done", "dot", "down",
-                  "end_fill", "end_poly", "exitonclick", "fd", "fillcolor",
-                  "filling", "forward", "get_poly", "get_shapepoly", "getcanvas",
-                  "getmethparlist", "getpen", "getscreen", "getshapes", "getturtle",
-                  "goto", "heading", "hideturtle", "home", "ht", "inspect",
-                  "isdown", "isfile", "isvisible", "join", "left", "listen", "lt",
-                  "mainloop", "math", "mode", "numinput", "onclick", "ondrag",
-                  "onkey", "onkeypress", "onkeyrelease", "onrelease",
-                  "onscreenclick", "ontimer", "pd", "pen", "pencolor", "pendown",
-                  "pensize", "penup", "pos", "position", "pu", "radians",
-                  "read_docstrings", "readconfig", "register_shape", "reset",
-                  "resetscreen", "resizemode", "right", "rt", "screensize",
-                  "seth", "setheading", "setpos", "setposition", "settiltangle",
-                  "setundobuffer", "setup", "setworldcoordinates", "setx", "sety",
-                  "shape", "shapesize", "shapetransform", "shearfactor",
-                  "showturtle", "simpledialog", "speed", "split", "st", "stamp",
-                  "sys", "textinput", "tilt", "tiltangle", "time", "title",
-                  "towards", "tracer", "turtles", "turtlesize", "types", "undo",
-                  "undobufferentries", "up", "update", "width", "window_height",
-                  "window_width", "write", "write_docstringdict", "xcor", "ycor"]
-
-    def __init__(self):
-        self.calls = []
-
-    def _reset_turtles(self):
-        self.calls = []
-        
-    def _generate_patches(self):
-        if IS_PYTHON_36:
-            # Generate patches manually
-            return {name: self.getter(name) for name in self.FIELDS}
-        else:
-            return {'__getattr__': self.getter}
-
-    def getter(self, key):
-        " If anything asks, we prevent the module. Except for __file__. "
-        # Needed to support coverage - it's okay to ask who I am.
-        if key == '__file__':
-            return self.module_name
-
-        def _fake_call_wrapper(*args, **kwargs):
-            self.calls.append((key, args, kwargs))
-            return self._fake_call(args, kwargs)
-        return _fake_call_wrapper
-        
-    def _fake_call(self, *args, **kwargs):
-        return 0
-
-
-class MockDesigner(MockModule):
-    """
-    This will eventually be much more sophisticated. We really need a "MockPygame" that provides a
-    window-less version of itself suitable for testing. I think that will be very key for the long-term
-    testing behavior of Designer!
-    """
-    module_name = 'designer'
-    if IS_PYTHON_36:
-        FIELDS = ['Animation', 'Arc', 'COMMON_EVENT_NAMES', 'COMMON_EVENT_NAME_LOOKUP',
-                  'emoji', '_tifa_definitions',
-                  'CubicIn', 'CubicInOut', 'CubicOut', 'DEFAULT_WINDOW_TITLE', 'DelayAnimation', 'DesignerObject',
-                  'Director', 'Event', 'EventHandler', 'GLOBAL_DIRECTOR', 'GameEndException', 'InternalImage',
-                  'Iterate', 'KNOWN_EVENTS', 'KeyboardKey', 'KeyboardModule', 'Keys', 'Linear', 'LinearTuple',
-                  'List', 'LiveEventHandler', 'MOUSE_MAP', 'Mods', 'MouseModule', 'MultiAnimation', 'MusicModule',
-                  'Optional', 'Polar', 'QuadraticIn', 'QuadraticInOut', 'QuadraticOut', 'Random',
-                  'ReplayEventHandler', 'Request', 'SequentialAnimation', 'SfxModule', 'Sine', 'Union', 'Vec2D',
-                  'WeakMethod', 'WeakSet', 'Window', '__all__', '__annotations__', '__builtins__', '__cached__',
-                  '__doc__', '__file__', '__loader__', '__name__', '__package__', '__path__', '__spec__', 'above',
-                  'animation', 'arc', 'background_image', 'background_music', 'base64', 'below', 'check_initialized',
-                  'circle', 'clear_namespace', 'colliding', 'colors', 'continue_music', 'core', 'cursors', 'designer',
-                  'designer_object', 'destroy', 'difflib', 'disable_keyboard_repeating', 'draw', 'ellipse',
-                  'enable_keyboard_repeating', 'environ', 'f', 'get_director', 'get_height', 'get_keyboard_delay',
-                  'get_keyboard_interval', 'get_keyboard_repeat', 'get_mouse_cursor', 'get_mouse_position',
-                  'get_mouse_visible', 'get_mouse_x', 'get_mouse_y', 'get_music_position', 'get_music_volume',
-                  'get_positional_event_parameters', 'get_width', 'get_window_color', 'get_window_title',
-                  'glide_around', 'glide_down', 'glide_in_degrees', 'glide_left', 'glide_right', 'glide_up',
-                  'group', 'handle', 'helpers', 'hex_to_rgb', 'image', 'imghdr', 'importlib', 'inspect', 'io',
-                  'is_music_playing', 'json', 'keyboard', 'keys', 'line', 'linear_animation', 'make_suggestions',
-                  'math', 'mods', 'mouse', 'music', 'objects', 'os', 'path', 'pause', 'pause_music', 'play_music',
-                  'play_sound', 'positioning', 'pprint', 'pygame', 'queue', 'random', 're', 'rectangle', 'register',
-                  'rewind_music', 'sequence_animation', 'set_game_state', 'set_keyboard_delay',
-                  'set_keyboard_interval', 'set_keyboard_repeat', 'set_mouse_cursor', 'set_mouse_position',
-                  'set_mouse_visible', 'set_music_position', 'set_music_volume', 'set_window_color',
-                  'set_window_size', 'set_window_state', 'set_window_title', 'set_world_state', 'sfx', 'shape',
-                  'spin', 'start', 'stop', 'stop_music', 'sys', 'text', 'this_directory', 'unregister', 'urlopen',
-                  'utilities', 'when']
-
-    def __init__(self):
-        self.calls = []
-
-    def _reset_designer(self):
-        self.calls = []
-
-    def _generate_patches(self):
-        if IS_PYTHON_36:
-            # Generate patches manually
-            return {name: self.getter(name) for name in self.FIELDS}
-        else:
-            return {'__getattr__': self.getter}
-
-    def getter(self, key):
-        " If anything asks, we prevent the module. Except for __file__. "
-        # Needed to support coverage - it's okay to ask who I am.
-        if key == '__file__':
-            return self.module_name
-
-        def _fake_call_wrapper(*args, **kwargs):
-            self.calls.append((key, args, kwargs))
-            return self._fake_call(args, kwargs)
-
-        return _fake_call_wrapper
-
-    def _fake_call(self, *args, **kwargs):
-        return 0
-
-
-class MockPlt(MockModule):
-    """
-    Mock MatPlotLib library that can be used to capture plot data.
-
-    Attributes:
-        plots (list of dict): The internal list of plot dictionaries.
-    """
-
-    def __init__(self):
-        super().__init__()
-        self._reset_plots()
-
-    def show(self, **kwargs):
-        """ Renders the plot """
-        self.plots.append(self.active_plot)
-        self._reset_plot()
-
-    def unshown_plots(self):
-        """ Checks for plots that are not yet shown. """
-        return self.active_plot['data']
-
-    def __repr__(self):
-        return repr(self.plots)
-
-    def __str__(self):
-        return str(self.plots)
-
-    def _reset_plots(self):
-        self.plots = []
-        self._reset_plot()
-
-    def _reset_plot(self):
-        self.active_plot = {'data': [],
-                            'xlabel': None, 'ylabel': None,
-                            'title': None, 'legend': False,
-                            'kwargs': {},
-                            'xlabel_kwargs': {}, 'ylabel_kwargs': {},
-                            'title_kwargs': {}, 'suptitle_kwargs': {},
-                            'legend_kwargs': {},
-                            'other_calls': []}
-
-    def hist(self, data, **kwargs):
-        """ Make a histogram """
-        label = kwargs.get('label', None)
-        self.active_plot['data'].append({'type': 'hist', 'values': data,
-                                         'label': label, 'kwargs': kwargs})
-
-    def boxplot(self, data, **kwargs):
-        label = kwargs.get('label', None)
-        self.active_plot['data'].append({'type': 'boxplot', 'values': data,
-                                         'label': label, 'kwargs': kwargs})
-
-    def hlines(self, y, xmin, xmax, **kwargs):
-        label = kwargs.get('label')
-        self.active_plot['data'].append({'type': 'hlines', 'y': y,
-                                         'xmin': xmin, 'xmax': xmax,
-                                         'label': label, 'kwargs': kwargs})
-
-    def vlines(self, x, ymin, ymax, **kwargs):
-        label = kwargs.get('label')
-        self.active_plot['data'].append({'type': 'vlines', 'x': x,
-                                         'ymin': ymin, 'ymax': ymax,
-                                         'label': label, 'kwargs': kwargs})
-
-    def plot(self, xs, ys=None, **kwargs):
-        """ Make a line plot """
-        label = kwargs.get('label', None)
-        if ys is None:
-            self.active_plot['data'].append({'type': 'line',
-                                             'x': list(range(len(xs))),
-                                             'y': xs, 'label': label,
-                                             'kwargs': kwargs})
-        else:
-            self.active_plot['data'].append({'type': 'line', 'x': xs,
-                                             'y': ys, 'label': label,
-                                             'kwargs': kwargs})
-
-    def scatter(self, xs, ys, **kwargs):
-        """ Make a scatter plot """
-        label = kwargs.get('label', None)
-        self.active_plot['data'].append({'type': 'scatter', 'x': xs,
-                                         'y': ys, 'label': label,
-                                         'kwargs': kwargs})
-
-    def bar(self, xs, ys, **kwargs):
-        """ Make a bar plot """
-        label = kwargs.get('label', None)
-        self.active_plot['data'].append({'type': 'bar', 'x': xs,
-                                         'y': ys, 'label': label,
-                                         'kwargs': kwargs})
-
-    def xlabel(self, label, **kwargs):
-        """ Label the x-axis """
-        self.active_plot['xlabel'] = label
-        self.active_plot['xlabel_kwargs'].update(kwargs)
-
-    def title(self, label, **kwargs):
-        """ Make the title """
-        self.active_plot['title'] = label
-        self.active_plot['title_kwargs'].update(kwargs)
-
-    def suptitle(self, label, **kwargs):
-        """ Make the super title """
-        self.title(label, **kwargs)
-        self.active_plot['suptitle_kwargs'].update(kwargs)
-
-    def ylabel(self, label, **kwargs):
-        """ Label the Y-axis """
-        self.active_plot['ylabel'] = label
-        self.active_plot['ylabel_kwargs'].update(kwargs)
-
-    def legend(self, **kwargs):
-        """ Show the legend """
-        self.active_plot['legend'] = True
-        self.active_plot['legend_kwargs'].update(kwargs)
-
-    def _generate_patches(self):
-        def dummy(*args, **kwargs):
-            """ This function does nothing. """
-            # TODO: Capture name; does this need to be a decorated function?
-            self.active_plot['other_calls'].append((args, kwargs))
-
-        return dict(hist=self.hist, plot=self.plot,
-                    bar=self.bar, boxplot=self.boxplot,
-                    hlines=self.hlines, vlines=self.vlines,
-                    scatter=self.scatter, show=self.show,
-                    xlabel=self.xlabel, ylabel=self.ylabel,
-                    title=self.title, legend=self.legend,
-                    xticks=dummy, yticks=dummy,
-                    autoscale=dummy, axhline=dummy,
-                    axhspan=dummy, axvline=dummy,
-                    axvspan=dummy, clf=dummy,
-                    cla=dummy, close=dummy,
-                    figlegend=dummy, figimage=dummy,
-                    suptitle=self.suptitle, text=dummy,
-                    tick_params=dummy, ticklabel_format=dummy,
-                    tight_layout=dummy, xkcd=dummy,
-                    xlim=dummy, ylim=dummy,
-                    xscale=dummy, yscale=dummy)

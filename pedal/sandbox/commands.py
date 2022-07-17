@@ -399,6 +399,14 @@ def block_module(module_name, report=MAIN_REPORT):
     sandbox.block_module(module_name)
 
 
+def get_module(module_name, report=MAIN_REPORT):
+    """ Loads the data for the given mocked module, if available (otherwise raises exception) """
+    sandbox: Sandbox = report[TOOL_NAME]['sandbox']
+    if hasattr(sandbox.modules, module_name):
+        return getattr(sandbox.modules, module_name)
+    raise ValueError(f"Unknown Sandbox Module: `{module_name}`")
+
+
 class CommandBlock:
     """
     Context Manager for creating instructor blocks of code that will

@@ -16,7 +16,8 @@ from pedal.core.report import MAIN_REPORT
 from pedal.utilities.exceptions import ExpandedTraceback, improve_builtin_exceptions
 from pedal.sandbox.data import SandboxVariable, SandboxContextKind, \
     SandboxContext, SandboxModules
-from pedal.sandbox import mocked
+import pedal.sandbox.mocked as mocked
+import pedal.sandbox.library as mocked_libraries
 from pedal.sandbox.constants import TOOL_NAME
 from pedal.sandbox.feedbacks import runtime_error, EXCEPTION_FF_MAP
 from pedal.sandbox.exceptions import SandboxHasNoFunction, SandboxHasNoVariable
@@ -574,9 +575,10 @@ class Sandbox:
         self.mock_function('open', mocked.create_open_function(self.report))
         self.mock_function('__import__', mocked.create_import_function(self.report, self))
         self.block_module('pedal')
-        self.mock_module('turtle', mocked.MockTurtle(), 'turtles')
-        self.mock_module('matplotlib.pyplot', mocked.MockPlt(), 'plotting')
-        self.mock_module('designer', mocked.MockDesigner(), 'designer')
+        self.mock_module('turtle', mocked_libraries.MockTurtle(), 'turtles')
+        self.mock_module('matplotlib.pyplot', mocked_libraries.MockPlt(), 'plotting')
+        self.mock_module('designer', mocked_libraries.MockDesigner(), 'designer')
+        self.mock_module('microbit', mocked_libraries.MockMicrobit(), 'microbit')
 
     def mock_function(self, function_name, new_version):
         self._module_overrides['__builtins__'][function_name] = new_version

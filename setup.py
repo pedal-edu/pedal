@@ -11,7 +11,7 @@ setuptools.setup(
     packages=['pedal', 'pedal.core', 'pedal.utilities', 'pedal.environments',
               'pedal.resolvers', 'pedal.command_line',
               'pedal.source', 'pedal.cait', 'pedal.tifa',
-              'pedal.sandbox', 'pedal.assertions',
+              'pedal.sandbox', 'pedal.sandbox.library', 'pedal.assertions',
               'pedal.questions', 'pedal.extensions', 'pedal.types', 'pedal.types.library'
               ],
     license='Creative Commons Attribution-Noncommercial-Share Alike license',

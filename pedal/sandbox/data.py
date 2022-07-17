@@ -199,12 +199,14 @@ class SandboxModules:
             dict[str,:py:class:`types.ModuleType`]: The newly created modules
                 mapped by their imported path names.
         """
+        if isinstance(data, MockModule):
+            import_name = [import_name, *data.SUBMODULES]
         root, modules, target = create_module(import_name)
         if isinstance(data, dict):
             mocked_module = MockDictModule(data)
             mocked_module.add_to_module(target)
         elif isinstance(data, MockModule):
-            data.add_to_module(target)
+            data.add_to_module(target, modules)
         else:
             raise ValueError("Given data must be either MockModule or dict.")
         self._modules[friendly_name] = data

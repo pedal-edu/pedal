@@ -42,7 +42,7 @@ def normalize_type(type_expression, evaluate_name=None) -> Type:
             JSON-Encoded representations.
 
     Returns:
-        :py:class:`pedal.types.definitions.Type`: A normalized Pedal Type.
+        :py:class:`pedal.types.new_types.Type`: A normalized Pedal Type.
     """
     # Already a Pedal Type
     if isinstance(type_expression, str) and type_expression in PEDAL_TYPE_NAMES:
