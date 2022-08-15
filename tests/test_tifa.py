@@ -509,7 +509,12 @@ unit_tests = {
          [], ['incompatible_types']],
     'dictionary_literal_key_access_str_bad':
         ['person = {"Name": "Charles", "Age": 4}\nperson["Name"] + "1"',
-         ['incompatible_types'], []]
+         ['incompatible_types'], []],
+
+    # Enumerate
+    'enumerate_function_in_function':
+        ['def do_it(data):\n    v = 0\n    for i, _ in enumerate(data):\n        v += i\n    return v\ndo_it("ab")',
+         ['unused_variable'], []]
 }
 
 
@@ -517,7 +522,7 @@ class TestCode(unittest.TestCase):
     pass
 
 
-SILENCE_EXCEPT = 'None' # 'possibly_overwritten_in_elif_branch' # None  # 'read_not_out_of_scope'
+SILENCE_EXCEPT = 'enumerate_function_in_function' # 'possibly_overwritten_in_elif_branch' # None  # 'read_not_out_of_scope'
 
 
 def make_tester(internal_name, code, nones, somes):
@@ -1029,6 +1034,69 @@ print(x([{"a": "apple"}]))""")
                          "The formal parameter type must match the argument's type.",
                          result.issues['parameter_type_mismatch'][0].message)
 
+    def test_dataclass_bad_constructor_call_order(self):
+        program = dedent("""
+        from dataclasses import dataclass
+
+        @dataclass
+        class Dog:
+            name: str
+            age: int
+            fuzzy: bool
+        
+        ada = Dog('Ada Bart', True, 4)
+        print(ada.name)
+        """)
+        tifa = pedal.tifa.Tifa()
+        result = tifa.process_code(program, filename="student.py")
+        self.assertIsNone(result.error)
+        self.assertTrue(result.issues)
+        self.assertEqual("You defined the field age as an integer. However, the argument passed to that field's "
+                         "parameter in the constructor function on line 10 was a boolean. The formal field type "
+                         "must match the argument's type.",
+                         result.issues['field_type_mismatch'][0].message)
+
+    def test_dataclass_bad_constructor_call_arity(self):
+        program = dedent("""
+        from dataclasses import dataclass
+
+        @dataclass
+        class Dog:
+            name: str
+            age: int
+            fuzzy: bool
+
+        ada = Dog('Ada Bart', 4)
+        print(ada.name)
+        """)
+        tifa = pedal.tifa.Tifa()
+        result = tifa.process_code(program, filename="student.py")
+        self.assertIsNone(result.error)
+        self.assertTrue(result.issues)
+        self.assertEqual("The constructor function Dog was given the wrong number of arguments. You should have "
+                         "had 3 arguments, but instead you had 2 arguments.",
+                         result.issues['incorrect_arity'][0].message)
+
+    def test_dataclass_bad_constructor_call_extra(self):
+        program = dedent("""
+        from dataclasses import dataclass
+
+        @dataclass
+        class Dog:
+            name: str
+            age: int
+            fuzzy: bool
+
+        ada = Dog('Ada Bart', 4, True, "is cute!")
+        print(ada.name)
+        """)
+        tifa = pedal.tifa.Tifa()
+        result = tifa.process_code(program, filename="student.py")
+        self.assertIsNone(result.error)
+        self.assertTrue(result.issues)
+        self.assertEqual("The constructor function Dog was given the wrong number of arguments. You should have "
+                         "had 3 arguments, but instead you had 4 arguments.",
+                         result.issues['incorrect_arity'][0].message)
 
 if __name__ == '__main__':
     unittest.main(buffer=False)

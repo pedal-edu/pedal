@@ -17,19 +17,43 @@ them into a canonical Pedal type.
     TODO: Implement get_pedal_type_from_typing
 """
 import ast
+
 from pedal.types.new_types import (Type, AnyType, ImpossibleType, NumType, BoolType,
                                    TupleType, ListType, StrType,
                                    DictType, SetType, GeneratorType,
                                    ModuleType, NoneType, FrozenSetType,
                                    FunctionType, TYPE_STRINGS,
                                    LiteralStr, LiteralInt, LiteralFloat, LiteralBool, ClassType, InstanceType,
-                                   widest_type, LiteralValue, TypeUnion, PEDAL_TYPE_NAMES)
+                                   widest_type, LiteralValue, TypeUnion, PEDAL_TYPE_NAMES, specify_subtype)
 from pedal.utilities.system import IS_PYTHON_39
 
 try:
     import typing as python_types
 except ImportError:
     python_types = None
+
+try:
+    from dataclasses import fields
+except:
+    fields = None
+
+
+def get_generic_type(type_expression, evaluate_name=None) -> Type:
+    if not hasattr(type_expression, '__args__'):
+        return TYPE_STRINGS[type_expression.__name__]()
+    base_type = TYPE_STRINGS[type_expression.__name__]()
+    arg_type = type_expression.__args__
+    arg_type = tuple((normalize_type(at, evaluate_name) for at in arg_type))
+    base_type.add_type_arguments(arg_type)
+    return base_type
+
+
+def unbox_sandbox_if_needed(value):
+    """ TODO: Redefined here to avoid imports. Need a better solution! """
+    if hasattr(value, "__actual_class__"):
+        if value.__actual_class__.__name__ == 'SandboxResult':
+            return value._actual_value
+    return value
 
 
 def normalize_type(type_expression, evaluate_name=None) -> Type:
@@ -52,13 +76,19 @@ def normalize_type(type_expression, evaluate_name=None) -> Type:
     # What if it's a builtin type function?
     if isinstance(type_expression, type):
         if type_expression.__name__ in TYPE_STRINGS:
-            return TYPE_STRINGS[type_expression.__name__]()
+            return get_generic_type(type_expression, evaluate_name)
         if evaluate_name:
-            type_object = evaluate_name(type_expression.__name__)
+            type_object = unbox_sandbox_if_needed(evaluate_name(type_expression.__name__))
             if isinstance(type_object, type):
+                if fields and hasattr(type_object, '__dataclass_fields__'):
+                    return ClassType(type_object.__name__, {
+                        field.name: normalize_type(field.type, evaluate_name)
+                        for field in fields(type_object)
+                    })
                 return ClassType(type_object.__name__, {
-                    v: normalize_type(v, evaluate_name)
+                    f: normalize_type(v, evaluate_name)
                     for f, v in vars(type_object).items()
+                    if not f.startswith('___')
                 })
             return type_object
         return normalize_type(type_expression.__name__, evaluate_name=evaluate_name)
@@ -221,7 +251,11 @@ def get_pedal_type_from_value(value, evaluate_name=None) -> Type:
             # Resort to just matching the types?
             return DictType([(k, v) for k, v in items])
     if evaluate_name:
-        return InstanceType(normalize_type(evaluate_name(type(value).__name__), evaluate_name))
+        new_instance = InstanceType(normalize_type(evaluate_name(type(value).__name__), evaluate_name))
+        if fields and hasattr(value, '__dataclass_fields__'):
+            for field in fields(value):
+                new_instance.add_attr(field.name, get_pedal_type_from_value(getattr(value, field.name), evaluate_name))
+        return new_instance
     return AnyType()
 
 

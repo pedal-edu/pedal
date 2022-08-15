@@ -15,10 +15,25 @@ _MICROBIT_FIELDS = {
    'temperature': int_function('temperature'),
    'Button': _BUTTON_CLASS,
    'button_a': InstanceType(_BUTTON_CLASS),
-   'button_b': InstanceType(_BUTTON_CLASS)
+   'button_b': InstanceType(_BUTTON_CLASS),
 }
 _MICROBIT_FIELDS.update({
    name: void_function for name in _VOID_FUNCTIONS
 })
 
-BUILTIN_MODULES['microbit'] = ModuleType('microbit', fields=_MICROBIT_FIELDS)
+_MICROBIT_SUBMODULES = {
+   'display': ModuleType('display', {
+      'show': void_function('show'),
+      'scroll': void_function('scroll'),
+      'on': void_function('on'),
+      'off': void_function('off'),
+      'clear': void_function('clear'),
+      'set_pixel': void_function('set_pixel'),
+      'get_pixel': int_function('get_pixel'),
+      'is_on': bool_function('is_on'),
+      'read_light_level': int_function('read_light_level')
+   })
+}
+
+BUILTIN_MODULES['microbit'] = ModuleType('microbit', fields=_MICROBIT_FIELDS,
+                                         submodules=_MICROBIT_SUBMODULES)

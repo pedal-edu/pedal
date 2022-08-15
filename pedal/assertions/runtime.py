@@ -21,7 +21,7 @@ from pedal.core.report import MAIN_REPORT
 from pedal.core.feedback import CompositeFeedbackFunction
 from pedal.sandbox import Sandbox
 from pedal.sandbox.commands import check_coverage, get_call_arguments, get_student_data, evaluate
-from pedal.sandbox.result import share_sandbox_context
+from pedal.sandbox.result import share_sandbox_context, is_sandbox_result, unwrap_value
 from pedal.types.normalize import normalize_type, get_pedal_type_from_value
 from pedal.types.new_types import is_subtype
 from pedal.utilities.comparisons import equality_test
@@ -489,18 +489,23 @@ class _compare_type(RuntimeAssertionFeedback):
 
     def __init__(self, value, expected_type, **kwargs):
         fields = kwargs.setdefault('fields', {})
-        value_pedal_type = get_pedal_type_from_value(value)
+        value_pedal_type = get_pedal_type_from_value(unwrap_value(value), evaluate)
         evaluated_expected_type = evaluate(expected_type) if isinstance(expected_type, str) else expected_type
-        expected_pedal_type = normalize_type(evaluated_expected_type, evaluate).as_type()
+        expected_pedal_type = normalize_type(evaluated_expected_type, evaluate)
+        if not isinstance(expected_pedal_type, Exception):
+            expected_pedal_type = expected_pedal_type.as_type()
+            expected_pedal_type_name = expected_pedal_type.singular_name
+        else:
+            expected_pedal_type_name = ""
         singular_name = share_sandbox_context(value_pedal_type.singular_name, value)
         fields['value_raw'] = value
         fields['value_type'] = value_pedal_type
         fields['value_type_name'] = singular_name
         fields['expected_type_raw'] = expected_type
         fields['expected_type'] = expected_pedal_type
-        fields['expected_type_name'] = expected_pedal_type.singular_name
+        fields['expected_type_name'] = expected_pedal_type_name
         super().__init__(SandboxedValue(singular_name),
-                         SandboxedValue(expected_pedal_type.singular_name), **kwargs)
+                         SandboxedValue(expected_pedal_type_name), **kwargs)
 
     def condition(self, value, expected_type):
         """ Tests if the left and right are equal """
@@ -568,7 +573,21 @@ class assert_not_almost_equal(assert_not_equal):
 
 class assert_output(RuntimePrintingAssertionFeedback):
     """
-    Determine if the ``execution`` outputs ``text``
+    Determine if the ``execution`` outputs ``text``. Uses the `==` operator to do the final comparison.
+    In this case, you can think of the output as a single string with newlines, as opposed to a list
+    of strings (i.e., it is retrieved with `raw_output`).
+
+    If the `exact_strings` parameter is set to be `False`, then output is first normalized following
+    this strategy:
+    * Make strings lowercase
+    * Remove all punctuation characters
+    * Split the string by newlines into a list
+    * Split each individual line by spaces (aka into words)
+    * Remove all empty lines
+    * Sorts the lines by default order
+
+    So the default check will be fairly generous about checking output; as long as all the lines are
+    there (in whatever order), ignoring punctuation and case, the text will be found.
     """
     justification = "Did not print the output"
     _expected_verb = "the output to be"
@@ -586,7 +605,8 @@ class assert_prints(assert_output):
 
 class assert_not_output(RuntimePrintingAssertionFeedback):
     """
-    Determine if the ``execution`` does not output ``text``
+    Determine if the ``execution`` does not output ``text``. Simply the inverse of
+    :py:func:`pedal.assertions.runtime.assert_output` so check the rules there for more information.
     """
     justification = "Printed the output"
     _expected_verb = "the output to not be"
@@ -600,7 +620,11 @@ class assert_not_output(RuntimePrintingAssertionFeedback):
 
 class assert_output_contains(RuntimePrintingAssertionFeedback):
     """
-    Determine if the ``execution`` outputs ``text``
+    Determine if the ``execution`` outputs ``text`` anywhere. Unlike :py:func:`pedal.assertions.runtime.assert_output`,
+    this function uses the `in` operator. If the `exact_strings` parameter is `False`, then both strings are only
+    lowercased first (but the other normalization rules from `assert_output` are not applied). Can be a more flexible
+    check since it just looks for whether the run of characters is ANYWHERE in the output. Remember that newlines are
+    part of the output, though, so the check will not work across lines unless the `text` includes those newlines.
     """
     justification = "Did not contain the printed output"
     _expected_verb = "the output to contain"

@@ -13,6 +13,16 @@ def chomp_spec(format_spec, word):
     return format_spec
 
 
+def escape_dunders(text):
+    if text[:2] == '__' and text[-2:] == '__':
+        return "\\_\\_" + text[2:-2] + "\\_\\_"
+    return text
+
+
+def escape_angles(text):
+    return text.replace("<", "&lt;").replace(">", "&gt;")
+
+
 class FeedbackFieldWrapper:
     """
     Wraps an individual field within a Feedback message.
@@ -134,13 +144,13 @@ class HtmlFormatter(Formatter):
             return f"<{tag} class='{classes}'>{contents}</{tag}>"
 
     def html_pre(self, text, classes=None):
-        return self.html_tag('pre', text, classes)
+        return self.html_tag('pre', escape_angles(text), classes)
 
     def html_div(self, contents, classes=None):
         return self.html_tag('div', contents, classes)
 
     def html_code(self, contents, classes=None):
-        return self.html_tag('code', contents, classes)
+        return self.html_tag('code', escape_dunders(contents), classes)
 
     def html_span(self, contents, classes=None):
         return self.html_tag('span', contents, classes)
@@ -148,7 +158,7 @@ class HtmlFormatter(Formatter):
     ############################################################################
 
     def python_code(self, code):
-        return self.html_pre(self.html_code(code), "pedal-python-code python")
+        return self.html_tag('pre', self.html_code(code), "pedal-python-code python")
 
     def python_expression(self, code):
         return self.html_code(code)

@@ -148,6 +148,16 @@ class Type:
                     return result
         return
 
+    def list_fields(self, seen=None):
+        if seen is None:
+            seen = set()
+        for field in self.fields:
+            yield field
+        seen.add(self)
+        for parent in self.parents:
+            if parent not in seen:
+                yield from parent.list_fields(seen)
+
     def is_subtype(self, other, seen, indent=0):
         if isinstance(self, AnyType) or isinstance(other, AnyType):
             return True
@@ -162,6 +172,9 @@ class Type:
         if isinstance(receiving_type, AnyType):
             return self
         return receiving_type
+
+    def add_type_arguments(self, type_arguments):
+        return self
 
     @staticmethod
     def definition(tifa, function, callee, arguments, named_arguments, location):
@@ -438,6 +451,11 @@ class ElementContainerType(Type):
             receiving_type.element_type = self.element_type.specify_subtype(receiving_type.element_type)
             return receiving_type
 
+    def add_type_arguments(self, type_arguments):
+        self.element_type = (type_arguments[0] if len(type_arguments) == 1
+                             else TupleType(type_arguments))
+        return self
+
     def break_apart(self):
         while True:
             yield self.element_type
@@ -619,6 +637,10 @@ class TupleType(Type):
                                                                    receiving_type.element_types)))
             return receiving_type
 
+    def add_type_arguments(self, type_arguments):
+        self.element_types = type_arguments
+        return self
+
     def as_type(self, tifa=None, location=None):
         return TupleType([t.as_type(tifa, location) for t in self.element_types])
 
@@ -699,6 +721,10 @@ class DictType(Type):
                     for other_key, other_value in other.element_types
                 ) for self_key, self_value in self.element_types)
         return False
+
+    def add_type_arguments(self, type_arguments):
+        self.element_types = [type_arguments]
+        return self
 
     def index(self, key):
         # TODO: Support a flag for whether Numbers are allowed for Integers
@@ -870,6 +896,9 @@ class BuiltinConstructorType(Type):
     def as_type(self, tifa=None, location=None):
         return self.definition(tifa, self, None, [], [], location)
 
+    def add_type_arguments(self, type_arguments):
+        self.type_arguments = type_arguments[0] if len(type_arguments) == 1 else TupleType(type_arguments)
+        return self
 
 class IntConstructor(BuiltinConstructorType):
     name = 'int'
@@ -995,13 +1024,22 @@ class InstanceType(Type):
     def is_subtype(self, other, seen, indent=0):
         if isinstance(self, AnyType) or isinstance(other, AnyType):
             return True
-        # Should this be some kind of parent check instead via the instance?
-        if type(self) == type(other) and other.name == self.name:
-            # TODO: Nominal typing or structural ducktyping?
-            return True
+        # Avoid recursion
         if self in seen:
             return True
         seen.add(self)
+        # Check that the structure matches the expected
+        if type(self) == type(other) and other.name == self.name:
+            for expected_field_name in set(other.list_fields()):
+                if expected_field_name.startswith('__'):
+                    continue
+                expected_field_type = other.find_field(expected_field_name, set())
+                actual_field_type = self.find_field(expected_field_name, set())
+                if actual_field_type is None or expected_field_type is None:
+                    return False
+                if not is_subtype(actual_field_type, expected_field_type):
+                    return False
+            return True
 
         def check_parent(current):
             if isinstance(current, AnyType):
@@ -1015,24 +1053,51 @@ class InstanceType(Type):
         result = any(check_parent(parent) for parent in self.parents)
         return result
 
+    def add_attr(self, field: str, value):
+        if field in self.fields:
+            if not is_subtype(self.fields[field], value):
+                return ImpossibleType()
+        self.fields[field] = value
+        return value
+
 
 def make_dataclass(tifa, function, callee, arguments, named_arguments: dict, location):
     class_type = arguments[0]
+    simple_class_fields = [(field, expected_type) for field, expected_type in class_type.fields.items()
+                           if not isinstance(expected_type, FunctionType)]
 
     def constructor(tifa, function, callee, arguments, named_arguments: dict, location):
         seen_fields = set()
+        missing_fields = []
+        arguments = arguments.copy()
+        the_self = arguments.pop(0) if arguments else None
         named_arguments = named_arguments.copy()
+        new_instance = InstanceType(class_type)
         # TODO: Handle kwargs better
         kwargs = [(k, v) for k, v in named_arguments if k is None]
-        for field, expected_type in class_type.fields.items():
+        for field, expected_type in simple_class_fields:
             # Key is found?
             # Key's value has right type?
-            print("TODO DC:", field, expected_type)
+            if field in named_arguments:
+                value = named_arguments.pop(field)
+            elif field in kwargs:
+                value = kwargs.pop(field)
+            elif arguments:
+                value = arguments.pop(0)
+            else:
+                #tifa._issue('missing_parameter', location, field, expected_type)
+                missing_fields.append((field, expected_type))
+                continue
             seen_fields.add(field)
-        if len(seen_fields) > (len(arguments) + len(named_arguments) + len(kwargs)):
+            if not is_subtype(value, expected_type):
+                tifa._issue('field_type_mismatch', location, field, expected_type, value)
+            new_instance.add_attr(field, value.clone_mutably())
+        expected_field_count = len(simple_class_fields)
+        actual_field_count = len(seen_fields) + len(arguments) + len(named_arguments) + len(kwargs)
+        if expected_field_count != actual_field_count:
             # TODO: unexpected_dataclass_parameters
-            pass
-        return InstanceType(class_type)
+            tifa._issue('incorrect_arity', location, class_type.name, expected_field_count, actual_field_count, True)
+        return new_instance
     constructor_function_type = FunctionType('__init__', definition=constructor)
     class_type.add_attr('__init__', constructor_function_type)
     return class_type

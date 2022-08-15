@@ -10,6 +10,7 @@ def add_indefinite_article(phrase):
     and add it the front of the word. Matches the original word's
     capitalization.
 
+
     Args:
         phrase (str): The phrase to get the appropriate definite article
             for.
@@ -17,9 +18,10 @@ def add_indefinite_article(phrase):
     Returns:
         str: Either "an" or "a".
     """
-    if phrase[0] in "aeiou":
+    # Note: Must cast to string because it could be a SandboxResult
+    if str(phrase[0]) in "aeiou":
         return "an "+phrase
-    elif phrase[0] in "AEIOU":
+    elif str(phrase[0]) in "AEIOU":
         return "An "+phrase
     elif phrase[0].lower() == phrase[0]:
         return "a "+phrase

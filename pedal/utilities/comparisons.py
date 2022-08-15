@@ -3,6 +3,11 @@ import re
 
 # Number encapsulates bool, int, float, complex, decimal.Decimal, etc.
 try:
+    from dataclasses import is_dataclass, fields
+except ImportError:
+    is_dataclass = lambda value: False
+
+try:
     from numbers import Number
 except:
     Number = (bool, int, float, complex)
@@ -157,6 +162,11 @@ def equality_test(actual, expected, _exact_strings, _delta):
             if not equality_test(expected[key], actual[key], _exact_strings, _delta):
                 return False
         return True
+    # Two dataclasses
+    elif is_dataclass(expected) and is_dataclass(actual):
+        return (expected.__name__ == actual.__name__ and
+                all(e.name == a.name and equality_test(e.type, a.type, _exact_strings, _delta)
+                    for e, a in zip(fields(expected), fields(actual))))
     # Else
     return False
 

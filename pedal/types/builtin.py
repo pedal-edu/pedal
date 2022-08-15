@@ -132,6 +132,12 @@ def zip_definition(tifa, function, callee, arguments, named_arguments, location)
                          tupled_types)
 
 
+def enumerate_definition(tifa, function, callee, arguments, named_arguments, location):
+    if arguments:
+        tupled_types = TupleType((IntType(), arguments[0].iterate()))
+        return GeneratorType(arguments and arguments[0].is_empty, tupled_types)
+    return ImpossibleType()
+
 # TODO: Type guard with `isinstance`
 
 
@@ -155,6 +161,7 @@ BUILTIN_NAMES.update({
         FunctionType('dir', returns=lambda: ListType(False, StrType())),
         FunctionType('max', returns='element'),
         FunctionType('min', returns='element'),
+        FunctionType('enumerate', definition=enumerate_definition),
         FunctionType('zip', definition=zip_definition),
         FunctionType('__import__', returns=ModuleType),
         FunctionType('globals', returns=lambda: DictType([(StrType(), AnyType())])),

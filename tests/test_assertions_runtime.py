@@ -357,6 +357,96 @@ The value of the result was:
 But I expected the result to be a value of type:
     'an integer'""")
 
+    def test_assert_type_fails_non_generic_list(self):
+        with Execution('x=["3"]\nprint(x)') as e:
+            assert_type(evaluate('x'), list[int])
+        self.assertFeedback(e, """Failed Instructor Test
+Student code failed instructor test.
+I evaluated the expression:
+    x
+The value of the result was:
+    'a list of strings'
+But I expected the result to be a value of type:
+    'a list of integers'""")
+
+    def test_assert_type_passes_instructor_dataclass(self):
+            with Execution('''from dataclasses import dataclass
+@dataclass
+class Dog:
+    name: str
+    age: int
+x = Dog("D", 5)
+print(x)''') as e:
+                from dataclasses import dataclass
+                @dataclass
+                class Dog:
+                    name: str
+                    age: int
+                assert_type(evaluate('x'), Dog)
+            self.assertFeedback(e, SUCCESS_MESSAGE)
+
+    def test_assert_type_passes_instructor_dataclass(self):
+        with Execution('''from dataclasses import dataclass
+@dataclass
+class Dog:
+    name: str
+    age: int
+x = Dog("D", 5)
+print(x)''') as e:
+            from dataclasses import dataclass
+            @dataclass
+            class Dog:
+                pass
+
+            assert_type(evaluate('x'), Dog)
+        self.assertFeedback(e, SUCCESS_MESSAGE)
+
+    def test_assert_type_fails_instructor_dataclass(self):
+        with Execution('''from dataclasses import dataclass
+@dataclass
+class Dog:
+    name: str
+    age: int
+x = Dog("D", 5)
+print(x)''') as e:
+            from dataclasses import dataclass
+            @dataclass
+            class Cat:
+                pass
+
+            assert_type(evaluate('x'), Cat)
+        self.assertFeedback(e, """Name Error
+A NameError occurred:
+
+    Name 'cat' is not defined
+
+I evaluated the expression:
+    Cat
+
+The traceback was:
+missing
+
+A name error means you have used a variable that has no value.  You may have a typo, so check the spelling. Or, you may have forgotten to initialize a variable.
+
+Suggestion: Trace your code and make sure each variable was set before it was read.""")
+
+    def test_assert_type_passes_instructor_dataclass_nested(self):
+        with Execution('''from dataclasses import dataclass
+@dataclass
+class Dog:
+    name: str
+    age: int
+    hobbies: list[str]
+x = Dog("D", 5, ["fetch"])
+print(x)''') as e:
+            from dataclasses import dataclass
+            @dataclass
+            class Dog:
+                pass
+
+            assert_equal(evaluate('x'), call('Dog', 'D', 5, ['fetch']))
+        self.assertFeedback(e, SUCCESS_MESSAGE)
+
     def test_assert_chain_passes(self):
         with Execution('x=3\nprint(x)') as e:
             assert_has_variable(e.student, 'x')

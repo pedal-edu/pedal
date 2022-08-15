@@ -228,7 +228,7 @@ class TifaCore:
                 if state.over == 'yes':
                     position = state.over_position
                     self._issue(overwritten_variable(position, state.name))
-                if state.read == 'no':
+                if state.read == 'no' and state.name != '_':
                     self._issue(unused_variable(state.position, state.name, state.type, report=self.report))
 
     def _scope_chain_str(self, name=None):

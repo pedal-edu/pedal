@@ -94,7 +94,9 @@ The differences were at the following positions:
 
     def test_assert_microbit_displayed_animation_touches_corners_fails(self):
         with Execution(dedent("""
-        from microbit.display import show
+        from microbit import display
+        
+        show = display.show
         # A 3x3 box with the bottom-left corner and center missing
         show([[0, 0, 0, 0, 9], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]])
         show([[9, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]])
@@ -114,20 +116,20 @@ The differences were at the following positions:
 
     def test_assert_microbit_displayed_animation_touches_corners_loop(self):
         with Execution(dedent("""
-        from microbit.display import show
+        from microbit import display
         # A 3x3 box with the bottom-left corner and center missing
         STARTS = [(4, 0), (0, 0), (0, 4), (4, 4)]
         DIRECTIONS = [(-1, 0), (0, 1), (1, 0), (0, -1)]
-        current = [[0, 0, 0, 0, 0] for _ in range(5)]
+        display.clear()
         previous_x, previous_y = (0, 0)
         for (start_x, start_y), (dx, dy) in zip(STARTS, DIRECTIONS):
             for i in range(0, 5):
-                current[previous_y][previous_x] = 0
+                display.set_pixel(previous_x, previous_y, 0)
                 previous_x, previous_y = start_x + dx*i, start_y + dy*i
-                current[previous_y][previous_x] = 9
-                show(current)
+                display.set_pixel(previous_x, previous_y, 9)
         """)) as e:
             assert_microbit_displayed("    █:     :     :     :     ",
+                                      "   █ :     :     :     :     ",
                                       " █   :     :     :     :     ",
                                       "█    :     :     :     :     ",
                                       "     :     :     :     :█    ",

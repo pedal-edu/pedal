@@ -1,6 +1,17 @@
 """
 Collection of feedback functions related to static checks of student code.
 """
+try:
+    import dataclasses
+except ImportError:
+    dataclasses = None
+import ast
+
+from pedal.assertions.classes import (missing_dataclass, dataclass_not_available,
+                                      missing_field_type, too_few_fields, too_many_fields,
+                                      duplicate_dataclass_definition, invalid_field_type,
+                                      wrong_fields_type, name_is_not_a_dataclass, missing_dataclass_annotation,
+                                      unknown_field)
 from pedal.assertions.functions import *
 from pedal.cait.cait_api import parse_program
 from pedal.assertions.feedbacks import AssertionFeedback
@@ -539,6 +550,87 @@ def ensure_function(name, arity=None, parameters=None,
 
     return None
 
+
+@CompositeFeedbackFunction(missing_dataclass, duplicate_dataclass_definition,
+                           too_few_fields, too_many_fields, invalid_field_type,
+                           unknown_field,
+                           missing_field_type, wrong_fields_type, name_is_not_a_dataclass,
+                           dataclass_not_available, missing_dataclass_annotation)
+def ensure_dataclass(name, fields=None, root=None, compliment=False, **kwargs):
+    """
+    Ensures that the actual definition for the given class exists.
+    You can provide either a string and fields, or an instructor-defined version
+
+    Arguments:
+        name (str or dataclass): Either the name of the expected dataclass, or a
+            dataclass object (not an instance).
+        fields (dict):
+    """
+    if isinstance(name, str):
+        # Fields will be a dictionary or class
+        if fields is None:
+            fields = {}
+    # Or assume it is a dataclass provided by the instructor
+    else:
+        fields = {field.name: field.type for field in dataclasses.fields(name)}
+        name = name.__name__
+    # Inspect the code for the definition
+    report = kwargs.get('report', MAIN_REPORT)
+    root = root or parse_program(report=report)
+    defs = root.find_all('ClassDef')
+    defs = [a_def for a_def in defs if a_def._name == name]
+    if not defs:
+        return missing_dataclass(name, **kwargs)
+    if len(defs) > 1:
+        lines = [Location.from_ast(a_def) for a_def in defs]
+        return duplicate_dataclass_definition(name, lines, **kwargs)
+    definition = defs[0]
+    definition_fields = [line for line in definition.body
+                         if isinstance(line.ast_node, ast.AnnAssign) and line.simple]
+    # TODO: Support ast.Assign nodes for default values
+    # 1. Make sure import is present
+    ensure_import('dataclasses')
+    for decorator in definition.decorator_list:
+        # TODO: Support the @dataclasses.dataclass style too
+        if isinstance(decorator.ast_node, ast.Name) and decorator.id == 'dataclass':
+            break
+    else:
+        missing_dataclass_annotation(name, **kwargs)
+    # 2. Confirm the number of fields
+    expected_arity = len(fields)
+    actual_arity = len(definition_fields)
+    if actual_arity < expected_arity:
+        return too_few_fields(name, actual_arity, expected_arity, **kwargs)
+    elif actual_arity > expected_arity:
+        return too_many_fields(name, actual_arity, expected_arity, **kwargs)
+    # 3. checks each field's name and type
+    for actual_field in definition_fields:
+        actual_field_name = actual_field.target.id
+        if actual_field_name not in fields:
+            return unknown_field(name, actual_field_name, **kwargs)
+        expected_field = fields[actual_field_name]
+        expected_field_type = normalize_type(expected_field, tifa_type_check).as_type()
+        if actual_field.annotation is None:
+            return missing_field_type(name, actual_field_name, expected_field_type, **kwargs)
+        try:
+            actual_field_type = normalize_type(actual_field.annotation.ast_node,
+                                               tifa_type_check).as_type()
+        except ValueError as e:
+            return invalid_field_type(name, actual_field_name, actual_field.annotation,
+                                      expected_field_type, **kwargs)
+        if not is_subtype(actual_field_type, expected_field_type):
+            return wrong_fields_type(name, actual_field_name, actual_field_type,
+                                     expected_field_type, **kwargs)
+    # Alternatively, returns positive FF?
+    if compliment:
+        if isinstance(compliment, str):
+            core_compliment(compliment, label="dataclass_defined", **kwargs)
+        elif compliment is True:
+            core_compliment(f"Defined {name}", label="dataclass_defined", **kwargs)
+    elif kwargs.get("score"):
+        give_partial(kwargs.pop("score"), label="dataclass_defined", **kwargs)
+
+    return None
 
 @CompositeFeedbackFunction(prevent_function_call, ensure_function_call)
 def ensure_prints_exactly(count, **kwargs):

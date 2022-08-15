@@ -112,6 +112,10 @@ class MicrobitDisplay:
         return [list(line) for line in self.image]
 
 
+class MicrobitImage:
+    pass
+
+
 class MicrobitSimulator:
     #: Whether the board is in "panic mode" (error state)
     panic_mode: bool
@@ -159,31 +163,58 @@ class MicrobitSimulator:
 
 
 class MockMicrobitDisplay(MockModuleExposing):
+    """
+    If needed, could make the history extremely compact by tracking changes instead, and storing
+    them in a single integer. First 6 bits for the X/Y, and then 4 bits for the new value. Could also have some
+    special codes, if needed (e.g., for "clear").
+    """
     expose = MethodExposer()
     UNKNOWN_FUNCTIONS = []
     SUBMODULES = []
+    DEFAULT_LIGHT_LEVEL = 110
 
     def __init__(self, display):
         super().__init__()
+        self.light_level = self.DEFAULT_LIGHT_LEVEL
         self.history = []
         self.current = display
         self.clear()
 
     @expose
     def clear(self):
+        self.light_level = self.DEFAULT_LIGHT_LEVEL
         self.current.reset_state()
         self.record_current()
 
     @expose
-    def show(self, image):
+    def show(self, image, delay=400, wait=True, loop=False, clear=False):
+        if isinstance(image, MicrobitImage):
+            pass
+        # TODO: Fix this to use the proper Image api!
         for y, row in enumerate(image):
             for x, brightness in enumerate(row):
                 self.current.image[y][x] = brightness
         self.record_current()
 
+    @expose
+    def set_pixel(self, x, y, value):
+        self.current.image[y][x] = value
+        self.record_current()
+
+    @expose
+    def get_pixel(self, x, y):
+        return self.current.image[y][x]
+
     def record_current(self):
         self.history.append(self.current.copy())
 
+    @expose
+    def read_light_level(self):
+        return self.light_level
+
+    @expose
+    def set_light_level(self, light_level):
+        self.light_level = light_level
 
 
 class MockMicrobit(MockModuleExposing):

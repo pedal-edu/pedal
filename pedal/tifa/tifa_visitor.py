@@ -33,7 +33,8 @@ from pedal.tifa.feedbacks import (action_after_return, return_outside_function,
                                   possible_initialization_problem,
                                   incorrect_arity, else_on_loop_body,
                                   module_not_found, nested_function_definition,
-                                  unused_returned_value, invalid_indexing)
+                                  unused_returned_value, invalid_indexing,
+                                  attribute_type_change)
 from pedal.utilities.system import IS_PYTHON_39, IS_AT_LEAST_PYTHON_38
 
 
@@ -264,7 +265,9 @@ class Tifa(TifaCore, ast.NodeVisitor):
                     self._issue(incompatible_types(self.locate(), operation, original_type, target_type, report=self.report))
             else:
                 new_target_type = target_type
-            original_type.add_attr(target.attr, new_target_type)
+            assigned_type = original_type.add_attr(target.attr, new_target_type)
+            if isinstance(assigned_type, ImpossibleType):
+                self._issue(attribute_type_change(self.locate(), target.attr, original_type, new_target_type, report=self.report))
             if origin:
                 origin_type = self.load_variable(origin)
                 if origin_type:
@@ -841,15 +844,20 @@ class Tifa(TifaCore, ast.NodeVisitor):
         """
         # Handle names
         for alias in node.names:
-            if node.module is None:
-                asname = alias.asname or alias.name
-                module_type = self.load_module(alias.name)
+            if alias.name == '*':
+                module_type = self.load_module(node.module)
+                for field, value in module_type.fields.items():
+                    self.store_read_variable(field, value)
             else:
-                module_name = node.module
-                asname = alias.asname or alias.name
-                module_type = self.load_module(module_name)
-            name_type = module_type.get_attr(alias.name)
-            self.store_variable(asname, name_type)
+                if node.module is None:
+                    asname = alias.asname or alias.name
+                    module_type = self.load_module(alias.name)
+                else:
+                    module_name = node.module
+                    asname = alias.asname or alias.name
+                    module_type = self.load_module(module_name)
+                name_type = module_type.get_attr(alias.name)
+                self.store_variable(asname, name_type)
 
     def visit_Lambda(self, node):
         """

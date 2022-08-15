@@ -281,6 +281,31 @@ class parameter_type_mismatch(TifaFeedback):
         super().__init__(location=location, fields=fields, **kwargs)
 
 
+class field_type_mismatch(TifaFeedback):
+    """ Field type mismatch """
+    title = "Field Type Mismatch"
+    message_template = ("You defined the field {field_name_message} "
+                        "as {field_type_name}. However, the argument passed to that field's parameter in the"
+                        " constructor function on line {location.line} was {argument_type_name}. The formal field"
+                        " type must match the argument's type."
+                        )
+    justification = "TIFA visited a constructor function call where a parameter type and argument type were not subtypes."
+
+    def __init__(self, location, field_name, field, argument, **kwargs):
+        report = kwargs.get("report", MAIN_REPORT)
+        field_type_name = field.singular_name
+        argument_type_name = argument.singular_name
+        if field_type_name == argument_type_name:
+            argument_type_name = "a different kind of " + argument_type_name
+        fields = {'location': location,
+                  'field_name': field_name,
+                  'field_name_message': report.format.name(field_name),
+                  'field_type': field,
+                  'field_type_name': field_type_name,
+                  'argument_type': argument,
+                  'argument_type_name': argument_type_name}
+        super().__init__(location=location, fields=fields, **kwargs)
+
 class read_out_of_scope(TifaFeedback):
     """ Read out of scope """
     title = "Read out of Scope"
@@ -313,6 +338,21 @@ class type_changes(TifaFeedback):
                   'old': old, 'new': new}
         super().__init__(location=location, fields=fields, **kwargs)
 
+
+class attribute_type_change(TifaFeedback):
+    """ Type change on attribute """
+    title = "Attribute Type Change"
+    message_template = ("On line {location.line}, you attempted to assign a {new} to "
+                        "the attribute {attr_message}, which was supposed to be {old}.")
+    justification = ""
+    muted = False
+
+    def __init__(self, location, attr, old, new, **kwargs):
+        report = kwargs.get("report", MAIN_REPORT)
+        fields = {'location': location, 'attr': attr,
+                  'attr_message': report.format.name(attr),
+                  'old': old, 'new': new}
+        super().__init__(location=location, fields=fields, **kwargs)
 
 class type_change_append(TifaFeedback):
     """ Type Change in an append Method """
@@ -382,16 +422,18 @@ class not_a_function(TifaFeedback):
 class incorrect_arity(TifaFeedback):
     """ Incorrect arity """
     title = "Incorrect Arity"
-    message_template = ("The function {function_name_message} was given the "
+    message_template = ("The {function_type} {function_name_message} was given the "
                         "wrong number of arguments. You should have had {expected_count} "
                         "arguments, but instead you had {actual_count} arguments.")
     justification = ""
 
-    def __init__(self, location, function_name, expected_count, actual_count, **kwargs):
+    def __init__(self, location, function_name, expected_count, actual_count, is_constructor=False, **kwargs):
         report = kwargs.get("report", MAIN_REPORT)
+        function_type = 'constructor function' if is_constructor else 'function'
         super().__init__(location=location, function_name=function_name,
                          expected_count=expected_count, actual_count=actual_count,
                          function_name_message=report.format.name(function_name),
+                         function_type=function_type,
                          **kwargs)
 
 
@@ -480,7 +522,10 @@ TODO: Finish these checks
 
 
 # TODO: Add in all other names from this module
-FEEDBACK_BY_NAME = {'type_change_append': type_change_append}
+FEEDBACK_BY_NAME = {'type_change_append': type_change_append,
+                    'incorrect_arity': incorrect_arity,
+                    'parameter_type_mismatch': parameter_type_mismatch,
+                    'field_type_mismatch': field_type_mismatch}
 
 
 def lookup_feedback(name):
