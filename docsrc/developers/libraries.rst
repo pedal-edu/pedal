@@ -237,7 +237,7 @@ The following features would be DIFFICULT/PAINFUL to rewrite in Pedal:
 * f-strings don’t support the !r, !s, and !a conversions
 * Method Resolution Order (MRO) is not compliant with CPython
 * When inheriting from multiple classes super() only calls one class
-* Function objects do not have the __module__ attribute (this one would be INCREDIBLY painful to rewrite)
+* User-defined attributes for functions are not supported (this one would be INCREDIBLY painful to rewrite)
 
 The following features were convenient in Pedal, and could be avoided:
 
