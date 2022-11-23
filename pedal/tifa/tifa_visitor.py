@@ -464,7 +464,10 @@ class Tifa(TifaCore, ast.NodeVisitor):
         elif isinstance(function_type, (IntType, FloatType, NumType, ListType,
                                         DictType, SetType, TupleType, InstanceType,
                                         StrType, BoolType, NoneType, LiteralValue)):
-            self._issue(not_a_function(self.locate(), original_callee, function_type, report=self.report))
+            if original_callee is None:
+                self._issue(not_a_function(self.locate(), "a value", function_type, report=self.report))
+            else:
+                self._issue(not_a_function(self.locate(), original_callee.name, function_type, report=self.report))
             return ImpossibleType()
         return AnyType()
 
@@ -671,7 +674,7 @@ class Tifa(TifaCore, ast.NodeVisitor):
                 # Process arguments
                 if len(arguments) + len(named_arguments) != len(pos_parameters) and not vararg_parameter:
                     self._issue(incorrect_arity(self.locate(), function_name,
-                                                len(arguments), len(pos_parameters), report=self.report))
+                                                len(pos_parameters), len(arguments), report=self.report))
                 for parameter, default, argument in zip(pos_parameters, pos_defaults, arguments):
                     parameter_name = parameter.arg
                     if parameter.annotation:

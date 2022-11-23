@@ -230,8 +230,7 @@ The traceback was:
 Line 5 of file answer.py
     syntax error
 
-
-Suggestion: Check line 5, the line before it, and the line after it.""",
+Suggestion: Check line 5, the line before it, and the line after it. Remember to ignore blank lines.""",
                          "\n".join(f"# {g.section_number if g is not None else 'Global'}\n{f.title}\n{f.message}"
                                    for g, f in finals.items()))
 

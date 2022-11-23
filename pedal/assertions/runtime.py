@@ -463,7 +463,10 @@ class assert_is_instance(RuntimeAssertionFeedback):
 
     def condition(self, obj, cls):
         """ Tests if the left and right are equal """
-        return not isinstance(obj.value, cls.value)
+        value = cls.value
+        if value == int or value == float:
+            value = (int, float)
+        return not isinstance(obj.value, value)
 
 
 class assert_not_is_instance(RuntimeAssertionFeedback):
@@ -489,7 +492,10 @@ class _compare_type(RuntimeAssertionFeedback):
 
     def __init__(self, value, expected_type, **kwargs):
         fields = kwargs.setdefault('fields', {})
-        value_pedal_type = get_pedal_type_from_value(unwrap_value(value), evaluate)
+        if isinstance(unwrap_value(value), Exception):
+            value_pedal_type = "An error"
+        else:
+            value_pedal_type = get_pedal_type_from_value(unwrap_value(value), evaluate)
         evaluated_expected_type = evaluate(expected_type) if isinstance(expected_type, str) else expected_type
         expected_pedal_type = normalize_type(evaluated_expected_type, evaluate)
         if not isinstance(expected_pedal_type, Exception):
@@ -497,7 +503,9 @@ class _compare_type(RuntimeAssertionFeedback):
             expected_pedal_type_name = expected_pedal_type.singular_name
         else:
             expected_pedal_type_name = ""
-        singular_name = share_sandbox_context(value_pedal_type.singular_name, value)
+        singular_name = share_sandbox_context(value_pedal_type if
+                                              isinstance(value_pedal_type, str) else
+                                              value_pedal_type.singular_name, value)
         fields['value_raw'] = value
         fields['value_type'] = value_pedal_type
         fields['value_type_name'] = singular_name
@@ -725,6 +733,7 @@ class assert_has_function(RuntimeAssertionFeedback):
 
 # TODO: This one is at Runtime, but is not an assertion... Should these be "tests"?
 
+
 class ensure_coverage(AssertionFeedback):
     """
     Verifies that the most recent executed and traced student code has
@@ -753,7 +762,7 @@ class ensure_coverage(AssertionFeedback):
         super().__init__(coverage, at_least, **kwargs)
 
     def condition(self, coverage, at_least):
-        return coverage <= at_least
+        return coverage < at_least
 
 
 class ensure_called_uniquely(AssertionFeedback):

@@ -5,6 +5,7 @@ behavior.
 import re
 import sys
 import types
+from io import StringIO
 
 from pedal.core.report import Report
 from pedal.sandbox.exceptions import (SandboxNoMoreInputsException,
@@ -95,7 +96,7 @@ def create_open_function(report: Report, forbidden_names=_OPEN_FORBIDDEN_NAMES, 
         elif forbidden_modes.search(mode):
             raise RuntimeError("You are not allowed to 'open' files for writing.")
         elif report.submission and name in report.submission.files:
-            return report.submission.files[name]
+            return StringIO(report.submission.files[name])
         else:
             return ORIGINAL_BUILTINS['open'](name, mode, buffering)
     return _restricted_open

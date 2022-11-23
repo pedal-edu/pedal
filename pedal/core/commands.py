@@ -6,7 +6,7 @@ Uses a global report object (MAIN_REPORT).
 __all__ = ['feedback', 'set_success', 'compliment', 'give_partial', 'explain',
            'gently', 'hide_correctness', 'suppress', 'log', 'debug',
            'system_error', 'clear_report', 'get_all_feedback', 'guidance',
-           'contextualize_report', 'Feedback']
+           'contextualize_report', 'Feedback', 'get_submission']
 
 from pedal.core.feedback import (Feedback, FeedbackKind, FeedbackCategory,
                                  FeedbackResponse)
@@ -218,6 +218,19 @@ def contextualize_report(submission, filename='answer.py', clear=True,
     if clear:
         report.clear()
     report.contextualize(submission)
+
+def get_submission(report=MAIN_REPORT) -> Submission:
+    """
+    Get the current submission from the given report, or the default MAIN_REPORT.
+
+    Args:
+        report: The report to attach this feedback to (defaults to the
+            :py:data:`~pedal.core.report.MAIN_REPORT`).
+
+    Returns:
+        Submission: The current submission
+    """
+    return report.submission
 
 
 def get_all_feedback(report=MAIN_REPORT):

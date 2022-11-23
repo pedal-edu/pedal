@@ -139,6 +139,26 @@ class wrong_fields_type(AssertionFeedback):
         super().__init__(fields=fields, **kwargs)
 
 
+class wrong_field_order(AssertionFeedback):
+    """ Wrong Field Order """
+    title = "Wrong Field Order"
+    message_template = ("The dataclass named {name_message} has a field named "
+                        "{actual_message}, which is correct. However, that field should "
+                        "come after the field named {expected_message}. Instead, it came "
+                        "before. Check the order of your definitions' fields.")
+
+    def __init__(self, name, actual, expected, **kwargs):
+        report = kwargs.get("report", MAIN_REPORT)
+        fields = kwargs.get("fields", {})
+        fields['name'] = name
+        fields['name_message'] = report.format.name(name)
+        fields['actual'] = actual
+        fields['actual_message'] = report.format.name(actual)
+        fields['expected'] = expected
+        fields['expected_message'] = report.format.name(expected)
+        super().__init__(fields=fields, **kwargs)
+
+
 class name_is_not_a_dataclass(AssertionFeedback):
     """ The name is not a dataclass """
     title = "Name Is Not a Dataclass"
@@ -179,5 +199,5 @@ class missing_dataclass_annotation(AssertionFeedback):
         fields = kwargs.get("fields", {})
         fields['name'] = name
         fields['name_message'] = report.format.name(name)
-        fields['dc_annotation'] = report.format.code('@dataclass')
+        fields['dc_annotation'] = report.format.html_code('@dataclass')
         super().__init__(fields=fields, **kwargs)

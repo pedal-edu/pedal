@@ -11,7 +11,7 @@ from pedal.assertions.classes import (missing_dataclass, dataclass_not_available
                                       missing_field_type, too_few_fields, too_many_fields,
                                       duplicate_dataclass_definition, invalid_field_type,
                                       wrong_fields_type, name_is_not_a_dataclass, missing_dataclass_annotation,
-                                      unknown_field)
+                                      unknown_field, wrong_field_order)
 from pedal.assertions.functions import *
 from pedal.cait.cait_api import parse_program
 from pedal.assertions.feedbacks import AssertionFeedback
@@ -31,8 +31,10 @@ class EnsureAssertionFeedback(AssertionFeedback):
     def __init__(self, name, at_least=1, root=None, **kwargs):
         report = kwargs.get('report', MAIN_REPORT)
         root = root or parse_program(report=report)
+        root_message = "" if not root else " (inside of some other code)"
         fields = {'name': name, 'at_least': at_least, 'capacity': '',
-                  'root': root, 'name_message': report.format.name(name)}
+                  'root': root, 'name_message': report.format.name(name),
+                  'root_message': root_message}
         super().__init__(fields=fields, **kwargs)
 
     def _check_usage(self, field_name, uses):
@@ -53,8 +55,10 @@ class PreventAssertionFeedback(AssertionFeedback):
     def __init__(self, name, at_most=0, root=None, **kwargs):
         report = kwargs.get('report', MAIN_REPORT)
         root = root or parse_program(report=report)
+        root_message = "" if not root else " (inside of some other code)"
         fields = {'name': name, 'at_most': at_most, 'capacity': '',
-                  'root': root, 'name_message': report.format.name(name)}
+                  'root': root, 'name_message': report.format.name(name),
+                  'root_message': root_message}
         super().__init__(fields=fields, **kwargs)
 
     def _check_usage(self, field_name, uses):
@@ -313,6 +317,8 @@ class prevent_ast(PreventAssertionFeedback):
     message_template = ("You used {name_message} on line "
                         "{location.line}. You may not use that"
                         "{capacity}.")
+    justification_template = ("Incorrectly found a {name_message}{capacity}{root_message}.",
+                              "Correctly found a {name_message}{capacity}{root_message}.")
 
     def condition(self):
         """ Use find_all to check number of occurrences. """
@@ -339,6 +345,8 @@ class ensure_ast(EnsureAssertionFeedback):
     """
     title = "Must Use Code"
     message_template = "You must use {name_message}{capacity}."
+    justification_template = ("Failed to find a {name_message}{capacity}{root_message}.",
+                              "Successfully found a {name_message}{capacity}{root_message}.")
 
     def condition(self):
         """ Use find_all to check number of occurrences. """
@@ -589,13 +597,15 @@ def ensure_dataclass(name, fields=None, root=None, compliment=False, **kwargs):
                          if isinstance(line.ast_node, ast.AnnAssign) and line.simple]
     # TODO: Support ast.Assign nodes for default values
     # 1. Make sure import is present
-    ensure_import('dataclasses')
+    missing_import = ensure_import('dataclasses')
+    if missing_import:
+        return missing_import
     for decorator in definition.decorator_list:
         # TODO: Support the @dataclasses.dataclass style too
         if isinstance(decorator.ast_node, ast.Name) and decorator.id == 'dataclass':
             break
     else:
-        missing_dataclass_annotation(name, **kwargs)
+        return missing_dataclass_annotation(name, **kwargs)
     # 2. Confirm the number of fields
     expected_arity = len(fields)
     actual_arity = len(definition_fields)
@@ -621,6 +631,10 @@ def ensure_dataclass(name, fields=None, root=None, compliment=False, **kwargs):
         if not is_subtype(actual_field_type, expected_field_type):
             return wrong_fields_type(name, actual_field_name, actual_field_type,
                                      expected_field_type, **kwargs)
+    for actual_field, expected_field in zip(definition_fields, fields.keys()):
+        actual_field_name = actual_field.target.id
+        if actual_field_name != expected_field:
+            return wrong_field_order(name, actual_field_name, expected_field, **kwargs)
     # Alternatively, returns positive FF?
     if compliment:
         if isinstance(compliment, str):

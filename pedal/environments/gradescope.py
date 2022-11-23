@@ -37,17 +37,13 @@ $> pedal feedback \
 }
 
 """
-import re
-import sys
 import json
-from html.parser import HTMLParser
 import tabulate
 
 from pedal import Score
 from pedal.core.final_feedback import parse_feedback
 from pedal.resolvers.core import make_resolver
 from pedal.source import verify, next_section as original_next_section
-from pedal.core.feedback import Feedback
 from pedal.core.environment import Environment
 from pedal.core.report import MAIN_REPORT
 from pedal.sandbox import run, get_sandbox, set_input, start_trace, get_output

@@ -3,7 +3,7 @@ Class for managing custom score objects (e.g., "+20%").
 """
 import re
 
-SCORE_PATTERN = re.compile(r"(\!*)([\+\-\/\*])?([\d\.]+)(\%)?(.*)")
+SCORE_PATTERN = re.compile(r"(!*)([+\-/*])?([\d.]+)(%)?(.*)")
 
 class Score:
     def __init__(self, invert, operator, value, percentage, leftovers):
@@ -61,12 +61,18 @@ class Score:
             value *= 100
         value = str(round(value))
         operator = self.operator
-        if operator is None:
+        if not operator:
             operator = "+"
         return (
             ("!" if self.invert else "")+operator+value +
             ("%" if self.percentage else "")+self.leftovers
         )
+
+    def to_percent_string(self):
+        value = self.value * 100
+        value = str(round(value))
+        operator = "+" if not self.operator else self.operator
+        return ("!" if self.invert else "") + operator + value + "%" + self.leftovers
 
     def add_to_current(self, current):
         if self.operator in ("+", None, "") and not self.invert:

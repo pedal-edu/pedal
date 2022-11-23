@@ -416,15 +416,14 @@ print(x)''') as e:
 
             assert_type(evaluate('x'), Cat)
         self.assertFeedback(e, """Name Error
-A NameError occurred:
-
-    Name 'cat' is not defined
-
 I evaluated the expression:
     Cat
 
-The traceback was:
-missing
+A NameError occurred:
+
+    Name 'Cat' is not defined
+
+
 
 A name error means you have used a variable that has no value.  You may have a typo, so check the spelling. Or, you may have forgotten to initialize a variable.
 

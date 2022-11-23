@@ -7,6 +7,7 @@ TODO: JoinedStr
 import ast
 from pedal.core.report import MAIN_REPORT
 from pedal.core.location import Location
+from pedal.tifa.contexts import NewScope
 from pedal.types.normalize import (get_pedal_type_from_json)
 from pedal.types.builtin import (get_builtin_module)
 from pedal.types.new_types import (is_subtype, Type, AnyType, ImpossibleType, NoneType,
@@ -156,6 +157,7 @@ class TifaCore:
         self.path_parents = {}
         self.final_node = None
         self.class_scopes = {}
+        self.module_scopes = {}
 
     def find_variable_scope(self, name):
         """
@@ -345,7 +347,7 @@ class TifaCore:
             self.name_map[current_path][full_name] = new_state
         else:
             new_state = self.trace_state(variable.state, "store", position)
-            if not variable.in_scope:
+            if not variable.in_scope and not self._in_module():
                 self._issue(write_out_of_scope(self.locate(), name, report=self.report))
             # Type change?
             if not is_subtype(store_type, variable.state.type):
@@ -418,32 +420,55 @@ class TifaCore:
                         module type.
         """
         module_names = chain.split('.')
-        potential_module = get_builtin_module(module_names[0])
-        if potential_module is not None:
-            base_module = potential_module
-            for module in module_names[1:]:
-                if (isinstance(base_module, ModuleType) and
-                        module in base_module.submodules):
-                    base_module = base_module.submodules[module]
-                else:
-                    self._issue(module_not_found(self.locate(), chain, False, None, report=self.report))
-            return base_module
-        else:
-            filename = chain.replace('.', '/') + ".py"
-            if self.report.submission and filename in self.report.submission.files:
-                # TODO: Try running TIFA over the code
-                return ModuleType(module_names[-1], {}, {})
-            else:
-                # Non-student file, maybe it has _tifa_definitions?
-                try:
-                    actual_module = __import__(chain, globals(), {},
-                                               ['_tifa_definitions'])
-                    definitions = actual_module._tifa_definitions()
-                    return get_pedal_type_from_json(definitions)
-                except Exception as e:
-                    #print(e)
-                    self._issue(module_not_found(self.locate(), chain, True, e, report=self.report))
-                    return ModuleType(module_names[-1], {}, {})
+        for potential_module in [self.report[TOOL_NAME]['types']['modules'].get(module_names[0]),
+                                 get_builtin_module(module_names[0])]:
+            if potential_module is not None:
+                base_module = potential_module
+                for module in module_names[1:]:
+                    if (isinstance(base_module, ModuleType) and
+                            module in base_module.submodules):
+                        base_module = base_module.submodules[module]
+                    else:
+                        # TODO: What if the module is partially overriding a builtin?
+                        self._issue(module_not_found(self.locate(), chain, False, None, report=self.report))
+                return base_module
+
+        # Non-student file, maybe it has _tifa_definitions?
+        error = None
+        try:
+            actual_module = __import__(chain, globals(), {},
+                                       ['_tifa_definitions'])
+            definitions = actual_module._tifa_definitions()
+            return get_pedal_type_from_json(definitions)
+        except Exception as e:
+            error = e
+        filename = chain.replace('.', '/') + ".py"
+        if self.report.submission and filename in self.report.submission.files:
+            # TODO: Try running TIFA over the code
+            code = self.report.submission.files[filename]
+            try:
+                # TODO: Doesn't import toplevels as variables.
+                # TODO: Allow variables to be unused inside the file
+                self.report[TOOL_NAME]['types']['modules'][chain] = self._visit_module(chain, filename, code)
+                return self.report[TOOL_NAME]['types']['modules'][chain]
+            except Exception as e:
+                error = e
+        self._issue(module_not_found(self.locate(), chain, True, error, report=self.report))
+        return ModuleType(module_names[-1], {}, {})
+
+    def _visit_module(self, module_name, filename, code):
+        ast_tree = ast.parse(code, filename)
+        # TODO: Properly handle submodules
+        new_module = ModuleType(module_name, {}, {})
+        #self.store_variable(class_name, new_class_type)
+        definitions_scope = self.scope_chain[:]
+        class_scope = NewScope(self, definitions_scope, class_type=new_module, is_module=True)
+        with class_scope:
+            self.visit(ast_tree)
+        return new_module
+
+    def _in_module(self):
+        return any(scope_id in self.module_scopes for scope_id in self.scope_chain)
 
     def combine_states(self, left, right):
         """

@@ -10,10 +10,10 @@ from pedal.sandbox import TOOL_NAME
 from pedal.utilities.text import add_indefinite_article
 
 RUNTIME_ERROR_MESSAGE_HEADER = (
+    "{context_message}\n"
     "{exception_name} occurred:\n\n"
     "{exception_message}\n\n"
-    "{context_message}\n"
-    "The traceback was:\n{traceback_message}\n"
+    "{traceback_message}\n"
 )
 
 
@@ -47,7 +47,8 @@ class runtime_error(FeedbackResponse):
         report = kwargs.get('report', MAIN_REPORT)
         exception_name = get_exception_name(exception)
         exception_name_proper = add_indefinite_article(exception_name)
-        exception_message = str(exception).capitalize()
+        exception_message = str(exception)
+        exception_message = exception_message[0].upper() + exception_message[1:] if exception_message else ""
         if type(exception) not in EXCEPTION_FF_MAP:
             title = exception_name
         else:
@@ -56,6 +57,10 @@ class runtime_error(FeedbackResponse):
         traceback_stack = traceback.build_traceback()
         traceback_message = traceback.format_traceback(traceback_stack,
                                                        report.format)
+        if not traceback_message:
+            traceback_message = ""
+        else:
+            traceback_message = f"The traceback was:\n{traceback_message}"
         context_message = format_contexts(context, report.format)
         fields = {'exception': exception,
                   'exception_name': exception_name_proper,

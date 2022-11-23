@@ -74,11 +74,11 @@ class TestCode(unittest.TestCase):
         self.assertIsInstance(student.exception, TypeError)
         self.assertEqual(1, student.feedback.location.line)
         self.assertEqual(dedent(
-            """A TypeError occurred:
+            """I ran the file _sandbox_test_student.py.
+
+A TypeError occurred:
 
     Unsupported operand type(s) for +: 'int' and 'str'
-
-I ran the file _sandbox_test_student.py.
 
 The traceback was:
 Line 1 of file _sandbox_test_student.py
@@ -102,15 +102,15 @@ Suggestion: To fix a type error, you should trace through your code. Make sure e
         print("--", [c.inputs for c in student._context])
         self.assertEqual(3, student.feedback.location.line)
         self.assertEqual(dedent(
-            """A ValueError occurred:
-
-    Invalid literal for int() with base 10: 'banana'
-
-I ran the code:
+            """I ran the code:
     get_input()
 
 And I entered as input:
     Banana 
+    
+A ValueError occurred:
+
+    Invalid literal for int() with base 10: 'Banana'
 
 The traceback was:
 Line 3 of file student.py in get_input
@@ -319,15 +319,15 @@ Suggestion: Read the error message to see which function had the issue. Check wh
         result = student.call("x", inputs=["0"])
         print([[c.kind, c.inputs] for c in student._context])
 
-        self.assertEqual("""A TypeError occurred:
-
-    Unsupported operand type(s) for %: 'int' and 'str'
-
-I ran the code:
+        self.assertEqual("""I ran the code:
     x()
 
 And I entered as input:
     0 
+
+A TypeError occurred:
+
+    Unsupported operand type(s) for %: 'int' and 'str'
 
 The traceback was:
 Line 4 of file answer.py in x

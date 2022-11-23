@@ -4,7 +4,7 @@ Tests related to checking function definitions
 
 import unittest
 
-from pedal import unit_test, block_function
+from pedal import unit_test, block_function, evaluate, CommandBlock, run
 from pedal.assertions.static import *
 from pedal.types.new_types import DictType, LiteralStr, StrType
 from tests.execution_helper import Execution, ExecutionTestCase, SUCCESS_MESSAGE
@@ -94,11 +94,11 @@ make_polite("Pet the dog")""", run_tifa=False) as e:
                       (["Pet the dog"], "Pet the dog, please"),
                       (["Walk the dog"], "Walk the dog, please"))
         self.assertFeedback(e, """Type Error
+I ran your code.
+
 A TypeError occurred:
 
     Can only concatenate str (not "function") to str
-
-I ran your code.
 
 The traceback was:
 Line 5 of file answer.py
@@ -127,6 +127,80 @@ You passed 0/1 tests.
 I ran your function summate on some new arguments.
  | Arguments | Returned | Expected
 × |     [1, 2, 3] | You are not allowed to call 'sum'. | 6""")
+
+    def test_unit_test_extra_context(self):
+        with Execution('def add(a, b): return b', run_tifa=False) as e:
+            unit_test('add',
+                      ('data, 5', 17),
+                      (([3, 3], 3), 9),
+                      score="+100%",
+                      context=evaluate('[5, 3, 4]', target='data'),
+                      partial_credit=True)
+        #self.assertEqual(3 / 5, e.final.score)
+        self.assertFeedback(e, """
+Failed Instructor Test
+Student code failed instructor tests.
+You passed 0/2 tests.
+
+I ran the code:
+    data = [5, 3, 4]
+
+I ran your function add on some new arguments.
+ | Arguments | Returned | Expected
+× |     data, 5 | 5 | 17
+× |     [3, 3], 3 | 3 | 9""")
+
+    def test_unit_test_extra_context_run(self):
+        with Execution('def add(a, b): return b', run_tifa=False) as e:
+            run('this_should_not_appear = 5')
+            unit_test('add',
+                      ('data, 5', 17),
+                      (([3, 3], 3), 9),
+                      score="+100%",
+                      context=run('data = [5, 3, 4]\ndata2 = [1,2,3]'),
+                      partial_credit=True)
+        #self.assertEqual(3 / 5, e.final.score)
+        self.assertFeedback(e, """
+Failed Instructor Test
+Student code failed instructor tests.
+You passed 0/2 tests.
+
+I ran the code:
+    data = [5, 3, 4]
+    data2 = [1,2,3]
+
+I ran your function add on some new arguments.
+ | Arguments | Returned | Expected
+× |     data, 5 | 5 | 17
+× |     [3, 3], 3 | 3 | 9""")
+
+    def test_unit_test_extra_context_calls(self):
+        with Execution('def add(a, b): return b', run_tifa=False) as e:
+            with CommandBlock() as context:
+                evaluate('[1,2,3]', target='data')
+                evaluate('[1,2,3]', target='data2')
+            unit_test('add',
+                      ('data, 5', 17),
+                      ('data2, 5', 17),
+                      (([3, 3], 3), 9),
+                      score="+100%",
+                      context=context,
+                      partial_credit=True)
+        #self.assertEqual(3 / 5, e.final.score)
+        self.assertFeedback(e, """
+Failed Instructor Test
+Student code failed instructor tests.
+You passed 0/3 tests.
+
+I ran the code:
+    data = [1,2,3]
+    data2 = [1,2,3]
+
+I ran your function add on some new arguments.
+ | Arguments | Returned | Expected
+× |     data, 5 | 5 | 17
+× |     data2, 5 | 5 | 17
+× |     [3, 3], 3 | 3 | 9""")
 
 if __name__ == '__main__':
     unittest.main(buffer=False)

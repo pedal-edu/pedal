@@ -378,9 +378,10 @@ class assert_group(AssertionFeedback, FeedbackGroup):
 
     message_template = ("Student code failed instructor tests.\n"
                         "{summary_statistics}\n"
+                        "{extra_context}"
                         "{tables}")
 
-    def __init__(self, name, try_all=True, **kwargs):
+    def __init__(self, name, try_all=True, context=None, **kwargs):
         super().__init__(delay_condition=True, **kwargs)
         self.name = name
         self.try_all = try_all
@@ -388,6 +389,12 @@ class assert_group(AssertionFeedback, FeedbackGroup):
         self.failures = []
         self.errors = []
         self.all_feedback = []
+
+        self.fields['extra_context'] = ""
+        if context:
+            formatted_messages = format_contexts([context], self.report.format)
+            if formatted_messages.strip():
+                self.fields['extra_context'] = formatted_messages + '\n'
 
     def __enter__(self):
         self.report.start_group(self)

@@ -16,7 +16,11 @@ def add_tuples(left, right):
 
 def add_element_container_types(left, right):
     """ Use whichever type is not empty """
-    return right.element_type.clone() if left.is_empty else left.element_type.clone()
+    if left.is_empty:
+        return right.clone()
+    else:
+        return left.clone()
+    #return right.element_type.clone() if left.is_empty else left.element_type.clone()
 
 
 def NumType_any(*x):

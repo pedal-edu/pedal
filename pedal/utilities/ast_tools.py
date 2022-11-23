@@ -14,7 +14,7 @@ AST_NODE_NAMES = {
     "AsyncFor": "an asychronous for loop",
     "AsyncFunctionDef": "an asychronous function definition",
     "AsyncWith": "an asychronous with statement",
-    "Attribute": "an attribute lookup",
+    "Attribute": "an attribute lookup (access a field)",
     "AugAssign": "an augmented assignment",
     "AugLoad": "an augmented load",
     "AugStore": "an augmented store",

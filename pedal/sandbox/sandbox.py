@@ -59,7 +59,7 @@ class Sandbox:
             turning them into temporary variables.
     """
 
-    MAXIMUM_TEMPORARY_LENGTH = 70
+    MAXIMUM_TEMPORARY_LENGTH = 200
     MAXIMUM_INPUTS = 100000
 
     def __init__(self, report=MAIN_REPORT):
@@ -397,7 +397,7 @@ class Sandbox:
         Tries to figure out the best context for the given target_name, by
         first checking whether the target was ever used in a CALL or EVAL.
         If it fails to find it, then it uses the most recent RUN. Otherwise,
-        it just just returns None.
+        it just returns None.
 
         Returns:
             :py:class:`pedal.sandbox.data.SandboxContext` or None: The found
@@ -421,7 +421,7 @@ class Sandbox:
 
     def stop_grouping_context(self):
         """ Stop grouping subsequent executions. """
-        self._context_group_start.pop()
+        return self._context_group_start.pop()
 
     def clear_context(self):
         """ Removes the history of any previous executions. """

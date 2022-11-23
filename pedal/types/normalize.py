@@ -27,10 +27,7 @@ from pedal.types.new_types import (Type, AnyType, ImpossibleType, NumType, BoolT
                                    widest_type, LiteralValue, TypeUnion, PEDAL_TYPE_NAMES, specify_subtype)
 from pedal.utilities.system import IS_PYTHON_39
 
-try:
-    import typing as python_types
-except ImportError:
-    python_types = None
+import types as dynamic_python_types
 
 try:
     from dataclasses import fields
@@ -85,11 +82,19 @@ def normalize_type(type_expression, evaluate_name=None) -> Type:
                         field.name: normalize_type(field.type, evaluate_name)
                         for field in fields(type_object)
                     })
-                return ClassType(type_object.__name__, {
-                    f: normalize_type(v, evaluate_name)
-                    for f, v in vars(type_object).items()
-                    if not f.startswith('___')
-                })
+                # TODO: Fix this ugly ugly hack!
+                try:
+                    vars(type_object)
+                    has_vars = True
+                except:
+                    has_vars = False
+                if has_vars:
+                    return ClassType(type_object.__name__, {
+                        f: normalize_type(v, evaluate_name)
+                        for f, v in vars(type_object).items()
+                        if not f.startswith('___')
+                    })
+                return ClassType(type_object.__name__, {})
             return type_object
         return normalize_type(type_expression.__name__, evaluate_name=evaluate_name)
     # Might be a string, can we evaluate?
@@ -118,6 +123,12 @@ def normalize_type(type_expression, evaluate_name=None) -> Type:
         return get_pedal_type_from_ast(type_expression, evaluate_name)
     if isinstance(type_expression, (set, list, tuple, frozenset)):
         return get_pedal_type_from_type_literal(type_expression, evaluate_name)
+    if isinstance(type_expression, dynamic_python_types.ModuleType):
+        return ModuleType(type_expression.__name__, {
+            field: normalize_type(getattr(type_expression, field), evaluate_name)
+            for field in dir(type_expression)
+            if not field.startswith('__')
+        })
     return get_pedal_type_from_value(type_expression)
     # raise ValueError(f"Could not normalize {type_expression!r} into a Pedal type.")
 

@@ -86,6 +86,7 @@ class FinalFeedback:
             invert_logic = ((feedback.valence != feedback.NEGATIVE_VALENCE) == (not feedback))
             inversion = "!" if invert_logic else ""
             self._scores.append(f"{inversion}{partial}")
+            feedback.resolved_score = Score.parse(f"{inversion}{partial}").to_percent_string()
         if not feedback and feedback.else_message:
             self.positives.append(feedback)
             return feedback

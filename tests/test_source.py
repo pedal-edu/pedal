@@ -46,23 +46,22 @@ The traceback was:
 Line 2 of file answer.py
     b b b
 
-
-Suggestion: Check line 2, the line before it, and the line after it.""", e.final.message)
+Suggestion: Check line 2, the line before it, and the line after it. Remember to ignore blank lines.""", e.final.message)
 
     def test_no_more_input(self):
         contextualize_report('def x():')
         verify()
         feedback = get_all_feedback()
         self.assertTrue(feedback)
-        self.assertEqual(feedback[0].label, 'syntax_error')
-        self.assertEqual(feedback[0].message, """Bad syntax on line 1
+        self.assertEqual(feedback[0].label, 'indentation_error')
+        self.assertEqual(feedback[0].message, """Bad indentation on line 1 or adjacent line.
+    expected an indented block (answer.py, line 1)
 
 The traceback was:
 Line 1 of file answer.py
     def x():
 
-
-Suggestion: Check line 1, the line before it, and the line after it.""")
+Suggestion: Check line 1, the line before it, and the line after it. Remember to ignore blank lines.""")
 
     def test_sections_syntax_errors(self):
         contextualize_report(dedent('''

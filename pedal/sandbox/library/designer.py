@@ -39,7 +39,19 @@ class MockDesigner(MockModule):
               'set_mouse_visible', 'set_music_position', 'set_music_volume', 'set_window_color',
               'set_window_size', 'set_window_state', 'set_window_title', 'set_world_state', 'sfx', 'shape',
               'spin', 'start', 'stop', 'stop_music', 'sys', 'text', 'this_directory', 'unregister', 'urlopen',
-              'utilities', 'when']
+              'utilities', 'when',
+              'above', 'below', 'beside', 'spin',
+              'move_forward', 'move_backward', 'turn_left', 'turn_right', 'go_to', 'go_to_xy', 'go_to_mouse',
+              'point_towards', 'point_towards_mouse', 'point_in_direction', 'change_xy', 'change_x',
+              'change_y', 'set_x', 'set_y',
+              'get_angle', 'get_x', 'get_y',
+              'flip_x', 'flip_y', 'set_flip_x', 'set_flip_y', 'set_scale', 'set_scale_x', 'set_scale_y',
+              'set_background_image',
+              'get_scale', 'get_scale_x', 'get_scale_y', 'get_visible', 'get_flip_x', 'get_flip_y', 'show',
+              'hide',
+              'grow', 'grow_x', 'grow_y', 'shrink',
+              'move_to_x', 'move_to_y', 'move_to', 'move_to_mouse', 'move_to_xy',
+              'set_visible', 'change_scale', 'set_emoji_name', 'set_text']
 
     def __init__(self):
         super().__init__()

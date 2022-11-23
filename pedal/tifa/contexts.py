@@ -52,10 +52,11 @@ class NewScope:
             will be available as a field.
     """
 
-    def __init__(self, tifa, definitions_scope_chain, class_type=None):
+    def __init__(self, tifa, definitions_scope_chain, class_type=None, is_module=False):
         self.tifa = tifa
         self.definitions_scope_chain = definitions_scope_chain
         self.class_type = class_type
+        self.is_module = is_module
 
     def __enter__(self):
         # Manage scope
@@ -69,10 +70,13 @@ class NewScope:
         if self.class_type is not None:
             self.class_type.scope_id = self.tifa.scope_id
             self.tifa.class_scopes[self.tifa.scope_id] = self.class_type
+        if self.is_module:
+            self.tifa.module_scopes[self.tifa.scope_id] = self.class_type
 
     def __exit__(self, exc_type, value, traceback):
         # Finish up the scope
-        self.tifa._finish_scope()
+        if not self.is_module:
+            self.tifa._finish_scope()
         # Leave the body
         self.tifa.scope_chain.pop(0)
         # Restore the scope

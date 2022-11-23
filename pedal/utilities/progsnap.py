@@ -65,7 +65,8 @@ class SqlProgSnap2(BaseProgSnap2):
                     'X-IsStaff': "False",
                 },
                 "Assignment": {
-                    "X-Course.Id": "4"
+                    "X-Name": "Midterm 2.4"
+                #    "X-Course.Id": "4"
                 }
             },
             link_selections={
@@ -82,7 +83,7 @@ class SqlProgSnap2(BaseProgSnap2):
                 }
             },
             link_primary={
-                'user': 'student_pokemon'
+                'user': 'student_email'
             },
         ),
     }

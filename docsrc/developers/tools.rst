@@ -10,3 +10,5 @@ Developer Tools Reference
     tools/cait
     tools/sandbox
     tools/assertions
+    tools/questions
+    tools/extensions

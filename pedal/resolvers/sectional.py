@@ -3,11 +3,8 @@ A version of the resolver that still chooses one piece of feedback, but
 does so per section.
 """
 
-import sys
-
 from pedal.core.feedback import Feedback
-from pedal.core.final_feedback import parse_feedback, FinalFeedback
-from pedal.resolvers import simple
+from pedal.core.final_feedback import FinalFeedback
 from pedal.core.report import MAIN_REPORT
 from pedal.resolvers.core import make_resolver
 from pedal.resolvers.simple import by_priority

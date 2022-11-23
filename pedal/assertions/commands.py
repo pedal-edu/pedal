@@ -3,7 +3,7 @@ Unifying collection of all the commands in ``pedal.assertions``.
 """
 from pedal.core.commands import gently
 from pedal.core.scoring import Score, combine_scores
-from pedal.sandbox.commands import call, clear_student_data, run, get_sandbox
+from pedal.sandbox.commands import call, clear_student_data, run, get_sandbox, CommandBlock
 from pedal.assertions.static import *
 from pedal.assertions.runtime import *
 from pedal.assertions.runtime import _FIELDS
@@ -22,7 +22,7 @@ _unit_test_class = unit_test
 
 
 def unit_test(function, *tests, else_message=None, score=None, partial_credit=False,
-              assert_function=None, **kwargs):
+              assert_function=None, context=None, **kwargs):
     """
     Helper function for quickly unit testing.
 
@@ -51,11 +51,25 @@ def unit_test(function, *tests, else_message=None, score=None, partial_credit=Fa
     if assert_function is None:
         assert_function = assert_equal
     each_score = partial_credit_logic(tests, score, partial_credit)
+    # Handle context
+    if context is True:
+        context = get_sandbox().get_context()
+    elif context:
+        if isinstance(context, Sandbox):
+            context = context.get_context()
+        elif isinstance(context, CommandBlock):
+            context = context.context
+        else:
+            context = get_sandbox().get_context(context._actual_context_id)
     # TODO: Make it so unit_test can document its cases
-    with _unit_test_class(function, else_message=else_message, **kwargs) as group_result:
+    with _unit_test_class(function, else_message=else_message,
+                          context=context, **kwargs) as group_result:
         for test_index, test in enumerate(tests):
             args, expected = test
-            assert_function(call(function, *args), expected, score=each_score[test_index], **kwargs)
+            if isinstance(args, str):
+                assert_function(call(function, args_locals=[args]), expected, score=each_score[test_index], **kwargs)
+            else:
+                assert_function(call(function, *args), expected, score=each_score[test_index], **kwargs)
     if partial_credit is False:
         group_result.score = score
     else:
@@ -66,12 +80,26 @@ def unit_test(function, *tests, else_message=None, score=None, partial_credit=Fa
     return not group_result
 
 
+class check_dataclass_error(RuntimeAssertionFeedback):
+    justification = "Value is not a dataclass"
+    _expected_verb = "to be"
+    _inverse_operator = "is not"
+
+    def __init__(self, value, **kwargs):
+        super().__init__(SandboxedValue(value), ExactValue("a dataclass"), **kwargs)
+
 def check_dataclass_instance(value, dataclass, else_message=None, score=None, partial_credit=False, **kwargs):
     report = kwargs.get('report', MAIN_REPORT)
+    name = dataclass.__name__
+    # Check that we weren't given an error
+    if isinstance(value, Exception):
+        return check_dataclass_error(value, score=score, **kwargs)
+        #return gently(f"I evaluated the name {report.format.name(name)} and expected the result to be a dataclass. "
+        #              f"However, there was an error instead.",
+        #              label="check_dataclass_error", score=score, **kwargs)
     # Get the students' instance as a Pedal Type
     value_pedal_type = get_pedal_type_from_value(unwrap_value(value), evaluate)
     # Convert the instructor's version to a Pedal type
-    name = dataclass.__name__
     evaluated_expected_type = evaluate(dataclass) if isinstance(dataclass, str) else dataclass
     expected_pedal_type = normalize_type(evaluated_expected_type, evaluate)
     if not isinstance(expected_pedal_type, Exception):
@@ -82,9 +110,10 @@ def check_dataclass_instance(value, dataclass, else_message=None, score=None, pa
     # Make sure the students' version is an actual dataclass
     singular_name = share_sandbox_context(value_pedal_type.singular_name, value)
     if not hasattr(unwrap_value(value), _FIELDS):
-        return gently(f"I evaluated the name {report.format.name(name)} and expected the result to be a dataclass. "
-                      f"However, the result was a {report.format.python_expression(type(unwrap_value(value)))}",
-                      label="check_dataclass_missing", score=score, **kwargs)
+        return check_dataclass_error(value, score=score, **kwargs)
+        #return gently(f"I evaluated the name {report.format.name(name)} and expected the result to be a dataclass. "
+        #              f"However, the result was a {report.format.python_expression(str(type(unwrap_value(value))))}",
+        #              label="check_dataclass_missing", score=score, **kwargs)
     if not fields:
         return gently("Dataclasses are not supported in this version of Python", label="dataclasses_not_supported")
     # Now Check the fields

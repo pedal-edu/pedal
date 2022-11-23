@@ -419,13 +419,16 @@ class CommandBlock:
 
     def __init__(self, report=MAIN_REPORT):
         self.sandbox = report[TOOL_NAME]['sandbox']
+        self.context_id = None
+        self.context = None
 
     def __enter__(self):
         self.sandbox.start_grouping_context()
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        self.sandbox.stop_grouping_context()
+        self.context = self.sandbox.get_context()
+        self.context_id = self.sandbox.stop_grouping_context()
 
 
 # TODO: Deprecate these!

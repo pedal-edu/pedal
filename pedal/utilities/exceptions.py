@@ -233,7 +233,9 @@ class ExpandedTraceback:
              (f" in {formatter.frame(frame.name)}\n"
               if frame.name != "<module>" and frame.name is not None
               else "\n") +
-             f"{formatter.python_code(frame.line)}\n")
+             f"{formatter.python_code(frame.line if frame.line is not None else '')}\n")
             for frame in traceback_stack
-        ]) or "missing"
+        ])
+        if not traceback_message:
+            return None
         return formatter.traceback(traceback_message)

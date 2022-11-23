@@ -4,5 +4,5 @@ Extensions
 .. automodule:: pedal.extensions.plotting
     :members:
 
-.. automodule:: pedal.assertions.turtles
+.. automodule:: pedal.extensions.turtles
     :members:

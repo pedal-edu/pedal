@@ -246,9 +246,11 @@ class AbstractPipeline:
                 events = progsnap.get_events(event_filter={'EventType': event_type},
                                              link_filters=link_filters, limit=self.config.limit)
             if self.config.progsnap_events == 'last':
-                events = [e for e in {
-                    (event[progsnap.profile['link_primary']['user']], event['assignment_name']): event
-                    for event in sorted(events, key=lambda e: e['event_id'])}.values()]
+                runs_by_user_assign = {}
+                for event in sorted(events, key=lambda e: e['event_id']):
+                    key = (event[progsnap.PROFILES[progsnap.profile]['link_primary']['user']], event['assignment_name'])
+                    runs_by_user_assign[key] = event
+                events = list(runs_by_user_assign.values())
             for event in events:
                 if instructor_code is None:
                     instructor_code_for_this_run = event['on_run']
@@ -258,6 +260,7 @@ class AbstractPipeline:
                 new_submission = Submission(
                     main_file='answer.py', main_code=event['submission_code'].decode('utf-8'),
                     instructor_file='instructor.py',
+                    #files={'cisc106.py': 'from bakery import *'},
                     execution=dict(client_timestamp=event['client_timestamp'],
                                    event_id=event['event_id']),
                     #user=dict(email=event['student_email'],
@@ -501,6 +504,7 @@ class GradePipeline(AbstractPipeline):
                 self.print_bundles(output_file)
 
     def print_bundles(self, target):
+        #print(len(self.submissions))
         for bundle in self.submissions:
             print(bundle.result.output, file=target)
             if bundle.result.error:
@@ -508,9 +512,11 @@ class GradePipeline(AbstractPipeline):
             # This info is not sent to the output target, just to stdout
             print(bundle.submission.instructor_file,
                   bundle.submission.main_file,
-                  bundle.result.data['MAIN_REPORT'].result.score *
-                  bundle.result.data['MAIN_REPORT'].result.success,
-                  sep=", ")
+                  bundle.submission.user.get('student_email') if bundle.submission.user else 'Unknown User',
+                  bundle.submission.assignment.get('name') if bundle.submission.assignment else 'Unknown Assignment',
+                  1 if bundle.result.resolution.success else
+                  bundle.result.resolution.score,
+                  sep=", ", end="")
 
 
 class SandboxPipeline(AbstractPipeline):
@@ -563,20 +569,22 @@ run()"""
 class DebugPipeline(AbstractPipeline):
     def process_output(self):
         for bundle in self.submissions:
-            for bundle in self.submissions:
-                print(bundle.submission.instructor_file,
-                      bundle.submission.main_file)
-                if bundle.result.error:
-                    print(bundle.result.error)
-                else:
-                    print("Output:")
-                    print(indent(bundle.result.output, " " * 4))
-                    report = bundle.result.data['MAIN_REPORT']
-                    print("Feedback:")
-                    for feedback in report.feedback:
-                        print("\t", feedback, repr(feedback.fields))
-                    print("Final Feedback")
-                    pprint(report.result.to_json())
+            print(bundle.submission.instructor_file,
+                  bundle.submission.main_file)
+            print("****** Student Code:")
+            print(indent(bundle.submission.main_code, "    "))
+            print("****** Results")
+            if bundle.result.error:
+                print(bundle.result.error)
+            else:
+                print("Output:")
+                print(indent(bundle.result.output, " " * 4))
+                report = bundle.result.data['MAIN_REPORT']
+                print("Feedback:")
+                for feedback in report.feedback:
+                    print("\t", feedback, repr(feedback.fields))
+                print("Final Feedback")
+                pprint(report.result.to_json())
 
 
 class MODES:

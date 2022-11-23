@@ -117,3 +117,4 @@ ctstats/
 # Powerpoint/excel/word
 ~$*.pptx
 ~$*.docx
+/cisc106.py

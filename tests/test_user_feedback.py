@@ -27,11 +27,11 @@ class TestFeedback(unittest.TestCase):
             suppress("analyzer")
         self.assertEqual(e.feedback,
                          """Type Error
+I ran your code.
+
 A TypeError occurred:
 
     Unsupported operand type(s) for +: 'int' and 'str'
-
-I ran your code.
 
 The traceback was:
 Line 1 of file answer.py

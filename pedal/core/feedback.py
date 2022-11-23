@@ -38,6 +38,9 @@ class Feedback:
         justification (str): An instructor-facing string briefly describing why this
             feedback was selected. Serves as a "TL;DR" for this feedback category, useful
             for debugging why a piece of feedback appeared.
+        justification_template (str): A markdown-formatted message template that will
+            be used if a ``justification`` is None. Any ``fields`` will be injected
+            into the template IF the ``condition`` is met.
         priority (str): An indication of how important this feedback is relative to other types
             of feedback in the same category. Might be "high/medium/low". Exactly how this
             gets used is up to the resolver, but typicaly it helps break ties.
@@ -110,6 +113,7 @@ class Feedback:
     label = None
     category = None
     justification = None
+    justification_template = None
     constant_fields = None
     fields = None
     field_names = None
@@ -137,6 +141,9 @@ class Feedback:
     _met_condition: bool
     _stored_args: tuple
     _stored_kwargs: dict
+
+    resolved_score = None
+    unused_message = None
 
     #MAIN_REPORT
 
@@ -249,10 +256,15 @@ class Feedback:
         try:
             self._met_condition = self.condition(*self._stored_args, **self._stored_kwargs)
             # Generate the message field as needed
+            self.justification = self._get_justification(self._met_condition)
             if self._met_condition:
                 self.message = self._get_message()
                 self._status = FeedbackStatus.ACTIVE
             else:
+                try:
+                    self.unused_message = self._get_message()
+                except Exception:
+                    self.unused_message = ""
                 self._status = FeedbackStatus.INACTIVE
         except Exception as e:
             self._met_condition = False
@@ -298,6 +310,38 @@ class Feedback:
                       for field, value in self.fields.items()}
             return self.message_template.format(**fields)
         return "No feedback message provided"
+
+    def _get_justification(self, met_condition):
+        """
+        Determines the appropriate value for the justification. It first checks
+        if there is a `justification` already present, but if it's not available
+        then it will attempt to generate one from the `justification_template`. Then,
+        it returns a generic message.
+
+        You can override this to create a truly dynamic justification, if you want.
+
+        Returns:
+            str: The justification for this feedback.
+        """
+        if self.justification is not None:
+            if isinstance(self.justification, str):
+                if met_condition:
+                    return self.justification
+                else:
+                    return "The following condition was not met: " + self.justification
+            else:
+                met, unmet = self.justification
+                return met if met_condition else unmet
+        if self.justification_template is not None:
+            if isinstance(self.justification_template, str):
+                template = "The following condition was not met: " + self.justification_template
+            else:
+                met, unmet = self.justification_template
+                template = met if met_condition else unmet
+            fields = {field: FeedbackFieldWrapper(field, value, self.report.format)
+                      for field, value in self.fields.items()}
+            return template.format(**fields)
+        return "No justification provided"
 
     def _get_child_feedback(self, feedback, active):
         """ Callback function that Reports will call when a new piece of

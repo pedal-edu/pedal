@@ -39,6 +39,7 @@ class FunctionGrader(QuestionGrader):
         self.points = 0
         self.config = config or {}
         self.config.setdefault('suppress_function_unused', True)
+        self.justification_parts = []
 
     def _test(self, question):
         defined = self.grade_definition(question)
@@ -60,7 +61,11 @@ class FunctionGrader(QuestionGrader):
         Args:
             question:
         """
-        give_partial(self.points/self.MAX_POINTS)
+        self.justification_parts.append(f"Total: {self.points:.2f}/{self.MAX_POINTS} (+{round(self.points/self.MAX_POINTS * 100)}%)")
+        give_partial(self.points/self.MAX_POINTS,
+                     title="Function Grader Partial Credit",
+                     message="Partial credit from function grader",
+                     justification="\n".join(self.justification_parts))
 
     def report_success(self, question):
         """
@@ -95,6 +100,7 @@ class FunctionGrader(QuestionGrader):
             suppress(FeedbackCategory.ALGORITHMIC, 'unused_variable', {'name': self.function_name})
 
         self.points += self.DEFINITION_POINTS
+        self.justification_parts.append(f"Function {self.function_name} defined with signature: {self.DEFINITION_POINTS}")
         return True
 
     def grade_components(self, question):
@@ -109,6 +115,8 @@ class FunctionGrader(QuestionGrader):
             component(question)
         self.component_points = min(self.component_points, self.MAX_COMPONENTS_POINTS)
         self.points += self.component_points
+        if self.component_points:
+            self.justification_parts.append(f"Components: {self.component_points}")
 
     def assertEqual(self, *parameters):
         """
@@ -138,25 +146,34 @@ class FunctionGrader(QuestionGrader):
             ratio = self.UNIT_TEST_TYPE_RATIO
             TYPE_POINT_ADD = (self.UNIT_TEST_TOTAL_POINTS / len(self.tests) * (ratio))
             VALUE_POINT_ADD = (self.UNIT_TEST_TOTAL_POINTS / len(self.tests) * (1 - ratio))
-        for arguments, expected in self.tests:
+        test_points = 0
+        for index, (arguments, expected) in enumerate(self.tests):
             # import sys
             # print(repr(arguments), file=sys.stderr)
             result = self.student.call(self.function_name, *arguments)
             # print(repr(self.student.exception), file=sys.stderr)
             if self.student.exception:
                 all_good = False
+                self.justification_parts.append(f"  Test {index}: error occurred")
                 continue
             if not assertIsInstance(result, type(expected)):
                 self.points += TYPE_POINT_ADD
+                test_points += TYPE_POINT_ADD
             else:
                 all_good = False
+                self.justification_parts.append(f"  Test {index}: wrong return type")
                 continue
             if not self.assertEqual(result, expected):
                 self.points += VALUE_POINT_ADD
+                test_points += VALUE_POINT_ADD
+                self.justification_parts.append(f"  Test {index}: correct ({VALUE_POINT_ADD})")
             else:
                 all_good = False
+                self.justification_parts.append(f"  Test {index}: wrong return value, but correct type ({TYPE_POINT_ADD})")
         if all_good:
             self.points += self.UNIT_TEST_COMPLETION_POINTS
+            self.justification_parts.append(f"All tests passed: {self.UNIT_TEST_COMPLETION_POINTS}")
         else:
             gently("Failing instructor unit tests")
+            self.justification_parts.append(f"Some tests failed: {test_points}")
         return all_good

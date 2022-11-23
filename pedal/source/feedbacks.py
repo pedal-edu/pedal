@@ -54,15 +54,16 @@ class source_file_not_found(SourceFeedback):
         super().__init__(fields=fields, group=group, **kwargs)
 
 
+
 class syntax_error(SourceFeedback):
     """ Generic feedback for any kind of syntax error. """
     muted = False
     title = "Syntax Error"
     message_template = ("Bad syntax on line {lineno:line}\n\n"
-                        "The traceback was:\n{traceback_message}\n\n"
+                        "{traceback_message}\n"
                         "Suggestion: Check line {lineno:line}, the line "
-                        "before it, and the line after it.")
-    version = '0.0.1'
+                        "before it, and the line after it. Remember to ignore blank lines.")
+    version = '0.0.2'
     justification = "Syntax error was triggered while calling ast.parse"
 
     def __init__(self, line, filename, code, col_offset,
@@ -84,10 +85,15 @@ class syntax_error(SourceFeedback):
         traceback_stack = traceback.build_traceback()
         traceback_message = traceback.format_traceback(traceback_stack,
                                                        report.format)
+        if not traceback_message:
+            traceback_message = ""
+        else:
+            traceback_message = f"The traceback was:\n{traceback_message}"
         line_offset = line_offsets.get(filename, 0)
         fields = {'lineno': line+line_offset,
                   'filename': filename, 'offset': col_offset,
                   'exception': exception,
+                  'exception_message': str(exception),
                   'traceback': traceback,
                   'traceback_stack': traceback_stack,
                   'traceback_message': traceback_message}
@@ -99,12 +105,23 @@ class incorrect_number_of_sections(SourceFeedback):
     """ Incorrect number of sections """
     title = "Incorrect Number of Sections"
     message_template = ("Incorrect number of sections in your file. "
-                     "Expected {count}, but only found {found}")
+                        "Expected {count}, but only found {found}")
     justification = ""
 
     def __init__(self, count, found, **kwargs):
         fields = {'count': count, 'found': found}
         super().__init__(fields=fields, **kwargs)
 
-# TODO: IndentationError
 # TODO: TabError
+
+
+class indentation_error(syntax_error):
+    """ Generic feedback for indentation errors. """
+    title = "Indentation Error"
+    message_template = ("Bad indentation on line {lineno:line} or adjacent line.\n"
+                        "{exception_message:exception}\n\n"
+                        "{traceback_message}\n"
+                        "Suggestion: Check line {lineno:line}, the line "
+                        "before it, and the line after it. Remember to ignore blank lines.")
+    version = '0.0.1'
+    justification = "Indentation error was triggered while calling ast.parse"

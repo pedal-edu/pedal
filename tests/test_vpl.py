@@ -33,8 +33,7 @@ The traceback was:
 Line 15 of file datafiles/student_example.py
 >a syntax error in this section!
 
-
-Suggestion: Check line 15, the line before it, and the line after it.
+Suggestion: Check line 15, the line before it, and the line after it. Remember to ignore blank lines.
 --|>
 Grade :=>> 0
 """, f.getvalue())
@@ -115,8 +114,7 @@ The traceback was:
 Line 15 of file datafiles/student_example.py
 >a syntax error in this section!
 
-
-Suggestion: Check line 15, the line before it, and the line after it.
+Suggestion: Check line 15, the line before it, and the line after it. Remember to ignore blank lines.
 -Part 4
 No feedback for this section
 --|>

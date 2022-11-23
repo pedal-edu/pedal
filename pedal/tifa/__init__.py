@@ -87,7 +87,10 @@ def reset(report=MAIN_REPORT):
         'analyses': {},
         'latest': None,
         'instance': Tifa(report=report),
-        'settings': get_default_tifa_settings()
+        'settings': get_default_tifa_settings(),
+        'types': {
+            'modules': {}
+        }
     }
     return report[TOOL_NAME]
 

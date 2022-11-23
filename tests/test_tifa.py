@@ -5,12 +5,12 @@ import sys
 from textwrap import dedent
 from pprint import pprint
 
-from pedal import contextualize_report
-
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import pedal.tifa
 import pedal.types.new_types as defs
 import pedal.types.normalize as normalize
+from pedal import contextualize_report, Submission, evaluate
+from pedal.tifa import tifa_provide_module_type
 
 unit_tests = {
     # Source Code, Shouldn't catch this, Should catch this
@@ -1097,6 +1097,131 @@ print(x([{"a": "apple"}]))""")
         self.assertEqual("The constructor function Dog was given the wrong number of arguments. You should have "
                          "had 3 arguments, but instead you had 4 arguments.",
                          result.issues['incorrect_arity'][0].message)
+
+    def test_import_second_file(self):
+        main_program = dedent("""
+        import monsters
+        
+        monsters.number + ""
+        """)
+        monster_file = dedent("""number = 7\nalpha = 'test'""")
+        contextualize_report(Submission(files={'student.py': main_program, 'monsters.py': monster_file}))
+        tifa = pedal.tifa.Tifa()
+        result = tifa.process_code(main_program, filename="student.py")
+        self.assertIsNone(result.error)
+        self.assertTrue(result.issues)
+        self.assertEqual("You used an addition operation with an integer and a string on line 4. But you can't do that with that operator. Make sure both sides of the operator are the right type.",
+                         result.issues['incompatible_types'][0].message)
+        self.assertEqual(len(result.issues.get('unused_variable', [])), 0)
+
+    def test_import_second_file_successful(self):
+        main_program = dedent("""
+        from monsters import Monster, dracula
+
+        dracula.name + ""
+        print(Monster("Wolfman"))
+        """)
+        monster_file = dedent("""
+        from dataclasses import dataclass
+        @dataclass
+        class Monster:
+            name: str
+        dracula = Monster('Dracula')""")
+        contextualize_report(Submission(files={'student.py': main_program, 'monsters.py': monster_file}))
+        tifa = pedal.tifa.Tifa()
+        result = tifa.process_code(main_program, filename="student.py")
+        self.assertIsNone(result.error)
+        self.assertFalse(result.issues)
+
+    def test_provide_import_type_definitions(self):
+        main_program = dedent("""
+        import monsters
+
+        monsters.number + ""
+        """)
+        tifa = pedal.tifa.Tifa()
+        tifa_provide_module_type('monsters', {'number': normalize.normalize_type('int')})
+        result = tifa.process_code(main_program, filename="student.py")
+        self.assertIsNone(result.error)
+        self.assertTrue(result.issues)
+        self.assertEqual(
+            "You used an addition operation with an integer and a string on line 4. But you can't do that with that operator. Make sure both sides of the operator are the right type.",
+            result.issues['incompatible_types'][0].message)
+
+    @unittest.skip
+    def test_provide_module_definitions(self):
+        main_program = dedent("""
+        from monsters import dracula
+
+        dracula.age + ""
+        """)
+        tifa = pedal.tifa.Tifa()
+        import tests.test_files.monsters as monsters
+        tifa_provide_module_type('monsters', normalize.normalize_type(monsters))
+        result = tifa.process_code(main_program, filename="student.py")
+        if result.error is not None:
+            raise result.error
+        self.assertIsNone(result.error)
+        self.assertTrue(result.issues)
+        self.assertEqual(
+            "You used an addition operation with an integer and a string on line 4. But you can't do that with that operator. Make sure both sides of the operator are the right type.",
+            result.issues['incompatible_types'][0].message)
+
+    def test_weird_return_control_flow(self):
+        main_program = dedent("""
+        from dataclasses import dataclass
+        
+        @dataclass
+        class Media:
+            name: str
+            kind: str
+            duration: int
+        
+        def longest(media: list[Media]) -> str:
+            movies_only = [i for i in media if i.kind == 'movie']
+            if not movies_only:
+                return 'no movies'
+            key = lambda movie: movie.duration
+            return max(movies_only, key=key).name
+        
+        print(longest([Media("Snoopy", "movie", 5)]))
+        print(longest([]))
+        """)
+        tifa = pedal.tifa.Tifa()
+        result = tifa.process_code(main_program, filename="student.py")
+        if result.error:
+            raise result.error
+        self.assertIsNone(result.error)
+        self.assertFalse(result.issues)
+
+    def test_weird_increment_set_list(self):
+        main_program = dedent("""from dataclasses import dataclass
+
+@dataclass
+class Forecast:
+    reports: list[int]
+    
+def rainfall(weather: list[Forecast]) -> list[int]:
+    reports = []
+    for a_weather in weather:
+        reports += a_weather.reports
+    return reports
+
+def total_rainfall(forecast: list[Forecast]) -> int:
+    total = 0
+    reports = rainfall(forecast)
+    for measurement in reports:
+        total += measurement
+    return total
+
+forecast1 = [Forecast([1,2,3])]
+5+total_rainfall(forecast1)""")
+        tifa = pedal.tifa.Tifa()
+        result = tifa.process_code(main_program, filename="student.py")
+        if result.error:
+            raise result.error
+        self.assertIsNone(result.error)
+        self.assertFalse(result.issues)
 
 if __name__ == '__main__':
     unittest.main(buffer=False)

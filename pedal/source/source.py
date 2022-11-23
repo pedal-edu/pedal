@@ -9,7 +9,6 @@
     "ast", "ast.Ast", "None", "The root node of the latest successfully parsed chunk of code."
 
 """
-import os
 import sys
 import ast
 
@@ -18,7 +17,7 @@ from pedal.core.report import Report, MAIN_REPORT
 from pedal.core.submission import Submission
 from pedal.source.constants import TOOL_NAME, DEFAULT_STUDENT_FILENAME
 from pedal.source.sections import separate_into_sections
-from pedal.source.feedbacks import blank_source, syntax_error, source_file_not_found
+from pedal.source.feedbacks import blank_source, syntax_error, source_file_not_found, indentation_error
 from pedal.source.substitutions import Substitution
 from pedal.utilities.files import find_possible_filenames
 
@@ -107,7 +106,7 @@ def restore_code(report=MAIN_REPORT):
         verify(report=report)
 
 
-@CompositeFeedbackFunction(blank_source, syntax_error)
+@CompositeFeedbackFunction(blank_source, syntax_error, indentation_error, source_file_not_found)
 def verify(code=None, filename=DEFAULT_STUDENT_FILENAME, report=MAIN_REPORT,
            muted=False):
     """
@@ -136,11 +135,17 @@ def verify(code=None, filename=DEFAULT_STUDENT_FILENAME, report=MAIN_REPORT,
     try:
         parsed = ast.parse(code, filename)
         report[TOOL_NAME]['ast'] = parsed
+    except IndentationError as e:
+        indentation_error(e.lineno, e.filename, code, e.offset, e,
+                     sys.exc_info(), report=report, muted=muted)
+        report[TOOL_NAME]['success'] = False
+        report[TOOL_NAME]['ast'] = ast.parse("")
     except SyntaxError as e:
         syntax_error(e.lineno, e.filename, code, e.offset, e,
                      sys.exc_info(), report=report, muted=muted)
         report[TOOL_NAME]['success'] = False
         report[TOOL_NAME]['ast'] = ast.parse("")
+        # TODO: Shouldn't this return early?
     report[TOOL_NAME]['success'] = True
     return report[TOOL_NAME]['success']
 

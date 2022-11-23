@@ -10,6 +10,7 @@ import hashlib
 
 def _name_hash(name: str) -> int:
     """ Turn a string name into a unique hashcode using MD5 """
+    name = ",".join(str(x) for x in bytes(name, 'utf-8'))
     return hashlib.md5(name.encode('utf8')).digest()[0]
 
 

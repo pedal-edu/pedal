@@ -405,7 +405,7 @@ class not_a_function(TifaFeedback):
     title = "Not a Function"
     message_template = ("You attempted to call {name} as if it"
                         " was a function on line {location.line}. However,"
-                        " that expression was actually a {called_type}.")
+                        " that expression was actually {singular_name}.")
     justification = ""
     # TODO: Unmute?
     #muted = True

@@ -4,7 +4,7 @@ Commands related to navigating TIFA data.
 import ast
 from pedal.core.report import MAIN_REPORT
 from pedal.tifa.constants import TOOL_NAME as TIFA_TOOL_NAME
-from pedal.types.new_types import ImpossibleType
+from pedal.types.new_types import ImpossibleType, ModuleType
 
 
 def tifa_analysis(code=None, report=MAIN_REPORT):
@@ -51,3 +51,19 @@ def get_issues(category, report=MAIN_REPORT):
         tifa_analysis(report=report)
     latest = report[TIFA_TOOL_NAME]['latest']
     return latest.issues.get(category, [])
+
+
+def tifa_provide_module_type(name: str, fields, report=MAIN_REPORT):
+    """
+
+    Args:
+        name:
+        fields:
+
+    Returns:
+
+    """
+    if not isinstance(fields, ModuleType):
+        fields = ModuleType(name, fields)
+    report[TIFA_TOOL_NAME]['types']['modules'][name] = fields
+

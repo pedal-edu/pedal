@@ -70,7 +70,7 @@ def identity_definition(tifa, function, callee, arguments, named_arguments, loca
 
 def element_definition(tifa, function, callee, arguments, named_arguments, location):
     """ Element function definition """
-    return arguments[0].index(0) if arguments else ImpossibleType()
+    return arguments[0].index(IntType()) if arguments else ImpossibleType()
 
 
 class Type:
@@ -85,6 +85,9 @@ class Type:
     # Default Universal Fields
     is_empty = False
     orderable = frozenset()
+
+    def __init__(self):
+        self.fields = self.fields.copy()
 
     def clone(self):
         """ Make a new instance of this Type based on the old instance """
@@ -359,6 +362,15 @@ class BoolType(Type):
         return super().is_subtype(other, seen, indent)
 
 
+class ExceptionType(Type):
+    name = "Exception"
+    singular_name = "an exception"
+    plural_name = "exceptions"
+    immutable = False
+    fields = {}
+    parents = []
+
+
 class StrType(Type):
     name = "String"
     singular_name = "a string"
@@ -508,6 +520,8 @@ class ListType(ElementContainerType):
     parents = []
     _singular_names = ("a list", "an empty list")
     _plural_names = ("lists", "empty lists")
+    # TODO: Add in support for "protected_fields"
+    protected_fields = ["append"]
 
     def index(self, key):
         # TODO: Support a flag for whether Numbers are allowed for Integers
@@ -1000,6 +1014,7 @@ TYPE_TYPE = BuiltinConstructorType("type")
 
 class InstanceType(Type):
     immutable = False
+    fields = {}
 
     def __init__(self, parent):
         super().__init__()
@@ -1113,6 +1128,7 @@ class ModuleType(Type):
     submodules: dict
 
     def __init__(self, name, fields, submodules=None):
+        super().__init__()
         self.name = name
         self.fields = fields
         self.submodules = submodules if submodules is not None else {}
@@ -1356,6 +1372,10 @@ PEDAL_TYPE_NAMES = {
     "ListType": ListType,
     "NoneType": NoneType
 }
+
+
+def exception_function(name):
+    return FunctionType(name, returns=ExceptionType)
 
 
 def int_function(name):

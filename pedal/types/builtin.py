@@ -8,11 +8,10 @@ from pedal.types.new_types import (make_dataclass, FunctionType, AnyType,
                                    ModuleType, SetType, LiteralInt, LiteralFloat, LiteralStr, LiteralBool,
                                    BUILTIN_MODULES, BUILTIN_NAMES,
                                    int_function, float_function, num_function,
-                                   bool_function, void_function, TYPE_TYPE,
+                                   bool_function, void_function, TYPE_TYPE, exception_function,
                                    IntConstructor, FloatConstructor, BoolConstructor,
                                    ListConstructor, StrConstructor, str_function, GeneratorType, SetConstructor,
                                    FrozenSetConstructor, DictConstructor, TupleConstructor)
-
 
 BUILTIN_MODULES.update({
     'dataclasses': ModuleType('dataclasses', fields={
@@ -100,8 +99,8 @@ BUILTIN_MODULES.update({
                                float_function('erfc'),
                                float_function('gamma'),
                                float_function('lgamma')
-                       ]}
-   )
+                           ]}
+                       )
 })
 
 BUILTIN_MODULES['math'].fields.update({
@@ -111,6 +110,7 @@ BUILTIN_MODULES['math'].fields.update({
     'inf': FloatType(),
     'nan': FloatType()
 })
+
 
 def round_definition(tifa, function, callee, arguments, named_arguments, location):
     if len(arguments) == 1:
@@ -138,8 +138,28 @@ def enumerate_definition(tifa, function, callee, arguments, named_arguments, loc
         return GeneratorType(arguments and arguments[0].is_empty, tupled_types)
     return ImpossibleType()
 
-# TODO: Type guard with `isinstance`
 
+# TODO: Type guard with `isinstance`
+# TODO: all the built-in exceptions!
+
+BUILT_EXCEPTION_NAMES = ["BaseException", "BaseExceptionGroup", "GeneratorExit", "KeyboardInterrupt", "SystemExit",
+                         "Exception", "ArithmeticError", "FloatingPointError", "OverflowError", "ZeroDivisionError",
+                         "AssertionError", "AttributeError", "BufferError", "EOFError", "ImportError",
+                         "ModuleNotFoundError", "LookupError", "IndexError", "KeyError", "MemoryError", "NameError",
+                         "UnboundLocalError", "OSError", "BlockingIOError", "ChildProcessError", "ConnectionError",
+                         "BrokenPipeError", "ConnectionAbortedError", "ConnectionRefusedError", "ConnectionResetError",
+                         "FileExistsError", "FileNotFoundError", "InterruptedError", "IsADirectoryError",
+                         "NotADirectoryError", "PermissionError", "ProcessLookupError", "TimeoutError",
+                         "ReferenceError", "RuntimeError", "NotImplementedError", "RecursionError",
+                         "StopAsyncIteration", "StopIteration", "SyntaxError", "IndentationError", "TabError",
+                         "SystemError", "TypeError", "ValueError", "UnicodeError", "UnicodeDecodeError",
+                         "UnicodeEncodeError", "UnicodeTranslateError", "Warning", "BytesWarning", "DeprecationWarning",
+                         "EncodingWarning", "FutureWarning", "ImportWarning", "PendingDeprecationWarning",
+                         "ResourceWarning", "RuntimeWarning", "SyntaxWarning", "UnicodeWarning", "UserWarning"]
+
+BUILTIN_NAMES.update({
+    name: exception_function(name) for name in BUILT_EXCEPTION_NAMES
+})
 
 BUILTIN_NAMES.update({
     f.name: f for f in [
@@ -147,7 +167,9 @@ BUILTIN_NAMES.update({
         IntConstructor(), FloatConstructor(), BoolConstructor(), StrConstructor(),
         ListConstructor(), SetConstructor(), FrozenSetConstructor(),
         DictConstructor(), TupleConstructor(),
+        void_function('Exception'), void_function("ValueError"),
         void_function('print'), int_function("abs"), int_function('len'),
+        int_function('id'),
         int_function('ord'), num_function('pow'), num_function('sum'),
         bool_function('all'), bool_function('any'), bool_function('isinstance'),
         str_function('chr'), str_function('bin'), str_function('repr'), str_function('input'),
