@@ -22,12 +22,22 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v1
-      # Build the documentation
-      - uses: ammaraskar/sphinx-action@master
+      # Change python version to 3.9
+      - uses: actions/setup-python@v4
         with:
-          pre-build-command: "python3 -m pip install -r requirements_dev.txt && python3 -m pip install -e ."
-          repo-token: "${{ secrets.GITHUB_TOKEN }}" 
-          docs-folder: "docsrc/"
+          python-version: '3.9' 
+      # Build the documentation
+      - name: Build Documentation
+        run: |
+          python --version
+          python -m pip install -r requirements_dev.txt && python -m pip install -e .
+          cd docsrc/
+          python -m sphinx.cmd.build -M html . _build/ -b coverage
+      #- uses: ammaraskar/sphinx-action@master
+      #  with:
+      #    pre-build-command: "python -m pip install -r requirements_dev.txt && python -m pip install -e ."
+      #    repo-token: "${{ secrets.GITHUB_TOKEN }}" 
+      #    docs-folder: "docsrc/"
       # Build PDF using custom depedencies
       #- uses: ammaraskar/sphinx-action@master
       #  with:
