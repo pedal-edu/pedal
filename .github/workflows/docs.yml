@@ -32,7 +32,8 @@ jobs:
           python --version
           python -m pip install -r requirements_dev.txt && python -m pip install -e .
           cd docsrc/
-          python -m sphinx.cmd.build -M html . _build/ -b coverage
+          python -m sphinx.cmd.build -M html . _build/
+          ls _build/developers/
           cd ../
           #- uses: ammaraskar/sphinx-action@master
           #  with:
