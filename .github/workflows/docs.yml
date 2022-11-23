@@ -31,7 +31,7 @@ jobs:
       # Build the documentation
       - uses: ammaraskar/sphinx-action@master
         with:
-          pre-build-command: "python3.9 -m pip install -r requirements_dev.txt && python3.9 -m pip install -e ."
+          pre-build-command: "python -m pip install -r requirements_dev.txt && python -m pip install -e ."
           repo-token: "${{ secrets.GITHUB_TOKEN }}" 
           docs-folder: "docsrc/"
       # Build PDF using custom depedencies
