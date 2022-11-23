@@ -32,7 +32,7 @@ jobs:
       - name: Build Documentation
         run: |
           cd docsrc/
-          python -v
+          python --version
           python -m pip install -r requirements_dev.txt && python -m pip install -e .
           make html -b coverage
       #- uses: ammaraskar/sphinx-action@master
