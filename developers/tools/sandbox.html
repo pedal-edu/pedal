@@ -1,18 +1,22 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sandbox &mdash; Pedal 1.0 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <title>Sandbox &mdash; Pedal 1.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -38,7 +42,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption"><span class="caption-text">Contents</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../everyone/introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../everyone/installation.html">Installation</a></li>
@@ -53,11 +57,113 @@
 <li class="toctree-l2"><a class="reference internal" href="source.html">Source</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tifa.html">TIFA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cait.html">CAIT</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Sandbox</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Sandbox</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.reset"><code class="docutils literal notranslate"><span class="pre">reset()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.sandbox.Sandbox"><code class="docutils literal notranslate"><span class="pre">Sandbox</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.sandbox.sandbox.Sandbox.data"><code class="docutils literal notranslate"><span class="pre">Sandbox.data</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.sandbox.sandbox.Sandbox.result"><code class="docutils literal notranslate"><span class="pre">Sandbox.result</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.sandbox.sandbox.Sandbox.output"><code class="docutils literal notranslate"><span class="pre">Sandbox.output</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.sandbox.sandbox.Sandbox.inputs"><code class="docutils literal notranslate"><span class="pre">Sandbox.inputs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.sandbox.sandbox.Sandbox.raw_output"><code class="docutils literal notranslate"><span class="pre">Sandbox.raw_output</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.sandbox.sandbox.Sandbox.exception"><code class="docutils literal notranslate"><span class="pre">Sandbox.exception</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.sandbox.sandbox.Sandbox.feedback"><code class="docutils literal notranslate"><span class="pre">Sandbox.feedback</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.sandbox.sandbox.Sandbox.target"><code class="docutils literal notranslate"><span class="pre">Sandbox.target</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.sandbox.sandbox.Sandbox.allowed_time"><code class="docutils literal notranslate"><span class="pre">Sandbox.allowed_time</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.sandbox.sandbox.Sandbox.tracer_style"><code class="docutils literal notranslate"><span class="pre">Sandbox.tracer_style</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.sandbox.sandbox.Sandbox._context"><code class="docutils literal notranslate"><span class="pre">Sandbox._context</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.sandbox.sandbox.Sandbox._next_context_id"><code class="docutils literal notranslate"><span class="pre">Sandbox._next_context_id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.sandbox.sandbox.Sandbox._current_patches"><code class="docutils literal notranslate"><span class="pre">Sandbox._current_patches</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.sandbox.sandbox.Sandbox.MAXIMUM_TEMPORARY_LENGTH"><code class="docutils literal notranslate"><span class="pre">Sandbox.MAXIMUM_TEMPORARY_LENGTH</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.sandbox.sandbox.Sandbox.allow_module"><code class="docutils literal notranslate"><span class="pre">Sandbox.allow_module()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.sandbox.sandbox.Sandbox.append_output"><code class="docutils literal notranslate"><span class="pre">Sandbox.append_output()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.sandbox.sandbox.Sandbox.block_module"><code class="docutils literal notranslate"><span class="pre">Sandbox.block_module()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.sandbox.sandbox.Sandbox.call"><code class="docutils literal notranslate"><span class="pre">Sandbox.call()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.sandbox.sandbox.Sandbox.clear"><code class="docutils literal notranslate"><span class="pre">Sandbox.clear()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.sandbox.sandbox.Sandbox.clear_context"><code class="docutils literal notranslate"><span class="pre">Sandbox.clear_context()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.sandbox.sandbox.Sandbox.clear_exception"><code class="docutils literal notranslate"><span class="pre">Sandbox.clear_exception()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.sandbox.sandbox.Sandbox.clear_input"><code class="docutils literal notranslate"><span class="pre">Sandbox.clear_input()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.sandbox.sandbox.Sandbox.clear_mocks"><code class="docutils literal notranslate"><span class="pre">Sandbox.clear_mocks()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.sandbox.sandbox.Sandbox.clear_output"><code class="docutils literal notranslate"><span class="pre">Sandbox.clear_output()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.sandbox.sandbox.Sandbox.clear_tracer"><code class="docutils literal notranslate"><span class="pre">Sandbox.clear_tracer()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.sandbox.sandbox.Sandbox.evaluate"><code class="docutils literal notranslate"><span class="pre">Sandbox.evaluate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.sandbox.sandbox.Sandbox.functions"><code class="docutils literal notranslate"><span class="pre">Sandbox.functions</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.sandbox.sandbox.Sandbox.get_context"><code class="docutils literal notranslate"><span class="pre">Sandbox.get_context()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.sandbox.sandbox.Sandbox.get_names_by_type"><code class="docutils literal notranslate"><span class="pre">Sandbox.get_names_by_type()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.sandbox.sandbox.Sandbox.get_values_by_type"><code class="docutils literal notranslate"><span class="pre">Sandbox.get_values_by_type()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.sandbox.sandbox.Sandbox.get_variables_by_type"><code class="docutils literal notranslate"><span class="pre">Sandbox.get_variables_by_type()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.sandbox.sandbox.Sandbox.make_safe_variable"><code class="docutils literal notranslate"><span class="pre">Sandbox.make_safe_variable()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.sandbox.sandbox.Sandbox.mock_module"><code class="docutils literal notranslate"><span class="pre">Sandbox.mock_module()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.sandbox.sandbox.Sandbox.reset_default_overrides"><code class="docutils literal notranslate"><span class="pre">Sandbox.reset_default_overrides()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.sandbox.sandbox.Sandbox.run"><code class="docutils literal notranslate"><span class="pre">Sandbox.run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.sandbox.sandbox.Sandbox.set_input"><code class="docutils literal notranslate"><span class="pre">Sandbox.set_input()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.sandbox.sandbox.Sandbox.set_student_data"><code class="docutils literal notranslate"><span class="pre">Sandbox.set_student_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.sandbox.sandbox.Sandbox.start_grouping_context"><code class="docutils literal notranslate"><span class="pre">Sandbox.start_grouping_context()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.sandbox.sandbox.Sandbox.stop_grouping_context"><code class="docutils literal notranslate"><span class="pre">Sandbox.stop_grouping_context()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.sandbox.sandbox.Sandbox.var"><code class="docutils literal notranslate"><span class="pre">Sandbox.var</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.sandbox.Sandbox.modules.plots"><code class="docutils literal notranslate"><span class="pre">Sandbox.modules.plots</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.sandbox.Sandbox.modules.turtles"><code class="docutils literal notranslate"><span class="pre">Sandbox.modules.turtles</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.feedbacks.attribute_error"><code class="docutils literal notranslate"><span class="pre">attribute_error</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.feedbacks.import_error"><code class="docutils literal notranslate"><span class="pre">import_error</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.feedbacks.indentation_error"><code class="docutils literal notranslate"><span class="pre">indentation_error</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.feedbacks.index_error"><code class="docutils literal notranslate"><span class="pre">index_error</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.feedbacks.io_error"><code class="docutils literal notranslate"><span class="pre">io_error</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.feedbacks.key_error"><code class="docutils literal notranslate"><span class="pre">key_error</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.feedbacks.memory_error"><code class="docutils literal notranslate"><span class="pre">memory_error</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.feedbacks.name_error"><code class="docutils literal notranslate"><span class="pre">name_error</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.feedbacks.runtime_error"><code class="docutils literal notranslate"><span class="pre">runtime_error</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.sandbox.feedbacks.runtime_error.exception"><code class="docutils literal notranslate"><span class="pre">runtime_error.exception</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.sandbox.feedbacks.runtime_error.exception_name"><code class="docutils literal notranslate"><span class="pre">runtime_error.exception_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.sandbox.feedbacks.runtime_error.exception_message"><code class="docutils literal notranslate"><span class="pre">runtime_error.exception_message</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.sandbox.feedbacks.runtime_error.traceback"><code class="docutils literal notranslate"><span class="pre">runtime_error.traceback</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.sandbox.feedbacks.runtime_error.traceback_message"><code class="docutils literal notranslate"><span class="pre">runtime_error.traceback_message</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.sandbox.feedbacks.runtime_error.context"><code class="docutils literal notranslate"><span class="pre">runtime_error.context</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.feedbacks.timeout_error"><code class="docutils literal notranslate"><span class="pre">timeout_error</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.feedbacks.type_error"><code class="docutils literal notranslate"><span class="pre">type_error</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.feedbacks.value_error"><code class="docutils literal notranslate"><span class="pre">value_error</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.feedbacks.zero_division_error"><code class="docutils literal notranslate"><span class="pre">zero_division_error</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.commands.CommandBlock"><code class="docutils literal notranslate"><span class="pre">CommandBlock</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.commands.allow_function"><code class="docutils literal notranslate"><span class="pre">allow_function()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.commands.allow_module"><code class="docutils literal notranslate"><span class="pre">allow_module()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.commands.block_function"><code class="docutils literal notranslate"><span class="pre">block_function()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.commands.block_module"><code class="docutils literal notranslate"><span class="pre">block_module()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.commands.call"><code class="docutils literal notranslate"><span class="pre">call()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.commands.check_coverage"><code class="docutils literal notranslate"><span class="pre">check_coverage()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.commands.clear_input"><code class="docutils literal notranslate"><span class="pre">clear_input()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.commands.clear_mocks"><code class="docutils literal notranslate"><span class="pre">clear_mocks()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.commands.clear_output"><code class="docutils literal notranslate"><span class="pre">clear_output()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.commands.clear_sandbox"><code class="docutils literal notranslate"><span class="pre">clear_sandbox()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.commands.clear_student_data"><code class="docutils literal notranslate"><span class="pre">clear_student_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.commands.count_unique_calls"><code class="docutils literal notranslate"><span class="pre">count_unique_calls()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.commands.evaluate"><code class="docutils literal notranslate"><span class="pre">evaluate()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.commands.get_call_arguments"><code class="docutils literal notranslate"><span class="pre">get_call_arguments()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.commands.get_exception"><code class="docutils literal notranslate"><span class="pre">get_exception()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.commands.get_input"><code class="docutils literal notranslate"><span class="pre">get_input()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.commands.get_module"><code class="docutils literal notranslate"><span class="pre">get_module()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.commands.get_output"><code class="docutils literal notranslate"><span class="pre">get_output()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.commands.get_sandbox"><code class="docutils literal notranslate"><span class="pre">get_sandbox()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.commands.get_student_data"><code class="docutils literal notranslate"><span class="pre">get_student_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.commands.get_trace"><code class="docutils literal notranslate"><span class="pre">get_trace()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.commands.mock_function"><code class="docutils literal notranslate"><span class="pre">mock_function()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.commands.mock_module"><code class="docutils literal notranslate"><span class="pre">mock_module()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.commands.queue_input"><code class="docutils literal notranslate"><span class="pre">queue_input()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.commands.reset_output"><code class="docutils literal notranslate"><span class="pre">reset_output()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.commands.run"><code class="docutils literal notranslate"><span class="pre">run()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.commands.set_input"><code class="docutils literal notranslate"><span class="pre">set_input()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.commands.start_trace"><code class="docutils literal notranslate"><span class="pre">start_trace()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.commands.stop_trace"><code class="docutils literal notranslate"><span class="pre">stop_trace()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="assertions.html">Assertions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="questions.html">Questions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extensions.html">Extensions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../conventions.html">Internal Naming Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../libraries.html">Necessary Libraries</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../everyone/glossary.html">Glossary</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../everyone/contact.html">Contact</a></li>
 </ul>
@@ -75,9 +181,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../tools.html">Developer Tools Reference</a> &raquo;</li>
-      <li>Sandbox</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../tools.html">Developer Tools Reference</a></li>
+      <li class="breadcrumb-item active">Sandbox</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/developers/tools/sandbox.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -87,11 +193,11 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="module-pedal.sandbox">
-<span id="sandbox"></span><h1>Sandbox<a class="headerlink" href="#module-pedal.sandbox" title="Permalink to this headline">¶</a></h1>
-<dl class="function">
-<dt id="pedal.sandbox.reset">
-<code class="sig-name descname">reset</code><span class="sig-paren">(</span><em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox.html#reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.reset" title="Permalink to this definition">¶</a></dt>
+  <section id="module-pedal.sandbox">
+<span id="sandbox"></span><h1>Sandbox<a class="headerlink" href="#module-pedal.sandbox" title="Permalink to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="pedal.sandbox.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox.html#reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.reset" title="Permalink to this definition"></a></dt>
 <dd><p>Resets (or initializes) the Sandbox instance for this report.
 Completely destroys the existing Sandbox instance attached to this report;
 if you want to just clear out its data, then instead use
@@ -105,196 +211,196 @@ if you want to just clear out its data, then instead use
 
 <span class="target" id="module-pedal.sandbox.sandbox"></span><p>File containing the Sandbox class.</p>
 <p>TODO: Handle sys.argv</p>
-<dl class="class">
-<dt id="pedal.sandbox.sandbox.Sandbox">
-<em class="property">class </em><code class="sig-name descname">Sandbox</code><span class="sig-paren">(</span><em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/sandbox.html#Sandbox"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="pedal.sandbox.sandbox.Sandbox">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Sandbox</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/sandbox.html#Sandbox"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>report</strong> (<a class="reference internal" href="../api.html#pedal.core.report.Report" title="pedal.core.report.Report"><code class="xref py py-class docutils literal notranslate"><span class="pre">Report</span></code></a>) – The report that this
 Sandbox is attached to.</p>
 </dd>
 </dl>
-<dl class="attribute">
-<dt id="pedal.sandbox.sandbox.Sandbox.data">
-<code class="sig-name descname">data</code><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.data" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pedal.sandbox.sandbox.Sandbox.data">
+<span class="sig-name descname"><span class="pre">data</span></span><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.data" title="Permalink to this definition"></a></dt>
 <dd><p>The namespace that the context are occurring in.
 Note that this is mutable.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a>, Any]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a>, Any]</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="pedal.sandbox.sandbox.Sandbox.result">
-<code class="sig-name descname">result</code><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.result" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pedal.sandbox.sandbox.Sandbox.result">
+<span class="sig-name descname"><span class="pre">result</span></span><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.result" title="Permalink to this definition"></a></dt>
 <dd><p>TODO</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="pedal.sandbox.sandbox.Sandbox.output">
-<code class="sig-name descname">output</code><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.output" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pedal.sandbox.sandbox.Sandbox.output">
+<span class="sig-name descname"><span class="pre">output</span></span><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.output" title="Permalink to this definition"></a></dt>
 <dd><p>The list of strings that have been printed to the
-console by <a class="reference external" href="https://docs.python.org/3/library/functions.html#print" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">print()</span></code></a>. Note that line endings have been removed
+console by <a class="reference external" href="https://docs.python.org/3/library/functions.html#print" title="(in Python v3.11)"><code class="xref py py-func docutils literal notranslate"><span class="pre">print()</span></code></a>. Note that line endings have been removed
 using <code class="xref py py-func docutils literal notranslate"><span class="pre">string.rstrip()</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a>]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a>]</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="pedal.sandbox.sandbox.Sandbox.inputs">
-<code class="sig-name descname">inputs</code><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.inputs" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pedal.sandbox.sandbox.Sandbox.inputs">
+<span class="sig-name descname"><span class="pre">inputs</span></span><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.inputs" title="Permalink to this definition"></a></dt>
 <dd><p>The list of strings that will be passed to
-<a class="reference external" href="https://docs.python.org/3/library/functions.html#input" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">input()</span></code></a>.</p>
+<a class="reference external" href="https://docs.python.org/3/library/functions.html#input" title="(in Python v3.11)"><code class="xref py py-func docutils literal notranslate"><span class="pre">input()</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a>]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a>]</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="pedal.sandbox.sandbox.Sandbox.raw_output">
-<code class="sig-name descname">raw_output</code><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.raw_output" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pedal.sandbox.sandbox.Sandbox.raw_output">
+<span class="sig-name descname"><span class="pre">raw_output</span></span><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.raw_output" title="Permalink to this definition"></a></dt>
 <dd><p>A concatenated string of all the text that was printed
 to console. No changes have been made to the text.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="pedal.sandbox.sandbox.Sandbox.exception">
-<code class="sig-name descname">exception</code><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.exception" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pedal.sandbox.sandbox.Sandbox.exception">
+<span class="sig-name descname"><span class="pre">exception</span></span><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.exception" title="Permalink to this definition"></a></dt>
 <dd><p>The exception that occurred during the
 most recent execution, or None if nothing happened.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.10)">Exception</a> or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)">None</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.11)">Exception</a> or None</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="pedal.sandbox.sandbox.Sandbox.feedback">
-<code class="sig-name descname">feedback</code><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.feedback" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pedal.sandbox.sandbox.Sandbox.feedback">
+<span class="sig-name descname"><span class="pre">feedback</span></span><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.feedback" title="Permalink to this definition"></a></dt>
 <dd><p>TODO</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="pedal.sandbox.sandbox.Sandbox.modules.plots">
-<code class="sig-prename descclassname">modules.</code><code class="sig-name descname">plots</code><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.modules.plots" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pedal.sandbox.sandbox.Sandbox.modules.plots">
+<span class="sig-prename descclassname"><span class="pre">modules.</span></span><span class="sig-name descname"><span class="pre">plots</span></span><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.modules.plots" title="Permalink to this definition"></a></dt>
 <dd><p>TODO</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="pedal.sandbox.sandbox.Sandbox.modules.turtles">
-<code class="sig-prename descclassname">modules.</code><code class="sig-name descname">turtles</code><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.modules.turtles" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pedal.sandbox.sandbox.Sandbox.modules.turtles">
+<span class="sig-prename descclassname"><span class="pre">modules.</span></span><span class="sig-name descname"><span class="pre">turtles</span></span><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.modules.turtles" title="Permalink to this definition"></a></dt>
 <dd><p>TODO</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="pedal.sandbox.sandbox.Sandbox.target">
-<code class="sig-name descname">target</code><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.target" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pedal.sandbox.sandbox.Sandbox.target">
+<span class="sig-name descname"><span class="pre">target</span></span><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.target" title="Permalink to this definition"></a></dt>
 <dd><p>TODO</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="pedal.sandbox.sandbox.Sandbox.allowed_time">
-<code class="sig-name descname">allowed_time</code><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.allowed_time" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pedal.sandbox.sandbox.Sandbox.allowed_time">
+<span class="sig-name descname"><span class="pre">allowed_time</span></span><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.allowed_time" title="Permalink to this definition"></a></dt>
 <dd><p>How long to allow before stopping execution.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)">int</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="pedal.sandbox.sandbox.Sandbox.tracer_style">
-<code class="sig-name descname">tracer_style</code><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.tracer_style" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pedal.sandbox.sandbox.Sandbox.tracer_style">
+<span class="sig-name descname"><span class="pre">tracer_style</span></span><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.tracer_style" title="Permalink to this definition"></a></dt>
 <dd><p>TODO</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="pedal.sandbox.sandbox.Sandbox._context">
-<code class="sig-name descname">_context</code><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox._context" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pedal.sandbox.sandbox.Sandbox._context">
+<span class="sig-name descname"><span class="pre">_context</span></span><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox._context" title="Permalink to this definition"></a></dt>
 <dd><p>The history of executions made in
 this sandbox.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)">list</a>[SandboxContext]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[SandboxContext]</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="pedal.sandbox.sandbox.Sandbox._next_context_id">
-<code class="sig-name descname">_next_context_id</code><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox._next_context_id" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pedal.sandbox.sandbox.Sandbox._next_context_id">
+<span class="sig-name descname"><span class="pre">_next_context_id</span></span><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox._next_context_id" title="Permalink to this definition"></a></dt>
 <dd><p>The ID of the next execution context.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)">int</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="pedal.sandbox.sandbox.Sandbox._current_patches">
-<code class="sig-name descname">_current_patches</code><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox._current_patches" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pedal.sandbox.sandbox.Sandbox._current_patches">
+<span class="sig-name descname"><span class="pre">_current_patches</span></span><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox._current_patches" title="Permalink to this definition"></a></dt>
 <dd><p>A stack of patches that are currently
 being used. This allows recursive patching behavior.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)">list</a>[Patch]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[Patch]</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="pedal.sandbox.sandbox.Sandbox.MAXIMUM_TEMPORARY_LENGTH">
-<code class="sig-name descname">MAXIMUM_TEMPORARY_LENGTH</code><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.MAXIMUM_TEMPORARY_LENGTH" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pedal.sandbox.sandbox.Sandbox.MAXIMUM_TEMPORARY_LENGTH">
+<span class="sig-name descname"><span class="pre">MAXIMUM_TEMPORARY_LENGTH</span></span><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.MAXIMUM_TEMPORARY_LENGTH" title="Permalink to this definition"></a></dt>
 <dd><p>How long to allow arguments to be before
 turning them into temporary variables.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)">int</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="pedal.sandbox.sandbox.Sandbox.allow_module">
-<code class="sig-name descname">allow_module</code><span class="sig-paren">(</span><em class="sig-param">module_name</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/sandbox.html#Sandbox.allow_module"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.allow_module" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="pedal.sandbox.sandbox.Sandbox.allow_module">
+<span class="sig-name descname"><span class="pre">allow_module</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/sandbox.html#Sandbox.allow_module"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.allow_module" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>module_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – </p>
+<dd class="field-odd"><p><strong>module_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – </p>
 </dd>
 </dl>
 <p>Returns:</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="pedal.sandbox.sandbox.Sandbox.append_output">
-<code class="sig-name descname">append_output</code><span class="sig-paren">(</span><em class="sig-param">raw_output</em>, <em class="sig-param">context</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/sandbox.html#Sandbox.append_output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.append_output" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="pedal.sandbox.sandbox.Sandbox.append_output">
+<span class="sig-name descname"><span class="pre">append_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_output</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/sandbox.html#Sandbox.append_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.append_output" title="Permalink to this definition"></a></dt>
 <dd><p>Adds the string of <cite>raw_output</cite> to the current <cite>raw_output</cite> attribute.
 The added string will be split on newlines and rstripped to append
 to the <cite>output</cite> attribute.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>raw_output</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The new raw_output for the sandbox. To compute
+<li><p><strong>raw_output</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The new raw_output for the sandbox. To compute
 the <cite>output</cite> attribute, the system splits and rstrips at
 newlines.</p></li>
 <li><p><strong>context</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.sandbox.data.SandboxContext</span></code>) – The
@@ -304,13 +410,15 @@ currently executing context, where this output will be recorded.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="pedal.sandbox.sandbox.Sandbox.block_module">
-<code class="sig-name descname">block_module</code><span class="sig-paren">(</span><em class="sig-param">module_name</em>, <em class="sig-param">friendly_name=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/sandbox.html#Sandbox.block_module"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.block_module" title="Permalink to this definition">¶</a></dt>
-<dd><p>Prevent the module from being loaded in student code.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pedal.sandbox.sandbox.Sandbox.block_module">
+<span class="sig-name descname"><span class="pre">block_module</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">friendly_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/sandbox.html#Sandbox.block_module"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.block_module" title="Permalink to this definition"></a></dt>
+<dd><p>Prevent the module from being loaded in student code.
+Also unloads the module if it has been imported previously by
+destroying the variable in the current student <cite>data</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>module_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the module to prevent, as it would
+<dd class="field-odd"><p><strong>module_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The name of the module to prevent, as it would
 be used by import (e.g., <code class="docutils literal notranslate"><span class="pre">&quot;matplotlib.pyplot&quot;</span></code>).</p>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -322,9 +430,9 @@ be used by import (e.g., <code class="docutils literal notranslate"><span class=
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="pedal.sandbox.sandbox.Sandbox.call">
-<code class="sig-name descname">call</code><span class="sig-paren">(</span><em class="sig-param">function</em>, <em class="sig-param">*args</em>, <em class="sig-param">target='_'</em>, <em class="sig-param">threaded=None</em>, <em class="sig-param">inputs=None</em>, <em class="sig-param">function_kwargs=None</em>, <em class="sig-param">args_locals=None</em>, <em class="sig-param">kwargs_locals=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/sandbox.html#Sandbox.call"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.call" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="pedal.sandbox.sandbox.Sandbox.call">
+<span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">function</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'_'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threaded</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args_locals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kwargs_locals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/sandbox.html#Sandbox.call"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.call" title="Permalink to this definition"></a></dt>
 <dd><p>Execute the given function from the student’s namespace.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">args_locals</span></code> and <code class="docutils literal notranslate"><span class="pre">kwargs_locals</span></code> values allow you to
 use student’s local variables as arguments, instead of literal values.
@@ -333,24 +441,24 @@ without modification.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>function</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the function to call.</p></li>
+<li><p><strong>function</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The name of the function to call.</p></li>
 <li><p><strong>*args</strong> (<em>Any</em>) – Any number of positional arguments to be passed to
 the called function.</p></li>
-<li><p><strong>target</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The variable to assign the result of this call to.
+<li><p><strong>target</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The variable to assign the result of this call to.
 Defaults to <code class="docutils literal notranslate"><span class="pre">&quot;_&quot;</span></code>.</p></li>
-<li><p><strong>threaded</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether or not to run this code in a threaded
+<li><p><strong>threaded</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – Whether or not to run this code in a threaded
 environment, which allows for timeouts.</p></li>
-<li><p><strong>inputs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – </p></li>
-<li><p><strong>function_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>Any</em><em>]</em>) – Additional keyword arguments
+<li><p><strong>inputs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – </p></li>
+<li><p><strong>function_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><em>Any</em><em>]</em>) – Additional keyword arguments
 that could not be passed in directly via <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code> (perhaps
 because they conflict with an existing parameter like
 <code class="docutils literal notranslate"><span class="pre">target</span></code>).</p></li>
-<li><p><strong>args_locals</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – A list of names (or any valid Python
+<li><p><strong>args_locals</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – A list of names (or any valid Python
 expression) that will be passed as positional arguments to
 the function (as opposed to actual values). If any value is
 None (or if the list is too short), then the corresponding
 position argument from <code class="docutils literal notranslate"><span class="pre">*args</span></code> will be used instead.</p></li>
-<li><p><strong>kwargs_locals</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – A dictionary of keyword argument
+<li><p><strong>kwargs_locals</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – A dictionary of keyword argument
 names mapped to local names (or any valid Python expression),
 that will be used as keyword parameters similar to
 <code class="docutils literal notranslate"><span class="pre">args_locals</span></code>.</p></li>
@@ -374,51 +482,51 @@ returned instead.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="pedal.sandbox.sandbox.Sandbox.clear">
-<code class="sig-name descname">clear</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/sandbox.html#Sandbox.clear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.clear" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="pedal.sandbox.sandbox.Sandbox.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/sandbox.html#Sandbox.clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.clear" title="Permalink to this definition"></a></dt>
 <dd><p>Removes any existing data in this sandbox.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="pedal.sandbox.sandbox.Sandbox.clear_context">
-<code class="sig-name descname">clear_context</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/sandbox.html#Sandbox.clear_context"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.clear_context" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="pedal.sandbox.sandbox.Sandbox.clear_context">
+<span class="sig-name descname"><span class="pre">clear_context</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/sandbox.html#Sandbox.clear_context"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.clear_context" title="Permalink to this definition"></a></dt>
 <dd><p>Removes the history of any previous executions.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="pedal.sandbox.sandbox.Sandbox.clear_exception">
-<code class="sig-name descname">clear_exception</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/sandbox.html#Sandbox.clear_exception"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.clear_exception" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="pedal.sandbox.sandbox.Sandbox.clear_exception">
+<span class="sig-name descname"><span class="pre">clear_exception</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/sandbox.html#Sandbox.clear_exception"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.clear_exception" title="Permalink to this definition"></a></dt>
 <dd><p>Removes the latest exception information</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="pedal.sandbox.sandbox.Sandbox.clear_input">
-<code class="sig-name descname">clear_input</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/sandbox.html#Sandbox.clear_input"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.clear_input" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="pedal.sandbox.sandbox.Sandbox.clear_input">
+<span class="sig-name descname"><span class="pre">clear_input</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/sandbox.html#Sandbox.clear_input"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.clear_input" title="Permalink to this definition"></a></dt>
 <dd><p>Removes any inputs queued.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="pedal.sandbox.sandbox.Sandbox.clear_mocks">
-<code class="sig-name descname">clear_mocks</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/sandbox.html#Sandbox.clear_mocks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.clear_mocks" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="pedal.sandbox.sandbox.Sandbox.clear_mocks">
+<span class="sig-name descname"><span class="pre">clear_mocks</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/sandbox.html#Sandbox.clear_mocks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.clear_mocks" title="Permalink to this definition"></a></dt>
 <dd><p>Removes any module or builtin overrides currently in effect.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="pedal.sandbox.sandbox.Sandbox.clear_output">
-<code class="sig-name descname">clear_output</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/sandbox.html#Sandbox.clear_output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.clear_output" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="pedal.sandbox.sandbox.Sandbox.clear_output">
+<span class="sig-name descname"><span class="pre">clear_output</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/sandbox.html#Sandbox.clear_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.clear_output" title="Permalink to this definition"></a></dt>
 <dd><p>Remove any output currently attached to this sandbox.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="pedal.sandbox.sandbox.Sandbox.clear_tracer">
-<code class="sig-name descname">clear_tracer</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/sandbox.html#Sandbox.clear_tracer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.clear_tracer" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="pedal.sandbox.sandbox.Sandbox.clear_tracer">
+<span class="sig-name descname"><span class="pre">clear_tracer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/sandbox.html#Sandbox.clear_tracer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.clear_tracer" title="Permalink to this definition"></a></dt>
 <dd><p>Stop tracing in this sandbox.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="pedal.sandbox.sandbox.Sandbox.evaluate">
-<code class="sig-name descname">evaluate</code><span class="sig-paren">(</span><em class="sig-param">code</em>, <em class="sig-param">target='_'</em>, <em class="sig-param">threaded=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/sandbox.html#Sandbox.evaluate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.evaluate" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="pedal.sandbox.sandbox.Sandbox.evaluate">
+<span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'_'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threaded</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/sandbox.html#Sandbox.evaluate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.evaluate" title="Permalink to this definition"></a></dt>
 <dd><p>Evaluates the given code and assigns the result to the given target.
 Will cause an error if <code class="docutils literal notranslate"><span class="pre">code</span></code> is not a valid expression.</p>
 <p># TODO: Clean up syntax error.</p>
@@ -427,9 +535,9 @@ Will cause an error if <code class="docutils literal notranslate"><span class="p
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>code</strong> (str or <code class="xref py py-class docutils literal notranslate"><span class="pre">CaitNode</span></code>) – The code to execute. If a CaitNode, then that will be executed
 directly instead of being compiled.</p></li>
-<li><p><strong>target</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the variable to assign the result to.
+<li><p><strong>target</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The name of the variable to assign the result to.
 Note that the result is also returned by this function.</p></li>
-<li><p><strong>threaded</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether or not to run this code in a threaded
+<li><p><strong>threaded</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – Whether or not to run this code in a threaded
 environment, which allows for timeouts.</p></li>
 </ul>
 </dd>
@@ -449,9 +557,9 @@ returned instead.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="pedal.sandbox.sandbox.Sandbox.functions">
-<em class="property">property </em><code class="sig-name descname">functions</code><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.functions" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="pedal.sandbox.sandbox.Sandbox.functions">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">functions</span></span><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.functions" title="Permalink to this definition"></a></dt>
 <dd><p>Retrieve a list of all the callable names in the students’ namespace.
 In other words, get a list of all the functions the student defined.</p>
 <dl class="field-list simple">
@@ -461,9 +569,9 @@ In other words, get a list of all the functions the student defined.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="pedal.sandbox.sandbox.Sandbox.get_context">
-<code class="sig-name descname">get_context</code><span class="sig-paren">(</span><em class="sig-param">context_id: int = None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/sandbox.html#Sandbox.get_context"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.get_context" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="pedal.sandbox.sandbox.Sandbox.get_context">
+<span class="sig-name descname"><span class="pre">get_context</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/sandbox.html#Sandbox.get_context"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.get_context" title="Permalink to this definition"></a></dt>
 <dd><p>Retrieve the most recent contexts.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -479,9 +587,9 @@ In other words, get a list of all the functions the student defined.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="pedal.sandbox.sandbox.Sandbox.get_names_by_type">
-<code class="sig-name descname">get_names_by_type</code><span class="sig-paren">(</span><em class="sig-param">type</em>, <em class="sig-param">exclude_builtins=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/sandbox.html#Sandbox.get_names_by_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.get_names_by_type" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="pedal.sandbox.sandbox.Sandbox.get_names_by_type">
+<span class="sig-name descname"><span class="pre">get_names_by_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_builtins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/sandbox.html#Sandbox.get_names_by_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.get_names_by_type" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -493,9 +601,9 @@ In other words, get a list of all the functions the student defined.</p>
 <p>Returns:</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="pedal.sandbox.sandbox.Sandbox.get_values_by_type">
-<code class="sig-name descname">get_values_by_type</code><span class="sig-paren">(</span><em class="sig-param">type</em>, <em class="sig-param">exclude_builtins=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/sandbox.html#Sandbox.get_values_by_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.get_values_by_type" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="pedal.sandbox.sandbox.Sandbox.get_values_by_type">
+<span class="sig-name descname"><span class="pre">get_values_by_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_builtins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/sandbox.html#Sandbox.get_values_by_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.get_values_by_type" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -507,9 +615,9 @@ In other words, get a list of all the functions the student defined.</p>
 <p>Returns:</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="pedal.sandbox.sandbox.Sandbox.get_variables_by_type">
-<code class="sig-name descname">get_variables_by_type</code><span class="sig-paren">(</span><em class="sig-param">type</em>, <em class="sig-param">exclude_builtins=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/sandbox.html#Sandbox.get_variables_by_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.get_variables_by_type" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="pedal.sandbox.sandbox.Sandbox.get_variables_by_type">
+<span class="sig-name descname"><span class="pre">get_variables_by_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_builtins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/sandbox.html#Sandbox.get_variables_by_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.get_variables_by_type" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -521,9 +629,9 @@ In other words, get a list of all the functions the student defined.</p>
 <p>Returns:</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="pedal.sandbox.sandbox.Sandbox.make_safe_variable">
-<code class="sig-name descname">make_safe_variable</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/sandbox.html#Sandbox.make_safe_variable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.make_safe_variable" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="pedal.sandbox.sandbox.Sandbox.make_safe_variable">
+<span class="sig-name descname"><span class="pre">make_safe_variable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/sandbox.html#Sandbox.make_safe_variable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.make_safe_variable" title="Permalink to this definition"></a></dt>
 <dd><p>Tries to construct a safe variable name in the current namespace, based
 off the given one. This is accomplished by appending a “_” and a number
 of increasing value until no comparable name exists in the namespace.
@@ -532,35 +640,35 @@ assign to, but you are concerned that the user might have a variable
 with that name already, which their code relies on.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – A desired target name.</p>
+<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – A desired target name.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>A safe target name, based off the given one.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="pedal.sandbox.sandbox.Sandbox.mock_module">
-<code class="sig-name descname">mock_module</code><span class="sig-paren">(</span><em class="sig-param">module_name</em>, <em class="sig-param">new_version</em>, <em class="sig-param">friendly_name=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/sandbox.html#Sandbox.mock_module"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.mock_module" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="pedal.sandbox.sandbox.Sandbox.mock_module">
+<span class="sig-name descname"><span class="pre">mock_module</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_version</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">friendly_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/sandbox.html#Sandbox.mock_module"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.mock_module" title="Permalink to this definition"></a></dt>
 <dd><p>Create a mocked version of this module.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="pedal.sandbox.sandbox.Sandbox.reset_default_overrides">
-<code class="sig-name descname">reset_default_overrides</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/sandbox.html#Sandbox.reset_default_overrides"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.reset_default_overrides" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="pedal.sandbox.sandbox.Sandbox.reset_default_overrides">
+<span class="sig-name descname"><span class="pre">reset_default_overrides</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/sandbox.html#Sandbox.reset_default_overrides"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.reset_default_overrides" title="Permalink to this definition"></a></dt>
 <dd><p>Resets the list of blocked functions and modules to its starting
 state. This blocks <code class="docutils literal notranslate"><span class="pre">compile</span></code>, <code class="docutils literal notranslate"><span class="pre">eval</span></code>, <code class="docutils literal notranslate"><span class="pre">exec</span></code>, <code class="docutils literal notranslate"><span class="pre">globals</span></code>,
 and provides mocked versions of <code class="docutils literal notranslate"><span class="pre">open</span></code> and <code class="docutils literal notranslate"><span class="pre">import</span></code> that are
 more restricted. It also blocks the <code class="docutils literal notranslate"><span class="pre">pedal</span></code> module.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="pedal.sandbox.sandbox.Sandbox.run">
-<code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param">code=None</em>, <em class="sig-param">filename=None</em>, <em class="sig-param">inputs=None</em>, <em class="sig-param">threaded=None</em>, <em class="sig-param">after=None</em>, <em class="sig-param">before=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/sandbox.html#Sandbox.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.run" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="pedal.sandbox.sandbox.Sandbox.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threaded</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">before</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/sandbox.html#Sandbox.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.run" title="Permalink to this definition"></a></dt>
 <dd><p>If both <code class="docutils literal notranslate"><span class="pre">code</span></code> and <code class="docutils literal notranslate"><span class="pre">filename</span></code> are None, then the submission’s
 main file will be executed. If <code class="docutils literal notranslate"><span class="pre">code</span></code> is given but <code class="docutils literal notranslate"><span class="pre">filename</span></code> is
 not, then it is assumed to be instructor code.</p>
@@ -572,13 +680,13 @@ not, then it is assumed to be instructor code.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>code</strong> (str or <code class="xref py py-class docutils literal notranslate"><span class="pre">CaitNode</span></code> or None) – The code to execute.</p></li>
-<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><em>None</em></a>) – The filename to use for this code.</p></li>
-<li><p><strong>inputs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – Optional inputs to be passed to
+<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em> or </em><em>None</em>) – The filename to use for this code.</p></li>
+<li><p><strong>inputs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – Optional inputs to be passed to
 <code class="xref py py-func docutils literal notranslate"><span class="pre">set_input()</span></code>.</p></li>
-<li><p><strong>threaded</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether or not to run this code in a threaded
+<li><p><strong>threaded</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – Whether or not to run this code in a threaded
 environment, which allows for timeouts.</p></li>
-<li><p><strong>after</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Code to run after this code (without a filename).</p></li>
-<li><p><strong>before</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Code to run before this code (without a filename).</p></li>
+<li><p><strong>after</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Code to run after this code (without a filename).</p></li>
+<li><p><strong>before</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Code to run before this code (without a filename).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -590,135 +698,135 @@ environment, which allows for timeouts.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="pedal.sandbox.sandbox.Sandbox.set_input">
-<code class="sig-name descname">set_input</code><span class="sig-paren">(</span><em class="sig-param">inputs</em>, <em class="sig-param">clear=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/sandbox.html#Sandbox.set_input"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.set_input" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="pedal.sandbox.sandbox.Sandbox.set_input">
+<span class="sig-name descname"><span class="pre">set_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clear</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/sandbox.html#Sandbox.set_input"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.set_input" title="Permalink to this definition"></a></dt>
 <dd><p>Queues the given value as the next arguments to the <cite>input</cite> function.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="pedal.sandbox.sandbox.Sandbox.set_student_data">
-<code class="sig-name descname">set_student_data</code><span class="sig-paren">(</span><em class="sig-param">new_data</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/sandbox.html#Sandbox.set_student_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.set_student_data" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="pedal.sandbox.sandbox.Sandbox.set_student_data">
+<span class="sig-name descname"><span class="pre">set_student_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/sandbox.html#Sandbox.set_student_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.set_student_data" title="Permalink to this definition"></a></dt>
 <dd><p>Overwrites the existing student data with the keys and values from
 the <code class="docutils literal notranslate"><span class="pre">new_data</span></code>. This copies the data over, but does not modify the
 reference to <code class="docutils literal notranslate"><span class="pre">data</span></code>’s dictionary.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>new_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>Any</em><em>]</em>) – The new data.</p>
+<dd class="field-odd"><p><strong>new_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><em>Any</em><em>]</em>) – The new data.</p>
 </dd>
 </dl>
 <p>Returns:</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="pedal.sandbox.sandbox.Sandbox.start_grouping_context">
-<code class="sig-name descname">start_grouping_context</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/sandbox.html#Sandbox.start_grouping_context"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.start_grouping_context" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="pedal.sandbox.sandbox.Sandbox.start_grouping_context">
+<span class="sig-name descname"><span class="pre">start_grouping_context</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/sandbox.html#Sandbox.start_grouping_context"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.start_grouping_context" title="Permalink to this definition"></a></dt>
 <dd><p>Any subsequent executions will be grouped.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="pedal.sandbox.sandbox.Sandbox.stop_grouping_context">
-<code class="sig-name descname">stop_grouping_context</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/sandbox.html#Sandbox.stop_grouping_context"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.stop_grouping_context" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="pedal.sandbox.sandbox.Sandbox.stop_grouping_context">
+<span class="sig-name descname"><span class="pre">stop_grouping_context</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/sandbox.html#Sandbox.stop_grouping_context"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.stop_grouping_context" title="Permalink to this definition"></a></dt>
 <dd><p>Stop grouping subsequent executions.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="pedal.sandbox.sandbox.Sandbox.var">
-<em class="property">property </em><code class="sig-name descname">var</code><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.var" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="pedal.sandbox.sandbox.Sandbox.var">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">var</span></span><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.var" title="Permalink to this definition"></a></dt>
 <dd><p>Returns:</p>
 </dd></dl>
 
 </dd></dl>
 
 <span class="target" id="module-pedal.sandbox.feedbacks"></span><p>Generic runtime exception feedback class.</p>
-<dl class="class">
-<dt id="pedal.sandbox.feedbacks.attribute_error">
-<em class="property">class </em><code class="sig-name descname">attribute_error</code><span class="sig-paren">(</span><em class="sig-param">exception</em>, <em class="sig-param">context</em>, <em class="sig-param">traceback</em>, <em class="sig-param">location</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/feedbacks.html#attribute_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.feedbacks.attribute_error" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="pedal.sandbox.feedbacks.attribute_error">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">attribute_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exception</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traceback</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/feedbacks.html#attribute_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.feedbacks.attribute_error" title="Permalink to this definition"></a></dt>
 <dd><p>Runtime AttributeError</p>
 </dd></dl>
 
-<dl class="class">
-<dt id="pedal.sandbox.feedbacks.import_error">
-<em class="property">class </em><code class="sig-name descname">import_error</code><span class="sig-paren">(</span><em class="sig-param">exception</em>, <em class="sig-param">context</em>, <em class="sig-param">traceback</em>, <em class="sig-param">location</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/feedbacks.html#import_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.feedbacks.import_error" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="pedal.sandbox.feedbacks.import_error">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">import_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exception</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traceback</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/feedbacks.html#import_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.feedbacks.import_error" title="Permalink to this definition"></a></dt>
 <dd><p>Runtime ImportError</p>
 </dd></dl>
 
-<dl class="class">
-<dt id="pedal.sandbox.feedbacks.indentation_error">
-<em class="property">class </em><code class="sig-name descname">indentation_error</code><span class="sig-paren">(</span><em class="sig-param">exception</em>, <em class="sig-param">context</em>, <em class="sig-param">traceback</em>, <em class="sig-param">location</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/feedbacks.html#indentation_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.feedbacks.indentation_error" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="pedal.sandbox.feedbacks.indentation_error">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">indentation_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exception</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traceback</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/feedbacks.html#indentation_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.feedbacks.indentation_error" title="Permalink to this definition"></a></dt>
 <dd><p>Syntax IndentationError</p>
 </dd></dl>
 
-<dl class="class">
-<dt id="pedal.sandbox.feedbacks.index_error">
-<em class="property">class </em><code class="sig-name descname">index_error</code><span class="sig-paren">(</span><em class="sig-param">exception</em>, <em class="sig-param">context</em>, <em class="sig-param">traceback</em>, <em class="sig-param">location</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/feedbacks.html#index_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.feedbacks.index_error" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="pedal.sandbox.feedbacks.index_error">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">index_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exception</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traceback</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/feedbacks.html#index_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.feedbacks.index_error" title="Permalink to this definition"></a></dt>
 <dd><p>Runtime IndexError</p>
 </dd></dl>
 
-<dl class="class">
-<dt id="pedal.sandbox.feedbacks.io_error">
-<em class="property">class </em><code class="sig-name descname">io_error</code><span class="sig-paren">(</span><em class="sig-param">exception</em>, <em class="sig-param">context</em>, <em class="sig-param">traceback</em>, <em class="sig-param">location</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/feedbacks.html#io_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.feedbacks.io_error" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="pedal.sandbox.feedbacks.io_error">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">io_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exception</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traceback</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/feedbacks.html#io_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.feedbacks.io_error" title="Permalink to this definition"></a></dt>
 <dd><p>Runtime IOError</p>
 </dd></dl>
 
-<dl class="class">
-<dt id="pedal.sandbox.feedbacks.key_error">
-<em class="property">class </em><code class="sig-name descname">key_error</code><span class="sig-paren">(</span><em class="sig-param">exception</em>, <em class="sig-param">context</em>, <em class="sig-param">traceback</em>, <em class="sig-param">location</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/feedbacks.html#key_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.feedbacks.key_error" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="pedal.sandbox.feedbacks.key_error">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">key_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exception</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traceback</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/feedbacks.html#key_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.feedbacks.key_error" title="Permalink to this definition"></a></dt>
 <dd><p>Runtime KeyError</p>
 </dd></dl>
 
-<dl class="class">
-<dt id="pedal.sandbox.feedbacks.memory_error">
-<em class="property">class </em><code class="sig-name descname">memory_error</code><span class="sig-paren">(</span><em class="sig-param">exception</em>, <em class="sig-param">context</em>, <em class="sig-param">traceback</em>, <em class="sig-param">location</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/feedbacks.html#memory_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.feedbacks.memory_error" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="pedal.sandbox.feedbacks.memory_error">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">memory_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exception</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traceback</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/feedbacks.html#memory_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.feedbacks.memory_error" title="Permalink to this definition"></a></dt>
 <dd><p>Runtime MemoryError</p>
 </dd></dl>
 
-<dl class="class">
-<dt id="pedal.sandbox.feedbacks.name_error">
-<em class="property">class </em><code class="sig-name descname">name_error</code><span class="sig-paren">(</span><em class="sig-param">exception</em>, <em class="sig-param">context</em>, <em class="sig-param">traceback</em>, <em class="sig-param">location</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/feedbacks.html#name_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.feedbacks.name_error" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="pedal.sandbox.feedbacks.name_error">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exception</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traceback</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/feedbacks.html#name_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.feedbacks.name_error" title="Permalink to this definition"></a></dt>
 <dd><p>Runtime NameError</p>
 </dd></dl>
 
-<dl class="class">
-<dt id="pedal.sandbox.feedbacks.runtime_error">
-<em class="property">class </em><code class="sig-name descname">runtime_error</code><span class="sig-paren">(</span><em class="sig-param">exception</em>, <em class="sig-param">context</em>, <em class="sig-param">traceback</em>, <em class="sig-param">location</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/feedbacks.html#runtime_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.feedbacks.runtime_error" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="pedal.sandbox.feedbacks.runtime_error">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">runtime_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exception</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traceback</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/feedbacks.html#runtime_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.feedbacks.runtime_error" title="Permalink to this definition"></a></dt>
 <dd><p>Used to create all runtime errors.</p>
-<dl class="attribute">
-<dt id="pedal.sandbox.feedbacks.runtime_error.exception">
-<code class="sig-name descname">exception</code><a class="headerlink" href="#pedal.sandbox.feedbacks.runtime_error.exception" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pedal.sandbox.feedbacks.runtime_error.exception">
+<span class="sig-name descname"><span class="pre">exception</span></span><a class="headerlink" href="#pedal.sandbox.feedbacks.runtime_error.exception" title="Permalink to this definition"></a></dt>
 <dd><p>The original exception.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.10)">Exception</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.11)">Exception</a></p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="pedal.sandbox.feedbacks.runtime_error.exception_name">
-<code class="sig-name descname">exception_name</code><a class="headerlink" href="#pedal.sandbox.feedbacks.runtime_error.exception_name" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pedal.sandbox.feedbacks.runtime_error.exception_name">
+<span class="sig-name descname"><span class="pre">exception_name</span></span><a class="headerlink" href="#pedal.sandbox.feedbacks.runtime_error.exception_name" title="Permalink to this definition"></a></dt>
 <dd><p>The original name of the exception.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="pedal.sandbox.feedbacks.runtime_error.exception_message">
-<code class="sig-name descname">exception_message</code><a class="headerlink" href="#pedal.sandbox.feedbacks.runtime_error.exception_message" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pedal.sandbox.feedbacks.runtime_error.exception_message">
+<span class="sig-name descname"><span class="pre">exception_message</span></span><a class="headerlink" href="#pedal.sandbox.feedbacks.runtime_error.exception_message" title="Permalink to this definition"></a></dt>
 <dd><p>the original error message from the exception.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="pedal.sandbox.feedbacks.runtime_error.traceback">
-<code class="sig-name descname">traceback</code><a class="headerlink" href="#pedal.sandbox.feedbacks.runtime_error.traceback" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pedal.sandbox.feedbacks.runtime_error.traceback">
+<span class="sig-name descname"><span class="pre">traceback</span></span><a class="headerlink" href="#pedal.sandbox.feedbacks.runtime_error.traceback" title="Permalink to this definition"></a></dt>
 <dd><p>An enhanced version of the builtin Traceback object. Has a number
 of additional fields.</p>
 <dl class="field-list simple">
@@ -728,20 +836,20 @@ of additional fields.</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="pedal.sandbox.feedbacks.runtime_error.traceback_message">
-<code class="sig-name descname">traceback_message</code><a class="headerlink" href="#pedal.sandbox.feedbacks.runtime_error.traceback_message" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pedal.sandbox.feedbacks.runtime_error.traceback_message">
+<span class="sig-name descname"><span class="pre">traceback_message</span></span><a class="headerlink" href="#pedal.sandbox.feedbacks.runtime_error.traceback_message" title="Permalink to this definition"></a></dt>
 <dd><p>A nicely formatted version of the traceback.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="pedal.sandbox.feedbacks.runtime_error.context">
-<code class="sig-name descname">context</code><a class="headerlink" href="#pedal.sandbox.feedbacks.runtime_error.context" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pedal.sandbox.feedbacks.runtime_error.context">
+<span class="sig-name descname"><span class="pre">context</span></span><a class="headerlink" href="#pedal.sandbox.feedbacks.runtime_error.context" title="Permalink to this definition"></a></dt>
 <dd><p>The
 history of inputs, outputs, executed code, and other information
 from when this runtime error occurred. Usually just a single
@@ -756,68 +864,68 @@ If the code was run from a file, then the filename is given.</p>
 
 </dd></dl>
 
-<dl class="class">
-<dt id="pedal.sandbox.feedbacks.timeout_error">
-<em class="property">class </em><code class="sig-name descname">timeout_error</code><span class="sig-paren">(</span><em class="sig-param">exception</em>, <em class="sig-param">context</em>, <em class="sig-param">traceback</em>, <em class="sig-param">location</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/feedbacks.html#timeout_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.feedbacks.timeout_error" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="pedal.sandbox.feedbacks.timeout_error">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">timeout_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exception</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traceback</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/feedbacks.html#timeout_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.feedbacks.timeout_error" title="Permalink to this definition"></a></dt>
 <dd><p>Runtime TimeoutError</p>
 </dd></dl>
 
-<dl class="class">
-<dt id="pedal.sandbox.feedbacks.type_error">
-<em class="property">class </em><code class="sig-name descname">type_error</code><span class="sig-paren">(</span><em class="sig-param">exception</em>, <em class="sig-param">context</em>, <em class="sig-param">traceback</em>, <em class="sig-param">location</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/feedbacks.html#type_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.feedbacks.type_error" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="pedal.sandbox.feedbacks.type_error">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">type_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exception</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traceback</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/feedbacks.html#type_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.feedbacks.type_error" title="Permalink to this definition"></a></dt>
 <dd><p>Type Error</p>
 </dd></dl>
 
-<dl class="class">
-<dt id="pedal.sandbox.feedbacks.value_error">
-<em class="property">class </em><code class="sig-name descname">value_error</code><span class="sig-paren">(</span><em class="sig-param">exception</em>, <em class="sig-param">context</em>, <em class="sig-param">traceback</em>, <em class="sig-param">location</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/feedbacks.html#value_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.feedbacks.value_error" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="pedal.sandbox.feedbacks.value_error">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">value_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exception</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traceback</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/feedbacks.html#value_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.feedbacks.value_error" title="Permalink to this definition"></a></dt>
 <dd><p>Runtime ValueError</p>
 </dd></dl>
 
-<dl class="class">
-<dt id="pedal.sandbox.feedbacks.zero_division_error">
-<em class="property">class </em><code class="sig-name descname">zero_division_error</code><span class="sig-paren">(</span><em class="sig-param">exception</em>, <em class="sig-param">context</em>, <em class="sig-param">traceback</em>, <em class="sig-param">location</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/feedbacks.html#zero_division_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.feedbacks.zero_division_error" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="pedal.sandbox.feedbacks.zero_division_error">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">zero_division_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exception</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traceback</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/feedbacks.html#zero_division_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.feedbacks.zero_division_error" title="Permalink to this definition"></a></dt>
 <dd><p>Runtime ZeroDivisionError</p>
 </dd></dl>
 
 <span class="target" id="module-pedal.sandbox.commands"></span><p>The collection of top-level commands for the Sandbox module. Note that
 most of these simply act on the current MAIN_REPORT’s Sandbox instance, without
 doing any logic themselves.</p>
-<dl class="class">
-<dt id="pedal.sandbox.commands.CommandBlock">
-<em class="property">class </em><code class="sig-name descname">CommandBlock</code><span class="sig-paren">(</span><em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#CommandBlock"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.CommandBlock" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="pedal.sandbox.commands.CommandBlock">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CommandBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#CommandBlock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.commands.CommandBlock" title="Permalink to this definition"></a></dt>
 <dd><p>Context Manager for creating instructor blocks of code that will
 be shown together to the student.</p>
 <p>TODO: What about named points where you can “rewind” the state to?</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="pedal.sandbox.commands.allow_function">
-<code class="sig-name descname">allow_function</code><span class="sig-paren">(</span><em class="sig-param">function_name</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#allow_function"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.allow_function" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pedal.sandbox.commands.allow_function">
+<span class="sig-name descname"><span class="pre">allow_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">function_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#allow_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.commands.allow_function" title="Permalink to this definition"></a></dt>
 <dd><p>Explicitly allow students to use the given function.</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="pedal.sandbox.commands.allow_module">
-<code class="sig-name descname">allow_module</code><span class="sig-paren">(</span><em class="sig-param">module_name</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#allow_module"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.allow_module" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pedal.sandbox.commands.allow_module">
+<span class="sig-name descname"><span class="pre">allow_module</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#allow_module"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.commands.allow_module" title="Permalink to this definition"></a></dt>
 <dd><p>Explicitly allow students to use the given module.</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="pedal.sandbox.commands.block_function">
-<code class="sig-name descname">block_function</code><span class="sig-paren">(</span><em class="sig-param">function_name</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#block_function"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.block_function" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pedal.sandbox.commands.block_function">
+<span class="sig-name descname"><span class="pre">block_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">function_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#block_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.commands.block_function" title="Permalink to this definition"></a></dt>
 <dd><p>Cause an error if students call the given function.</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="pedal.sandbox.commands.block_module">
-<code class="sig-name descname">block_module</code><span class="sig-paren">(</span><em class="sig-param">module_name</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#block_module"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.block_module" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pedal.sandbox.commands.block_module">
+<span class="sig-name descname"><span class="pre">block_module</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#block_module"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.commands.block_module" title="Permalink to this definition"></a></dt>
 <dd><p>Cause an error if students use the given module.</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="pedal.sandbox.commands.call">
-<code class="sig-name descname">call</code><span class="sig-paren">(</span><em class="sig-param">function</em>, <em class="sig-param">*args</em>, <em class="sig-param">target='_'</em>, <em class="sig-param">threaded=None</em>, <em class="sig-param">inputs=None</em>, <em class="sig-param">function_kwargs=None</em>, <em class="sig-param">args_locals=None</em>, <em class="sig-param">kwargs_locals=None</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#call"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.call" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pedal.sandbox.commands.call">
+<span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">function</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target='_'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threaded=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inputs=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function_kwargs=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args_locals=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kwargs_locals=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#call"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.commands.call" title="Permalink to this definition"></a></dt>
 <dd><p>Execute the given function from the student’s namespace.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">args_locals</span></code> and <code class="docutils literal notranslate"><span class="pre">kwargs_locals</span></code> values allow you to
 use student’s local variables as arguments, instead of literal values.
@@ -826,24 +934,24 @@ without modification.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>function</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the function to call.</p></li>
+<li><p><strong>function</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The name of the function to call.</p></li>
 <li><p><strong>*args</strong> (<em>Any</em>) – Any number of positional arguments to be passed to
 the called function.</p></li>
-<li><p><strong>target</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The variable to assign the result of this call to.
+<li><p><strong>target</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The variable to assign the result of this call to.
 Defaults to <code class="docutils literal notranslate"><span class="pre">&quot;_&quot;</span></code>.</p></li>
-<li><p><strong>threaded</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether or not to run this code in a threaded
+<li><p><strong>threaded</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – Whether or not to run this code in a threaded
 environment, which allows for timeouts.</p></li>
-<li><p><strong>inputs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – </p></li>
-<li><p><strong>function_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>Any</em><em>]</em>) – Additional keyword arguments
+<li><p><strong>inputs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – </p></li>
+<li><p><strong>function_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><em>Any</em><em>]</em>) – Additional keyword arguments
 that could not be passed in directly via <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code> (perhaps
 because they conflict with an existing parameter like
 <code class="docutils literal notranslate"><span class="pre">target</span></code>).</p></li>
-<li><p><strong>args_locals</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – A list of names (or any valid Python
+<li><p><strong>args_locals</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – A list of names (or any valid Python
 expression) that will be passed as positional arguments to
 the function (as opposed to actual values). If any value is
 None (or if the list is too short), then the corresponding
 position argument from <code class="docutils literal notranslate"><span class="pre">*args</span></code> will be used instead.</p></li>
-<li><p><strong>kwargs_locals</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – A dictionary of keyword argument
+<li><p><strong>kwargs_locals</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – A dictionary of keyword argument
 names mapped to local names (or any valid Python expression),
 that will be used as keyword parameters similar to
 <code class="docutils literal notranslate"><span class="pre">args_locals</span></code>.</p></li>
@@ -869,9 +977,9 @@ returned instead.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="pedal.sandbox.commands.check_coverage">
-<code class="sig-name descname">check_coverage</code><span class="sig-paren">(</span><em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#check_coverage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.check_coverage" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pedal.sandbox.commands.check_coverage">
+<span class="sig-name descname"><span class="pre">check_coverage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#check_coverage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.commands.check_coverage" title="Permalink to this definition"></a></dt>
 <dd><p>Checks that all the statements in the program have been executed.
 This function only works when a tracer_style has been set in the sandbox,
 or you are using an environment that automatically traces calls (e.g.,
@@ -890,44 +998,44 @@ defaults to MAIN_REPORT.</p>
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.10)">set</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)">int</a>]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)">set</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)">int</a>]</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="pedal.sandbox.commands.clear_input">
-<code class="sig-name descname">clear_input</code><span class="sig-paren">(</span><em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#clear_input"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.clear_input" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pedal.sandbox.commands.clear_input">
+<span class="sig-name descname"><span class="pre">clear_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#clear_input"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.commands.clear_input" title="Permalink to this definition"></a></dt>
 <dd><p>Removes any existing inputs set up for the sandbox.</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="pedal.sandbox.commands.clear_mocks">
-<code class="sig-name descname">clear_mocks</code><span class="sig-paren">(</span><em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#clear_mocks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.clear_mocks" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pedal.sandbox.commands.clear_mocks">
+<span class="sig-name descname"><span class="pre">clear_mocks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#clear_mocks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.commands.clear_mocks" title="Permalink to this definition"></a></dt>
 <dd><p>Reset mocked modules and functions to their defaults.</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="pedal.sandbox.commands.clear_output">
-<code class="sig-name descname">clear_output</code><span class="sig-paren">(</span><em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#clear_output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.clear_output" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pedal.sandbox.commands.clear_output">
+<span class="sig-name descname"><span class="pre">clear_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#clear_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.commands.clear_output" title="Permalink to this definition"></a></dt>
 <dd><p>Removes any existing outputs associated with the sandbox.</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="pedal.sandbox.commands.clear_sandbox">
-<code class="sig-name descname">clear_sandbox</code><span class="sig-paren">(</span><em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#clear_sandbox"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.clear_sandbox" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pedal.sandbox.commands.clear_sandbox">
+<span class="sig-name descname"><span class="pre">clear_sandbox</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#clear_sandbox"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.commands.clear_sandbox" title="Permalink to this definition"></a></dt>
 <dd><p>Removes any existing data within the current sandbox instance.</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="pedal.sandbox.commands.clear_student_data">
-<code class="sig-name descname">clear_student_data</code><span class="sig-paren">(</span><em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#clear_student_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.clear_student_data" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pedal.sandbox.commands.clear_student_data">
+<span class="sig-name descname"><span class="pre">clear_student_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#clear_student_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.commands.clear_student_data" title="Permalink to this definition"></a></dt>
 <dd><p>Removes any data in the student namespace.</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="pedal.sandbox.commands.count_unique_calls">
-<code class="sig-name descname">count_unique_calls</code><span class="sig-paren">(</span><em class="sig-param">function_name</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#count_unique_calls"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.count_unique_calls" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pedal.sandbox.commands.count_unique_calls">
+<span class="sig-name descname"><span class="pre">count_unique_calls</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">function_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#count_unique_calls"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.commands.count_unique_calls" title="Permalink to this definition"></a></dt>
 <dd><p>Counts how many times the given function was called with unique arguments.
 TODO: What about also tracking the number of “top-level” calls? So we know</p>
 <blockquote>
@@ -936,7 +1044,7 @@ TODO: What about also tracking the number of “top-level” calls? So we know</
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>function_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the function to check for calls.</p></li>
+<li><p><strong>function_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The name of the function to check for calls.</p></li>
 <li><p><strong>report</strong> (<a class="reference internal" href="../api.html#pedal.core.report.Report" title="pedal.core.report.Report"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.core.report.Report</span></code></a>) – The report with the
 sandbox instance.</p></li>
 </ul>
@@ -945,14 +1053,14 @@ sandbox instance.</p></li>
 <dd class="field-even"><p>The number of unique calls</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)">int</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="pedal.sandbox.commands.evaluate">
-<code class="sig-name descname">evaluate</code><span class="sig-paren">(</span><em class="sig-param">code</em>, <em class="sig-param">target='_'</em>, <em class="sig-param">threaded=None</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#evaluate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.evaluate" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pedal.sandbox.commands.evaluate">
+<span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target='_'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threaded=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#evaluate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.commands.evaluate" title="Permalink to this definition"></a></dt>
 <dd><p>Evaluates the given code and assigns the result to the given target.
 Will cause an error if <code class="docutils literal notranslate"><span class="pre">code</span></code> is not a valid expression.</p>
 <dl class="field-list simple">
@@ -960,9 +1068,9 @@ Will cause an error if <code class="docutils literal notranslate"><span class="p
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>code</strong> (str or <code class="xref py py-class docutils literal notranslate"><span class="pre">CaitNode</span></code>) – The code to execute. If a CaitNode, then that will be executed
 directly instead of being compiled.</p></li>
-<li><p><strong>target</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the variable to assign the result to.
+<li><p><strong>target</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The name of the variable to assign the result to.
 Note that the result is also returned by this function.</p></li>
-<li><p><strong>threaded</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether or not to run this code in a threaded
+<li><p><strong>threaded</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – Whether or not to run this code in a threaded
 environment, which allows for timeouts.</p></li>
 <li><p><strong>report</strong> (<a class="reference internal" href="../api.html#pedal.core.report.Report" title="pedal.core.report.Report"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.core.report.Report</span></code></a>) – The report with the
 sandbox instance.</p></li>
@@ -984,15 +1092,15 @@ returned instead.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="pedal.sandbox.commands.get_call_arguments">
-<code class="sig-name descname">get_call_arguments</code><span class="sig-paren">(</span><em class="sig-param">function_name</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#get_call_arguments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.get_call_arguments" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pedal.sandbox.commands.get_call_arguments">
+<span class="sig-name descname"><span class="pre">get_call_arguments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">function_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#get_call_arguments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.commands.get_call_arguments" title="Permalink to this definition"></a></dt>
 <dd><p>Retrieves all the arguments that were passed into the given function when it
 was called.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>function_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the function to check.</p></li>
+<li><p><strong>function_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The name of the function to check.</p></li>
 <li><p><strong>report</strong> (<a class="reference internal" href="../api.html#pedal.core.report.Report" title="pedal.core.report.Report"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.core.report.Report</span></code></a>) – The report with the
 sandbox instance.</p></li>
 </ul>
@@ -1007,21 +1115,21 @@ if they exist.</p>
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a>, any]]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a>, any]]</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="pedal.sandbox.commands.get_exception">
-<code class="sig-name descname">get_exception</code><span class="sig-paren">(</span><em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#get_exception"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.get_exception" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pedal.sandbox.commands.get_exception">
+<span class="sig-name descname"><span class="pre">get_exception</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#get_exception"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.commands.get_exception" title="Permalink to this definition"></a></dt>
 <dd><p>Returns an exception if one occurred during the last execution,
 otherwise returns None.</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="pedal.sandbox.commands.get_input">
-<code class="sig-name descname">get_input</code><span class="sig-paren">(</span><em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#get_input"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.get_input" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pedal.sandbox.commands.get_input">
+<span class="sig-name descname"><span class="pre">get_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#get_input"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.commands.get_input" title="Permalink to this definition"></a></dt>
 <dd><p>Retrieves the current inputs that are available for execution.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1031,27 +1139,33 @@ sandbox instance.</p>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><dl class="simple">
 <dt>The current list of inputs available for execution. The first</dt><dd><p>element of this list is the next string that will be passed to the
-next student call of <a class="reference external" href="https://docs.python.org/3/library/functions.html#input" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">input()</span></code></a>.</p>
+next student call of <a class="reference external" href="https://docs.python.org/3/library/functions.html#input" title="(in Python v3.11)"><code class="xref py py-func docutils literal notranslate"><span class="pre">input()</span></code></a>.</p>
 </dd>
 </dl>
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a>]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a>]</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="pedal.sandbox.commands.get_output">
-<code class="sig-name descname">get_output</code><span class="sig-paren">(</span><em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#get_output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.get_output" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pedal.sandbox.commands.get_module">
+<span class="sig-name descname"><span class="pre">get_module</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#get_module"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.commands.get_module" title="Permalink to this definition"></a></dt>
+<dd><p>Loads the data for the given mocked module, if available (otherwise raises exception)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pedal.sandbox.commands.get_output">
+<span class="sig-name descname"><span class="pre">get_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#get_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.commands.get_output" title="Permalink to this definition"></a></dt>
 <dd><p>Retrieves the current output (whatever the student has printed) since
 execution began.</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="pedal.sandbox.commands.get_sandbox">
-<code class="sig-name descname">get_sandbox</code><span class="sig-paren">(</span><em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#get_sandbox"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.get_sandbox" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pedal.sandbox.commands.get_sandbox">
+<span class="sig-name descname"><span class="pre">get_sandbox</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#get_sandbox"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.commands.get_sandbox" title="Permalink to this definition"></a></dt>
 <dd><p>Retrieves the current sandbox instance attached to this report.
 Typically, this is used to retrieve the sandbox without running the
 students’ code.</p>
@@ -1069,9 +1183,9 @@ sandbox instance.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="pedal.sandbox.commands.get_student_data">
-<code class="sig-name descname">get_student_data</code><span class="sig-paren">(</span><em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#get_student_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.get_student_data" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pedal.sandbox.commands.get_student_data">
+<span class="sig-name descname"><span class="pre">get_student_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#get_student_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.commands.get_student_data" title="Permalink to this definition"></a></dt>
 <dd><p>Retrieves the current data in the student namespace. Note that this is
 the data itself - modifying the dictionary will modify the data in the
 students’ namespace for subsequent executions!</p>
@@ -1088,14 +1202,14 @@ sandbox instance.</p>
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a>, Any]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a>, Any]</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="pedal.sandbox.commands.get_trace">
-<code class="sig-name descname">get_trace</code><span class="sig-paren">(</span><em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#get_trace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.get_trace" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pedal.sandbox.commands.get_trace">
+<span class="sig-name descname"><span class="pre">get_trace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#get_trace"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.commands.get_trace" title="Permalink to this definition"></a></dt>
 <dd><p>Retrieves the list of line numbers that have been traced (recognized as executed).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1110,29 +1224,29 @@ sandbox instance.</p>
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)">int</a>]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)">int</a>]</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="pedal.sandbox.commands.mock_function">
-<code class="sig-name descname">mock_function</code><span class="sig-paren">(</span><em class="sig-param">function_name</em>, <em class="sig-param">new_version</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#mock_function"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.mock_function" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pedal.sandbox.commands.mock_function">
+<span class="sig-name descname"><span class="pre">mock_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">function_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_version</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#mock_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.commands.mock_function" title="Permalink to this definition"></a></dt>
 <dd><p>Provide a custom version of the built-in function.</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="pedal.sandbox.commands.mock_module">
-<code class="sig-name descname">mock_module</code><span class="sig-paren">(</span><em class="sig-param">module_name</em>, <em class="sig-param">new_version</em>, <em class="sig-param">friendly_name=None</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#mock_module"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.mock_module" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pedal.sandbox.commands.mock_module">
+<span class="sig-name descname"><span class="pre">mock_module</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_version</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">friendly_name=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#mock_module"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.commands.mock_module" title="Permalink to this definition"></a></dt>
 <dd><p>Provide an alternative version of the given module.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>module_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The importable name of the module.</p></li>
+<li><p><strong>module_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The importable name of the module.</p></li>
 <li><p><strong>new_version</strong> (dict | <code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.sandbox.mocked.MockModule</span></code>) – The
 new version of the module, either as a dictionary of fields/values
 or a fully created MockModule.</p></li>
-<li><p><strong>friendly_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The internal name to use to store the data for this
+<li><p><strong>friendly_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The internal name to use to store the data for this
 module, accessible via Sandbox’s <cite>modules</cite> field.</p></li>
 <li><p><strong>report</strong> (<a class="reference internal" href="../api.html#pedal.core.report.Report" title="pedal.core.report.Report"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.core.report.Report</span></code></a>) – The report with the
 sandbox instance.</p></li>
@@ -1141,19 +1255,19 @@ sandbox instance.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="pedal.sandbox.commands.queue_input">
-<code class="sig-name descname">queue_input</code><span class="sig-paren">(</span><em class="sig-param">*inputs</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#queue_input"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.queue_input" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pedal.sandbox.commands.queue_input">
+<span class="sig-name descname"><span class="pre">queue_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#queue_input"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.commands.queue_input" title="Permalink to this definition"></a></dt>
 <dd><dl class="simple">
 <dt>Adds the given <code class="docutils literal notranslate"><span class="pre">*inputs</span></code> to be used as input during subsequent</dt><dd><p>executions (e.g., <a class="reference internal" href="#pedal.sandbox.commands.run" title="pedal.sandbox.commands.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">pedal.sandbox.commands.run()</span></code></a>) if the
-student’s code calls <a class="reference external" href="https://docs.python.org/3/library/functions.html#input" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">input()</span></code></a>. This does not remove existing
+student’s code calls <a class="reference external" href="https://docs.python.org/3/library/functions.html#input" title="(in Python v3.11)"><code class="xref py py-func docutils literal notranslate"><span class="pre">input()</span></code></a>. This does not remove existing
 inputs.</p>
 </dd>
 </dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>*inputs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – One or more strings that will be set. The first string
+<li><p><strong>*inputs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – One or more strings that will be set. The first string
 passed in is the first string that will be passed in as input.</p></li>
 <li><p><strong>report</strong> (<a class="reference internal" href="../api.html#pedal.core.report.Report" title="pedal.core.report.Report"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.core.report.Report</span></code></a>) – The report with the
 sandbox instance.</p></li>
@@ -1162,15 +1276,15 @@ sandbox instance.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="pedal.sandbox.commands.reset_output">
-<code class="sig-name descname">reset_output</code><span class="sig-paren">(</span><em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#pedal.sandbox.commands.reset_output" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pedal.sandbox.commands.reset_output">
+<span class="sig-name descname"><span class="pre">reset_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pedal.sandbox.commands.reset_output" title="Permalink to this definition"></a></dt>
 <dd><p>Removes any existing outputs associated with the sandbox.</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="pedal.sandbox.commands.run">
-<code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param">code=None</em>, <em class="sig-param">filename=None</em>, <em class="sig-param">inputs=None</em>, <em class="sig-param">threaded=None</em>, <em class="sig-param">after=None</em>, <em class="sig-param">before=None</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.run" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pedal.sandbox.commands.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inputs=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threaded=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">before=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.commands.run" title="Permalink to this definition"></a></dt>
 <dd><p>If both <code class="docutils literal notranslate"><span class="pre">code</span></code> and <code class="docutils literal notranslate"><span class="pre">filename</span></code> are None, then the submission’s
 main file will be executed. If <code class="docutils literal notranslate"><span class="pre">code</span></code> is given but <code class="docutils literal notranslate"><span class="pre">filename</span></code> is
 not, then it is assumed to be instructor code.</p>
@@ -1178,13 +1292,13 @@ not, then it is assumed to be instructor code.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>code</strong> (str or <code class="xref py py-class docutils literal notranslate"><span class="pre">CaitNode</span></code> or None) – The code to execute.</p></li>
-<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><em>None</em></a>) – The filename to use for this code.</p></li>
-<li><p><strong>inputs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – Optional inputs to be passed to
+<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em> or </em><em>None</em>) – The filename to use for this code.</p></li>
+<li><p><strong>inputs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – Optional inputs to be passed to
 <code class="xref py py-func docutils literal notranslate"><span class="pre">set_input()</span></code>.</p></li>
-<li><p><strong>threaded</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether or not to run this code in a threaded
+<li><p><strong>threaded</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – Whether or not to run this code in a threaded
 environment, which allows for timeouts.</p></li>
-<li><p><strong>after</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Code to run after this code (without a filename).</p></li>
-<li><p><strong>before</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Code to run before this code (without a filename).</p></li>
+<li><p><strong>after</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Code to run after this code (without a filename).</p></li>
+<li><p><strong>before</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Code to run before this code (without a filename).</p></li>
 <li><p><strong>report</strong> (<a class="reference internal" href="../api.html#pedal.core.report.Report" title="pedal.core.report.Report"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.core.report.Report</span></code></a>) – The report with the
 sandbox instance.</p></li>
 </ul>
@@ -1198,22 +1312,22 @@ sandbox instance.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="pedal.sandbox.commands.set_input">
-<code class="sig-name descname">set_input</code><span class="sig-paren">(</span><em class="sig-param">inputs</em>, <em class="sig-param">clear=True</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#set_input"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.set_input" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pedal.sandbox.commands.set_input">
+<span class="sig-name descname"><span class="pre">set_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clear=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#set_input"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.commands.set_input" title="Permalink to this definition"></a></dt>
 <dd><dl class="simple">
 <dt>Sets the given <code class="docutils literal notranslate"><span class="pre">inputs</span></code> to be used as input during subsequent</dt><dd><p>executions (e.g., <a class="reference internal" href="#pedal.sandbox.commands.run" title="pedal.sandbox.commands.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">pedal.sandbox.commands.run()</span></code></a>) if the
-student’s code calls <a class="reference external" href="https://docs.python.org/3/library/functions.html#input" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">input()</span></code></a>. Unless the <code class="docutils literal notranslate"><span class="pre">clear</span></code> parameter
+student’s code calls <a class="reference external" href="https://docs.python.org/3/library/functions.html#input" title="(in Python v3.11)"><code class="xref py py-func docutils literal notranslate"><span class="pre">input()</span></code></a>. Unless the <code class="docutils literal notranslate"><span class="pre">clear</span></code> parameter
 is set to False, this removes existing inputs.</p>
 </dd>
 </dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>inputs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – One or more strings that will be set. The
+<li><p><strong>inputs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – One or more strings that will be set. The
 first string passed in is the first string that will be passed in
 as input.</p></li>
-<li><p><strong>clear</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether or not to remove any existing inputs set up
+<li><p><strong>clear</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – Whether or not to remove any existing inputs set up
 in the sandbox.</p></li>
 <li><p><strong>report</strong> (<a class="reference internal" href="../api.html#pedal.core.report.Report" title="pedal.core.report.Report"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.core.report.Report</span></code></a>) – The report with the
 sandbox instance.</p></li>
@@ -1222,19 +1336,19 @@ sandbox instance.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="pedal.sandbox.commands.start_trace">
-<code class="sig-name descname">start_trace</code><span class="sig-paren">(</span><em class="sig-param">tracer_style='native'</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#start_trace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.start_trace" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pedal.sandbox.commands.start_trace">
+<span class="sig-name descname"><span class="pre">start_trace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tracer_style='native'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#start_trace"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.commands.start_trace" title="Permalink to this definition"></a></dt>
 <dd><p>Start tracing using the coverage module.</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="pedal.sandbox.commands.stop_trace">
-<code class="sig-name descname">stop_trace</code><span class="sig-paren">(</span><em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#stop_trace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.sandbox.commands.stop_trace" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pedal.sandbox.commands.stop_trace">
+<span class="sig-name descname"><span class="pre">stop_trace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#stop_trace"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.commands.stop_trace" title="Permalink to this definition"></a></dt>
 <dd><p>Stop whatever tracing is going on.</p>
 </dd></dl>
 
-</div>
+</section>
 
 
            </div>

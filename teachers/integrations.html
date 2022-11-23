@@ -1,18 +1,22 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Autograder Integrations &mdash; Pedal 1.0 documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <title>Autograder Integrations &mdash; Pedal 1.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
-        <script src="../_static/language_data.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -38,7 +42,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption"><span class="caption-text">Contents</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../everyone/introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../everyone/installation.html">Installation</a></li>
@@ -58,6 +62,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../developers/api.html">Developer API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers/tools.html">Developer Tools Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers/conventions.html">Internal Naming Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers/libraries.html">Necessary Libraries</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../everyone/glossary.html">Glossary</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../everyone/contact.html">Contact</a></li>
 </ul>
@@ -75,8 +80,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Autograder Integrations</li>
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Autograder Integrations</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/teachers/integrations.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -86,17 +91,17 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="autograder-integrations">
-<span id="integrations"></span><h1>Autograder Integrations<a class="headerlink" href="#autograder-integrations" title="Permalink to this headline">¶</a></h1>
+  <section id="autograder-integrations">
+<span id="integrations"></span><h1>Autograder Integrations<a class="headerlink" href="#autograder-integrations" title="Permalink to this heading"></a></h1>
 <p>Pedal is not tied to a single autograding platform, our vision is that it should be usable anywhere. This
 is largely achieved through “environments”, which can be set as command line parameters to reconfigure Pedal
 for the desired autograding platform. If you want to see a new platform, then please raise an Issue on our GitHub!</p>
-<div class="section" id="vpl">
-<h2>VPL<a class="headerlink" href="#vpl" title="Permalink to this headline">¶</a></h2>
+<section id="vpl">
+<h2>VPL<a class="headerlink" href="#vpl" title="Permalink to this heading"></a></h2>
 <p>You will need to create an instructor control script (e.g., <cite>ics.py</cite>), and upload it along with a <cite>vpl_evaluate.sh</cite> file:</p>
 <div class="literal-block-wrapper docutils container" id="id1">
-<div class="code-block-caption"><span class="caption-text">vpl_evaluate.sh</span><a class="headerlink" href="#id1" title="Permalink to this code">¶</a></div>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">#</span> Run the environment variable initializer to get access to its variables
+<div class="code-block-caption"><span class="caption-text">vpl_evaluate.sh</span><a class="headerlink" href="#id1" title="Permalink to this code"></a></div>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span>Run the environment variable initializer to get access to its variables
 <span class="go">source ./vpl_environment.sh</span>
 <span class="go">echo &quot;#!/bin/bash&quot; &gt; vpl_execution</span>
 <span class="go">echo &quot;python3.6 -m pedal grade ics.py $VPL_SUBFILE0 --environment vpl&quot;&gt;&gt; vpl_execution</span>
@@ -113,25 +118,25 @@ for the desired autograding platform. If you want to see a new platform, then pl
 <ul class="simple">
 <li><p>Most HTML tags are not available; only headers and preformatted text blocks are available.</p></li>
 </ul>
-</div>
-<div class="section" id="gradescope">
-<h2>GradeScope<a class="headerlink" href="#gradescope" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="gradescope">
+<h2>GradeScope<a class="headerlink" href="#gradescope" title="Permalink to this heading"></a></h2>
 <p>You will need to create an instructor control script (e.g., <cite>ics.py</cite>) and upload it along with the following files:</p>
 <div class="literal-block-wrapper docutils container" id="id2">
-<div class="code-block-caption"><span class="caption-text">setup.sh</span><a class="headerlink" href="#id2" title="Permalink to this code">¶</a></div>
+<div class="code-block-caption"><span class="caption-text">setup.sh</span><a class="headerlink" href="#id2" title="Permalink to this code"></a></div>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python3 -m pip install pedal</span>
-<span class="gp">#</span> Or use the development version of Pedal
-<span class="gp">#</span> python3 -m pip install git+git://github.com/pedal-edu/pedal.git
-<span class="gp">#</span> We also have these additional curriculum libraries available
-<span class="gp">#</span> python3 -m pip install git+git://github.com/pedal-edu/curriculum-sneks.git
-<span class="gp">#</span> python3 -m pip install git+git://github.com/pedal-edu/curriculum-ctvt.git
+<span class="gp"># </span>Or use the development version of Pedal
+<span class="gp"># </span>python3 -m pip install git+git://github.com/pedal-edu/pedal.git
+<span class="gp"># </span>We also have these additional curriculum libraries available
+<span class="gp"># </span>python3 -m pip install git+git://github.com/pedal-edu/curriculum-sneks.git
+<span class="gp"># </span>python3 -m pip install git+git://github.com/pedal-edu/curriculum-ctvt.git
 </pre></div>
 </div>
 </div>
 <div class="literal-block-wrapper docutils container" id="id3">
-<div class="code-block-caption"><span class="caption-text">run_autograder</span><a class="headerlink" href="#id3" title="Permalink to this code">¶</a></div>
+<div class="code-block-caption"><span class="caption-text">run_autograder</span><a class="headerlink" href="#id3" title="Permalink to this code"></a></div>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">#</span>!/usr/bin/env bash
-<span class="gp">#</span> Runs the first python file that the student submitted
+<span class="gp"># </span>Runs the first python file that the student submitted
 <span class="go">files=( /autograder/submission/*.py )</span>
 <span class="go">pedal grade \</span>
 <span class="go">        /autograder/source/ics.py \</span>
@@ -143,7 +148,7 @@ for the desired autograding platform. If you want to see a new platform, then pl
 </div>
 <p>An example Instructor Control Script looks like this:</p>
 <div class="literal-block-wrapper docutils container" id="id4">
-<div class="code-block-caption"><span class="caption-text">ics.py</span><a class="headerlink" href="#id4" title="Permalink to this code">¶</a></div>
+<div class="code-block-caption"><span class="caption-text">ics.py</span><a class="headerlink" href="#id4" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="c1"># Set the maximum score for the assignment here</span>
@@ -160,26 +165,26 @@ for the desired autograding platform. If you want to see a new platform, then pl
 <li><p>Only show the highest priority feedback message, rather than all possible feedback</p></li>
 </ul>
 <img alt="../_images/gradescope_example.png" src="../_images/gradescope_example.png" />
-</div>
-<div class="section" id="blockpy">
-<h2>BlockPy<a class="headerlink" href="#blockpy" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="blockpy">
+<h2>BlockPy<a class="headerlink" href="#blockpy" title="Permalink to this heading"></a></h2>
 <p>BlockPy comes preloaded with Pedal. No special configuration is required!</p>
-</div>
-<div class="section" id="web-cat">
-<h2>Web-CAT<a class="headerlink" href="#web-cat" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="web-cat">
+<h2>Web-CAT<a class="headerlink" href="#web-cat" title="Permalink to this heading"></a></h2>
 <p>We have not tried the latest version of Pedal on Web-CAT. However, we believe that it should be possible to install
 Pedal and have it generate appropriate documentation, based on our success with an earlier version. If you are
 interested in this effort, please check our GitHub Issues!</p>
-</div>
-<div class="section" id="jupyter-notebooks">
-<h2>Jupyter Notebooks<a class="headerlink" href="#jupyter-notebooks" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="jupyter-notebooks">
+<h2>Jupyter Notebooks<a class="headerlink" href="#jupyter-notebooks" title="Permalink to this heading"></a></h2>
 <p>Jupyter Notebook integration has been achieved, but we have not really prepared this for other people to use.
 If you are interested, then you will need to make sure that the Jupyter server preloads the Grade Magic command we
 have created. From there, you can create custom notebooks with the instructor grading code at the bottom. We wrote
 a <cite>simple extension &lt;https://github.com/acbart/jn-student-toolbar&gt;`_</cite> to hide these cells (along with
 other interface changes).</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

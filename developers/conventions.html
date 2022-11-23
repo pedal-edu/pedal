@@ -1,23 +1,27 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Internal Naming Conventions &mdash; Pedal 1.0 documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <title>Internal Naming Conventions &mdash; Pedal 1.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
-        <script src="../_static/language_data.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Glossary" href="../everyone/glossary.html" />
-    <link rel="prev" title="Assertions" href="tools/assertions.html" /> 
+    <link rel="next" title="Necessary Libraries" href="libraries.html" />
+    <link rel="prev" title="Extensions" href="tools/extensions.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -38,7 +42,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption"><span class="caption-text">Contents</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../everyone/introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../everyone/installation.html">Installation</a></li>
@@ -51,6 +55,7 @@
 <li class="toctree-l1"><a class="reference internal" href="api.html">Developer API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tools.html">Developer Tools Reference</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Internal Naming Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="libraries.html">Necessary Libraries</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../everyone/glossary.html">Glossary</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../everyone/contact.html">Contact</a></li>
 </ul>
@@ -68,8 +73,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Internal Naming Conventions</li>
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Internal Naming Conventions</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/developers/conventions.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -79,8 +84,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="internal-naming-conventions">
-<h1>Internal Naming Conventions<a class="headerlink" href="#internal-naming-conventions" title="Permalink to this headline">¶</a></h1>
+  <section id="internal-naming-conventions">
+<h1>Internal Naming Conventions<a class="headerlink" href="#internal-naming-conventions" title="Permalink to this heading"></a></h1>
 <dl class="simple">
 <dt>Labels</dt><dd><p>Should be valid Python identifiers when possible. Treat them like
 variable names, basically: mostly lowercase, underscores as separators,
@@ -88,11 +93,11 @@ ideally not crazy long. Try to keep them unique, distinct, and specialized,
 especially within a Category.</p>
 </dd>
 <dt>Category</dt><dd><p>These should be referred to by their
-<code class="xref py py-class docutils literal notranslate"><span class="pre">FeedbackCategory</span></code> constant.
+<a class="reference internal" href="api.html#pedal.core.feedback.FeedbackCategory" title="pedal.core.feedback_category.FeedbackCategory"><code class="xref py py-class docutils literal notranslate"><span class="pre">FeedbackCategory</span></code></a> constant.
 See examples in that class for naming conventions.</p>
 </dd>
 <dt>Kind</dt><dd><p>These should be referred to by their
-<code class="xref py py-class docutils literal notranslate"><span class="pre">FeedbackKind</span></code> constant.
+<a class="reference internal" href="api.html#pedal.core.feedback.FeedbackKind" title="pedal.core.feedback_category.FeedbackKind"><code class="xref py py-class docutils literal notranslate"><span class="pre">FeedbackKind</span></code></a> constant.
 See examples in that class for naming conventions.</p>
 </dd>
 <dt>Priority</dt><dd><p>These can be <code class="docutils literal notranslate"><span class="pre">&quot;low&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;medium&quot;</span></code>, or <code class="docutils literal notranslate"><span class="pre">&quot;high&quot;</span></code>, or the name of a
@@ -103,14 +108,14 @@ no restrictions on the Tool’s naming schema, but we recommend something
 short, simple, and human-friendly.</p>
 </dd>
 </dl>
-</div>
+</section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="tools/assertions.html" class="btn btn-neutral float-left" title="Assertions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../everyone/glossary.html" class="btn btn-neutral float-right" title="Glossary" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="tools/extensions.html" class="btn btn-neutral float-left" title="Extensions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="libraries.html" class="btn btn-neutral float-right" title="Necessary Libraries" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

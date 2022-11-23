@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Necessary Libraries &mdash; Pedal 1.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Glossary" href="../everyone/glossary.html" />
+    <link rel="prev" title="Internal Naming Conventions" href="conventions.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> Pedal
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../everyone/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../everyone/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../teachers/quickstart.html">Teacher Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../teachers/examples.html">Teacher Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../teachers/reference.html">Teacher Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../teachers/integrations.html">Autograder Integrations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../teachers/practices.html">Best Practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ffs.html">Feedback Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">Developer API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">Developer Tools Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conventions.html">Internal Naming Conventions</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Necessary Libraries</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#critical-standard-libraries">Critical Standard Libraries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#non-critical-standard-libraries">Non-Critical Standard Libraries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#optional-third-party-libraries">Optional Third Party Libraries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#compatiblity">Compatiblity</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#skulpt">Skulpt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#micropython">MicroPython</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../everyone/glossary.html">Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../everyone/contact.html">Contact</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Pedal</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Necessary Libraries</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/developers/libraries.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="necessary-libraries">
+<h1>Necessary Libraries<a class="headerlink" href="#necessary-libraries" title="Permalink to this heading"></a></h1>
+<p>A major design goal for Pedal was to limit third-party libraries. Unfortunately, we are still dependent on some
+libraries in the Standard Library. Although that may not sound like a restriction, we are often interested in running
+Pedal in non-Cpython versions of Python, such as Skulpt and MicroPython. This page attempts to document the libraries
+we depend on, and why they are necessary. Where possible, we talk about workarounds.</p>
+<section id="critical-standard-libraries">
+<h2>Critical Standard Libraries<a class="headerlink" href="#critical-standard-libraries" title="Permalink to this heading"></a></h2>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">sys</span></code></p>
+<blockquote>
+<div><p><a class="reference internal" href="tools/sandbox.html#module-pedal.sandbox" title="pedal.sandbox"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pedal.sandbox</span></code></a></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">modules</span></code> to do monkey patching madness.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">exc_info</span></code> for exception stuff</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">settrace</span></code> and <code class="docutils literal notranslate"><span class="pre">gettrace</span></code> for tracing</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">stdout</span></code> for tracing rerouting</p></li>
+</ul>
+</div></blockquote>
+<p><a class="reference internal" href="tools/source.html#module-pedal.source.source" title="pedal.source.source"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pedal.source.source</span></code></a></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">exc_info</span></code> for exception stuff</p></li>
+</ul>
+</div></blockquote>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">pedal.utilities</span></code></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">stdout</span></code> for exceptions</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">version_info</span></code> for checking current system version</p></li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">os</span></code></p>
+<blockquote>
+<div><p><a class="reference internal" href="tools/sandbox.html#module-pedal.sandbox" title="pedal.sandbox"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pedal.sandbox</span></code></a> and <code class="xref py py-mod docutils literal notranslate"><span class="pre">pedal.utilities</span></code></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">path</span></code> is used for a few things</p></li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dataclasses</span></code></p>
+<blockquote>
+<div><p><a class="reference internal" href="tools/assertions.html#module-pedal.assertions" title="pedal.assertions"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pedal.assertions</span></code></a>, <code class="xref py py-mod docutils literal notranslate"><span class="pre">pedal.types</span></code>, <code class="xref py py-mod docutils literal notranslate"><span class="pre">pedal.utilities</span></code></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">fields</span></code> and <code class="docutils literal notranslate"><span class="pre">_FIELDS</span></code> are used to inspect dataclass objects (should be try/catched!)</p></li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">functools</span></code></p>
+<blockquote>
+<div><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">pedal.assertions.organizers</span></code></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">wraps</span></code> is used out of convenience and for clarity, I think?</p></li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">re</span></code></p>
+<blockquote>
+<div><p><a class="reference internal" href="tools/assertions.html#module-pedal.assertions" title="pedal.assertions"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pedal.assertions</span></code></a>,:py:mod:<cite>pedal.cait</cite>, <a class="reference internal" href="tools/sandbox.html#module-pedal.sandbox" title="pedal.sandbox"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pedal.sandbox</span></code></a>, <code class="xref py py-mod docutils literal notranslate"><span class="pre">pedal.source</span></code>, <code class="xref py py-mod docutils literal notranslate"><span class="pre">pedal.utilities</span></code></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">search</span></code>, <code class="docutils literal notranslate"><span class="pre">compile</span></code>, <code class="docutils literal notranslate"><span class="pre">split</span></code>, <code class="docutils literal notranslate"><span class="pre">MULTILINE</span></code>, <code class="docutils literal notranslate"><span class="pre">sub</span></code> are all necessary.</p></li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ast</span></code></p>
+<blockquote>
+<div><p><a class="reference internal" href="tools/assertions.html#module-pedal.assertions" title="pedal.assertions"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pedal.assertions</span></code></a>, <a class="reference internal" href="tools/cait.html#module-pedal.cait" title="pedal.cait"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pedal.cait</span></code></a>, <code class="xref py py-mod docutils literal notranslate"><span class="pre">pedal.source</span></code>, <a class="reference internal" href="tools/tifa.html#module-pedal.tifa" title="pedal.tifa"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pedal.tifa</span></code></a>, <code class="xref py py-mod docutils literal notranslate"><span class="pre">pedal.types</span></code>, <code class="xref py py-mod docutils literal notranslate"><span class="pre">pedal.utilities</span></code></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">parse</span></code>, but also like almost every single other class descending from <code class="docutils literal notranslate"><span class="pre">Ast</span></code> too. Oh, and <code class="docutils literal notranslate"><span class="pre">NodeVisitor</span></code> and <code class="docutils literal notranslate"><span class="pre">iter_fields</span></code> too.</p></li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">types</span></code></p>
+<blockquote>
+<div><p><a class="reference internal" href="tools/cait.html#module-pedal.cait" title="pedal.cait"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pedal.cait</span></code></a>, <a class="reference internal" href="tools/sandbox.html#module-pedal.sandbox" title="pedal.sandbox"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pedal.sandbox</span></code></a>, <code class="xref py py-mod docutils literal notranslate"><span class="pre">pedal.types</span></code></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">MethodType</span></code> for dynamically creating methods (I wonder if this could be changed?)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ModuleType</span></code> for dynamically creating modules</p></li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">io</span></code></p>
+<blockquote>
+<div><p><a class="reference internal" href="tools/sandbox.html#module-pedal.sandbox" title="pedal.sandbox"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pedal.sandbox</span></code></a></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">StringIO</span></code> is necessary for handling mocked files, and capturing stdout</p></li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">unittest</span></code></p>
+<blockquote>
+<div><p><a class="reference internal" href="tools/sandbox.html#module-pedal.sandbox" title="pedal.sandbox"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pedal.sandbox</span></code></a></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">patch</span></code> is necessary for more sophisticated patching used in the Sandbox and the Tracer</p></li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">traceback</span></code></p>
+<blockquote>
+<div><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">pedal.utilities.exception</span></code></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">TracebackException</span></code> and <code class="docutils literal notranslate"><span class="pre">extract_tb</span></code> are used to capture the full traceback info and reshape it.</p></li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">time</span></code></p>
+<blockquote>
+<div><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">pedal.sandbox.timeout</span></code></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">time</span></code> is used to get the current time for calculating the timeout</p></li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">math</span></code></p>
+<blockquote>
+<div><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">pedal.sandbox.result</span></code></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">truncate</span></code> needs to be imported and used in order to properly emulate it</p></li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">itertools</span></code></p>
+<blockquote>
+<div><p><a class="reference internal" href="tools/sandbox.html#module-pedal.sandbox.sandbox" title="pedal.sandbox.sandbox"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pedal.sandbox.sandbox</span></code></a></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">zip_longest</span></code> is used as a convenience</p></li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">threading</span></code></p>
+<blockquote>
+<div><p><a class="reference internal" href="tools/sandbox.html#module-pedal.sandbox.sandbox" title="pedal.sandbox.sandbox"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pedal.sandbox.sandbox</span></code></a></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Thread</span></code> and <code class="docutils literal notranslate"><span class="pre">_active</span></code> are used to handle threading student code (which is usually necessary for properly handling timeouts)</p></li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ctypes</span></code></p>
+<blockquote>
+<div><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">pedal.sandbox.timeout</span></code></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pythonapi</span></code>, <code class="docutils literal notranslate"><span class="pre">c_long</span></code>, and <code class="docutils literal notranslate"><span class="pre">py_object</span></code> are used inside of threading the timeout stuff. I have no idea since that code is mostly stolen.</p></li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">bdb</span></code></p>
+<blockquote>
+<div><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">pedal.sandbox.tracer</span></code></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Bdb</span></code> and <code class="docutils literal notranslate"><span class="pre">BdbQuit</span></code> are useful for tracing student code, but not critical.</p></li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">hashlib</span></code></p>
+<blockquote>
+<div><p><a class="reference internal" href="tools/questions.html#module-pedal.questions.setup" title="pedal.questions.setup"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pedal.questions.setup</span></code></a></p>
+<blockquote>
+<div><ul class="simple">
+<li><p>depends on the <code class="docutils literal notranslate"><span class="pre">md5</span></code> function to translate users/questions into a replicable seed for consistent “random” question pools</p></li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">string</span></code></p>
+<blockquote>
+<div><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">pedal.utilities.comparisons</span></code></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">punctuation</span></code> is used in the string comparison function (could be hardcoded)</p></li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">numbers</span></code></p>
+<blockquote>
+<div><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">pedal.utilities.comparisons</span></code></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Number</span></code> is used somehow?</p></li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+</li>
+</ul>
+</section>
+<section id="non-critical-standard-libraries">
+<h2>Non-Critical Standard Libraries<a class="headerlink" href="#non-critical-standard-libraries" title="Permalink to this heading"></a></h2>
+<p>Most of the Environments require some various libraries (e.g., the Jupyter environment absolutely depends on
+<cite>nbformat</cite>).</p>
+<ul>
+<li><p><cite>sys</cite></p>
+<blockquote>
+<div><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">pedal.command_line</span></code></p>
+<blockquote>
+<div><p>Uses <cite>version_info</cite>, <cite>stdout</cite></p>
+</div></blockquote>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">pedal.environments</span></code></p>
+<blockquote>
+<div><p>Uses <cite>stderr</cite>, <cite>exc_info</cite>, <cite>argv</cite></p>
+</div></blockquote>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sqlite3</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pickle</span></code></p></li>
+</ul>
+</section>
+<section id="optional-third-party-libraries">
+<h2>Optional Third Party Libraries<a class="headerlink" href="#optional-third-party-libraries" title="Permalink to this heading"></a></h2>
+<p>These allow us to do some convenient things, but we don’t <em>need</em> them.</p>
+<ul class="simple">
+<li><p><cite>coverage</cite> - does some fancier tracing I believe?</p></li>
+<li><p><cite>tabulate</cite></p></li>
+<li><p><cite>tqdm</cite></p></li>
+</ul>
+</section>
+<section id="compatiblity">
+<h2>Compatiblity<a class="headerlink" href="#compatiblity" title="Permalink to this heading"></a></h2>
+<p>Here is an attempt at figuring out compatibility with some popular CPython alternatives.</p>
+<section id="skulpt">
+<h3>Skulpt<a class="headerlink" href="#skulpt" title="Permalink to this heading"></a></h3>
+<p>We support Skulpt via our own fork. Everything in Pedal works in our version of Skulpt because otherwise we couldn’t
+do BlockPy.</p>
+</section>
+<section id="micropython">
+<h3>MicroPython<a class="headerlink" href="#micropython" title="Permalink to this heading"></a></h3>
+<p>These libraries seem to be sufficiently supported:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">re</span></code> (although might need a specific MicroPython port?)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">io</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">time</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">truncate</span></code> (although it might be <code class="docutils literal notranslate"><span class="pre">trunc</span></code>? Need to investigate)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">hashlib</span></code></p></li>
+</ul>
+<p>These libraries might be a problem:</p>
+<p><code class="docutils literal notranslate"><span class="pre">sys</span></code></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">sys.stdout</span></code> is available</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sys.modules</span></code> is available, but might be missing “builting modules” (does that matter?)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sys.settrace</span></code> is available, through a customized build! But what about <code class="docutils literal notranslate"><span class="pre">sys.gettrace</span></code>? Doesn’t seem to be implemented, but there might be workarounds…</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sys.version_info</span></code> is available, though might be slightly different?</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sys.exc_info</span></code> may <strong>NOT</strong> be available? Need to investigate, since that’s a big deal breaker, I’m pretty sure.</p></li>
+</ul>
+</div></blockquote>
+<p><code class="docutils literal notranslate"><span class="pre">os</span></code></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">path</span></code> may <strong>NOT</strong> be available. Might be able to handle that other ways though?</p></li>
+</ul>
+</div></blockquote>
+<p><code class="docutils literal notranslate"><span class="pre">threading</span></code></p>
+<blockquote>
+<div><ul class="simple">
+<li><p>there is a <code class="docutils literal notranslate"><span class="pre">_thread</span></code> library with experimental support, so that might be sufficient?</p></li>
+</ul>
+</div></blockquote>
+<p><code class="docutils literal notranslate"><span class="pre">ctypes</span></code></p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Since this is only used for timeout code, it might be related to what we need to do for <code class="docutils literal notranslate"><span class="pre">threading</span></code></p></li>
+</ul>
+</div></blockquote>
+<p>These libraries are <strong>NOT</strong> available, and that’s a deal-breaker until they are added:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ast</span></code> (entire thing seems to be missing)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">types</span></code> (actually, I think its in the source code)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">unittest</span></code> (key feature is missing)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">traceback</span></code> (key features are missing)</p></li>
+</ul>
+<p>These libraries are not available, but I suspect that we can work around:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">dataclasses</span></code> (really not necessary unless you want students using dataclasses, which they can’t!)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">functools</span></code> (it’s in the source code…)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">itertools</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">bdb</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">string</span></code> (it’s in the source code…)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">numbers</span></code></p></li>
+</ul>
+<p>The following features are CRITICAL to Pedal:</p>
+<ul class="simple">
+<li><p>Overriding sys.stdin, sys.stdout and sys.stderr not possible (well that’s a deciding factor right there)</p></li>
+</ul>
+<p>The following features would be DIFFICULT/PAINFUL to rewrite in Pedal:</p>
+<ul class="simple">
+<li><p>f-strings don’t support the !r, !s, and !a conversions</p></li>
+<li><p>Method Resolution Order (MRO) is not compliant with CPython</p></li>
+<li><p>When inheriting from multiple classes super() only calls one class</p></li>
+<li><p>User-defined attributes for functions are not supported (this one would be INCREDIBLY painful to rewrite)</p></li>
+</ul>
+<p>The following features were convenient in Pedal, and could be avoided:</p>
+<ul class="simple">
+<li><p>f-strings don’t support concatenation with adjacent literals if the adjacent literals contain braces or are f-strings</p></li>
+<li><p>f-strings cannot support expressions that require parsing to resolve unbalanced nested braces and brackets</p></li>
+<li><p>Raw f-strings are not supported</p></li>
+<li><p>Failed to load modules are still registered as loaded</p></li>
+</ul>
+<p>I am unclear if these will matter:</p>
+<ul class="simple">
+<li><p>Calling super() getter property in subclass will return a property object, not the value</p></li>
+<li><p>Error messages for methods may display unexpected argument counts</p></li>
+<li><p>Context manager __exit__() not called in a generator which does not run to completion</p></li>
+<li><p>User-defined attributes for builtin exceptions are not supported</p></li>
+<li><p>Attributes/subscr not implemented for <cite>str</cite></p></li>
+<li><p>Subscript with step != 1 is not yet implemented¶</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="conventions.html" class="btn btn-neutral float-left" title="Internal Naming Conventions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../everyone/glossary.html" class="btn btn-neutral float-right" title="Glossary" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2018, acbart, lukesg08.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

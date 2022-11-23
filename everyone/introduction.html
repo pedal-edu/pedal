@@ -1,18 +1,22 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Introduction &mdash; Pedal 1.0 documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <title>Introduction &mdash; Pedal 1.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
-        <script src="../_static/language_data.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -38,7 +42,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption"><span class="caption-text">Contents</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#an-example">An Example</a></li>
@@ -55,6 +59,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../developers/api.html">Developer API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers/tools.html">Developer Tools Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers/conventions.html">Internal Naming Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers/libraries.html">Necessary Libraries</a></li>
 <li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
 </ul>
@@ -72,8 +77,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Introduction</li>
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Introduction</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/everyone/introduction.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -83,8 +88,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="introduction">
-<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
+  <section id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h1>
 <p>Good feedback is hard to come by.
 Imagine you are a student submitting your first program, and this is what
 the system spits out:</p>
@@ -109,11 +114,11 @@ trigger feedback responses. The system chooses the most appropriate feedback
 (in addition to tracking alternatives).
 Since Pedal itself is written in Python, it is compatible with a wide range of
 <span class="xref std std-doc">autograding platforms</span> - as long as they allow you to execute arbitrary Python code.</p>
-<div class="section" id="an-example">
-<h2>An Example<a class="headerlink" href="#an-example" title="Permalink to this headline">¶</a></h2>
+<section id="an-example">
+<h2>An Example<a class="headerlink" href="#an-example" title="Permalink to this heading"></a></h2>
 <p>Let’s look at an example.</p>
 <div class="literal-block-wrapper docutils container" id="id1">
-<div class="code-block-caption"><span class="caption-text">An Example Student Program with Mistakes</span><a class="headerlink" href="#id1" title="Permalink to this code">¶</a></div>
+<div class="code-block-caption"><span class="caption-text">An Example Student Program with Mistakes</span><a class="headerlink" href="#id1" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">add_prices</span><span class="p">(</span><span class="n">books</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">book</span> <span class="ow">in</span> <span class="n">books</span><span class="p">:</span>
         <span class="n">total</span> <span class="o">=</span> <span class="n">book</span> <span class="o">+</span> <span class="n">books</span>
@@ -130,7 +135,7 @@ Pedal could detect many of these scenarios and provide different kinds of feedba
 automatically provide feedback on not only syntax and runtime errors, but also do typechecking,
 liveness checking, and several custom instructor checks.</p>
 <div class="literal-block-wrapper docutils container" id="id2">
-<div class="code-block-caption"><span class="caption-text">Instructor Control Script</span><a class="headerlink" href="#id2" title="Permalink to this code">¶</a></div>
+<div class="code-block-caption"><span class="caption-text">Instructor Control Script</span><a class="headerlink" href="#id2" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="c1"># Partial credit for good progress</span>
@@ -154,7 +159,7 @@ liveness checking, and several custom instructor checks.</p>
 <p>An instructor could also grasp more control of the grading process by running without a Pedal Environment. This may
 look a little more complex, but you can see clearly all the phases of checking that a BlockPy program can do:</p>
 <div class="literal-block-wrapper docutils container" id="id3">
-<div class="code-block-caption"><span class="caption-text">Instructor Control Script</span><a class="headerlink" href="#id3" title="Permalink to this code">¶</a></div>
+<div class="code-block-caption"><span class="caption-text">Instructor Control Script</span><a class="headerlink" href="#id3" title="Permalink to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="c1"># Check for syntax errors</span>
@@ -186,9 +191,9 @@ look a little more complex, but you can see clearly all the phases of checking t
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="architecture">
-<h2>Architecture<a class="headerlink" href="#architecture" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="architecture">
+<h2>Architecture<a class="headerlink" href="#architecture" title="Permalink to this heading"></a></h2>
 <p>The diagram below captures the major components of Pedal with a little detail.</p>
 <img alt="../_images/pedal-overview-v3.png" src="../_images/pedal-overview-v3.png" />
 <p>Teachers begin by creating an Instructor Control Script, like the one above,
@@ -199,8 +204,8 @@ responses. The responses and their conditions are then encapsulated into raw
 Feedback, which is stored in a centralized Report. At the conclusion of the script,
 a Resolver is used to choose the most appropriate final feedback (or feedbacks),
 which are then sent back to the student via the autograder.</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

@@ -1,19 +1,21 @@
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Index &mdash; Pedal 1.0 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <title>Index &mdash; Pedal 1.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="#" />
     <link rel="search" title="Search" href="search.html" /> 
@@ -37,7 +39,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption"><span class="caption-text">Contents</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="everyone/introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="everyone/installation.html">Installation</a></li>
@@ -50,6 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="developers/api.html">Developer API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="developers/tools.html">Developer Tools Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="developers/conventions.html">Internal Naming Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developers/libraries.html">Necessary Libraries</a></li>
 <li class="toctree-l1"><a class="reference internal" href="everyone/glossary.html">Glossary</a></li>
 <li class="toctree-l1"><a class="reference internal" href="everyone/contact.html">Contact</a></li>
 </ul>
@@ -67,8 +70,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Index</li>
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Index</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -157,8 +160,13 @@
 </li>
       <li><a href="developers/tools/assertions.html#pedal.assertions.runtime.assert_equal">assert_equal (class in pedal.assertions.runtime)</a>
 </li>
-      <li><a href="teachers/tools/assertions.html#assert_equal">assert_equal() (built-in function)</a>
+      <li>
+    assert_equal()
+
+      <ul>
+        <li><a href="teachers/tools/assertions.html#assert_equal">built-in function</a>
 </li>
+      </ul></li>
       <li><a href="developers/tools/assertions.html#pedal.assertions.runtime.assert_false">assert_false (class in pedal.assertions.runtime)</a>
 </li>
       <li><a href="developers/tools/assertions.html#pedal.assertions.runtime.assert_greater">assert_greater (class in pedal.assertions.runtime)</a>
@@ -221,10 +229,10 @@
 </li>
       <li><a href="developers/tools/assertions.html#pedal.assertions.runtime.assert_not_type">assert_not_type (class in pedal.assertions.runtime)</a>
 </li>
-      <li><a href="developers/tools/assertions.html#pedal.assertions.runtime.assert_output">assert_output (class in pedal.assertions.runtime)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="developers/tools/assertions.html#pedal.assertions.runtime.assert_output">assert_output (class in pedal.assertions.runtime)</a>
+</li>
       <li><a href="developers/tools/assertions.html#pedal.assertions.runtime.assert_output_contains">assert_output_contains (class in pedal.assertions.runtime)</a>
 </li>
       <li><a href="developers/tools/extensions.html#pedal.extensions.plotting.assert_plot">assert_plot() (in module pedal.extensions.plotting)</a>
@@ -313,7 +321,7 @@
 </li>
       <li><a href="developers/api.html#pedal.core.submission.Submission.assignment">assignment (Submission attribute)</a>
 </li>
-      <li><a href="everyone/glossary.html#term-atomic-feedback-function"><strong>Atomic Feedback Function</strong></a>
+      <li><a href="everyone/glossary.html#term-Atomic-Feedback-Function"><strong>Atomic Feedback Function</strong></a>
 </li>
       <li><a href="developers/tools/sandbox.html#pedal.sandbox.feedbacks.attribute_error">attribute_error (class in pedal.sandbox.feedbacks)</a>
 </li>
@@ -329,12 +337,71 @@
 </li>
       <li><a href="developers/tools/sandbox.html#pedal.sandbox.commands.block_function">block_function() (in module pedal.sandbox.commands)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="developers/tools/sandbox.html#pedal.sandbox.commands.block_module">block_module() (in module pedal.sandbox.commands)</a>
 
       <ul>
         <li><a href="developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.block_module">(Sandbox method)</a>
+</li>
+      </ul></li>
+      <li>
+    built-in function
+
+      <ul>
+        <li><a href="teachers/tools/assertions.html#assert_equal">assert_equal()</a>
+</li>
+        <li><a href="teachers/tools/sandbox.html#call">call()</a>
+</li>
+        <li><a href="teachers/tools/source.html#check_section_exists">check_section_exists()</a>
+</li>
+        <li><a href="teachers/tools/core.html#clear_report">clear_report()</a>
+</li>
+        <li><a href="teachers/tools/core.html#compliment">compliment()</a>
+</li>
+        <li><a href="teachers/tools/core.html#contextualize_report">contextualize_report()</a>
+</li>
+        <li><a href="teachers/tools/core.html#debug">debug()</a>
+</li>
+        <li><a href="teachers/tools/assertions.html#ensure_literal">ensure_literal()</a>
+</li>
+        <li><a href="teachers/tools/core.html#explain">explain()</a>
+</li>
+        <li><a href="teachers/tools/core.html#gently">gently()</a>
+</li>
+        <li><a href="teachers/tools/core.html#get_all_feedback">get_all_feedback()</a>
+</li>
+        <li><a href="teachers/tools/source.html#get_program">get_program()</a>
+</li>
+        <li><a href="teachers/tools/core.html#give_partial">give_partial()</a>
+</li>
+        <li><a href="teachers/tools/core.html#guidance">guidance()</a>
+</li>
+        <li><a href="teachers/tools/core.html#hide_correctness">hide_correctness()</a>
+</li>
+        <li><a href="teachers/tools/core.html#log">log()</a>
+</li>
+        <li><a href="teachers/tools/source.html#next_section">next_section()</a>
+</li>
+        <li><a href="teachers/tools/assertions.html#prevent_literal">prevent_literal()</a>
+</li>
+        <li><a href="teachers/tools/source.html#restore_code">restore_code()</a>
+</li>
+        <li><a href="teachers/tools/sandbox.html#run">run()</a>
+</li>
+        <li><a href="teachers/tools/source.html#separate_into_sections">separate_into_sections()</a>
+</li>
+        <li><a href="teachers/tools/sandbox.html#set_input">set_input()</a>
+</li>
+        <li><a href="teachers/tools/source.html#set_source">set_source()</a>
+</li>
+        <li><a href="teachers/tools/core.html#set_success">set_success()</a>
+</li>
+        <li><a href="teachers/tools/source.html#stop_sections">stop_sections()</a>
+</li>
+        <li><a href="teachers/tools/core.html#suppress">suppress()</a>
+</li>
+        <li><a href="teachers/tools/tifa.html#tifa_analysis">tifa_analysis()</a>
+</li>
+        <li><a href="teachers/tools/source.html#verify">verify()</a>
 </li>
       </ul></li>
   </ul></td>
@@ -345,11 +412,16 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="developers/tools/cait.html#pedal.cait.cait_api.CaitException">CaitException</a>
 </li>
-      <li><a href="teachers/tools/sandbox.html#call">call() (built-in function)</a>
+      <li>
+    call()
 
       <ul>
-        <li><a href="developers/tools/sandbox.html#pedal.sandbox.commands.call">(in module pedal.sandbox.commands)</a>
+        <li><a href="teachers/tools/sandbox.html#call">built-in function</a>
 </li>
+      </ul></li>
+      <li><a href="developers/tools/sandbox.html#pedal.sandbox.commands.call">call() (in module pedal.sandbox.commands)</a>
+
+      <ul>
         <li><a href="developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.call">(Sandbox method)</a>
 </li>
       </ul></li>
@@ -359,8 +431,15 @@
 </li>
       <li><a href="developers/tools/sandbox.html#pedal.sandbox.commands.check_coverage">check_coverage() (in module pedal.sandbox.commands)</a>
 </li>
-      <li><a href="teachers/tools/source.html#check_section_exists">check_section_exists() (built-in function)</a>
+      <li><a href="developers/tools/assertions.html#pedal.assertions.commands.check_dataclass_error">check_dataclass_error (class in pedal.assertions.commands)</a>
 </li>
+      <li>
+    check_section_exists()
+
+      <ul>
+        <li><a href="teachers/tools/source.html#check_section_exists">built-in function</a>
+</li>
+      </ul></li>
       <li><a href="developers/api.html#pedal.core.report.Report.clear">clear() (Report method)</a>
 
       <ul>
@@ -389,12 +468,15 @@
         <li><a href="developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.clear_output">(Sandbox method)</a>
 </li>
       </ul></li>
-      <li><a href="teachers/tools/core.html#clear_report">clear_report() (built-in function)</a>
+      <li>
+    clear_report()
 
       <ul>
-        <li><a href="developers/api.html#pedal.core.commands.clear_report">(in module pedal.core.commands)</a>
+        <li><a href="teachers/tools/core.html#clear_report">built-in function</a>
 </li>
       </ul></li>
+      <li><a href="developers/api.html#pedal.core.commands.clear_report">clear_report() (in module pedal.core.commands)</a>
+</li>
       <li><a href="developers/tools/sandbox.html#pedal.sandbox.commands.clear_sandbox">clear_sandbox() (in module pedal.sandbox.commands)</a>
 </li>
       <li><a href="developers/tools/sandbox.html#pedal.sandbox.commands.clear_student_data">clear_student_data() (in module pedal.sandbox.commands)</a>
@@ -411,9 +493,14 @@
 </li>
       <li><a href="developers/api.html#pedal.core.commands.compliment">compliment (class in pedal.core.commands)</a>
 </li>
-      <li><a href="teachers/tools/core.html#compliment">compliment() (built-in function)</a>
+      <li>
+    compliment()
+
+      <ul>
+        <li><a href="teachers/tools/core.html#compliment">built-in function</a>
 </li>
-      <li><a href="everyone/glossary.html#term-composite-feedback-function"><strong>Composite Feedback Function</strong></a>
+      </ul></li>
+      <li><a href="everyone/glossary.html#term-Composite-Feedback-Function"><strong>Composite Feedback Function</strong></a>
 </li>
       <li><a href="developers/api.html#pedal.core.feedback.CompositeFeedbackFunction">CompositeFeedbackFunction() (in module pedal.core.feedback)</a>
 </li>
@@ -532,6 +619,8 @@
 </li>
         <li><a href="developers/tools/assertions.html#pedal.assertions.static.prevent_operation.condition">(prevent_operation method)</a>
 </li>
+        <li><a href="developers/tools/assertions.html#pedal.assertions.commands.wheat_chaff_game_class.condition">(wheat_chaff_game_class method)</a>
+</li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -541,12 +630,15 @@
 </li>
       <li><a href="developers/api.html#pedal.core.report.Report.contextualize">contextualize() (Report method)</a>
 </li>
-      <li><a href="teachers/tools/core.html#contextualize_report">contextualize_report() (built-in function)</a>
+      <li>
+    contextualize_report()
 
       <ul>
-        <li><a href="developers/api.html#pedal.core.commands.contextualize_report">(in module pedal.core.commands)</a>
+        <li><a href="teachers/tools/core.html#contextualize_report">built-in function</a>
 </li>
       </ul></li>
+      <li><a href="developers/api.html#pedal.core.commands.contextualize_report">contextualize_report() (in module pedal.core.commands)</a>
+</li>
       <li><a href="developers/api.html#pedal.core.commands.Feedback.correct">correct (Feedback attribute)</a>, <a href="developers/api.html#pedal.core.feedback.Feedback.correct">[1]</a>
 </li>
       <li><a href="developers/tools/sandbox.html#pedal.sandbox.commands.count_unique_calls">count_unique_calls() (in module pedal.sandbox.commands)</a>
@@ -567,12 +659,15 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="teachers/tools/core.html#debug">debug() (built-in function)</a>
+      <li>
+    debug()
 
       <ul>
-        <li><a href="developers/api.html#pedal.core.commands.debug">(in module pedal.core.commands)</a>
+        <li><a href="teachers/tools/core.html#debug">built-in function</a>
 </li>
       </ul></li>
+      <li><a href="developers/api.html#pedal.core.commands.debug">debug() (in module pedal.core.commands)</a>
+</li>
       <li><a href="developers/tools/cait.html#pedal.cait.cait_api.def_use_error">def_use_error() (in module pedal.cait.cait_api)</a>
 </li>
   </ul></td>
@@ -595,6 +690,8 @@
 </li>
       <li><a href="developers/tools/assertions.html#pedal.assertions.runtime.ensure_coverage">ensure_coverage (class in pedal.assertions.runtime)</a>
 </li>
+      <li><a href="developers/tools/assertions.html#pedal.assertions.static.ensure_dataclass">ensure_dataclass() (in module pedal.assertions.static)</a>
+</li>
       <li><a href="developers/tools/assertions.html#pedal.assertions.static.ensure_documented_functions">ensure_documented_functions (class in pedal.assertions.static)</a>
 </li>
       <li><a href="developers/tools/assertions.html#pedal.assertions.static.ensure_function">ensure_function() (in module pedal.assertions.static)</a>
@@ -605,8 +702,13 @@
 </li>
       <li><a href="developers/tools/assertions.html#pedal.assertions.static.ensure_literal">ensure_literal (class in pedal.assertions.static)</a>
 </li>
-      <li><a href="teachers/tools/assertions.html#ensure_literal">ensure_literal() (built-in function)</a>
+      <li>
+    ensure_literal()
+
+      <ul>
+        <li><a href="teachers/tools/assertions.html#ensure_literal">built-in function</a>
 </li>
+      </ul></li>
       <li><a href="developers/tools/assertions.html#pedal.assertions.static.ensure_literal_type">ensure_literal_type (class in pedal.assertions.static)</a>
 </li>
       <li><a href="developers/tools/assertions.html#pedal.assertions.static.ensure_operation">ensure_operation (class in pedal.assertions.static)</a>
@@ -621,13 +723,13 @@
 </li>
       <li><a href="developers/tools/assertions.html#pedal.assertions.static.ensure_starting_code">ensure_starting_code (class in pedal.assertions.static)</a>
 </li>
-      <li><a href="everyone/glossary.html#term-environment"><strong>Environment</strong></a>
+      <li><a href="everyone/glossary.html#term-Environment"><strong>Environment</strong></a>
 
       <ul>
         <li><a href="developers/api.html#pedal.core.environment.Environment">(class in pedal.core.environment)</a>
 </li>
       </ul></li>
-      <li><a href="developers/tools/tifa.html#term-error"><strong>Error</strong></a>
+      <li><a href="developers/tools/tifa.html#term-Error"><strong>Error</strong></a>
 </li>
       <li><a href="developers/tools/sandbox.html#pedal.sandbox.commands.evaluate">evaluate() (in module pedal.sandbox.commands)</a>
 
@@ -653,15 +755,20 @@
 </li>
       <li><a href="developers/api.html#pedal.core.commands.explain">explain (class in pedal.core.commands)</a>
 </li>
-      <li><a href="teachers/tools/core.html#explain">explain() (built-in function)</a>
+      <li>
+    explain()
+
+      <ul>
+        <li><a href="teachers/tools/core.html#explain">built-in function</a>
 </li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
 <h2 id="F">F</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="everyone/glossary.html#term-feedback"><strong>Feedback</strong></a>
+      <li><a href="everyone/glossary.html#term-Feedback"><strong>Feedback</strong></a>
 
       <ul>
         <li><a href="developers/api.html#pedal.core.commands.Feedback">(class in pedal.core.commands)</a>
@@ -677,17 +784,17 @@
         <li><a href="developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.feedback">(Sandbox attribute)</a>
 </li>
       </ul></li>
-      <li><a href="everyone/glossary.html#term-feedback-category"><strong>Feedback Category</strong></a>
+      <li><a href="everyone/glossary.html#term-Feedback-Category"><strong>Feedback Category</strong></a>
 </li>
-      <li><a href="everyone/glossary.html#term-feedback-condition"><strong>Feedback Condition</strong></a>
+      <li><a href="everyone/glossary.html#term-Feedback-Condition"><strong>Feedback Condition</strong></a>
 </li>
-      <li><a href="everyone/glossary.html#term-feedback-function"><strong>Feedback Function</strong></a>
+      <li><a href="everyone/glossary.html#term-Feedback-Function"><strong>Feedback Function</strong></a>
 </li>
-      <li><a href="everyone/glossary.html#term-feedback-kind"><strong>Feedback Kind</strong></a>
+      <li><a href="everyone/glossary.html#term-Feedback-Kind"><strong>Feedback Kind</strong></a>
 </li>
-      <li><a href="everyone/glossary.html#term-feedback-label"><strong>Feedback Label</strong></a>
+      <li><a href="everyone/glossary.html#term-Feedback-Label"><strong>Feedback Label</strong></a>
 </li>
-      <li><a href="everyone/glossary.html#term-feedback-response"><strong>Feedback Response</strong></a>
+      <li><a href="everyone/glossary.html#term-Feedback-Response"><strong>Feedback Response</strong></a>
 </li>
       <li><a href="developers/api.html#pedal.core.feedback.FeedbackCategory">FeedbackCategory (class in pedal.core.feedback)</a>
 </li>
@@ -695,21 +802,29 @@
 </li>
       <li><a href="developers/api.html#pedal.core.feedback.FeedbackResponse">FeedbackResponse (class in pedal.core.feedback)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="developers/api.html#pedal.core.commands.Feedback.fields">fields (Feedback attribute)</a>, <a href="developers/api.html#pedal.core.feedback.Feedback.fields">[1]</a>
 </li>
       <li><a href="developers/api.html#pedal.core.location.Location.filename">filename (Location attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="developers/api.html#pedal.core.submission.Submission.files">files (Submission attribute)</a>
 </li>
       <li><a href="developers/tools/cait.html#pedal.cait.cait_api.find_asts">find_asts() (in module pedal.cait.cait_api)</a>
 </li>
       <li><a href="developers/tools/cait.html#pedal.cait.cait_api.find_expr_sub_matches">find_expr_sub_matches() (in module pedal.cait.cait_api)</a>
 </li>
+      <li><a href="developers/tools/cait.html#pedal.cait.find_node.find_function_calls">find_function_calls() (in module pedal.cait.find_node)</a>
+</li>
+      <li><a href="developers/tools/cait.html#pedal.cait.find_node.find_function_definition">find_function_definition() (in module pedal.cait.find_node)</a>
+</li>
       <li><a href="developers/tools/cait.html#pedal.cait.cait_api.find_match">find_match() (in module pedal.cait.cait_api)</a>
 </li>
       <li><a href="developers/tools/cait.html#pedal.cait.cait_api.find_matches">find_matches() (in module pedal.cait.cait_api)</a>
+</li>
+      <li><a href="developers/tools/cait.html#pedal.cait.find_node.find_operation">find_operation() (in module pedal.cait.find_node)</a>
+</li>
+      <li><a href="developers/tools/cait.html#pedal.cait.find_node.find_prior_initializations">find_prior_initializations() (in module pedal.cait.find_node)</a>
 </li>
       <li><a href="developers/tools/cait.html#pedal.cait.cait_api.find_submatches">find_submatches() (in module pedal.cait.cait_api)</a>
 </li>
@@ -723,11 +838,13 @@
 </li>
       <li><a href="developers/api.html#pedal.core.report.Report.full_clear">full_clear() (Report method)</a>
 </li>
-      <li><a href="developers/tools/tifa.html#term-fully-qualified-name"><strong>Fully Qualified Name</strong></a>
+      <li><a href="developers/tools/tifa.html#term-Fully-Qualified-Name"><strong>Fully Qualified Name</strong></a>
+</li>
+      <li><a href="developers/tools/cait.html#pedal.cait.find_node.function_is_called">function_is_called() (in module pedal.cait.find_node)</a>
 </li>
       <li><a href="developers/tools/assertions.html#pedal.assertions.static.function_prints">function_prints() (in module pedal.assertions.static)</a>
 </li>
-      <li><a href="developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.functions">functions() (Sandbox property)</a>
+      <li><a href="developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.functions">functions (Sandbox property)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -737,14 +854,22 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="developers/api.html#pedal.core.commands.gently">gently (class in pedal.core.commands)</a>
 </li>
-      <li><a href="teachers/tools/core.html#gently">gently() (built-in function)</a>
-</li>
-      <li><a href="teachers/tools/core.html#get_all_feedback">get_all_feedback() (built-in function)</a>
+      <li>
+    gently()
 
       <ul>
-        <li><a href="developers/api.html#pedal.core.commands.get_all_feedback">(in module pedal.core.commands)</a>
+        <li><a href="teachers/tools/core.html#gently">built-in function</a>
 </li>
       </ul></li>
+      <li>
+    get_all_feedback()
+
+      <ul>
+        <li><a href="teachers/tools/core.html#get_all_feedback">built-in function</a>
+</li>
+      </ul></li>
+      <li><a href="developers/api.html#pedal.core.commands.get_all_feedback">get_all_feedback() (in module pedal.core.commands)</a>
+</li>
       <li><a href="developers/tools/sandbox.html#pedal.sandbox.commands.get_call_arguments">get_call_arguments() (in module pedal.sandbox.commands)</a>
 </li>
       <li><a href="developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.get_context">get_context() (Sandbox method)</a>
@@ -757,25 +882,32 @@
 </li>
       <li><a href="developers/api.html#pedal.core.submission.Submission.get_lines">get_lines() (Submission method)</a>
 </li>
+      <li><a href="developers/tools/sandbox.html#pedal.sandbox.commands.get_module">get_module() (in module pedal.sandbox.commands)</a>
+</li>
       <li><a href="developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.get_names_by_type">get_names_by_type() (Sandbox method)</a>
 </li>
       <li><a href="developers/tools/source.html#pedal.source.source.get_original_program">get_original_program() (in module pedal.source.source)</a>
 </li>
       <li><a href="developers/tools/sandbox.html#pedal.sandbox.commands.get_output">get_output() (in module pedal.sandbox.commands)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="developers/tools/extensions.html#pedal.extensions.plotting.get_plots">get_plots() (in module pedal.extensions.plotting)</a>
 </li>
-      <li><a href="teachers/tools/source.html#get_program">get_program() (built-in function)</a>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    get_program()
 
       <ul>
-        <li><a href="developers/tools/source.html#pedal.source.source.get_program">(in module pedal.source.source)</a>
+        <li><a href="teachers/tools/source.html#get_program">built-in function</a>
 </li>
       </ul></li>
+      <li><a href="developers/tools/source.html#pedal.source.source.get_program">get_program() (in module pedal.source.source)</a>
+</li>
       <li><a href="developers/tools/sandbox.html#pedal.sandbox.commands.get_sandbox">get_sandbox() (in module pedal.sandbox.commands)</a>
 </li>
       <li><a href="developers/tools/sandbox.html#pedal.sandbox.commands.get_student_data">get_student_data() (in module pedal.sandbox.commands)</a>
+</li>
+      <li><a href="developers/api.html#pedal.core.commands.get_submission">get_submission() (in module pedal.core.commands)</a>
 </li>
       <li><a href="developers/tools/sandbox.html#pedal.sandbox.commands.get_trace">get_trace() (in module pedal.sandbox.commands)</a>
 </li>
@@ -785,16 +917,26 @@
 </li>
       <li><a href="developers/api.html#pedal.core.commands.give_partial">give_partial (class in pedal.core.commands)</a>
 </li>
-      <li><a href="teachers/tools/core.html#give_partial">give_partial() (built-in function)</a>
+      <li>
+    give_partial()
+
+      <ul>
+        <li><a href="teachers/tools/core.html#give_partial">built-in function</a>
 </li>
+      </ul></li>
       <li><a href="developers/api.html#pedal.core.report.Report.group">group (Report attribute)</a>
 </li>
       <li><a href="developers/api.html#pedal.core.report.Report.group_names">group_names (Report attribute)</a>
 </li>
       <li><a href="developers/api.html#pedal.core.commands.guidance">guidance (class in pedal.core.commands)</a>
 </li>
-      <li><a href="teachers/tools/core.html#guidance">guidance() (built-in function)</a>
+      <li>
+    guidance()
+
+      <ul>
+        <li><a href="teachers/tools/core.html#guidance">built-in function</a>
 </li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -805,16 +947,21 @@
 </li>
       <li><a href="developers/api.html#pedal.core.report.Report.hiddens">hiddens (Report attribute)</a>
 </li>
-      <li><a href="teachers/tools/core.html#hide_correctness">hide_correctness() (built-in function)</a>
+      <li>
+    hide_correctness()
 
       <ul>
-        <li><a href="developers/api.html#pedal.core.commands.hide_correctness">(in module pedal.core.commands)</a>
-</li>
-        <li><a href="developers/api.html#pedal.core.report.Report.hide_correctness">(Report method)</a>
+        <li><a href="teachers/tools/core.html#hide_correctness">built-in function</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="developers/api.html#pedal.core.commands.hide_correctness">hide_correctness() (in module pedal.core.commands)</a>
+
+      <ul>
+        <li><a href="developers/api.html#pedal.core.report.Report.hide_correctness">(Report method)</a>
+</li>
+      </ul></li>
       <li><a href="developers/api.html#pedal.core.feedback.FeedbackKind.HINT">HINT (FeedbackKind attribute)</a>
 </li>
       <li><a href="developers/api.html#pedal.core.report.Report.hooks">hooks (Report attribute)</a>
@@ -825,7 +972,7 @@
 <h2 id="I">I</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="developers/tools/tifa.html#term-identifier"><strong>Identifier</strong></a>
+      <li><a href="developers/tools/tifa.html#term-Identifier"><strong>Identifier</strong></a>
 </li>
       <li><a href="developers/tools/sandbox.html#pedal.sandbox.feedbacks.import_error">import_error (class in pedal.sandbox.feedbacks)</a>
 </li>
@@ -841,11 +988,13 @@
 </li>
       <li><a href="developers/api.html#pedal.core.feedback.FeedbackCategory.INSTRUCTOR">INSTRUCTOR (FeedbackCategory attribute)</a>
 </li>
-      <li><a href="everyone/glossary.html#term-instructor-control-script"><strong>Instructor Control Script</strong></a>
+      <li><a href="everyone/glossary.html#term-Instructor-Control-Script"><strong>Instructor Control Script</strong></a>
 </li>
       <li><a href="developers/tools/sandbox.html#pedal.sandbox.feedbacks.io_error">io_error (class in pedal.sandbox.feedbacks)</a>
 </li>
-      <li><a href="developers/tools/tifa.html#term-issue"><strong>Issue</strong></a>
+      <li><a href="developers/tools/cait.html#pedal.cait.find_node.is_top_level">is_top_level() (in module pedal.cait.find_node)</a>
+</li>
+      <li><a href="developers/tools/tifa.html#term-Issue"><strong>Issue</strong></a>
 </li>
   </ul></td>
 </tr></table>
@@ -854,6 +1003,10 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="developers/api.html#pedal.core.commands.Feedback.justification">justification (Feedback attribute)</a>, <a href="developers/api.html#pedal.core.feedback.Feedback.justification">[1]</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="developers/api.html#pedal.core.commands.Feedback.justification_template">justification_template (Feedback attribute)</a>, <a href="developers/api.html#pedal.core.feedback.Feedback.justification_template">[1]</a>
 </li>
   </ul></td>
 </tr></table>
@@ -879,27 +1032,30 @@
 </li>
       <li><a href="developers/api.html#pedal.core.location.Location.line">line (Location attribute)</a>
 </li>
-      <li><a href="developers/tools/tifa.html#term-literal"><strong>Literal</strong></a>
+      <li><a href="developers/tools/tifa.html#term-Literal"><strong>Literal</strong></a>
+</li>
+      <li><a href="developers/api.html#pedal.core.location.Location">Location (class in pedal.core.location)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="developers/api.html#pedal.core.location.Location">Location (class in pedal.core.location)</a>
-</li>
       <li><a href="developers/api.html#pedal.core.commands.Feedback.location">location (Feedback attribute)</a>, <a href="developers/api.html#pedal.core.feedback.Feedback.location">[1]</a>
 </li>
-      <li><a href="teachers/tools/core.html#log">log() (built-in function)</a>
+      <li>
+    log()
 
       <ul>
-        <li><a href="developers/api.html#pedal.core.commands.log">(in module pedal.core.commands)</a>
+        <li><a href="teachers/tools/core.html#log">built-in function</a>
 </li>
       </ul></li>
+      <li><a href="developers/api.html#pedal.core.commands.log">log() (in module pedal.core.commands)</a>
+</li>
   </ul></td>
 </tr></table>
 
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="everyone/glossary.html#term-main-report"><strong>Main Report</strong></a>
+      <li><a href="everyone/glossary.html#term-Main-Report"><strong>Main Report</strong></a>
 </li>
       <li><a href="developers/api.html#pedal.core.submission.Submission.main_code">main_code (Submission attribute)</a>
 </li>
@@ -915,8 +1071,6 @@
 </li>
       <li><a href="developers/api.html#pedal.core.commands.Feedback.message">message (Feedback attribute)</a>, <a href="developers/api.html#pedal.core.feedback.Feedback.message">[1]</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="developers/api.html#pedal.core.commands.Feedback.message_template">message_template (Feedback attribute)</a>, <a href="developers/api.html#pedal.core.feedback.Feedback.message_template">[1]</a>
 </li>
       <li><a href="developers/api.html#pedal.core.feedback.FeedbackKind.METACOGNITIVE">METACOGNITIVE (FeedbackKind attribute)</a>
@@ -935,6 +1089,59 @@
         <li><a href="developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.mock_module">(Sandbox method)</a>
 </li>
       </ul></li>
+      <li>
+    module
+
+      <ul>
+        <li><a href="developers/tools/assertions.html#module-pedal.assertions">pedal.assertions</a>
+</li>
+        <li><a href="developers/tools/assertions.html#module-pedal.assertions.commands">pedal.assertions.commands</a>
+</li>
+        <li><a href="developers/tools/assertions.html#module-pedal.assertions.runtime">pedal.assertions.runtime</a>
+</li>
+        <li><a href="developers/tools/assertions.html#module-pedal.assertions.static">pedal.assertions.static</a>
+</li>
+        <li><a href="developers/tools/cait.html#module-pedal.cait">pedal.cait</a>
+</li>
+        <li><a href="developers/tools/cait.html#module-pedal.cait.cait_api">pedal.cait.cait_api</a>
+</li>
+        <li><a href="developers/tools/cait.html#module-pedal.cait.find_node">pedal.cait.find_node</a>
+</li>
+        <li><a href="developers/api.html#module-pedal.core.commands">pedal.core.commands</a>
+</li>
+        <li><a href="developers/api.html#module-pedal.core.environment">pedal.core.environment</a>
+</li>
+        <li><a href="developers/api.html#module-pedal.core.feedback">pedal.core.feedback</a>
+</li>
+        <li><a href="developers/api.html#module-pedal.core.location">pedal.core.location</a>
+</li>
+        <li><a href="developers/api.html#module-pedal.core.report">pedal.core.report</a>
+</li>
+        <li><a href="developers/api.html#module-pedal.core.submission">pedal.core.submission</a>
+</li>
+        <li><a href="developers/api.html#module-pedal.core.tool">pedal.core.tool</a>
+</li>
+        <li><a href="developers/tools/extensions.html#module-pedal.extensions.plotting">pedal.extensions.plotting</a>
+</li>
+        <li><a href="developers/tools/extensions.html#module-pedal.extensions.turtles">pedal.extensions.turtles</a>
+</li>
+        <li><a href="developers/tools/questions.html#module-pedal.questions.setup">pedal.questions.setup</a>
+</li>
+        <li><a href="developers/tools/sandbox.html#module-pedal.sandbox">pedal.sandbox</a>
+</li>
+        <li><a href="developers/tools/sandbox.html#module-pedal.sandbox.commands">pedal.sandbox.commands</a>
+</li>
+        <li><a href="developers/tools/sandbox.html#module-pedal.sandbox.feedbacks">pedal.sandbox.feedbacks</a>
+</li>
+        <li><a href="developers/tools/sandbox.html#module-pedal.sandbox.sandbox">pedal.sandbox.sandbox</a>
+</li>
+        <li><a href="developers/tools/source.html#module-pedal.source.source">pedal.source.source</a>
+</li>
+        <li><a href="developers/tools/tifa.html#module-pedal.tifa">pedal.tifa</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="developers/api.html#pedal.core.commands.Feedback.muted">muted (Feedback attribute)</a>, <a href="developers/api.html#pedal.core.feedback.Feedback.muted">[1]</a>
 </li>
   </ul></td>
@@ -943,18 +1150,23 @@
 <h2 id="N">N</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="developers/tools/tifa.html#term-name"><strong>Name</strong></a>
+      <li><a href="developers/tools/tifa.html#term-Name"><strong>Name</strong></a>
 </li>
       <li><a href="developers/api.html#pedal.core.tool.ToolRegistration.name">name (ToolRegistration attribute)</a>
 </li>
-      <li><a href="developers/tools/tifa.html#term-name-map"><strong>Name Map</strong></a>
+      <li><a href="developers/tools/tifa.html#term-Name-Map"><strong>Name Map</strong></a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="developers/tools/sandbox.html#pedal.sandbox.feedbacks.name_error">name_error (class in pedal.sandbox.feedbacks)</a>
 </li>
-      <li><a href="teachers/tools/source.html#next_section">next_section() (built-in function)</a>
+      <li>
+    next_section()
+
+      <ul>
+        <li><a href="teachers/tools/source.html#next_section">built-in function</a>
 </li>
+      </ul></li>
       <li><a href="developers/tools/extensions.html#pedal.extensions.plotting.no_plt">no_plt (class in pedal.extensions.plotting)</a>
 </li>
   </ul></td>
@@ -979,50 +1191,171 @@
 </li>
       <li><a href="developers/tools/cait.html#pedal.cait.cait_api.parse_program">parse_program() (in module pedal.cait.cait_api)</a>
 </li>
-      <li><a href="developers/tools/tifa.html#term-path"><strong>Path</strong></a>
+      <li><a href="developers/tools/tifa.html#term-Path"><strong>Path</strong></a>
 </li>
-      <li><a href="developers/tools/assertions.html#module-pedal.assertions">pedal.assertions (module)</a>
+      <li>
+    pedal.assertions
+
+      <ul>
+        <li><a href="developers/tools/assertions.html#module-pedal.assertions">module</a>
 </li>
-      <li><a href="developers/tools/assertions.html#module-pedal.assertions.commands">pedal.assertions.commands (module)</a>
+      </ul></li>
+      <li>
+    pedal.assertions.commands
+
+      <ul>
+        <li><a href="developers/tools/assertions.html#module-pedal.assertions.commands">module</a>
 </li>
-      <li><a href="developers/tools/assertions.html#module-pedal.assertions.runtime">pedal.assertions.runtime (module)</a>
+      </ul></li>
+      <li>
+    pedal.assertions.runtime
+
+      <ul>
+        <li><a href="developers/tools/assertions.html#module-pedal.assertions.runtime">module</a>
 </li>
-      <li><a href="developers/tools/assertions.html#module-pedal.assertions.static">pedal.assertions.static (module)</a>
+      </ul></li>
+      <li>
+    pedal.assertions.static
+
+      <ul>
+        <li><a href="developers/tools/assertions.html#module-pedal.assertions.static">module</a>
 </li>
-      <li><a href="developers/tools/cait.html#module-pedal.cait">pedal.cait (module)</a>
+      </ul></li>
+      <li>
+    pedal.cait
+
+      <ul>
+        <li><a href="developers/tools/cait.html#module-pedal.cait">module</a>
 </li>
-      <li><a href="developers/tools/cait.html#module-pedal.cait.cait_api">pedal.cait.cait_api (module)</a>
+      </ul></li>
+      <li>
+    pedal.cait.cait_api
+
+      <ul>
+        <li><a href="developers/tools/cait.html#module-pedal.cait.cait_api">module</a>
 </li>
-      <li><a href="developers/api.html#module-pedal.core.commands">pedal.core.commands (module)</a>
+      </ul></li>
+      <li>
+    pedal.cait.find_node
+
+      <ul>
+        <li><a href="developers/tools/cait.html#module-pedal.cait.find_node">module</a>
 </li>
-      <li><a href="developers/api.html#module-pedal.core.environment">pedal.core.environment (module)</a>
+      </ul></li>
+      <li>
+    pedal.core.commands
+
+      <ul>
+        <li><a href="developers/api.html#module-pedal.core.commands">module</a>
 </li>
-      <li><a href="developers/api.html#module-pedal.core.feedback">pedal.core.feedback (module)</a>
+      </ul></li>
+      <li>
+    pedal.core.environment
+
+      <ul>
+        <li><a href="developers/api.html#module-pedal.core.environment">module</a>
 </li>
-      <li><a href="developers/api.html#module-pedal.core.location">pedal.core.location (module)</a>
+      </ul></li>
+      <li>
+    pedal.core.feedback
+
+      <ul>
+        <li><a href="developers/api.html#module-pedal.core.feedback">module</a>
 </li>
-      <li><a href="developers/api.html#module-pedal.core.report">pedal.core.report (module)</a>
+      </ul></li>
+      <li>
+    pedal.core.location
+
+      <ul>
+        <li><a href="developers/api.html#module-pedal.core.location">module</a>
 </li>
-      <li><a href="developers/api.html#module-pedal.core.submission">pedal.core.submission (module)</a>
+      </ul></li>
+      <li>
+    pedal.core.report
+
+      <ul>
+        <li><a href="developers/api.html#module-pedal.core.report">module</a>
 </li>
-      <li><a href="developers/api.html#module-pedal.core.tool">pedal.core.tool (module)</a>
+      </ul></li>
+      <li>
+    pedal.core.submission
+
+      <ul>
+        <li><a href="developers/api.html#module-pedal.core.submission">module</a>
 </li>
-      <li><a href="developers/tools/extensions.html#module-pedal.extensions.plotting">pedal.extensions.plotting (module)</a>
+      </ul></li>
+      <li>
+    pedal.core.tool
+
+      <ul>
+        <li><a href="developers/api.html#module-pedal.core.tool">module</a>
 </li>
-      <li><a href="developers/tools/sandbox.html#module-pedal.sandbox">pedal.sandbox (module)</a>
+      </ul></li>
+      <li>
+    pedal.extensions.plotting
+
+      <ul>
+        <li><a href="developers/tools/extensions.html#module-pedal.extensions.plotting">module</a>
 </li>
-      <li><a href="developers/tools/sandbox.html#module-pedal.sandbox.commands">pedal.sandbox.commands (module)</a>
-</li>
-      <li><a href="developers/tools/sandbox.html#module-pedal.sandbox.feedbacks">pedal.sandbox.feedbacks (module)</a>
-</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="developers/tools/sandbox.html#module-pedal.sandbox.sandbox">pedal.sandbox.sandbox (module)</a>
+      <li>
+    pedal.extensions.turtles
+
+      <ul>
+        <li><a href="developers/tools/extensions.html#module-pedal.extensions.turtles">module</a>
 </li>
-      <li><a href="developers/tools/source.html#module-pedal.source.source">pedal.source.source (module)</a>
+      </ul></li>
+      <li>
+    pedal.questions.setup
+
+      <ul>
+        <li><a href="developers/tools/questions.html#module-pedal.questions.setup">module</a>
 </li>
-      <li><a href="developers/tools/tifa.html#module-pedal.tifa">pedal.tifa (module)</a>
+      </ul></li>
+      <li>
+    pedal.sandbox
+
+      <ul>
+        <li><a href="developers/tools/sandbox.html#module-pedal.sandbox">module</a>
 </li>
+      </ul></li>
+      <li>
+    pedal.sandbox.commands
+
+      <ul>
+        <li><a href="developers/tools/sandbox.html#module-pedal.sandbox.commands">module</a>
+</li>
+      </ul></li>
+      <li>
+    pedal.sandbox.feedbacks
+
+      <ul>
+        <li><a href="developers/tools/sandbox.html#module-pedal.sandbox.feedbacks">module</a>
+</li>
+      </ul></li>
+      <li>
+    pedal.sandbox.sandbox
+
+      <ul>
+        <li><a href="developers/tools/sandbox.html#module-pedal.sandbox.sandbox">module</a>
+</li>
+      </ul></li>
+      <li>
+    pedal.source.source
+
+      <ul>
+        <li><a href="developers/tools/source.html#module-pedal.source.source">module</a>
+</li>
+      </ul></li>
+      <li>
+    pedal.tifa
+
+      <ul>
+        <li><a href="developers/tools/tifa.html#module-pedal.tifa">module</a>
+</li>
+      </ul></li>
       <li><a href="developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.modules.plots">plots (Sandbox.modules attribute)</a>
 </li>
       <li><a href="developers/tools/extensions.html#pedal.extensions.plotting.plt_rename_err">plt_rename_err (class in pedal.extensions.plotting)</a>
@@ -1043,8 +1376,13 @@
 </li>
       <li><a href="developers/tools/assertions.html#pedal.assertions.static.prevent_literal">prevent_literal (class in pedal.assertions.static)</a>
 </li>
-      <li><a href="teachers/tools/assertions.html#prevent_literal">prevent_literal() (built-in function)</a>
+      <li>
+    prevent_literal()
+
+      <ul>
+        <li><a href="teachers/tools/assertions.html#prevent_literal">built-in function</a>
 </li>
+      </ul></li>
       <li><a href="developers/tools/assertions.html#pedal.assertions.static.prevent_literal_type">prevent_literal_type (class in pedal.assertions.static)</a>
 </li>
       <li><a href="developers/tools/assertions.html#pedal.assertions.static.prevent_operation">prevent_operation (class in pedal.assertions.static)</a>
@@ -1079,7 +1417,7 @@
 </li>
       <li><a href="developers/api.html#pedal.core.submission.Submission.replace_main">replace_main() (Submission method)</a>
 </li>
-      <li><a href="everyone/glossary.html#term-report"><strong>Report</strong></a>
+      <li><a href="everyone/glossary.html#term-Report"><strong>Report</strong></a>
 
       <ul>
         <li><a href="developers/api.html#pedal.core.report.Report">(class in pedal.core.report)</a>
@@ -1096,6 +1434,8 @@
       <ul>
         <li><a href="developers/tools/cait.html#pedal.cait.cait_api.reset">(in module pedal.cait.cait_api)</a>
 </li>
+        <li><a href="developers/tools/questions.html#pedal.questions.setup.reset">(in module pedal.questions.setup)</a>
+</li>
         <li><a href="developers/tools/sandbox.html#pedal.sandbox.reset">(in module pedal.sandbox)</a>
 </li>
         <li><a href="developers/tools/source.html#pedal.source.source.reset">(in module pedal.source.source)</a>
@@ -1107,27 +1447,35 @@
 </li>
       <li><a href="developers/tools/sandbox.html#pedal.sandbox.commands.reset_output">reset_output() (in module pedal.sandbox.commands)</a>
 </li>
-      <li><a href="everyone/glossary.html#term-resolver"><strong>Resolver</strong></a>
+      <li><a href="everyone/glossary.html#term-Resolver"><strong>Resolver</strong></a>
 </li>
       <li><a href="developers/api.html#pedal.core.report.Report.resolves">resolves (Report attribute)</a>
 </li>
-      <li><a href="teachers/tools/source.html#restore_code">restore_code() (built-in function)</a>
+      <li>
+    restore_code()
 
       <ul>
-        <li><a href="developers/tools/source.html#pedal.source.source.restore_code">(in module pedal.source.source)</a>
+        <li><a href="teachers/tools/source.html#restore_code">built-in function</a>
 </li>
       </ul></li>
+      <li><a href="developers/tools/source.html#pedal.source.source.restore_code">restore_code() (in module pedal.source.source)</a>
+</li>
       <li><a href="developers/api.html#pedal.core.report.Report.result">result (Report attribute)</a>
 
       <ul>
         <li><a href="developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.result">(Sandbox attribute)</a>
 </li>
       </ul></li>
-      <li><a href="teachers/tools/sandbox.html#run">run() (built-in function)</a>
+      <li>
+    run()
 
       <ul>
-        <li><a href="developers/tools/sandbox.html#pedal.sandbox.commands.run">(in module pedal.sandbox.commands)</a>
+        <li><a href="teachers/tools/sandbox.html#run">built-in function</a>
 </li>
+      </ul></li>
+      <li><a href="developers/tools/sandbox.html#pedal.sandbox.commands.run">run() (in module pedal.sandbox.commands)</a>
+
+      <ul>
         <li><a href="developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.run">(Sandbox method)</a>
 </li>
       </ul></li>
@@ -1143,63 +1491,88 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox">Sandbox (class in pedal.sandbox.sandbox)</a>
 </li>
-      <li><a href="developers/tools/tifa.html#term-scope"><strong>Scope</strong></a>
+      <li><a href="developers/tools/tifa.html#term-Scope"><strong>Scope</strong></a>
 </li>
-      <li><a href="developers/tools/tifa.html#term-scope-chain"><strong>Scope Chain</strong></a>
+      <li><a href="developers/tools/tifa.html#term-Scope-Chain"><strong>Scope Chain</strong></a>
 </li>
       <li><a href="developers/api.html#pedal.core.commands.Feedback.score">score (Feedback attribute)</a>, <a href="developers/api.html#pedal.core.feedback.Feedback.score">[1]</a>
 </li>
-      <li><a href="teachers/tools/source.html#separate_into_sections">separate_into_sections() (built-in function)</a>
-</li>
-      <li><a href="developers/api.html#pedal.core.report.Report.set_formatter">set_formatter() (Report method)</a>
-</li>
-      <li><a href="teachers/tools/sandbox.html#set_input">set_input() (built-in function)</a>
+      <li>
+    separate_into_sections()
 
       <ul>
-        <li><a href="developers/tools/sandbox.html#pedal.sandbox.commands.set_input">(in module pedal.sandbox.commands)</a>
+        <li><a href="teachers/tools/source.html#separate_into_sections">built-in function</a>
 </li>
+      </ul></li>
+      <li><a href="developers/api.html#pedal.core.report.Report.set_formatter">set_formatter() (Report method)</a>
+</li>
+      <li>
+    set_input()
+
+      <ul>
+        <li><a href="teachers/tools/sandbox.html#set_input">built-in function</a>
+</li>
+      </ul></li>
+      <li><a href="developers/tools/sandbox.html#pedal.sandbox.commands.set_input">set_input() (in module pedal.sandbox.commands)</a>
+
+      <ul>
         <li><a href="developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.set_input">(Sandbox method)</a>
 </li>
       </ul></li>
       <li><a href="developers/api.html#pedal.core.submission.Submission.set_line_offset">set_line_offset() (Submission method)</a>
 </li>
-      <li><a href="teachers/tools/source.html#set_source">set_source() (built-in function)</a>
+      <li><a href="developers/tools/questions.html#pedal.questions.setup.set_seed">set_seed() (in module pedal.questions.setup)</a>
+</li>
+      <li>
+    set_source()
 
       <ul>
-        <li><a href="developers/tools/source.html#pedal.source.source.set_source">(in module pedal.source.source)</a>
+        <li><a href="teachers/tools/source.html#set_source">built-in function</a>
 </li>
       </ul></li>
+      <li><a href="developers/tools/source.html#pedal.source.source.set_source">set_source() (in module pedal.source.source)</a>
+</li>
       <li><a href="developers/tools/source.html#pedal.source.source.set_source_file">set_source_file() (in module pedal.source.source)</a>
 </li>
       <li><a href="developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.set_student_data">set_student_data() (Sandbox method)</a>
 </li>
       <li><a href="developers/api.html#pedal.core.commands.set_success">set_success (class in pedal.core.commands)</a>
 </li>
-      <li><a href="teachers/tools/core.html#set_success">set_success() (built-in function)</a>
+      <li>
+    set_success()
+
+      <ul>
+        <li><a href="teachers/tools/core.html#set_success">built-in function</a>
 </li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="developers/api.html#pedal.core.feedback.FeedbackCategory.SPECIFICATION">SPECIFICATION (FeedbackCategory attribute)</a>
 </li>
       <li><a href="developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.start_grouping_context">start_grouping_context() (Sandbox method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="developers/tools/sandbox.html#pedal.sandbox.commands.start_trace">start_trace() (in module pedal.sandbox.commands)</a>
 </li>
-      <li><a href="developers/tools/tifa.html#term-state"><strong>State</strong></a>
+      <li><a href="developers/tools/tifa.html#term-State"><strong>State</strong></a>
 </li>
       <li><a href="developers/api.html#pedal.core.report.Report.stop_group">stop_group() (Report method)</a>
 </li>
       <li><a href="developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.stop_grouping_context">stop_grouping_context() (Sandbox method)</a>
 </li>
-      <li><a href="teachers/tools/source.html#stop_sections">stop_sections() (built-in function)</a>
+      <li>
+    stop_sections()
+
+      <ul>
+        <li><a href="teachers/tools/source.html#stop_sections">built-in function</a>
 </li>
+      </ul></li>
       <li><a href="developers/tools/sandbox.html#pedal.sandbox.commands.stop_trace">stop_trace() (in module pedal.sandbox.commands)</a>
 </li>
       <li><a href="developers/api.html#pedal.core.feedback.FeedbackCategory.STUDENT">STUDENT (FeedbackCategory attribute)</a>
 </li>
       <li><a href="developers/api.html#pedal.core.feedback.FeedbackCategory.STYLE">STYLE (FeedbackCategory attribute)</a>
 </li>
-      <li><a href="everyone/glossary.html#term-submission"><strong>Submission</strong></a>
+      <li><a href="everyone/glossary.html#term-Submission"><strong>Submission</strong></a>
 
       <ul>
         <li><a href="developers/api.html#pedal.core.submission.Submission">(class in pedal.core.submission)</a>
@@ -1207,11 +1580,16 @@
       </ul></li>
       <li><a href="developers/api.html#pedal.core.report.Report.submission">submission (Report attribute)</a>
 </li>
-      <li><a href="teachers/tools/core.html#suppress">suppress() (built-in function)</a>
+      <li>
+    suppress()
 
       <ul>
-        <li><a href="developers/api.html#pedal.core.commands.suppress">(in module pedal.core.commands)</a>
+        <li><a href="teachers/tools/core.html#suppress">built-in function</a>
 </li>
+      </ul></li>
+      <li><a href="developers/api.html#pedal.core.commands.suppress">suppress() (in module pedal.core.commands)</a>
+
+      <ul>
         <li><a href="developers/api.html#pedal.core.report.Report.suppress">(Report method)</a>
 </li>
       </ul></li>
@@ -1235,22 +1613,25 @@
 </li>
       <li><a href="developers/tools/tifa.html#pedal.tifa.Tifa">Tifa (class in pedal.tifa)</a>
 </li>
-      <li><a href="teachers/tools/tifa.html#tifa_analysis">tifa_analysis() (built-in function)</a>
+      <li>
+    tifa_analysis()
 
       <ul>
-        <li><a href="developers/tools/tifa.html#pedal.tifa.tifa_analysis">(in module pedal.tifa)</a>
+        <li><a href="teachers/tools/tifa.html#tifa_analysis">built-in function</a>
 </li>
       </ul></li>
+      <li><a href="developers/tools/tifa.html#pedal.tifa.tifa_analysis">tifa_analysis() (in module pedal.tifa)</a>
+</li>
       <li><a href="developers/tools/sandbox.html#pedal.sandbox.feedbacks.timeout_error">timeout_error (class in pedal.sandbox.feedbacks)</a>
 </li>
       <li><a href="developers/api.html#pedal.core.commands.Feedback.title">title (Feedback attribute)</a>, <a href="developers/api.html#pedal.core.feedback.Feedback.title">[1]</a>
 </li>
       <li><a href="developers/api.html#pedal.core.location.Location.to_json">to_json() (Location method)</a>
 </li>
-      <li><a href="everyone/glossary.html#term-tool"><strong>Tool</strong></a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="everyone/glossary.html#term-Tool"><strong>Tool</strong></a>
+</li>
       <li><a href="developers/api.html#pedal.core.commands.Feedback.tool">tool (Feedback attribute)</a>, <a href="developers/api.html#pedal.core.feedback.Feedback.tool">[1]</a>
 </li>
       <li><a href="developers/api.html#pedal.core.tool.ToolRegistration">ToolRegistration (class in pedal.core.tool)</a>
@@ -1265,7 +1646,7 @@
 </li>
       <li><a href="developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.modules.turtles">turtles (Sandbox.modules attribute)</a>
 </li>
-      <li><a href="developers/tools/tifa.html#term-type"><strong>Type</strong></a>
+      <li><a href="developers/tools/tifa.html#term-Type"><strong>Type</strong></a>
 </li>
       <li><a href="developers/tools/sandbox.html#pedal.sandbox.feedbacks.type_error">type_error (class in pedal.sandbox.feedbacks)</a>
 </li>
@@ -1297,14 +1678,17 @@
 </li>
       <li><a href="developers/tools/sandbox.html#pedal.sandbox.feedbacks.value_error">value_error (class in pedal.sandbox.feedbacks)</a>
 </li>
-      <li><a href="developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.var">var() (Sandbox property)</a>
+      <li><a href="developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.var">var (Sandbox property)</a>
 </li>
-      <li><a href="teachers/tools/source.html#verify">verify() (built-in function)</a>
+      <li>
+    verify()
 
       <ul>
-        <li><a href="developers/tools/source.html#pedal.source.source.verify">(in module pedal.source.source)</a>
+        <li><a href="teachers/tools/source.html#verify">built-in function</a>
 </li>
       </ul></li>
+      <li><a href="developers/tools/source.html#pedal.source.source.verify">verify() (in module pedal.source.source)</a>
+</li>
       <li><a href="developers/tools/source.html#pedal.source.source.verify_section">verify_section() (in module pedal.source.source)</a>
 </li>
       <li><a href="developers/api.html#pedal.core.commands.Feedback.version">version (Feedback attribute)</a>, <a href="developers/api.html#pedal.core.feedback.Feedback.version">[1]</a>
@@ -1325,8 +1709,6 @@
 </li>
       <li><a href="developers/tools/tifa.html#pedal.tifa.Tifa.visit_BoolOp">visit_BoolOp() (Tifa method)</a>
 </li>
-      <li><a href="developers/tools/tifa.html#pedal.tifa.Tifa.visit_Call">visit_Call() (Tifa method)</a>
-</li>
       <li><a href="developers/tools/tifa.html#pedal.tifa.Tifa.visit_ClassDef">visit_ClassDef() (Tifa method)</a>
 </li>
       <li><a href="developers/tools/tifa.html#pedal.tifa.Tifa.visit_Compare">visit_Compare() (Tifa method)</a>
@@ -1339,10 +1721,10 @@
 </li>
       <li><a href="developers/tools/tifa.html#pedal.tifa.Tifa.visit_DictComp">visit_DictComp() (Tifa method)</a>
 </li>
-      <li><a href="developers/tools/tifa.html#pedal.tifa.Tifa.visit_Expr">visit_Expr() (Tifa method)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="developers/tools/tifa.html#pedal.tifa.Tifa.visit_Expr">visit_Expr() (Tifa method)</a>
+</li>
       <li><a href="developers/tools/tifa.html#pedal.tifa.Tifa.visit_For">visit_For() (Tifa method)</a>
 </li>
       <li><a href="developers/tools/tifa.html#pedal.tifa.Tifa.visit_FunctionDef">visit_FunctionDef() (Tifa method)</a>
@@ -1381,8 +1763,6 @@
 </li>
       <li><a href="developers/tools/tifa.html#pedal.tifa.Tifa.visit_Subscript">visit_Subscript() (Tifa method)</a>
 </li>
-      <li><a href="developers/tools/tifa.html#pedal.tifa.Tifa.visit_Tuple">visit_Tuple() (Tifa method)</a>
-</li>
       <li><a href="developers/tools/tifa.html#pedal.tifa.Tifa.visit_UnaryOp">visit_UnaryOp() (Tifa method)</a>
 </li>
       <li><a href="developers/tools/tifa.html#pedal.tifa.Tifa.visit_While">visit_While() (Tifa method)</a>
@@ -1395,7 +1775,7 @@
 <h2 id="W">W</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="developers/tools/tifa.html#pedal.tifa.Tifa.walk_targets">walk_targets() (Tifa static method)</a>
+      <li><a href="developers/tools/assertions.html#pedal.assertions.commands.wheat_chaff_game_class">wheat_chaff_game_class (class in pedal.assertions.commands)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>

@@ -3,16 +3,19 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pedal.assertions.static &mdash; Pedal 1.0 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <title>pedal.assertions.static &mdash; Pedal 1.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/language_data.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -36,7 +39,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption"><span class="caption-text">Contents</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../everyone/introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../everyone/installation.html">Installation</a></li>
@@ -49,6 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../developers/api.html">Developer API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers/tools.html">Developer Tools Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers/conventions.html">Internal Naming Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers/libraries.html">Necessary Libraries</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../everyone/glossary.html">Glossary</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../everyone/contact.html">Contact</a></li>
 </ul>
@@ -66,10 +70,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-          <li><a href="../assertions.html">pedal.assertions</a> &raquo;</li>
-      <li>pedal.assertions.static</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../assertions.html">pedal.assertions</a></li>
+      <li class="breadcrumb-item active">pedal.assertions.static</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -82,6 +86,17 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Collection of feedback functions related to static checks of student code.</span>
 <span class="sd">&quot;&quot;&quot;</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">dataclasses</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">dataclasses</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="kn">import</span> <span class="nn">ast</span>
+
+<span class="kn">from</span> <span class="nn">pedal.assertions.classes</span> <span class="kn">import</span> <span class="p">(</span><span class="n">missing_dataclass</span><span class="p">,</span> <span class="n">dataclass_not_available</span><span class="p">,</span>
+                                      <span class="n">missing_field_type</span><span class="p">,</span> <span class="n">too_few_fields</span><span class="p">,</span> <span class="n">too_many_fields</span><span class="p">,</span>
+                                      <span class="n">duplicate_dataclass_definition</span><span class="p">,</span> <span class="n">invalid_field_type</span><span class="p">,</span>
+                                      <span class="n">wrong_fields_type</span><span class="p">,</span> <span class="n">name_is_not_a_dataclass</span><span class="p">,</span> <span class="n">missing_dataclass_annotation</span><span class="p">,</span>
+                                      <span class="n">unknown_field</span><span class="p">,</span> <span class="n">wrong_field_order</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">pedal.assertions.functions</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">pedal.cait.cait_api</span> <span class="kn">import</span> <span class="n">parse_program</span>
 <span class="kn">from</span> <span class="nn">pedal.assertions.feedbacks</span> <span class="kn">import</span> <span class="n">AssertionFeedback</span>
@@ -90,8 +105,9 @@
 <span class="kn">from</span> <span class="nn">pedal.core.location</span> <span class="kn">import</span> <span class="n">Location</span>
 <span class="kn">from</span> <span class="nn">pedal.core.report</span> <span class="kn">import</span> <span class="n">MAIN_REPORT</span>
 <span class="kn">from</span> <span class="nn">pedal.core.commands</span> <span class="kn">import</span> <span class="n">compliment</span> <span class="k">as</span> <span class="n">core_compliment</span><span class="p">,</span> <span class="n">give_partial</span>
+<span class="kn">from</span> <span class="nn">pedal.tifa.commands</span> <span class="kn">import</span> <span class="n">tifa_type_check</span>
 <span class="kn">from</span> <span class="nn">pedal.types.normalize</span> <span class="kn">import</span> <span class="n">normalize_type</span>
-<span class="kn">from</span> <span class="nn">pedal.types.operations</span> <span class="kn">import</span> <span class="n">are_types_equal</span>
+<span class="kn">from</span> <span class="nn">pedal.types.new_types</span> <span class="kn">import</span> <span class="n">is_subtype</span>
 <span class="kn">from</span> <span class="nn">pedal.utilities.ast_tools</span> <span class="kn">import</span> <span class="n">AST_NODE_NAMES</span>
 
 
@@ -100,8 +116,10 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">at_least</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">report</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;report&#39;</span><span class="p">,</span> <span class="n">MAIN_REPORT</span><span class="p">)</span>
         <span class="n">root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">parse_program</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span>
+        <span class="n">root_message</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">root</span> <span class="k">else</span> <span class="s2">&quot; (inside of some other code)&quot;</span>
         <span class="n">fields</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span> <span class="s1">&#39;at_least&#39;</span><span class="p">:</span> <span class="n">at_least</span><span class="p">,</span> <span class="s1">&#39;capacity&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
-                  <span class="s1">&#39;root&#39;</span><span class="p">:</span> <span class="n">root</span><span class="p">,</span> <span class="s1">&#39;name_message&#39;</span><span class="p">:</span> <span class="n">report</span><span class="o">.</span><span class="n">format</span><span class="o">.</span><span class="n">name</span><span class="p">(</span><span class="n">name</span><span class="p">)}</span>
+                  <span class="s1">&#39;root&#39;</span><span class="p">:</span> <span class="n">root</span><span class="p">,</span> <span class="s1">&#39;name_message&#39;</span><span class="p">:</span> <span class="n">report</span><span class="o">.</span><span class="n">format</span><span class="o">.</span><span class="n">name</span><span class="p">(</span><span class="n">name</span><span class="p">),</span>
+                  <span class="s1">&#39;root_message&#39;</span><span class="p">:</span> <span class="n">root_message</span><span class="p">}</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="n">fields</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_check_usage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field_name</span><span class="p">,</span> <span class="n">uses</span><span class="p">):</span>
@@ -111,8 +129,8 @@
             <span class="k">if</span> <span class="n">at_least</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="k">return</span> <span class="kc">True</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;capacity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot; at least </span><span class="si">{at_least}</span><span class="s2"> times, but&quot;</span>
-                                           <span class="sa">f</span><span class="s2">&quot; you used it </span><span class="si">{use_count}</span><span class="s2"> times&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;capacity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot; at least </span><span class="si">{</span><span class="n">at_least</span><span class="si">}</span><span class="s2"> times, but&quot;</span>
+                                           <span class="sa">f</span><span class="s2">&quot; you used it </span><span class="si">{</span><span class="n">use_count</span><span class="si">}</span><span class="s2"> times&quot;</span><span class="p">)</span>
                 <span class="k">return</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="kc">False</span>
 
@@ -122,8 +140,10 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">at_most</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">report</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;report&#39;</span><span class="p">,</span> <span class="n">MAIN_REPORT</span><span class="p">)</span>
         <span class="n">root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">parse_program</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span>
+        <span class="n">root_message</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">root</span> <span class="k">else</span> <span class="s2">&quot; (inside of some other code)&quot;</span>
         <span class="n">fields</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span> <span class="s1">&#39;at_most&#39;</span><span class="p">:</span> <span class="n">at_most</span><span class="p">,</span> <span class="s1">&#39;capacity&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
-                  <span class="s1">&#39;root&#39;</span><span class="p">:</span> <span class="n">root</span><span class="p">,</span> <span class="s1">&#39;name_message&#39;</span><span class="p">:</span> <span class="n">report</span><span class="o">.</span><span class="n">format</span><span class="o">.</span><span class="n">name</span><span class="p">(</span><span class="n">name</span><span class="p">)}</span>
+                  <span class="s1">&#39;root&#39;</span><span class="p">:</span> <span class="n">root</span><span class="p">,</span> <span class="s1">&#39;name_message&#39;</span><span class="p">:</span> <span class="n">report</span><span class="o">.</span><span class="n">format</span><span class="o">.</span><span class="n">name</span><span class="p">(</span><span class="n">name</span><span class="p">),</span>
+                  <span class="s1">&#39;root_message&#39;</span><span class="p">:</span> <span class="n">root_message</span><span class="p">}</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="n">fields</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_check_usage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field_name</span><span class="p">,</span> <span class="n">uses</span><span class="p">):</span>
@@ -133,8 +153,8 @@
             <span class="k">if</span> <span class="n">at_most</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="k">return</span> <span class="kc">True</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;capacity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot; more than </span><span class="si">{at_most}</span><span class="s2"> times, but&quot;</span>
-                                           <span class="sa">f</span><span class="s2">&quot; you used it </span><span class="si">{use_count}</span><span class="s2"> times&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;capacity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot; more than </span><span class="si">{</span><span class="n">at_most</span><span class="si">}</span><span class="s2"> times, but&quot;</span>
+                                           <span class="sa">f</span><span class="s2">&quot; you used it </span><span class="si">{</span><span class="n">use_count</span><span class="si">}</span><span class="s2"> times&quot;</span><span class="p">)</span>
                 <span class="k">return</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="kc">False</span>
 
@@ -324,7 +344,7 @@
         <span class="k">elif</span> <span class="n">literal_type</span> <span class="o">==</span> <span class="nb">dict</span><span class="p">:</span>
             <span class="n">uses</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;root&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;Dict&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown literal type: </span><span class="si">{literal_type}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown literal type: </span><span class="si">{</span><span class="n">literal_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">uses</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">update_location</span><span class="p">(</span><span class="n">uses</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lineno</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_usage</span><span class="p">(</span><span class="s1">&#39;use_count&#39;</span><span class="p">,</span> <span class="n">uses</span><span class="p">)</span></div></div>
@@ -360,7 +380,7 @@
         <span class="k">elif</span> <span class="n">literal_type</span> <span class="o">==</span> <span class="nb">dict</span><span class="p">:</span>
             <span class="n">uses</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;root&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;Dict&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown literal type: </span><span class="si">{literal_type}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown literal type: </span><span class="si">{</span><span class="n">literal_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">uses</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">update_location</span><span class="p">(</span><span class="n">uses</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lineno</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_usage</span><span class="p">(</span><span class="s1">&#39;use_count&#39;</span><span class="p">,</span> <span class="n">uses</span><span class="p">)</span></div></div>
@@ -382,6 +402,8 @@
     <span class="n">message_template</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;You used </span><span class="si">{name_message}</span><span class="s2"> on line &quot;</span>
                         <span class="s2">&quot;</span><span class="si">{location.line}</span><span class="s2">. You may not use that&quot;</span>
                         <span class="s2">&quot;</span><span class="si">{capacity}</span><span class="s2">.&quot;</span><span class="p">)</span>
+    <span class="n">justification_template</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;Incorrectly found a </span><span class="si">{name_message}{capacity}{root_message}</span><span class="s2">.&quot;</span><span class="p">,</span>
+                              <span class="s2">&quot;Correctly found a </span><span class="si">{name_message}{capacity}{root_message}</span><span class="s2">.&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="prevent_ast.condition"><a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.prevent_ast.condition">[docs]</a>    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Use find_all to check number of occurrences. &quot;&quot;&quot;</span>
@@ -408,6 +430,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Must Use Code&quot;</span>
     <span class="n">message_template</span> <span class="o">=</span> <span class="s2">&quot;You must use </span><span class="si">{name_message}{capacity}</span><span class="s2">.&quot;</span>
+    <span class="n">justification_template</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;Failed to find a </span><span class="si">{name_message}{capacity}{root_message}</span><span class="s2">.&quot;</span><span class="p">,</span>
+                              <span class="s2">&quot;Successfully found a </span><span class="si">{name_message}{capacity}{root_message}</span><span class="s2">.&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="ensure_ast.condition"><a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.ensure_ast.condition">[docs]</a>    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Use find_all to check number of occurrences. &quot;&quot;&quot;</span>
@@ -575,7 +599,7 @@
     <span class="k">if</span> <span class="n">parameters</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">actual_parameters</span> <span class="o">=</span> <span class="n">definition</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">args</span>
         <span class="k">for</span> <span class="n">expected_parameter</span><span class="p">,</span> <span class="n">actual_parameter</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">actual_parameters</span><span class="p">):</span>
-            <span class="n">expected_parameter_type</span> <span class="o">=</span> <span class="n">normalize_type</span><span class="p">(</span><span class="n">expected_parameter</span><span class="p">)</span>
+            <span class="n">expected_parameter_type</span> <span class="o">=</span> <span class="n">normalize_type</span><span class="p">(</span><span class="n">expected_parameter</span><span class="p">,</span> <span class="n">tifa_type_check</span><span class="p">)</span><span class="o">.</span><span class="n">as_type</span><span class="p">()</span>
             <span class="n">actual_parameter_name</span> <span class="o">=</span> <span class="p">(</span><span class="n">actual_parameter</span><span class="o">.</span><span class="n">id</span> <span class="k">if</span> <span class="n">actual_parameter</span><span class="o">.</span><span class="n">id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
                                      <span class="k">else</span> <span class="n">actual_parameter</span><span class="o">.</span><span class="n">arg</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">actual_parameter</span><span class="o">.</span><span class="n">annotation</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -583,27 +607,29 @@
                                               <span class="n">expected_parameter_type</span><span class="p">,</span>
                                               <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">actual_parameter_type</span> <span class="o">=</span> <span class="n">normalize_type</span><span class="p">(</span><span class="n">actual_parameter</span><span class="o">.</span><span class="n">annotation</span><span class="o">.</span><span class="n">ast_node</span><span class="p">)</span>
+                <span class="n">actual_parameter_type</span> <span class="o">=</span> <span class="n">normalize_type</span><span class="p">(</span><span class="n">actual_parameter</span><span class="o">.</span><span class="n">annotation</span><span class="o">.</span><span class="n">ast_node</span><span class="p">,</span>
+                                                       <span class="n">tifa_type_check</span><span class="p">)</span><span class="o">.</span><span class="n">as_type</span><span class="p">()</span>
             <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">invalid_parameter_type</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">actual_parameter_name</span><span class="p">,</span>
                                               <span class="n">actual_parameter</span><span class="o">.</span><span class="n">annotation</span><span class="p">,</span>
                                               <span class="n">expected_parameter_type</span><span class="p">,</span>
                                               <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">are_types_equal</span><span class="p">(</span><span class="n">actual_parameter_type</span><span class="p">,</span> <span class="n">expected_parameter_type</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">is_subtype</span><span class="p">(</span><span class="n">actual_parameter_type</span><span class="p">,</span> <span class="n">expected_parameter_type</span><span class="p">):</span>
                 <span class="k">return</span> <span class="n">wrong_parameter_type</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">actual_parameter_name</span><span class="p">,</span>
                                             <span class="n">actual_parameter_type</span><span class="p">,</span>
                                             <span class="n">expected_parameter_type</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="c1"># 1.2.3. &#39;returns&#39; style - checks the return type explicitly</span>
     <span class="k">if</span> <span class="n">returns</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">expected_returns</span> <span class="o">=</span> <span class="n">normalize_type</span><span class="p">(</span><span class="n">returns</span><span class="p">)</span>
+        <span class="n">expected_returns</span> <span class="o">=</span> <span class="n">normalize_type</span><span class="p">(</span><span class="n">returns</span><span class="p">,</span> <span class="n">tifa_type_check</span><span class="p">)</span><span class="o">.</span><span class="n">as_type</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">definition</span><span class="o">.</span><span class="n">returns</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">missing_return_type</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">expected_returns</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">actual_returns</span> <span class="o">=</span> <span class="n">normalize_type</span><span class="p">(</span><span class="n">definition</span><span class="o">.</span><span class="n">returns</span><span class="o">.</span><span class="n">ast_node</span><span class="p">)</span>
+            <span class="n">actual_returns</span> <span class="o">=</span> <span class="n">normalize_type</span><span class="p">(</span><span class="n">definition</span><span class="o">.</span><span class="n">returns</span><span class="o">.</span><span class="n">ast_node</span><span class="p">,</span>
+                                            <span class="n">tifa_type_check</span><span class="p">)</span><span class="o">.</span><span class="n">as_type</span><span class="p">()</span>
         <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">invalid_return_type</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">definition</span><span class="o">.</span><span class="n">returns</span><span class="p">,</span>
                                        <span class="n">expected_returns</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">are_types_equal</span><span class="p">(</span><span class="n">actual_returns</span><span class="p">,</span> <span class="n">expected_returns</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_subtype</span><span class="p">(</span><span class="n">actual_returns</span><span class="p">,</span> <span class="n">expected_returns</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">wrong_return_type</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">actual_returns</span><span class="p">,</span> <span class="n">expected_returns</span><span class="p">,</span>
                                      <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="c1"># Alternatively, returns positive FF?</span>
@@ -611,12 +637,99 @@
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">compliment</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="n">core_compliment</span><span class="p">(</span><span class="n">compliment</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;function_defined&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">compliment</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="n">core_compliment</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Defined </span><span class="si">{name}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;function_defined&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="n">core_compliment</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Defined </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;function_defined&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;score&quot;</span><span class="p">):</span>
         <span class="n">give_partial</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;score&quot;</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;function_defined&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="kc">None</span></div>
 
+
+<div class="viewcode-block" id="ensure_dataclass"><a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.ensure_dataclass">[docs]</a><span class="nd">@CompositeFeedbackFunction</span><span class="p">(</span><span class="n">missing_dataclass</span><span class="p">,</span> <span class="n">duplicate_dataclass_definition</span><span class="p">,</span>
+                           <span class="n">too_few_fields</span><span class="p">,</span> <span class="n">too_many_fields</span><span class="p">,</span> <span class="n">invalid_field_type</span><span class="p">,</span>
+                           <span class="n">unknown_field</span><span class="p">,</span>
+                           <span class="n">missing_field_type</span><span class="p">,</span> <span class="n">wrong_fields_type</span><span class="p">,</span> <span class="n">name_is_not_a_dataclass</span><span class="p">,</span>
+                           <span class="n">dataclass_not_available</span><span class="p">,</span> <span class="n">missing_dataclass_annotation</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">ensure_dataclass</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">compliment</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Ensures that the actual definition for the given class exists.</span>
+<span class="sd">    You can provide either a string and fields, or an instructor-defined version</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">        name (str or dataclass): Either the name of the expected dataclass, or a</span>
+<span class="sd">            dataclass object (not an instance).</span>
+<span class="sd">        fields (dict):</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="c1"># Fields will be a dictionary or class</span>
+        <span class="k">if</span> <span class="n">fields</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">fields</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="c1"># Or assume it is a dataclass provided by the instructor</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">{</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">field</span><span class="o">.</span><span class="n">type</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">dataclasses</span><span class="o">.</span><span class="n">fields</span><span class="p">(</span><span class="n">name</span><span class="p">)}</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="vm">__name__</span>
+    <span class="c1"># Inspect the code for the definition</span>
+    <span class="n">report</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;report&#39;</span><span class="p">,</span> <span class="n">MAIN_REPORT</span><span class="p">)</span>
+    <span class="n">root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">parse_program</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span>
+    <span class="n">defs</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">&#39;ClassDef&#39;</span><span class="p">)</span>
+    <span class="n">defs</span> <span class="o">=</span> <span class="p">[</span><span class="n">a_def</span> <span class="k">for</span> <span class="n">a_def</span> <span class="ow">in</span> <span class="n">defs</span> <span class="k">if</span> <span class="n">a_def</span><span class="o">.</span><span class="n">_name</span> <span class="o">==</span> <span class="n">name</span><span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">defs</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">missing_dataclass</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">defs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">Location</span><span class="o">.</span><span class="n">from_ast</span><span class="p">(</span><span class="n">a_def</span><span class="p">)</span> <span class="k">for</span> <span class="n">a_def</span> <span class="ow">in</span> <span class="n">defs</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">duplicate_dataclass_definition</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">lines</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="n">defs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">definition_fields</span> <span class="o">=</span> <span class="p">[</span><span class="n">line</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">definition</span><span class="o">.</span><span class="n">body</span>
+                         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">ast_node</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">AnnAssign</span><span class="p">)</span> <span class="ow">and</span> <span class="n">line</span><span class="o">.</span><span class="n">simple</span><span class="p">]</span>
+    <span class="c1"># TODO: Support ast.Assign nodes for default values</span>
+    <span class="c1"># 1. Make sure import is present</span>
+    <span class="n">missing_import</span> <span class="o">=</span> <span class="n">ensure_import</span><span class="p">(</span><span class="s1">&#39;dataclasses&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">missing_import</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">missing_import</span>
+    <span class="k">for</span> <span class="n">decorator</span> <span class="ow">in</span> <span class="n">definition</span><span class="o">.</span><span class="n">decorator_list</span><span class="p">:</span>
+        <span class="c1"># TODO: Support the @dataclasses.dataclass style too</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">decorator</span><span class="o">.</span><span class="n">ast_node</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Name</span><span class="p">)</span> <span class="ow">and</span> <span class="n">decorator</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="s1">&#39;dataclass&#39;</span><span class="p">:</span>
+            <span class="k">break</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">missing_dataclass_annotation</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="c1"># 2. Confirm the number of fields</span>
+    <span class="n">expected_arity</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span>
+    <span class="n">actual_arity</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">definition_fields</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">actual_arity</span> <span class="o">&lt;</span> <span class="n">expected_arity</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">too_few_fields</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">actual_arity</span><span class="p">,</span> <span class="n">expected_arity</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">actual_arity</span> <span class="o">&gt;</span> <span class="n">expected_arity</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">too_many_fields</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">actual_arity</span><span class="p">,</span> <span class="n">expected_arity</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="c1"># 3. checks each field&#39;s name and type</span>
+    <span class="k">for</span> <span class="n">actual_field</span> <span class="ow">in</span> <span class="n">definition_fields</span><span class="p">:</span>
+        <span class="n">actual_field_name</span> <span class="o">=</span> <span class="n">actual_field</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">id</span>
+        <span class="k">if</span> <span class="n">actual_field_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">unknown_field</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">actual_field_name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">expected_field</span> <span class="o">=</span> <span class="n">fields</span><span class="p">[</span><span class="n">actual_field_name</span><span class="p">]</span>
+        <span class="n">expected_field_type</span> <span class="o">=</span> <span class="n">normalize_type</span><span class="p">(</span><span class="n">expected_field</span><span class="p">,</span> <span class="n">tifa_type_check</span><span class="p">)</span><span class="o">.</span><span class="n">as_type</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">actual_field</span><span class="o">.</span><span class="n">annotation</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">missing_field_type</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">actual_field_name</span><span class="p">,</span> <span class="n">expected_field_type</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">actual_field_type</span> <span class="o">=</span> <span class="n">normalize_type</span><span class="p">(</span><span class="n">actual_field</span><span class="o">.</span><span class="n">annotation</span><span class="o">.</span><span class="n">ast_node</span><span class="p">,</span>
+                                               <span class="n">tifa_type_check</span><span class="p">)</span><span class="o">.</span><span class="n">as_type</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">invalid_field_type</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">actual_field_name</span><span class="p">,</span> <span class="n">actual_field</span><span class="o">.</span><span class="n">annotation</span><span class="p">,</span>
+                                      <span class="n">expected_field_type</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_subtype</span><span class="p">(</span><span class="n">actual_field_type</span><span class="p">,</span> <span class="n">expected_field_type</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">wrong_fields_type</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">actual_field_name</span><span class="p">,</span> <span class="n">actual_field_type</span><span class="p">,</span>
+                                     <span class="n">expected_field_type</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">actual_field</span><span class="p">,</span> <span class="n">expected_field</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">definition_fields</span><span class="p">,</span> <span class="n">fields</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+        <span class="n">actual_field_name</span> <span class="o">=</span> <span class="n">actual_field</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">id</span>
+        <span class="k">if</span> <span class="n">actual_field_name</span> <span class="o">!=</span> <span class="n">expected_field</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">wrong_field_order</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">actual_field_name</span><span class="p">,</span> <span class="n">expected_field</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="c1"># Alternatively, returns positive FF?</span>
+    <span class="k">if</span> <span class="n">compliment</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">compliment</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">core_compliment</span><span class="p">(</span><span class="n">compliment</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;dataclass_defined&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">compliment</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">core_compliment</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Defined </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;dataclass_defined&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;score&quot;</span><span class="p">):</span>
+        <span class="n">give_partial</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;score&quot;</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;dataclass_defined&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="ensure_prints_exactly"><a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.ensure_prints_exactly">[docs]</a><span class="nd">@CompositeFeedbackFunction</span><span class="p">(</span><span class="n">prevent_function_call</span><span class="p">,</span> <span class="n">ensure_function_call</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">ensure_prints_exactly</span><span class="p">(</span><span class="n">count</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>

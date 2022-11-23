@@ -1,18 +1,22 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CAIT &mdash; Pedal 1.0 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <title>CAIT &mdash; Pedal 1.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -38,7 +42,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption"><span class="caption-text">Contents</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../everyone/introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../everyone/installation.html">Installation</a></li>
@@ -52,12 +56,37 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../tools.html">Developer Tools Reference</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="source.html">Source</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tifa.html">TIFA</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">CAIT</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">CAIT</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.cait.find_node.find_function_calls"><code class="docutils literal notranslate"><span class="pre">find_function_calls()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.cait.find_node.find_function_definition"><code class="docutils literal notranslate"><span class="pre">find_function_definition()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.cait.find_node.find_operation"><code class="docutils literal notranslate"><span class="pre">find_operation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.cait.find_node.find_prior_initializations"><code class="docutils literal notranslate"><span class="pre">find_prior_initializations()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.cait.find_node.function_is_called"><code class="docutils literal notranslate"><span class="pre">function_is_called()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.cait.find_node.is_top_level"><code class="docutils literal notranslate"><span class="pre">is_top_level()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.cait.cait_api.CaitException"><code class="docutils literal notranslate"><span class="pre">CaitException</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.cait.cait_api.data_state"><code class="docutils literal notranslate"><span class="pre">data_state()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.cait.cait_api.data_type"><code class="docutils literal notranslate"><span class="pre">data_type()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.cait.cait_api.def_use_error"><code class="docutils literal notranslate"><span class="pre">def_use_error()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.cait.cait_api.expire_cait_cache"><code class="docutils literal notranslate"><span class="pre">expire_cait_cache()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.cait.cait_api.find_asts"><code class="docutils literal notranslate"><span class="pre">find_asts()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.cait.cait_api.find_expr_sub_matches"><code class="docutils literal notranslate"><span class="pre">find_expr_sub_matches()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.cait.cait_api.find_match"><code class="docutils literal notranslate"><span class="pre">find_match()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.cait.cait_api.find_matches"><code class="docutils literal notranslate"><span class="pre">find_matches()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.cait.cait_api.find_submatches"><code class="docutils literal notranslate"><span class="pre">find_submatches()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.cait.cait_api.parse_program"><code class="docutils literal notranslate"><span class="pre">parse_program()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.cait.cait_api.reparse_if_needed"><code class="docutils literal notranslate"><span class="pre">reparse_if_needed()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.cait.cait_api.require_tifa"><code class="docutils literal notranslate"><span class="pre">require_tifa()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.cait.cait_api.reset"><code class="docutils literal notranslate"><span class="pre">reset()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="sandbox.html">Sandbox</a></li>
 <li class="toctree-l2"><a class="reference internal" href="assertions.html">Assertions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="questions.html">Questions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extensions.html">Extensions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../conventions.html">Internal Naming Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../libraries.html">Necessary Libraries</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../everyone/glossary.html">Glossary</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../everyone/contact.html">Contact</a></li>
 </ul>
@@ -75,9 +104,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../tools.html">Developer Tools Reference</a> &raquo;</li>
-      <li>CAIT</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../tools.html">Developer Tools Reference</a></li>
+      <li class="breadcrumb-item active">CAIT</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/developers/tools/cait.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -87,11 +116,104 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="module-pedal.cait">
-<span id="cait"></span><h1>CAIT<a class="headerlink" href="#module-pedal.cait" title="Permalink to this headline">¶</a></h1>
+  <section id="module-pedal.cait">
+<span id="cait"></span><h1>CAIT<a class="headerlink" href="#module-pedal.cait" title="Permalink to this heading"></a></h1>
 <p>A package of tools for capturing student code by matching it against patterns.</p>
+<span class="target" id="module-pedal.cait.find_node"></span><p>Helper functions for traversing through the code structure.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="pedal.cait.find_node.find_function_calls">
+<span class="sig-name descname"><span class="pre">find_function_calls</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/cait/find_node.html#find_function_calls"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.cait.find_node.find_function_calls" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a list of CaitNodes representing all of the function calls that
+were found. This includes both methods and regular functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The name of the function to search.</p></li>
+<li><p><strong>root</strong> – A subtree of a parse tree to revert to.</p></li>
+<li><p><strong>report</strong> (<a class="reference internal" href="../api.html#pedal.core.report.Report" title="pedal.core.report.Report"><em>Report</em></a>) – The name of the Report to refer to.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Relevant call nodes.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[CaitNode]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pedal.cait.find_node.find_function_definition">
+<span class="sig-name descname"><span class="pre">find_function_definition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/cait/find_node.html#find_function_definition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.cait.find_node.find_function_definition" title="Permalink to this definition"></a></dt>
+<dd><p>Finds the given function definition based on the given <code class="docutils literal notranslate"><span class="pre">name</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The name of the function.</p></li>
+<li><p><strong>root</strong> – A subtree of a parse tree to revert to.</p></li>
+<li><p><strong>report</strong> (<a class="reference internal" href="../api.html#pedal.core.report.Report" title="pedal.core.report.Report"><em>Report</em></a>) – The name of the Report to refer to.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>The first occurrence of a</dt><dd><p>function with the given name.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.cait.cait_node.CaitNode</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pedal.cait.find_node.find_operation">
+<span class="sig-name descname"><span class="pre">find_operation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">op_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/cait/find_node.html#find_operation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.cait.find_node.find_operation" title="Permalink to this definition"></a></dt>
+<dd><p>Returns all the occurrences of the operator <cite>op_name</cite> in the source code.
+You can specify the operator as a string like <cite>“+”</cite> or <cite>“&lt;&lt;”</cite>.
+Supports all comparison, boolean, binary, and unary operators.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pedal.cait.find_node.find_prior_initializations">
+<span class="sig-name descname"><span class="pre">find_prior_initializations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/cait/find_node.html#find_prior_initializations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.cait.find_node.find_prior_initializations" title="Permalink to this definition"></a></dt>
+<dd><p>DEPRECATED</p>
+<p>Given a Name node, returns a list of all the assignment
+statements that incorporate that Name node prior to that line. Returns
+None if no Name is given.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pedal.cait.find_node.function_is_called">
+<span class="sig-name descname"><span class="pre">function_is_called</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a></span></span><a class="reference internal" href="../../_modules/pedal/cait/find_node.html#function_is_called"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.cait.find_node.function_is_called" title="Permalink to this definition"></a></dt>
+<dd><p>DEPRECATED</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pedal.cait.find_node.is_top_level">
+<span class="sig-name descname"><span class="pre">is_top_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ast_node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="../../_modules/pedal/cait/find_node.html#is_top_level"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.cait.find_node.is_top_level" title="Permalink to this definition"></a></dt>
+<dd><p>Determines if the <cite>ast_node</cite> is at the top-level of the program.
+Correctly handles expression statements (so a print call on its own will be
+considered a statement, even though its technically an expression).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ast_node</strong> (<em>pedal.cait.cait_node.CaitNode</em>) – The CaitNode to check</p></li>
+<li><p><strong>report</strong> (<a class="reference internal" href="../api.html#pedal.core.report.Report" title="pedal.core.report.Report"><em>pedal.core.report.Report</em></a>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Whether the node is from the top level</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
 <span class="target" id="module-pedal.cait.cait_api"></span><table class="colwidths-given docutils align-default" id="id1">
-<caption><span class="caption-text">Cait Report Data</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-text">Cait Report Data</span><a class="headerlink" href="#id1" title="Permalink to this table"></a></caption>
 <colgroup>
 <col style="width: 20%" />
 <col style="width: 20%" />
@@ -128,19 +250,19 @@
 </tr>
 </tbody>
 </table>
-<dl class="exception">
-<dt id="pedal.cait.cait_api.CaitException">
-<em class="property">exception </em><code class="sig-name descname">CaitException</code><a class="reference internal" href="../../_modules/pedal/cait/cait_api.html#CaitException"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.cait.cait_api.CaitException" title="Permalink to this definition">¶</a></dt>
+<dl class="py exception">
+<dt class="sig sig-object py" id="pedal.cait.cait_api.CaitException">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CaitException</span></span><a class="reference internal" href="../../_modules/pedal/cait/cait_api.html#CaitException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.cait.cait_api.CaitException" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="pedal.cait.cait_api.data_state">
-<code class="sig-name descname">data_state</code><span class="sig-paren">(</span><em class="sig-param">node</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/cait/cait_api.html#data_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.cait.cait_api.data_state" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pedal.cait.cait_api.data_state">
+<span class="sig-name descname"><span class="pre">data_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/cait/cait_api.html#data_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.cait.cait_api.data_state" title="Permalink to this definition"></a></dt>
 <dd><p>Determines the Tifa State of the given node.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>node</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> or </em><em>AstNode</em><em> or </em><em>CaitNode</em>) – The Name node to look up in TIFA.</p></li>
+<li><p><strong>node</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em> or </em><em>AstNode</em><em> or </em><em>CaitNode</em>) – The Name node to look up in TIFA.</p></li>
 <li><p><strong>report</strong> (<a class="reference internal" href="../api.html#pedal.core.report.Report" title="pedal.core.report.Report"><em>Report</em></a>) – The report to attach data to. Defaults to MAIN_REPORT.</p></li>
 </ul>
 </dd>
@@ -150,14 +272,14 @@
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="pedal.cait.cait_api.data_type">
-<code class="sig-name descname">data_type</code><span class="sig-paren">(</span><em class="sig-param">node</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/cait/cait_api.html#data_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.cait.cait_api.data_type" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pedal.cait.cait_api.data_type">
+<span class="sig-name descname"><span class="pre">data_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/cait/cait_api.html#data_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.cait.cait_api.data_type" title="Permalink to this definition"></a></dt>
 <dd><p>Looks up the type of the node using Tifa’s analysis.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>node</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> or </em><em>AstNode</em><em> or </em><em>CaitNode</em>) – The Name node to look up in TIFA.</p></li>
+<li><p><strong>node</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em> or </em><em>AstNode</em><em> or </em><em>CaitNode</em>) – The Name node to look up in TIFA.</p></li>
 <li><p><strong>report</strong> (<a class="reference internal" href="../api.html#pedal.core.report.Report" title="pedal.core.report.Report"><em>Report</em></a>) – The report to attach data to. Defaults to MAIN_REPORT.</p></li>
 </ul>
 </dd>
@@ -167,14 +289,14 @@
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="pedal.cait.cait_api.def_use_error">
-<code class="sig-name descname">def_use_error</code><span class="sig-paren">(</span><em class="sig-param">node</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/cait/cait_api.html#def_use_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.cait.cait_api.def_use_error" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pedal.cait.cait_api.def_use_error">
+<span class="sig-name descname"><span class="pre">def_use_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/cait/cait_api.html#def_use_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.cait.cait_api.def_use_error" title="Permalink to this definition"></a></dt>
 <dd><p>Checks if node is a name and has a def_use_error</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>node</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> or </em><em>AstNode</em><em> or </em><em>CaitNode</em>) – The Name node to look up.</p></li>
+<li><p><strong>node</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em> or </em><em>AstNode</em><em> or </em><em>CaitNode</em>) – The Name node to look up.</p></li>
 <li><p><strong>report</strong> (<a class="reference internal" href="../api.html#pedal.core.report.Report" title="pedal.core.report.Report"><em>Report</em></a>) – The report to attach data to. Defaults to MAIN_REPORT.</p></li>
 </ul>
 </dd>
@@ -184,9 +306,9 @@
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="pedal.cait.cait_api.expire_cait_cache">
-<code class="sig-name descname">expire_cait_cache</code><span class="sig-paren">(</span><em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/cait/cait_api.html#expire_cait_cache"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.cait.cait_api.expire_cait_cache" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pedal.cait.cait_api.expire_cait_cache">
+<span class="sig-name descname"><span class="pre">expire_cait_cache</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/cait/cait_api.html#expire_cait_cache"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.cait.cait_api.expire_cait_cache" title="Permalink to this definition"></a></dt>
 <dd><p>Deletes the most recent CAIT run and any cached CAIT parses.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -195,16 +317,16 @@
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="pedal.cait.cait_api.find_asts">
-<code class="sig-name descname">find_asts</code><span class="sig-paren">(</span><em class="sig-param">node_name: str</em>, <em class="sig-param">student_code=None</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/cait/cait_api.html#find_asts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.cait.cait_api.find_asts" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pedal.cait.cait_api.find_asts">
+<span class="sig-name descname"><span class="pre">find_asts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_name:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">student_code=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/cait/cait_api.html#find_asts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.cait.cait_api.find_asts" title="Permalink to this definition"></a></dt>
 <dd><p>Find all occurrences of the given AST node, based on the name of the AST
 node (e.g., <cite>“For”</cite> or <cite>“FunctionDef”</cite>).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>node_type</strong> – the string representing the “type” of node to look for</p></li>
-<li><p><strong>student_code</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Optionally, different code to parse and search.</p></li>
+<li><p><strong>student_code</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Optionally, different code to parse and search.</p></li>
 <li><p><strong>report</strong> – defaults to MAIN_REPORT unless another one is given.</p></li>
 </ul>
 </dd>
@@ -219,9 +341,9 @@ node (e.g., <cite>“For”</cite> or <cite>“FunctionDef”</cite>).</p>
 <p>Returns:</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="pedal.cait.cait_api.find_expr_sub_matches">
-<code class="sig-name descname">find_expr_sub_matches</code><span class="sig-paren">(</span><em class="sig-param">pattern</em>, <em class="sig-param">student_code</em>, <em class="sig-param">is_mod=False</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/cait/cait_api.html#find_expr_sub_matches"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.cait.cait_api.find_expr_sub_matches" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pedal.cait.cait_api.find_expr_sub_matches">
+<span class="sig-name descname"><span class="pre">find_expr_sub_matches</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pattern</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">student_code</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_mod=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/cait/cait_api.html#find_expr_sub_matches"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.cait.cait_api.find_expr_sub_matches" title="Permalink to this definition"></a></dt>
 <dd><p>Finds pattern in student_code
 # TODO: Add code to make pattern accept CaitNodes
 # TODO: Make this function without so much meta knowledge
@@ -237,19 +359,19 @@ node (e.g., <cite>“For”</cite> or <cite>“FunctionDef”</cite>).</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="pedal.cait.cait_api.find_match">
-<code class="sig-name descname">find_match</code><span class="sig-paren">(</span><em class="sig-param">pattern</em>, <em class="sig-param">student_code=None</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em>, <em class="sig-param">cut=False</em>, <em class="sig-param">use_previous=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/cait/cait_api.html#find_match"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.cait.cait_api.find_match" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pedal.cait.cait_api.find_match">
+<span class="sig-name descname"><span class="pre">find_match</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pattern</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">student_code=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cut=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_previous=None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/cait/cait_api.html#find_match"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.cait.cait_api.find_match" title="Permalink to this definition"></a></dt>
 <dd><p>Apply Tree Inclusion and return the first match of the <cite>pattern</cite> in the
 <cite>student_code</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>pattern</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The CaitExpression to match against.</p></li>
-<li><p><strong>student_code</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The string of student code to check against.
+<li><p><strong>pattern</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The CaitExpression to match against.</p></li>
+<li><p><strong>student_code</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The string of student code to check against.
 Defaults to the code of the Source tool in the Report.</p></li>
 <li><p><strong>report</strong> (<a class="reference internal" href="../api.html#pedal.core.report.Report" title="pedal.core.report.Report"><em>Report</em></a>) – The report to attach data to.</p></li>
-<li><p><strong>cut</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Set to true to trim root to first branch</p></li>
+<li><p><strong>cut</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – Set to true to trim root to first branch</p></li>
 <li><p><strong>use_previous</strong> (<em>AstMap</em>) – If user wants to continue off of a previously found match</p></li>
 </ul>
 </dd>
@@ -261,23 +383,23 @@ Defaults to the code of the Source tool in the Report.</p></li>
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>CaitNode or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)">None</a></p>
+<dd class="field-odd"><p>CaitNode or None</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="pedal.cait.cait_api.find_matches">
-<code class="sig-name descname">find_matches</code><span class="sig-paren">(</span><em class="sig-param">pattern</em>, <em class="sig-param">student_code=None</em>, <em class="sig-param">cut=False</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em>, <em class="sig-param">use_previous=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/cait/cait_api.html#find_matches"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.cait.cait_api.find_matches" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pedal.cait.cait_api.find_matches">
+<span class="sig-name descname"><span class="pre">find_matches</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pattern</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">student_code=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cut=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_previous=None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/cait/cait_api.html#find_matches"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.cait.cait_api.find_matches" title="Permalink to this definition"></a></dt>
 <dd><p>Apply Tree Inclusion and return all matches of the <cite>pattern</cite> in the
 <cite>student_code</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>pattern</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The CaitExpression to match against.</p></li>
-<li><p><strong>student_code</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The string of student code to check against.</p></li>
+<li><p><strong>pattern</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The CaitExpression to match against.</p></li>
+<li><p><strong>student_code</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The string of student code to check against.</p></li>
 <li><p><strong>report</strong> (<a class="reference internal" href="../api.html#pedal.core.report.Report" title="pedal.core.report.Report"><em>Report</em></a>) – The report to attach data to.</p></li>
-<li><p><strong>cut</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Set to true to trim root to first branch</p></li>
+<li><p><strong>cut</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – Set to true to trim root to first branch</p></li>
 <li><p><strong>use_previous</strong> (<em>AstMap</em>) – If user wants to continue off of a previously found match</p></li>
 </ul>
 </dd>
@@ -285,25 +407,25 @@ Defaults to the code of the Source tool in the Report.</p></li>
 <dd class="field-even"><p>All matching nodes for the given pattern.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)">list</a>[pedal.cait.ast_map.AstMap]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>[pedal.cait.ast_map.AstMap]</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="pedal.cait.cait_api.find_submatches">
-<code class="sig-name descname">find_submatches</code><span class="sig-paren">(</span><em class="sig-param">pattern</em>, <em class="sig-param">student_code</em>, <em class="sig-param">is_mod=False</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/cait/cait_api.html#find_submatches"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.cait.cait_api.find_submatches" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pedal.cait.cait_api.find_submatches">
+<span class="sig-name descname"><span class="pre">find_submatches</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pattern</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">student_code</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_mod=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/cait/cait_api.html#find_submatches"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.cait.cait_api.find_submatches" title="Permalink to this definition"></a></dt>
 <dd><p>Incomplete.</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="pedal.cait.cait_api.parse_program">
-<code class="sig-name descname">parse_program</code><span class="sig-paren">(</span><em class="sig-param">student_code=None</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/cait/cait_api.html#parse_program"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.cait.cait_api.parse_program" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pedal.cait.cait_api.parse_program">
+<span class="sig-name descname"><span class="pre">parse_program</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">student_code=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/cait/cait_api.html#parse_program"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.cait.cait_api.parse_program" title="Permalink to this definition"></a></dt>
 <dd><p>Parses student code and produces a CAIT representation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>student_code</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The student source code to parse. If None, defaults
+<li><p><strong>student_code</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The student source code to parse. If None, defaults
 to the code within the Source tool of the given Report.</p></li>
 <li><p><strong>report</strong> (<a class="reference internal" href="../api.html#pedal.core.report.Report" title="pedal.core.report.Report"><em>Report</em></a>) – The report to attach data to. Defaults to MAIN_REPORT.</p></li>
 </ul>
@@ -317,16 +439,16 @@ to the code within the Source tool of the given Report.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="pedal.cait.cait_api.reparse_if_needed">
-<code class="sig-name descname">reparse_if_needed</code><span class="sig-paren">(</span><em class="sig-param">student_code=None</em>, <em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/cait/cait_api.html#reparse_if_needed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.cait.cait_api.reparse_if_needed" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pedal.cait.cait_api.reparse_if_needed">
+<span class="sig-name descname"><span class="pre">reparse_if_needed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">student_code=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/cait/cait_api.html#reparse_if_needed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.cait.cait_api.reparse_if_needed" title="Permalink to this definition"></a></dt>
 <dd><p>Retrieves the current report for CAIT. If there is no CAIT report, it will
 generate one. If source code is given, that will be used instead of the
 report’s submission.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>student_code</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The code to parse into the a CaitNode tree. If
+<li><p><strong>student_code</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The code to parse into the a CaitNode tree. If
 None, then it will use the code in the report’s submission.</p></li>
 <li><p><strong>report</strong> (<a class="reference internal" href="../api.html#pedal.core.report.Report" title="pedal.core.report.Report"><em>Report</em></a>) – The report to attach data to.</p></li>
 </ul>
@@ -335,22 +457,22 @@ None, then it will use the code in the report’s submission.</p></li>
 <dd class="field-even"><p>Returns the Cait Report</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="pedal.cait.cait_api.require_tifa">
-<code class="sig-name descname">require_tifa</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/cait/cait_api.html#require_tifa"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.cait.cait_api.require_tifa" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pedal.cait.cait_api.require_tifa">
+<span class="sig-name descname"><span class="pre">require_tifa</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/cait/cait_api.html#require_tifa"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.cait.cait_api.require_tifa" title="Permalink to this definition"></a></dt>
 <dd><p>Confirms that TIFA was run successfully, otherwise raises a
 CaitException.</p>
 <p>TODO: Is this deprecated?</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="pedal.cait.cait_api.reset">
-<code class="sig-name descname">reset</code><span class="sig-paren">(</span><em class="sig-param">report=&lt;pedal.core.report.Report object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/cait/cait_api.html#reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pedal.cait.cait_api.reset" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="pedal.cait.cait_api.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/cait/cait_api.html#reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.cait.cait_api.reset" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>report</strong> – </p>
@@ -359,7 +481,7 @@ CaitException.</p>
 <p>Returns:</p>
 </dd></dl>
 
-</div>
+</section>
 
 
            </div>

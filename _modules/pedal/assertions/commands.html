@@ -3,16 +3,19 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pedal.assertions.commands &mdash; Pedal 1.0 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <title>pedal.assertions.commands &mdash; Pedal 1.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/language_data.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -36,7 +39,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption"><span class="caption-text">Contents</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../everyone/introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../everyone/installation.html">Installation</a></li>
@@ -49,6 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../developers/api.html">Developer API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers/tools.html">Developer Tools Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers/conventions.html">Internal Naming Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers/libraries.html">Necessary Libraries</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../everyone/glossary.html">Glossary</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../everyone/contact.html">Contact</a></li>
 </ul>
@@ -66,10 +70,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-          <li><a href="../assertions.html">pedal.assertions</a> &raquo;</li>
-      <li>pedal.assertions.commands</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../assertions.html">pedal.assertions</a></li>
+      <li class="breadcrumb-item active">pedal.assertions.commands</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -82,10 +86,17 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Unifying collection of all the commands in ``pedal.assertions``.</span>
 <span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">pedal.core.commands</span> <span class="kn">import</span> <span class="n">gently</span>
 <span class="kn">from</span> <span class="nn">pedal.core.scoring</span> <span class="kn">import</span> <span class="n">Score</span><span class="p">,</span> <span class="n">combine_scores</span>
-<span class="kn">from</span> <span class="nn">pedal.sandbox.commands</span> <span class="kn">import</span> <span class="n">call</span>
+<span class="kn">from</span> <span class="nn">pedal.sandbox.commands</span> <span class="kn">import</span> <span class="n">call</span><span class="p">,</span> <span class="n">clear_student_data</span><span class="p">,</span> <span class="n">run</span><span class="p">,</span> <span class="n">get_sandbox</span><span class="p">,</span> <span class="n">CommandBlock</span>
 <span class="kn">from</span> <span class="nn">pedal.assertions.static</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">pedal.assertions.runtime</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pedal.assertions.runtime</span> <span class="kn">import</span> <span class="n">_FIELDS</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">fields</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="n">fields</span> <span class="o">=</span> <span class="kc">None</span>
 
 
 <span class="k">class</span> <span class="nc">unit_test</span><span class="p">(</span><span class="n">assert_group</span><span class="p">):</span>
@@ -96,7 +107,7 @@
 
 
 <div class="viewcode-block" id="unit_test"><a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.commands.unit_test">[docs]</a><span class="k">def</span> <span class="nf">unit_test</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="o">*</span><span class="n">tests</span><span class="p">,</span> <span class="n">else_message</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">score</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">partial_credit</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-              <span class="n">assert_function</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+              <span class="n">assert_function</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Helper function for quickly unit testing.</span>
 
@@ -124,27 +135,26 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">assert_function</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">assert_function</span> <span class="o">=</span> <span class="n">assert_equal</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">partial_credit</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">partial_credit</span><span class="p">:</span>
-            <span class="c1"># Specify total score for all test cases, divide by # of cases passed | True, using `score`</span>
-            <span class="k">if</span> <span class="n">score</span><span class="p">:</span>
-                <span class="n">each_score</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">Score</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">score</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">tests</span><span class="p">))</span> <span class="k">for</span> <span class="n">test</span> <span class="ow">in</span> <span class="n">tests</span><span class="p">]</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">each_score</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span> <span class="k">for</span> <span class="n">test</span> <span class="ow">in</span> <span class="n">tests</span><span class="p">]</span>
+    <span class="n">each_score</span> <span class="o">=</span> <span class="n">partial_credit_logic</span><span class="p">(</span><span class="n">tests</span><span class="p">,</span> <span class="n">score</span><span class="p">,</span> <span class="n">partial_credit</span><span class="p">)</span>
+    <span class="c1"># Handle context</span>
+    <span class="k">if</span> <span class="n">context</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="n">get_sandbox</span><span class="p">()</span><span class="o">.</span><span class="n">get_context</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">context</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">Sandbox</span><span class="p">):</span>
+            <span class="n">context</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">get_context</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">CommandBlock</span><span class="p">):</span>
+            <span class="n">context</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">context</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># Specify total score for all test cases, no partial credit | False, using `score`</span>
-            <span class="n">each_score</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span> <span class="k">for</span> <span class="n">test</span> <span class="ow">in</span> <span class="n">tests</span><span class="p">]</span>
-    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">partial_credit</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
-        <span class="c1"># Specify exact score for each test case, with single value | str</span>
-        <span class="n">each_score</span> <span class="o">=</span> <span class="p">[</span><span class="n">partial_credit</span> <span class="k">for</span> <span class="n">test</span> <span class="ow">in</span> <span class="n">tests</span><span class="p">]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="c1"># Specify exact score for each test case, individually | list[str]</span>
-        <span class="n">each_score</span> <span class="o">=</span> <span class="n">partial_credit</span>
+            <span class="n">context</span> <span class="o">=</span> <span class="n">get_sandbox</span><span class="p">()</span><span class="o">.</span><span class="n">get_context</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">_actual_context_id</span><span class="p">)</span>
     <span class="c1"># TODO: Make it so unit_test can document its cases</span>
-    <span class="k">with</span> <span class="n">_unit_test_class</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="n">else_message</span><span class="o">=</span><span class="n">else_message</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="k">as</span> <span class="n">group_result</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">_unit_test_class</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="n">else_message</span><span class="o">=</span><span class="n">else_message</span><span class="p">,</span>
+                          <span class="n">context</span><span class="o">=</span><span class="n">context</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="k">as</span> <span class="n">group_result</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">test_index</span><span class="p">,</span> <span class="n">test</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tests</span><span class="p">):</span>
             <span class="n">args</span><span class="p">,</span> <span class="n">expected</span> <span class="o">=</span> <span class="n">test</span>
-            <span class="n">assert_function</span><span class="p">(</span><span class="n">call</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">),</span> <span class="n">expected</span><span class="p">,</span> <span class="n">score</span><span class="o">=</span><span class="n">each_score</span><span class="p">[</span><span class="n">test_index</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="n">assert_function</span><span class="p">(</span><span class="n">call</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="n">args_locals</span><span class="o">=</span><span class="p">[</span><span class="n">args</span><span class="p">]),</span> <span class="n">expected</span><span class="p">,</span> <span class="n">score</span><span class="o">=</span><span class="n">each_score</span><span class="p">[</span><span class="n">test_index</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">assert_function</span><span class="p">(</span><span class="n">call</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">),</span> <span class="n">expected</span><span class="p">,</span> <span class="n">score</span><span class="o">=</span><span class="n">each_score</span><span class="p">[</span><span class="n">test_index</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">partial_credit</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
         <span class="n">group_result</span><span class="o">.</span><span class="n">score</span> <span class="o">=</span> <span class="n">score</span>
     <span class="k">else</span><span class="p">:</span>
@@ -153,6 +163,201 @@
                                             <span class="p">[</span><span class="n">failure</span><span class="o">.</span><span class="n">score</span> <span class="k">for</span> <span class="n">failure</span> <span class="ow">in</span> <span class="n">group_result</span><span class="o">.</span><span class="n">failures</span><span class="p">]</span> <span class="o">+</span>
                                             <span class="p">[</span><span class="n">error</span><span class="o">.</span><span class="n">score</span> <span class="k">for</span> <span class="n">error</span> <span class="ow">in</span> <span class="n">group_result</span><span class="o">.</span><span class="n">errors</span><span class="p">])</span>
     <span class="k">return</span> <span class="ow">not</span> <span class="n">group_result</span></div>
+
+
+<div class="viewcode-block" id="check_dataclass_error"><a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.commands.check_dataclass_error">[docs]</a><span class="k">class</span> <span class="nc">check_dataclass_error</span><span class="p">(</span><span class="n">RuntimeAssertionFeedback</span><span class="p">):</span>
+    <span class="n">justification</span> <span class="o">=</span> <span class="s2">&quot;Value is not a dataclass&quot;</span>
+    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="s2">&quot;to be&quot;</span>
+    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">&quot;is not&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">SandboxedValue</span><span class="p">(</span><span class="n">value</span><span class="p">),</span> <span class="n">ExactValue</span><span class="p">(</span><span class="s2">&quot;a dataclass&quot;</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<span class="k">def</span> <span class="nf">check_dataclass_instance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">else_message</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">score</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">partial_credit</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">report</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;report&#39;</span><span class="p">,</span> <span class="n">MAIN_REPORT</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">dataclass</span><span class="o">.</span><span class="vm">__name__</span>
+    <span class="c1"># Check that we weren&#39;t given an error</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="ne">Exception</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">check_dataclass_error</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">score</span><span class="o">=</span><span class="n">score</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="c1">#return gently(f&quot;I evaluated the name {report.format.name(name)} and expected the result to be a dataclass. &quot;</span>
+        <span class="c1">#              f&quot;However, there was an error instead.&quot;,</span>
+        <span class="c1">#              label=&quot;check_dataclass_error&quot;, score=score, **kwargs)</span>
+    <span class="c1"># Get the students&#39; instance as a Pedal Type</span>
+    <span class="n">value_pedal_type</span> <span class="o">=</span> <span class="n">get_pedal_type_from_value</span><span class="p">(</span><span class="n">unwrap_value</span><span class="p">(</span><span class="n">value</span><span class="p">),</span> <span class="n">evaluate</span><span class="p">)</span>
+    <span class="c1"># Convert the instructor&#39;s version to a Pedal type</span>
+    <span class="n">evaluated_expected_type</span> <span class="o">=</span> <span class="n">evaluate</span><span class="p">(</span><span class="n">dataclass</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dataclass</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">dataclass</span>
+    <span class="n">expected_pedal_type</span> <span class="o">=</span> <span class="n">normalize_type</span><span class="p">(</span><span class="n">evaluated_expected_type</span><span class="p">,</span> <span class="n">evaluate</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">expected_pedal_type</span><span class="p">,</span> <span class="ne">Exception</span><span class="p">):</span>
+        <span class="n">expected_pedal_type</span> <span class="o">=</span> <span class="n">expected_pedal_type</span><span class="o">.</span><span class="n">as_type</span><span class="p">()</span>
+        <span class="n">expected_pedal_type_name</span> <span class="o">=</span> <span class="n">expected_pedal_type</span><span class="o">.</span><span class="n">singular_name</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">expected_pedal_type_name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="c1"># Make sure the students&#39; version is an actual dataclass</span>
+    <span class="n">singular_name</span> <span class="o">=</span> <span class="n">share_sandbox_context</span><span class="p">(</span><span class="n">value_pedal_type</span><span class="o">.</span><span class="n">singular_name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">unwrap_value</span><span class="p">(</span><span class="n">value</span><span class="p">),</span> <span class="n">_FIELDS</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">check_dataclass_error</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">score</span><span class="o">=</span><span class="n">score</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="c1">#return gently(f&quot;I evaluated the name {report.format.name(name)} and expected the result to be a dataclass. &quot;</span>
+        <span class="c1">#              f&quot;However, the result was a {report.format.python_expression(str(type(unwrap_value(value))))}&quot;,</span>
+        <span class="c1">#              label=&quot;check_dataclass_missing&quot;, score=score, **kwargs)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">fields</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;Dataclasses are not supported in this version of Python&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;dataclasses_not_supported&quot;</span><span class="p">)</span>
+    <span class="c1"># Now Check the fields</span>
+    <span class="n">actual_fields</span> <span class="o">=</span> <span class="p">{</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">get_pedal_type_from_value</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">unwrap_value</span><span class="p">(</span><span class="n">value</span><span class="p">),</span> <span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">),</span> <span class="n">evaluate</span><span class="p">)</span> <span class="k">for</span> <span class="n">field</span>
+                     <span class="ow">in</span> <span class="n">fields</span><span class="p">(</span><span class="n">unwrap_value</span><span class="p">(</span><span class="n">value</span><span class="p">))}</span>
+    <span class="n">expected_fields</span> <span class="o">=</span> <span class="p">{</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">field</span><span class="o">.</span><span class="n">type</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">(</span><span class="n">dataclass</span><span class="p">)}</span>
+    <span class="c1"># Number of fields</span>
+    <span class="n">expected_arity</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">expected_fields</span><span class="p">)</span>
+    <span class="n">actual_arity</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">actual_fields</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">actual_arity</span> <span class="o">&lt;</span> <span class="n">expected_arity</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">too_few_fields</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">actual_arity</span><span class="p">,</span> <span class="n">expected_arity</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">actual_arity</span> <span class="o">&gt;</span> <span class="n">expected_arity</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">too_many_fields</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">actual_arity</span><span class="p">,</span> <span class="n">expected_arity</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="c1"># Checks each field&#39;s name and type</span>
+    <span class="k">for</span> <span class="n">actual_field_name</span><span class="p">,</span> <span class="n">actual_field_type</span> <span class="ow">in</span> <span class="n">actual_fields</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">actual_field_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">expected_fields</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">unknown_field</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">actual_field_name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">expected_field_type</span> <span class="o">=</span> <span class="n">expected_fields</span><span class="p">[</span><span class="n">actual_field_name</span><span class="p">]</span>
+        <span class="n">expected_field_type</span> <span class="o">=</span> <span class="n">normalize_type</span><span class="p">(</span><span class="n">expected_field_type</span><span class="p">,</span> <span class="n">evaluate</span><span class="p">)</span><span class="o">.</span><span class="n">as_type</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">actual_field_type</span> <span class="o">=</span> <span class="n">normalize_type</span><span class="p">(</span><span class="n">actual_field_type</span><span class="p">,</span> <span class="n">evaluate</span><span class="p">)</span><span class="o">.</span><span class="n">as_type</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">invalid_field_type</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">actual_field_name</span><span class="p">,</span> <span class="n">actual_field_type</span><span class="p">,</span> <span class="n">expected_field_type</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_subtype</span><span class="p">(</span><span class="n">actual_field_type</span><span class="p">,</span> <span class="n">expected_field_type</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">wrong_fields_type</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">actual_field_name</span><span class="p">,</span> <span class="n">actual_field_type</span><span class="p">,</span>
+                                     <span class="n">expected_field_type</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="wheat_chaff_game_class"><a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.commands.wheat_chaff_game_class">[docs]</a><span class="k">class</span> <span class="nc">wheat_chaff_game_class</span><span class="p">(</span><span class="n">assert_group</span><span class="p">):</span>
+    <span class="n">message_template</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">I ran your test cases against some of my own implementations of {name:name}.</span>
+<span class="s2">I had </span><span class="si">{wheat_count}</span><span class="s2"> programs I expected to pass, and </span><span class="si">{chaff_count}</span><span class="s2"> programs I expected to fail.</span>
+<span class="si">{wheat_outcome}{chaff_outcome}</span><span class="s2"></span>
+<span class="si">{wheat_names}{chaff_names}</span><span class="s2"></span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">wheats</span><span class="p">,</span> <span class="n">chaffs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wheats</span> <span class="o">=</span> <span class="n">wheats</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">correct_wheats</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">chaffs</span> <span class="o">=</span> <span class="n">chaffs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">correct_chaffs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">points</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">points_possible</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;wheat_count&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">wheats</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;chaff_count&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">chaffs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_value</span><span class="p">,</span> <span class="n">traceback</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">stop_group</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">format_message</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_handle_condition</span><span class="p">()</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="nf">format_message</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">missing_wheats</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wheats</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">correct_wheats</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">missing_wheats</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;wheat_outcome&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Your tests did not pass </span><span class="si">{</span><span class="n">missing_wheats</span><span class="si">}</span><span class="s2"> of my good programs.</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">names</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">wheats</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">correct_wheats</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span>
+                <span class="s1">&#39;wheat_names&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Here are the names for the good programs that incorrectly failed on your test cases:</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">format</span><span class="o">.</span><span class="n">output</span><span class="p">(</span>
+                <span class="n">names</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;wheat_outcome&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Your tests passed all of my good programs.</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;wheat_names&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">missing_chaffs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chaffs</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">correct_chaffs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">missing_chaffs</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;chaff_outcome&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Your tests did not catch </span><span class="si">{</span><span class="n">missing_chaffs</span><span class="si">}</span><span class="s2"> of my bad programs.</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">names</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">chaffs</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">correct_chaffs</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span>
+                <span class="s1">&#39;chaff_names&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Here are the names for the bad programs that incorrectly passed your tests:</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">format</span><span class="o">.</span><span class="n">output</span><span class="p">(</span>
+                <span class="n">names</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;chaff_outcome&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;At least one of your tests correctly failed for all of my bad programs.</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;chaff_names&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">wheat_outcome</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wheat</span><span class="p">,</span> <span class="n">success</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">success</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">points</span> <span class="o">+=</span> <span class="mi">1</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wheats</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">correct_wheats</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wheat</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">chaff_outcome</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">chaff</span><span class="p">,</span> <span class="n">failure</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">failure</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">points</span> <span class="o">+=</span> <span class="mi">1</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chaffs</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">correct_chaffs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chaff</span><span class="p">)</span>
+
+
+
+<div class="viewcode-block" id="wheat_chaff_game_class.condition"><a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.commands.wheat_chaff_game_class.condition">[docs]</a>    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">correct</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">correct_wheats</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">correct_chaffs</span><span class="p">)</span>
+        <span class="n">possible</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wheats</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chaffs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">correct</span> <span class="o">&lt;</span> <span class="n">possible</span></div></div>
+
+
+<span class="k">def</span> <span class="nf">partial_credit_logic</span><span class="p">(</span><span class="n">cases</span><span class="p">,</span> <span class="n">score</span><span class="p">,</span> <span class="n">partial_credit</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">partial_credit</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">partial_credit</span><span class="p">:</span>
+            <span class="c1"># Specify total score for all test cases, divide by # of cases passed | True, using `score`</span>
+            <span class="k">if</span> <span class="n">score</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">Score</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">score</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">cases</span><span class="p">))</span> <span class="k">for</span> <span class="n">case</span> <span class="ow">in</span> <span class="n">cases</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">[</span><span class="kc">None</span> <span class="k">for</span> <span class="n">case</span> <span class="ow">in</span> <span class="n">cases</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Specify total score for all test cases, no partial credit | False, using `score`</span>
+            <span class="k">return</span> <span class="p">[</span><span class="kc">None</span> <span class="k">for</span> <span class="n">case</span> <span class="ow">in</span> <span class="n">cases</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">partial_credit</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+        <span class="c1"># Specify exact score for each test case, with single value | str</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">partial_credit</span> <span class="k">for</span> <span class="n">case</span> <span class="ow">in</span> <span class="n">cases</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Specify exact score for each test case, individually | list[str]</span>
+        <span class="k">return</span> <span class="n">partial_credit</span>
+
+
+<span class="k">def</span> <span class="nf">get_success_passed_failed_total_reason</span><span class="p">(</span><span class="n">student</span><span class="p">):</span>
+    <span class="n">student</span> <span class="o">=</span> <span class="n">get_student_data</span><span class="p">()</span>
+    <span class="k">if</span> <span class="s1">&#39;assert_equal&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">student</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Failed to import `assert_equal`&quot;</span>
+    <span class="n">assert_equal</span> <span class="o">=</span> <span class="n">student</span><span class="p">[</span><span class="s1">&#39;assert_equal&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">assert_equal</span><span class="p">,</span> <span class="s1">&#39;student_tests&#39;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;The `assert_equal` function has been modified.&quot;</span>
+    <span class="n">student_tests</span> <span class="o">=</span> <span class="n">assert_equal</span><span class="o">.</span><span class="n">student_tests</span>
+    <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="n">student_tests</span><span class="o">.</span><span class="n">successes</span><span class="p">,</span> <span class="n">student_tests</span><span class="o">.</span><span class="n">failures</span><span class="p">,</span> <span class="n">student_tests</span><span class="o">.</span><span class="n">tests</span><span class="p">,</span> <span class="s1">&#39;&#39;</span>
+
+
+<span class="k">def</span> <span class="nf">wheat_chaff_game</span><span class="p">(</span><span class="n">function_name</span><span class="p">,</span> <span class="n">wheats</span><span class="p">,</span> <span class="n">chaffs</span><span class="p">,</span>
+                     <span class="n">else_message</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">score</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">partial_credit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">report</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;report&#39;</span><span class="p">,</span> <span class="n">MAIN_REPORT</span><span class="p">)</span>
+    <span class="n">each_score</span> <span class="o">=</span> <span class="n">partial_credit_logic</span><span class="p">([</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">wheats</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">chaffs</span><span class="p">)),</span> <span class="n">score</span><span class="p">,</span> <span class="n">partial_credit</span><span class="p">)</span>
+    <span class="n">plusses</span><span class="p">,</span> <span class="n">minuses</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+    <span class="n">wheat_score</span><span class="p">,</span> <span class="n">chaff_score</span> <span class="o">=</span> <span class="p">{},</span> <span class="p">{}</span>
+    <span class="k">with</span> <span class="n">wheat_chaff_game_class</span><span class="p">(</span><span class="n">function_name</span><span class="p">,</span> <span class="n">wheats</span><span class="p">,</span> <span class="n">chaffs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="k">as</span> <span class="n">group_result</span><span class="p">:</span>
+        <span class="n">sandbox</span> <span class="o">=</span> <span class="n">get_sandbox</span><span class="p">(</span><span class="n">report</span><span class="p">)</span>
+        <span class="n">last</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">wheat</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">wheats</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+            <span class="n">clear_student_data</span><span class="p">()</span>
+            <span class="n">student</span> <span class="o">=</span> <span class="n">get_student_data</span><span class="p">(</span><span class="n">report</span><span class="p">)</span>
+            <span class="n">student</span><span class="p">[</span><span class="n">function_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">wheat</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">run</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">,</span> <span class="n">before</span><span class="o">=</span><span class="s1">&#39;from bakery import assert_equal</span><span class="se">\n</span><span class="s1">assert_equal.student_tests.reset()&#39;</span><span class="p">)</span>
+            <span class="n">success</span><span class="p">,</span> <span class="n">passed</span><span class="p">,</span> <span class="n">failed</span><span class="p">,</span> <span class="n">total</span><span class="p">,</span> <span class="n">reason</span> <span class="o">=</span> <span class="n">get_success_passed_failed_total_reason</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+            <span class="n">group_result</span><span class="o">.</span><span class="n">wheat_outcome</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="ow">not</span> <span class="n">sandbox</span><span class="o">.</span><span class="n">exception</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">failed</span> <span class="ow">and</span> <span class="n">success</span> <span class="ow">and</span> <span class="n">passed</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s1">&#39;assert_equal&#39;</span> <span class="ow">in</span> <span class="n">student</span><span class="p">:</span>
+                <span class="n">student</span><span class="p">[</span><span class="s1">&#39;assert_equal&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">student_tests</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+            <span class="n">last</span> <span class="o">=</span> <span class="n">i</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">chaff</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">chaffs</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">start</span><span class="o">=</span><span class="n">last</span><span class="p">):</span>
+            <span class="n">clear_student_data</span><span class="p">()</span>
+            <span class="n">student</span> <span class="o">=</span> <span class="n">get_student_data</span><span class="p">(</span><span class="n">report</span><span class="p">)</span>
+            <span class="n">student</span><span class="p">[</span><span class="n">function_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">chaff</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">run</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">,</span> <span class="n">before</span><span class="o">=</span><span class="s1">&#39;from bakery import assert_equal</span><span class="se">\n</span><span class="s1">assert_equal.student_tests.reset()&#39;</span><span class="p">)</span>
+            <span class="n">success</span><span class="p">,</span> <span class="n">passed</span><span class="p">,</span> <span class="n">failed</span><span class="p">,</span> <span class="n">total</span><span class="p">,</span> <span class="n">reason</span> <span class="o">=</span> <span class="n">get_success_passed_failed_total_reason</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+            <span class="n">group_result</span><span class="o">.</span><span class="n">chaff_outcome</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">sandbox</span><span class="o">.</span><span class="n">exception</span> <span class="ow">or</span> <span class="n">failed</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">success</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s1">&#39;assert_equal&#39;</span> <span class="ow">in</span> <span class="n">student</span><span class="p">:</span>
+                <span class="n">student</span><span class="p">[</span><span class="s1">&#39;assert_equal&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">student_tests</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">partial_credit</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="n">group_result</span><span class="o">.</span><span class="n">score</span> <span class="o">=</span> <span class="n">score</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">group_result</span><span class="o">.</span><span class="n">valence</span> <span class="o">=</span> <span class="n">group_result</span><span class="o">.</span><span class="n">POSITIVE_VALENCE</span>
+        <span class="n">group_result</span><span class="o">.</span><span class="n">score</span> <span class="o">=</span> <span class="n">group_result</span><span class="o">.</span><span class="n">points</span> <span class="o">/</span> <span class="n">group_result</span><span class="o">.</span><span class="n">points_possible</span>
+    <span class="k">return</span> <span class="ow">not</span> <span class="n">group_result</span>
 </pre></div>
 
            </div>

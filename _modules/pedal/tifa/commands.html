@@ -3,16 +3,19 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pedal.tifa.commands &mdash; Pedal 1.0 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <title>pedal.tifa.commands &mdash; Pedal 1.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/language_data.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -36,7 +39,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption"><span class="caption-text">Contents</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../everyone/introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../everyone/installation.html">Installation</a></li>
@@ -49,6 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../developers/api.html">Developer API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers/tools.html">Developer Tools Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers/conventions.html">Internal Naming Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers/libraries.html">Necessary Libraries</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../everyone/glossary.html">Glossary</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../everyone/contact.html">Contact</a></li>
 </ul>
@@ -66,9 +70,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>pedal.tifa.commands</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pedal.tifa.commands</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -81,8 +85,10 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Commands related to navigating TIFA data.</span>
 <span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">ast</span>
 <span class="kn">from</span> <span class="nn">pedal.core.report</span> <span class="kn">import</span> <span class="n">MAIN_REPORT</span>
 <span class="kn">from</span> <span class="nn">pedal.tifa.constants</span> <span class="kn">import</span> <span class="n">TOOL_NAME</span> <span class="k">as</span> <span class="n">TIFA_TOOL_NAME</span>
+<span class="kn">from</span> <span class="nn">pedal.types.new_types</span> <span class="kn">import</span> <span class="n">ImpossibleType</span><span class="p">,</span> <span class="n">ModuleType</span>
 
 
 <div class="viewcode-block" id="tifa_analysis"><a class="viewcode-back" href="../../../developers/tools/tifa.html#pedal.tifa.tifa_analysis">[docs]</a><span class="k">def</span> <span class="nf">tifa_analysis</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
@@ -108,6 +114,12 @@
     <span class="k">return</span> <span class="n">result</span></div>
 
 
+<span class="k">def</span> <span class="nf">tifa_type_check</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+    <span class="n">tifa_instance</span> <span class="o">=</span> <span class="n">report</span><span class="p">[</span><span class="n">TIFA_TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;instance&#39;</span><span class="p">]</span>
+    <span class="n">variable</span> <span class="o">=</span> <span class="n">tifa_instance</span><span class="o">.</span><span class="n">find_variable_scope</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">variable</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">type</span> <span class="k">if</span> <span class="n">variable</span><span class="o">.</span><span class="n">exists</span> <span class="k">else</span> <span class="n">ImpossibleType</span><span class="p">()</span>
+
+
 <span class="k">def</span> <span class="nf">get_issues</span><span class="p">(</span><span class="n">category</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 
@@ -123,6 +135,22 @@
         <span class="n">tifa_analysis</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span>
     <span class="n">latest</span> <span class="o">=</span> <span class="n">report</span><span class="p">[</span><span class="n">TIFA_TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;latest&#39;</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">latest</span><span class="o">.</span><span class="n">issues</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">category</span><span class="p">,</span> <span class="p">[])</span>
+
+
+<span class="k">def</span> <span class="nf">tifa_provide_module_type</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name:</span>
+<span class="sd">        fields:</span>
+
+<span class="sd">    Returns:</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fields</span><span class="p">,</span> <span class="n">ModuleType</span><span class="p">):</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="n">ModuleType</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">fields</span><span class="p">)</span>
+    <span class="n">report</span><span class="p">[</span><span class="n">TIFA_TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;types&#39;</span><span class="p">][</span><span class="s1">&#39;modules&#39;</span><span class="p">][</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">fields</span>
+
 </pre></div>
 
            </div>

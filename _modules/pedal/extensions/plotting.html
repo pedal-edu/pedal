@@ -3,16 +3,19 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pedal.extensions.plotting &mdash; Pedal 1.0 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <title>pedal.extensions.plotting &mdash; Pedal 1.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/language_data.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -36,7 +39,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption"><span class="caption-text">Contents</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../everyone/introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../everyone/installation.html">Installation</a></li>
@@ -49,6 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../developers/api.html">Developer API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers/tools.html">Developer Tools Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers/conventions.html">Internal Naming Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers/libraries.html">Necessary Libraries</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../everyone/glossary.html">Glossary</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../everyone/contact.html">Contact</a></li>
 </ul>
@@ -66,9 +70,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>pedal.extensions.plotting</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pedal.extensions.plotting</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -90,7 +94,7 @@
 <span class="kn">from</span> <span class="nn">pedal.core.feedback</span> <span class="kn">import</span> <span class="n">FeedbackResponse</span>
 <span class="kn">from</span> <span class="nn">pedal.core.report</span> <span class="kn">import</span> <span class="n">MAIN_REPORT</span>
 <span class="kn">from</span> <span class="nn">pedal.types.builtin</span> <span class="kn">import</span> <span class="n">BUILTIN_MODULES</span>
-<span class="kn">from</span> <span class="nn">pedal.types.definitions</span> <span class="kn">import</span> <span class="n">ModuleType</span><span class="p">,</span> <span class="n">FunctionType</span><span class="p">,</span> <span class="n">NoneType</span>
+<span class="kn">from</span> <span class="nn">pedal.types.new_types</span> <span class="kn">import</span> <span class="n">ModuleType</span><span class="p">,</span> <span class="n">FunctionType</span><span class="p">,</span> <span class="n">NoneType</span>
 <span class="kn">from</span> <span class="nn">pedal.cait.find_node</span> <span class="kn">import</span> <span class="n">function_is_called</span>
 <span class="kn">from</span> <span class="nn">pedal.cait.cait_api</span> <span class="kn">import</span> <span class="n">parse_program</span><span class="p">,</span> <span class="n">def_use_error</span>
 <span class="kn">from</span> <span class="nn">pedal.sandbox.commands</span> <span class="kn">import</span> <span class="n">get_sandbox</span>
@@ -164,8 +168,8 @@
         <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="n">function_name</span><span class="p">:</span>
             <span class="k">continue</span>
         <span class="n">prevent_function_call</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
-                              <span class="n">message</span><span class="o">=</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;You have called the {as_code(name)} &quot;</span>
-                                       <span class="sa">f</span><span class="s2">&quot;function, which makes a </span><span class="si">{description}</span><span class="s2">.&quot;</span><span class="p">))</span></div>
+                              <span class="n">message</span><span class="o">=</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;You have called the </span><span class="si">{</span><span class="n">as_code</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="si">}</span><span class="s2"> &quot;</span>
+                                       <span class="sa">f</span><span class="s2">&quot;function, which makes a </span><span class="si">{</span><span class="n">description</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="ensure_show"><a class="viewcode-back" href="../../../developers/tools/extensions.html#pedal.extensions.plotting.ensure_show">[docs]</a><span class="k">class</span> <span class="nc">ensure_show</span><span class="p">(</span><span class="n">Feedback</span><span class="p">):</span>

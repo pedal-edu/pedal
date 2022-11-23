@@ -3,16 +3,19 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pedal.core.commands &mdash; Pedal 1.0 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <title>pedal.core.commands &mdash; Pedal 1.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/language_data.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -36,7 +39,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption"><span class="caption-text">Contents</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../everyone/introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../everyone/installation.html">Installation</a></li>
@@ -49,6 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../developers/api.html">Developer API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers/tools.html">Developer Tools Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers/conventions.html">Internal Naming Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers/libraries.html">Necessary Libraries</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../everyone/glossary.html">Glossary</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../everyone/contact.html">Contact</a></li>
 </ul>
@@ -66,9 +70,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>pedal.core.commands</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pedal.core.commands</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -86,7 +90,7 @@
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;feedback&#39;</span><span class="p">,</span> <span class="s1">&#39;set_success&#39;</span><span class="p">,</span> <span class="s1">&#39;compliment&#39;</span><span class="p">,</span> <span class="s1">&#39;give_partial&#39;</span><span class="p">,</span> <span class="s1">&#39;explain&#39;</span><span class="p">,</span>
            <span class="s1">&#39;gently&#39;</span><span class="p">,</span> <span class="s1">&#39;hide_correctness&#39;</span><span class="p">,</span> <span class="s1">&#39;suppress&#39;</span><span class="p">,</span> <span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="s1">&#39;debug&#39;</span><span class="p">,</span>
            <span class="s1">&#39;system_error&#39;</span><span class="p">,</span> <span class="s1">&#39;clear_report&#39;</span><span class="p">,</span> <span class="s1">&#39;get_all_feedback&#39;</span><span class="p">,</span> <span class="s1">&#39;guidance&#39;</span><span class="p">,</span>
-           <span class="s1">&#39;contextualize_report&#39;</span><span class="p">,</span> <span class="s1">&#39;Feedback&#39;</span><span class="p">]</span>
+           <span class="s1">&#39;contextualize_report&#39;</span><span class="p">,</span> <span class="s1">&#39;Feedback&#39;</span><span class="p">,</span> <span class="s1">&#39;get_submission&#39;</span><span class="p">]</span>
 
 <span class="kn">from</span> <span class="nn">pedal.core.feedback</span> <span class="kn">import</span> <span class="p">(</span><span class="n">Feedback</span><span class="p">,</span> <span class="n">FeedbackKind</span><span class="p">,</span> <span class="n">FeedbackCategory</span><span class="p">,</span>
                                  <span class="n">FeedbackResponse</span><span class="p">)</span>
@@ -298,6 +302,19 @@
     <span class="k">if</span> <span class="n">clear</span><span class="p">:</span>
         <span class="n">report</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
     <span class="n">report</span><span class="o">.</span><span class="n">contextualize</span><span class="p">(</span><span class="n">submission</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="get_submission"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.get_submission">[docs]</a><span class="k">def</span> <span class="nf">get_submission</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Submission</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the current submission from the given report, or the default MAIN_REPORT.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        report: The report to attach this feedback to (defaults to the</span>
+<span class="sd">            :py:data:`~pedal.core.report.MAIN_REPORT`).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Submission: The current submission</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">report</span><span class="o">.</span><span class="n">submission</span></div>
 
 
 <div class="viewcode-block" id="get_all_feedback"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.get_all_feedback">[docs]</a><span class="k">def</span> <span class="nf">get_all_feedback</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>

@@ -1,18 +1,22 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Teacher Tutorial &mdash; Pedal 1.0 documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <title>Teacher Tutorial &mdash; Pedal 1.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
-        <script src="../_static/language_data.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
@@ -36,7 +40,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption"><span class="caption-text">Contents</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../everyone/introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../everyone/installation.html">Installation</a></li>
@@ -49,6 +53,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../developers/api.html">Developer API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers/tools.html">Developer Tools Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers/conventions.html">Internal Naming Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers/libraries.html">Necessary Libraries</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../everyone/glossary.html">Glossary</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../everyone/contact.html">Contact</a></li>
 </ul>
@@ -66,8 +71,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Teacher Tutorial</li>
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Teacher Tutorial</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/teachers/tutorial.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -77,35 +82,35 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="teacher-tutorial">
-<span id="tutorial"></span><h1>Teacher Tutorial<a class="headerlink" href="#teacher-tutorial" title="Permalink to this headline">¶</a></h1>
+  <section id="teacher-tutorial">
+<span id="tutorial"></span><h1>Teacher Tutorial<a class="headerlink" href="#teacher-tutorial" title="Permalink to this heading"></a></h1>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>This document is out of date, please refer to the QuickStart and Reference pages for now!</p>
 </div>
-<div class="section" id="using-pedal">
-<h2>Using Pedal<a class="headerlink" href="#using-pedal" title="Permalink to this headline">¶</a></h2>
+<section id="using-pedal">
+<h2>Using Pedal<a class="headerlink" href="#using-pedal" title="Permalink to this heading"></a></h2>
 <p>Pedal is a collection of tools to analyze student’s work in a pipeline.
 Pedal not only provides some of these tools, but it provides a <em>framework</em> around those tools.
 In this tutorial we go over the important concepts of Pedal, review each of the tools that compose Pedal,
 and then give practical examples of how to use Pedal.</p>
-<div class="section" id="tools">
-<h3>Tools<a class="headerlink" href="#tools" title="Permalink to this headline">¶</a></h3>
-<div class="section" id="source">
-<h4>Source<a class="headerlink" href="#source" title="Permalink to this headline">¶</a></h4>
+<section id="tools">
+<h3>Tools<a class="headerlink" href="#tools" title="Permalink to this heading"></a></h3>
+<section id="source">
+<h4>Source<a class="headerlink" href="#source" title="Permalink to this heading"></a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.source</span> <span class="kn">import</span> <span class="n">set_source</span>
 <span class="n">STUDENT_CODE</span> <span class="o">=</span> <span class="s2">&quot;message=&#39;Hello World&#39;</span><span class="se">\n</span><span class="s2">print(message)&quot;</span>
 <span class="n">set_source</span><span class="p">(</span><span class="n">STUDENT_CODE</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>One of the simplest tools, the Source tool provides a function for attaching source code to a Report. It is a requirement for any tool that wants to do code analysis. But notice that this tool is not required in general - you could find other ways to attach code (e.g., a History tool that attaches all previous code written) or other aspects of the students’ performance (e.g., a Demographics tool to attach bio-data about the student).</p>
-</div>
-<div class="section" id="tifa">
-<h4>TIFA<a class="headerlink" href="#tifa" title="Permalink to this headline">¶</a></h4>
+</section>
+<section id="tifa">
+<h4>TIFA<a class="headerlink" href="#tifa" title="Permalink to this heading"></a></h4>
 <p>Tifa is a Type Inferencer and Flow Analyzer. Its goal is not to be a general purpose tool for doing so, but to be focused on simplistic code written in pedagogical settings. This means that it can make a lot of assumptions and forbid a lot of features. Further, it’s primary job is not just to collect type information, but to detect issues in the code (e.g., a variable changes type, a variable is not read, a variable is defined in one scope then used in another).</p>
-</div>
-<div class="section" id="cait">
-<h4>CAIT<a class="headerlink" href="#cait" title="Permalink to this headline">¶</a></h4>
+</section>
+<section id="cait">
+<h4>CAIT<a class="headerlink" href="#cait" title="Permalink to this heading"></a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.cait</span> <span class="kn">import</span> <span class="n">parse_program</span><span class="p">,</span> <span class="n">find_matches</span>
 
 <span class="n">ast</span> <span class="o">=</span> <span class="n">parse_program</span><span class="p">()</span>
@@ -228,9 +233,9 @@ and then give practical examples of how to use Pedal.</p>
 </div>
 <p>In the example above, <cite>__expr1__</cite> will match to the inner body of the for loops in source 1 and source 2. The <cite>submatches</cite> variable would then in both cases, extract the <cite>summer = summer + item</cite> from both sources, returning the same type of list as <cite>find_matches</cite>.</p>
 <p>A final note for that example, note that some operations are expected to be commutative. Currently only addition and multiplication are supported as commutative operators. This commutativity currently unintelligently allows either ordering for the subtrees of the addition or multiplication ast nodes, and in the case as above, would return two matches, one for <cite>_var1_ = _var2_ + _var1_</cite> and one for <cite>_var1 = _var1_ + _var2_</cite>. If they are not commutative (e.g. because of a function call that changes state), Cait currently doesn’t detect such cases</p>
-</div>
-<div class="section" id="finding-ast-elements">
-<h4>Finding AST Elements<a class="headerlink" href="#finding-ast-elements" title="Permalink to this headline">¶</a></h4>
+</section>
+<section id="finding-ast-elements">
+<h4>Finding AST Elements<a class="headerlink" href="#finding-ast-elements" title="Permalink to this heading"></a></h4>
 <p><cite>CAIT</cite> is a “Capturer for AST Inclusion Trees”, a fancy way of saying it can be used to access the
 AST of the learners’ code. If the code failed to parse, <cite>CAIT</cite> functions are still safe to run - they
 will not cause exceptions, just return no results. <cite>CAIT</cite> has almost no <cite>Feedback Functions</cite>; instead, it
@@ -250,31 +255,31 @@ for more information about what is available.</p>
         <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;You have a `for` loop with multiple targets, don&#39;t do that!&quot;</span><span class="p">,</span> <span class="s2">&quot;for_loop_multiple_targets&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="mistakes">
-<h4>Mistakes<a class="headerlink" href="#mistakes" title="Permalink to this headline">¶</a></h4>
+</section>
+<section id="mistakes">
+<h4>Mistakes<a class="headerlink" href="#mistakes" title="Permalink to this heading"></a></h4>
 <p>A collection of code configuration patterns that represent common mistakes for students. These mistakes are grouped together by topics.</p>
-</div>
-<div class="section" id="toolkit">
-<h4>Toolkit<a class="headerlink" href="#toolkit" title="Permalink to this headline">¶</a></h4>
+</section>
+<section id="toolkit">
+<h4>Toolkit<a class="headerlink" href="#toolkit" title="Permalink to this heading"></a></h4>
 <p>A collection of helper functions to analyze student code, such as detecting incorrectly closed files, preventing the use of certain operators or literals, and unit testing functionality.</p>
-</div>
-<div class="section" id="sandbox">
-<h4>Sandbox<a class="headerlink" href="#sandbox" title="Permalink to this headline">¶</a></h4>
+</section>
+<section id="sandbox">
+<h4>Sandbox<a class="headerlink" href="#sandbox" title="Permalink to this heading"></a></h4>
 <p>A sophisticated system for executing students’ code under different circumstances. Relies on the <cite>exec</cite> and <cite>patch</cite> tools of Python to prevent students from escaping their namespace.</p>
 <p>However, you should be aware that true sandboxing is impossible in a dynamic language like Python. Be sure that your environment has multiple lines of defense, such as proper file system permissions.</p>
-</div>
-<div class="section" id="resolvers">
-<h4>Resolvers<a class="headerlink" href="#resolvers" title="Permalink to this headline">¶</a></h4>
-<div class="section" id="fcfs">
-<h5>FCFS<a class="headerlink" href="#fcfs" title="Permalink to this headline">¶</a></h5>
+</section>
+<section id="resolvers">
+<h4>Resolvers<a class="headerlink" href="#resolvers" title="Permalink to this heading"></a></h4>
+<section id="fcfs">
+<h5>FCFS<a class="headerlink" href="#fcfs" title="Permalink to this heading"></a></h5>
 <p>This resolver finds the highest priority message to deliver to the student, depending on a pre-established bit of logic for tools.</p>
 <p>Oter resolvers are possible - we could find the first, or deliver more than one (grouped using HTML formatting).</p>
-</div>
-</div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
+</section>
+</section>
 
 
            </div>

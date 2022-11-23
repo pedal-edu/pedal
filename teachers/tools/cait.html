@@ -1,18 +1,22 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CAIT &mdash; Pedal 1.0 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <title>CAIT &mdash; Pedal 1.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -38,7 +42,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption"><span class="caption-text">Contents</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../everyone/introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../everyone/installation.html">Installation</a></li>
@@ -67,6 +71,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../developers/api.html">Developer API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers/tools.html">Developer Tools Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers/conventions.html">Internal Naming Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers/libraries.html">Necessary Libraries</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../everyone/glossary.html">Glossary</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../everyone/contact.html">Contact</a></li>
 </ul>
@@ -84,9 +89,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../reference.html">Teacher Reference</a> &raquo;</li>
-      <li>CAIT</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../reference.html">Teacher Reference</a></li>
+      <li class="breadcrumb-item active">CAIT</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/teachers/tools/cait.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -96,8 +101,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="cait">
-<h1>CAIT<a class="headerlink" href="#cait" title="Permalink to this headline">¶</a></h1>
+  <section id="cait">
+<h1>CAIT<a class="headerlink" href="#cait" title="Permalink to this heading"></a></h1>
 <p>All the items in this guide may depend on one or more imports from the pedal package.
 However, most of these should work with the following imports</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.cait.cait_api</span> <span class="kn">import</span> <span class="o">*</span>
@@ -115,8 +120,8 @@ you’ll use the following pattern</p>
 <p>Also note that many of these items return a CaitNode; CaitNodes should mirror the built-in
 ast_node class except with added fields or functionality. In general it should be easier to work
 with CaitNodes as many additional operations and matching functionality are supported with CaitNodes.</p>
-<div class="section" id="list-of-pedal-data-types">
-<h2>List of Pedal Data Types<a class="headerlink" href="#list-of-pedal-data-types" title="Permalink to this headline">¶</a></h2>
+<section id="list-of-pedal-data-types">
+<h2>List of Pedal Data Types<a class="headerlink" href="#list-of-pedal-data-types" title="Permalink to this heading"></a></h2>
 <ul class="simple">
 <li><p>BoolType</p></li>
 <li><p>DictType</p></li>
@@ -131,25 +136,25 @@ with CaitNodes as many additional operations and matching functionality are supp
 <li><p>TupleType</p></li>
 <li><p>UnknownType</p></li>
 </ul>
-</div>
-<div class="section" id="save-and-reference-variable">
-<h2>Save and reference variable<a class="headerlink" href="#save-and-reference-variable" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="save-and-reference-variable">
+<h2>Save and reference variable<a class="headerlink" href="#save-and-reference-variable" title="Permalink to this heading"></a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">match</span> <span class="o">=</span> <span class="n">find_match</span><span class="p">(</span><span class="s2">&quot;_var_ = ___ + _var_&quot;</span><span class="p">)</span>
 <span class="n">student_var</span> <span class="o">=</span> <span class="n">match</span><span class="p">[</span><span class="s1">&#39;_var_&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="reference-a-function-call">
-<h2>Reference a function call<a class="headerlink" href="#reference-a-function-call" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="reference-a-function-call">
+<h2>Reference a function call<a class="headerlink" href="#reference-a-function-call" title="Permalink to this heading"></a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">match</span> <span class="o">=</span> <span class="n">find_match</span><span class="p">(</span><span class="s2">&quot;_var_ = _function_()&quot;</span><span class="p">)</span>
 <span class="n">student_func_call</span> <span class="o">=</span> <span class="n">match</span><span class="p">[</span><span class="s1">&#39;_function_&#39;</span><span class="p">]</span>
 <span class="n">args</span> <span class="o">=</span> <span class="n">student_func_call</span><span class="o">.</span><span class="n">args</span> <span class="c1">#access list of arguments as CaitNodes</span>
 <span class="n">keywords</span> <span class="o">=</span> <span class="n">student_func_call</span><span class="o">.</span><span class="n">keywords</span> <span class="c1">#access keyword arguments as CaitNodes</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="reference-a-function-definition">
-<h2>Reference a function definition<a class="headerlink" href="#reference-a-function-definition" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="reference-a-function-definition">
+<h2>Reference a function definition<a class="headerlink" href="#reference-a-function-definition" title="Permalink to this heading"></a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">match</span> <span class="o">=</span> <span class="n">find_match</span><span class="p">(</span><span class="s2">&quot;def _my_func_():</span><span class="se">\n</span><span class="s2">&quot;</span>
                    <span class="s2">&quot;    pass</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="n">student_func_def</span> <span class="o">=</span> <span class="n">match</span><span class="p">[</span><span class="s1">&#39;_my_func_&#39;</span><span class="p">]</span> <span class="c1"># root node of function definition</span>
@@ -165,20 +170,20 @@ with CaitNodes as many additional operations and matching functionality are supp
 </div>
 <p>will look for a function definition followed by the usage of the function as
 an ast sibling (so same indentation level as definition</p>
-</div>
-<div class="section" id="subtree-matching">
-<h2>Subtree matching<a class="headerlink" href="#subtree-matching" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="subtree-matching">
+<h2>Subtree matching<a class="headerlink" href="#subtree-matching" title="Permalink to this heading"></a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">match</span> <span class="o">=</span> <span class="n">find_match</span><span class="p">(</span><span class="s2">&quot;for _item_ in _list_:</span><span class="se">\n</span><span class="s2">&quot;</span>
                    <span class="s2">&quot;    __exp__&quot;</span><span class="p">)</span>
-<span class="n">match</span><span class="p">[</span><span class="s1">&#39;__exp__&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">find_match</span><span class="p">(</span><span class="s2">&quot;# whatever submatch&quot;</span><span class="p">)</span>
+<span class="k">match</span><span class="p">[</span><span class="s1">&#39;__exp__&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">find_match</span><span class="p">(</span><span class="s2">&quot;# whatever submatch&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Normally CAIT will match to direct siblings. By using an expression, you can
 instead search everything contained in the body of the for loop, or other ast
 child nodes (see tutorial)</p>
-</div>
-<div class="section" id="finding-data-types">
-<h2>Finding Data types<a class="headerlink" href="#finding-data-types" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="finding-data-types">
+<h2>Finding Data types<a class="headerlink" href="#finding-data-types" title="Permalink to this heading"></a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.tifa.type_definitions</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="n">match</span> <span class="o">=</span> <span class="n">find_match</span><span class="p">(</span><span class="s2">&quot;for _item_ in _list_:</span><span class="se">\n</span><span class="s2">&quot;</span>
                    <span class="s2">&quot;    _sum_ = _sum_ + _item_&quot;</span><span class="p">)</span>
@@ -190,7 +195,7 @@ child nodes (see tutorial)</p>
 <span class="n">data_state</span><span class="o">.</span><span class="n">was_type</span><span class="p">(</span><span class="n">NumType</span><span class="p">)</span>   <span class="c1"># equivalent to previous line</span>
 <span class="n">data_state</span><span class="o">.</span><span class="n">was_type</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>       <span class="c1"># equivalent to previous line</span>
 
-<span class="n">match</span><span class="p">[</span><span class="s1">&#39;_sum_&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">was_type</span><span class="p">(</span><span class="s1">&#39;NumType&#39;</span><span class="p">)</span> <span class="c1"># If you&#39;re only doing one access, you can use this</span>
+<span class="k">match</span><span class="p">[</span><span class="s1">&#39;_sum_&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">was_type</span><span class="p">(</span><span class="s1">&#39;NumType&#39;</span><span class="p">)</span> <span class="c1"># If you&#39;re only doing one access, you can use this</span>
 </pre></div>
 </div>
 <p>If you want to explore the data types yourself, recursively access the <cite>trace</cite> (a list of <cite>State</cite> objects) attribute of data_state and check each state’s <cite>type</cite> attribute. For example</p>
@@ -212,8 +217,8 @@ child nodes (see tutorial)</p>
 <span class="sd">&#39;&#39;&#39;</span>
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

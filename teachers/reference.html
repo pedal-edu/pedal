@@ -1,18 +1,22 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Teacher Reference &mdash; Pedal 1.0 documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <title>Teacher Reference &mdash; Pedal 1.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
-        <script src="../_static/language_data.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -38,7 +42,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption"><span class="caption-text">Contents</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../everyone/introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../everyone/installation.html">Installation</a></li>
@@ -59,6 +63,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../developers/api.html">Developer API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers/tools.html">Developer Tools Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers/conventions.html">Internal Naming Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers/libraries.html">Necessary Libraries</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../everyone/glossary.html">Glossary</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../everyone/contact.html">Contact</a></li>
 </ul>
@@ -76,8 +81,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Teacher Reference</li>
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Teacher Reference</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/teachers/reference.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -87,16 +92,34 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="teacher-reference">
-<span id="quick-reference"></span><h1>Teacher Reference<a class="headerlink" href="#teacher-reference" title="Permalink to this headline">¶</a></h1>
+  <section id="teacher-reference">
+<span id="quick-reference"></span><h1>Teacher Reference<a class="headerlink" href="#teacher-reference" title="Permalink to this heading"></a></h1>
 <p>This section describes the functions and tools available within Pedal for the
 benefit of an instructor authoring feedback. It does not attempt to exhaustively
 document all the features available - for that, you should refer to the <a class="reference internal" href="../developers/api.html#full-api"><span class="std std-ref">Developer API</span></a>.</p>
 <div class="toctree-wrapper compound">
-<p class="caption"><span class="caption-text">Contents</span></p>
+<p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="tools/core.html">Core Commands</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tools/tifa.html">TIFA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools/core.html">Core Commands</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tools/core.html#set_success"><code class="docutils literal notranslate"><span class="pre">set_success()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/core.html#compliment"><code class="docutils literal notranslate"><span class="pre">compliment()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/core.html#give_partial"><code class="docutils literal notranslate"><span class="pre">give_partial()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/core.html#explain"><code class="docutils literal notranslate"><span class="pre">explain()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/core.html#gently"><code class="docutils literal notranslate"><span class="pre">gently()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/core.html#guidance"><code class="docutils literal notranslate"><span class="pre">guidance()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/core.html#hide_correctness"><code class="docutils literal notranslate"><span class="pre">hide_correctness()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/core.html#suppress"><code class="docutils literal notranslate"><span class="pre">suppress()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/core.html#log"><code class="docutils literal notranslate"><span class="pre">log()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/core.html#debug"><code class="docutils literal notranslate"><span class="pre">debug()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/core.html#clear_report"><code class="docutils literal notranslate"><span class="pre">clear_report()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/core.html#contextualize_report"><code class="docutils literal notranslate"><span class="pre">contextualize_report()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/core.html#get_all_feedback"><code class="docutils literal notranslate"><span class="pre">get_all_feedback()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tools/tifa.html">TIFA</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tools/tifa.html#tifa_analysis"><code class="docutils literal notranslate"><span class="pre">tifa_analysis()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="tools/cait.html">CAIT</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="tools/cait.html#list-of-pedal-data-types">List of Pedal Data Types</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tools/cait.html#save-and-reference-variable">Save and reference variable</a></li>
@@ -107,6 +130,10 @@ document all the features available - for that, you should refer to the <a class
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="tools/source.html">Source</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tools/source.html#verify"><code class="docutils literal notranslate"><span class="pre">verify()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/source.html#get_program"><code class="docutils literal notranslate"><span class="pre">get_program()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/source.html#set_source"><code class="docutils literal notranslate"><span class="pre">set_source()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/source.html#restore_code"><code class="docutils literal notranslate"><span class="pre">restore_code()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="tools/source.html#sections">Sections</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tools/source.html#source-feedbacks">Source Feedbacks</a></li>
 </ul>
@@ -116,11 +143,16 @@ document all the features available - for that, you should refer to the <a class
 <li class="toctree-l2"><a class="reference internal" href="tools/assertions.html#runtime">Runtime</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="tools/sandbox.html">Sandbox</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools/sandbox.html">Sandbox</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tools/sandbox.html#call"><code class="docutils literal notranslate"><span class="pre">call()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/sandbox.html#run"><code class="docutils literal notranslate"><span class="pre">run()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/sandbox.html#set_input"><code class="docutils literal notranslate"><span class="pre">set_input()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </div>
 <p>tools/assertions</p>
-</div>
+</section>
 
 
            </div>

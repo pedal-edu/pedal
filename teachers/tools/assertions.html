@@ -1,18 +1,22 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Assertions &mdash; Pedal 1.0 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <title>Assertions &mdash; Pedal 1.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -38,7 +42,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption"><span class="caption-text">Contents</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../everyone/introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../everyone/installation.html">Installation</a></li>
@@ -50,8 +54,15 @@
 <li class="toctree-l2"><a class="reference internal" href="cait.html">CAIT</a></li>
 <li class="toctree-l2"><a class="reference internal" href="source.html">Source</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Assertions</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#static">Static</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#runtime">Runtime</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#static">Static</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#prevent_literal"><code class="docutils literal notranslate"><span class="pre">prevent_literal()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ensure_literal"><code class="docutils literal notranslate"><span class="pre">ensure_literal()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#runtime">Runtime</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#assert_equal"><code class="docutils literal notranslate"><span class="pre">assert_equal()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="sandbox.html">Sandbox</a></li>
@@ -63,6 +74,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../developers/api.html">Developer API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers/tools.html">Developer Tools Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers/conventions.html">Internal Naming Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers/libraries.html">Necessary Libraries</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../everyone/glossary.html">Glossary</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../everyone/contact.html">Contact</a></li>
 </ul>
@@ -80,9 +92,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../reference.html">Teacher Reference</a> &raquo;</li>
-      <li>Assertions</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../reference.html">Teacher Reference</a></li>
+      <li class="breadcrumb-item active">Assertions</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/teachers/tools/assertions.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -92,29 +104,29 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="assertions">
-<h1>Assertions<a class="headerlink" href="#assertions" title="Permalink to this headline">¶</a></h1>
+  <section id="assertions">
+<h1>Assertions<a class="headerlink" href="#assertions" title="Permalink to this heading"></a></h1>
 <p>There are two major kinds of assertions: static and runtime.</p>
-<div class="section" id="static">
-<h2>Static<a class="headerlink" href="#static" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="prevent_literal">
-<code class="sig-name descname">prevent_literal</code><span class="sig-paren">(</span><em class="sig-param">*literals: Any</em>, <em class="sig-param">muted=False</em><span class="sig-paren">)</span> &#x2192; False or Any<a class="headerlink" href="#prevent_literal" title="Permalink to this definition">¶</a></dt>
+<section id="static">
+<h2>Static<a class="headerlink" href="#static" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="prevent_literal">
+<span class="sig-name descname"><span class="pre">prevent_literal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">literals</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">muted</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">False</span> <span class="pre">or</span> <span class="pre">Any</span></span></span><a class="headerlink" href="#prevent_literal" title="Permalink to this definition"></a></dt>
 <dd><p>Confirms that the literal is not in the code, returning False if it is not.
 You can use literal strings, integers, floats, booleans, and None.</p>
-<code class="sig-prename descclassname">Feedback Function: May Not Use Literal Value</code><dd><ul>
+<span class="sig-prename descclassname">Feedback Function: May Not Use Literal Value</span><dd><ul>
 <li><strong>Label: </strong><span>prevent_literal</span></li>
 <li><strong>Justification: </strong><span>None</span></li>
 <li><strong>Response: </strong><span>You used the literal value {literal_message:python_expression} on line {location.line}. You may not use that value{capacity}.</span></li>
 </ul>
 </dd></dd></dl>
 
-<dl class="function">
-<dt id="ensure_literal">
-<code class="sig-name descname">ensure_literal</code><span class="sig-paren">(</span><em class="sig-param">*literals: Any</em>, <em class="sig-param">muted=False</em><span class="sig-paren">)</span> &#x2192; False or Any<a class="headerlink" href="#ensure_literal" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="ensure_literal">
+<span class="sig-name descname"><span class="pre">ensure_literal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">literals</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">muted</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">False</span> <span class="pre">or</span> <span class="pre">Any</span></span></span><a class="headerlink" href="#ensure_literal" title="Permalink to this definition"></a></dt>
 <dd><p>Confirms that the literal IS in the code, returning False if it is not.
 You can use literal strings, integers, floats, booleans, and None.</p>
-<code class="sig-prename descclassname">Feedback Function: Must Use Literal Value</code><dd><ul>
+<span class="sig-prename descclassname">Feedback Function: Must Use Literal Value</span><dd><ul>
 <li><strong>Label: </strong><span>ensure_literal</span></li>
 <li><strong>Justification: </strong><span>None</span></li>
 <li><strong>Response: </strong><span>You must use the literal value {literal_message}{capacity}.</span></li>
@@ -122,14 +134,14 @@ You can use literal strings, integers, floats, booleans, and None.</p>
 </dd></dd></dl>
 
 <p>TODO: Handle all the others</p>
-</div>
-<div class="section" id="runtime">
-<h2>Runtime<a class="headerlink" href="#runtime" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="assert_equal">
-<code class="sig-name descname">assert_equal</code><span class="sig-paren">(</span><em class="sig-param">left</em>, <em class="sig-param">right</em><span class="sig-paren">)</span> &#x2192; Feedback<a class="headerlink" href="#assert_equal" title="Permalink to this definition">¶</a></dt>
+</section>
+<section id="runtime">
+<h2>Runtime<a class="headerlink" href="#runtime" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="assert_equal">
+<span class="sig-name descname"><span class="pre">assert_equal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../../developers/api.html#pedal.core.commands.Feedback" title="pedal.core.commands.Feedback"><span class="pre">Feedback</span></a></span></span><a class="headerlink" href="#assert_equal" title="Permalink to this definition"></a></dt>
 <dd><p>Tests if the left and right values are equal.</p>
-<code class="sig-prename descclassname">Feedback Function: Failed Instructor Test</code><dd><ul>
+<span class="sig-prename descclassname">Feedback Function: Failed Instructor Test</span><dd><ul>
 <li><strong>Label: </strong><span>assert_equal</span></li>
 <li><strong>Justification: </strong><span>Left and right were not equal</span></li>
 <li><strong>Response: </strong><span>Student code failed instructor test.
@@ -138,8 +150,8 @@ You can use literal strings, integers, floats, booleans, and None.</p>
 </dd></dd></dl>
 
 <p>TODO: Handle all the others</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

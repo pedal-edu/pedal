@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pedal.core.tool &mdash; Pedal 1.0 documentation</title>
+  <title>pedal.questions.setup &mdash; Pedal 1.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -72,7 +72,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">pedal.core.tool</li>
+      <li class="breadcrumb-item active">pedal.questions.setup</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -81,69 +81,60 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for pedal.core.tool</h1><div class="highlight"><pre>
+  <h1>Source code for pedal.questions.setup</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Tools are effectively submodules within Pedal - notable exceptions are</span>
-<span class="sd">:py:mod:`pedal.core`, :py:mod:`pedal.environments`,</span>
-<span class="sd">:py:mod:`pedal.utilities`, and :py:mod:`pedal.resolvers`.</span>
-
-<span class="sd">All Tools with any kind of state are expected to have a `reset` function.</span>
-<span class="sd">Although this can take parameters, we recommend avoiding that. The `reset`</span>
-<span class="sd">should be for putting things back into a &quot;null&quot; state, and then you could have</span>
-<span class="sd">followup functions that also give initial state.</span>
-
-<span class="sd">Tools should avoid removing their references (i.e., clear out data from lists</span>
-<span class="sd">and dictionaries instead of assigning a new one).</span>
-
-<span class="sd">Tools should define a ``constants.py`` file with any useful constants. One of</span>
-<span class="sd">these should be ``TOOL_NAME``, a string value indicating their desired namespace</span>
-<span class="sd">(e.g., ``TOOL_NAME = &quot;source&quot;``).</span>
-
-<span class="sd">Tools should define a ``feedbacks.py`` module that centralizes</span>
-<span class="sd">:term:`Feedback Functions&lt;Feedback Function&gt;` for that tool.</span>
-
-<span class="sd">Any function that interacts with Reports should expose a ``report`` parameter</span>
-<span class="sd">that defaults to :py:data:`pedal.core.report.MAIN_REPORT`. All internal</span>
-<span class="sd">functions should respect the ``report`` that was passed in, and not assume the</span>
-<span class="sd">``MAIN_REPORT``.</span>
-
-<span class="sd">Tools are allowed to store state within their namespace of a</span>
-<span class="sd">:py:class:`pedal.core.report.Report`.</span>
-<span class="sd">If the tool has not yet been initialized, its `reset` function will be called.</span>
-<span class="sd">You can update and access fields via dictionary access.</span>
-
-<span class="sd">.. code-block:: python</span>
-
-<span class="sd">    report[TOOL_NAME][&#39;my field&#39;] = False</span>
-
-<span class="sd">The ``__init__.py`` file for a Tool should use  ``__all__`` to expose any</span>
-<span class="sd">interesting teacher-level functions, classes, and data. That way, teachers can</span>
-<span class="sd">just consistently use ``from pedal.tool import *`` to instantly gain access to</span>
-<span class="sd">the interesting set of members. The big exception to this is</span>
-<span class="sd">:ref:`toolkit`, which is full of prototypical Tools organized</span>
-<span class="sd">into subsubmodules. If it&#39;s just a single function without much complexity, it</span>
-<span class="sd">probably belongs in the Toolkit; but as soon as complexity or multiple</span>
-<span class="sd">functions emerge with a theme, it can be promoted to a Tool.</span>
-
+<span class="sd">Initialize and setup the Questions tool.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ToolRegistration&#39;</span><span class="p">]</span>
+<span class="kn">from</span> <span class="nn">pedal.core.report</span> <span class="kn">import</span> <span class="n">MAIN_REPORT</span><span class="p">,</span> <span class="n">Report</span>
+<span class="kn">from</span> <span class="nn">pedal.questions.constants</span> <span class="kn">import</span> <span class="n">TOOL_NAME</span>
+
+<span class="kn">import</span> <span class="nn">hashlib</span>
 
 
-<div class="viewcode-block" id="ToolRegistration"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.tool.ToolRegistration">[docs]</a><span class="k">class</span> <span class="nc">ToolRegistration</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">_name_hash</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Turn a string name into a unique hashcode using MD5 &quot;&quot;&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">digest</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="reset"><a class="viewcode-back" href="../../../developers/tools/questions.html#pedal.questions.setup.reset">[docs]</a><span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    ToolRegistration is a data class for holding general, system-wide</span>
-<span class="sd">    information about a Tool. Note that it doesn&#39;t hold the tool&#39;s data, just</span>
-<span class="sd">    the static information about the tool like its reset function.</span>
+<span class="sd">    Remove all settings for the Questions tool. Seed will be 0.</span>
 
-<span class="sd">    Attributes:</span>
-<span class="sd">        name (str): The formal name of this tool.</span>
-<span class="sd">        reset (callable): A function defined for initializing and</span>
-<span class="sd">            re-initializing the tool&#39;s data.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        report: The report object</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        This tool&#39;s data</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">reset</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">reset</span> <span class="o">=</span> <span class="n">reset</span></div>
+    <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;seed&#39;</span><span class="p">:</span> <span class="mi">0</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">]</span></div>
+
+
+<span class="n">Report</span><span class="o">.</span><span class="n">register_tool</span><span class="p">(</span><span class="n">TOOL_NAME</span><span class="p">,</span> <span class="n">reset</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="set_seed"><a class="viewcode-back" href="../../../developers/tools/questions.html#pedal.questions.setup.set_seed">[docs]</a><span class="k">def</span> <span class="nf">set_seed</span><span class="p">(</span><span class="n">seed_value</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sets the seed that will be used in selecting questions.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        seed_value (int or str or iterable[int]): The value to use when</span>
+<span class="sd">            selecting questions, deterministically. If int, the same index</span>
+<span class="sd">            will be used for all questions. If an iterable of ints, each</span>
+<span class="sd">            one will serve as the index for the corresponding problem (throws</span>
+<span class="sd">            an exception if the iterable isn&#39;t long enough). If a string,</span>
+<span class="sd">            it will be hashed to a value (the hash is deterministic across</span>
+<span class="sd">            platforms) that will be modulo&#39;d to be in the right range for the</span>
+<span class="sd">            pool. Presently, hashing generates values from [0, 256) so you</span>
+<span class="sd">            need to limit your questions to 256.</span>
+<span class="sd">        report (Report): The report object to store data and feedback in. If</span>
+<span class="sd">            left None, defaults to the global MAIN_REPORT.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">report</span><span class="p">[</span><span class="s1">&#39;questions&#39;</span><span class="p">][</span><span class="s1">&#39;seed&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">seed_value</span></div>
 </pre></div>
 
            </div>
