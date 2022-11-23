@@ -27,38 +27,18 @@ jobs:
         with:
           python-version: '3.9' 
       # Build the documentation
-      - name: Build Documentation
+      - name: Build and Commit Documentation
         run: |
           python --version
           python -m pip install -r requirements_dev.txt && python -m pip install -e .
           cd docsrc/
           python -m sphinx.cmd.build -M html . _build/ -b coverage
-      #- uses: ammaraskar/sphinx-action@master
-      #  with:
-      #    pre-build-command: "python -m pip install -r requirements_dev.txt && python -m pip install -e ."
-      #    repo-token: "${{ secrets.GITHUB_TOKEN }}" 
-      #    docs-folder: "docsrc/"
-      # Build PDF using custom depedencies
-      #- uses: ammaraskar/sphinx-action@master
-      #  with:
-      #    repo-token: "${{ secrets.GITHUB_TOKEN }}"
-      #    pre-build-command: "apt-get update -y && apt-get install -y latexmk texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended"
-      #    build-command: "make latexpdf"
-      #    docs-folder: "docsrc/"
-      # Create an artifact of the html output.
-      #- uses: actions/upload-artifact@v1
-      #  with:
-      #    name: DocumentationHTML
-      #    path: docsrc/_build/html/
-      # Create an artifact out of the previously built pdf.
-      #- uses: actions/upload-artifact@v1
-      #  with:
-      #    name: Documentation
-      #    path: docsrc/_build/latex/pdfexample.pdf
-      # Publish built docs to gh-pages branch.
-      # ===============================
-      - name: Commit documentation changes
-        run: |
+          cd ../
+          #- uses: ammaraskar/sphinx-action@master
+          #  with:
+          #    pre-build-command: "python -m pip install -r requirements_dev.txt && python -m pip install -e ."
+          #    repo-token: "${{ secrets.GITHUB_TOKEN }}" 
+          #    docs-folder: "docsrc/"
           git clone https://github.com/pedal-edu/pedal.git --branch gh-pages --single-branch gh-pages
           cp -r docsrc/_build/html/* gh-pages/
           cd gh-pages
