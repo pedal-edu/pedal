@@ -19,9 +19,6 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: python:3.9
-      volumes:
-        - dist:dist
-        - public:public
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
