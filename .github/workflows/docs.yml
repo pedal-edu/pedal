@@ -17,19 +17,24 @@ jobs:
   docs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    container:
+      image: python:3.9
+      volumes:
+        - dist:dist
+        - public:public
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v1
-      # Change python version to 3.10
+      # Change python version to 3.9
       - uses: actions/setup-python@v4
         with:
-          python-version: '3.10' 
+          python-version: '3.9' 
       # Build the documentation
       - uses: ammaraskar/sphinx-action@master
         with:
-          pre-build-command: "python -m pip install -r requirements_dev.txt && python -m pip install -e ."
+          pre-build-command: "python3.9 -m pip install -r requirements_dev.txt && python3.9 -m pip install -e ."
           repo-token: "${{ secrets.GITHUB_TOKEN }}" 
           docs-folder: "docsrc/"
       # Build PDF using custom depedencies
