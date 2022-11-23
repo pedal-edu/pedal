@@ -32,7 +32,7 @@ jobs:
           cd docsrc/
           python --version
           python -m pip install -r requirements_dev.txt && python -m pip install -e .
-          make html -b coverage
+          python -m sphinx.cmd.build html -b coverage
       #- uses: ammaraskar/sphinx-action@master
       #  with:
       #    pre-build-command: "python -m pip install -r requirements_dev.txt && python -m pip install -e ."
