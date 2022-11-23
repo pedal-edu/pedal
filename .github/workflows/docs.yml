@@ -33,7 +33,7 @@ jobs:
           python -m pip install -r requirements_dev.txt && python -m pip install -e .
           cd docsrc/
           python -m sphinx.cmd.build -M html . _build/
-          ls _build/developers/
+          ls _build/html/developers/
           cd ../
           #- uses: ammaraskar/sphinx-action@master
           #  with:
