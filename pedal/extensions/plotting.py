@@ -5,10 +5,11 @@ Mock module for Sandbox.
 
 Assertions.
 """
-from pedal import Feedback, CompositeFeedbackFunction
+from pedal import Feedback, CompositeFeedbackFunction, is_sandbox_result, Sandbox
 from pedal.assertions import ensure_function_call, prevent_function_call
 from pedal.core.feedback import FeedbackResponse
 from pedal.core.report import MAIN_REPORT
+from pedal.sandbox.data import format_contexts
 from pedal.types.builtin import BUILTIN_MODULES
 from pedal.types.new_types import ModuleType, FunctionType, NoneType
 from pedal.cait.find_node import function_is_called
@@ -101,7 +102,7 @@ class ensure_show(Feedback):
         return not function_is_called("show")
 
 
-def compare_data(plt_type, correct, given, special_comparion=None):
+def compare_data(plt_type, correct, given, special_comparison=None):
     """
     Determines whether the given data matches any of the data found in the
     correct data. This handles plots of different types: if a histogram
@@ -111,13 +112,13 @@ def compare_data(plt_type, correct, given, special_comparion=None):
         plt_type (str): The expected type of this plot
         correct (List of Int or List of List of Int): The expected data.
         given (Dict): The actual plotted data and information
-        special_comparion (callable): A special comparison function to use
+        special_comparison (callable): A special comparison function to use
             between the data. If None, then will use the ``==`` operator.
     Returns:
         bool: Whether the correct data was found in the given plot.
     """
-    if special_comparion is None:
-        def special_comparion(left, right):
+    if special_comparison is None:
+        def special_comparison(left, right):
             return left == right
 
     # Infer arguments
@@ -136,12 +137,22 @@ def compare_data(plt_type, correct, given, special_comparion=None):
         correct_ys = correct
 
     if given['type'] == 'hist':
-        return special_comparion(correct_ys, given['values'])
+        return special_comparison(correct_ys, given['values'])
     elif plt_type == 'hist':
-        return special_comparion(correct_ys, given['y'])
+        return special_comparison(correct_ys, given['y'])
     else:
-        return (special_comparion(correct_xs, given['x']) and
-                special_comparion(correct_ys, given['y']))
+        return (special_comparison(correct_xs, given['x']) and
+                special_comparison(correct_ys, given['y']))
+
+
+def describe_data(given, with_x=False):
+    if given['type'] == 'hist':
+        return given['values']
+    elif given['type'] == 'line' and not with_x:
+        # TODO: Might need to know if we describe the x-axis too..?
+        return given['y']
+    else:
+        return [given['x'], given['y']]
 
 
 GRAPH_TYPES = {'line': 'line plot',
@@ -149,42 +160,69 @@ GRAPH_TYPES = {'line': 'line plot',
                'scatter': 'scatter plot'}
 
 
+def get_diff(expected, actual, format):
+    if isinstance(actual, bool):
+        return ("\nI expected the data to be:\n" +
+                format.python_value(repr(expected)))
+    if len(actual) == 1:
+        return ("\nI expected the data to be:\n" +
+                format.python_value(repr(expected)) +
+                "\nBut instead, the data was:\n" +
+                format.python_value(repr(actual[0])))
+    return ("\nI expected the data to be:\n" +
+            format.python_value(repr(expected)) +
+            f"\nBut instead, I found {len(actual)} plots, with this data:\n" +
+            "\n".join(format.python_value(repr(a)) for a in actual))
+
+
 class BadGraphFeedback(FeedbackResponse):
-    category = Feedback.CATEGORIES.INSTRUCTOR
-    def __init__(self, plt_type, expected, actual, **kwargs):
+    category = Feedback.CATEGORIES.SPECIFICATION
+    valence = Feedback.NEGATIVE_VALENCE
+    kind = Feedback.KINDS.CONSTRAINT
+
+    def __init__(self, plt_type, expected, actual, context=None, report=MAIN_REPORT, **kwargs):
         fields = kwargs.setdefault('fields', {})
         fields['plt_type'] = plt_type
         fields['expected'] = expected
         fields['actual'] = actual
-        super().__init__(plt_type, expected, actual, **kwargs)
+        fields['diff_message'] = get_diff(expected, actual, report.format)
+        fields['context'] = context
+        if is_sandbox_result(context):
+            context_id = context._actual_context_id
+            sandbox = context._actual_sandbox
+            actual_context = sandbox.get_context(context_id)
+            fields['context_message'] = "\n "+format_contexts([actual_context], report.format)
+        else:
+            fields['context_message'] = ""
+        super().__init__(plt_type, expected, actual, report=report, **kwargs)
 
 
 class other_plt(BadGraphFeedback):
     title = "Plotting Another Graph"
     message_template = ("You have created a {plt_type}, but it does not "
                         "have the right data. That data appears to have been "
-                        "plotted in another graph.")
+                        "plotted in another graph.{context_message}")
 
 
 class wrong_plt_data(BadGraphFeedback):
     title = "Plot Data Incorrect"
     message_template = ("You have created a {plt_type}, but it does not have "
-                        "the right data.")
+                        "the right data.{context_message}{diff_message}")
 
 
 class wrong_plt_type(BadGraphFeedback):
     title = "Wrong Plot Type"
     message_template = ("You have plotted the right data, but you appear to "
-                        "have not plotted it as a {plt_type}.")
+                        "have not plotted it as a {plt_type}.{context_message}")
 
 
 class no_plt(BadGraphFeedback):
     title = "Missing Plot"
-    message_template = "You have not created a {plt_type} with the proper data."
+    message_template = "You have not created a {plt_type} with the proper data.{context_message}"
 
 
 @CompositeFeedbackFunction(other_plt, wrong_plt_data, wrong_plt_type, no_plt)
-def assert_plot(plt_type, data, **kwargs):
+def assert_plot(plt_type, data, context=None, special_comparison=None, **kwargs):
     """
     Check whether a plot with the given ``plt_type`` and ``data`` exists.
     If the plot was found successfully, returns False.
@@ -203,13 +241,15 @@ def assert_plot(plt_type, data, **kwargs):
     type_found = False
     data_found = False
     plots = get_sandbox(report=report).modules.plotting.plots
+    appropriate_plots = []
     for graph in plots:
         for a_plot in graph['data']:
-            data_found_here = compare_data(plt_type, data, a_plot)
+            data_found_here = compare_data(plt_type, data, a_plot, special_comparison=special_comparison)
             if a_plot['type'] == plt_type and data_found_here:
                 return False
             if a_plot['type'] == plt_type:
                 type_found = True
+                appropriate_plots.append(describe_data(a_plot, not isinstance(data, (tuple, list))))
             if data_found_here:
                 data_found = data_found_here
     # Figure out what kind of mistake was made.
@@ -217,7 +257,7 @@ def assert_plot(plt_type, data, **kwargs):
     if type_found and data_found:
         return other_plt(plt_type, data, data_found)
     elif type_found:
-        return wrong_plt_data(plt_type, data, data_found)
+        return wrong_plt_data(plt_type, data, appropriate_plots, context=context)
     elif data_found:
         return wrong_plt_type(plt_type, data, data_found)
     else:
@@ -251,3 +291,6 @@ def get_plots(report=MAIN_REPORT):
     """
     return get_sandbox(report=report).modules.plotting.plots
 
+
+def clear_plots(report=MAIN_REPORT):
+    get_sandbox(report=report).modules.plotting._reset_plots()

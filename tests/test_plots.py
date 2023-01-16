@@ -3,6 +3,7 @@ Tests for checking that the plotting extension works.
 """
 from textwrap import dedent
 
+from pedal import call
 from tests.execution_helper import Execution, ExecutionTestCase, SUCCESS_MESSAGE
 from pedal.extensions.plotting import *
 
@@ -27,8 +28,11 @@ class TestPlots(ExecutionTestCase):
         with Execution(code_hist_and_plot) as e:
             assert_plot('hist', [1, 2, 3, 4])
         self.assertFeedback(e, "Plot Data Incorrect\n"
-                               "You have created a histogram, but it does not "
-                               "have the right data.")
+                                "You have created a histogram, but it does not have the right data.\n"
+                                "I expected the data to be:\n"
+                                "    [1, 2, 3, 4]\n"
+                                "But instead, the data was:\n"
+                                "    [1, 2, 3]")
 
     def test_check_for_plot_correct_plot(self):
         with Execution(code_hist_and_plot) as e:
@@ -39,8 +43,11 @@ class TestPlots(ExecutionTestCase):
         with Execution(code_hist_and_plot) as e:
             assert_plot('line', [4, 5, 6, 7])
         self.assertFeedback(e, "Plot Data Incorrect\n"
-                               "You have created a line plot, but it does not "
-                               "have the right data.")
+                               "You have created a line plot, but it does not have the right data.\n"
+                               "I expected the data to be:\n"
+                               "    [4, 5, 6, 7]\n"
+                               "But instead, the data was:\n"
+                               "    [4, 5, 6]")
 
     def test_assert_plot_wrong_type_of_plot(self):
         student_code = dedent('''
@@ -148,3 +155,51 @@ class TestPlots(ExecutionTestCase):
         ''')
         with Execution(student_code) as e:
             self.assertFalse(prevent_incorrect_plt())
+
+
+    def test_check_plot_wrong_scatter(self):
+        student_code = dedent('''
+            import matplotlib.pyplot as plt
+            plt.scatter([1,2,3, 4], [4,5,6, 7])
+            plt.show()
+        ''')
+        with Execution(student_code) as e:
+            assert_plot('scatter', [[1, 2, 3], [4, 5, 6]])
+        self.assertFeedback(e, "Plot Data Incorrect\n"
+                               "You have created a scatter plot, but it does not have the right data.\n"
+                               "I expected the data to be:\n"
+                               "    [[1, 2, 3], [4, 5, 6]]\n"
+                               "But instead, the data was:\n"
+                               "    [[1, 2, 3, 4], [4, 5, 6, 7]]")
+
+    def test_check_plot_wrong_scatter_via_call(self):
+        student_code = dedent('''
+            import matplotlib.pyplot as plt
+            def make_plot():
+                plt.scatter([1,2,3, 4], [4,5,6, 7])
+                plt.show()
+            make_plot
+            plt
+        ''')
+        with Execution(student_code) as e:
+            assert_plot('scatter', [[1, 2, 3], [4, 5, 6]], context=call('make_plot'))
+        self.assertFeedback(e, "Plot Data Incorrect\n"
+                               "You have created a scatter plot, but it does not have the right data.\n"
+                               " I ran the code:\n    make_plot()\n\n"
+                               "I expected the data to be:\n"
+                               "    [[1, 2, 3], [4, 5, 6]]\n"
+                               "But instead, the data was:\n"
+                               "    [[1, 2, 3, 4], [4, 5, 6, 7]]")
+
+    def test_check_plot_custom_compare(self):
+        student_code = dedent('''
+            import matplotlib.pyplot as plt
+            plt.hist([82.0, 70.0, 57.99999999999999, 59.0, 83.0, 81.0, 56.99999999999999])
+            plt.show()
+        ''')
+        def close_comparison(a, b):
+            return set(round(aa) for aa in a) == set(round(bb) for bb in b)
+        with Execution(student_code) as e:
+            assert_plot('hist', [82.0, 70.0, 58.0, 59.0, 83.0, 81.0, 57.0],
+                        special_comparison=close_comparison)
+        self.assertFeedback(e, "Complete\nGreat work!")
