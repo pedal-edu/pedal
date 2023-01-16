@@ -73,6 +73,7 @@ from pedal.tifa.constants import TOOL_NAME
 from pedal.tifa.settings import get_default_tifa_settings
 from pedal.tifa.tifa_visitor import Tifa
 from pedal.tifa.commands import *
+from pedal.types.new_types import reset_builtin_modules
 
 
 def reset(report=MAIN_REPORT):
@@ -83,6 +84,7 @@ def reset(report=MAIN_REPORT):
         report:
     """
     # TODO: Make it so we can reset TIFA through this, safely.
+    reset_builtin_modules()
     report[TOOL_NAME] = {
         'analyses': {},
         'latest': None,

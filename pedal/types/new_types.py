@@ -45,6 +45,19 @@ from pedal.utilities.text import join_list_with_and, add_indefinite_article
 BUILTIN_MODULES = {}
 BUILTIN_NAMES = {}
 
+_MODULE_LOADERS = {}
+
+
+def register_builtin_module(name, module_function):
+    _MODULE_LOADERS[name] = module_function
+
+
+# TODO: Should tie type system into Report
+def reset_builtin_modules():
+    BUILTIN_MODULES.clear()
+    for name, module_function in _MODULE_LOADERS.items():
+        BUILTIN_MODULES[name] = module_function()
+
 
 def void_definition(tifa, function, callee, arguments, named_arguments, location):
     return NoneType()
