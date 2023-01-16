@@ -1,3 +1,10 @@
+Version 2.3.9 (1/16/2023)
+-------------------------
+* Wheat/Chaff Game feature (needs work)
+* Dataclass support
+* Microbit stuff
+* Fix bug with multiple reruns of Pedal not reseting type system
+
 Version 2.3.8
 -------------
 * Bug fix for metadata of threaded Sandboxed function calls
