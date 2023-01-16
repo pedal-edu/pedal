@@ -65,7 +65,7 @@ class SqlProgSnap2(BaseProgSnap2):
                     'X-IsStaff': "False",
                 },
                 "Assignment": {
-                    "X-Name": "Midterm 2.4"
+                    #"X-Name": "Midterm 2.4"
                 #    "X-Course.Id": "4"
                 }
             },
