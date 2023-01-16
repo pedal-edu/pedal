@@ -132,7 +132,9 @@ class ExecutionTextHolder:
         self._finish_body()
         return "".join(self._result)
 
+
 INPUT_MAXIMUM_LINES = 30
+
 
 def format_contexts(contexts, format):
     """
