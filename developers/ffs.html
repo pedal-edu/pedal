@@ -1,39 +1,77 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" />
+  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Feedback Functions &mdash; Pedal 1.0 documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+  <title>Developers: Feedback Functions &mdash; Pedal 1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/sphinx_highlight.js"></script>
-    <script src="../_static/js/theme.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Developer API" href="api.html" />
     <link rel="prev" title="Best Practices" href="../teachers/practices.html" /> 
 </head>
 
-<body class="wy-body-for-nav"> 
+<body class="wy-body-for-nav">
+
+   
   <div class="wy-grid-for-nav">
+    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
+          
+
+          
             <a href="../index.html" class="icon icon-home"> Pedal
+          
+
+          
           </a>
+
+          
+            
+            
               <div class="version">
                 1.0
               </div>
+            
+          
+
+          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -41,7 +79,18 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
               <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../everyone/introduction.html">Introduction</a></li>
@@ -51,9 +100,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../teachers/reference.html">Teacher Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../teachers/integrations.html">Autograder Integrations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../teachers/practices.html">Best Practices</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Feedback Functions</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Developers: Feedback Functions</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#why-feedback-functions">Why Feedback Functions?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#feedback-function-concepts">Feedback Function Concepts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-lifetime-of-a-feedback-function">The Lifetime of a Feedback Function</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#the-metadata-of-feedback-functions">The Metadata of Feedback Functions</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#message">Message</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#message-template">Message Template</a></li>
@@ -65,40 +115,82 @@
 <li class="toctree-l1"><a class="reference internal" href="tools.html">Developer Tools Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="conventions.html">Internal Naming Conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="libraries.html">Necessary Libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../teachers/analysis.html">Researchers: Analyzing with Pedal</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../everyone/glossary.html">Glossary</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../everyone/contact.html">Contact</a></li>
 </ul>
 
+            
+          
         </div>
+        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">Pedal</a>
+        
       </nav>
 
+
       <div class="wy-nav-content">
+        
         <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a></li>
-      <li class="breadcrumb-item active">Feedback Functions</li>
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Developers: Feedback Functions</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
+        
+          
             <a href="../_sources/developers/ffs.rst.txt" rel="nofollow"> View page source</a>
+          
+        
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-             
-  <section id="feedback-functions">
-<h1>Feedback Functions<a class="headerlink" href="#feedback-functions" title="Permalink to this heading"></a></h1>
+            
+  <section id="developers-feedback-functions">
+<span id="developers-ffs"></span><h1>Developers: Feedback Functions<a class="headerlink" href="#developers-feedback-functions" title="Permalink to this heading">¶</a></h1>
 <p>The most important unit of Pedal are its Feedback Functions.
 This document walks through all of the features available on a Feedback Function.</p>
 <section id="why-feedback-functions">
-<h2>Why Feedback Functions?<a class="headerlink" href="#why-feedback-functions" title="Permalink to this heading"></a></h2>
+<h2>Why Feedback Functions?<a class="headerlink" href="#why-feedback-functions" title="Permalink to this heading">¶</a></h2>
 <p>When we first giving automated feedback, our scripts became a pile of <code class="docutils literal notranslate"><span class="pre">if</span></code> statements
 and messages. The complex logic was very delicate, and any reordering could
 potentially break the chain. Large chunks of code were clearly representing very
@@ -112,10 +204,10 @@ manner without sacrificing the power and flexibility of instructor logic.
 Not only are Feedback Functions reusable, but they are also easier to analyze.</p>
 </section>
 <section id="feedback-function-concepts">
-<h2>Feedback Function Concepts<a class="headerlink" href="#feedback-function-concepts" title="Permalink to this heading"></a></h2>
+<h2>Feedback Function Concepts<a class="headerlink" href="#feedback-function-concepts" title="Permalink to this heading">¶</a></h2>
 <p>This section details the structure and interface of Feedback Functions.</p>
 <dl>
-<dt>Inheritance</dt><dd><p>All Feedback Functions descend from the main <cite>Feedback</cite> class. This class
+<dt>Inheritance</dt><dd><p>All Feedback Functions descend from the main <code class="xref py py-obj docutils literal notranslate"><span class="pre">Feedback</span></code> class. This class
 has a huge number of fields and default behavior. Many of Pedal’s Tools subclass
 the Feedback class, and Feedback Developers are encouraged to build their own hierarchy.
 Then, teachers writing their Instructor Control Scripts can call Feedback Functions
@@ -141,13 +233,25 @@ in order to “turn off” their response based on the condition of another FF.<
 data so their results can be passed to other systems for analysis.</p>
 </dd>
 <dt>Report</dt><dd><p>Feedback Functions are expected to be attached to a report object.
-By default, they are all attached to the <cite>MAIN_REPORT</cite>. Attempting to reuse
+By default, they are all attached to the <code class="xref py py-obj docutils literal notranslate"><span class="pre">MAIN_REPORT</span></code>. Attempting to reuse
 an instance of FF is undefined behavior.</p>
 </dd>
 </dl>
 </section>
+<section id="the-lifetime-of-a-feedback-function">
+<h2>The Lifetime of a Feedback Function<a class="headerlink" href="#the-lifetime-of-a-feedback-function" title="Permalink to this heading">¶</a></h2>
+<p>Default lifetime of a Feedback Function:</p>
+<ol class="arabic simple">
+<li><p>Feedback Function is called</p></li>
+<li><p>FF default initializer is executed</p></li>
+<li><p>Child initializers are executed</p></li>
+<li><p>The feedback’s condition is evaluated</p></li>
+<li><p>The feedback’s</p></li>
+<li><p>Any parent feedbacks have the opportunity to manipulate the child.</p></li>
+</ol>
+</section>
 <section id="the-metadata-of-feedback-functions">
-<h2>The Metadata of Feedback Functions<a class="headerlink" href="#the-metadata-of-feedback-functions" title="Permalink to this heading"></a></h2>
+<h2>The Metadata of Feedback Functions<a class="headerlink" href="#the-metadata-of-feedback-functions" title="Permalink to this heading">¶</a></h2>
 <dl class="simple">
 <dt>Label</dt><dd><p>Every Feedback Function needs to be given a semi-unique name for
 identification. The label should be an underscore-separated string
@@ -158,18 +262,18 @@ be the name of the underlying Python class or function that creates
 instances of that Feedback.</p>
 </dd>
 <dt>Category</dt><dd><p>An internal name for indicating the tool that created
-this feedback. Should be taken directly from the Tool itself. If <cite>None</cite>, then
+this feedback. Should be taken directly from the Tool itself. If <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>, then
 this was not created by a tool but directly by the control script.</p>
 </dd>
 <dt>Tool</dt><dd><p>What Tool was responsible for creating this feedback function.</p>
 </dd>
 </dl>
 <section id="message">
-<h3>Message<a class="headerlink" href="#message" title="Permalink to this heading"></a></h3>
+<h3>Message<a class="headerlink" href="#message" title="Permalink to this heading">¶</a></h3>
 <p>The Response to show to students.</p>
 </section>
 <section id="message-template">
-<h3>Message Template<a class="headerlink" href="#message-template" title="Permalink to this heading"></a></h3>
+<h3>Message Template<a class="headerlink" href="#message-template" title="Permalink to this heading">¶</a></h3>
 <p>An interpolatable string, with any fields automatically injected.
 Has a lower priority than the <code class="docutils literal notranslate"><span class="pre">message</span></code>.</p>
 </section>
@@ -178,33 +282,50 @@ Has a lower priority than the <code class="docutils literal notranslate"><span c
 
 
            </div>
+           
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../teachers/practices.html" class="btn btn-neutral float-left" title="Best Practices" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
         <a href="api.html" class="btn btn-neutral float-right" title="Developer API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../teachers/practices.html" class="btn btn-neutral float-left" title="Best Practices" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2018, acbart, lukesg08.</p>
-  </div>
+    <p>
+        &#169; Copyright 2018, acbart, lukesg08.
 
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
         </div>
       </div>
+
     </section>
+
   </div>
-  <script>
+  
+
+  <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

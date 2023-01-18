@@ -8,29 +8,6 @@ Pedal is not tied to a single autograding platform, our vision is that it should
 is largely achieved through "environments", which can be set as command line parameters to reconfigure Pedal
 for the desired autograding platform. If you want to see a new platform, then please raise an Issue on our GitHub!
 
-VPL
----
-
-You will need to create an instructor control script (e.g., `ics.py`), and upload it along with a `vpl_evaluate.sh` file:
-
-.. code-block:: console
-    :caption: vpl_evaluate.sh
-
-    # Run the environment variable initializer to get access to its variables
-    source ./vpl_environment.sh
-    echo "#!/bin/bash" > vpl_execution
-    echo "python3.6 -m pedal grade ics.py $VPL_SUBFILE0 --environment vpl">> vpl_execution
-    chmod +x vpl_execution
-
-You should configure the assignment as follows:
-
-* Include the `ics.py` file in the "Files to keep when running"
-* Under "Execution Options", enable Evaluate and Automatic Grade.
-
-When you use the VPL environment, you can expect the following:
-
-* Most HTML tags are not available; only headers and preformatted text blocks are available.
-
 GradeScope
 ----------
 
@@ -83,6 +60,33 @@ BlockPy
 
 BlockPy comes preloaded with Pedal. No special configuration is required!
 
+Since the environment is preconfigured on every run, the only thing you need to do is ``from pedal import *``
+
+VPL
+---
+
+You will need to create an instructor control script (e.g., `ics.py`), and upload it along with a `vpl_evaluate.sh` file:
+
+.. code-block:: console
+    :caption: vpl_evaluate.sh
+
+    # Run the environment variable initializer to get access to its variables
+    source ./vpl_environment.sh
+    echo "#!/bin/bash" > vpl_execution
+    echo "python3.6 -m pedal grade ics.py $VPL_SUBFILE0 --environment vpl">> vpl_execution
+    chmod +x vpl_execution
+
+You should configure the assignment as follows:
+
+* Include the `ics.py` file in the "Files to keep when running"
+* Under "Execution Options", enable Evaluate and Automatic Grade.
+
+When you use the VPL environment, you can expect the following:
+
+* Most HTML tags are not available; only headers and preformatted text blocks are available.
+
+
+
 Web-CAT
 -------
 
@@ -96,5 +100,5 @@ Jupyter Notebooks
 Jupyter Notebook integration has been achieved, but we have not really prepared this for other people to use.
 If you are interested, then you will need to make sure that the Jupyter server preloads the Grade Magic command we
 have created. From there, you can create custom notebooks with the instructor grading code at the bottom. We wrote
-a `simple extension <https://github.com/acbart/jn-student-toolbar>`_` to hide these cells (along with
+a `simple extension <https://github.com/acbart/jn-student-toolbar>`_ to hide these cells (along with
 other interface changes).

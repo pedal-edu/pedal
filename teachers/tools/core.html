@@ -1,39 +1,77 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" />
+  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
   <title>Core Commands &mdash; Pedal 1.0 documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/sphinx_highlight.js"></script>
-    <script src="../../_static/js/theme.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="TIFA" href="tifa.html" />
+    <link rel="next" title="Feedback Functions" href="ffs.html" />
     <link rel="prev" title="Teacher Reference" href="../reference.html" /> 
 </head>
 
-<body class="wy-body-for-nav"> 
+<body class="wy-body-for-nav">
+
+   
   <div class="wy-grid-for-nav">
+    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
+          
+
+          
             <a href="../../index.html" class="icon icon-home"> Pedal
+          
+
+          
           </a>
+
+          
+            
+            
               <div class="version">
                 1.0
               </div>
+            
+          
+
+          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -41,7 +79,18 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
               <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../everyone/introduction.html">Introduction</a></li>
@@ -65,6 +114,8 @@
 <li class="toctree-l3"><a class="reference internal" href="#get_all_feedback"><code class="docutils literal notranslate"><span class="pre">get_all_feedback()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="ffs.html">Feedback Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="formatter.html">Formatter</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tifa.html">TIFA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cait.html">CAIT</a></li>
 <li class="toctree-l2"><a class="reference internal" href="source.html">Source</a></li>
@@ -74,52 +125,95 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../integrations.html">Autograder Integrations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../practices.html">Best Practices</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../developers/ffs.html">Feedback Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers/ffs.html">Developers: Feedback Functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers/api.html">Developer API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers/tools.html">Developer Tools Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers/conventions.html">Internal Naming Conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers/libraries.html">Necessary Libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../analysis.html">Researchers: Analyzing with Pedal</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../everyone/glossary.html">Glossary</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../everyone/contact.html">Contact</a></li>
 </ul>
 
+            
+          
         </div>
+        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../index.html">Pedal</a>
+        
       </nav>
 
+
       <div class="wy-nav-content">
+        
         <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a></li>
-          <li class="breadcrumb-item"><a href="../reference.html">Teacher Reference</a></li>
-      <li class="breadcrumb-item active">Core Commands</li>
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../reference.html">Teacher Reference</a> &raquo;</li>
+        
+      <li>Core Commands</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
+        
+          
             <a href="../../_sources/teachers/tools/core.rst.txt" rel="nofollow"> View page source</a>
+          
+        
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-             
+            
   <section id="core-commands">
-<h1>Core Commands<a class="headerlink" href="#core-commands" title="Permalink to this heading"></a></h1>
+<h1>Core Commands<a class="headerlink" href="#core-commands" title="Permalink to this heading">¶</a></h1>
 <p>Imported as:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal</span> <span class="kn">import</span> <span class="o">*</span>
 </pre></div>
 </div>
 <dl class="py function">
 <dt class="sig sig-object py" id="set_success">
-<span class="sig-name descname"><span class="pre">set_success</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">justification</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#set_success" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set_success</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">justification</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#set_success" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set this submission as correct/complete/successful. Typically resolved as overriding
 all other feedback. Often triggered as part of a conditional. You can optionally set
-an (internal) <cite>justification</cite> message for why this was triggered.</p>
+an (internal) <a class="reference internal" href="ffs.html#justification" title="justification"><code class="xref py py-obj docutils literal notranslate"><span class="pre">justification</span></code></a> message for why this was triggered.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">set_success</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -127,10 +221,10 @@ an (internal) <cite>justification</cite> message for why this was triggered.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="compliment">
-<span class="sig-name descname"><span class="pre">compliment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">justification</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#compliment" title="Permalink to this definition"></a></dt>
-<dd><p>Provides a <cite>message</cite> to the student complimenting them on something they did correctly.
-You can also specify a numeric <cite>value</cite> that will be added as partial credit.
-Finally, you can optionally set an internal <cite>justification</cite> message for why this was triggered.</p>
+<span class="sig-name descname"><span class="pre">compliment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">justification</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#compliment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Provides a <a class="reference internal" href="ffs.html#message" title="message"><code class="xref py py-obj docutils literal notranslate"><span class="pre">message</span></code></a> to the student complimenting them on something they did correctly.
+You can also specify a numeric <code class="xref py py-obj docutils literal notranslate"><span class="pre">value</span></code> that will be added as partial credit.
+Finally, you can optionally set an internal <a class="reference internal" href="ffs.html#justification" title="justification"><code class="xref py py-obj docutils literal notranslate"><span class="pre">justification</span></code></a> message for why this was triggered.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">compliment</span><span class="p">(</span><span class="s2">&quot;Your `for` loop looks correct!&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -138,9 +232,9 @@ Finally, you can optionally set an internal <cite>justification</cite> message f
 
 <dl class="py function">
 <dt class="sig sig-object py" id="give_partial">
-<span class="sig-name descname"><span class="pre">give_partial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">justification</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#give_partial" title="Permalink to this definition"></a></dt>
-<dd><p>Increases the student’s overall score by the numeric <cite>value</cite>.
-Finally, you can optionally set an internal <cite>justification</cite> message for why this was triggered.</p>
+<span class="sig-name descname"><span class="pre">give_partial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">justification</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#give_partial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Increases the student’s overall score by the numeric <code class="xref py py-obj docutils literal notranslate"><span class="pre">value</span></code>.
+Finally, you can optionally set an internal <a class="reference internal" href="ffs.html#justification" title="justification"><code class="xref py py-obj docutils literal notranslate"><span class="pre">justification</span></code></a> message for why this was triggered.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">give_partial</span><span class="p">(</span><span class="mf">.5</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -148,10 +242,10 @@ Finally, you can optionally set an internal <cite>justification</cite> message f
 
 <dl class="py function">
 <dt class="sig sig-object py" id="explain">
-<span class="sig-name descname"><span class="pre">explain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'explain'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">justification</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#explain" title="Permalink to this definition"></a></dt>
-<dd><p>A core feedback function, used to display a specific feedback <cite>message</cite> response to the
-learner. The <cite>label</cite> can be given to help track this piece of feedback; we strongly recommend
-always including a <a class="reference internal" href="../../everyone/glossary.html#term-Feedback-Label"><span class="xref std std-term">Feedback Label</span></a> when you can! You can also provide the internal <cite>justification</cite>
+<span class="sig-name descname"><span class="pre">explain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'explain'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">justification</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#explain" title="Permalink to this definition">¶</a></dt>
+<dd><p>A core feedback function, used to display a specific feedback <a class="reference internal" href="ffs.html#message" title="message"><code class="xref py py-obj docutils literal notranslate"><span class="pre">message</span></code></a> response to the
+learner. The <a class="reference internal" href="ffs.html#label" title="label"><code class="xref py py-obj docutils literal notranslate"><span class="pre">label</span></code></a> can be given to help track this piece of feedback; we strongly recommend
+always including a <a class="reference internal" href="../../everyone/glossary.html#term-Feedback-Label"><span class="xref std std-term">Feedback Label</span></a> when you can! You can also provide the internal <a class="reference internal" href="ffs.html#justification" title="justification"><code class="xref py py-obj docutils literal notranslate"><span class="pre">justification</span></code></a>
 text to give some debug information about the justification for this feedback. By default,
 this feedback’s priority tends to override almost any other kind besides syntax errors.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">explain</span><span class="p">(</span><span class="s2">&quot;You need to use a For loop for this problem!&quot;</span><span class="p">)</span>
@@ -163,12 +257,12 @@ this feedback’s priority tends to override almost any other kind besides synta
 
 <dl class="py function">
 <dt class="sig sig-object py" id="gently">
-<span class="sig-name descname"><span class="pre">gently</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">justification</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gently" title="Permalink to this definition"></a></dt>
-<dd><p>A core feedback function, used to display a specific feedback <cite>message</cite> to the learner.
+<span class="sig-name descname"><span class="pre">gently</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">justification</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gently" title="Permalink to this definition">¶</a></dt>
+<dd><p>A core feedback function, used to display a specific feedback <a class="reference internal" href="ffs.html#message" title="message"><code class="xref py py-obj docutils literal notranslate"><span class="pre">message</span></code></a> to the learner.
 Basically the same as the <a class="reference internal" href="#explain" title="explain"><code class="xref py py-func docutils literal notranslate"><span class="pre">explain()</span></code></a>, except the priority is much lower. This will not
 override runtime or <a class="reference internal" href="../../developers/tools/tifa.html#tifa"><span class="std std-ref">algorithmic</span></a> errors.
-The <cite>label</cite> can be given to help track this piece of feedback; we strongly recommend
-always including a <a class="reference internal" href="../../everyone/glossary.html#term-Feedback-Label"><span class="xref std std-term">Feedback Label</span></a> when you can! You can also provide the internal <cite>justification</cite>
+The <a class="reference internal" href="ffs.html#label" title="label"><code class="xref py py-obj docutils literal notranslate"><span class="pre">label</span></code></a> can be given to help track this piece of feedback; we strongly recommend
+always including a <a class="reference internal" href="../../everyone/glossary.html#term-Feedback-Label"><span class="xref std std-term">Feedback Label</span></a> when you can! You can also provide the internal <a class="reference internal" href="ffs.html#justification" title="justification"><code class="xref py py-obj docutils literal notranslate"><span class="pre">justification</span></code></a>
 text to give some debug information about the justification for this feedback.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gently</span><span class="p">(</span><span class="s2">&quot;Your solution looks close, but you haven&#39;t incorporated any multiplication.&quot;</span><span class="p">)</span>
 
@@ -180,8 +274,8 @@ text to give some debug information about the justification for this feedback.</
 
 <dl class="py function">
 <dt class="sig sig-object py" id="guidance">
-<span class="sig-name descname"><span class="pre">guidance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'guidance'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">justification</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#guidance" title="Permalink to this definition"></a></dt>
-<dd><p>Used to display guiding feedback such as a hint or revised instructions via the <cite>message</cite> to the learner.
+<span class="sig-name descname"><span class="pre">guidance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'guidance'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">justification</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#guidance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to display guiding feedback such as a hint or revised instructions via the <a class="reference internal" href="ffs.html#message" title="message"><code class="xref py py-obj docutils literal notranslate"><span class="pre">message</span></code></a> to the learner.
 You are recommended to include a <a class="reference internal" href="../../everyone/glossary.html#term-Feedback-Label"><span class="xref std std-term">Feedback Label</span></a>, but not obligated. You can also optionally
 include a justification.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">guidance</span><span class="p">(</span><span class="s2">&quot;Great work so far - now try incorporating a variable!&quot;</span><span class="p">)</span>
@@ -194,7 +288,7 @@ include a justification.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="hide_correctness">
-<span class="sig-name descname"><span class="pre">hide_correctness</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hide_correctness" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">hide_correctness</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hide_correctness" title="Permalink to this definition">¶</a></dt>
 <dd><p>Special function to signal to the environment to not report whether or not this submission was correct.
 Useful in exam situations where you do not want to explicitly state whether the student has a correct
 answer even if the system can detect it.; not that we take a stance on whether that’s a sound strategy
@@ -206,7 +300,7 @@ pedagogically.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="suppress">
-<span class="sig-name descname"><span class="pre">suppress</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">category</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#suppress" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">suppress</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">category</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#suppress" title="Permalink to this definition">¶</a></dt>
 <dd><p>Override whether a particular <a class="reference internal" href="../../everyone/glossary.html#term-Feedback-Category"><span class="xref std std-term">Feedback Category</span></a> or an individual <a class="reference internal" href="../../everyone/glossary.html#term-Feedback-Label"><span class="xref std std-term">Feedback Label</span></a>
 should be displayed to the user. You can specify one or both, and it will refine the answer accordingly.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.core.feedback_category</span> <span class="kn">import</span> <span class="n">FeedbackCategory</span>
@@ -223,7 +317,7 @@ should be displayed to the user. You can specify one or both, and it will refine
 
 <dl class="py function">
 <dt class="sig sig-object py" id="log">
-<span class="sig-name descname"><span class="pre">log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#log" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#log" title="Permalink to this definition">¶</a></dt>
 <dd><p>A muted feedback type meant for internal system usage, will not be shown to the student. You can use
 this to log data that will be viewable as an instructor, since printing is often not available when
 writing grading scripts.</p>
@@ -234,7 +328,7 @@ writing grading scripts.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="debug">
-<span class="sig-name descname"><span class="pre">debug</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#debug" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">debug</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#debug" title="Permalink to this definition">¶</a></dt>
 <dd><p>Similar to <a class="reference internal" href="#log" title="log"><code class="xref py py-func docutils literal notranslate"><span class="pre">log()</span></code></a>, a muted feedback type meant for internal system usage. However, this one
 should be used to indicate that something went wrong.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;The conditional should be false, but was true instead.&quot;</span><span class="p">)</span>
@@ -244,7 +338,7 @@ should be used to indicate that something went wrong.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="clear_report">
-<span class="sig-name descname"><span class="pre">clear_report</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#clear_report" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">clear_report</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#clear_report" title="Permalink to this definition">¶</a></dt>
 <dd><p>Removes all existing data from the report, including any submissions, suppressions, feedback,
 and Tool data. Essentially resets the entire grading script. Be careful about using this one!</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">clear_report</span><span class="p">()</span>
@@ -254,7 +348,7 @@ and Tool data. Essentially resets the entire grading script. Be careful about us
 
 <dl class="py function">
 <dt class="sig sig-object py" id="contextualize_report">
-<span class="sig-name descname"><span class="pre">contextualize_report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">submission</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span> <span class="pre">or</span> <span class="pre">Submission</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'answer.py'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clear</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#contextualize_report" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">contextualize_report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">submission</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span> <span class="pre">or</span> <span class="pre">Submission</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'answer.py'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clear</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#contextualize_report" title="Permalink to this definition">¶</a></dt>
 <dd><p>Updates the report with the submission.
 You can pass in either an actual <a class="reference internal" href="../../developers/api.html#pedal.core.submission.Submission" title="pedal.core.submission.Submission"><code class="xref py py-class docutils literal notranslate"><span class="pre">Submission</span></code></a> or a string representing
 the code of the submission, for the first parameter. The second parameter is unused if you pass in a
@@ -278,7 +372,7 @@ additional meta information and specify additional files.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="get_all_feedback">
-<span class="sig-name descname"><span class="pre">get_all_feedback</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="../../developers/api.html#pedal.core.commands.Feedback" title="pedal.core.commands.Feedback"><span class="pre">Feedback</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#get_all_feedback" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_all_feedback</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="../../developers/api.html#pedal.core.commands.Feedback" title="pedal.core.commands.Feedback"><span class="pre">Feedback</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#get_all_feedback" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves a list of all the <a class="reference internal" href="../../developers/api.html#pedal.core.feedback.Feedback" title="pedal.core.feedback.Feedback"><code class="xref py py-class docutils literal notranslate"><span class="pre">Feedback</span></code></a> currently attached to the report,
 which you could inspect in order to reuse conditions or even perhaps modify responses.
 Not very convenient currently, but we will improve the interface if there is demand.</p>
@@ -293,33 +387,50 @@ Not very convenient currently, but we will improve the interface if there is dem
 
 
            </div>
+           
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="ffs.html" class="btn btn-neutral float-right" title="Feedback Functions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
         <a href="../reference.html" class="btn btn-neutral float-left" title="Teacher Reference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="tifa.html" class="btn btn-neutral float-right" title="TIFA" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2018, acbart, lukesg08.</p>
-  </div>
+    <p>
+        &#169; Copyright 2018, acbart, lukesg08.
 
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
         </div>
       </div>
+
     </section>
+
   </div>
-  <script>
+  
+
+  <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

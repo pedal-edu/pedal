@@ -1,5 +1,7 @@
-Feedback Functions
-==================
+.. _developers_ffs:
+
+Developers: Feedback Functions
+==============================
 
 The most important unit of Pedal are its Feedback Functions.
 This document walks through all of the features available on a Feedback Function.
@@ -60,6 +62,18 @@ Report
     Feedback Functions are expected to be attached to a report object.
     By default, they are all attached to the `MAIN_REPORT`. Attempting to reuse
     an instance of FF is undefined behavior.
+
+The Lifetime of a Feedback Function
+-----------------------------------
+
+Default lifetime of a Feedback Function:
+
+1. Feedback Function is called
+2. FF default initializer is executed
+3. Child initializers are executed
+4. The feedback's condition is evaluated
+5. The feedback's
+6. Any parent feedbacks have the opportunity to manipulate the child.
 
 The Metadata of Feedback Functions
 ----------------------------------

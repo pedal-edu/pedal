@@ -7,14 +7,14 @@ There are two major kinds of assertions: static and runtime.
 Static
 ------
 
-.. function:: prevent_literal(*literals: Any, muted=False) -> False or Any
+.. function:: prevent_literal(*literals: Any) -> Feedback
 
     Confirms that the literal is not in the code, returning False if it is not.
     You can use literal strings, integers, floats, booleans, and None.
 
     .. feedback_function:: pedal.assertions.static.prevent_literal
 
-.. function:: ensure_literal(*literals: Any, muted=False) -> False or Any
+.. function:: ensure_literal(*literals: Any) -> Feedback
 
     Confirms that the literal IS in the code, returning False if it is not.
     You can use literal strings, integers, floats, booleans, and None.
