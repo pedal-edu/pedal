@@ -47,7 +47,8 @@ class assert_equal(RuntimeAssertionFeedback):
             If delta is None, then the default Delta will be used (.001).
     """
     DELTA = .001
-    justification = "Left and right were not equal"
+    justification_template = ("Left ({left}) and right ({right}) were not equal",
+                              "Left ({left}) and right ({right}) were equal")
     _expected_verb = "to be equal to"
     _aggregate_verb = "Expected"
     _inverse_operator = "!="

@@ -12,6 +12,8 @@ document all the features available - for that, you should refer to the :ref:`fu
     :caption: Contents
 
     tools/core
+    tools/ffs
+    tools/formatter
     tools/tifa
     tools/cait
     tools/source

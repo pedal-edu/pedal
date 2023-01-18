@@ -7,6 +7,9 @@ REM Command file for Sphinx documentation
 if "%SPHINXBUILD%" == "" (
 	set SPHINXBUILD=python -msphinx
 )
+if "%SPHINXBUILD%" == "live" (
+	set SPHINXBUILD=python -msphinx-autobuild
+)
 set SOURCEDIR=.
 set BUILDDIR=../docs/
 set SPHINXPROJ=Pedal

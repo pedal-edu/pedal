@@ -110,6 +110,11 @@ class Feedback:
     CATEGORIES = FeedbackCategory
     KINDS = FeedbackKind
 
+    DEFAULT_FEEDBACK_MESSAGE = "No feedback message provided"
+    DEFAULT_JUSTIFICATION_MESSAGE = "No justification provided"
+    DEFAULT_ELSE_MESSAGE = None
+
+
     label = None
     category = None
     justification = None
@@ -122,6 +127,7 @@ class Feedback:
     message = None
     message_template = None
     else_message = None
+    else_message_template = None
     priority = None
     valence = None
     location = None
@@ -152,7 +158,7 @@ class Feedback:
                  fields=None, field_names=None,
                  kind=None, title=None,
                  message=None, message_template=None,
-                 else_message=None,
+                 else_message=None, else_message_template=None,
                  priority=None, valence=None,
                  location=None, score=None, correct=None,
                  muted=None, unscored=None,
@@ -200,6 +206,8 @@ class Feedback:
             self.message_template = message_template
         if else_message is not None:
             self.else_message = else_message
+        if else_message_template is not None:
+            self.else_message_template = else_message_template
 
         # Locations
         if isinstance(location, int):
@@ -261,6 +269,8 @@ class Feedback:
                 self.message = self._get_message()
                 self._status = FeedbackStatus.ACTIVE
             else:
+                self.else_message = self._get_else_message()
+                self.message = self.else_message
                 try:
                     self.unused_message = self._get_message()
                 except Exception:
@@ -309,7 +319,27 @@ class Feedback:
             fields = {field: FeedbackFieldWrapper(field, value, self.report.format)
                       for field, value in self.fields.items()}
             return self.message_template.format(**fields)
-        return "No feedback message provided"
+        return self.DEFAULT_FEEDBACK_MESSAGE
+
+    def _get_else_message(self):
+        """
+        Determines the appropriate value for the else_message. It will attempt
+        to use this instance's else_message, but if it's not available then it will
+        try to generate one from the else_message_template. Then, it returns ``None``
+        instead (since usually we don't provide positive feedback).
+
+        You can override this to create a truly dynamic else_message, if you want.
+
+        Returns:
+            str: The else_message for this feedback.
+        """
+        if self.else_message is not None:
+            return self.else_message
+        if self.else_message_template is not None:
+            fields = {field: FeedbackFieldWrapper(field, value, self.report.format)
+                      for field, value in self.fields.items()}
+            return self.else_message_template.format(**fields)
+        return self.DEFAULT_ELSE_MESSAGE
 
     def _get_justification(self, met_condition):
         """
@@ -341,7 +371,7 @@ class Feedback:
             fields = {field: FeedbackFieldWrapper(field, value, self.report.format)
                       for field, value in self.fields.items()}
             return template.format(**fields)
-        return "No justification provided"
+        return self.DEFAULT_JUSTIFICATION_MESSAGE
 
     def _get_child_feedback(self, feedback, active):
         """ Callback function that Reports will call when a new piece of

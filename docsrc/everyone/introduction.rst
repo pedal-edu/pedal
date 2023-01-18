@@ -3,8 +3,9 @@ Introduction
 
 Good feedback is hard to come by.
 Imagine you are a student submitting your first program, and this is what
-the system spits out::
+the system spits out
 
+.. error::
     Traceback (most recent call last):
         File "instructor.py", line 12323, in _special_custom_helper:
             self.assertEqual(result, 5)

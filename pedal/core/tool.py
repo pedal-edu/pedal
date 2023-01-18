@@ -35,11 +35,7 @@ You can update and access fields via dictionary access.
 The ``__init__.py`` file for a Tool should use  ``__all__`` to expose any
 interesting teacher-level functions, classes, and data. That way, teachers can
 just consistently use ``from pedal.tool import *`` to instantly gain access to
-the interesting set of members. The big exception to this is
-:ref:`toolkit`, which is full of prototypical Tools organized
-into subsubmodules. If it's just a single function without much complexity, it
-probably belongs in the Toolkit; but as soon as complexity or multiple
-functions emerge with a theme, it can be promoted to a Tool.
+the interesting set of members.
 
 """
 

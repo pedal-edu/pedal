@@ -126,6 +126,7 @@ class Formatter:
         return "\n" + ("\n".join(result))
 
     def check_mark(self):
+        # TODO: should be ✓, right?
         return " "
 
     def negative_mark(self):

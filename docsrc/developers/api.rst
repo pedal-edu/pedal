@@ -4,7 +4,7 @@ Developer API
 =============
 
 This is the complete API reference for Pedal and its associated components.
-If you are an instructor, you might find it more helpful to read over the :ref:`tutorial` too.
+If you are an instructor, you might find it more helpful to read over the :ref:`quickstart` too.
 
 Important Concepts
 ******************
@@ -16,7 +16,7 @@ Important Concepts
 
     Feedback Response should be Markdown, but should also provide a plain-text console-friendly version.
 
-    Recommended to have a `muted` boolean parameter that allows you to use it strictly as a Condition.
+    Recommended to have a ``muted`` boolean parameter that allows you to use it strictly as a Condition.
     When muted, a function still attaches feedback but that feedback will not contribute to correctness
     or consider being displayed to the user. Its score will be added, though!
 
@@ -78,6 +78,9 @@ Feedback
 ********
 
 .. automodule:: pedal.core.feedback
+    :members:
+
+.. automodule:: pedal.core.feedback_category
     :members:
 
 Environment

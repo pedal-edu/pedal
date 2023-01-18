@@ -15,13 +15,15 @@ except:
 
 
 class unit_test(assert_group):
-    pass
+    justification_template = ("Some of the feedback in this group was triggered.",
+                              "None of the feedback in this group was triggered.")
 
 
 _unit_test_class = unit_test
 
 
-def unit_test(function, *tests, else_message=None, score=None, partial_credit=False,
+def unit_test(function, *tests, else_message=None, else_message_template=None,
+              score=None, partial_credit=False,
               assert_function=None, context=None, **kwargs):
     """
     Helper function for quickly unit testing.
@@ -63,6 +65,7 @@ def unit_test(function, *tests, else_message=None, score=None, partial_credit=Fa
             context = get_sandbox().get_context(context._actual_context_id)
     # TODO: Make it so unit_test can document its cases
     with _unit_test_class(function, else_message=else_message,
+                          else_message_template=else_message_template,
                           context=context, **kwargs) as group_result:
         for test_index, test in enumerate(tests):
             args, expected = test
