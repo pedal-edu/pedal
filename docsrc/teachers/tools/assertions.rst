@@ -4,6 +4,7 @@ Assertions
 There are two major kinds of assertions: static and runtime.
 
 
+
 Static
 ------
 

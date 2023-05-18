@@ -15,6 +15,7 @@ from pedal.sandbox import run, get_sandbox, set_input, start_trace
 from pedal.tifa import tifa_analysis
 from pedal.resolvers.simple import resolve
 
+
 def parse_argv():
     """ Retrieve fields from sys.argv """
     if len(sys.argv) == 2:

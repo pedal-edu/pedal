@@ -19,12 +19,13 @@ DEFAULT_CATEGORY_PRIORITY = [
 
 def resolve_feedback(feedback):
     """
+    This function is used to resolve a single feedback object into a string.
 
     Args:
-        feedback:
+        feedback: The feedback object to resolve.
 
     Returns:
-
+        str: The resolved feedback.
     """
     return "{title}\n{body}".format(title=feedback.title, body=feedback.message)
 
@@ -32,12 +33,13 @@ def resolve_feedback(feedback):
 @make_resolver
 def resolve(report=MAIN_REPORT, priority_key=by_priority):
     """
+    This function is used to resolve the feedback objects in the report into a FinalFeedback object.
 
     Args:
-        report:
+        report: The report to resolve.
 
     Returns:
-
+        FinalFeedback: The resolved feedback.
     """
 
     # Prepare feedbacks
