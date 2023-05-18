@@ -1,93 +1,45 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
   <title>pedal.sandbox.sandbox &mdash; Pedal 1.0 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/sphinx_highlight.js"></script>
-    
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
-
-    
+    <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
 
           
-            <a href="../../../index.html" class="icon icon-home"> Pedal
           
-
-          
+          <a href="../../../index.html" class="icon icon-home">
+            Pedal
           </a>
-
-          
-            
-            
               <div class="version">
                 1.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../everyone/introduction.html">Introduction</a></li>
@@ -107,71 +59,31 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../everyone/contact.html">Contact</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../index.html">Pedal</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-        
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-        
-          <li><a href="../sandbox.html">pedal.sandbox</a> &raquo;</li>
-        
-      <li>pedal.sandbox.sandbox</li>
-    
-    
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../sandbox.html">pedal.sandbox</a></li>
+      <li class="breadcrumb-item active">pedal.sandbox.sandbox</li>
       <li class="wy-breadcrumbs-aside">
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   <h1>Source code for pedal.sandbox.sandbox</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">File containing the Sandbox class.</span>
@@ -188,6 +100,7 @@
 
 <span class="kn">from</span> <span class="nn">pedal.core.feedback_category</span> <span class="kn">import</span> <span class="n">FeedbackCategory</span>
 <span class="kn">from</span> <span class="nn">pedal.core.report</span> <span class="kn">import</span> <span class="n">MAIN_REPORT</span>
+<span class="kn">from</span> <span class="nn">pedal.sandbox.mocked</span> <span class="kn">import</span> <span class="n">PrintingStringIO</span>
 <span class="kn">from</span> <span class="nn">pedal.utilities.exceptions</span> <span class="kn">import</span> <span class="n">ExpandedTraceback</span><span class="p">,</span> <span class="n">improve_builtin_exceptions</span>
 <span class="kn">from</span> <span class="nn">pedal.sandbox.data</span> <span class="kn">import</span> <span class="n">SandboxVariable</span><span class="p">,</span> <span class="n">SandboxContextKind</span><span class="p">,</span> \
     <span class="n">SandboxContext</span><span class="p">,</span> <span class="n">SandboxModules</span>
@@ -317,7 +230,6 @@
             <span class="nb">setattr</span><span class="p">(</span><span class="n">imported_module</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
         <span class="c1"># And get them back the module</span>
         <span class="k">return</span> <span class="n">imported_module</span>
-
 
     <span class="k">def</span> <span class="nf">_execute_with_timeout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">kind</span><span class="p">,</span> <span class="o">**</span><span class="n">meta</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -563,9 +475,9 @@
                 <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_context</span><span class="p">[</span><span class="n">context_id</span><span class="p">]]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">past_context_group_starts</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_context_group_start</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
-                    <span class="k">if</span> <span class="n">past_context_group_starts</span> <span class="o">&lt;</span> <span class="n">context_id</span><span class="o">+</span><span class="mi">1</span><span class="p">:</span>
-                        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_context</span><span class="p">[</span><span class="n">past_context_group_starts</span><span class="p">:</span><span class="n">context_id</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_context</span><span class="p">[:</span><span class="n">context_id</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span></div>
+                    <span class="k">if</span> <span class="n">past_context_group_starts</span> <span class="o">&lt;</span> <span class="n">context_id</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_context</span><span class="p">[</span><span class="n">past_context_group_starts</span><span class="p">:</span><span class="n">context_id</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_context</span><span class="p">[:</span><span class="n">context_id</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span></div>
 
     <span class="k">def</span> <span class="nf">_guess_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -683,7 +595,6 @@
                 <span class="n">data</span><span class="p">[</span><span class="s1">&#39;__builtins__&#39;</span><span class="p">][</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
                 <span class="n">data</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
 
-
     <span class="k">def</span> <span class="nf">_start_mocking</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">SandboxContext</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Mock input, output, builtins, and modules &quot;&quot;&quot;</span>
         <span class="c1"># Handle input tracking</span>
@@ -698,8 +609,12 @@
             <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">True</span><span class="p">:</span>
                 <span class="n">overridden_modules</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_module_overrides</span><span class="p">[</span><span class="s1">&#39;__builtins__&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">builtins</span>
+        <span class="c1"># Handle allowing *actual* printing to the real stdout console</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_module_overrides</span><span class="p">[</span><span class="s1">&#39;__builtins__&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;print&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_current_stdout</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_current_stdout</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">PrintingStringIO</span><span class="p">())</span>
         <span class="c1"># And do the patches</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_current_stdout</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">())</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_start_patches</span><span class="p">(</span>
             <span class="n">patch</span><span class="o">.</span><span class="n">dict</span><span class="p">(</span><span class="s1">&#39;sys.modules&#39;</span><span class="p">,</span> <span class="n">overridden_modules</span><span class="p">),</span>
             <span class="n">patch</span><span class="p">(</span><span class="s1">&#39;sys.stdout&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_stdout</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span>
@@ -727,11 +642,17 @@
         <span class="k">for</span> <span class="n">a_patch</span> <span class="ow">in</span> <span class="n">patches</span><span class="p">:</span>
             <span class="n">a_patch</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
 
-<div class="viewcode-block" id="Sandbox.clear_mocks"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.clear_mocks">[docs]</a>    <span class="k">def</span> <span class="nf">clear_mocks</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Removes any module or builtin overrides currently in effect. &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Sandbox.clear_mocks"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.clear_mocks">[docs]</a>    <span class="k">def</span> <span class="nf">clear_mocks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reset_default_mocks</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Removes any module or builtin overrides currently in effect.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            reset_default_mocks (bool): If True, also resets the default mocks (e.g., `open`, `__import__`).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_module_overrides</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">reset_default_overrides</span><span class="p">()</span></div>
+        <span class="k">if</span> <span class="n">reset_default_mocks</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reset_default_overrides</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Sandbox.reset_default_overrides"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.reset_default_overrides">[docs]</a>    <span class="k">def</span> <span class="nf">reset_default_overrides</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -762,6 +683,15 @@
 
     <span class="k">def</span> <span class="nf">block_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">function_name</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_module_overrides</span><span class="p">[</span><span class="s1">&#39;__builtins__&#39;</span><span class="p">][</span><span class="n">function_name</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="Sandbox.clear_mocked_function"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.clear_mocked_function">[docs]</a>    <span class="k">def</span> <span class="nf">clear_mocked_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">function_name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Removes the mocking associated with the given function name.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            function_name (str): The name of the function to be mocked.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_module_overrides</span><span class="p">[</span><span class="s1">&#39;__builtins__&#39;</span><span class="p">][</span><span class="n">function_name</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="Sandbox.allow_module"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.allow_module">[docs]</a>    <span class="k">def</span> <span class="nf">allow_module</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -806,7 +736,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">_module_overrides</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">mocked_version</span>
             <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
                 <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
-        <span class="c1">#self._module_overrides[module_name] = mocked.BlockedModule(module_name)</span>
+        <span class="c1"># self._module_overrides[module_name] = mocked.BlockedModule(module_name)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
     <span class="c1">############################################################################</span>
@@ -894,7 +824,6 @@
             <span class="n">current_addition</span> <span class="o">=</span> <span class="s2">&quot;_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">attempt_index</span><span class="p">)</span>
             <span class="n">attempt_index</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="n">name</span> <span class="o">+</span> <span class="n">current_addition</span></div>
-
 
     <span class="c1">############################################################################</span>
     <span class="c1"># Data Namespace Management</span>
@@ -989,7 +918,7 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            list of callables</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="n">v</span><span class="p">)}</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">v</span><span class="p">)}</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">var</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1028,7 +957,7 @@
     <span class="c1">############################################################################</span>
     <span class="c1"># Useful Dunders</span>
 
-    <span class="c1">#def __repr__(self):</span>
+    <span class="c1"># def __repr__(self):</span>
     <span class="c1">#    return &quot;Sandbox({})&quot;.format()</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1065,23 +994,28 @@
 <span class="sd">        Wraps an input function with a tracker.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_called_inputs</span> <span class="o">=</span> <span class="mi">0</span>
+
         <span class="k">def</span> <span class="nf">_input_tracker</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">args</span><span class="p">:</span>
                 <span class="n">prompt</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">prompt</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">):</span>
+                <span class="n">value_entered</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span>
                 <span class="n">value_entered</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="c1"># TODO: Make this smarter, more elegant in choosing IF we should repeat 0</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span>
                 <span class="n">value_entered</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_context</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value_entered</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_called_inputs</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">MAXIMUM_INPUTS</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">MAXIMUM_INPUTS</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_called_inputs</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Asked for user input too many times (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_called_inputs</span><span class="si">}</span><span class="s2"> times). Perhaps you have an infinite loop?&quot;</span><span class="p">)</span>
-            <span class="c1">#context_inputs.append(value_entered)</span>
+                    <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Asked for user input too many times (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_called_inputs</span><span class="si">}</span><span class="s2"> times). Perhaps you have an infinite loop?&quot;</span><span class="p">)</span>
+            <span class="c1"># context_inputs.append(value_entered)</span>
             <span class="k">return</span> <span class="n">value_entered</span>
 
         <span class="k">return</span> <span class="n">_input_tracker</span>
@@ -1128,46 +1062,30 @@
 </pre></div>
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2018, acbart, lukesg08.
-
-    </p>
+    <p>&#169; Copyright 2018, acbart, lukesg08.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

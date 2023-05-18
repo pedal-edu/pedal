@@ -1,96 +1,48 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
   <title>CAIT &mdash; Pedal 1.0 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/sphinx_highlight.js"></script>
-    
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-
-    
+    <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Source" href="source.html" />
     <link rel="prev" title="TIFA" href="tifa.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
 
           
-            <a href="../../index.html" class="icon icon-home"> Pedal
           
-
-          
+          <a href="../../index.html" class="icon icon-home">
+            Pedal
           </a>
-
-          
-            
-            
               <div class="version">
                 1.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../everyone/introduction.html">Introduction</a></li>
@@ -128,75 +80,33 @@
 <li class="toctree-l1"><a class="reference internal" href="../../everyone/contact.html">Contact</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../index.html">Pedal</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-        
-          <li><a href="../reference.html">Teacher Reference</a> &raquo;</li>
-        
-      <li>CAIT</li>
-    
-    
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../reference.html">Teacher Reference</a></li>
+      <li class="breadcrumb-item active">CAIT</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../../_sources/teachers/tools/cait.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   <section id="cait">
-<h1>CAIT<a class="headerlink" href="#cait" title="Permalink to this heading">¶</a></h1>
+<h1>CAIT<a class="headerlink" href="#cait" title="Permalink to this heading"></a></h1>
 <p>All the items in this guide may depend on one or more imports from the pedal package.
 However, most of these should work with the following imports</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.cait.cait_api</span> <span class="kn">import</span> <span class="o">*</span>
@@ -215,7 +125,7 @@ you’ll use the following pattern</p>
 ast_node class except with added fields or functionality. In general it should be easier to work
 with CaitNodes as many additional operations and matching functionality are supported with CaitNodes.</p>
 <section id="list-of-pedal-data-types">
-<h2>List of Pedal Data Types<a class="headerlink" href="#list-of-pedal-data-types" title="Permalink to this heading">¶</a></h2>
+<h2>List of Pedal Data Types<a class="headerlink" href="#list-of-pedal-data-types" title="Permalink to this heading"></a></h2>
 <ul class="simple">
 <li><p>BoolType</p></li>
 <li><p>DictType</p></li>
@@ -232,14 +142,14 @@ with CaitNodes as many additional operations and matching functionality are supp
 </ul>
 </section>
 <section id="save-and-reference-variable">
-<h2>Save and reference variable<a class="headerlink" href="#save-and-reference-variable" title="Permalink to this heading">¶</a></h2>
+<h2>Save and reference variable<a class="headerlink" href="#save-and-reference-variable" title="Permalink to this heading"></a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">match</span> <span class="o">=</span> <span class="n">find_match</span><span class="p">(</span><span class="s2">&quot;_var_ = ___ + _var_&quot;</span><span class="p">)</span>
 <span class="n">student_var</span> <span class="o">=</span> <span class="n">match</span><span class="p">[</span><span class="s1">&#39;_var_&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
 </section>
 <section id="reference-a-function-call">
-<h2>Reference a function call<a class="headerlink" href="#reference-a-function-call" title="Permalink to this heading">¶</a></h2>
+<h2>Reference a function call<a class="headerlink" href="#reference-a-function-call" title="Permalink to this heading"></a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">match</span> <span class="o">=</span> <span class="n">find_match</span><span class="p">(</span><span class="s2">&quot;_var_ = _function_()&quot;</span><span class="p">)</span>
 <span class="n">student_func_call</span> <span class="o">=</span> <span class="n">match</span><span class="p">[</span><span class="s1">&#39;_function_&#39;</span><span class="p">]</span>
 <span class="n">args</span> <span class="o">=</span> <span class="n">student_func_call</span><span class="o">.</span><span class="n">args</span> <span class="c1">#access list of arguments as CaitNodes</span>
@@ -248,7 +158,7 @@ with CaitNodes as many additional operations and matching functionality are supp
 </div>
 </section>
 <section id="reference-a-function-definition">
-<h2>Reference a function definition<a class="headerlink" href="#reference-a-function-definition" title="Permalink to this heading">¶</a></h2>
+<h2>Reference a function definition<a class="headerlink" href="#reference-a-function-definition" title="Permalink to this heading"></a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">match</span> <span class="o">=</span> <span class="n">find_match</span><span class="p">(</span><span class="s2">&quot;def _my_func_():</span><span class="se">\n</span><span class="s2">&quot;</span>
                    <span class="s2">&quot;    pass</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="n">student_func_def</span> <span class="o">=</span> <span class="n">match</span><span class="p">[</span><span class="s1">&#39;_my_func_&#39;</span><span class="p">]</span> <span class="c1"># root node of function definition</span>
@@ -266,7 +176,7 @@ with CaitNodes as many additional operations and matching functionality are supp
 an ast sibling (so same indentation level as definition</p>
 </section>
 <section id="subtree-matching">
-<h2>Subtree matching<a class="headerlink" href="#subtree-matching" title="Permalink to this heading">¶</a></h2>
+<h2>Subtree matching<a class="headerlink" href="#subtree-matching" title="Permalink to this heading"></a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">match</span> <span class="o">=</span> <span class="n">find_match</span><span class="p">(</span><span class="s2">&quot;for _item_ in _list_:</span><span class="se">\n</span><span class="s2">&quot;</span>
                    <span class="s2">&quot;    __exp__&quot;</span><span class="p">)</span>
 <span class="k">match</span><span class="p">[</span><span class="s1">&#39;__exp__&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">find_match</span><span class="p">(</span><span class="s2">&quot;# whatever submatch&quot;</span><span class="p">)</span>
@@ -277,7 +187,7 @@ instead search everything contained in the body of the for loop, or other ast
 child nodes (see tutorial)</p>
 </section>
 <section id="finding-data-types">
-<h2>Finding Data types<a class="headerlink" href="#finding-data-types" title="Permalink to this heading">¶</a></h2>
+<h2>Finding Data types<a class="headerlink" href="#finding-data-types" title="Permalink to this heading"></a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.tifa.type_definitions</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="n">match</span> <span class="o">=</span> <span class="n">find_match</span><span class="p">(</span><span class="s2">&quot;for _item_ in _list_:</span><span class="se">\n</span><span class="s2">&quot;</span>
                    <span class="s2">&quot;    _sum_ = _sum_ + _item_&quot;</span><span class="p">)</span>
@@ -316,50 +226,33 @@ child nodes (see tutorial)</p>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="source.html" class="btn btn-neutral float-right" title="Source" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="tifa.html" class="btn btn-neutral float-left" title="TIFA" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="source.html" class="btn btn-neutral float-right" title="Source" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2018, acbart, lukesg08.
-
-    </p>
+    <p>&#169; Copyright 2018, acbart, lukesg08.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>
