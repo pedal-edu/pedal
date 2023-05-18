@@ -1,3 +1,9 @@
+Version 2.4.0 (5/18/2023)
+-------------------------
+* Allow for normal I/O in Sandbox (`allow_real_io` and `block_real_io`)
+* Added `clear_mocked_function` to `Sandbox`
+* Add print_resolve to top-level Pedal import
+
 Version 2.3.9 (1/16/2023)
 -------------------------
 * Wheat/Chaff Game feature (needs work)
