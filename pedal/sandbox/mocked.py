@@ -146,6 +146,7 @@ ORIGINAL_BUILTINS = {
     'locals': _default_builtins['locals'],
     'open': _default_builtins['open'],
     'input': _default_builtins['input'],
+    'print': _default_builtins['print'],
     'exec': _default_builtins.get('exec', _disabled_exec),
     'eval': _default_builtins.get('eval', _disabled_eval),
     'compile': _default_builtins.get('compile', _disabled_compile),
@@ -187,6 +188,43 @@ def make_inputs(input_list, repeat=None):
                 return repeat
 
     return mock_input
+
+
+class PrintingStringIO(StringIO):
+    _ORIGINAL_STDOUT = sys.stdout
+
+    def __init__(self, stdout=None, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._original_stdout = self._ORIGINAL_STDOUT if stdout is None else stdout
+
+    def write(self, s):
+        """
+
+        Args:
+            s:
+
+        Returns:
+
+        """
+        super().write(s)
+        self._original_stdout.write(s)
+
+
+def make_fake_output(also_print=False) -> StringIO:
+    """
+    Creates a fake output stream that can be used to capture the output
+    of a function. This is useful for testing functions that print things.
+
+    Args:
+        also_print (bool): Whether to also print the output to the console.
+
+    Returns:
+        StringIO: The fake output stream.
+    """
+    fake_output = StringIO()
+
+
+    return fake_output
 
 
 def create_module(module_names):

@@ -12,5 +12,6 @@ from pedal.source import *
 from pedal.sandbox.commands import *
 from pedal.cait import *
 from pedal.assertions.commands import *
+from pedal.resolvers import *
 
 student: Sandbox

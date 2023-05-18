@@ -47,8 +47,14 @@ class SandboxContextKind:
 
     @staticmethod
     def describe_action(context):
-        """ Produces the relevant Action message for the given kind
-        of context """
+        """
+        Produces the relevant Action message for the given kind of context.
+
+        Args:
+            context (SandboxContext): The context to describe.
+        Returns:
+            str: The description of the action.
+        """
         if context.kind == SandboxContextKind.EVAL and context.target in ("", "_"):
             return 'I evaluated the expression'
         else:
@@ -99,20 +105,41 @@ class SandboxContext:
         self.args = args
 
     def clone(self, context_id):
-        """ Create a separate copy of this item. Inputs will be deepcopied. """
+        """
+        Create a separate copy of this item. Inputs will be deep-copied.
+
+        Args:
+            context_id (int): The new context ID.
+        Returns:
+            SandboxContext: The new context, copied from the old one except with a new ID.
+        """
         return SandboxContext(context_id, self.code, self.filename,
                               self.kind, self.target, list(self.inputs),
                               self.output, self.exception, self.submission)
 
 
 class ExecutionTextHolder:
-    def __init__(self, format):
+    """
+    Helper class for formatting the text of an execution. Keeps track of the last action taken, the current body,
+    and the current formatter for this Report.
+
+    Args:
+        format (ReportFormatter): The formatter to use for this Report.
+    """
+    def __init__(self, report_format):
         self._result = []
         self._last_action = None
         self._current_body = []
-        self._format = format
+        self._format = report_format
 
     def add_message(self, action_message, body=None):
+        """
+        Add a message to the text of the execution.
+
+        Args:
+            action_message (str): The message to add.
+            body (str): The body of the message, if any.
+        """
         if action_message != self._last_action and self._last_action is not None:
             self._finish_body()
         if body:
@@ -120,6 +147,9 @@ class ExecutionTextHolder:
         self._last_action = action_message
 
     def _finish_body(self):
+        """
+        Finish the current body, if any, and add it to the result.
+        """
         if self._current_body:
             code_message = self._format.python_code("\n".join(self._current_body))
             message = self._last_action + "\n"+code_message + "\n"
@@ -129,6 +159,12 @@ class ExecutionTextHolder:
             self._result.append(self._last_action+"\n")
 
     def get_lines(self):
+        """
+        Get the lines of the execution text, as a single string.
+
+        Returns:
+            str: The lines of the execution text.
+        """
         self._finish_body()
         return "".join(self._result)
 

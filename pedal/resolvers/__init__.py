@@ -19,7 +19,7 @@ Full Summary
 
 """
 
-from pedal.resolvers import simple
+from pedal.resolvers import simple as simple_resolver
 
 
 def print_resolve(*args, **kwargs):
@@ -28,7 +28,7 @@ def print_resolve(*args, **kwargs):
     Title/Label/Score/Message. Any arguments are forwarded to
     :py:func:`pedal.resolvers.simple.resolve`
     """
-    result = simple.resolve(*args, **kwargs)
+    result = simple_resolver.resolve(*args, **kwargs)
     print("Title:", result.title)
     print("Label:", result.label)
     print("Score:", result.score)

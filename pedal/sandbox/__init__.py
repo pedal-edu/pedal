@@ -12,7 +12,7 @@ def reset(report=MAIN_REPORT):
     :py:func:`pedal.sandbox.commands.clear_sandbox`.
 
     Args:
-        report:
+        report: The report to reset the Sandbox for.
     """
     report[TOOL_NAME] = {
         'sandbox': Sandbox(report=report)

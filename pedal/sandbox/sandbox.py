@@ -13,6 +13,7 @@ from unittest.mock import patch
 
 from pedal.core.feedback_category import FeedbackCategory
 from pedal.core.report import MAIN_REPORT
+from pedal.sandbox.mocked import PrintingStringIO
 from pedal.utilities.exceptions import ExpandedTraceback, improve_builtin_exceptions
 from pedal.sandbox.data import SandboxVariable, SandboxContextKind, \
     SandboxContext, SandboxModules
@@ -142,7 +143,6 @@ class Sandbox:
             setattr(imported_module, key, value)
         # And get them back the module
         return imported_module
-
 
     def _execute_with_timeout(self, code, filename, kind, **meta):
         """
@@ -388,9 +388,9 @@ class Sandbox:
                 return [self._context[context_id]]
             else:
                 for past_context_group_starts in self._context_group_start[::-1]:
-                    if past_context_group_starts < context_id+1:
-                        return self._context[past_context_group_starts:context_id+1]
-                return self._context[:context_id+1]
+                    if past_context_group_starts < context_id + 1:
+                        return self._context[past_context_group_starts:context_id + 1]
+                return self._context[:context_id + 1]
 
     def _guess_context(self, target_name):
         """
@@ -508,7 +508,6 @@ class Sandbox:
                 data['__builtins__'][name] = value
                 data[name] = value
 
-
     def _start_mocking(self, context: SandboxContext):
         """ Mock input, output, builtins, and modules """
         # Handle input tracking
@@ -523,8 +522,12 @@ class Sandbox:
             if value is not True:
                 overridden_modules[name] = value
         self._module_overrides['__builtins__'] = builtins
+        # Handle allowing *actual* printing to the real stdout console
+        if self._module_overrides['__builtins__'].get('print') is not True:
+            self._current_stdout.append(io.StringIO())
+        else:
+            self._current_stdout.append(PrintingStringIO())
         # And do the patches
-        self._current_stdout.append(io.StringIO())
         self._start_patches(
             patch.dict('sys.modules', overridden_modules),
             patch('sys.stdout', self._current_stdout[-1]),
@@ -552,11 +555,17 @@ class Sandbox:
         for a_patch in patches:
             a_patch.stop()
 
-    def clear_mocks(self):
-        """ Removes any module or builtin overrides currently in effect. """
+    def clear_mocks(self, reset_default_mocks=True):
+        """
+        Removes any module or builtin overrides currently in effect.
+
+        Args:
+            reset_default_mocks (bool): If True, also resets the default mocks (e.g., `open`, `__import__`).
+        """
         self._module_overrides.clear()
         self.modules.clear()
-        self.reset_default_overrides()
+        if reset_default_mocks:
+            self.reset_default_overrides()
 
     def reset_default_overrides(self):
         """
@@ -587,6 +596,15 @@ class Sandbox:
 
     def block_function(self, function_name):
         self._module_overrides['__builtins__'][function_name] = False
+
+    def clear_mocked_function(self, function_name):
+        """
+        Removes the mocking associated with the given function name.
+
+        Args:
+            function_name (str): The name of the function to be mocked.
+        """
+        del self._module_overrides['__builtins__'][function_name]
 
     def allow_module(self, module_name):
         """
@@ -631,7 +649,7 @@ class Sandbox:
                 self._module_overrides[name] = mocked_version
             if name in self.data:
                 del self.data[name]
-        #self._module_overrides[module_name] = mocked.BlockedModule(module_name)
+        # self._module_overrides[module_name] = mocked.BlockedModule(module_name)
         return self
 
     ############################################################################
@@ -719,7 +737,6 @@ class Sandbox:
             current_addition = "_{}".format(attempt_index)
             attempt_index += 1
         return name + current_addition
-
 
     ############################################################################
     # Data Namespace Management
@@ -853,7 +870,7 @@ class Sandbox:
     ############################################################################
     # Useful Dunders
 
-    #def __repr__(self):
+    # def __repr__(self):
     #    return "Sandbox({})".format()
 
     def __str__(self):
@@ -890,23 +907,28 @@ class Sandbox:
         Wraps an input function with a tracker.
         """
         self._called_inputs = 0
+
         def _input_tracker(*args, **kwargs):
             if args:
                 prompt = args[0]
             else:
                 prompt = ""
-            print(prompt)
-            if self.inputs:
+            if callable(self.inputs):
+                value_entered = self.inputs(prompt)
+            elif self.inputs:
+                print(prompt)
                 value_entered = self.inputs.pop(0)
             else:
                 # TODO: Make this smarter, more elegant in choosing IF we should repeat 0
+                print(prompt)
                 value_entered = '0'
             self._context[-1].inputs.append(value_entered)
             self._called_inputs += 1
             if self.MAXIMUM_INPUTS is not None:
                 if self.MAXIMUM_INPUTS <= self._called_inputs:
-                    raise IOError(f"Asked for user input too many times ({self._called_inputs} times). Perhaps you have an infinite loop?")
-            #context_inputs.append(value_entered)
+                    raise IOError(
+                        f"Asked for user input too many times ({self._called_inputs} times). Perhaps you have an infinite loop?")
+            # context_inputs.append(value_entered)
             return value_entered
 
         return _input_tracker

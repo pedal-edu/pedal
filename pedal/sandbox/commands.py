@@ -24,7 +24,7 @@ def run(code=None, filename=None, inputs=None, threaded=None,
         filename (str or None): The filename to use for this code.
         inputs (list[str]): Optional inputs to be passed to
             :py:func:`~pedal.sandbox.Sandbox.set_input`.
-        threaded (bool): Whether or not to run this code in a threaded
+        threaded (bool): Whether to run this code in a threaded
             environment, which allows for timeouts.
         after (str): Code to run after this code (without a filename).
         before (str): Code to run before this code (without a filename).
@@ -119,7 +119,12 @@ def evaluate(code, target="_", threaded=None, report=MAIN_REPORT):
 
 
 def clear_input(report=MAIN_REPORT):
-    """ Removes any existing inputs set up for the sandbox. """
+    """
+    Removes any existing inputs set up for the sandbox.
+
+    Args:
+        report (:py:class:`pedal.core.report.Report`): The report to clear inputs for
+    """
     sandbox: Sandbox = report[TOOL_NAME]['sandbox']
     sandbox.clear_input()
 
@@ -179,27 +184,52 @@ def get_input(report=MAIN_REPORT):
 
 
 def clear_output(report=MAIN_REPORT):
-    """ Removes any existing outputs associated with the sandbox. """
+    """
+    Removes any existing outputs associated with the sandbox.
+
+    Args:
+        report (:py:class:`pedal.core.report.Report`): The report to clear outputs for.
+    """
     sandbox: Sandbox = report[TOOL_NAME]['sandbox']
     sandbox.clear_output()
 
 
 def get_output(report=MAIN_REPORT):
-    """ Retrieves the current output (whatever the student has printed) since
-    execution began. """
+    """
+    Retrieves the current output (whatever the student has printed) since
+    execution began.
+
+    Args:
+        report (:py:class:`pedal.core.report.Report`): The report to get the output for.
+
+    Returns:
+        list[str]: The current output.
+    """
     sandbox: Sandbox = report[TOOL_NAME]['sandbox']
     return sandbox.output
 
 
 def get_exception(report=MAIN_REPORT):
-    """ Returns an exception if one occurred during the last execution,
-    otherwise returns None. """
+    """
+    Returns an exception if one occurred during the last execution,
+    otherwise returns None.
+
+    Args:
+        report (:py:class:`pedal.core.report.Report`): The report to get the exception for.
+    Returns:
+        Exception or None: The exception that occurred, or None if no exception
+    """
     sandbox: Sandbox = report[TOOL_NAME]['sandbox']
     return sandbox.exception
 
 
 def clear_student_data(report=MAIN_REPORT):
-    """ Removes any data in the student namespace. """
+    """
+    Removes any data in the student namespace.
+
+    Args:
+        report (:py:class:`pedal.core.report.Report`): The report to clear the data for.
+    """
     sandbox: Sandbox = report[TOOL_NAME]['sandbox']
     sandbox.clear_data()
 
@@ -258,8 +288,6 @@ def get_trace(report=MAIN_REPORT):
     """
     sandbox: Sandbox = report[TOOL_NAME]['sandbox']
     return sandbox.trace.lines
-    # Coverage version:
-    # return sandbox.trace.lines - sandbox.trace.missing
 
 
 def get_call_arguments(function_name, report=MAIN_REPORT):
@@ -374,6 +402,27 @@ def allow_module(module_name, report=MAIN_REPORT):
     sandbox: Sandbox = report[TOOL_NAME]['sandbox']
     sandbox.allow_module(module_name)
 
+
+def allow_real_io(report=MAIN_REPORT):
+    """
+    Allow the input() and print() functions to actually write to the real stdout.
+    By default, Pedal will block this kind of writing/reading normally (although students can
+    still use those functions).
+    """
+    sandbox: Sandbox = report[TOOL_NAME]['sandbox']
+    sandbox.allow_function('print')
+    sandbox.set_input(input)
+
+
+def block_real_io(report=MAIN_REPORT):
+    """
+    Explicitly block students from using the input() and print() functions to write/read
+    to the real stdout. This does not prevent them from using the functions, but it does
+    prevent the output from appearing in the real console.
+    """
+    sandbox: Sandbox = report[TOOL_NAME]['sandbox']
+    sandbox.clear_mocked_function('print')
+    sandbox.clear_input()
 
 def mock_module(module_name, new_version, friendly_name=None, report=MAIN_REPORT):
     """
