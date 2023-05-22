@@ -196,7 +196,7 @@ class Sandbox:
         return self
 
     def run(self, code=None, filename=None, inputs=None, threaded=None,
-            after=None, before=None):
+            after=None, before=None, real_io=False):
         """
         If both ``code`` and ``filename`` are None, then the submission's
         main file will be executed. If ``code`` is given but ``filename`` is
@@ -206,6 +206,7 @@ class Sandbox:
             But the user should be able to treat that as if it were the Sandbox...
 
         Args:
+            real_io: If True, makes print and input actually write to stdout.
             code (str or :py:class:`~pedal.cait.cait_node.CaitNode` or None):
                 The code to execute.
             filename (str or None): The filename to use for this code.
@@ -220,6 +221,9 @@ class Sandbox:
         Returns:
             Sandbox: This sandbox instance.
         """
+        if real_io:
+            self.allow_function('print')
+            self.set_input(input)
         if threaded is None:
             threaded = self.threaded
         if code is None:
@@ -236,6 +240,9 @@ class Sandbox:
         self._execute(code, filename, SandboxContextKind.RUN, threaded)
         if after is not None:
             self._execute(after, filename, SandboxContextKind.RUN, threaded)
+        if real_io:
+            self.clear_mocked_function('print')
+            self.clear_input()
         return self
 
     def call(self, function, *args, target="_", threaded=None,
@@ -604,7 +611,8 @@ class Sandbox:
         Args:
             function_name (str): The name of the function to be mocked.
         """
-        del self._module_overrides['__builtins__'][function_name]
+        if function_name in self._module_overrides['__builtins__']:
+            del self._module_overrides['__builtins__'][function_name]
 
     def allow_module(self, module_name):
         """
