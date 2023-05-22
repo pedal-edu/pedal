@@ -198,16 +198,16 @@ class PrintingStringIO(StringIO):
         self._original_stdout = self._ORIGINAL_STDOUT if stdout is None else stdout
 
     def write(self, s):
-        """
-
-        Args:
-            s:
-
-        Returns:
-
-        """
-        super().write(s)
         self._original_stdout.write(s)
+        return super().write(s)
+
+    def flush(self):
+        self._original_stdout.flush()
+        return super().flush()
+
+    def writelines(self, lines):
+        self._original_stdout.writelines(lines)
+        return super().writelines(lines)
 
 
 def make_fake_output(also_print=False) -> StringIO:

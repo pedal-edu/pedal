@@ -1,4 +1,10 @@
+import sys
 from pedal import *
+
+sys.stdout.write("Gimme value:")
+#sys.stdout.flush()
+print(sys.stdin.readline())
+
 
 set_source("a = 'Give me a value: '\nprint(input(a))")
 
