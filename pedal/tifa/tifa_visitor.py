@@ -76,7 +76,7 @@ class Tifa(TifaCore, ast.NodeVisitor):
             self.process_ast(ast_tree)
         except Exception as error:
             self.analysis.fail(error)
-            system_error(TOOL_NAME, "Successfully parsed but could not "
+            system_error(TOOL_NAME, message="Successfully parsed but could not "
                                     "process AST: " + str(error),
                          report=self.report)
         # Return whatever we got

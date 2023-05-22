@@ -6,7 +6,7 @@ Uses a global report object (MAIN_REPORT).
 __all__ = ['feedback', 'set_success', 'compliment', 'give_partial', 'explain',
            'gently', 'hide_correctness', 'suppress', 'log', 'debug',
            'system_error', 'clear_report', 'get_all_feedback', 'guidance',
-           'contextualize_report', 'Feedback', 'get_submission']
+           'contextualize_report', 'Feedback', 'get_submission', 'set_formatter']
 
 from pedal.core.feedback import (Feedback, FeedbackKind, FeedbackCategory,
                                  FeedbackResponse)
@@ -268,3 +268,16 @@ class system_error(FeedbackResponse):
 
 
 # TODO: set_line_offset(offset, filename='answer.py')
+
+def set_formatter(formatter, report=MAIN_REPORT):
+    """
+    Set the formatter for the given report.
+
+    Args:
+        formatter (Formatter): The formatter class to use. If you wish to use an instance instead,
+            you'll need to call `set_formatter` on the report instance instead.
+        report (:py:class:`~pedal.core.report.Report`): The report to attach
+            this feedback to (defaults to the
+            :py:data:`~pedal.core.report.MAIN_REPORT`).
+    """
+    report.set_formatter(formatter(report))

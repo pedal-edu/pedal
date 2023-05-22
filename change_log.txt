@@ -1,3 +1,7 @@
+Version 2.4.2 (5/22/2023)
+-------------------------
+* Expose a top-level set_formatter function
+
 Version 2.4.1 (5/22/2023)
 -------------------------
 * Fix mocking of flush when using Real IO

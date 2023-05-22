@@ -18,7 +18,7 @@ class action_after_return(TifaFeedback):
     """ Statement after return """
     title = "Action after Return"
     message_template = ("You performed an action after already returning from "
-                        "a function, on line {location.line}. You can "
+                        "a function, on line {location.line:line}. You can "
                         "only return on a path once.")
     justification = ("TIFA visited a node not in the top scope when its "
                      "*return variable was definitely set in this scope.")
@@ -31,7 +31,7 @@ class return_outside_function(TifaFeedback):
     """ Return statement outside of function """
     title = "Return outside Function"
     message_template = ("You attempted to return outside of a function on line "
-                        "{location.line}. But you can only return from within "
+                        "{location.line:line}. But you can only return from within "
                         "a function.")
     justification = "TIFA visited a return node at the top level."
 
@@ -42,7 +42,7 @@ class return_outside_function(TifaFeedback):
 class multiple_return_types(TifaFeedback):
     """ Multiple returned types in single function """
     title = "Multiple Return Types"
-    message_template = ("Your function returned {actual} on line {location.line}, "
+    message_template = ("Your function returned {actual} on line {location.line:line}, "
                         "even though you defined it to return {expected}. "
                         "Your function should return values consistently.")
     justification = ("TIFA visited a function definition with multiple returns "
@@ -58,7 +58,7 @@ class write_out_of_scope(TifaFeedback):
     title = "Write Out of Scope"
     message_template = ("You attempted to write the variable {name_message} "
                         "from a higher scope (outside the function) on line "
-                        "{location.line}. You should only use variables inside "
+                        "{location.line:line}. You should only use variables inside "
                         "the function they were declared in.")
     justification = "TIFA stored to an existing variable not in this scope"
 
@@ -71,7 +71,7 @@ class write_out_of_scope(TifaFeedback):
 class unconnected_blocks(TifaFeedback):
     """ Unconnected Blocks """
     title = "Unconnected Blocks"
-    message_template = ("It looks like you have unconnected blocks on line {location.line}. "
+    message_template = ("It looks like you have unconnected blocks on line {location.line:line}. "
                         "Before you run your program, you must make sure that all "
                         "of your blocks are connected that there are no unfilled "
                         "holes.")
@@ -85,7 +85,7 @@ class iteration_problem(TifaFeedback):
     """ Iteration Problem """
     title = "Iteration Problem"
     message_template = ("The variable {name_message} was iterated on line "
-                        "{location.line} but you used the same variable as the iteration "
+                        "{location.line:line} but you used the same variable as the iteration "
                         "variable. You should choose a different variable name "
                         "for the iteration variable. Usually, the iteration variable "
                         "is the singular form of the iteration list (e.g., "
@@ -101,7 +101,7 @@ class iteration_problem(TifaFeedback):
 class initialization_problem(TifaFeedback):
     """ Initialization Problem """
     title = "Initialization Problem"
-    message_template = ("The variable {name_message} was used on line {location.line}, "
+    message_template = ("The variable {name_message} was used on line {location.line:line}, "
                         "but it was not given a value on a previous line. "
                         "You cannot use a variable until it has been given a value."
                         )
@@ -116,7 +116,7 @@ class initialization_problem(TifaFeedback):
 class possible_initialization_problem(TifaFeedback):
     """ Possible Initialization Problem """
     title = "Possible Initialization Problem"
-    message_template = ("The variable {name_message} was used on line {location.line}, "
+    message_template = ("The variable {name_message} was used on line {location.line:line}, "
                         "but it was possibly not given a value on a previous "
                         "line. You cannot use a variable until it has been given "
                         "a value. Check to make sure that this variable was "
@@ -134,7 +134,7 @@ class unused_variable(TifaFeedback):
     """ Unused Variable """
     title = "Unused Variable"
     message_template = ("The {kind} {name_message} was {initialization} on line "
-                        "{location.line}, but was never used after that.")
+                        "{location.line:line}, but was never used after that.")
     justification = ("TIFA stored a variable but it was not read any other time "
                      "in the program.")
 
@@ -161,7 +161,7 @@ class overwritten_variable(TifaFeedback):
     """ Overwritten Variable """
     title = "Overwritten Variable"
     message_template = ("The variable {name_message} was given a value, but "
-                        "{name_message} was changed on line {location.line} "
+                        "{name_message} was changed on line {location.line:line} "
                         "before it was used. One of the times that you gave "
                         "{name_message} a value was incorrect."
                         )
@@ -178,7 +178,7 @@ class iterating_over_non_list(TifaFeedback):
     """ Iterating over non-list """
     title = "Iterating over Non-list"
     message_template = ("The {iter} is not a list, but you used it in the "
-                        "iteration on line {location.line}. You should only "
+                        "iteration on line {location.line:line}. You should only "
                         "iterate over sequences like lists.")
     justification = ("TIFA visited a loop's iteration list whose type was"
                      "not indexable.")
@@ -201,7 +201,7 @@ class iterating_over_empty_list(TifaFeedback):
     title = "Iterating over empty list"
     message_template = ("The {iter} was set as an empty list, "
                         "and then you attempted to use it in an iteration on line "
-                        "{location.line}. You should only iterate over non-empty lists."
+                        "{location.line:line}. You should only iterate over non-empty lists."
                         )
     justification = "TIFA visited a loop's iteration list that was empty."
 
@@ -219,7 +219,7 @@ class incompatible_types(TifaFeedback):
     """ Incompatible types """
     title = "Incompatible types"
     message_template = ("You used {op_name} operation with {left_name} and {right_name} on line "
-                        "{location.line}. But you can't do that with that operator. Make "
+                        "{location.line:line}. But you can't do that with that operator. Make "
                         "sure both sides of the operator are the right type."
                         )
     justification = "TIFA visited an operation with operands of the wrong type."
@@ -240,7 +240,7 @@ class invalid_indexing(TifaFeedback):
     """ Invalid Index """
     title = "Invalid Index"
     message_template = ("You indexed {left_name} with {right_name} on line "
-                        "{location.line}. But you can't index {left_name} with "
+                        "{location.line:line}. But you can't index {left_name} with "
                         "{right_name}."
                         )
     justification = ("TIFA attempted to call an .index() operation on a type"
@@ -260,7 +260,7 @@ class parameter_type_mismatch(TifaFeedback):
     """ Parameter type mismatch """
     title = "Parameter Type Mismatch"
     message_template = ("You defined the parameter {parameter_name_message} "
-                        "as {parameter_type_name}. However, the argument passed to that parameter on line {location.line} "
+                        "as {parameter_type_name}. However, the argument passed to that parameter on line {location.line:line} "
                         "was {argument_type_name}. The formal parameter type must match the argument's type."
                         )
     justification = "TIFA visited a function definition where a parameter type and argument type were not equal."
@@ -286,7 +286,7 @@ class field_type_mismatch(TifaFeedback):
     title = "Field Type Mismatch"
     message_template = ("You defined the field {field_name_message} "
                         "as {field_type_name}. However, the argument passed to that field's parameter in the"
-                        " constructor function on line {location.line} was {argument_type_name}. The formal field"
+                        " constructor function on line {location.line:line} was {argument_type_name}. The formal field"
                         " type must match the argument's type."
                         )
     justification = "TIFA visited a constructor function call where a parameter type and argument type were not subtypes."
@@ -310,7 +310,7 @@ class read_out_of_scope(TifaFeedback):
     """ Read out of scope """
     title = "Read out of Scope"
     message_template = ("You attempted to read the variable {name_message} "
-                        "from a different scope on line {location.line}. You "
+                        "from a different scope on line {location.line:line}. You "
                         "should only use variables inside the function they "
                         "were declared in."
                         )
@@ -327,7 +327,7 @@ class type_changes(TifaFeedback):
     """ Type changes """
     title = "Type Changes"
     message_template = ("The variable {name_message} changed type from {old} to "
-                        "{new} on line {location.line}.")
+                        "{new} on line {location.line:line}.")
     justification = ""
     muted = True
 
@@ -342,7 +342,7 @@ class type_changes(TifaFeedback):
 class attribute_type_change(TifaFeedback):
     """ Type change on attribute """
     title = "Attribute Type Change"
-    message_template = ("On line {location.line}, you attempted to assign a {new} to "
+    message_template = ("On line {location.line:line}, you attempted to assign a {new} to "
                         "the attribute {attr_message}, which was supposed to be {old}.")
     justification = ""
     muted = False
@@ -358,7 +358,7 @@ class type_change_append(TifaFeedback):
     """ Type Change in an append Method """
     title = "Type Change in Append"
     message_template = ("You attempted to append a {new} to a list that was "
-                        "supposed to have {old} on line {location.line}.")
+                        "supposed to have {old} on line {location.line:line}.")
     justification = ""
     muted = True
 
@@ -371,7 +371,7 @@ class unnecessary_second_branch(TifaFeedback):
     """ Unnecessary second branch """
     title = "Unnecessary Second Branch"
     message_template = ("You have an `if` statement where one of the two branches"
-                       " only has `pass` in its body, on line {location.line}."
+                       " only has `pass` in its body, on line {location.line:line}."
                         " You shouldn't need an empty body.")
     justification = "There is an else or if statement who's body is just pass."
 
@@ -404,7 +404,7 @@ class not_a_function(TifaFeedback):
     """ Not a function """
     title = "Not a Function"
     message_template = ("You attempted to call {name} as if it"
-                        " was a function on line {location.line}. However,"
+                        " was a function on line {location.line:line}. However,"
                         " that expression was actually {singular_name}.")
     justification = ""
     # TODO: Unmute?
@@ -466,7 +466,7 @@ class append_to_non_list(TifaFeedback):
 class nested_function_definition(TifaFeedback):
     """ Function defined not at top-level """
     message_template = ("The function {name_message} was defined inside of another"
-                        "block on line {location.line}. For instance, you may "
+                        "block on line {location.line:line}. For instance, you may "
                         "have placed it inside another function definition, or "
                         "inside of a loop. Do not nest your function "
                         "definition!")
@@ -485,7 +485,7 @@ class unused_returned_value(TifaFeedback):
     """ Expr node had a non-None value """
     title = "Did Not Use Function's Return Value"
     message_template = ("It looks like you called the {call_type} {name_message} on "
-                        "{location.line}, but failed to store the result in "
+                        "{location.line:line}, but failed to store the result in "
                         "a variable or use it in an expression. You should "
                         "remember to use the result!")
     justification = "Expression node calculated a non-None value."
