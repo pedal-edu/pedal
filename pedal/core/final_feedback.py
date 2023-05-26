@@ -49,7 +49,7 @@ class FinalFeedback:
             success (bool): DEPRECATED. This field is now set by `correct`. The alternative parameter name is
                 kept around for backwards compatibility.
         """
-        self.correct = correct if correct is not None else success
+        self.success = self.correct = correct if correct is not None else success
         self.score = score
         self._scores = []
         self._scores_feedback = []
@@ -115,7 +115,7 @@ class FinalFeedback:
             return feedback
         if feedback.kind == Feedback.KINDS.INSTRUCTIONAL:
             self.instructions.append(feedback)
-        self.correct = correct and self.correct
+        self.success = self.correct = correct and self.correct
         if message is not None and self.message is None:
             self.message = message
             self.title = title
@@ -137,10 +137,10 @@ class FinalFeedback:
             self.title = set_correct.title
             self.message = set_correct.message_template
             self.score = 1
-            self.correct = True
+            self.success = self.correct = True
         else:
             self.score = combine_scores(self._scores)
-        self.correct = bool(self.correct)
+        self.success = self.correct = bool(self.correct)
         return self
 
     def __str__(self) -> str:
@@ -153,10 +153,6 @@ class FinalFeedback:
                                                              score=self.score,
                                                              title=self.title,
                                                              message=self.message)
-
-    @property
-    def success(self):
-        return self.correct
 
     def to_json(self) -> dict:
         """

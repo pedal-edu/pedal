@@ -1,4 +1,4 @@
-from pedal.core.final_feedback import FinalFeedback
+from pedal.core.final_feedback import FinalFeedback, set_correct_no_errors
 from pedal.resolvers.core import make_resolver
 from pedal.core.report import MAIN_REPORT
 from pedal.core.feedback import Feedback
@@ -46,13 +46,7 @@ def resolve(report=MAIN_REPORT, priority_key=by_priority):
     feedbacks = report.feedback + report.ignored_feedback
     feedbacks.sort(key=priority_key)
     # Create the initial final feedback
-    final = FinalFeedback(success=True, score=0,
-                          title=None, message=None,
-                          category=Feedback.CATEGORIES.COMPLETE,
-                          label='set_correct_no_errors',
-                          data=[], hide_correctness=False,
-                          suppressions=report.suppressions,
-                          suppressed_labels=report.suppressed_labels)
+    final = set_correct_no_errors(report)
     # Process each feedback in turn
     used = []
     for feedback in feedbacks:

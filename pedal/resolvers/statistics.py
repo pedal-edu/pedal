@@ -2,7 +2,7 @@
 Resolver that collates all the feedback given into a simple format.
 """
 from pedal import Feedback
-from pedal.core.final_feedback import FinalFeedback
+from pedal.core.final_feedback import FinalFeedback, set_correct_no_errors
 from pedal.resolvers.core import make_resolver
 from pedal.resolvers.simple import by_priority
 from pedal.core.report import MAIN_REPORT
@@ -20,13 +20,7 @@ def resolve(report=MAIN_REPORT):
     """
     feedbacks = report.feedback + report.ignored_feedback
     feedbacks.sort(key=by_priority)
-    final = FinalFeedback(success=True, score=0,
-                          title=None, message=None,
-                          category=Feedback.CATEGORIES.COMPLETE,
-                          label='set_correct_no_errors',
-                          data=[], hide_correctness=False,
-                          suppressions=report.suppressions,
-                          suppressed_labels=report.suppressed_labels)
+    final = set_correct_no_errors(report)
     result = []
     for feedback in feedbacks:
         final.merge(feedback)
