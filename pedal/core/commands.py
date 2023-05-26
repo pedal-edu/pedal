@@ -3,7 +3,7 @@ Imperative style commands for constructing feedback in a convenient way.
 Uses a global report object (MAIN_REPORT).
 """
 
-__all__ = ['feedback', 'set_success', 'compliment', 'give_partial', 'explain',
+__all__ = ['feedback', 'set_success', 'set_correct', 'compliment', 'give_partial', 'explain',
            'gently', 'hide_correctness', 'suppress', 'log', 'debug',
            'system_error', 'clear_report', 'get_all_feedback', 'guidance',
            'contextualize_report', 'Feedback', 'get_submission', 'set_formatter']
@@ -20,7 +20,7 @@ feedback = Feedback
 
 # TODO: force_success function, which ignores errors to give the points.
 
-class set_success(FeedbackResponse):
+class set_correct(FeedbackResponse):
     """
     **(Feedback Function)**
 
@@ -34,6 +34,9 @@ class set_success(FeedbackResponse):
     category = FeedbackCategory.COMPLETE
     kind = FeedbackKind.RESULT
     valence = Feedback.POSITIVE_VALENCE
+
+
+set_success = set_correct
 
 
 class compliment(FeedbackResponse):
@@ -218,6 +221,7 @@ def contextualize_report(submission, filename='answer.py', clear=True,
     if clear:
         report.clear()
     report.contextualize(submission)
+
 
 def get_submission(report=MAIN_REPORT) -> Submission:
     """

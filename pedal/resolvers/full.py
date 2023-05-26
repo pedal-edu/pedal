@@ -49,7 +49,7 @@ def resolve(report=MAIN_REPORT, priority_key=by_priority):
     final = FinalFeedback(success=True, score=0,
                           title=None, message=None,
                           category=Feedback.CATEGORIES.COMPLETE,
-                          label='set_success_no_errors',
+                          label='set_correct_no_errors',
                           data=[], hide_correctness=False,
                           suppressions=report.suppressions,
                           suppressed_labels=report.suppressed_labels)

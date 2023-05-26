@@ -1,5 +1,6 @@
 from pedal.core.feedback import Feedback
-from pedal.core.commands import set_success
+from pedal.core.commands import set_correct
+from pedal.core.report import Report
 from pedal.core.scoring import Score, combine_scores
 
 
@@ -25,13 +26,30 @@ class FinalFeedback:
 
     DEFAULT_NO_FEEDBACK_TITLE = "No Errors"
     DEFAULT_NO_FEEDBACK_MESSAGE = "No errors reported."
+    DEFAULT_NO_FEEDBACK_LABEL = "set_correct_no_errors"
 
     # TODO: Change all these so that FinalFeedback also logs considered feedback
 
-    def __init__(self, success=None, score=None, category=None, label=None, title=None,
+    def __init__(self, correct=None, score=None, category=None, label=None, title=None,
                  message=None, data=None, hide_correctness=None,
-                 suppressions=None, suppressed_labels=None):
-        self.success = success
+                 suppressions=None, suppressed_labels=None, success=None):
+        """
+
+        Args:
+            correct:
+            score:
+            category:
+            label:
+            title:
+            message:
+            data:
+            hide_correctness:
+            suppressions:
+            suppressed_labels:
+            success (bool): DEPRECATED. This field is now set by `correct`. The alternative parameter name is
+                kept around for backwards compatibility.
+        """
+        self.correct = correct if correct is not None else success
         self.score = score
         self._scores = []
         self._scores_feedback = []
@@ -77,7 +95,7 @@ class FinalFeedback:
                         break
                 else:
                     return
-        success, partial, message, title, data = parse_feedback(feedback)
+        correct, partial, message, title, data = parse_feedback(feedback)
         if feedback and feedback.category == Feedback.CATEGORIES.SYSTEM:
             self.systems.append(feedback)
         if not feedback.unscored and feedback.score is not None:
@@ -97,7 +115,7 @@ class FinalFeedback:
             return feedback
         if feedback.kind == Feedback.KINDS.INSTRUCTIONAL:
             self.instructions.append(feedback)
-        self.success = success and self.success
+        self.correct = correct and self.correct
         if message is not None and self.message is None:
             self.message = message
             self.title = title
@@ -111,18 +129,18 @@ class FinalFeedback:
         if self.message is None:
             self.title = self.DEFAULT_NO_FEEDBACK_TITLE
             self.message = self.DEFAULT_NO_FEEDBACK_MESSAGE
-        self.hide_correctness = self.suppressions.get('success', False)
+        self.hide_correctness = self.suppressions.get('correct', self.suppressions.get('success', False))
         if (not self.hide_correctness and
-                self.label == 'set_success_no_errors' and
+                self.label == self.DEFAULT_NO_FEEDBACK_LABEL and
                 self.category == Feedback.CATEGORIES.COMPLETE):
             # TODO: Promote to be its own atomic feedback function
-            self.title = set_success.title
-            self.message = set_success.message_template
+            self.title = set_correct.title
+            self.message = set_correct.message_template
             self.score = 1
-            self.success = True
+            self.correct = True
         else:
             self.score = combine_scores(self._scores)
-        self.success = bool(self.success)
+        self.correct = bool(self.correct)
         return self
 
     def __str__(self) -> str:
@@ -136,6 +154,10 @@ class FinalFeedback:
                                                              title=self.title,
                                                              message=self.message)
 
+    @property
+    def success(self):
+        return self.correct
+
     def to_json(self) -> dict:
         """
 
@@ -143,7 +165,8 @@ class FinalFeedback:
 
         """
         return {
-            'success': self.success,
+            'correct': self.correct,
+            'success': self.correct,
             'score': self.score,
             "scores": self._scores,
             'category': self.category,
@@ -153,3 +176,13 @@ class FinalFeedback:
             'data': self.data,
             'hide_correctness': self.hide_correctness
         }
+
+
+def set_correct_no_errors(report: Report) -> FinalFeedback:
+    return FinalFeedback(correct=True, score=0,
+                         title=None, message=None,
+                         category=Feedback.CATEGORIES.COMPLETE,
+                         label=FinalFeedback.DEFAULT_NO_FEEDBACK_LABEL,
+                         data=[], hide_correctness=False,
+                         suppressions=report.suppressions,
+                         suppressed_labels=report.suppressed_labels)

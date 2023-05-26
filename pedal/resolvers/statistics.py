@@ -22,7 +22,8 @@ def resolve(report=MAIN_REPORT):
     feedbacks.sort(key=by_priority)
     final = FinalFeedback(success=True, score=0,
                           title=None, message=None,
-                          category=Feedback.CATEGORIES.COMPLETE, label='set_success_no_errors',
+                          category=Feedback.CATEGORIES.COMPLETE,
+                          label='set_correct_no_errors',
                           data=[], hide_correctness=False,
                           suppressions=report.suppressions,
                           suppressed_labels=report.suppressed_labels)

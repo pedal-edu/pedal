@@ -3,7 +3,7 @@ Helper functions and basic setup routines for the entire module.
 """
 
 from pedal.core.report import MAIN_REPORT
-from pedal.core.commands import set_success
+from pedal.core.commands import set_correct
 from pedal.sandbox.exceptions import SandboxStudentCodeException
 from pedal.utilities.sorting import topological_sort
 

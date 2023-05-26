@@ -41,8 +41,8 @@ class StandardEnvironment(Environment):
     """
     def __init__(self, files=None, main_file='answer.py', main_code=None,
                  user=None, assignment=None, course=None, execution=None,
-                 instructor_file='on_run.py', skip_tifa=False, set_success=True, skip_run=False,
-                 report=MAIN_REPORT, trace=True, threaded=False):
+                 instructor_file='on_run.py', skip_tifa=False, set_correct=True, set_success=None,
+                 skip_run=False, report=MAIN_REPORT, trace=True, threaded=False):
         # Possibly user passed in stuff via the command line.
         if files is None and main_code is None:
             (instructor_file, files, main_file, main_code, user, assignment,
@@ -68,7 +68,7 @@ class StandardEnvironment(Environment):
             'student': student,
             'resolve': resolve
         }
-        self.set_success = set_success
+        self.set_correct = set_correct or set_success
 
     def print_resolve(self, *args, **kwargs):
         """

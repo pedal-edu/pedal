@@ -61,7 +61,7 @@ syntax:
 messages:
     FUNCTION_NOT_DEFINED: "Oops you missed a function"
 """
-from pedal.core.commands import set_success, give_partial, gently
+from pedal.core.commands import set_correct, give_partial, gently
 from pedal.core.feedback_category import FeedbackCategory
 from pedal.questions.constants import TOOL_NAME
 

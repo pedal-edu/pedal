@@ -512,7 +512,7 @@ def test_add(first_arg):
 
 
 if test_add(5) and test_add(-3):
-    set_success()
+    set_correct()
 
 
 def unit_test(function_name, *tests):
