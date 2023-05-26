@@ -170,7 +170,8 @@ class FinalFeedback:
             'title': self.title,
             'message': self.message,
             'data': self.data,
-            'hide_correctness': self.hide_correctness
+            'hide_correctness': self.hide_correctness,
+            'location': self.data.get('location', None) if self.data else None
         }
 
 

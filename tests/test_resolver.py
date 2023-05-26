@@ -1,6 +1,7 @@
 import unittest
 import os
 import sys
+import json
 
 from pedal.core.feedback import Feedback
 from pedal.core.final_feedback import FinalFeedback
@@ -11,7 +12,7 @@ from pedal.core.commands import (clear_report, set_success, gently, explain, giv
                                  contextualize_report, get_all_feedback, feedback)
 from pedal.source import set_source, next_section, verify_section, verify, separate_into_sections
 from pedal.tifa import tifa_analysis
-from pedal.resolvers import simple, sectional
+from pedal.resolvers import simple, sectional, statistics
 import pedal.sandbox.commands as commands
 from tests.execution_helper import Execution, SUCCESS_TEXT, ExecutionTestCase, SUCCESS_MESSAGE
 
@@ -342,6 +343,19 @@ p = 0
         self.assertFeedback(e, """Unused Variable
 The variable p was given a value on line 6, but was never used after that.""")
 
+    def test_stats_resolver(self):
+        clear_report()
+        contextualize_report('a=0\na+""')
+        # These are added
+        verify()
+        tifa_analysis()
+        commands.run()
+        # Calculate final result
+        final = statistics.resolve(clean=True)
+        # Get expected
+        with open('output_files/stats_feedback_test_1.json') as f:
+            expected = f.read()
+        self.assertEqual(final, expected)
 
 
 if __name__ == '__main__':

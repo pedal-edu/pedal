@@ -60,6 +60,9 @@ class SandboxContextKind:
         else:
             return 'I ran the code'
 
+    def __repr__(self):
+        return f"<SandboxContextKind {self.value}>"
+
 
 class SandboxContext:
     """
@@ -116,6 +119,9 @@ class SandboxContext:
         return SandboxContext(context_id, self.code, self.filename,
                               self.kind, self.target, list(self.inputs),
                               self.output, self.exception, self.submission)
+
+    def __repr__(self):
+        return f"<SandboxContext {self.context_id}>"
 
 
 class ExecutionTextHolder:

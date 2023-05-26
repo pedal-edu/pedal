@@ -1,10 +1,12 @@
 """
 Simple data class for storing information about a location within source code.
 """
+from dataclasses import dataclass
 
 __all__ = ['Location']
 
 
+@dataclass
 class Location:
     """
     A class for storing information about a location in source code.
@@ -30,7 +32,7 @@ class Location:
         self.filename = filename
 
     def __str__(self):
-        return f"<Location({self.line}, {self.col}, {self.filename})>"
+        return f"<Location({self.line}, {self.col}, {self.filename!r})>"
 
     def __repr__(self):
         return str(self)

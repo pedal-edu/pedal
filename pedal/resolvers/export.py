@@ -1,8 +1,11 @@
+import ast
 import dataclasses
 import datetime
 
 from pedal.sandbox.result import is_sandbox_result
 import json
+
+from pedal.types import new_types
 
 
 class PedalJSONEncoder(json.JSONEncoder):
@@ -17,13 +20,20 @@ class PedalJSONEncoder(json.JSONEncoder):
             return super()._iterencode(o, markers)
 
     def default(self, obj):
-        if dataclasses.is_dataclass(obj):
-            return dataclasses.asdict(obj)
+        if hasattr(obj, 'to_json'):
+            return obj.to_json()
         if isinstance(obj, (datetime.datetime, datetime.date, datetime.time)):
             return obj.isoformat()
         elif isinstance(obj, datetime.timedelta):
             return (datetime.datetime.min + obj).time().isoformat()
-        return '<not serializable>'
+        elif isinstance(obj, new_types.Type):
+            return str(obj)
+        elif isinstance(obj, ast.AST):
+            return obj.__class__.__name__
+        try:
+            return repr(obj)
+        except:
+            return '<not serializable>'
 
 
 def clean_json(obj):

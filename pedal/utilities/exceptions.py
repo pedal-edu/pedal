@@ -130,6 +130,9 @@ class ExpandedTraceback:
         self.original_code_lines = original_code_lines
         self.student_files = student_files
 
+    def __repr__(self):
+        return f"ExpandedTraceback({self.exception})"
+
     def build_traceback(self):
         """
         Filter out unnecessary frames

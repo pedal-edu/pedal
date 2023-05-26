@@ -1,0 +1,121 @@
+{
+  "considered": [
+    {
+      "correct": null,
+      "score": null,
+      "title": "Incompatible types",
+      "message": "You used an addition operation with an integer and a string on line 2. But you can't do that with that operator. Make sure both sides of the operator are the right type.",
+      "label": "incompatible_types",
+      "active": true,
+      "muted": false,
+      "unscored": null,
+      "category": "algorithmic",
+      "kind": "Mistake",
+      "valence": null,
+      "version": "1.0.0",
+      "fields": {
+        "location": {
+          "line": 2,
+          "col": 0,
+          "end_line": null,
+          "end_col": null,
+          "filename": null
+        },
+        "operation": "Add",
+        "op_name": "an addition",
+        "left": "LiteralInteger[0]",
+        "right": "LiteralStr",
+        "left_name": "an integer",
+        "right_name": "a string"
+      },
+      "justification": "TIFA visited an operation with operands of the wrong type.",
+      "priority": null,
+      "location": {
+        "line": 2,
+        "col": 0,
+        "end_line": null,
+        "end_col": null,
+        "filename": null
+      }
+    },
+    {
+      "correct": null,
+      "score": null,
+      "title": "Type Error",
+      "message": "I ran your code.\n\nA TypeError occurred:\n\n    Unsupported operand type(s) for +: 'int' and 'str'\n\nThe traceback was:\nLine 2 of file answer.py\n    a+\"\"\n\n\nType errors occur when you use an operator or function on the wrong type of value. For example, using `+` to add to a list (instead of `.append`), or dividing a string by a number.\n\nSuggestion: To fix a type error, you should trace through your code. Make sure each expression has the type you expect it to have.",
+      "label": "type_error",
+      "active": true,
+      "muted": null,
+      "unscored": null,
+      "category": "runtime",
+      "kind": "Mistake",
+      "valence": null,
+      "version": "1.1.0",
+      "fields": {
+        "exception": "TypeError(\"unsupported operand type(s) for +: 'int' and 'str'\")",
+        "exception_name": "A TypeError",
+        "exception_message": "    Unsupported operand type(s) for +: 'int' and 'str'",
+        "location": {
+          "line": 2,
+          "col": null,
+          "end_line": null,
+          "end_col": null,
+          "filename": null
+        },
+        "traceback": "ExpandedTraceback(unsupported operand type(s) for +: 'int' and 'str')",
+        "traceback_stack": [
+          "<FrameSummary file answer.py, line 2 in <module>>"
+        ],
+        "traceback_message": "The traceback was:\nLine 2 of file answer.py\n    a+\"\"\n",
+        "context": [
+          [
+            "<SandboxContext 0>"
+          ]
+        ],
+        "context_message": "I ran your code.\n"
+      },
+      "justification": "A runtime error occurred during execution of some code.",
+      "priority": "runtime",
+      "location": {
+        "line": 2,
+        "col": null,
+        "end_line": null,
+        "end_col": null,
+        "filename": null
+      }
+    }
+  ],
+  "final": {
+    "correct": false,
+    "success": false,
+    "score": 0,
+    "scores": [],
+    "category": "algorithmic",
+    "label": "incompatible_types",
+    "title": "Incompatible types",
+    "message": "You used an addition operation with an integer and a string on line 2. But you can't do that with that operator. Make sure both sides of the operator are the right type.",
+    "data": {
+      "location": {
+        "line": 2,
+        "col": 0,
+        "end_line": null,
+        "end_col": null,
+        "filename": null
+      },
+      "operation": "Add",
+      "op_name": "an addition",
+      "left": "LiteralInteger[0]",
+      "right": "LiteralStr",
+      "left_name": "an integer",
+      "right_name": "a string"
+    },
+    "hide_correctness": false,
+    "location": {
+      "line": 2,
+      "col": 0,
+      "end_line": null,
+      "end_col": null,
+      "filename": null
+    }
+  }
+}
