@@ -18,10 +18,10 @@ from pedal.command_line.report import StatReport
 from pedal.command_line.verify import generate_report_out, ReportVerifier
 from pedal.core.report import MAIN_REPORT
 from pedal.core.submission import Submission
-from pedal.sandbox.result import is_sandbox_result
 from pedal.utilities.files import normalize_path, find_possible_filenames
 from pedal.utilities.progsnap import SqlProgSnap2
 from pedal.utilities.text import chomp
+from pedal.resolvers.export import PedalJSONEncoder, clean_json
 
 try:
     from tqdm import tqdm
@@ -373,31 +373,6 @@ class StatsPipeline(AbstractPipeline):
                     print(pedal_json_encoder.encode(final), file=output_file)
         return StatReport(final)
 
-
-class PedalJSONEncoder(json.JSONEncoder):
-    """
-    Custom JSON Encoder to handle weird Pedal values nested in Feedback Functions,
-    including things like SandboxResult.
-    """
-    def _iterencode(self, o, markers=None):
-        if is_sandbox_result(o):
-            return super()._iterencode(o._actual_value, markers)
-        else:
-            return super()._iterencode(o, markers)
-
-    def default(self, obj):
-        return '<not serializable>'
-
-
-def clean_json(obj):
-    if is_sandbox_result(obj):
-        return clean_json(obj._actual_value)
-    if isinstance(obj, dict):
-        return {clean_json(key): clean_json(value) for key, value in obj.items()}
-    elif isinstance(obj, (set, list, tuple)):
-        return [clean_json(value) for value in obj]
-    else:
-        return obj
 
 
 class VerifyPipeline(AbstractPipeline):
