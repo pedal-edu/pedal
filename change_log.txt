@@ -1,3 +1,12 @@
+Version 3.5.0 (5/26/2023)
+-------------------------
+* Upgrade minimum version to Python 3.7 (from 3.6)
+* More sophisticated export of JSON format from Pedal
+* Rename `success` field to `correct` field in Final Feedback
+* Rename `set_success` to `set_correct` (provide compatiblity alias for now)
+* Rename `set_success_no_errors` to `set_correct_no_errors`
+* Export location data as a top-level Final field
+
 Version 2.4.2 (5/22/2023)
 -------------------------
 * Expose a top-level set_formatter function

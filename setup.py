@@ -2,8 +2,8 @@ import setuptools
 
 setuptools.setup(
     name='pedal',
-    version='2.4.2',
-    python_requires='>=3.6',
+    version='2.5.0',
+    python_requires='>=3.7',
     author='acbart,lukesg08',
     author_email='acbart@udel.edu',
     description='Tools to provide feedback on student code.',
