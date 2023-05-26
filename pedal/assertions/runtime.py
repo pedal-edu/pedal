@@ -5,6 +5,25 @@ TODO: assert_has_class
 TODO: assertGraphType, assertGraphValues
 TODO: assert_coverage
 TODO: assert_ran (latest run produced no expections)
+
+
+assert_equal
+assert_not_equal
+assert_less
+assert_less_equal
+assert_greater
+assert_greater_equal
+assert_in
+assert_not_in
+assert_contains_subset
+assert_is
+assert_is_not
+assert_is_none
+assert_is_dataclass
+assert_is_not_dataclass
+assert_true
+assert_false
+assert_length_equal
 """
 import re
 
