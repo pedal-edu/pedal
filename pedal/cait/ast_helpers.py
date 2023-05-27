@@ -4,7 +4,7 @@ the ast.dump function and modified slightly to pretty-print.
 
 Alex Leone (acleone ~AT~ gmail.com), 2010-01-30
 
-From http://alexleone.blogspot.co.uk/2010/01/python-ast-pretty-printer.html
+From https://alexleone.blogspot.co.uk/2010/01/python-ast-pretty-printer.html
 """
 
 from ast import AST, iter_fields, parse

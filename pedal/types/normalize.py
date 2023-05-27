@@ -341,7 +341,7 @@ def get_pedal_type_from_type_literal(value, evaluate_name=None) -> Type:
             return ListType(True)
     elif isinstance(value, (set, frozenset)):
         return TypeUnion([normalize_type(v, evaluate_name) for v in value])
-    elif isinstance(value, (tuple)):
+    elif isinstance(value, tuple):
         return TupleType([normalize_type(v, evaluate_name) for v in value])
     elif isinstance(value, dict):
         if not value:

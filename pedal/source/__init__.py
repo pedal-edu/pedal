@@ -15,7 +15,8 @@ from pedal.source.constants import TOOL_NAME
 from pedal.source.sections import (separate_into_sections, check_section_exists,
                                    stop_sections, next_section)
 from pedal.source.source import (verify, verify_section, set_source, set_source_file, get_program)
-#from pedal.source.rewrite import unparse
+
+# from pedal.source.rewrite import unparse
 
 __all__ = ['TOOL_NAME',
            'set_source', 'verify', 'set_source_file', 'get_program',

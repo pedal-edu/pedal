@@ -29,13 +29,7 @@ from io import TextIOWrapper
 
 from unittest.mock import Mock, NonCallableMock, DEFAULT
 
-if sys.version_info < (3, 0):
-    try:
-        from cStringIO import StringIO, StringIO as BytesIO
-    except ImportError:
-        from StringIO import StringIO, StringIO as BytesIO
-else:
-    from io import StringIO, BytesIO
+from io import StringIO, BytesIO
 
 
 class FileLikeMock(NonCallableMock):

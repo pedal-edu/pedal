@@ -574,7 +574,7 @@ class TupleType(Type):
     immutable = True
     # Local
     is_empty: bool
-    element_types: tuple[Type]
+    element_types: tuple #: tuple[Type]
     fields = {}
     parents = []
 

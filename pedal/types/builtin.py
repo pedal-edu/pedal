@@ -18,18 +18,18 @@ register_builtin_module('dataclasses', lambda: ModuleType('dataclasses', fields=
     'dataclass': FunctionType('dataclass', definition=make_dataclass)
 }))
 
-register_builtin_module('pprint', lambda: ModuleType('pprint',fields={
+register_builtin_module('pprint', lambda: ModuleType('pprint', fields={
     'pprint': FunctionType(name='pprint', returns=NoneType)
- }))
+}))
 
-register_builtin_module('json', lambda: ModuleType('json',fields={
+register_builtin_module('json', lambda: ModuleType('json', fields={
     'loads': FunctionType(name='loads', returns=AnyType),
     'dumps': FunctionType(name='dumps', returns=StrType)
 }))
 
 register_builtin_module('random', lambda: ModuleType('random', fields={
-     'randint': FunctionType(name='randint', returns=NumType)
- }))
+    'randint': FunctionType(name='randint', returns=NumType)
+}))
 
 register_builtin_module('string', lambda: ModuleType('string', fields={
     'letters': StrType(False),
@@ -47,61 +47,61 @@ register_builtin_module('string', lambda: ModuleType('string', fields={
 
 def reload_math_module():
     math_module = ModuleType('math', fields={
-       f.name: f for f in [
-           int_function('ceil'),
-           int_function('comb'),
-           float_function('copysign'),
-           num_function('fabs'),
-           int_function('factorial'),
-           int_function('floor'),
-           num_function('fmod'),
-           FunctionType('frexp', returns=lambda: TupleType([FloatType(), IntType()])),
-           float_function('fsum'),
-           int_function('gcd'),
-           bool_function('isclose'),
-           bool_function('isfinite'),
-           bool_function('isinf'),
-           bool_function('isnan'),
-           int_function('isqrt'),
-           int_function('lcm'),
-           num_function('ldexp'),
-           FunctionType('modf', returns=lambda: TupleType([FloatType(), FloatType()])),
-           float_function('nextafter'),
-           int_function('perm'),
-           num_function('prod'),
-           float_function('remainder'),
-           int_function('trunc'),
-           float_function('ulp'),
-           float_function('exp'),
-           float_function('expm1'),
-           float_function('log'),
-           float_function('log1p'),
-           float_function('log2'),
-           float_function('log10'),
-           float_function('pow'),
-           float_function('sqrt'),
-           float_function('acos'),
-           float_function('asin'),
-           float_function('atan'),
-           float_function('atan2'),
-           float_function('cos'),
-           float_function('dist'),
-           float_function('hypot'),
-           float_function('sin'),
-           float_function('tan'),
-           num_function('radians'),
-           num_function('degrees'),
-           float_function('acosh'),
-           float_function('asinh'),
-           float_function('atanh'),
-           float_function('cosh'),
-           float_function('sinh'),
-           float_function('tanh'),
-           float_function('erf'),
-           float_function('erfc'),
-           float_function('gamma'),
-           float_function('lgamma')]
-        })
+        f.name: f for f in [
+            int_function('ceil'),
+            int_function('comb'),
+            float_function('copysign'),
+            num_function('fabs'),
+            int_function('factorial'),
+            int_function('floor'),
+            num_function('fmod'),
+            FunctionType('frexp', returns=lambda: TupleType([FloatType(), IntType()])),
+            float_function('fsum'),
+            int_function('gcd'),
+            bool_function('isclose'),
+            bool_function('isfinite'),
+            bool_function('isinf'),
+            bool_function('isnan'),
+            int_function('isqrt'),
+            int_function('lcm'),
+            num_function('ldexp'),
+            FunctionType('modf', returns=lambda: TupleType([FloatType(), FloatType()])),
+            float_function('nextafter'),
+            int_function('perm'),
+            num_function('prod'),
+            float_function('remainder'),
+            int_function('trunc'),
+            float_function('ulp'),
+            float_function('exp'),
+            float_function('expm1'),
+            float_function('log'),
+            float_function('log1p'),
+            float_function('log2'),
+            float_function('log10'),
+            float_function('pow'),
+            float_function('sqrt'),
+            float_function('acos'),
+            float_function('asin'),
+            float_function('atan'),
+            float_function('atan2'),
+            float_function('cos'),
+            float_function('dist'),
+            float_function('hypot'),
+            float_function('sin'),
+            float_function('tan'),
+            num_function('radians'),
+            num_function('degrees'),
+            float_function('acosh'),
+            float_function('asinh'),
+            float_function('atanh'),
+            float_function('cosh'),
+            float_function('sinh'),
+            float_function('tanh'),
+            float_function('erf'),
+            float_function('erfc'),
+            float_function('gamma'),
+            float_function('lgamma')]
+    })
     math_module.fields.update({
         'pi': FloatType(),
         'e': FloatType(),
@@ -113,8 +113,6 @@ def reload_math_module():
 
 
 register_builtin_module('math', reload_math_module)
-
-
 
 
 def round_definition(tifa, function, callee, arguments, named_arguments, location):

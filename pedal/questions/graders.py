@@ -144,7 +144,7 @@ class FunctionGrader(QuestionGrader):
             VALUE_POINT_ADD = self.UNIT_TEST_VALUE_POINTS
         else:
             ratio = self.UNIT_TEST_TYPE_RATIO
-            TYPE_POINT_ADD = (self.UNIT_TEST_TOTAL_POINTS / len(self.tests) * (ratio))
+            TYPE_POINT_ADD = (self.UNIT_TEST_TOTAL_POINTS / len(self.tests) * ratio)
             VALUE_POINT_ADD = (self.UNIT_TEST_TOTAL_POINTS / len(self.tests) * (1 - ratio))
         test_points = 0
         for index, (arguments, expected) in enumerate(self.tests):

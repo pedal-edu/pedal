@@ -40,9 +40,9 @@ class InterruptableThread(threading.Thread):
 
     @staticmethod
     def _async_raise(thread_id, exception):
-        '''
+        """
         Static method to raise an error asychronously using the ctypes module.
-        '''
+        """
         # Cache the function for convenience
         RaiseAsyncException = ctypes.pythonapi.PyThreadState_SetAsyncExc
 

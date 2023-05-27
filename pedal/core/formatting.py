@@ -119,8 +119,7 @@ class Formatter:
         return self.pre(exception)
 
     def table(self, rows, columns):
-        result = []
-        result.append(" | ".join(columns))
+        result = [" | ".join(columns)]
         for row in rows:
             result.append(" | ".join(row))
         return "\n" + ("\n".join(result))

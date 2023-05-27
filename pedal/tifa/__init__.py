@@ -63,7 +63,7 @@ Important concepts:
     Literal
         Sometimes, we need a specialized representation of a literal value
         to be passed around. This is particularly important for accessing
-        elements in an tuples.
+        elements in tuples.
 
     Name Map
         (Path x Fully Qualified Names) => States

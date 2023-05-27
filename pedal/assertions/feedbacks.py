@@ -435,8 +435,7 @@ class assert_group(AssertionFeedback, FeedbackGroup):
         self.fields['name'] = self.name
         self.fields['try_all'] = self.try_all
 
-        stats = []
-        stats.append(f"You passed {success_count}/{total_count} tests.\n")
+        stats = [f"You passed {success_count}/{total_count} tests.\n"]
         if error_count:
             stats.append(f"There were {error_count} errors.\n")
         self.fields['summary_statistics'] = "\n".join(stats)
