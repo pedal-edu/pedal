@@ -24,6 +24,29 @@ Static
 
 TODO: Handle all the others
 
+prevent_function_call()
+ensure_function_call()
+prevent_operation()
+ensure_operation()
+ensure_operator
+prevent_operator
+prevent_literal
+ensure_literal
+prevent_literal_type
+ensure_literal_type
+prevent_ast
+ensure_ast
+function_prints
+has_import
+ensure_import
+prevent_import
+ensure_documented_functions
+ensure_function
+ensure_dataclass
+ensure_prints_exactly
+ensure_starting_code
+prevent_embedded_answer
+
 Runtime
 -------
 

@@ -10,6 +10,8 @@
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/sphinx_highlight.js"></script>
@@ -283,7 +285,7 @@
         <span class="k">return</span> <span class="bp">self</span>
 
 <div class="viewcode-block" id="Sandbox.run"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">inputs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">threaded</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">after</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">before</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="n">after</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">before</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">real_io</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        If both ``code`` and ``filename`` are None, then the submission&#39;s</span>
 <span class="sd">        main file will be executed. If ``code`` is given but ``filename`` is</span>
@@ -293,6 +295,7 @@
 <span class="sd">            But the user should be able to treat that as if it were the Sandbox...</span>
 
 <span class="sd">        Args:</span>
+<span class="sd">            real_io: If True, makes print and input actually write to stdout.</span>
 <span class="sd">            code (str or :py:class:`~pedal.cait.cait_node.CaitNode` or None):</span>
 <span class="sd">                The code to execute.</span>
 <span class="sd">            filename (str or None): The filename to use for this code.</span>
@@ -307,6 +310,9 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            Sandbox: This sandbox instance.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">real_io</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">allow_function</span><span class="p">(</span><span class="s1">&#39;print&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_input</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">threaded</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">threaded</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">threaded</span>
         <span class="k">if</span> <span class="n">code</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -323,6 +329,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_execute</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">SandboxContextKind</span><span class="o">.</span><span class="n">RUN</span><span class="p">,</span> <span class="n">threaded</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">after</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_execute</span><span class="p">(</span><span class="n">after</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">SandboxContextKind</span><span class="o">.</span><span class="n">RUN</span><span class="p">,</span> <span class="n">threaded</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">real_io</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">clear_mocked_function</span><span class="p">(</span><span class="s1">&#39;print&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">clear_input</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="Sandbox.call"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.call">[docs]</a>    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="n">threaded</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -691,7 +700,8 @@
 <span class="sd">        Args:</span>
 <span class="sd">            function_name (str): The name of the function to be mocked.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_module_overrides</span><span class="p">[</span><span class="s1">&#39;__builtins__&#39;</span><span class="p">][</span><span class="n">function_name</span><span class="p">]</span></div>
+        <span class="k">if</span> <span class="n">function_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_module_overrides</span><span class="p">[</span><span class="s1">&#39;__builtins__&#39;</span><span class="p">]:</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_module_overrides</span><span class="p">[</span><span class="s1">&#39;__builtins__&#39;</span><span class="p">][</span><span class="n">function_name</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="Sandbox.allow_module"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.allow_module">[docs]</a>    <span class="k">def</span> <span class="nf">allow_module</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>

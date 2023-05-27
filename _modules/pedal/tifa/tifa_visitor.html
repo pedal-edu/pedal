@@ -10,6 +10,8 @@
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/sphinx_highlight.js"></script>
@@ -162,7 +164,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">process_ast</span><span class="p">(</span><span class="n">ast_tree</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">analysis</span><span class="o">.</span><span class="n">fail</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
-            <span class="n">system_error</span><span class="p">(</span><span class="n">TOOL_NAME</span><span class="p">,</span> <span class="s2">&quot;Successfully parsed but could not &quot;</span>
+            <span class="n">system_error</span><span class="p">(</span><span class="n">TOOL_NAME</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Successfully parsed but could not &quot;</span>
                                     <span class="s2">&quot;process AST: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="p">),</span>
                          <span class="n">report</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="p">)</span>
         <span class="c1"># Return whatever we got</span>
