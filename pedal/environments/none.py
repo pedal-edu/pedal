@@ -12,4 +12,5 @@ class NoneEnvironment(Environment):
     any behavior.
     """
 
+
 setup_environment = NoneEnvironment

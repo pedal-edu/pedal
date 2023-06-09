@@ -17,7 +17,10 @@ from pedal.resolvers.simple import resolve as simple_resolve, by_priority
 from pedal.resolvers.sectional import resolve as original_sectional_resolve
 from pedal.core.formatting import Formatter
 
-import tabulate
+try:
+    import tabulate
+except ImportError:
+    tabulate = None
 
 
 class VPLEnvironment(Environment):
@@ -124,7 +127,10 @@ class VPLFormatter(Formatter):
         return self.pre(exception)
 
     def table(self, rows, columns):
-        return self.pre(tabulate.tabulate(rows, headers=columns))
+        if tabulate:
+            return self.pre(tabulate.tabulate(rows, headers=columns))
+        else:
+            return self.pre(f"Table:\n{columns}\n{rows}")
 
 
 score_maximum = 1
