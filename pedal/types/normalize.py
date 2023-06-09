@@ -25,7 +25,7 @@ from pedal.types.new_types import (Type, AnyType, ImpossibleType, NumType, BoolT
                                    FunctionType, TYPE_STRINGS,
                                    LiteralStr, LiteralInt, LiteralFloat, LiteralBool, ClassType, InstanceType,
                                    widest_type, LiteralValue, TypeUnion, PEDAL_TYPE_NAMES, specify_subtype)
-from pedal.utilities.system import IS_PYTHON_39
+from pedal.utilities.system import IS_AT_LEAST_PYTHON_39
 
 import types as dynamic_python_types
 
@@ -71,12 +71,12 @@ def normalize_type(type_expression, evaluate_name=None) -> Type:
     if isinstance(type_expression, Type):
         return type_expression
     # What if it's a builtin type function?
-    if isinstance(type_expression, type):
+    if isinstance(type_expression, (type, dynamic_python_types.GenericAlias)):
         if type_expression.__name__ in TYPE_STRINGS:
             return get_generic_type(type_expression, evaluate_name)
         if evaluate_name:
             type_object = unbox_sandbox_if_needed(evaluate_name(type_expression.__name__))
-            if isinstance(type_object, type):
+            if isinstance(type_object, (type, dynamic_python_types.GenericAlias)):
                 if fields and hasattr(type_object, '__dataclass_fields__'):
                     return ClassType(type_object.__name__, {
                         field.name: normalize_type(field.type, evaluate_name)
@@ -306,9 +306,9 @@ def get_pedal_type_from_ast(value: ast.AST, evaluate_name=None) -> Type:
                           get_pedal_type_from_ast(v, evaluate_name))
                          for k, v in zip(value.keys, value.values)])
     # Support new style subscripts (e.g., ``list[int]``)
-    elif ((IS_PYTHON_39 and isinstance(value, ast.Subscript)) or
+    elif ((IS_AT_LEAST_PYTHON_39 and isinstance(value, ast.Subscript)) or
           isinstance(value, ast.Subscript) and isinstance(value.slice, ast.Index)):
-        if IS_PYTHON_39:
+        if IS_AT_LEAST_PYTHON_39:
             slice = value.slice
         else:
             slice = value.slice.value

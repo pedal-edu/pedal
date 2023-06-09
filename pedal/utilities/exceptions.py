@@ -6,6 +6,8 @@ import traceback
 import os
 import sys
 
+from pedal.utilities.system import IS_AT_LEAST_PYTHON_310
+
 BuiltinKeyError = KeyError
 
 _backup_stdout = sys.stdout
@@ -230,15 +232,24 @@ class ExpandedTraceback:
         Returns:
             str: The text of the message.
         """
+
+        # TODO: In 3.10 (or 11?), the colno is available. Indents are not automatically applied. So we need to have
+        # different behavior for those versions to show off the entire line and also highlight "the good bit".
         traceback_message = "\n".join([
             (f"Line {formatter.line(frame.lineno)}"
              f" of file {formatter.filename(frame.filename)}" +
              (f" in {formatter.frame(frame.name)}\n"
               if frame.name != "<module>" and frame.name is not None
               else "\n") +
-             f"{formatter.python_code(frame.line if frame.line is not None else '')}\n")
+             f"{self.format_line(formatter, frame)}\n")
             for frame in traceback_stack
         ])
         if not traceback_message:
             return None
         return formatter.traceback(traceback_message)
+
+    def format_line(self, formatter, frame):
+        if IS_AT_LEAST_PYTHON_310:
+            return formatter.python_code(frame.line if frame.line is not None else '',
+                                         colno=frame.colno if frame.colno is not None else None)
+        return formatter.python_code(frame.line if frame.line is not None else '')

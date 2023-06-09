@@ -54,7 +54,6 @@ class source_file_not_found(SourceFeedback):
         super().__init__(fields=fields, group=group, **kwargs)
 
 
-
 class syntax_error(SourceFeedback):
     """ Generic feedback for any kind of syntax error. """
     muted = False
@@ -78,7 +77,6 @@ class syntax_error(SourceFeedback):
         else:
             lines = code.split("\n")
             line_offsets = {}
-        line_offset = line_offsets.get(filename, 0)
         traceback = ExpandedTraceback(exception, exc_info, False,
                                       [report.submission.instructor_file],
                                       line_offsets, [filename], lines, files)
@@ -90,14 +88,15 @@ class syntax_error(SourceFeedback):
         else:
             traceback_message = f"The traceback was:\n{traceback_message}"
         line_offset = line_offsets.get(filename, 0)
-        fields = {'lineno': line+line_offset,
-                  'filename': filename, 'offset': col_offset,
+        fields = {'lineno': line + line_offset,
+                  'filename': filename,
+                  'offset': col_offset,
                   'exception': exception,
                   'exception_message': str(exception),
                   'traceback': traceback,
                   'traceback_stack': traceback_stack,
                   'traceback_message': traceback_message}
-        location = Location(line=line+line_offset, col=col_offset, filename=filename)
+        location = Location(line=line + line_offset, col=col_offset, filename=filename)
         super().__init__(fields=fields, location=location, **kwargs)
 
 
@@ -111,6 +110,7 @@ class incorrect_number_of_sections(SourceFeedback):
     def __init__(self, count, found, **kwargs):
         fields = {'count': count, 'found': found}
         super().__init__(fields=fields, **kwargs)
+
 
 # TODO: TabError
 

@@ -35,7 +35,7 @@ from pedal.tifa.feedbacks import (action_after_return, return_outside_function,
                                   module_not_found, nested_function_definition,
                                   unused_returned_value, invalid_indexing,
                                   attribute_type_change)
-from pedal.utilities.system import IS_PYTHON_39, IS_AT_LEAST_PYTHON_38
+from pedal.utilities.system import IS_AT_LEAST_PYTHON_38
 
 
 class Tifa(TifaCore, ast.NodeVisitor):
