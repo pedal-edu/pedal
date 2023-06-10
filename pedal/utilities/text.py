@@ -79,3 +79,8 @@ def join_list_with_and(items):
     else:
         pre = ", ".join(items[:-1])
         return f"{pre}, and {items[-1]}"
+
+def inject_line(code, line_number, new_line):
+    lines = code.split("\n")
+    lines.insert(line_number, new_line)
+    return "\n".join(lines)

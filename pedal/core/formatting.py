@@ -1,7 +1,8 @@
 """
 Utilities and classes related to formatting a Feedback Message.
 """
-
+from pedal.core.location import Location
+from pedal.utilities.text import inject_line
 
 def chomp_spec(format_spec, word):
     """ Return a new version of format_spec without the ``word`` and
@@ -85,7 +86,9 @@ class Formatter:
     def pre(self, text):
         return "\n".join(["    " + line for line in text.split("\n")])
 
-    def python_code(self, code):
+    def python_code(self, code, focus=None):
+        if isinstance(focus, Location):
+            code = inject_line(code, focus.line+1, " "*(focus.col-1) + "^"*(focus.end_col-focus.col))
         return self.pre(code)
 
     def python_expression(self, code):
@@ -157,7 +160,9 @@ class HtmlFormatter(Formatter):
 
     ############################################################################
 
-    def python_code(self, code):
+    def python_code(self, code, focus=None):
+        if isinstance(focus, Location):
+            code = inject_line(code, focus.line+1, " "*(focus.col-1) + "^"*(focus.end_col-focus.col))
         return self.html_tag('pre', self.html_code(code), "pedal-python-code python")
 
     def python_expression(self, code):

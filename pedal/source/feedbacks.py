@@ -1,13 +1,14 @@
 """
 Feedback functions of the Source module
 """
-
+import traceback as tb
 from pedal.core.commands import feedback
 from pedal.core.feedback import FeedbackResponse
 from pedal.core.location import Location
 from pedal.core.report import MAIN_REPORT
 from pedal.utilities.exceptions import ExpandedTraceback
 from pedal.source.constants import TOOL_NAME
+from pedal.utilities.system import IS_AT_LEAST_PYTHON_310
 
 
 class SourceFeedback(FeedbackResponse):
@@ -58,15 +59,16 @@ class syntax_error(SourceFeedback):
     """ Generic feedback for any kind of syntax error. """
     muted = False
     title = "Syntax Error"
-    message_template = ("Bad syntax on line {lineno:line}\n\n"
+    message_template = ("Bad syntax on line {lineno:line}.\n\n"
                         "{traceback_message}\n"
+                        "{suggestion_message}"
                         "Suggestion: Check line {lineno:line}, the line "
-                        "before it, and the line after it. Remember to ignore blank lines.")
-    version = '0.0.2'
+                        "before it, and the line after it. Ignore blank lines.")
+    version = '1.0.0'
     justification = "Syntax error was triggered while calling ast.parse"
 
     def __init__(self, line, filename, code, col_offset,
-                 exception, exc_info, **kwargs):
+                 exception, exc_info, enhance=True, **kwargs):
         report = kwargs.get('report', MAIN_REPORT)
         files = report.submission.get_files_lines()
         if filename not in files:
@@ -81,13 +83,15 @@ class syntax_error(SourceFeedback):
                                       [report.submission.instructor_file],
                                       line_offsets, [filename], lines, files)
         traceback_stack = traceback.build_traceback()
-        traceback_message = traceback.format_traceback(traceback_stack,
-                                                       report.format)
-        if not traceback_message:
-            traceback_message = ""
-        else:
+        traceback_message = traceback.format_traceback(traceback_stack, report.format)
+        if traceback_message:
             traceback_message = f"The traceback was:\n{traceback_message}"
+        else:
+            traceback_message = ""
+        #if not enhance:
+        #    self.message_template = "{traceback_message}\n{exception_message}"
         line_offset = line_offsets.get(filename, 0)
+        suggestion_message = self.make_suggestion_message(exception)
         fields = {'lineno': line + line_offset,
                   'filename': filename,
                   'offset': col_offset,
@@ -95,9 +99,18 @@ class syntax_error(SourceFeedback):
                   'exception_message': str(exception),
                   'traceback': traceback,
                   'traceback_stack': traceback_stack,
-                  'traceback_message': traceback_message}
+                  'traceback_message': traceback_message,
+                  'suggestion_message': suggestion_message}
         location = Location(line=line + line_offset, col=col_offset, filename=filename)
         super().__init__(fields=fields, location=location, **kwargs)
+
+    def make_suggestion_message(self, exception):
+        """ Generate a suggestion message based on the exception. """
+        base_message = exception.msg
+        base_message = base_message.capitalize() + "."
+        if base_message == "Invalid syntax.":
+            return ""
+        return base_message + "\n"
 
 
 class incorrect_number_of_sections(SourceFeedback):
@@ -118,10 +131,10 @@ class incorrect_number_of_sections(SourceFeedback):
 class indentation_error(syntax_error):
     """ Generic feedback for indentation errors. """
     title = "Indentation Error"
-    message_template = ("Bad indentation on line {lineno:line} or adjacent line.\n"
-                        "{exception_message:exception}\n\n"
+    message_template = ("Bad indentation on line {lineno:line} or adjacent line.\n\n"
                         "{traceback_message}\n"
+                        "{suggestion_message}"
                         "Suggestion: Check line {lineno:line}, the line "
-                        "before it, and the line after it. Remember to ignore blank lines.")
-    version = '0.0.1'
+                        "before it, and the line after it. Ignore blank lines.")
+    version = '1.0.0'
     justification = "Indentation error was triggered while calling ast.parse"

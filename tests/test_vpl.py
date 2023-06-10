@@ -27,13 +27,13 @@ class TestVPL(ExecutionTestCase):
             vpl.resolve()
             self.assertEqual("""<|--
 -Syntax Error
-Bad syntax on line 15
+Bad syntax on line 15.
 
 The traceback was:
 Line 15 of file datafiles/student_example.py
 >a syntax error in this section!
 
-Suggestion: Check line 15, the line before it, and the line after it. Remember to ignore blank lines.
+Suggestion: Check line 15, the line before it, and the line after it. Ignore blank lines.
 --|>
 Grade :=>> 0
 """, f.getvalue())
@@ -108,13 +108,13 @@ Complete
 Great work!
 -Part 3
 Syntax Error
-Bad syntax on line 15
+Bad syntax on line 15.
 
 The traceback was:
 Line 15 of file datafiles/student_example.py
 >a syntax error in this section!
 
-Suggestion: Check line 15, the line before it, and the line after it. Remember to ignore blank lines.
+Suggestion: Check line 15, the line before it, and the line after it. Ignore blank lines.
 -Part 4
 No feedback for this section
 --|>

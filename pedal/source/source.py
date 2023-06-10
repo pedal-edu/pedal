@@ -63,7 +63,7 @@ def set_source(code, filename=DEFAULT_STUDENT_FILENAME, sections=False,
         code (str): The contents of the source file.
         filename (str): The filename of the students' code. Defaults to
                         `answer.py`.
-        sections (str or bool): Whether or not the file should be divided into
+        sections (str or bool): Whether the file should be divided into
                                 sections. If a str, then it should be a
                                 Python regular expression for how the sections
                                 are separated. If False, there will be no
@@ -108,15 +108,16 @@ def restore_code(report=MAIN_REPORT):
 
 @CompositeFeedbackFunction(blank_source, syntax_error, indentation_error, source_file_not_found)
 def verify(code=None, filename=DEFAULT_STUDENT_FILENAME, report=MAIN_REPORT,
-           muted=False):
+           muted=False, enhance=True):
     """
     Parses the given source code and checks for syntax errors; if no code is given, defaults to the
     current Main file of the submission.
 
     Args:
-        muted:
+        enhance (bool): Whether to use native Python error messages or the Pedal enhanced ones.
+        muted: Whether this Feedback should be considered for showing to the student.
         code (str): Some code to parse and syntax check.
-        filename: An optional filename to use
+        filename (str): An optional filename to use
         report:
 
     Returns:
@@ -126,27 +127,27 @@ def verify(code=None, filename=DEFAULT_STUDENT_FILENAME, report=MAIN_REPORT,
         code = report.submission.main_code
         filename = report.submission.main_file
     if report.submission.load_error:
-        source_file_not_found(filename, None)
+        source_file_not_found(filename, None, enhance=enhance, report=report, muted=muted)
         report[TOOL_NAME]['success'] = False
         return False
     if code.strip() == '':
-        blank_source()
+        blank_source(enhance=enhance, report=report, muted=muted)
         report[TOOL_NAME]['success'] = False
     try:
         parsed = ast.parse(code, filename)
         report[TOOL_NAME]['ast'] = parsed
     except IndentationError as e:
         indentation_error(e.lineno, e.filename, code, e.offset, e,
-                     sys.exc_info(), report=report, muted=muted)
+                          sys.exc_info(), report=report, muted=muted, enhance=enhance)
         report[TOOL_NAME]['success'] = False
         report[TOOL_NAME]['ast'] = ast.parse("")
     except SyntaxError as e:
         syntax_error(e.lineno, e.filename, code, e.offset, e,
-                     sys.exc_info(), report=report, muted=muted)
+                     sys.exc_info(), report=report, muted=muted, enhance=enhance)
         report[TOOL_NAME]['success'] = False
         report[TOOL_NAME]['ast'] = ast.parse("")
-        # TODO: Shouldn't this return early?
-    report[TOOL_NAME]['success'] = True
+    else:
+        report[TOOL_NAME]['success'] = True
     return report[TOOL_NAME]['success']
 
 
@@ -171,7 +172,6 @@ def get_original_program(report=MAIN_REPORT) -> str:
 
     """
     return report[TOOL_NAME]['substitutions'][0].code
-
 
 
 @CompositeFeedbackFunction(source_file_not_found)

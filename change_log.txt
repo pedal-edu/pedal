@@ -1,4 +1,10 @@
-Version 3.5.0 (5/26/2023)
+Version 2.5.1 (6/09/2023)
+-------------------------
+* Create terminal environment, with colored output
+* Minor compatibilty fixes for Python 3.10+
+* Superior runtime/syntax errors in Python 3.10+ (positions are shown)
+
+Version 2.5.0 (5/26/2023)
 -------------------------
 * Upgrade minimum version to Python 3.7 (from 3.6)
 * More sophisticated export of JSON format from Pedal

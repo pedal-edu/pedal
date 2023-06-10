@@ -67,7 +67,7 @@ class Feedback:
         muted (bool): Whether this piece of feedback is something that should be shown to a student. There are
             various use cases for muted feedback: they can serve as flags for later conditionals, suppressed
             default kinds of feedback, or perhaps feedback that is interesting for analysis but not pedagogically
-            helpful to give to the student. They will still contribute to overall score, but not to the correcntess
+            helpful to give to the student. They will still contribute to overall score, but not to the correctness
             of the submission.
         unscored (bool): Whether or not this piece of feedback contributes to
             the score/correctness.
@@ -75,7 +75,7 @@ class Feedback:
         else_message (str): A string to render as a message when a
             NEGATIVE valence feedback is NOT triggered, or a POSITIVE valence
             feedback IS triggered.
-            TODO: Should we also have an else_message_template? Probably.
+        else_message_template (str): Similar to the ``message_template``, but for the ``else_message``.
 
         activate (bool): Used for default feedback objects without a custom
             condition, to indicate whether they should be considered triggered.
@@ -297,7 +297,7 @@ class Feedback:
         Defaults to true through the `activate` parameter.
 
         Returns:
-            bool: Whether or not this feedback's condition was detected.
+            bool: Whether this feedback's condition was detected.
         """
         return self.activate
 
@@ -383,6 +383,15 @@ class Feedback:
         feedback was met. """
 
     def __xor__(self, other):
+        """
+        Allows you to have two mutually exclusive conditions. Only one condition will be activated.
+
+        Args:
+            other:
+
+        Returns:
+
+        """
         if isinstance(other, Feedback):
             self.muted = bool(self) and not bool(other)
             self.unscored = self.muted

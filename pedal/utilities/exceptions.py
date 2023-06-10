@@ -1,12 +1,13 @@
 """
 Utilities for handling exceptions across all of Pedal.
 """
-
+from textwrap import indent
 import traceback
 import os
 import sys
 
 from pedal.utilities.system import IS_AT_LEAST_PYTHON_310
+from pedal.core.location import Location
 
 BuiltinKeyError = KeyError
 
@@ -86,11 +87,14 @@ def add_context_to_error(e, message):
 
 class FakeFrame:
     """ Simplistic hack to make fake StackFrames for SyntaxErrors """
-    def __init__(self, name, filename, lineno, line):
+    def __init__(self, name, filename, lineno, line, colno, end_lineno, end_colno):
         self.name = name
         self.filename = filename
         self.lineno = lineno
         self._line = line
+        self.colno = colno
+        self.end_lineno = end_lineno
+        self.end_colno = end_colno
 
     @property
     def line(self):
@@ -153,8 +157,16 @@ class ExpandedTraceback:
         # A SyntaxError has to be handled differently to actually get its output:
         # https://docs.python.org/3/library/traceback.html#traceback.print_exception
         if isinstance(self.exception, SyntaxError):
+            offset = self.exception.offset
+            if IS_AT_LEAST_PYTHON_310:
+                end_lineno = self.exception.end_lineno
+                end_offset = offset if self.exception.end_offset not in {None, 0} else offset
+                end_offset = offset + 1 if offset == end_offset or end_offset == -1 else end_offset
+            else:
+                end_lineno = self.exception.lineno
+                end_offset = offset + 1
             fake_frame = FakeFrame("<module>", self.exception.filename,
-                                   self.exception.lineno, None)
+                                   self.exception.lineno, None, offset-1, end_lineno, end_offset-1)
             self._fix_frame_line(fake_frame)
             # Skulpt compatibility hack, to prevent duplicate tracebacks
             if not frames or fake_frame != frames[-1]:
@@ -250,6 +262,9 @@ class ExpandedTraceback:
 
     def format_line(self, formatter, frame):
         if IS_AT_LEAST_PYTHON_310:
-            return formatter.python_code(frame.line if frame.line is not None else '',
-                                         colno=frame.colno if frame.colno is not None else None)
+            end_offset = frame.end_colno+1 if frame.lineno == frame.end_lineno else len(frame._line)
+            # Note: Need to use _line because in 3.10 and above, the line gets stripped.
+            # https://github.com/python/cpython/commit/5644c7b3ffd49bed58dc095be6e6148e0bb4431e
+            line = frame._line if frame._line is not None else ''
+            return formatter.python_code(line, focus=Location(0, frame.colno+1, 0, end_offset))
         return formatter.python_code(frame.line if frame.line is not None else '')

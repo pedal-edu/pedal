@@ -55,8 +55,7 @@ class runtime_error(FeedbackResponse):
             title = EXCEPTION_FF_MAP[type(exception)].title
         location = Location(location)
         traceback_stack = traceback.build_traceback()
-        traceback_message = traceback.format_traceback(traceback_stack,
-                                                       report.format)
+        traceback_message = traceback.format_traceback(traceback_stack, report.format)
         if not traceback_message:
             traceback_message = ""
         else:
