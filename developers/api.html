@@ -77,6 +77,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#pedal.core.commands.Feedback.muted"><code class="docutils literal notranslate"><span class="pre">Feedback.muted</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pedal.core.commands.Feedback.unscored"><code class="docutils literal notranslate"><span class="pre">Feedback.unscored</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pedal.core.commands.Feedback.else_message"><code class="docutils literal notranslate"><span class="pre">Feedback.else_message</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.core.commands.Feedback.else_message_template"><code class="docutils literal notranslate"><span class="pre">Feedback.else_message_template</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pedal.core.commands.Feedback.activate"><code class="docutils literal notranslate"><span class="pre">Feedback.activate</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pedal.core.commands.Feedback.author"><code class="docutils literal notranslate"><span class="pre">Feedback.author</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pedal.core.commands.Feedback.version"><code class="docutils literal notranslate"><span class="pre">Feedback.version</span></code></a></li>
@@ -174,6 +175,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#pedal.core.feedback.Feedback.muted"><code class="docutils literal notranslate"><span class="pre">Feedback.muted</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pedal.core.feedback.Feedback.unscored"><code class="docutils literal notranslate"><span class="pre">Feedback.unscored</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pedal.core.feedback.Feedback.else_message"><code class="docutils literal notranslate"><span class="pre">Feedback.else_message</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.core.feedback.Feedback.else_message_template"><code class="docutils literal notranslate"><span class="pre">Feedback.else_message_template</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pedal.core.feedback.Feedback.activate"><code class="docutils literal notranslate"><span class="pre">Feedback.activate</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pedal.core.feedback.Feedback.author"><code class="docutils literal notranslate"><span class="pre">Feedback.author</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pedal.core.feedback.Feedback.version"><code class="docutils literal notranslate"><span class="pre">Feedback.version</span></code></a></li>
@@ -562,7 +564,7 @@ task is now finished.</p>
 <dd><p>Whether this piece of feedback is something that should be shown to a student. There are
 various use cases for muted feedback: they can serve as flags for later conditionals, suppressed
 default kinds of feedback, or perhaps feedback that is interesting for analysis but not pedagogically
-helpful to give to the student. They will still contribute to overall score, but not to the correcntess
+helpful to give to the student. They will still contribute to overall score, but not to the correctness
 of the submission.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -588,8 +590,18 @@ the score/correctness.</p>
 <span class="sig-name descname"><span class="pre">else_message</span></span><a class="headerlink" href="#pedal.core.commands.Feedback.else_message" title="Permalink to this definition"></a></dt>
 <dd><p>A string to render as a message when a
 NEGATIVE valence feedback is NOT triggered, or a POSITIVE valence
-feedback IS triggered.
-TODO: Should we also have an else_message_template? Probably.</p>
+feedback IS triggered.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pedal.core.commands.Feedback.else_message_template">
+<span class="sig-name descname"><span class="pre">else_message_template</span></span><a class="headerlink" href="#pedal.core.commands.Feedback.else_message_template" title="Permalink to this definition"></a></dt>
+<dd><p>Similar to the <code class="docutils literal notranslate"><span class="pre">message_template</span></code>, but for the <code class="docutils literal notranslate"><span class="pre">else_message</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a></p>
@@ -699,7 +711,7 @@ context.</p>
 Defaults to true through the <a class="reference internal" href="../teachers/tools/ffs.html#activate" title="activate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">activate</span></code></a> parameter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Whether or not this feedback’s condition was detected.</p>
+<dd class="field-odd"><p>Whether this feedback’s condition was detected.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a></p>
@@ -1595,7 +1607,7 @@ task is now finished.</p>
 <dd><p>Whether this piece of feedback is something that should be shown to a student. There are
 various use cases for muted feedback: they can serve as flags for later conditionals, suppressed
 default kinds of feedback, or perhaps feedback that is interesting for analysis but not pedagogically
-helpful to give to the student. They will still contribute to overall score, but not to the correcntess
+helpful to give to the student. They will still contribute to overall score, but not to the correctness
 of the submission.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -1621,8 +1633,18 @@ the score/correctness.</p>
 <span class="sig-name descname"><span class="pre">else_message</span></span><a class="headerlink" href="#pedal.core.feedback.Feedback.else_message" title="Permalink to this definition"></a></dt>
 <dd><p>A string to render as a message when a
 NEGATIVE valence feedback is NOT triggered, or a POSITIVE valence
-feedback IS triggered.
-TODO: Should we also have an else_message_template? Probably.</p>
+feedback IS triggered.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pedal.core.feedback.Feedback.else_message_template">
+<span class="sig-name descname"><span class="pre">else_message_template</span></span><a class="headerlink" href="#pedal.core.feedback.Feedback.else_message_template" title="Permalink to this definition"></a></dt>
+<dd><p>Similar to the <code class="docutils literal notranslate"><span class="pre">message_template</span></code>, but for the <code class="docutils literal notranslate"><span class="pre">else_message</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a></p>
@@ -1732,7 +1754,7 @@ context.</p>
 Defaults to true through the <a class="reference internal" href="../teachers/tools/ffs.html#activate" title="activate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">activate</span></code></a> parameter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Whether or not this feedback’s condition was detected.</p>
+<dd class="field-odd"><p>Whether this feedback’s condition was detected.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a></p>

@@ -155,7 +155,7 @@
 <span class="sd">        muted (bool): Whether this piece of feedback is something that should be shown to a student. There are</span>
 <span class="sd">            various use cases for muted feedback: they can serve as flags for later conditionals, suppressed</span>
 <span class="sd">            default kinds of feedback, or perhaps feedback that is interesting for analysis but not pedagogically</span>
-<span class="sd">            helpful to give to the student. They will still contribute to overall score, but not to the correcntess</span>
+<span class="sd">            helpful to give to the student. They will still contribute to overall score, but not to the correctness</span>
 <span class="sd">            of the submission.</span>
 <span class="sd">        unscored (bool): Whether or not this piece of feedback contributes to</span>
 <span class="sd">            the score/correctness.</span>
@@ -163,7 +163,7 @@
 <span class="sd">        else_message (str): A string to render as a message when a</span>
 <span class="sd">            NEGATIVE valence feedback is NOT triggered, or a POSITIVE valence</span>
 <span class="sd">            feedback IS triggered.</span>
-<span class="sd">            TODO: Should we also have an else_message_template? Probably.</span>
+<span class="sd">        else_message_template (str): Similar to the ``message_template``, but for the ``else_message``.</span>
 
 <span class="sd">        activate (bool): Used for default feedback objects without a custom</span>
 <span class="sd">            condition, to indicate whether they should be considered triggered.</span>
@@ -385,7 +385,7 @@
 <span class="sd">        Defaults to true through the `activate` parameter.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            bool: Whether or not this feedback&#39;s condition was detected.</span>
+<span class="sd">            bool: Whether this feedback&#39;s condition was detected.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">activate</span></div>
 
@@ -471,6 +471,15 @@
 <span class="sd">        feedback was met. &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__xor__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Allows you to have two mutually exclusive conditions. Only one condition will be activated.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            other:</span>
+
+<span class="sd">        Returns:</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Feedback</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">muted</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">bool</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">unscored</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">muted</span>

@@ -151,7 +151,7 @@
 <span class="sd">        code (str): The contents of the source file.</span>
 <span class="sd">        filename (str): The filename of the students&#39; code. Defaults to</span>
 <span class="sd">                        `answer.py`.</span>
-<span class="sd">        sections (str or bool): Whether or not the file should be divided into</span>
+<span class="sd">        sections (str or bool): Whether the file should be divided into</span>
 <span class="sd">                                sections. If a str, then it should be a</span>
 <span class="sd">                                Python regular expression for how the sections</span>
 <span class="sd">                                are separated. If False, there will be no</span>
@@ -196,15 +196,16 @@
 
 <div class="viewcode-block" id="verify"><a class="viewcode-back" href="../../../developers/tools/source.html#pedal.source.source.verify">[docs]</a><span class="nd">@CompositeFeedbackFunction</span><span class="p">(</span><span class="n">blank_source</span><span class="p">,</span> <span class="n">syntax_error</span><span class="p">,</span> <span class="n">indentation_error</span><span class="p">,</span> <span class="n">source_file_not_found</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">verify</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">DEFAULT_STUDENT_FILENAME</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">,</span>
-           <span class="n">muted</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+           <span class="n">muted</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">enhance</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Parses the given source code and checks for syntax errors; if no code is given, defaults to the</span>
 <span class="sd">    current Main file of the submission.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        muted:</span>
+<span class="sd">        enhance (bool): Whether to use native Python error messages or the Pedal enhanced ones.</span>
+<span class="sd">        muted: Whether this Feedback should be considered for showing to the student.</span>
 <span class="sd">        code (str): Some code to parse and syntax check.</span>
-<span class="sd">        filename: An optional filename to use</span>
+<span class="sd">        filename (str): An optional filename to use</span>
 <span class="sd">        report:</span>
 
 <span class="sd">    Returns:</span>
@@ -214,27 +215,27 @@
         <span class="n">code</span> <span class="o">=</span> <span class="n">report</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">main_code</span>
         <span class="n">filename</span> <span class="o">=</span> <span class="n">report</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">main_file</span>
     <span class="k">if</span> <span class="n">report</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">load_error</span><span class="p">:</span>
-        <span class="n">source_file_not_found</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">source_file_not_found</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">enhance</span><span class="o">=</span><span class="n">enhance</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">,</span> <span class="n">muted</span><span class="o">=</span><span class="n">muted</span><span class="p">)</span>
         <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;success&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">return</span> <span class="kc">False</span>
     <span class="k">if</span> <span class="n">code</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
-        <span class="n">blank_source</span><span class="p">()</span>
+        <span class="n">blank_source</span><span class="p">(</span><span class="n">enhance</span><span class="o">=</span><span class="n">enhance</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">,</span> <span class="n">muted</span><span class="o">=</span><span class="n">muted</span><span class="p">)</span>
         <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;success&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">parsed</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
         <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;ast&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">parsed</span>
     <span class="k">except</span> <span class="ne">IndentationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="n">indentation_error</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">lineno</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">offset</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span>
-                     <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">(),</span> <span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">,</span> <span class="n">muted</span><span class="o">=</span><span class="n">muted</span><span class="p">)</span>
+                          <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">(),</span> <span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">,</span> <span class="n">muted</span><span class="o">=</span><span class="n">muted</span><span class="p">,</span> <span class="n">enhance</span><span class="o">=</span><span class="n">enhance</span><span class="p">)</span>
         <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;success&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;ast&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">SyntaxError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="n">syntax_error</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">lineno</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">offset</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span>
-                     <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">(),</span> <span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">,</span> <span class="n">muted</span><span class="o">=</span><span class="n">muted</span><span class="p">)</span>
+                     <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">(),</span> <span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">,</span> <span class="n">muted</span><span class="o">=</span><span class="n">muted</span><span class="p">,</span> <span class="n">enhance</span><span class="o">=</span><span class="n">enhance</span><span class="p">)</span>
         <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;success&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;ast&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-        <span class="c1"># TODO: Shouldn&#39;t this return early?</span>
-    <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;success&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;success&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="k">return</span> <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;success&#39;</span><span class="p">]</span></div>
 
 
@@ -259,7 +260,6 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;substitutions&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">code</span></div>
-
 
 
 <div class="viewcode-block" id="set_source_file"><a class="viewcode-back" href="../../../developers/tools/source.html#pedal.source.source.set_source_file">[docs]</a><span class="nd">@CompositeFeedbackFunction</span><span class="p">(</span><span class="n">source_file_not_found</span><span class="p">)</span>

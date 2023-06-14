@@ -199,7 +199,7 @@ the Submission’s current main code.</p>
 <li><p><strong>code</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The contents of the source file.</p></li>
 <li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The filename of the students’ code. Defaults to
 <code class="xref py py-obj docutils literal notranslate"><span class="pre">answer.py</span></code>.</p></li>
-<li><p><strong>sections</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – Whether or not the file should be divided into
+<li><p><strong>sections</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – Whether the file should be divided into
 sections. If a str, then it should be a
 Python regular expression for how the sections
 are separated. If False, there will be no
@@ -239,15 +239,16 @@ If no files are found, the <code class="xref py py-obj docutils literal notransl
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pedal.source.source.verify">
-<span class="sig-name descname"><span class="pre">verify</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename='answer.py'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">muted=False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/source/source.html#verify"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.source.source.verify" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">verify</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename='answer.py'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">muted=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enhance=True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/source/source.html#verify"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.source.source.verify" title="Permalink to this definition"></a></dt>
 <dd><p>Parses the given source code and checks for syntax errors; if no code is given, defaults to the
 current Main file of the submission.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>muted</strong> – </p></li>
+<li><p><strong>enhance</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – Whether to use native Python error messages or the Pedal enhanced ones.</p></li>
+<li><p><strong>muted</strong> – Whether this Feedback should be considered for showing to the student.</p></li>
 <li><p><strong>code</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Some code to parse and syntax check.</p></li>
-<li><p><strong>filename</strong> – An optional filename to use</p></li>
+<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – An optional filename to use</p></li>
 <li><p><strong>report</strong> – </p></li>
 </ul>
 </dd>
@@ -257,15 +258,16 @@ current Main file of the submission.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pedal.source.source.verify_section">
-<span class="sig-name descname"><span class="pre">verify_section</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename='answer.py'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">muted=False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pedal.source.source.verify_section" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">verify_section</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename='answer.py'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">muted=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enhance=True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pedal.source.source.verify_section" title="Permalink to this definition"></a></dt>
 <dd><p>Parses the given source code and checks for syntax errors; if no code is given, defaults to the
 current Main file of the submission.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>muted</strong> – </p></li>
+<li><p><strong>enhance</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – Whether to use native Python error messages or the Pedal enhanced ones.</p></li>
+<li><p><strong>muted</strong> – Whether this Feedback should be considered for showing to the student.</p></li>
 <li><p><strong>code</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Some code to parse and syntax check.</p></li>
-<li><p><strong>filename</strong> – An optional filename to use</p></li>
+<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – An optional filename to use</p></li>
 <li><p><strong>report</strong> – </p></li>
 </ul>
 </dd>
