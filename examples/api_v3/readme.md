@@ -4,8 +4,8 @@ This directory contains examples of the V3 Pedal API.
 # The Examples
 
 ```
-$> pedal debug simple_test.py student_code.py --environment blockpy
-$> pedal debug unit_test_examples.py student_code.py --environment blockpy
+$> pedal debug simple_test.py student_code.py --environment terminal
+$> pedal debug unit_test_examples.py student_code.py --environment terminal
 ```
 
 
@@ -96,6 +96,8 @@ already run.
 You could also manually set the environment by starting the file with
 ```
 from pedal.environments.blockpy import *
+
+setup_environment()
 ```
 
 If you try to access certain builtins expecting them to be there, and they

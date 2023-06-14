@@ -317,16 +317,17 @@ class AbstractPipeline:
 class FeedbackPipeline(AbstractPipeline):
     def process_output(self):
         for bundle in self.submissions:
-            print(bundle.submission.instructor_file,
-                  bundle.submission.main_file)
+            #print(bundle.submission.instructor_file,
+            #      bundle.submission.main_file)
             if bundle.result.error:
                 print(bundle.result.error)
             elif bundle.result.resolution:
                 # report = bundle.result.data['MAIN_REPORT']
-                print(bundle.result.resolution.title)
-                print(bundle.result.resolution.message)
+                #print(bundle.result.resolution.title)
+                #print(bundle.result.resolution.message)
+                print(bundle.result.output)
             else:
-                print("No feedback determined.")
+                print("Error: No feedback determined.")
 
 
 class RunPipeline(AbstractPipeline):

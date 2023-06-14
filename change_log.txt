@@ -1,3 +1,9 @@
+Version 2.5.2 (6/14/2023)
+-------------------------
+* Further improve terminal environment
+* Minor changes to how feedback mode outputs to console
+* Allow easy JSON dumping for final feedback object
+
 Version 2.5.1 (6/09/2023)
 -------------------------
 * Create terminal environment, with colored output

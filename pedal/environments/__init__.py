@@ -32,5 +32,5 @@ def default_pipeline(tifa=False, cait=True, sandbox=True):
 from pedal.environments.standard import setup_environment
 
 ALL_ENVIRONMENTS = [
-    'blockpy', 'gradescope', 'jupyter', 'standard', 'vpl'
+    'blockpy', 'gradescope', 'jupyter', 'standard', 'vpl', 'terminal'
 ]

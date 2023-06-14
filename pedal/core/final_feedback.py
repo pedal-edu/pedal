@@ -1,3 +1,4 @@
+import json
 from pedal.core.feedback import Feedback
 from pedal.core.commands import set_correct
 from pedal.core.report import Report
@@ -174,6 +175,12 @@ class FinalFeedback:
             'location': self.data.get('location', None) if self.data else None
         }
 
+    def to_file(self, path, format='json'):
+        with open(path, 'w') as f:
+            if format == 'json':
+                json.dump(self.to_json(), f)
+            else:
+                f.write(self.for_console())
 
 def set_correct_no_errors(report: Report) -> FinalFeedback:
     return FinalFeedback(correct=True, score=0,
