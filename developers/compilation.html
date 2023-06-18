@@ -99,11 +99,11 @@
 you may need to compile Pedal. The most obvious example is BlockPy, which uses Skulpt to run Python code in the browser.</p>
 <section id="compiling-pedal-for-skulpt">
 <h2>Compiling Pedal for Skulpt<a class="headerlink" href="#compiling-pedal-for-skulpt" title="Permalink to this heading"></a></h2>
-<p>From within the <code class="xref py py-obj docutils literal notranslate"><span class="pre">blockpy-edu/skulpt</span></code> project’s main folder, you can run the following command (replacing <code class="xref py py-obj docutils literal notranslate"><span class="pre">$PEDAL</span></code> with the path to the Pedal project folder):</p>
+<p>From within the <code class="xref py py-obj docutils literal notranslate"><span class="pre">blockpy-edu/skulpt</span></code> project’s main folder, you can run the following command (replacing <code class="docutils literal notranslate"><span class="pre">$PEDAL_PATH</span></code> with the path to the Pedal project folder):</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$&gt; npm run precompile $PEDAL_PATH/dist-js/skulpt-pedal.js $PEDAL_PATH/ pedal -- -m
 </pre></div>
 </div>
-<p>The <code class="xref py py-obj docutils literal notranslate"><span class="pre">--</span> <span class="pre">-m</span></code> arguments at the end will make Skulpt compile the output down with various optimizations. While debugging,
+<p>The <code class="docutils literal notranslate"><span class="pre">--</span> <span class="pre">-m</span></code> arguments at the end will make Skulpt compile the output down with various optimizations. While debugging,
 you may find it helpful to remove those arguments to 1) make the compilation faster, and 2) leave in certain debug
 information that might be useful.</p>
 </section>
