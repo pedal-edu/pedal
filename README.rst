@@ -49,17 +49,3 @@ that Conditions can be Categorized as being from "Specifications" or
 For more information, check out the docs for Pedal_.
 
 .. _Pedal: https://pedal-edu.github.io/pedal
-
-Command Line Examples
-=====================
-
-Pedal can be used from the command line to run a single file, or to run a bunch of files.
-
-```sh
-$> pedal feedback instructor.py student.py --environment terminal
-
-$> pedal feedback examples/api_v3/simple_test.py examples/api-v3/student-code.py --environment terminal
-```
-
-Environment Examples
-====================
