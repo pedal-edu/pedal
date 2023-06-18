@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Overview: module code &mdash; Pedal 1.0 documentation</title>
+  <title>Compilation &mdash; Pedal 1.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -17,7 +18,9 @@
         <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Researchers: Analyzing with Pedal" href="../teachers/analysis.html" />
+    <link rel="prev" title="Necessary Libraries" href="libraries.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -43,7 +46,7 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../everyone/introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../everyone/installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../teachers/quickstart.html">Teacher Quick Start Guide</a></li>
@@ -51,12 +54,16 @@
 <li class="toctree-l1"><a class="reference internal" href="../teachers/reference.html">Teacher Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../teachers/integrations.html">Autograder Integrations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../teachers/practices.html">Best Practices</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developers/ffs.html">Developers: Feedback Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developers/api.html">Developer API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developers/tools.html">Developer Tools Reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developers/conventions.html">Internal Naming Conventions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developers/libraries.html">Necessary Libraries</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developers/compilation.html">Compilation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ffs.html">Developers: Feedback Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">Developer API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">Developer Tools Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conventions.html">Internal Naming Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="libraries.html">Necessary Libraries</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Compilation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#compiling-pedal-for-skulpt">Compiling Pedal for Skulpt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#compiling-pedal-for-pyodide">Compiling Pedal for Pyodide</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../teachers/analysis.html">Researchers: Analyzing with Pedal</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../everyone/glossary.html">Glossary</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../everyone/contact.html">Contact</a></li>
@@ -76,8 +83,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Overview: module code</li>
+      <li class="breadcrumb-item active">Compilation</li>
       <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/developers/compilation.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -85,35 +93,33 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>All modules for which code is available</h1>
-<ul><li><a href="pedal/assertions.html">pedal.assertions</a></li>
-<ul><li><a href="pedal/assertions/commands.html">pedal.assertions.commands</a></li>
-<li><a href="pedal/assertions/runtime.html">pedal.assertions.runtime</a></li>
-<li><a href="pedal/assertions/static.html">pedal.assertions.static</a></li>
-</ul><li><a href="pedal/cait/cait_api.html">pedal.cait.cait_api</a></li>
-<li><a href="pedal/cait/find_node.html">pedal.cait.find_node</a></li>
-<li><a href="pedal/core/commands.html">pedal.core.commands</a></li>
-<li><a href="pedal/core/environment.html">pedal.core.environment</a></li>
-<li><a href="pedal/core/feedback.html">pedal.core.feedback</a></li>
-<li><a href="pedal/core/feedback_category.html">pedal.core.feedback_category</a></li>
-<li><a href="pedal/core/location.html">pedal.core.location</a></li>
-<li><a href="pedal/core/report.html">pedal.core.report</a></li>
-<li><a href="pedal/core/submission.html">pedal.core.submission</a></li>
-<li><a href="pedal/core/tool.html">pedal.core.tool</a></li>
-<li><a href="pedal/extensions/plotting.html">pedal.extensions.plotting</a></li>
-<li><a href="pedal/questions/setup.html">pedal.questions.setup</a></li>
-<li><a href="pedal/sandbox.html">pedal.sandbox</a></li>
-<ul><li><a href="pedal/sandbox/commands.html">pedal.sandbox.commands</a></li>
-<li><a href="pedal/sandbox/feedbacks.html">pedal.sandbox.feedbacks</a></li>
-<li><a href="pedal/sandbox/sandbox.html">pedal.sandbox.sandbox</a></li>
-</ul><li><a href="pedal/source/source.html">pedal.source.source</a></li>
-<li><a href="pedal/tifa/commands.html">pedal.tifa.commands</a></li>
-<li><a href="pedal/tifa/tifa_visitor.html">pedal.tifa.tifa_visitor</a></li>
-</ul>
+  <section id="compilation">
+<h1>Compilation<a class="headerlink" href="#compilation" title="Permalink to this heading"></a></h1>
+<p>Pedal is a pure Python library, with almost zero dependent <a class="reference internal" href="libraries.html#libraries"><span class="std std-ref">Necessary Libraries</span></a>. However, for deployment on certain platforms,
+you may need to compile Pedal. The most obvious example is BlockPy, which uses Skulpt to run Python code in the browser.</p>
+<section id="compiling-pedal-for-skulpt">
+<h2>Compiling Pedal for Skulpt<a class="headerlink" href="#compiling-pedal-for-skulpt" title="Permalink to this heading"></a></h2>
+<p>From within the <code class="xref py py-obj docutils literal notranslate"><span class="pre">blockpy-edu/skulpt</span></code> project’s main folder, you can run the following command (replacing <code class="xref py py-obj docutils literal notranslate"><span class="pre">$PEDAL</span></code> with the path to the Pedal project folder):</p>
+<p><code class="docutils literal notranslate"><span class="pre">`sh</span>
+<span class="pre">$&gt;</span> <span class="pre">npm</span> <span class="pre">run</span> <span class="pre">precompile</span> <span class="pre">$PEDAL_PATH/dist-js/skulpt-pedal.js</span> <span class="pre">$PEDAL_PATH/</span> <span class="pre">pedal</span> <span class="pre">--</span> <span class="pre">-m</span>
+<span class="pre">`</span></code></p>
+<p>The <code class="xref py py-obj docutils literal notranslate"><span class="pre">--</span> <span class="pre">-m</span></code> arguments at the end will make Skulpt compile the output down with various optimizations. While debugging,
+you may find it helpful to remove those arguments to 1) make the compilation faster, and 2) leave in certain debug
+information that might be useful.</p>
+</section>
+<section id="compiling-pedal-for-pyodide">
+<h2>Compiling Pedal for Pyodide<a class="headerlink" href="#compiling-pedal-for-pyodide" title="Permalink to this heading"></a></h2>
+<p>Nothing special is needed!</p>
+</section>
+</section>
+
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="libraries.html" class="btn btn-neutral float-left" title="Necessary Libraries" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../teachers/analysis.html" class="btn btn-neutral float-right" title="Researchers: Analyzing with Pedal" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 

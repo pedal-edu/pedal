@@ -37,6 +37,7 @@ rather than an afterthought.
     developers/tools
     developers/conventions
     developers/libraries
+    developers/compilation
     teachers/analysis
     everyone/glossary
     everyone/contact
