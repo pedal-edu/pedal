@@ -11,7 +11,7 @@ from pedal.source import *
 from pedal.tifa import tifa_analysis
 from tests.execution_helper import Execution
 import pedal.resolvers.sectional as sectional
-from pedal.utilities.system import IS_AT_LEAST_PYTHON_311, IS_AT_LEAST_PYTHON_39, IS_AT_LEAST_PYTHON_38
+from pedal.utilities.system import IS_AT_LEAST_PYTHON_311, IS_AT_LEAST_PYTHON_39, IS_AT_LEAST_PYTHON_38, IS_AT_LEAST_PYTHON_310
 
 
 class TestCode(unittest.TestCase):
@@ -62,7 +62,7 @@ The traceback was:
 Line 1 of file answer.py
     def x():
 """ + ('            ^\n' if IS_AT_LEAST_PYTHON_311 else "") + """
-""" + ('Expected an indented block after function definition on line 1.' if IS_AT_LEAST_PYTHON_311 else "Expected an indented block.") + """
+""" + ('Expected an indented block after function definition on line 1.' if IS_AT_LEAST_PYTHON_310 else "Expected an indented block.") + """
 Suggestion: Check line 1, the line before it, and the line after it. Ignore blank lines.""")
         else:
             self.assertEqual(feedback[0].message, """Bad syntax on line 1.

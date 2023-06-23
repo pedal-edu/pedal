@@ -2,7 +2,7 @@ import unittest
 import os
 import sys
 
-from pedal.utilities.system import IS_AT_LEAST_PYTHON_310
+from pedal.utilities.system import IS_AT_LEAST_PYTHON_311
 
 pedal_library = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.insert(0, pedal_library)
@@ -37,7 +37,7 @@ A TypeError occurred:
 The traceback was:
 Line 1 of file answer.py
     0+"A"
-""" + ('    ^^^^^\n' if IS_AT_LEAST_PYTHON_310 else "") +"""
+""" + ('    ^^^^^\n' if IS_AT_LEAST_PYTHON_311 else "") +"""
 
 Type errors occur when you use an operator or function on the wrong type of value. For example, using `+` to add to a list (instead of `.append`), or dividing a string by a number.
 

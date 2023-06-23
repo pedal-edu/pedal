@@ -38,7 +38,7 @@ The function named x has a parameter named c that is a list of integers, but sho
         with Execution('D = list\ndef x(a: int, c: D) -> str: pass\nx\nD') as e:
             f = ensure_function('x', parameters=(int, 'int'), returns=str)
             self.assertTrue(f)
-        print(f.fields)
+        #print(f.fields)
         self.assertFeedback(e, "Wrong Parameter Type\n"
                                "The function named x "
                                "has a parameter named c "
