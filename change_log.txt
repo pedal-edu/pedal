@@ -1,3 +1,9 @@
+Version 2.5.3 (6/23/2023)
+-------------------------
+* Fix bug where CaitNodes are not exportable to JSON
+* New profile for analysis: BlockPy consenting (where the LinkSubject table is not present)
+* Fix tests for Python 11 and 10
+
 Version 2.5.2 (6/14/2023)
 -------------------------
 * Further improve terminal environment
