@@ -6,7 +6,7 @@ import traceback
 import os
 import sys
 
-from pedal.utilities.system import IS_AT_LEAST_PYTHON_310
+from pedal.utilities.system import IS_AT_LEAST_PYTHON_310, IS_AT_LEAST_PYTHON_311
 from pedal.core.location import Location
 
 BuiltinKeyError = KeyError
@@ -261,7 +261,7 @@ class ExpandedTraceback:
         return formatter.traceback(traceback_message)
 
     def format_line(self, formatter, frame):
-        if IS_AT_LEAST_PYTHON_310:
+        if IS_AT_LEAST_PYTHON_311:
             end_offset = frame.end_colno+1 if frame.lineno == frame.end_lineno else len(frame._line)
             # Note: Need to use _line because in 3.10 and above, the line gets stripped.
             # https://github.com/python/cpython/commit/5644c7b3ffd49bed58dc095be6e6148e0bb4431e
