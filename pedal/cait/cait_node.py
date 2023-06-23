@@ -660,6 +660,9 @@ class CaitNode:
         """
         return Location(self.astNode.lineno, col=self.astNode.col_offset)
 
+    def to_json(self):
+        return str(self)
+
 
 AST_SINGLE_FUNCTIONS = ["ctx_name", "op_name"]
 AST_ARRAYS_OF_FUNCTIONS = ["ops_names"]
