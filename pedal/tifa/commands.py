@@ -41,6 +41,7 @@ def get_issues(category, report=MAIN_REPORT):
 
     Args:
         category (str or Feedback): The category of Issues to retrieve.
+        report: The report to get feedback from (defaults to the MAIN_REPORT).
 
     Returns:
         list[Feedback]: The feedback functions triggered for this issue.
@@ -55,10 +56,12 @@ def get_issues(category, report=MAIN_REPORT):
 
 def tifa_provide_module_type(name: str, fields, report=MAIN_REPORT):
     """
+    Gives TIFA the type definition for a module.
 
     Args:
-        name:
-        fields:
+        name: The name of the module to provide a type for.
+        fields: A `ModuleType` or `dict` of fields to provide.
+        report: The report to attach this feedback to (defaults to the MAIN_REPORT).
 
     Returns:
 

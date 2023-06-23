@@ -331,7 +331,8 @@ class TifaCore:
             name (str): The unqualified name of the variable. The variable will
                         be assumed to be in the current scope.
             store_type (Type): The new type of this variable.
-            position: The location that this store occurred at
+            position: The location that this store occurred at.
+            force_create: Used to force the creation of a new variable, even if the variable already exists.
         Returns:
             State: The new state of the variable.
         """

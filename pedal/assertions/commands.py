@@ -35,16 +35,18 @@ def unit_test(function, *tests, else_message=None, else_message_template=None,
 
     Args:
         assert_function: Override the assert function (defaults to assert_equal)
-        function ():
-        *tests ():
+        function (str): The name of the function to test.
+        *tests (): The test cases to run. Each test case is a tuple of the input/output pairs.
         else_message (str): The message to present as a positive if the
              tests all pass.
+        else_message_template (str): The template for the else_message, to be formatted.
         score (str): The score to give overall/per test case, depending on
             partial_credit.
-        partial_credit (bool or str or list[str]): Whether or not to give credit for
+        partial_credit (bool or str or list[str]): Whether to give credit for
             each unit test as a percentage of the whole (True), or to only give
             points for passing all the tests (False). Defaults to False.
             If a list is passed, those scores will be used per test case.
+        context (Sandbox or CommandBlock): The context to run the function in.
         **kwargs ():
 
     Returns:

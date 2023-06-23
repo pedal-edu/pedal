@@ -288,9 +288,6 @@ class AstMap:
     @property
     def match_lineno(self):
         """
-        Args:
-            first (bool): Whether to use the first found match, or the last one.
-
         Returns:
             int: the line number this match started on
         """

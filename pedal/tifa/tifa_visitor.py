@@ -211,6 +211,7 @@ class Tifa(TifaCore, ast.NodeVisitor):
             target (ast.AST): The target AST Node.
             target_type (Type): The new TIFA type.
             operation (None | ast.op): The AugAssign operation, if there is one
+            store_with_read: Whether to store the variable as a read variable, or just a write variable.
 
         Returns:
 

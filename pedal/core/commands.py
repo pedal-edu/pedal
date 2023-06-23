@@ -146,6 +146,7 @@ def log(*items, sep=" ", **kwargs):
     Attach logging information to the Report as a piece of feedback.
 
     Args:
+        sep: The separator to use between items (defaults to space).
         items (Any): Any set of values to log information about. Will be
             converted to strings using `str` if not already strings.
 

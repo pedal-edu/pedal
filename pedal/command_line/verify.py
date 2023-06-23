@@ -11,7 +11,7 @@ def parse_out_file(path):
     of other features, but who needs 'em.
 
     Args:
-        contents (str): The contents of the out file.
+        path (str): The path to the inifile that will be read.
 
     Returns:
         dict[str, dict[str, str]]: The constructed out sections=>{fields=>data}

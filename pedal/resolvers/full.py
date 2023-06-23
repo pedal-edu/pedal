@@ -36,6 +36,7 @@ def resolve(report=MAIN_REPORT, priority_key=by_priority):
     This function is used to resolve the feedback objects in the report into a FinalFeedback object.
 
     Args:
+        priority_key: The function used to sort the feedback objects.
         report: The report to resolve.
 
     Returns:

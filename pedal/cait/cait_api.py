@@ -273,7 +273,7 @@ def find_asts(node_name: str, student_code=None, report=MAIN_REPORT):
     node (e.g., `"For"` or `"FunctionDef"`).
 
     Args:
-        node_type: the string representing the "type" of node to look for
+        node_name: the string representing the "type" of node to look for
         student_code (str): Optionally, different code to parse and search.
         report: defaults to MAIN_REPORT unless another one is given.
 

@@ -138,14 +138,17 @@ def detailed_resolver(report=MAIN_REPORT, priority_key=by_priority):
 
 
 @make_resolver
-def resolve(report=MAIN_REPORT, customize_failure_message= None, leaderboard=None, priority_key=by_priority):
+def resolve(report=MAIN_REPORT, customize_failure_message= None, leaderboard=None):
     """
 
     TODO: Support some hidden tests for instructors
 
     Args:
-        report:
-        custom_success_message:
+        leaderboard: A list of data for the leaderboard, or a function to generate a leaderboard.
+        customize_failure_message: A function that takes in the final feedback object in order to manipulate its
+            settings. This is useful for changing the message of a feedback object to be more specific to the
+            needs of the instructor.
+        report: The report to resolve.
     """
     final = full_resolve(report)
     tests = []
