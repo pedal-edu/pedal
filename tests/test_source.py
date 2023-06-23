@@ -55,7 +55,7 @@ Suggestion: Check line 2, the line before it, and the line after it. Ignore blan
         feedback = get_all_feedback()
         self.assertTrue(feedback)
         self.assertEqual(feedback[0].label, 'indentation_error' if IS_AT_LEAST_PYTHON_39 else "syntax_error")
-        if IS_AT_LEAST_PYTHON_38:
+        if IS_AT_LEAST_PYTHON_39:
             self.assertEqual(feedback[0].message, """Bad indentation on line 1 or adjacent line.
 
 The traceback was:
