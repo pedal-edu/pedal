@@ -5,6 +5,7 @@ from pedal.assertions.feedbacks import assert_group
 from pedal.assertions.runtime import *
 from pedal.sandbox.commands import call, start_trace, get_sandbox, evaluate, CommandBlock, run
 from tests.execution_helper import Execution, ExecutionTestCase, SUCCESS_MESSAGE
+from pedal.utilities.system import IS_AT_LEAST_PYTHON_39
 import unittest
 
 
@@ -357,6 +358,7 @@ The value of the result was:
 But I expected the result to be a value of type:
     'an integer'""")
 
+    @unittest.skipUnless(IS_AT_LEAST_PYTHON_39, "requires python 3.9")
     def test_assert_type_fails_non_generic_list(self):
         with Execution('x=["3"]\nprint(x)') as e:
             assert_type(evaluate('x'), list[int])
@@ -429,6 +431,7 @@ A name error means you have used a variable that has no value.  You may have a t
 
 Suggestion: Trace your code and make sure each variable was set before it was read.""")
 
+    @unittest.skipUnless(IS_AT_LEAST_PYTHON_39, "requires python 3.9+")
     def test_assert_type_passes_instructor_dataclass_nested(self):
         with Execution('''from dataclasses import dataclass
 @dataclass

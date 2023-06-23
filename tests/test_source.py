@@ -11,7 +11,7 @@ from pedal.source import *
 from pedal.tifa import tifa_analysis
 from tests.execution_helper import Execution
 import pedal.resolvers.sectional as sectional
-from pedal.utilities.system import IS_AT_LEAST_PYTHON_310
+from pedal.utilities.system import IS_AT_LEAST_PYTHON_310, IS_AT_LEAST_PYTHON_39
 
 
 class TestCode(unittest.TestCase):
@@ -54,7 +54,7 @@ Suggestion: Check line 2, the line before it, and the line after it. Ignore blan
         verify()
         feedback = get_all_feedback()
         self.assertTrue(feedback)
-        self.assertEqual(feedback[0].label, 'indentation_error')
+        self.assertEqual(feedback[0].label, 'indentation_error' if IS_AT_LEAST_PYTHON_39 else "syntax_error")
         self.assertEqual(feedback[0].message, """Bad indentation on line 1 or adjacent line.
 
 The traceback was:

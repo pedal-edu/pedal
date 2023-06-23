@@ -1,7 +1,7 @@
 from textwrap import dedent
-
+import unittest
 from pedal.assertions.static import *
-
+from pedal.utilities.system import IS_AT_LEAST_PYTHON_39
 from tests.execution_helper import Execution, ExecutionTestCase, SUCCESS_MESSAGE
 
 
@@ -116,6 +116,7 @@ class TestAssertions(ExecutionTestCase):
         self.assertFeedback(e, "Must Use Literal Value\n"
                                "You must use the literal value True.")
 
+    @unittest.skipUnless(IS_AT_LEAST_PYTHON_39, "requires python 3.9+")
     def test_ensure_function_types(self):
         # [int]
         with Execution(dedent("""
