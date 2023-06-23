@@ -12,7 +12,7 @@ from pedal.core.commands import MAIN_REPORT, clear_report, contextualize_report
 from pedal.sandbox import Sandbox, run
 import pedal.sandbox.commands as commands
 from pedal.source import set_source
-from pedal.utilities.system import IS_AT_LEAST_PYTHON_310
+from pedal.utilities.system import IS_AT_LEAST_PYTHON_311
 
 here = "" if os.path.basename(os.getcwd()) == "tests" else "tests/"
 
@@ -84,7 +84,7 @@ A TypeError occurred:
 The traceback was:
 Line 1 of file _sandbox_test_student.py
     1+'0'
-""" + ('    ^^^^^\n' if IS_AT_LEAST_PYTHON_310 else "") + """
+""" + ('    ^^^^^\n' if IS_AT_LEAST_PYTHON_311 else "") + """
 
 Type errors occur when you use an operator or function on the wrong type of value. For example, using `+` to add to a list (instead of `.append`), or dividing a string by a number.
 
@@ -116,7 +116,7 @@ A ValueError occurred:
 The traceback was:
 Line 3 of file student.py in get_input
         return int(input("Gimme the number"))
-""" + ('               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n' if IS_AT_LEAST_PYTHON_310 else "") + """
+""" + ('               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n' if IS_AT_LEAST_PYTHON_311 else "") + """
 
 A ValueError occurs when you pass the wrong type of value to a function. For example, you try to convert a string without numbers to an integer (like `int('Five')`).
 
@@ -279,7 +279,7 @@ Suggestion: Read the error message to see which function had the issue. Check wh
         self.assertIsNone(student.exception)
         #self.assertEqual(round(student.trace.pc_covered), 85)
 
-        if IS_AT_LEAST_PYTHON_310:
+        if IS_AT_LEAST_PYTHON_311:
             self.assertEqual([1, 2, 3, 4, 5, 6, 9, 12, 16, 14, 15, 17], student.trace.lines)
         else:
             self.assertEqual([1, 2, 3, 4, 6, 9, 12, 16, 14, 15, 17], student.trace.lines)
@@ -294,7 +294,7 @@ Suggestion: Read the error message to see which function had the issue. Check wh
         student.tracer_style = 'native'
         student.run(student_code, filename=test_filename)
         self.assertIsNone(student.exception)
-        if IS_AT_LEAST_PYTHON_310:
+        if IS_AT_LEAST_PYTHON_311:
             self.assertEqual(student.trace.lines, [1, 2, 3, 4, 5, 6, 9, 12, 16, 14, 15, 17])
         else:
             self.assertEqual(student.trace.lines, [1, 2, 3, 4, 6, 9, 12, 16, 14, 15, 17])
@@ -339,7 +339,7 @@ A TypeError occurred:
 The traceback was:
 Line 4 of file answer.py in x
         return 7 % value
-""" + ('               ^^^^^^^^^\n' if IS_AT_LEAST_PYTHON_310 else "") +"""
+""" + ('               ^^^^^^^^^\n' if IS_AT_LEAST_PYTHON_311 else "") +"""
 
 Type errors occur when you use an operator or function on the wrong type of value. For example, using `+` to add to a list (instead of `.append`), or dividing a string by a number.
 
