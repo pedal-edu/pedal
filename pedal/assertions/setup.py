@@ -1,7 +1,7 @@
 """
 Helper functions and basic setup routines for the entire module.
 """
-
+from pedal.assertions.feedbacks import AssertionBreak
 from pedal.core.report import MAIN_REPORT
 from pedal.core.commands import set_correct
 from pedal.sandbox.exceptions import SandboxStudentCodeException
@@ -37,7 +37,7 @@ def resolve_all(set_successful=False, no_phases_is_success=False, report=MAIN_RE
     #for f in report.feedback:
     #    print("\t", f, f.mistake, f.misconception)
     if not report['assertions']['failures'] and phase_success and set_successful:
-        set_success()
+        set_successful(report)
     
     _reset_phases(report)
 
