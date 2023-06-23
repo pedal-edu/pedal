@@ -267,4 +267,6 @@ class ExpandedTraceback:
             # https://github.com/python/cpython/commit/5644c7b3ffd49bed58dc095be6e6148e0bb4431e
             line = frame._line if frame._line is not None else ''
             return formatter.python_code(line, focus=Location(0, frame.colno+1, 0, end_offset))
+        elif IS_AT_LEAST_PYTHON_310:
+            return formatter.python_code(frame._line if frame._line is not None else '')
         return formatter.python_code(frame.line if frame.line is not None else '')
