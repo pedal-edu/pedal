@@ -90,4 +90,3 @@ if no_forbidden_values:
                 explain("Do not change the <code>course</code> variable.")
             else:
                 set_success()
------
