@@ -130,6 +130,7 @@
 
 <span class="sd">    Args:</span>
 <span class="sd">        category (str or Feedback): The category of Issues to retrieve.</span>
+<span class="sd">        report: The report to get feedback from (defaults to the MAIN_REPORT).</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        list[Feedback]: The feedback functions triggered for this issue.</span>
@@ -144,10 +145,12 @@
 
 <span class="k">def</span> <span class="nf">tifa_provide_module_type</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Gives TIFA the type definition for a module.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        name:</span>
-<span class="sd">        fields:</span>
+<span class="sd">        name: The name of the module to provide a type for.</span>
+<span class="sd">        fields: A `ModuleType` or `dict` of fields to provide.</span>
+<span class="sd">        report: The report to attach this feedback to (defaults to the MAIN_REPORT).</span>
 
 <span class="sd">    Returns:</span>
 

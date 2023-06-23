@@ -1652,16 +1652,18 @@ Defaults to true through the <a class="reference internal" href="../../teachers/
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>assert_function</strong> – Override the assert function (defaults to assert_equal)</p></li>
-<li><p><strong>(</strong><strong>)</strong> (<em>**kwargs</em>) – </p></li>
-<li><p><strong>(</strong><strong>)</strong> – </p></li>
+<li><p><strong>function</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The name of the function to test.</p></li>
+<li><p><strong>(</strong><strong>)</strong> (<em>**kwargs</em>) – The test cases to run. Each test case is a tuple of the input/output pairs.</p></li>
 <li><p><strong>else_message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The message to present as a positive if the
 tests all pass.</p></li>
+<li><p><strong>else_message_template</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The template for the else_message, to be formatted.</p></li>
 <li><p><strong>score</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The score to give overall/per test case, depending on
 partial_credit.</p></li>
-<li><p><strong>partial_credit</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – Whether or not to give credit for
+<li><p><strong>partial_credit</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – Whether to give credit for
 each unit test as a percentage of the whole (True), or to only give
 points for passing all the tests (False). Defaults to False.
 If a list is passed, those scores will be used per test case.</p></li>
+<li><p><strong>context</strong> (<a class="reference internal" href="sandbox.html#pedal.sandbox.sandbox.Sandbox" title="pedal.sandbox.sandbox.Sandbox"><em>Sandbox</em></a><em> or </em><a class="reference internal" href="sandbox.html#pedal.sandbox.commands.CommandBlock" title="pedal.sandbox.commands.CommandBlock"><em>CommandBlock</em></a>) – The context to run the function in.</p></li>
 <li><p><strong>(</strong><strong>)</strong> – </p></li>
 </ul>
 </dd>

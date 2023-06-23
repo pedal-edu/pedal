@@ -125,16 +125,18 @@
 
 <span class="sd">    Args:</span>
 <span class="sd">        assert_function: Override the assert function (defaults to assert_equal)</span>
-<span class="sd">        function ():</span>
-<span class="sd">        *tests ():</span>
+<span class="sd">        function (str): The name of the function to test.</span>
+<span class="sd">        *tests (): The test cases to run. Each test case is a tuple of the input/output pairs.</span>
 <span class="sd">        else_message (str): The message to present as a positive if the</span>
 <span class="sd">             tests all pass.</span>
+<span class="sd">        else_message_template (str): The template for the else_message, to be formatted.</span>
 <span class="sd">        score (str): The score to give overall/per test case, depending on</span>
 <span class="sd">            partial_credit.</span>
-<span class="sd">        partial_credit (bool or str or list[str]): Whether or not to give credit for</span>
+<span class="sd">        partial_credit (bool or str or list[str]): Whether to give credit for</span>
 <span class="sd">            each unit test as a percentage of the whole (True), or to only give</span>
 <span class="sd">            points for passing all the tests (False). Defaults to False.</span>
 <span class="sd">            If a list is passed, those scores will be used per test case.</span>
+<span class="sd">        context (Sandbox or CommandBlock): The context to run the function in.</span>
 <span class="sd">        **kwargs ():</span>
 
 <span class="sd">    Returns:</span>
