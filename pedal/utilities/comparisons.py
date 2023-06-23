@@ -57,7 +57,7 @@ LIST_GENERATOR_TYPES = (type(map(bool, [])), type(filter(bool, [])),
                         type(enumerate([])))
 
 
-def _split_into_lolos(a_string) -> 'List[List[str]]':
+def _split_into_lolos(a_string):
     """
     Splits the given string into a list of list of strings, based on new lines.
 
