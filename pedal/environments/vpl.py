@@ -16,6 +16,8 @@ from pedal.tifa import tifa_analysis
 from pedal.resolvers.simple import resolve as simple_resolve, by_priority
 from pedal.resolvers.sectional import resolve as original_sectional_resolve
 from pedal.core.formatting import Formatter
+from pedal.core.location import Location
+from pedal.utilities.text import inject_line
 
 try:
     import tabulate
@@ -93,7 +95,9 @@ class VPLFormatter(Formatter):
     def pre(self, text):
         return "\n".join([">" + line for line in text.split("\n")])
 
-    def python_code(self, code):
+    def python_code(self, code, focus=None):
+        if isinstance(focus, Location):
+            code = inject_line(code, focus.line + 1, " " * (focus.col - 1) + "^" * (focus.end_col - focus.col))
         return self.pre(code)
 
     def python_expression(self, code):
