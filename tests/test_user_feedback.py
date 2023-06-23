@@ -2,6 +2,8 @@ import unittest
 import os
 import sys
 
+from pedal.utilities.system import IS_AT_LEAST_PYTHON_310
+
 pedal_library = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.insert(0, pedal_library)
 
@@ -25,8 +27,7 @@ class TestFeedback(unittest.TestCase):
     def test_runtime(self):
         with Execution('0+"A"', old_style_messages=True) as e:
             suppress("analyzer")
-        self.assertEqual(e.feedback,
-                         """Type Error
+        self.assertEqual("""Type Error
 I ran your code.
 
 A TypeError occurred:
@@ -36,11 +37,12 @@ A TypeError occurred:
 The traceback was:
 Line 1 of file answer.py
     0+"A"
-
+""" + ('    ^^^^^\n' if IS_AT_LEAST_PYTHON_310 else "") +"""
 
 Type errors occur when you use an operator or function on the wrong type of value. For example, using `+` to add to a list (instead of `.append`), or dividing a string by a number.
 
-Suggestion: To fix a type error, you should trace through your code. Make sure each expression has the type you expect it to have.""")
+Suggestion: To fix a type error, you should trace through your code. Make sure each expression has the type you expect it to have.""",
+                         e.feedback)
 
     @unittest.skip
     def test_tifa(self):

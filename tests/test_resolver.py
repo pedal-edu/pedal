@@ -2,9 +2,11 @@ import unittest
 import os
 import sys
 import json
+import re
 
 from pedal.core.feedback import Feedback
 from pedal.core.final_feedback import FinalFeedback
+from pedal.utilities.system import IS_AT_LEAST_PYTHON_310
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
@@ -230,7 +232,7 @@ Bad syntax on line 5.
 The traceback was:
 Line 5 of file answer.py
     syntax error
-
+""" + ('           ^^^^\n' if IS_AT_LEAST_PYTHON_310 else "") + """
 Suggestion: Check line 5, the line before it, and the line after it. Ignore blank lines.""",
                          "\n".join(f"# {g.section_number if g is not None else 'Global'}\n{f.title}\n{f.message}"
                                    for g, f in finals.items()))
@@ -355,6 +357,7 @@ The variable p was given a value on line 6, but was never used after that.""")
         # Get expected
         with open('output_files/stats_feedback_test_1.json') as f:
             expected = f.read()
+        final = re.sub(r"\s*\^\^+\\n", '', final)
         self.assertEqual(final, expected)
 
 

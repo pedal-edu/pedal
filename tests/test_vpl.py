@@ -6,6 +6,7 @@ from contextlib import redirect_stdout
 import io
 
 from pedal import verify, run
+from pedal.utilities.system import IS_AT_LEAST_PYTHON_310
 
 pedal_library = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.insert(0, pedal_library)
@@ -32,7 +33,7 @@ Bad syntax on line 15.
 The traceback was:
 Line 15 of file datafiles/student_example.py
 >a syntax error in this section!
-
+""" + ('>  ^\n' if IS_AT_LEAST_PYTHON_310 else "") +"""
 Suggestion: Check line 15, the line before it, and the line after it. Ignore blank lines.
 --|>
 Grade :=>> 0
@@ -113,7 +114,7 @@ Bad syntax on line 15.
 The traceback was:
 Line 15 of file datafiles/student_example.py
 >a syntax error in this section!
-
+""" + ('>  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n' if IS_AT_LEAST_PYTHON_310 else "") +"""
 Suggestion: Check line 15, the line before it, and the line after it. Ignore blank lines.
 -Part 4
 No feedback for this section

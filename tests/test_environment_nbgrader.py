@@ -2,6 +2,7 @@ import os
 import sys
 import io
 from contextlib import redirect_stdout
+import unittest
 
 pedal_library = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.insert(0, pedal_library)
@@ -14,7 +15,14 @@ from pedal.source import next_section, verify_section, check_section_exists, set
 from pedal.core.commands import compliment, clear_report, contextualize_report, log
 from pedal.assertions import assert_equal, prevent_ast
 
+try:
+    from IPython import get_ipython
+    skip = False
+except ModuleNotFoundError:
+    skip = True
 
+
+@unittest.skipIf(skip, "IPython not installed")
 class TestNBGrader(ExecutionTestCase):
 
     def test_parse_file(self):
