@@ -146,7 +146,7 @@ ORIGINAL_BUILTINS = {
     'locals': _default_builtins['locals'],
     'open': _default_builtins['open'],
     'input': _default_builtins['input'],
-    'print': _default_builtins['print'],
+    'print': _default_builtins.get('print'),
     'exec': _default_builtins.get('exec', _disabled_exec),
     'eval': _default_builtins.get('eval', _disabled_eval),
     'compile': _default_builtins.get('compile', _disabled_compile),
