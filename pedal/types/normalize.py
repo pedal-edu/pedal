@@ -71,12 +71,12 @@ def normalize_type(type_expression, evaluate_name=None) -> Type:
     if isinstance(type_expression, Type):
         return type_expression
     # What if it's a builtin type function?
-    if isinstance(type_expression, (type, dynamic_python_types.GenericAlias)):
+    if isinstance(type_expression, type) or (IS_AT_LEAST_PYTHON_39 and isinstance(type_expression, dynamic_python_types.GenericAlias)):
         if type_expression.__name__ in TYPE_STRINGS:
             return get_generic_type(type_expression, evaluate_name)
         if evaluate_name:
             type_object = unbox_sandbox_if_needed(evaluate_name(type_expression.__name__))
-            if isinstance(type_object, (type, dynamic_python_types.GenericAlias)):
+            if isinstance(type_object, type) or (IS_AT_LEAST_PYTHON_39 and isinstance(type_object, dynamic_python_types.GenericAlias)):
                 if fields and hasattr(type_object, '__dataclass_fields__'):
                     return ClassType(type_object.__name__, {
                         field.name: normalize_type(field.type, evaluate_name)
