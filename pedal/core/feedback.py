@@ -15,6 +15,11 @@ PEDAL_DEVELOPERS = ["Austin Cory Bart <acbart@udel.edu>",
                     "Luke Gusukuma <lukesg08@vt.edu>"]
 
 
+class FeedbackRegistry:
+    def __init__(self):
+        self._registered_feedback = {}
+
+
 class Feedback:
     """
     A class for storing raw feedback.
