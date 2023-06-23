@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/pedal.iml" filepath="$PROJECT_DIR$/.idea/pedal.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/pedal-kennel.iml" filepath="$PROJECT_DIR$/.idea/pedal-kennel.iml" />
     </modules>
   </component>
 </project>
