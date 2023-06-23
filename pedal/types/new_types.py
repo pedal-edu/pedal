@@ -1278,6 +1278,9 @@ class LiteralValue:
     value: any
     parents: list
 
+    def __init__(self, value):
+        self.value = value
+
     def promote(self):
         return self.parents[0]
 
@@ -1292,20 +1295,12 @@ class LiteralBool(LiteralValue, BoolType):
     fields = {}
     parents = [BoolType()]
 
-    def __init__(self, value):
-        super().__init__()
-        self.value = value
-
 
 class LiteralStr(LiteralValue, StrType):
     value: str
     singular_name = "a string"
     plural_name = "strings"
     fields = {}
-
-    def __init__(self, value):
-        super().__init__(value == "")
-        self.value = value
 
     @property
     def parents(self):
@@ -1324,10 +1319,6 @@ class LiteralInt(LiteralValue, Type):
     fields = {}
     parents = [IntType()]
 
-    def __init__(self, value):
-        super().__init__()
-        self.value = value
-
     def __str__(self):
         return f"LiteralInteger[{self.value}]"
 
@@ -1340,10 +1331,6 @@ class LiteralFloat(LiteralValue, Type):
     value: int
     fields = {}
     parents = [FloatType()]
-
-    def __init__(self, value):
-        super().__init__()
-        self.value = value
 
     def __str__(self):
         return f"LiteralFloat[{self.value}]"
