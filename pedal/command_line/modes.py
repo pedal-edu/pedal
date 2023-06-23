@@ -266,7 +266,8 @@ class AbstractPipeline:
                     #user=dict(email=event['student_email'],
                     #          first=event['student_first'],
                     #          last=event['student_last']),
-                    user={key: event[key] for key in link_selections['Subject'].values()},
+                    user={key: event[key] for key in link_selections['Subject'].values()}
+                    if 'Subject' in link_selections else {'id': event['subject_id']},
                     assignment=dict(name=event['assignment_name'],
                                     url=event['assignment_url']),
                 )

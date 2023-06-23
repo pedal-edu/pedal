@@ -86,6 +86,20 @@ class SqlProgSnap2(BaseProgSnap2):
                 'user': 'student_email'
             },
         ),
+        'blockpy_consenting': dict(
+            link_filters={
+            },
+            link_selections={
+                'Assignment': {
+                    'X-Name': 'assignment_name',
+                    'X-URL': 'assignment_url',
+                    'X-Code.OnRun': 'on_run'
+                }
+            },
+            link_primary={
+                'user': 'SubjectID'
+            },
+        ),
     }
 
     def set_profile(self, profile):
@@ -135,6 +149,9 @@ class SqlProgSnap2(BaseProgSnap2):
         filters = []  # "MainTable.EventType=?"
         selections = ['MainTable.EventID', 'MainTable.ClientTimestamp']
         fields = ['event_id', 'client_timestamp']
+        if 'Subject' not in link_selections:
+            selections.append('MainTable.SubjectID')
+            fields.append('subject_id')
         data = []
         # Add in event filters
         for column, value_filter in event_filter.items():
