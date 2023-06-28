@@ -48,7 +48,7 @@ from pedal.core.formatting import HtmlFormatter
 from pedal.core.report import MAIN_REPORT
 from pedal.sandbox import run, get_sandbox, set_input, start_trace
 from pedal.tifa import tifa_analysis
-from pedal.resolvers.simple import resolve
+from pedal.resolvers import print_resolve
 from pedal.resolvers.statistics import resolve as stats_resolve
 
 
@@ -81,7 +81,7 @@ class BlockPyEnvironment(Environment):
             student.threaded = threaded
         self.fields = {
             'student': student,
-            'resolve': resolve,
+            'resolve': print_resolve,
             'stats_resolve': stats_resolve
         }
 

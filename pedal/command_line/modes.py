@@ -126,8 +126,8 @@ class Bundle:
                                 resolution = global_data[resolver]()
                             # TODO: Need more elegance/configurability here
                             elif self.config.resolver == 'resolve':
-                                exec("from pedal.resolvers.simple import resolve", global_data)
-                                resolution = global_data["resolve"]()
+                                exec("from pedal.resolvers import print_resolve", global_data)
+                                resolution = global_data["print_resolve"]()
                         else:
                             resolution = global_data['MAIN_REPORT'].resolves[-1]
                 except Exception as e:
@@ -258,7 +258,9 @@ class AbstractPipeline:
                     instructor_code_for_this_run = instructor_code
                 link_selections = progsnap._merge('link_selections', {})
                 new_submission = Submission(
-                    main_file='answer.py', main_code=event['submission_code'].decode('utf-8'),
+                    main_file='answer.py',
+                    main_code=event['submission_code'] if isinstance(event['submission_code'], str) else
+                        event['submission_code'].decode('utf-8'),
                     instructor_file='instructor.py',
                     #files={'cisc106.py': 'from bakery import *'},
                     execution=dict(client_timestamp=event['client_timestamp'],
@@ -491,7 +493,7 @@ class GradePipeline(AbstractPipeline):
                   bundle.submission.main_file,
                   bundle.submission.user.get('student_email') if bundle.submission.user else 'Unknown User',
                   bundle.submission.assignment.get('name') if bundle.submission.assignment else 'Unknown Assignment',
-                  1 if bundle.result.resolution.success else
+                  1 if bundle.result.resolution.correct else
                   bundle.result.resolution.score,
                   sep=", ", end="")
 
