@@ -88,6 +88,10 @@ class SqlProgSnap2(BaseProgSnap2):
         ),
         'blockpy_consenting': dict(
             link_filters={
+                # '': [
+                #     ("LinkAssignment.`X-URL` LIKE ?", "%read%"),
+                #     ("LinkAssignment.`X-URL` LIKE ?", "%quiz%"),
+                # ]
             },
             link_selections={
                 'Assignment': {
@@ -166,18 +170,28 @@ class SqlProgSnap2(BaseProgSnap2):
             fields.append("submission_code")
         # Add in all needed link tables
         for table in (link_filters.keys() | link_selections.keys()):
-            tables.append('Link' + table)
-            filters.append(f"MainTable.`{table}ID`=Link{table}.`{table}Id`")
+            if table:
+                tables.append('Link' + table)
+                filters.append(f"MainTable.`{table}ID`=Link{table}.`{table}Id`")
         # Add in link table filters
         for table, table_filters in link_filters.items():
-            for column, value_filter in table_filters.items():
-                if isinstance(value_filter, str):
-                    # TODO: Make this more robust
-                    if "%" in value_filter:
-                        filters.append(f"Link{table}.`{column}` LIKE ?")
-                    else:
-                        filters.append(f"Link{table}.`{column}`=?")
-                    data.append(value_filter)
+            # Blank string is generic filters
+            if table == "":
+                if isinstance(table_filters, str):
+                    table_filters = [table_filters]
+                for value_filter, v in table_filters:
+                    filters.append(value_filter)
+                    data.append(v)
+            else:
+                # Otherwise, assume link table -> column filter
+                for column, value_filter in table_filters.items():
+                    if isinstance(value_filter, str):
+                        # TODO: Make this more robust
+                        if "%" in value_filter:
+                            filters.append(f"Link{table}.`{column}` LIKE ?")
+                        else:
+                            filters.append(f"Link{table}.`{column}`=?")
+                        data.append(value_filter)
         # Add in Contextual tables
         for table, table_selections in link_selections.items():
             for column, alias in table_selections.items():
