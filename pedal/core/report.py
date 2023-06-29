@@ -77,11 +77,13 @@ class Report:
         self.format = Formatter()
         self.result = None
         self.resolves = []
+        self.overridden_feedbacks = set()
 
     def clear(self):
         """
         Resets the entire report back to its starting form,
         including deleting any attached submissions, tool data, and feedbacks.
+        It will also reset any overridden fields of feedback classes.
         However, it will not affect class hooks.
         """
         self.feedback.clear()
@@ -98,11 +100,20 @@ class Report:
         self.result = None
         self.resolves.clear()
         self.format = Formatter()
+        self.clear_overridden_feedback()
 
     def full_clear(self):
         """ This totally resets the report, including any class hooks. """
         self.clear()
         self.class_hooks.clear()
+
+    def clear_overridden_feedback(self):
+        for feedback in self.overridden_feedbacks:
+            feedback._restore_overrides()
+        self.overridden_feedbacks.clear()
+
+    def override_feedback(self, feedback_class):
+        self.overridden_feedbacks.add(feedback_class)
 
     def contextualize(self, submission):
         """

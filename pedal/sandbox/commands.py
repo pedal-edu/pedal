@@ -456,6 +456,20 @@ def get_module(module_name, report=MAIN_REPORT):
     raise ValueError(f"Unknown Sandbox Module: `{module_name}`")
 
 
+def get_python_errors(report=MAIN_REPORT):
+    """
+    Retrieves any runtime or syntax errors from the report.
+    Args:
+        report:
+
+    Returns:
+        list[Feedback]: A list of runtime and syntax errors that were detected
+    """
+    for feedback in report.feedback:
+        if feedback.category == 'runtime' or feedback.category == 'syntax':
+            yield feedback
+
+
 class CommandBlock:
     """
     Context Manager for creating instructor blocks of code that will

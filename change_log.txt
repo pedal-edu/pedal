@@ -6,6 +6,10 @@ Version 2.5.3 (6/23/2023)
 * Fix tests for versions 3.7 through 3.11
 * Improved documentation across codebase
 * Fix terminal output for blockpy environment
+* Feedback objects can now have overridden attributes, which can also be safely reset using `clear_report`
+* Provided the `get_python_errors` function in Sandbox to get native runtime and syntax errors.
+* Improvements to the Terminal environment
+* Slight alterations to the syntax_error feedback message to include more of the original exception
 
 Version 2.5.2 (6/14/2023)
 -------------------------

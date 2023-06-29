@@ -6,9 +6,11 @@ from pedal.core.commands import feedback
 from pedal.core.feedback import FeedbackResponse
 from pedal.core.location import Location
 from pedal.core.report import MAIN_REPORT
-from pedal.utilities.exceptions import ExpandedTraceback
+from pedal.utilities.exceptions import ExpandedTraceback, get_exception_name
 from pedal.source.constants import TOOL_NAME
 from pedal.utilities.system import IS_AT_LEAST_PYTHON_310
+from pedal.utilities.text import add_indefinite_article
+from pedal.core.formatting import wrap_fields
 
 
 class SourceFeedback(FeedbackResponse):
@@ -59,11 +61,12 @@ class syntax_error(SourceFeedback):
     """ Generic feedback for any kind of syntax error. """
     muted = False
     title = "Syntax Error"
+    constant_fields = {"suggestion": "Suggestion: Check line {lineno:line}, the line before it, and the line "
+                                     "after it. Ignore blank lines."}
     message_template = ("Bad syntax on line {lineno:line}.\n\n"
-                        "{traceback_message}\n"
-                        "{suggestion_message}"
-                        "Suggestion: Check line {lineno:line}, the line "
-                        "before it, and the line after it. Ignore blank lines.")
+                        "{traceback_preamble}{traceback_message}\n"
+                        "{exception_message}"
+                        "{suggestion_message}")
     version = '1.0.0'
     justification = "Syntax error was triggered while calling ast.parse"
 
@@ -79,37 +82,39 @@ class syntax_error(SourceFeedback):
         else:
             lines = code.split("\n")
             line_offsets = {}
+        exception_name = get_exception_name(exception)
+        exception_name_proper = add_indefinite_article(exception_name)
         traceback = ExpandedTraceback(exception, exc_info, False,
                                       [report.submission.instructor_file],
                                       line_offsets, [filename], lines, files)
         traceback_stack = traceback.build_traceback()
         traceback_message = traceback.format_traceback(traceback_stack, report.format)
-        if traceback_message:
-            traceback_message = f"The traceback was:\n{traceback_message}"
-        else:
-            traceback_message = ""
+        traceback_preamble = f"The traceback was:\n" if traceback_message else ""
         #if not enhance:
         #    self.message_template = "{traceback_message}\n{exception_message}"
         line_offset = line_offsets.get(filename, 0)
-        suggestion_message = self.make_suggestion_message(exception)
+        exception_message = self.make_exception_message(exception)
         fields = {'lineno': line + line_offset,
                   'filename': filename,
                   'offset': col_offset,
                   'exception': exception,
-                  'exception_message': str(exception),
+                  'exception_name': exception_name,
+                  'exception_name_proper': exception_name_proper,
+                  'exception_message': exception_message,
                   'traceback': traceback,
                   'traceback_stack': traceback_stack,
-                  'traceback_message': traceback_message,
-                  'suggestion_message': suggestion_message}
+                  'traceback_preamble': traceback_preamble,
+                  'traceback_message': traceback_message}
         location = Location(line=line + line_offset, col=col_offset, filename=filename)
+        fields['suggestion_message'] = self.constant_fields['suggestion'].format(**wrap_fields(report.format, fields))
         super().__init__(fields=fields, location=location, **kwargs)
 
-    def make_suggestion_message(self, exception):
+    def make_exception_message(self, exception):
         """ Generate a suggestion message based on the exception. """
         base_message = exception.msg
         base_message = base_message.capitalize() + "."
-        if base_message == "Invalid syntax.":
-            return ""
+        #if base_message == "Invalid syntax.":
+        #    return ""
         return base_message + "\n"
 
 
@@ -131,10 +136,12 @@ class incorrect_number_of_sections(SourceFeedback):
 class indentation_error(syntax_error):
     """ Generic feedback for indentation errors. """
     title = "Indentation Error"
+    constant_fields = {'suggestion': "Suggestion: Check line {lineno:line}, the line before it, and the "
+                                     "line after it. Ignore blank lines."}
     message_template = ("Bad indentation on line {lineno:line} or adjacent line.\n\n"
-                        "{traceback_message}\n"
+                        "{traceback_preamble}{traceback_message}\n"
+                        "{exception_message}"
                         "{suggestion_message}"
-                        "Suggestion: Check line {lineno:line}, the line "
-                        "before it, and the line after it. Ignore blank lines.")
+                        )
     version = '1.0.0'
     justification = "Indentation error was triggered while calling ast.parse"

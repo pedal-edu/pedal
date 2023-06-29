@@ -85,7 +85,6 @@ The traceback was:
 Line 1 of file _sandbox_test_student.py
     1+'0'
 """ + ('    ^^^^^\n' if IS_AT_LEAST_PYTHON_311 else "") + """
-
 Type errors occur when you use an operator or function on the wrong type of value. For example, using `+` to add to a list (instead of `.append`), or dividing a string by a number.
 
 Suggestion: To fix a type error, you should trace through your code. Make sure each expression has the type you expect it to have.
@@ -117,7 +116,6 @@ The traceback was:
 Line 3 of file student.py in get_input
         return int(input("Gimme the number"))
 """ + ('               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n' if IS_AT_LEAST_PYTHON_311 else "") + """
-
 A ValueError occurs when you pass the wrong type of value to a function. For example, you try to convert a string without numbers to an integer (like `int('Five')`).
 
 Suggestion: Read the error message to see which function had the issue. Check what type the function expects. Then trace your code to make sure you pass in that type.""").strip(), student.feedback.message)
@@ -340,7 +338,6 @@ The traceback was:
 Line 4 of file answer.py in x
         return 7 % value
 """ + ('               ^^^^^^^^^\n' if IS_AT_LEAST_PYTHON_311 else "") +"""
-
 Type errors occur when you use an operator or function on the wrong type of value. For example, using `+` to add to a list (instead of `.append`), or dividing a string by a number.
 
 Suggestion: To fix a type error, you should trace through your code. Make sure each expression has the type you expect it to have.

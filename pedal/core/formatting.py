@@ -63,6 +63,10 @@ class FeedbackFieldWrapper:
 #       default.
 
 
+def wrap_fields(formatter, fields):
+    return {field: FeedbackFieldWrapper(field, value, formatter) for field, value in fields.items()}
+
+
 class Formatter:
     """ Utility class for wrapping a feedback message with HTML or other
             extra information. Can be subclassed by a different environment and

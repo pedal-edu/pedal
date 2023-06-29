@@ -42,7 +42,7 @@
       "correct": null,
       "score": null,
       "title": "Type Error",
-      "message": "I ran your code.\n\nA TypeError occurred:\n\n    Unsupported operand type(s) for +: 'int' and 'str'\n\nThe traceback was:\nLine 2 of file answer.py\n    a+\"\"\n\n\nType errors occur when you use an operator or function on the wrong type of value. For example, using `+` to add to a list (instead of `.append`), or dividing a string by a number.\n\nSuggestion: To fix a type error, you should trace through your code. Make sure each expression has the type you expect it to have.",
+      "message": "I ran your code.\n\nA TypeError occurred:\n\n    Unsupported operand type(s) for +: 'int' and 'str'\n\nThe traceback was:\nLine 2 of file answer.py\n    a+\"\"\n\nType errors occur when you use an operator or function on the wrong type of value. For example, using `+` to add to a list (instead of `.append`), or dividing a string by a number.\n\nSuggestion: To fix a type error, you should trace through your code. Make sure each expression has the type you expect it to have.",
       "label": "type_error",
       "active": true,
       "muted": null,
@@ -53,7 +53,8 @@
       "version": "1.1.0",
       "fields": {
         "exception": "TypeError(\"unsupported operand type(s) for +: 'int' and 'str'\")",
-        "exception_name": "A TypeError",
+        "exception_name": "TypeError",
+        "exception_name_proper": "A TypeError",
         "exception_message": "    Unsupported operand type(s) for +: 'int' and 'str'",
         "location": {
           "line": 2,
@@ -63,16 +64,19 @@
           "filename": null
         },
         "traceback": "ExpandedTraceback(unsupported operand type(s) for +: 'int' and 'str')",
+        "traceback_preamble": "The traceback was:\n",
         "traceback_stack": [
           "<FrameSummary file answer.py, line 2 in <module>>"
         ],
-        "traceback_message": "The traceback was:\nLine 2 of file answer.py\n    a+\"\"\n",
+        "traceback_message": "Line 2 of file answer.py\n    a+\"\"\n",
         "context": [
           [
             "<SandboxContext 0>"
           ]
         ],
-        "context_message": "I ran your code.\n"
+        "context_message": "I ran your code.\n",
+        "suggestion_message": "Type errors occur when you use an operator or function on the wrong type of value. For example, using `+` to add to a list (instead of `.append`), or dividing a string by a number.\n\nSuggestion: To fix a type error, you should trace through your code. Make sure each expression has the type you expect it to have.",
+        "suggestion": "Type errors occur when you use an operator or function on the wrong type of value. For example, using `+` to add to a list (instead of `.append`), or dividing a string by a number.\n\nSuggestion: To fix a type error, you should trace through your code. Make sure each expression has the type you expect it to have."
       },
       "justification": "A runtime error occurred during execution of some code.",
       "priority": "runtime",

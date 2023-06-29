@@ -426,7 +426,6 @@ A NameError occurred:
     Name 'Cat' is not defined
 
 
-
 A name error means you have used a variable that has no value.  You may have a typo, so check the spelling. Or, you may have forgotten to initialize a variable.
 
 Suggestion: Trace your code and make sure each variable was set before it was read.""")

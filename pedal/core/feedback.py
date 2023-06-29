@@ -6,7 +6,7 @@ __all__ = ['Feedback', 'FeedbackKind', 'FeedbackCategory',
            "CompositeFeedbackFunction",
            "FeedbackResponse"]
 
-from pedal.core.formatting import FeedbackFieldWrapper
+from pedal.core.formatting import wrap_fields
 from pedal.core.location import Location
 from pedal.core.report import MAIN_REPORT
 from pedal.core.feedback_category import FeedbackKind, FeedbackCategory, FeedbackStatus
@@ -152,6 +152,7 @@ class Feedback:
     _met_condition: bool
     _stored_args: tuple
     _stored_kwargs: dict
+    _override_backups = None
 
     resolved_score = None
     unused_message = None
@@ -321,8 +322,7 @@ class Feedback:
         if self.message is not None:
             return self.message
         if self.message_template is not None:
-            fields = {field: FeedbackFieldWrapper(field, value, self.report.format)
-                      for field, value in self.fields.items()}
+            fields = wrap_fields(self.report.format, self.fields)
             return self.message_template.format(**fields)
         return self.DEFAULT_FEEDBACK_MESSAGE
 
@@ -341,8 +341,7 @@ class Feedback:
         if self.else_message is not None:
             return self.else_message
         if self.else_message_template is not None:
-            fields = {field: FeedbackFieldWrapper(field, value, self.report.format)
-                      for field, value in self.fields.items()}
+            fields = wrap_fields(self.report.format, self.fields)
             return self.else_message_template.format(**fields)
         return self.DEFAULT_ELSE_MESSAGE
 
@@ -373,8 +372,7 @@ class Feedback:
             else:
                 met, unmet = self.justification_template
                 template = met if met_condition else unmet
-            fields = {field: FeedbackFieldWrapper(field, value, self.report.format)
-                      for field, value in self.fields.items()}
+            fields = wrap_fields(self.report.format, self.fields)
             return template.format(**fields)
         return self.DEFAULT_JUSTIFICATION_MESSAGE
 
@@ -469,6 +467,22 @@ class Feedback:
             'priority': self.priority,
             'location': self.location.to_json() if self.location is not None else None
         }
+
+    @classmethod
+    def override(cls, report=MAIN_REPORT, **fields):
+        if cls._override_backups is None:
+            cls._override_backups = {}
+        for field, new_value in fields.items():
+            if field not in cls._override_backups:
+                cls._override_backups[field] = getattr(cls, field)
+            setattr(cls, field, new_value)
+        report.override_feedback(cls)
+
+    @classmethod
+    def _restore_overrides(cls):
+        for field, old_value in cls._override_backups.items():
+            setattr(cls, field, old_value)
+        cls._override_backups.clear()
 
 
 class FeedbackResponse(Feedback):

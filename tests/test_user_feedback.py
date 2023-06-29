@@ -38,7 +38,6 @@ The traceback was:
 Line 1 of file answer.py
     0+"A"
 """ + ('    ^^^^^\n' if IS_AT_LEAST_PYTHON_311 else "") +"""
-
 Type errors occur when you use an operator or function on the wrong type of value. For example, using `+` to add to a list (instead of `.append`), or dividing a string by a number.
 
 Suggestion: To fix a type error, you should trace through your code. Make sure each expression has the type you expect it to have.""",

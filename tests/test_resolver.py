@@ -233,6 +233,7 @@ The traceback was:
 Line 5 of file answer.py
     syntax error
 """ + ('           ^^^^\n' if IS_AT_LEAST_PYTHON_311 else "") + """
+Invalid syntax.
 Suggestion: Check line 5, the line before it, and the line after it. Ignore blank lines.""",
                          "\n".join(f"# {g.section_number if g is not None else 'Global'}\n{f.title}\n{f.message}"
                                    for g, f in finals.items()))

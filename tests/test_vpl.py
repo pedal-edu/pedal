@@ -34,6 +34,7 @@ The traceback was:
 Line 15 of file datafiles/student_example.py
 >a syntax error in this section!
 """ + ('>  ^\n' if IS_AT_LEAST_PYTHON_311 else "") +"""
+Invalid syntax.
 Suggestion: Check line 15, the line before it, and the line after it. Ignore blank lines.
 --|>
 Grade :=>> 0
@@ -115,6 +116,7 @@ The traceback was:
 Line 15 of file datafiles/student_example.py
 >a syntax error in this section!
 """ + ('>  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n' if IS_AT_LEAST_PYTHON_311 else "") +"""
+Invalid syntax.
 Suggestion: Check line 15, the line before it, and the line after it. Ignore blank lines.
 -Part 4
 No feedback for this section

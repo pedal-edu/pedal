@@ -47,6 +47,7 @@ The traceback was:
 Line 2 of file answer.py
     b b b
 """ + ('      ^\n' if IS_AT_LEAST_PYTHON_311 else "") + """
+Invalid syntax.
 Suggestion: Check line 2, the line before it, and the line after it. Ignore blank lines.""", e.final.message)
 
     def test_no_more_input(self):
