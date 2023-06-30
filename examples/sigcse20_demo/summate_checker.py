@@ -1,6 +1,5 @@
-from pedal.environments.quick import *
+from pedal import *
 
-setup_pedal()
 student = run()
 
 match = find_match("""
@@ -15,4 +14,4 @@ else:
     else:
         assertEqual(student.call('summate', [1, 3, 5]), 9)
 
-resolve()
+print_resolve()

@@ -4,8 +4,8 @@ This directory contains examples of the V3 Pedal API.
 # The Examples
 
 ```
-$> pedal debug simple_test.py student_code.py --environment terminal
-$> pedal debug unit_test_examples.py student_code.py --environment terminal
+$> pedal feedback examples/simple_test.py examples/student_code.py --environment terminal
+$> pedal feedback examples/unit_test_examples.py examples/student_code.py --environment terminal
 ```
 
 
