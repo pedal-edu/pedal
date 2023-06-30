@@ -24,6 +24,21 @@ class TestEnvironmentTerminal(ExecutionTestCase):
     def checkFeedback(self, actual, expected):
         self.assertEqual(expected.strip(), actual.strip())
 
+    def test_correct(self):
+        with io.StringIO() as f, redirect_stdout(f):
+            terminal = setup_environment(main_code="""1+2""")
+            terminal.resolve(file=f)
+            clear_report()
+            self.checkFeedback(f.getvalue(), '''
+[;7mYOUR CODE[0;0m We ran your code. Here's the output:
+
+
+[;7mFEEDBACK[0;0m Based on your code, here are some tips and recommendations:
+
+✔️  Your code ran successfully.
+Great work! Based on your code submitted, there are no other recommendations available. You can proceed to the next page by using the “Next” button in your lesson.
+''')
+
     def test_syntax_error(self):
         with io.StringIO() as f, redirect_stdout(f):
             terminal = setup_environment(main_code="""1 1 2 3""")
