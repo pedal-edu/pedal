@@ -95,7 +95,7 @@
            <span class="s2">&quot;CompositeFeedbackFunction&quot;</span><span class="p">,</span>
            <span class="s2">&quot;FeedbackResponse&quot;</span><span class="p">]</span>
 
-<span class="kn">from</span> <span class="nn">pedal.core.formatting</span> <span class="kn">import</span> <span class="n">FeedbackFieldWrapper</span>
+<span class="kn">from</span> <span class="nn">pedal.core.formatting</span> <span class="kn">import</span> <span class="n">wrap_fields</span>
 <span class="kn">from</span> <span class="nn">pedal.core.location</span> <span class="kn">import</span> <span class="n">Location</span>
 <span class="kn">from</span> <span class="nn">pedal.core.report</span> <span class="kn">import</span> <span class="n">MAIN_REPORT</span>
 <span class="kn">from</span> <span class="nn">pedal.core.feedback_category</span> <span class="kn">import</span> <span class="n">FeedbackKind</span><span class="p">,</span> <span class="n">FeedbackCategory</span><span class="p">,</span> <span class="n">FeedbackStatus</span>
@@ -208,7 +208,6 @@
     <span class="n">DEFAULT_JUSTIFICATION_MESSAGE</span> <span class="o">=</span> <span class="s2">&quot;No justification provided&quot;</span>
     <span class="n">DEFAULT_ELSE_MESSAGE</span> <span class="o">=</span> <span class="kc">None</span>
 
-
     <span class="n">label</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">category</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">justification</span> <span class="o">=</span> <span class="kc">None</span>
@@ -241,11 +240,12 @@
     <span class="n">_met_condition</span><span class="p">:</span> <span class="nb">bool</span>
     <span class="n">_stored_args</span><span class="p">:</span> <span class="nb">tuple</span>
     <span class="n">_stored_kwargs</span><span class="p">:</span> <span class="nb">dict</span>
+    <span class="n">_override_backups</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="n">resolved_score</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">unused_message</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="c1">#MAIN_REPORT</span>
+    <span class="c1"># MAIN_REPORT</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">category</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">justification</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -290,6 +290,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">constant_fields</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">field_names</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">field_names</span> <span class="o">=</span> <span class="n">field_names</span>
+            <span class="c1"># TODO: Should this be taken from `fields` if nothing is provided?</span>
         <span class="k">if</span> <span class="n">title</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="n">title</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -350,7 +351,6 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_handle_condition</span><span class="p">()</span>
 
-
     <span class="k">def</span> <span class="nf">_handle_condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Actually handle the condition check, updating message and report. &quot;&quot;&quot;</span>
         <span class="c1"># Self-attach to a given report?</span>
@@ -410,8 +410,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">message</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">message_template</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">fields</span> <span class="o">=</span> <span class="p">{</span><span class="n">field</span><span class="p">:</span> <span class="n">FeedbackFieldWrapper</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">format</span><span class="p">)</span>
-                      <span class="k">for</span> <span class="n">field</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+            <span class="n">fields</span> <span class="o">=</span> <span class="n">wrap_fields</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">format</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">)</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">message_template</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">fields</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEFAULT_FEEDBACK_MESSAGE</span>
 
@@ -430,8 +429,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">else_message</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">else_message</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">else_message_template</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">fields</span> <span class="o">=</span> <span class="p">{</span><span class="n">field</span><span class="p">:</span> <span class="n">FeedbackFieldWrapper</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">format</span><span class="p">)</span>
-                      <span class="k">for</span> <span class="n">field</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+            <span class="n">fields</span> <span class="o">=</span> <span class="n">wrap_fields</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">format</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">)</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">else_message_template</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">fields</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEFAULT_ELSE_MESSAGE</span>
 
@@ -462,8 +460,7 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">met</span><span class="p">,</span> <span class="n">unmet</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">justification_template</span>
                 <span class="n">template</span> <span class="o">=</span> <span class="n">met</span> <span class="k">if</span> <span class="n">met_condition</span> <span class="k">else</span> <span class="n">unmet</span>
-            <span class="n">fields</span> <span class="o">=</span> <span class="p">{</span><span class="n">field</span><span class="p">:</span> <span class="n">FeedbackFieldWrapper</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">format</span><span class="p">)</span>
-                      <span class="k">for</span> <span class="n">field</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+            <span class="n">fields</span> <span class="o">=</span> <span class="n">wrap_fields</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">format</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">template</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">fields</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEFAULT_JUSTIFICATION_MESSAGE</span>
 
@@ -557,7 +554,23 @@
             <span class="s1">&#39;justification&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">justification</span><span class="p">,</span>
             <span class="s1">&#39;priority&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">priority</span><span class="p">,</span>
             <span class="s1">&#39;location&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">to_json</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
-        <span class="p">}</span></div>
+        <span class="p">}</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">override</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">,</span> <span class="o">**</span><span class="n">fields</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_override_backups</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">_override_backups</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">field</span><span class="p">,</span> <span class="n">new_value</span> <span class="ow">in</span> <span class="n">fields</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">field</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_override_backups</span><span class="p">:</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">_override_backups</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">field</span><span class="p">)</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">new_value</span><span class="p">)</span>
+        <span class="n">report</span><span class="o">.</span><span class="n">override_feedback</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_restore_overrides</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">field</span><span class="p">,</span> <span class="n">old_value</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_override_backups</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">old_value</span><span class="p">)</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">_override_backups</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="FeedbackResponse"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.FeedbackResponse">[docs]</a><span class="k">class</span> <span class="nc">FeedbackResponse</span><span class="p">(</span><span class="n">Feedback</span><span class="p">):</span>
@@ -578,6 +591,7 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        callable: The decorated function.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="nf">CompositeFeedbackFunction_with_attrs</span><span class="p">(</span><span class="n">function</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 
@@ -589,6 +603,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">CompositeFeedbackFunction_with_attrs</span><span class="o">.</span><span class="n">functions</span> <span class="o">=</span> <span class="n">functions</span>
         <span class="k">return</span> <span class="n">function</span>
+
     <span class="k">return</span> <span class="n">CompositeFeedbackFunction_with_attrs</span></div>
 
 

@@ -150,6 +150,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.commands.get_input"><code class="docutils literal notranslate"><span class="pre">get_input()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.commands.get_module"><code class="docutils literal notranslate"><span class="pre">get_module()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.commands.get_output"><code class="docutils literal notranslate"><span class="pre">get_output()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.commands.get_python_errors"><code class="docutils literal notranslate"><span class="pre">get_python_errors()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.commands.get_sandbox"><code class="docutils literal notranslate"><span class="pre">get_sandbox()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.commands.get_student_data"><code class="docutils literal notranslate"><span class="pre">get_student_data()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.commands.get_trace"><code class="docutils literal notranslate"><span class="pre">get_trace()</span></code></a></li>
@@ -764,6 +765,7 @@ reference to <code class="docutils literal notranslate"><span class="pre">data</
 </dd></dl>
 
 <span class="target" id="module-pedal.sandbox.feedbacks"></span><p>Generic runtime exception feedback class.</p>
+<p>TODO: Use the FeedbackRegistry to properly dispatch the appropriate runtime_error type, instead of reusing the base object</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="pedal.sandbox.feedbacks.attribute_error">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">attribute_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exception</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traceback</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/feedbacks.html#attribute_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.feedbacks.attribute_error" title="Permalink to this definition"></a></dt>
@@ -1237,6 +1239,21 @@ execution began.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pedal.sandbox.commands.get_python_errors">
+<span class="sig-name descname"><span class="pre">get_python_errors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#get_python_errors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.commands.get_python_errors" title="Permalink to this definition"></a></dt>
+<dd><p>Retrieves any runtime or syntax errors from the report.
+:param report:</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of runtime and syntax errors that were detected</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a>[<a class="reference internal" href="../api.html#pedal.core.commands.Feedback" title="pedal.core.commands.Feedback"><em>Feedback</em></a>]</p>
 </dd>
 </dl>
 </dd></dl>

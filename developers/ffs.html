@@ -57,12 +57,12 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Developers: Feedback Functions</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#why-feedback-functions">Why Feedback Functions?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#feedback-function-concepts">Feedback Function Concepts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#creating-a-feedback-function">Creating a Feedback Function</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#the-lifetime-of-a-feedback-function">The Lifetime of a Feedback Function</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#the-metadata-of-feedback-functions">The Metadata of Feedback Functions</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#message">Message</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#message-template">Message Template</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="#the-metadata-of-feedback-functions">The Metadata of Feedback Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#different-ways-of-disabling-feedback">Different Ways of Disabling Feedback</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#methods-of-feedback-functions">Methods of Feedback Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#overriding-existing-feedback-functions">Overriding Existing Feedback Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">Developer API</a></li>
@@ -102,20 +102,20 @@
   <section id="developers-feedback-functions">
 <span id="developers-ffs"></span><h1>Developers: Feedback Functions<a class="headerlink" href="#developers-feedback-functions" title="Permalink to this heading"></a></h1>
 <p>The most important unit of Pedal are its Feedback Functions.
-This document walks through all of the features available on a Feedback Function.</p>
+This document walks through Feedback Functions from a Tool developer’s perspective.</p>
 <section id="why-feedback-functions">
 <h2>Why Feedback Functions?<a class="headerlink" href="#why-feedback-functions" title="Permalink to this heading"></a></h2>
-<p>When we first giving automated feedback, our scripts became a pile of <code class="docutils literal notranslate"><span class="pre">if</span></code> statements
+<p>When we first started giving automated feedback, our scripts became a pile of <code class="docutils literal notranslate"><span class="pre">if</span></code> statements
 and messages. The complex logic was very delicate, and any reordering could
 potentially break the chain. Large chunks of code were clearly representing very
 atomic ideas, and we desired more code reuse between problems. All of our analysis
-had to be ad-hoc and suffered.</p>
+was ad-hoc and therefore much harder to do.</p>
 <p>This led to the development of Feedback Functions, which encapsulate the detection
-of issues in student code and the desired response (a Function in the relational,
-Discrete Mathematics sense). By elevating Feedback to be a first-class object,
+of issues in student code and the desired response (a Function in the relational sense).
+By elevating Feedback to be a first-class object,
 we can approach the development process in a declarative, data-driven
 manner without sacrificing the power and flexibility of instructor logic.
-Not only are Feedback Functions reusable, but they are also easier to analyze.</p>
+Not only are Feedback Functions reusable, but they are also (probably) easier to analyze.</p>
 </section>
 <section id="feedback-function-concepts">
 <h2>Feedback Function Concepts<a class="headerlink" href="#feedback-function-concepts" title="Permalink to this heading"></a></h2>
@@ -128,69 +128,336 @@ Then, teachers writing their Instructor Control Scripts can call Feedback Functi
 in order to create instances of feedback, which are automatically attached to the
 Report.</p>
 </dd>
-<dt>Composition</dt><dd><p>Fundamentally, a FF is composed of the <em>condition</em>, <em>response</em>, and
+<dt>Encapsulation</dt><dd><p>Fundamentally, a FF is composed of the <em>condition</em>, <em>response</em>, and
 <em>metadata</em>. The condition indicates whether the FF should be active. The response
 is what should happen as a result of detecting or not detecting the condition.
 The metadata provides additional information about the FF.</p>
 </dd>
 <dt>Truthiness</dt><dd><p>When a FF is evaluated in a boolean context (e.g., as the conditional of an
 <code class="docutils literal notranslate"><span class="pre">if</span></code> statement), the FF returns whether its condition was detected.</p>
-</dd>
-<dt>Hierarchy</dt><dd><p>Any given FF can be a member of a group or be a parent to a group
-of other FFs. Groups allow FFs to be controlled as an aggregate. This is particularly
-useful for things like grouped unit tests, assignments with independent sections, or
-phases of feedback evaluation.</p>
 <p>Feedback functions also support the bitwise exclusive or (XOR) operator (the caret, <code class="docutils literal notranslate"><span class="pre">^</span></code>)
 in order to “turn off” their response based on the condition of another FF.</p>
 </dd>
-<dt>Serialization</dt><dd><p>Feedback Functions can be serialized and deserialized into JSON
-data so their results can be passed to other systems for analysis.</p>
+<dt>Composition</dt><dd><p>Any given FF can be a member of a group or be a parent to a group
+of other FFs. Groups allow FFs to be controlled as an aggregate. This is particularly
+useful for things like grouped unit tests, assignments with independent sections, or
+phases of feedback evaluation.</p>
+</dd>
+<dt>Deserialization</dt><dd><p>Feedback Functions can be deserialized into JSON data so their results can be
+passed to other systems for analysis.</p>
 </dd>
 <dt>Report</dt><dd><p>Feedback Functions are expected to be attached to a report object.
 By default, they are all attached to the <code class="xref py py-obj docutils literal notranslate"><span class="pre">MAIN_REPORT</span></code>. Attempting to reuse
-an instance of FF is undefined behavior.</p>
+a specific FF instance is undefined behavior.</p>
 </dd>
 </dl>
 </section>
+<section id="creating-a-feedback-function">
+<h2>Creating a Feedback Function<a class="headerlink" href="#creating-a-feedback-function" title="Permalink to this heading"></a></h2>
+<p>Technically, you can create a new instance of a <code class="xref py py-obj docutils literal notranslate"><span class="pre">Feedback</span></code> class directly, and pass in arguments
+for all of its metadata and associated values. Simply calling the constructor will create a new
+instance of the Feedback Function AND automatically attaches it to a report. That means it will
+be considered as possible output for the resolver to show to the student. You don’t even have to
+save the instance to a variable. The constructor does all the work!</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.core.feedback</span> <span class="kn">import</span> <span class="n">Feedback</span>
+
+<span class="c1"># Possible, but not recommended!</span>
+<span class="n">Feedback</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;addition_error&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Addition Error&quot;</span><span class="p">,</span>
+         <span class="n">message</span><span class="o">=</span><span class="s2">&quot;You should not have added those two numbers!&quot;</span><span class="p">,</span>
+         <span class="n">category</span><span class="o">=</span><span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">SPECIFICATION</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>However, this is not the recommended way. First, this approach is not reusable: you’d have to
+have all those arguments every time you wanted to create a new instance. You could put this into
+a function, but at that point you might as well have gone with the recommended approach and created
+a subclass of <code class="docutils literal notranslate"><span class="pre">Feedback</span></code> instead.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.core.feedback</span> <span class="kn">import</span> <span class="n">Feedback</span>
+
+<span class="c1"># Recommended!</span>
+<span class="k">class</span> <span class="nc">addition_error</span><span class="p">(</span><span class="n">Feedback</span><span class="p">):</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Addition Error&quot;</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;You should not have added those two numbers!&quot;</span>
+    <span class="n">category</span><span class="o">=</span><span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">SPECIFICATION</span>
+
+<span class="c1"># Then in your instructor control script, you just call:</span>
+<span class="n">addition_error</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Now, when you call <code class="docutils literal notranslate"><span class="pre">addition_error()</span></code> the feedback will be created and automatically added to the
+report. Since we chose the <code class="docutils literal notranslate"><span class="pre">SPECIFICATION</span></code> category, the feedback will only be shown if there are no
+runtime or syntax errors. If you want to show the feedback regardless of runtime or algorithmic, you can use the
+<code class="docutils literal notranslate"><span class="pre">INSTRUCTOR</span></code> category instead (although syntax errors will still win out). The default priority list is:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;highest&quot;</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Feedback.CATEGORIES.SYNTAX</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Feedback.CATEGORIES.MISTAKES</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Feedback.CATEGORIES.INSTRUCTOR</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Feedback.CATEGORIES.ALGORITHMIC</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Feedback.CATEGORIES.RUNTIME</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Feedback.CATEGORIES.STUDENT</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Feedback.CATEGORIES.SPECIFICATION</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Feedback.CATEGORIES.POSITIVE</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Feedback.CATEGORIES.INSTRUCTIONS</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Feedback.CATEGORIES.UNKNOWN</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;lowest&quot;</span></code></p></li>
+</ol>
+<p>Now, what if you wanted to have the FF only activated if the student’s code contained a specific
+error? Perhaps you are checking if the plus sign ever appears in their original source code of the
+submission. By implementing the <code class="docutils literal notranslate"><span class="pre">condition</span></code> method, you can have the FF check whether it should
+actually be activated.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.core.feedback</span> <span class="kn">import</span> <span class="n">Feedback</span>
+
+<span class="k">class</span> <span class="nc">addition_error</span><span class="p">(</span><span class="n">Feedback</span><span class="p">):</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Addition Error&quot;</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;You should not have added those two numbers!&quot;</span>
+    <span class="n">category</span><span class="o">=</span><span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">SPECIFICATION</span>
+
+    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;+&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">main_code</span>
+
+<span class="c1"># Then, in your instructor control script, you can just call:</span>
+<span class="n">addition_error</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>What if we wanted to parameterize the check, so the instructor could specify the operator?
+If you don’t care about changing the message, this is easy. Any extra positional arguments or
+non-default keyword arguments will be passed to the <code class="docutils literal notranslate"><span class="pre">condition</span></code> method.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.core.feedback</span> <span class="kn">import</span> <span class="n">Feedback</span>
+
+<span class="k">class</span> <span class="nc">addition_error</span><span class="p">(</span><span class="n">Feedback</span><span class="p">):</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Addition Error&quot;</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;You should not have added those two numbers!&quot;</span>
+    <span class="n">category</span><span class="o">=</span><span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">SPECIFICATION</span>
+
+    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operator</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">operator</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">main_code</span>
+
+<span class="c1"># Then, in your instructor control script, you can just call:</span>
+<span class="n">addition_error</span><span class="p">(</span><span class="s2">&quot;+&quot;</span><span class="p">)</span>
+<span class="n">addition_error</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>What if we wanted to modify the message? We could use the <code class="docutils literal notranslate"><span class="pre">message_template</span></code> field. There are
+various shortcut ways to do this, but let’s look at a more sophisticated way of overriding things:
+overriding the constructor and updating the fields. One of the fields comes directly from the
+constructor, but the other is calculated based on that parameter. We allow the instructor to also
+pass in other fields, if they so choose.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.core.feedback</span> <span class="kn">import</span> <span class="n">Feedback</span>
+
+<span class="k">class</span> <span class="nc">addition_error</span><span class="p">(</span><span class="n">Feedback</span><span class="p">):</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Addition Error&quot;</span>
+    <span class="n">message_template</span> <span class="o">=</span> <span class="s2">&quot;You used the </span><span class="si">{operator}</span><span class="s2"> operator. Do not </span><span class="si">{verb}</span><span class="s2">!&quot;</span>
+    <span class="n">category</span> <span class="o">=</span> <span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">SPECIFICATION</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operator</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;fields&#39;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="n">fields</span><span class="p">[</span><span class="s1">&#39;operator&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">operator</span>
+        <span class="n">fields</span><span class="p">[</span><span class="s1">&#39;verb&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;add&quot;</span> <span class="k">if</span> <span class="n">operator</span> <span class="o">==</span> <span class="s2">&quot;+&quot;</span> <span class="k">else</span> <span class="s2">&quot;subtract&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;operator&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">main_code</span>
+
+<span class="c1"># Then, in your instructor control script, you can call:</span>
+<span class="n">addition_error</span><span class="p">(</span><span class="s2">&quot;+&quot;</span><span class="p">)</span>
+<span class="n">addition_error</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>These are just some examples of what you can do with Feedback Functions!</p>
+</section>
 <section id="the-lifetime-of-a-feedback-function">
 <h2>The Lifetime of a Feedback Function<a class="headerlink" href="#the-lifetime-of-a-feedback-function" title="Permalink to this heading"></a></h2>
-<p>Default lifetime of a Feedback Function:</p>
+<p>The following describes what happens when you create an instance of a Feedback Function.</p>
 <ol class="arabic simple">
-<li><p>Feedback Function is called</p></li>
-<li><p>FF default initializer is executed</p></li>
-<li><p>Child initializers are executed</p></li>
-<li><p>The feedback’s condition is evaluated</p></li>
-<li><p>The feedback’s</p></li>
-<li><p>Any parent feedbacks have the opportunity to manipulate the child.</p></li>
+<li><p>The FF subclasses constructor is called.</p></li>
+<li><p>Parent constructors should be executed, including the root <code class="docutils literal notranslate"><span class="pre">Feedback</span></code> constructor.</p></li>
+<li><p>Most instance fields are updated during this time if they were provided as parameters.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">fields</span></code> are updated with the values from the <code class="docutils literal notranslate"><span class="pre">constant_fields</span></code>.</p></li>
+<li><p>If not specified explicitly, the <code class="docutils literal notranslate"><span class="pre">parent</span></code> is set to be the report’s current group (if there is one).</p></li>
+<li><p>Any additional keyword parameters are saved as <code class="docutils literal notranslate"><span class="pre">fields</span></code>.</p></li>
+<li><dl class="simple">
+<dt>If the <code class="docutils literal notranslate"><span class="pre">delay_condition</span></code> was <code class="docutils literal notranslate"><span class="pre">False</span></code>, then the <code class="docutils literal notranslate"><span class="pre">condition</span></code> is evaluated.</dt><dd><p>Otherwise, the creator of the class is obligated to call <code class="docutils literal notranslate"><span class="pre">self._handle_condition()</span></code> at some point.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>The <code class="docutils literal notranslate"><span class="pre">message</span></code>, <code class="docutils literal notranslate"><span class="pre">else_message</span></code>, and <code class="docutils literal notranslate"><span class="pre">justification</span></code> are calculated.</dt><dd><p>If the <code class="docutils literal notranslate"><span class="pre">message</span></code> is not <code class="docutils literal notranslate"><span class="pre">None</span></code>, then that is returned.
+Otherwise, if the <code class="docutils literal notranslate"><span class="pre">message_template</span></code> is not <code class="docutils literal notranslate"><span class="pre">None</span></code>, then that is formatted with the <code class="docutils literal notranslate"><span class="pre">fields</span></code>.
+Otherwise, the default feedback message is shown.
+Similar logic is used for the <code class="docutils literal notranslate"><span class="pre">else_message</span></code> and <code class="docutils literal notranslate"><span class="pre">justification</span></code>.</p>
+</dd>
+</dl>
+</li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">status</span></code> is set to <code class="docutils literal notranslate"><span class="pre">ACTIVE</span></code> if the <code class="docutils literal notranslate"><span class="pre">condition</span></code> was <code class="docutils literal notranslate"><span class="pre">True</span></code>, otherwise it is set to <code class="docutils literal notranslate"><span class="pre">INACTIVE</span></code>.</p></li>
+<li><p>If the condition was met, then the Feedback object is added to the report’s <code class="docutils literal notranslate"><span class="pre">feedbacks</span></code>.
+Otherwise, the Feedback object is added to the report’s <code class="docutils literal notranslate"><span class="pre">ignored_feedback</span></code>.</p></li>
+<li><p>If the feedback has a parent, that parent will have its <code class="docutils literal notranslate"><span class="pre">get_child_feedback</span></code> method called.
+The parent might decide to post-processs the child feedback, or it might decide to leave it unchanged.</p></li>
+<li><p>If an exception occurred during the creation of the Feedback Function, then that exception is now raised (and the FF’s status is <code class="docutils literal notranslate"><span class="pre">ERROR</span></code>).</p></li>
 </ol>
 </section>
 <section id="the-metadata-of-feedback-functions">
 <h2>The Metadata of Feedback Functions<a class="headerlink" href="#the-metadata-of-feedback-functions" title="Permalink to this heading"></a></h2>
+<p>Feedback Functions have a number of fields that can be set to control their behavior.
+When you create a new FF class, you should probably at least minimally set some of these
+static class fields.</p>
 <dl class="simple">
-<dt>Label</dt><dd><p>Every Feedback Function needs to be given a semi-unique name for
-identification. The label should be an underscore-separated string
+<dt><code class="docutils literal notranslate"><span class="pre">label</span></code> (str)</dt><dd><p>Every Feedback Function needs to be given a name for identification.
+This name should ideally be unique within a category.
+The label should be an underscore-separated string
 following the same conventions as names in Python. They do not
 have to be globally unique, but labels should be unique within a
-category or risk being treated as equivalent. Often the label will
-be the name of the underlying Python class or function that creates
+category or risk being treated as equivalent.
+By default, a subclass of Feedback will have a label equal to the classes name.
+In general, the name will be the name of the underlying Python class or function that creates
 instances of that Feedback.</p>
 </dd>
-<dt>Category</dt><dd><p>An internal name for indicating the tool that created
+<dt><code class="docutils literal notranslate"><span class="pre">category</span></code> (str)</dt><dd><p>The type of condition that led to this feedback object being activated.
+Choose an appropriate constant of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Feedback.CATEGORIES</span></code> for this.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">kind</span></code> (str)</dt><dd><p>The type of response that this feedback is meant to have.
+Choose an appropriate constant of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Feedback.KINDS</span></code> for this.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">priority</span></code> (str)</dt><dd><p>The priority of this feedback. Higher priority feedbacks are shown first.
+By default, the prioritization is based on the Category, so this is usually not
+needed. However, if you want to override the default ordering, you can set this
+to a different category that it better fits in with, in terms of prioritization.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">valence</span></code> (str)</dt><dd><p>The valence of this feedback. Positive feedback is meant to be encouraging,
+while negative feedback is meant to be discouraging. Neutral feedback is meant
+to be informative. This has serious impact on how the feedback’s score is interpreted.
+Negative valence will have the score subtracted from the total, while positive
+valence will have the score added to the total.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">tool</span></code> (str)</dt><dd><p>An internal name for indicating the tool that created
 this feedback. Should be taken directly from the Tool itself. If <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>, then
 this was not created by a tool but directly by the control script.</p>
 </dd>
-<dt>Tool</dt><dd><p>What Tool was responsible for creating this feedback function.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">title</span></code> (str)</dt><dd><p>The descriptive name of the feedback to be shown to the learner.
+Often very similar to the <code class="docutils literal notranslate"><span class="pre">label</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">message</span></code> (str)</dt><dd><p>This is the response text to show to students. You can put whatever you want, but it will
+always be the same thing. Often, you will instead want to define a <code class="docutils literal notranslate"><span class="pre">message_template</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">message_template</span></code> (str)</dt><dd><p>If the message to be shown to the user is dynamic, then set this attribute instead of the <code class="docutils literal notranslate"><span class="pre">message</span></code>.
+This becomes the template for the message to be shown to the learner.
+This is an interpolatable string, with any <code class="docutils literal notranslate"><span class="pre">fields</span></code> automatically injected.
+You can also use a set of format specifications to control how the fields are displayed.
+For example, the template <code class="docutils literal notranslate"><span class="pre">&quot;The</span> <span class="pre">variable</span> <span class="pre">{unused_variable:name}</span> <span class="pre">was</span> <span class="pre">not</span> <span class="pre">used.&quot;</span></code> will
+not only inject the value of the <code class="docutils literal notranslate"><span class="pre">unused_variable</span></code> field, but will also use the <code class="docutils literal notranslate"><span class="pre">name</span></code>
+formatter; an environment might turn that text into a clickable link, a tooltip, or color
+the text differently.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">score</span></code> (float or str)</dt><dd><p>The score to be awarded to the learner. This is a number between 0 and 1, inclusive.
+A numeric score to modify the students’ total score, indicating their overall performance.
+It is ultimately up to the Resolver to decide how to combine all the different scores; the default
+strategy is to add all the scores together for any non-muted feedback.
+Most feedback is worth 0 points, but some feedback is worth a small amount of partial credit.
+Besides a numeric score, you can also give a string like <code class="docutils literal notranslate"><span class="pre">&quot;+50%&quot;</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">correct</span></code> (bool)</dt><dd><p>Indicates that the entire submission should be marked as correct (successful) and that the
+task is now finished. Most feedback should be marked as <code class="docutils literal notranslate"><span class="pre">None</span></code> (the default).</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">muted</span></code> (bool)</dt><dd><p>Whether this piece of feedback is something that should be shown to a student. There are
+various use cases for muted feedback: they can serve as flags for later conditionals, suppressed
+default kinds of feedback, or perhaps feedback that is interesting for analysis but not pedagogically
+helpful to give to the student. They will still contribute to overall score, but not to the correctness
+of the submission.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">justification</span></code> (str)</dt><dd><p>A short description of why this feedback is being shown to the learner.
+This is used for debugging purposes, and is not shown to the learner.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">fields</span></code> (dict[str, Any])</dt><dd><p>A dictionary of information about the Feedback Function, typically to be injected into the
+message template, or meant to be used for analysis later on. The keys should all be strings
+that are valid Python identifiers. The values should be JSON-serializable, or else a custom
+serializer (<code class="docutils literal notranslate"><span class="pre">to_json</span></code>) should be provided.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">location</span></code> (int or FeedbackLocation)</dt><dd><p>A special field is the <code class="docutils literal notranslate"><span class="pre">location</span></code> field, which can be a line number or a
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">pedal.source.FeedbackLocation</span></code> object. This is used to indicate where the
+user’s attention should be directed.</p>
 </dd>
 </dl>
-<section id="message">
-<h3>Message<a class="headerlink" href="#message" title="Permalink to this heading"></a></h3>
-<p>The Response to show to students.</p>
 </section>
-<section id="message-template">
-<h3>Message Template<a class="headerlink" href="#message-template" title="Permalink to this heading"></a></h3>
-<p>An interpolatable string, with any fields automatically injected.
-Has a lower priority than the <code class="docutils literal notranslate"><span class="pre">message</span></code>.</p>
+<section id="different-ways-of-disabling-feedback">
+<h2>Different Ways of Disabling Feedback<a class="headerlink" href="#different-ways-of-disabling-feedback" title="Permalink to this heading"></a></h2>
+<p>There are a few different ways to control the behavior of Feedback Functions.</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">muted</span></code>:  Whether this piece of feedback is something that should be shown to a student. There are</dt><dd><p>various use cases for muted feedback: they can serve as flags for later conditionals, suppressed
+default kinds of feedback, or perhaps feedback that is interesting for analysis but not pedagogically
+helpful to give to the student. They will still contribute to overall score, but not to the correctness
+of the submission.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">activate</span></code>: Whether or not this Feedback should be activated. This is useful for Feedback that</dt><dd><p>is meant to be conditionally shown; you can pass the condition to the <code class="docutils literal notranslate"><span class="pre">activate</span></code> field.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">delay_condition</span></code>: Whether or not the <code class="docutils literal notranslate"><span class="pre">condition</span></code> check should automatically happen</dt><dd><p>when the Feedback is instantiated, or if it should be delayed until the Feedback is
+manually checked later. This is useful for Feedback that is meant to be activated later
+on in the execution of the control script, but should not be activated immediately.
+For example, this is how unit tests get grouped, and question pools are able to choose
+which questions to show.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">unscored</span></code>: Whether or not this Feedback should contribute to the overall score of the</dt><dd><p>submission. This is useful for Feedback that is meant to be shown to the student, but
+should not be counted towards their grade.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Suppression: This is not a feature of Feedback Functions, but a feature of reports. You can</dt><dd><p>suppress specific labels and categories of feedback, which means that they will be completely
+and utterly skipped during the resolver phase. They will still have their condition evaluated.</p>
+</dd>
+</dl>
+</li>
+</ul>
 </section>
+<section id="methods-of-feedback-functions">
+<h2>Methods of Feedback Functions<a class="headerlink" href="#methods-of-feedback-functions" title="Permalink to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">__init__</span></code></p>
+<blockquote>
+<div><p>If the Feedback object is not meant to be intelligent (e.g., it has no special fields or logic), then you don’t need to
+override the <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method. But many classes have special fields that need to be created.
+It is critical that you call the <code class="docutils literal notranslate"><span class="pre">super().__init__(**kwargs)</span></code> somewhere in your <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method.
+Make sure that the <code class="docutils literal notranslate"><span class="pre">__init__</span></code> can take all the right parameters by using <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>.</p>
+</div></blockquote>
+<p><code class="docutils literal notranslate"><span class="pre">condition</span></code></p>
+<blockquote>
+<div><p>This method is called to determine whether the feedback should be activated.
+The function consumes any positional args and kwargs that were provided to the function,
+and also has access to any of the <code class="docutils literal notranslate"><span class="pre">fields</span></code> in that attribute.
+It should return a boolean value. If the condition is not met (return False), then the feedback
+will not be activated. If the condition is met, then the feedback will be activated.
+If the condition is not defined, then the feedback will always be activated.
+This allows you to unconditionally instantiate a feedback, but only activate it when its
+condition is met. This is useful for things like unit tests, where you want to create the
+feedback for the student, but only show it to them when they fail the test. The <code class="docutils literal notranslate"><span class="pre">assert_equal</span></code>
+is always checked, but it only shows the feedback when the condition is met.</p>
+</div></blockquote>
+<p><code class="docutils literal notranslate"><span class="pre">_get_child_feedback</span></code></p>
+<blockquote>
+<div><p>This is a special method that gets called when a new piece of feedback is being considered.
+For almost all FFs, this is not necessary. However, when a</p>
+</div></blockquote>
+</section>
+<section id="overriding-existing-feedback-functions">
+<h2>Overriding Existing Feedback Functions<a class="headerlink" href="#overriding-existing-feedback-functions" title="Permalink to this heading"></a></h2>
+<p>If you are unhappy with the message we chose for a particular feedback, you can override it.
+In fact, you can override any of the attributes of existing Feedback Functions that were defined
+as classes.
+The <code class="docutils literal notranslate"><span class="pre">override</span></code> class method takes in keyword parameters for any of the fields of the Feedback Function.
+The system backs up the original value of the fields, in case you ever want to restore them.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.sandbox.feedbacks</span> <span class="kn">import</span> <span class="n">name_error</span>
+
+<span class="n">name_error</span><span class="o">.</span><span class="n">override</span><span class="p">(</span><span class="n">constant_fields</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;suggestion&#39;</span><span class="p">:</span> <span class="s2">&quot;THAT NAME DOES NOT EXIST MY DUDE.&quot;</span><span class="p">})</span>
+</pre></div>
+</div>
 </section>
 </section>
 

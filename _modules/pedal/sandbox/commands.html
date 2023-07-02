@@ -546,6 +546,20 @@
     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown Sandbox Module: `</span><span class="si">{</span><span class="n">module_name</span><span class="si">}</span><span class="s2">`&quot;</span><span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="get_python_errors"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.get_python_errors">[docs]</a><span class="k">def</span> <span class="nf">get_python_errors</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Retrieves any runtime or syntax errors from the report.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        report:</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list[Feedback]: A list of runtime and syntax errors that were detected</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">feedback</span> <span class="ow">in</span> <span class="n">report</span><span class="o">.</span><span class="n">feedback</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">feedback</span><span class="o">.</span><span class="n">category</span> <span class="o">==</span> <span class="s1">&#39;runtime&#39;</span> <span class="ow">or</span> <span class="n">feedback</span><span class="o">.</span><span class="n">category</span> <span class="o">==</span> <span class="s1">&#39;syntax&#39;</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">feedback</span></div>
+
+
 <div class="viewcode-block" id="CommandBlock"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.CommandBlock">[docs]</a><span class="k">class</span> <span class="nc">CommandBlock</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Context Manager for creating instructor blocks of code that will</span>

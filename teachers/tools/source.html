@@ -207,8 +207,8 @@ If used when there are no more sections, the <code class="xref py py-obj docutil
 <li><strong>Justification: </strong><span>Syntax error was triggered while calling ast.parse</span></li>
 <li><strong>Response: </strong><span>Bad syntax on line {lineno:line}.
 
-{traceback_message}
-{suggestion_message}Suggestion: Check line {lineno:line}, the line before it, and the line after it. Ignore blank lines.</span></li>
+{traceback_preamble}{traceback_message}
+{exception_message}{suggestion_message}</span></li>
 </ul>
 </dd><span class="sig-prename descclassname">Feedback Function: Incorrect Number of Sections</span><dd><ul>
 <li><strong>Label: </strong><span>incorrect_number_of_sections</span></li>

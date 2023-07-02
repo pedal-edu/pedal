@@ -166,11 +166,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">Formatter</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resolves</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">overridden_feedbacks</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
 
 <div class="viewcode-block" id="Report.clear"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.report.Report.clear">[docs]</a>    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Resets the entire report back to its starting form,</span>
 <span class="sd">        including deleting any attached submissions, tool data, and feedbacks.</span>
+<span class="sd">        It will also reset any overridden fields of feedback classes.</span>
 <span class="sd">        However, it will not affect class hooks.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">feedback</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
@@ -186,12 +188,21 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">submission</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resolves</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">Formatter</span><span class="p">()</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">Formatter</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clear_overridden_feedback</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Report.full_clear"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.report.Report.full_clear">[docs]</a>    <span class="k">def</span> <span class="nf">full_clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; This totally resets the report, including any class hooks. &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">class_hooks</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">clear_overridden_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">feedback</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">overridden_feedbacks</span><span class="p">:</span>
+            <span class="n">feedback</span><span class="o">.</span><span class="n">_restore_overrides</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">overridden_feedbacks</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">override_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feedback_class</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">overridden_feedbacks</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">feedback_class</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Report.contextualize"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.report.Report.contextualize">[docs]</a>    <span class="k">def</span> <span class="nf">contextualize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">submission</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
