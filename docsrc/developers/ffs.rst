@@ -25,7 +25,7 @@ Not only are Feedback Functions reusable, but they are also (probably) easier to
 Feedback Function Concepts
 --------------------------
 
-This section details the structure and interface of Feedback Functions.
+This section goes into a little more depth about the major concepts of feedback functions.
 
 Inheritance
     All Feedback Functions descend from the main `Feedback` class. This class
