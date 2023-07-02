@@ -119,7 +119,6 @@ class Feedback:
     DEFAULT_JUSTIFICATION_MESSAGE = "No justification provided"
     DEFAULT_ELSE_MESSAGE = None
 
-
     label = None
     category = None
     justification = None
@@ -157,7 +156,7 @@ class Feedback:
     resolved_score = None
     unused_message = None
 
-    #MAIN_REPORT
+    # MAIN_REPORT
 
     def __init__(self, *args, label=None,
                  category=None, justification=None,
@@ -202,6 +201,7 @@ class Feedback:
             self.fields.update(self.constant_fields)
         if field_names is not None:
             self.field_names = field_names
+            # TODO: Should this be taken from `fields` if nothing is provided?
         if title is not None:
             self.title = title
         elif self.title is None:
@@ -261,7 +261,6 @@ class Feedback:
             self._status = FeedbackStatus.DELAYED
         else:
             self._handle_condition()
-
 
     def _handle_condition(self):
         """ Actually handle the condition check, updating message and report. """
@@ -503,6 +502,7 @@ def CompositeFeedbackFunction(*functions):
     Returns:
         callable: The decorated function.
     """
+
     def CompositeFeedbackFunction_with_attrs(function):
         """
 
@@ -514,6 +514,7 @@ def CompositeFeedbackFunction(*functions):
         """
         CompositeFeedbackFunction_with_attrs.functions = functions
         return function
+
     return CompositeFeedbackFunction_with_attrs
 
 

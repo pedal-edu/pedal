@@ -137,6 +137,9 @@ def parse_args(reduced_mode=False):
     parser.add_argument('--threaded', help='Run the instructor script in a separate thread to avoid'
                                            ' timeout crashes.',
                         default=False)
+    parser.add_argument('--log_level', help="Set the logging level for Pedal.",
+                        choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
+                        default="ERROR")
     '''
     parser.add_argument('--include_submissions', help='An optional REGEX filter '
                                                       'to only include certain submissions')
