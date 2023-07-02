@@ -62,7 +62,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'Pedal'
-copyright = '2018, acbart, lukesg08'
+copyright = '2023, acbart, lukesg08'
 author = 'acbart, lukesg08'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -193,5 +193,5 @@ default_role = 'py:obj'
 add_module_names = False
 python_use_unqualified_type_names = True
 
-html_logo = "_static/pedal-logo.jpg"
+html_logo = "_static/pedal-logo-v3.png"
 html_favicon = "_static/favicon.ico"
