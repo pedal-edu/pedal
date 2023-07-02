@@ -192,3 +192,6 @@ default_role = 'py:obj'
 
 add_module_names = False
 python_use_unqualified_type_names = True
+
+html_logo = "_static/pedal-logo.jpg"
+html_favicon = "_static/favicon.ico"
