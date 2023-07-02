@@ -35,7 +35,7 @@ class TestEnvironmentTerminal(ExecutionTestCase):
 
 [;7mFEEDBACK[0;0m Based on your code, here are some tips and recommendations:
 
-✔️  Your code ran successfully.
+[1;92m✓[0;0m️  Your code ran successfully.
 Great work! Based on your code submitted, there are no other recommendations available. You can proceed to the next page by using the “Next” button in your lesson.
 ''')
 
@@ -50,14 +50,14 @@ Great work! Based on your code submitted, there are no other recommendations ava
 
 [;7mFEEDBACK[0;0m Based on your code, here are some tips and recommendations:
 
-❌  Syntax Error
+[1;91m✗[0;0m  Syntax Error
 
-Bad syntax on line [4m1[0m.
-Suggestion: Check line [4m1[0m, the line before it, and the line after it. Ignore blank lines.
+Bad syntax on line [4m1[0;0m.
+Suggestion: Check line [4m1[0;0m, the line before it, and the line after it. Ignore blank lines.
 
 [;7mTERMINAL OUTPUT[0;0m For reference, here is the original Python error:
 
-Line [4m1[0m of file answer.py
+Line [4m1[0;0m of file [4manswer.py[0;0m
     1 1 2 3
 ''' + ('      ^\n' if IS_AT_LEAST_PYTHON_311 else "") + '''
 SyntaxError: Invalid syntax.
@@ -74,13 +74,13 @@ SyntaxError: Invalid syntax.
 
 [;7mFEEDBACK[0;0m Based on your code, here are some tips and recommendations:
 
-❌  Incompatible types
+[1;91m✗[0;0m  Incompatible types
 
-You used an addition operation with an integer and a string on line [4m1[0m. But you can't do that with that operator. Make sure both sides of the operator are the right type.
+You used an addition operation with an integer and a string on line [4m1[0;0m. But you can't do that with that operator. Make sure both sides of the operator are the right type.
 
 [;7mTERMINAL OUTPUT[0;0m For reference, here is the original Python error:
 
-Line [4m1[0m of file answer.py
+Line [4m1[0;0m of file [4manswer.py[0;0m
     1+''
 ''' + ('    ^^^^\n' if IS_AT_LEAST_PYTHON_311 else "") + '''
 TypeError: Unsupported operand type(s) for +: 'int' and 'str'
@@ -97,7 +97,7 @@ TypeError: Unsupported operand type(s) for +: 'int' and 'str'
 
 [;7mFEEDBACK[0;0m Based on your code, here are some tips and recommendations:
 
-❌  Type Error
+[1;91m✗[0;0m  Type Error
 
 I ran your code.
 
@@ -111,7 +111,7 @@ Suggestion: To fix a type error, you should trace through your code. Make sure e
 
 [;7mTERMINAL OUTPUT[0;0m For reference, here is the original Python error:
 
-Line [4m2[0m of file answer.py
+Line [4m2[0;0m of file [4manswer.py[0;0m
     json.loads('1')+''
 ''' + ('    ^^^^^^^^^^^^^^^^^^\n' if IS_AT_LEAST_PYTHON_311 else "") + '''
 TypeError: Unsupported operand type(s) for +: 'int' and 'str'
@@ -129,13 +129,13 @@ TypeError: Unsupported operand type(s) for +: 'int' and 'str'
 
 [;7mFEEDBACK[0;0m Based on your code, here are some tips and recommendations:
 
-❌  Instructor Feedback
+[1;91m✗[0;0m  Instructor Feedback
 
 You should not be using the JSON library at all.
 
 [;7mTERMINAL OUTPUT[0;0m For reference, here is the original Python error:
 
-Line [4m2[0m of file answer.py
+Line [4m2[0;0m of file [4manswer.py[0;0m
     json.loads('1')+''
 ''' + ('    ^^^^^^^^^^^^^^^^^^\n' if IS_AT_LEAST_PYTHON_311 else "") + '''
 TypeError: Unsupported operand type(s) for +: 'int' and 'str'
@@ -154,7 +154,7 @@ TypeError: Unsupported operand type(s) for +: 'int' and 'str'
 
 [;7mFEEDBACK[0;0m Based on your code, here are some tips and recommendations:
 
-❌  Type Error
+[1;91m✗[0;0m  Type Error
 
 I ran the code:
     x()
@@ -169,7 +169,7 @@ Suggestion: To fix a type error, you should trace through your code. Make sure e
 
 [;7mTERMINAL OUTPUT[0;0m For reference, here is the original Python error:
 
-Line [4m1[0m of file answer.py in x
+Line [4m1[0;0m of file [4manswer.py[0;0m in x
     def x(): return 1+''
 ''' + ('                    ^^^^\n' if IS_AT_LEAST_PYTHON_311 else "") + '''
 TypeError: Unsupported operand type(s) for +: 'int' and 'str'
