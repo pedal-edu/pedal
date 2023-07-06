@@ -5,6 +5,7 @@ import sys
 import os
 import logging
 
+# Setup Logging
 logger = logging.getLogger('pedal')
 logger.addHandler(logging.NullHandler())
 logging.basicConfig(
@@ -13,12 +14,13 @@ logging.basicConfig(
 
 logger.debug("Pedal import started")
 
-# Core Commands
+# Core Features
 from pedal.core.report import MAIN_REPORT
 from pedal.core.submission import Submission
 from pedal.core.commands import *
 logger.debug("Pedal core import finished")
 
+# Default Tools
 from pedal.source import *
 logger.debug("Source Tool import finished")
 
@@ -34,6 +36,7 @@ logger.debug("Assertions Tool import finished")
 from pedal.resolvers import *
 logger.debug("Resolvers Tool import finished")
 
+# Provide type of `student` data object (setup via Sandbox)
 student: Sandbox
 
 logger.debug("Pedal import finished")
