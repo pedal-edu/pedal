@@ -48,7 +48,7 @@ class Feedback:
             into the template IF the ``condition`` is met.
         priority (str): An indication of how important this feedback is relative to other types
             of feedback in the same category. Might be "high/medium/low". Exactly how this
-            gets used is up to the resolver, but typicaly it helps break ties.
+            gets used is up to the resolver, but typically it helps break ties.
         valence (int): Indicates whether this is negative, positive, or neutral feedback.
             Either 1, -1, or 0.
 
@@ -74,8 +74,7 @@ class Feedback:
             default kinds of feedback, or perhaps feedback that is interesting for analysis but not pedagogically
             helpful to give to the student. They will still contribute to overall score, but not to the correctness
             of the submission.
-        unscored (bool): Whether or not this piece of feedback contributes to
-            the score/correctness.
+        unscored (bool): Whether this piece of feedback contributes to the score/correctness.
 
         else_message (str): A string to render as a message when a
             NEGATIVE valence feedback is NOT triggered, or a POSITIVE valence
@@ -381,7 +380,7 @@ class Feedback:
         for :py:class:`pedal.core.group.FeedbackGroup`, most other feedbacks
         will just not care.
 
-        The ``active`` parameter controls whether or not the condition for the
+        The ``active`` parameter controls whether the condition for the
         feedback was met. """
 
     def __xor__(self, other):
