@@ -3,6 +3,7 @@ Version 2.5.4 (6/30/2023)
 * Fix Terminal checkmarks being the wrong color on some platforms
 * Make Terminal mask filename output
 * Start of logging code
+* Fix bug with visit_Constant in CaitNode's `find_all` method for new Python versions.
 
 Version 2.5.3 (6/23/2023)
 -------------------------

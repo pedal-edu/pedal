@@ -480,12 +480,28 @@ class CaitNode:
             node_type_list = node_type
 
         for node_t in node_type_list:
-            func_name = 'visit_' + node_t
-            func_ref = main_visit
+            if node_t in ('Num', 'Str', 'Bool'):
+                func_name = 'visit_Constant'
+                func_ref = self._handle_visit_constant(node_t, main_visit)
+            else:
+                func_name = 'visit_' + node_t
+                func_ref = main_visit
             setattr(visitor, func_name, MethodType(func_ref, visitor))
 
         visitor.visit(self.astNode)
         return visitor.items
+
+    def _handle_visit_constant(self, actual_node, visitor_function):
+        def visit_Constant(self, node):
+            # TODO: Does this need to be extended for None, tuple, frozenset, anything else?
+            if actual_node == 'Bool' and isinstance(node.value, bool):
+                return visitor_function(self, node)
+            if actual_node == 'Num' and isinstance(node.value, (int, float)) and not isinstance(node.value, bool):
+                return visitor_function(self, node)
+            elif actual_node == 'Str' and isinstance(node.value, str):
+                return visitor_function(self, node)
+            return self.generic_visit(node)
+        return visit_Constant
 
     def has(self, node):
         """
