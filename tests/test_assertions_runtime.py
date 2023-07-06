@@ -113,7 +113,7 @@ But I expected the result to be None""")
         self.assertFeedback(e, SUCCESS_MESSAGE)
 
     def test_assert_is_basic_passes(self):
-        with Execution('0 is 0', run_tifa=False) as e:
+        with Execution('x = 0\nx is x', run_tifa=False) as e:
             l = [1,2,3]
             r = l
             assert_is(l, r)
