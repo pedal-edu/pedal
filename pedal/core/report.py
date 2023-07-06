@@ -6,6 +6,7 @@ useful very often. Usually you want to just rely on the global MAIN_REPORT.
 """
 
 __all__ = ['Report', 'MAIN_REPORT']
+import logging
 
 from pedal.core.errors import PedalToolNotRegistered, PedalToolAlreadyRegistered
 from pedal.core.feedback_category import FeedbackCategory
@@ -14,6 +15,8 @@ from pedal.core.feedback_category import FeedbackCategory
 # TODO: Mechanism for checking whether a piece of feedback is in the report
 from pedal.core.formatting import Formatter
 from pedal.core.tool import ToolRegistration
+
+log = logging.getLogger(__name__)
 
 
 class Report:
@@ -78,6 +81,7 @@ class Report:
         self.result = None
         self.resolves = []
         self.overridden_feedbacks = set()
+        log.debug("New Pedal Report created.")
 
     def clear(self):
         """
