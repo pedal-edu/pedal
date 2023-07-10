@@ -50,7 +50,7 @@ def resolve_on_terminal(report=MAIN_REPORT, file=sys.stdout):
     print("", file=file)
     print(f"{REVERSE}FEEDBACK{RESET} Based on your code, here are some tips and recommendations:\n", file=file)
     if feedback.correct:
-        print(f"{BOLD_GREEN}{CHECKMARK}{RESET}️  Your code ran successfully.", file=file)
+        print(f"{BOLD_GREEN}{CHECKMARK}{RESET}️  Your code ran successfully.\n", file=file)
         print(f"{feedback.message}", file=file)
     else:
         print(f"{BOLD_RED}{CROSSMARK}{RESET}  {feedback.title}\n", file=file)

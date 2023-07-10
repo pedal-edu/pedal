@@ -36,6 +36,7 @@ class TestEnvironmentTerminal(ExecutionTestCase):
 [;7mFEEDBACK[0;0m Based on your code, here are some tips and recommendations:
 
 [1;92m✓[0;0m️  Your code ran successfully.
+
 Great work! Based on your code submitted, there are no other recommendations available. You can proceed to the next page by using the “Next” button in your lesson.
 ''')
 
