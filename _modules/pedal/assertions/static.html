@@ -105,13 +105,13 @@
                                       <span class="n">wrong_fields_type</span><span class="p">,</span> <span class="n">name_is_not_a_dataclass</span><span class="p">,</span> <span class="n">missing_dataclass_annotation</span><span class="p">,</span>
                                       <span class="n">unknown_field</span><span class="p">,</span> <span class="n">wrong_field_order</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">pedal.assertions.functions</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pedal.cait.cait_api</span> <span class="kn">import</span> <span class="n">parse_program</span>
+<span class="kn">from</span> <span class="nn">pedal.cait.cait_api</span> <span class="kn">import</span> <span class="n">parse_program</span><span class="p">,</span> <span class="n">find_match</span><span class="p">,</span> <span class="n">find_matches</span>
 <span class="kn">from</span> <span class="nn">pedal.assertions.feedbacks</span> <span class="kn">import</span> <span class="n">AssertionFeedback</span>
 <span class="kn">from</span> <span class="nn">pedal.cait.find_node</span> <span class="kn">import</span> <span class="n">find_operation</span><span class="p">,</span> <span class="n">find_function_calls</span><span class="p">,</span> <span class="n">find_function_definition</span>
-<span class="kn">from</span> <span class="nn">pedal.core.feedback</span> <span class="kn">import</span> <span class="n">CompositeFeedbackFunction</span>
+<span class="kn">from</span> <span class="nn">pedal.core.feedback</span> <span class="kn">import</span> <span class="n">CompositeFeedbackFunction</span><span class="p">,</span> <span class="n">Feedback</span><span class="p">,</span> <span class="n">FeedbackResponse</span>
 <span class="kn">from</span> <span class="nn">pedal.core.location</span> <span class="kn">import</span> <span class="n">Location</span>
 <span class="kn">from</span> <span class="nn">pedal.core.report</span> <span class="kn">import</span> <span class="n">MAIN_REPORT</span>
-<span class="kn">from</span> <span class="nn">pedal.core.commands</span> <span class="kn">import</span> <span class="n">compliment</span> <span class="k">as</span> <span class="n">core_compliment</span><span class="p">,</span> <span class="n">give_partial</span>
+<span class="kn">from</span> <span class="nn">pedal.core.commands</span> <span class="kn">import</span> <span class="n">compliment</span> <span class="k">as</span> <span class="n">core_compliment</span><span class="p">,</span> <span class="n">give_partial</span><span class="p">,</span> <span class="n">explain</span><span class="p">,</span> <span class="n">gently</span>
 <span class="kn">from</span> <span class="nn">pedal.tifa.commands</span> <span class="kn">import</span> <span class="n">tifa_type_check</span>
 <span class="kn">from</span> <span class="nn">pedal.types.normalize</span> <span class="kn">import</span> <span class="n">normalize_type</span>
 <span class="kn">from</span> <span class="nn">pedal.types.new_types</span> <span class="kn">import</span> <span class="n">is_subtype</span>
@@ -791,6 +791,209 @@
         <span class="n">code</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;code&#39;</span><span class="p">]</span>
         <span class="n">ast</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;root&#39;</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_match</span><span class="p">(</span><span class="n">code</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="prevent_printing_functions"><a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.prevent_printing_functions">[docs]</a><span class="k">class</span> <span class="nc">prevent_printing_functions</span><span class="p">(</span><span class="n">AssertionFeedback</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Detects if the user has defined a function with a print statement inside.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        exceptions: A set of function names (or a single string) of functions to allow to print (e.g., `&#39;main&#39;`).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Do Not Print in Function&quot;</span>
+    <span class="n">message_template</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;The function </span><span class="si">{name}</span><span class="s2"> is printing on line {location.line:line}.&quot;</span>
+                        <span class="s2">&quot; However, that function is not supposed to print.&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exceptions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">report</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;report&#39;</span><span class="p">,</span> <span class="n">MAIN_REPORT</span><span class="p">)</span>
+        <span class="n">root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">parse_program</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;root&#39;</span><span class="p">:</span> <span class="n">root</span><span class="p">,</span> <span class="s1">&#39;exceptions&#39;</span><span class="p">:</span> <span class="n">exceptions</span><span class="p">}</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="n">fields</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="prevent_printing_functions.condition"><a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.prevent_printing_functions.condition">[docs]</a>    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">exceptions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;exceptions&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">exceptions</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">exceptions</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">exceptions</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">exceptions</span> <span class="o">=</span> <span class="p">{</span><span class="n">exceptions</span><span class="p">}</span>
+        <span class="n">root</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;root&#39;</span><span class="p">]</span>
+        <span class="n">defs</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;FunctionDef&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">a_def</span> <span class="ow">in</span> <span class="n">defs</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">a_def</span><span class="o">.</span><span class="n">_name</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">exceptions</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">for</span> <span class="n">call</span> <span class="ow">in</span> <span class="n">find_function_calls</span><span class="p">(</span><span class="s2">&quot;print&quot;</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="n">a_def</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="p">):</span>
+                <span class="n">location</span> <span class="o">=</span> <span class="n">call</span><span class="o">.</span><span class="n">locate</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">name</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">update_location</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span></div></div>
+
+
+<div class="viewcode-block" id="ensure_functions_return"><a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.ensure_functions_return">[docs]</a><span class="k">class</span> <span class="nc">ensure_functions_return</span><span class="p">(</span><span class="n">AssertionFeedback</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Detects if the user has defined a function with a print statement inside.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        exceptions: A set of function names (or a single string) of functions to allow to print (e.g., `&#39;main&#39;`).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Must Return in Function&quot;</span>
+    <span class="n">message_template</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;The function </span><span class="si">{name}</span><span class="s2"> is not returning.&quot;</span>
+                        <span class="s2">&quot; However, that function is supposed to have a return statement.&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exceptions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">report</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;report&#39;</span><span class="p">,</span> <span class="n">MAIN_REPORT</span><span class="p">)</span>
+        <span class="n">root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">parse_program</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;root&#39;</span><span class="p">:</span> <span class="n">root</span><span class="p">,</span> <span class="s1">&#39;exceptions&#39;</span><span class="p">:</span> <span class="n">exceptions</span><span class="p">}</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="n">fields</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ensure_functions_return.condition"><a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.ensure_functions_return.condition">[docs]</a>    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">exceptions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;exceptions&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">exceptions</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">exceptions</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">exceptions</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">exceptions</span> <span class="o">=</span> <span class="p">{</span><span class="n">exceptions</span><span class="p">}</span>
+        <span class="n">root</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;root&#39;</span><span class="p">]</span>
+        <span class="n">defs</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;FunctionDef&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">a_def</span> <span class="ow">in</span> <span class="n">defs</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">a_def</span><span class="o">.</span><span class="n">_name</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">exceptions</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">a_def</span><span class="o">.</span><span class="n">find_match</span><span class="p">(</span><span class="s2">&quot;return&quot;</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">name</span>
+                <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span></div></div>
+
+
+<div class="viewcode-block" id="only_printing_variables"><a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.only_printing_variables">[docs]</a><span class="k">class</span> <span class="nc">only_printing_variables</span><span class="p">(</span><span class="n">AssertionFeedback</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Determines whether the user is only printing variables, as opposed to</span>
+<span class="sd">    literal values.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Print Variables, Not Values&quot;</span>
+    <span class="n">message_template</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;You printed something other than a variable on&quot;</span>
+                      <span class="s2">&quot; line {location.line:line}. Although that is not a&quot;</span>
+                      <span class="s2">&quot; normally an issue, we want you to practice printing&quot;</span>
+                      <span class="s2">&quot; variables in this problem.&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;fields&#39;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="n">report</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;report&#39;</span><span class="p">,</span> <span class="n">MAIN_REPORT</span><span class="p">)</span>
+        <span class="n">fields</span><span class="p">[</span><span class="s1">&#39;root&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">parse_program</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="only_printing_variables.condition"><a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.only_printing_variables.condition">[docs]</a>    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Uses find_all to detect matches, ignoring named values. &quot;&quot;&quot;</span>
+        <span class="n">print_calls</span> <span class="o">=</span> <span class="n">find_function_calls</span><span class="p">(</span><span class="s1">&#39;print&#39;</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;root&#39;</span><span class="p">],</span>
+                                          <span class="n">report</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">print_call</span> <span class="ow">in</span> <span class="n">print_calls</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">print_call</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">arg</span><span class="o">.</span><span class="n">ast_name</span> <span class="o">!=</span> <span class="s2">&quot;Name&quot;</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">update_location</span><span class="p">(</span><span class="n">print_call</span><span class="o">.</span><span class="n">lineno</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="kc">True</span>
+                <span class="k">elif</span> <span class="n">arg</span><span class="o">.</span><span class="n">id</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;True&quot;</span><span class="p">,</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span> <span class="s2">&quot;None&quot;</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">update_location</span><span class="p">(</span><span class="n">print_call</span><span class="o">.</span><span class="n">lineno</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span></div></div>
+
+
+<span class="n">ADVANCED_ITERATION_FUNCTIONS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;sum&quot;</span><span class="p">,</span> <span class="s2">&quot;map&quot;</span><span class="p">,</span> <span class="s2">&quot;filter&quot;</span><span class="p">,</span> <span class="s2">&quot;reduce&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;len&quot;</span><span class="p">,</span> <span class="s2">&quot;max&quot;</span><span class="p">,</span> <span class="s2">&quot;min&quot;</span><span class="p">,</span> <span class="s2">&quot;max&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;sorted&quot;</span><span class="p">,</span> <span class="s2">&quot;all&quot;</span><span class="p">,</span> <span class="s2">&quot;any&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;getattr&quot;</span><span class="p">,</span> <span class="s2">&quot;setattr&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;eval&quot;</span><span class="p">,</span> <span class="s2">&quot;exec&quot;</span><span class="p">,</span> <span class="s2">&quot;iter&quot;</span><span class="p">,</span> <span class="s2">&quot;next&quot;</span>
+<span class="p">]</span>
+
+
+<div class="viewcode-block" id="prevent_advanced_iteration"><a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.prevent_advanced_iteration">[docs]</a><span class="nd">@CompositeFeedbackFunction</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">prevent_advanced_iteration</span><span class="p">(</span><span class="n">allow_while</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_for</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                               <span class="n">allow_function</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Prevents the student from using certain advanced iteration functions</span>
+<span class="sd">    and constructs. Does not currently support blocking recursion. &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">allow_function</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">allow_function</span> <span class="o">=</span> <span class="p">{</span><span class="n">allow_function</span><span class="p">}</span>
+    <span class="k">elif</span> <span class="n">allow_function</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">allow_function</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">allow_while</span><span class="p">:</span>
+        <span class="n">prevent_ast</span><span class="p">(</span><span class="s2">&quot;While&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">allow_for</span><span class="p">:</span>
+        <span class="n">prevent_ast</span><span class="p">(</span><span class="s2">&quot;For&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">function_name</span> <span class="ow">in</span> <span class="n">ADVANCED_ITERATION_FUNCTIONS</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">function_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">allow_function</span><span class="p">:</span>
+            <span class="n">prevent_function_call</span><span class="p">(</span><span class="n">function_name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="open_without_arguments"><a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.open_without_arguments">[docs]</a><span class="k">class</span> <span class="nc">open_without_arguments</span><span class="p">(</span><span class="n">FeedbackResponse</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Detects if the user has called the `open` function without any arguments.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">muted</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Opened Without Arguments&quot;</span>
+    <span class="n">message_template</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;You have called the `open` function &quot;</span>
+                        <span class="s2">&quot;without any arguments. It needs a filename.&quot;</span><span class="p">)</span>
+    <span class="n">category</span> <span class="o">=</span> <span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">INSTRUCTOR</span></div>
+
+
+<div class="viewcode-block" id="files_not_handled_correctly"><a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.files_not_handled_correctly">[docs]</a><span class="nd">@CompositeFeedbackFunction</span><span class="p">(</span><span class="n">open_without_arguments</span><span class="p">,</span> <span class="n">ensure_literal</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">files_not_handled_correctly</span><span class="p">(</span><span class="o">*</span><span class="n">filenames</span><span class="p">,</span> <span class="n">muted</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Statically detect if files have been opened and closed correctly.</span>
+<span class="sd">    This is only useful in the case of very simplistic file handling.</span>
+
+<span class="sd">    TODO: This could be vastly improved with line numbers and other information.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">filenames</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filenames</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="n">num_filenames</span> <span class="o">=</span> <span class="n">filenames</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">actual_filenames</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">num_filenames</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">filenames</span><span class="p">)</span>
+        <span class="n">actual_filenames</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">ast</span> <span class="o">=</span> <span class="n">parse_program</span><span class="p">()</span>
+    <span class="n">calls</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;Call&quot;</span><span class="p">)</span>
+    <span class="n">called_open</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">closed</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">a_call</span> <span class="ow">in</span> <span class="n">calls</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">ast_name</span> <span class="o">==</span> <span class="s1">&#39;Name&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="s1">&#39;open&#39;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">a_call</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
+                    <span class="n">open_without_arguments</span><span class="p">(</span><span class="n">muted</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="kc">True</span>
+                <span class="n">called_open</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a_call</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="s1">&#39;close&#39;</span><span class="p">:</span>
+                <span class="n">explain</span><span class="p">(</span><span class="s2">&quot;You have attempted to call `close` as a &quot;</span>
+                        <span class="s2">&quot;function, but it is actually a method of the &quot;</span>
+                        <span class="s2">&quot;file object.&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;used_close_as_function&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Close Is a Method&quot;</span><span class="p">,</span> <span class="n">priority</span><span class="o">=</span><span class="s1">&#39;syntax&#39;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">ast_name</span> <span class="o">==</span> <span class="s1">&#39;Attribute&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">attr</span> <span class="o">==</span> <span class="s1">&#39;open&#39;</span><span class="p">:</span>
+                <span class="c1"># TODO: Make these feedback functions</span>
+                <span class="n">explain</span><span class="p">(</span><span class="s2">&quot;You have attempted to call `open` as a &quot;</span>
+                        <span class="s2">&quot;method, but it is actually a built-in function.&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;used_open_as_method&quot;</span><span class="p">,</span>
+                        <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Open Is a Function&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">elif</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">attr</span> <span class="o">==</span> <span class="s1">&#39;close&#39;</span><span class="p">:</span>
+                <span class="n">closed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a_call</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">called_open</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">num_filenames</span><span class="p">:</span>
+        <span class="n">explain</span><span class="p">(</span><span class="s2">&quot;You have not opened all the files you were supposed to.&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;unopened_files&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Unopened Files&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">called_open</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">num_filenames</span><span class="p">:</span>
+        <span class="n">explain</span><span class="p">(</span><span class="s2">&quot;You have opened more files than you were supposed to.&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;extra_open_files&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Extra Opened Files&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="n">withs</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;With&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">withs</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">closed</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">num_filenames</span><span class="p">:</span>
+        <span class="n">explain</span><span class="p">(</span><span class="s2">&quot;You have not closed all the files you were supposed to.&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;unclosed_files&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Unclosed Files&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">withs</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">closed</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">num_filenames</span><span class="p">:</span>
+        <span class="n">explain</span><span class="p">(</span><span class="s2">&quot;You have closed more files than you were supposed to.&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;extra_closed_files&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Extra Closed Files&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">if</span> <span class="n">actual_filenames</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">filenames</span><span class="p">:</span>
+            <span class="n">ensured</span> <span class="o">=</span> <span class="n">ensure_literal</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">ensured</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">ensured</span>
+    <span class="k">return</span> <span class="kc">False</span></div>
 </pre></div>
 
            </div>

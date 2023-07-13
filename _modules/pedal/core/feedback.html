@@ -139,7 +139,7 @@
 <span class="sd">            into the template IF the ``condition`` is met.</span>
 <span class="sd">        priority (str): An indication of how important this feedback is relative to other types</span>
 <span class="sd">            of feedback in the same category. Might be &quot;high/medium/low&quot;. Exactly how this</span>
-<span class="sd">            gets used is up to the resolver, but typicaly it helps break ties.</span>
+<span class="sd">            gets used is up to the resolver, but typically it helps break ties.</span>
 <span class="sd">        valence (int): Indicates whether this is negative, positive, or neutral feedback.</span>
 <span class="sd">            Either 1, -1, or 0.</span>
 
@@ -165,8 +165,7 @@
 <span class="sd">            default kinds of feedback, or perhaps feedback that is interesting for analysis but not pedagogically</span>
 <span class="sd">            helpful to give to the student. They will still contribute to overall score, but not to the correctness</span>
 <span class="sd">            of the submission.</span>
-<span class="sd">        unscored (bool): Whether or not this piece of feedback contributes to</span>
-<span class="sd">            the score/correctness.</span>
+<span class="sd">        unscored (bool): Whether this piece of feedback contributes to the score/correctness.</span>
 
 <span class="sd">        else_message (str): A string to render as a message when a</span>
 <span class="sd">            NEGATIVE valence feedback is NOT triggered, or a POSITIVE valence</span>
@@ -472,7 +471,7 @@
 <span class="sd">        for :py:class:`pedal.core.group.FeedbackGroup`, most other feedbacks</span>
 <span class="sd">        will just not care.</span>
 
-<span class="sd">        The ``active`` parameter controls whether or not the condition for the</span>
+<span class="sd">        The ``active`` parameter controls whether the condition for the</span>
 <span class="sd">        feedback was met. &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__xor__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>

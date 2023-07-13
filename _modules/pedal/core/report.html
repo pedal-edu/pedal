@@ -97,6 +97,7 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Report&#39;</span><span class="p">,</span> <span class="s1">&#39;MAIN_REPORT&#39;</span><span class="p">]</span>
+<span class="kn">import</span> <span class="nn">logging</span>
 
 <span class="kn">from</span> <span class="nn">pedal.core.errors</span> <span class="kn">import</span> <span class="n">PedalToolNotRegistered</span><span class="p">,</span> <span class="n">PedalToolAlreadyRegistered</span>
 <span class="kn">from</span> <span class="nn">pedal.core.feedback_category</span> <span class="kn">import</span> <span class="n">FeedbackCategory</span>
@@ -105,6 +106,8 @@
 <span class="c1"># TODO: Mechanism for checking whether a piece of feedback is in the report</span>
 <span class="kn">from</span> <span class="nn">pedal.core.formatting</span> <span class="kn">import</span> <span class="n">Formatter</span>
 <span class="kn">from</span> <span class="nn">pedal.core.tool</span> <span class="kn">import</span> <span class="n">ToolRegistration</span>
+
+<span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="Report"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.report.Report">[docs]</a><span class="k">class</span> <span class="nc">Report</span><span class="p">:</span>
@@ -169,6 +172,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resolves</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">overridden_feedbacks</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;New Pedal Report created.&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Report.clear"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.report.Report.clear">[docs]</a>    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>

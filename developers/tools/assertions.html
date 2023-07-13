@@ -79,6 +79,10 @@
 <li class="toctree-l4"><a class="reference internal" href="#pedal.assertions.static.ensure_function_call.condition"><code class="docutils literal notranslate"><span class="pre">ensure_function_call.condition()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.assertions.static.ensure_functions_return"><code class="docutils literal notranslate"><span class="pre">ensure_functions_return</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.assertions.static.ensure_functions_return.condition"><code class="docutils literal notranslate"><span class="pre">ensure_functions_return.condition()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#pedal.assertions.static.ensure_import"><code class="docutils literal notranslate"><span class="pre">ensure_import</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#pedal.assertions.static.ensure_import.condition"><code class="docutils literal notranslate"><span class="pre">ensure_import.condition()</span></code></a></li>
 </ul>
@@ -101,8 +105,15 @@
 <li class="toctree-l4"><a class="reference internal" href="#pedal.assertions.static.ensure_starting_code.condition"><code class="docutils literal notranslate"><span class="pre">ensure_starting_code.condition()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.assertions.static.files_not_handled_correctly"><code class="docutils literal notranslate"><span class="pre">files_not_handled_correctly()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pedal.assertions.static.function_prints"><code class="docutils literal notranslate"><span class="pre">function_prints()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pedal.assertions.static.has_import"><code class="docutils literal notranslate"><span class="pre">has_import()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.assertions.static.only_printing_variables"><code class="docutils literal notranslate"><span class="pre">only_printing_variables</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.assertions.static.only_printing_variables.condition"><code class="docutils literal notranslate"><span class="pre">only_printing_variables.condition()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.assertions.static.open_without_arguments"><code class="docutils literal notranslate"><span class="pre">open_without_arguments</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.assertions.static.prevent_advanced_iteration"><code class="docutils literal notranslate"><span class="pre">prevent_advanced_iteration()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pedal.assertions.static.prevent_ast"><code class="docutils literal notranslate"><span class="pre">prevent_ast</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#pedal.assertions.static.prevent_ast.condition"><code class="docutils literal notranslate"><span class="pre">prevent_ast.condition()</span></code></a></li>
 </ul>
@@ -132,6 +143,10 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#pedal.assertions.static.prevent_operator"><code class="docutils literal notranslate"><span class="pre">prevent_operator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.assertions.static.prevent_printing_functions"><code class="docutils literal notranslate"><span class="pre">prevent_printing_functions</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.assertions.static.prevent_printing_functions.condition"><code class="docutils literal notranslate"><span class="pre">prevent_printing_functions.condition()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#pedal.assertions.runtime.assertAlmostEqual"><code class="docutils literal notranslate"><span class="pre">assertAlmostEqual</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pedal.assertions.runtime.assertEqual"><code class="docutils literal notranslate"><span class="pre">assertEqual</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pedal.assertions.runtime.assertFalse"><code class="docutils literal notranslate"><span class="pre">assertFalse</span></code></a></li>
@@ -472,6 +487,32 @@ function. Defaults to <code class="docutils literal notranslate"><span class="pr
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="pedal.assertions.static.ensure_functions_return">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ensure_functions_return</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exceptions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/static.html#ensure_functions_return"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.assertions.static.ensure_functions_return" title="Permalink to this definition"></a></dt>
+<dd><p>Detects if the user has defined a function with a print statement inside.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>exceptions</strong> – A set of function names (or a single string) of functions to allow to print (e.g., <code class="xref py py-obj docutils literal notranslate"><span class="pre">'main'</span></code>).</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pedal.assertions.static.ensure_functions_return.condition">
+<span class="sig-name descname"><span class="pre">condition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/static.html#ensure_functions_return.condition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.assertions.static.ensure_functions_return.condition" title="Permalink to this definition"></a></dt>
+<dd><p>Detect if this feedback is present in the code.
+Defaults to true through the <a class="reference internal" href="../../teachers/tools/ffs.html#activate" title="activate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">activate</span></code></a> parameter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Whether this feedback’s condition was detected.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="pedal.assertions.static.ensure_import">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ensure_import</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">at_least</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/static.html#ensure_import"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.assertions.static.ensure_import" title="Permalink to this definition"></a></dt>
 <dd><p>Verify that the given <code class="docutils literal notranslate"><span class="pre">module</span></code> has been imported, by statically
@@ -590,6 +631,14 @@ number of times.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="pedal.assertions.static.files_not_handled_correctly">
+<span class="sig-name descname"><span class="pre">files_not_handled_correctly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">filenames</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">muted</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/static.html#files_not_handled_correctly"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.assertions.static.files_not_handled_correctly" title="Permalink to this definition"></a></dt>
+<dd><p>Statically detect if files have been opened and closed correctly.
+This is only useful in the case of very simplistic file handling.</p>
+<p>TODO: This could be vastly improved with line numbers and other information.</p>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="pedal.assertions.static.function_prints">
 <span class="sig-name descname"><span class="pre">function_prints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">function_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/static.html#function_prints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.assertions.static.function_prints" title="Permalink to this definition"></a></dt>
 <dd><p>Determine that the print function is called within this function, by
@@ -622,6 +671,32 @@ to search.</p></li>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a></p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pedal.assertions.static.only_printing_variables">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">only_printing_variables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/static.html#only_printing_variables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.assertions.static.only_printing_variables" title="Permalink to this definition"></a></dt>
+<dd><p>Determines whether the user is only printing variables, as opposed to
+literal values.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pedal.assertions.static.only_printing_variables.condition">
+<span class="sig-name descname"><span class="pre">condition</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/static.html#only_printing_variables.condition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.assertions.static.only_printing_variables.condition" title="Permalink to this definition"></a></dt>
+<dd><p>Uses find_all to detect matches, ignoring named values.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pedal.assertions.static.open_without_arguments">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">open_without_arguments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">justification=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fields=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_names=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message_template=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">else_message=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">else_message_template=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">priority=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valence=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">score=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">correct=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">muted=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unscored=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tool=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">version=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">author=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tags=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay_condition=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activate=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/static.html#open_without_arguments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.assertions.static.open_without_arguments" title="Permalink to this definition"></a></dt>
+<dd><p>Detects if the user has called the <a class="reference external" href="https://docs.python.org/3/library/functions.html#open" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">open</span></code></a> function without any arguments.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pedal.assertions.static.prevent_advanced_iteration">
+<span class="sig-name descname"><span class="pre">prevent_advanced_iteration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">allow_while</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_for</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/static.html#prevent_advanced_iteration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.assertions.static.prevent_advanced_iteration" title="Permalink to this definition"></a></dt>
+<dd><p>Prevents the student from using certain advanced iteration functions
+and constructs. Does not currently support blocking recursion.</p>
 </dd></dl>
 
 <dl class="py class">
@@ -771,6 +846,32 @@ function. Defaults to <code class="docutils literal notranslate"><span class="pr
 <dt class="sig sig-object py" id="pedal.assertions.static.prevent_operator">
 <span class="sig-name descname"><span class="pre">prevent_operator</span></span><a class="headerlink" href="#pedal.assertions.static.prevent_operator" title="Permalink to this definition"></a></dt>
 <dd><p>alias of <a class="reference internal" href="#pedal.assertions.static.prevent_operation" title="pedal.assertions.static.prevent_operation"><code class="xref py py-class docutils literal notranslate"><span class="pre">prevent_operation</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pedal.assertions.static.prevent_printing_functions">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">prevent_printing_functions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exceptions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/static.html#prevent_printing_functions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.assertions.static.prevent_printing_functions" title="Permalink to this definition"></a></dt>
+<dd><p>Detects if the user has defined a function with a print statement inside.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>exceptions</strong> – A set of function names (or a single string) of functions to allow to print (e.g., <code class="xref py py-obj docutils literal notranslate"><span class="pre">'main'</span></code>).</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pedal.assertions.static.prevent_printing_functions.condition">
+<span class="sig-name descname"><span class="pre">condition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/static.html#prevent_printing_functions.condition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.assertions.static.prevent_printing_functions.condition" title="Permalink to this definition"></a></dt>
+<dd><p>Detect if this feedback is present in the code.
+Defaults to true through the <a class="reference internal" href="../../teachers/tools/ffs.html#activate" title="activate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">activate</span></code></a> parameter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Whether this feedback’s condition was detected.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <span class="target" id="module-pedal.assertions.runtime"></span><p>Runtime assertions.</p>
