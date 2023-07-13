@@ -13,13 +13,13 @@ from pedal.assertions.classes import (missing_dataclass, dataclass_not_available
                                       wrong_fields_type, name_is_not_a_dataclass, missing_dataclass_annotation,
                                       unknown_field, wrong_field_order)
 from pedal.assertions.functions import *
-from pedal.cait.cait_api import parse_program
+from pedal.cait.cait_api import parse_program, find_match, find_matches
 from pedal.assertions.feedbacks import AssertionFeedback
 from pedal.cait.find_node import find_operation, find_function_calls, find_function_definition
-from pedal.core.feedback import CompositeFeedbackFunction
+from pedal.core.feedback import CompositeFeedbackFunction, Feedback, FeedbackResponse
 from pedal.core.location import Location
 from pedal.core.report import MAIN_REPORT
-from pedal.core.commands import compliment as core_compliment, give_partial
+from pedal.core.commands import compliment as core_compliment, give_partial, explain, gently
 from pedal.tifa.commands import tifa_type_check
 from pedal.types.normalize import normalize_type
 from pedal.types.new_types import is_subtype
@@ -699,3 +699,206 @@ class prevent_embedded_answer(AssertionFeedback):
         code = self.fields['code']
         ast = self.fields['root']
         return ast.find_match(code)
+
+
+class prevent_printing_functions(AssertionFeedback):
+    """
+    Detects if the user has defined a function with a print statement inside.
+
+    Args:
+        exceptions: A set of function names (or a single string) of functions to allow to print (e.g., `'main'`).
+    """
+    title = "Do Not Print in Function"
+    message_template = ("The function {name} is printing on line {location.line:line}."
+                        " However, that function is not supposed to print.")
+
+    def __init__(self, exceptions=None, root=None, **kwargs):
+        report = kwargs.get('report', MAIN_REPORT)
+        root = root or parse_program(report=report)
+        fields = {'root': root, 'exceptions': exceptions}
+        super().__init__(fields=fields, **kwargs)
+
+    def condition(self, *args, **kwargs):
+        exceptions = self.fields['exceptions']
+        if exceptions is None:
+            exceptions = set()
+        elif isinstance(exceptions, str):
+            exceptions = {exceptions}
+        root = self.fields['root']
+        defs = root.find_all("FunctionDef")
+        for a_def in defs:
+            name = a_def._name
+            if name in exceptions:
+                continue
+            for call in find_function_calls("print", root=a_def, report=self.report):
+                location = call.locate()
+                self.fields['name'] = name
+                self.update_location(location)
+                return True
+        return False
+
+
+class ensure_functions_return(AssertionFeedback):
+    """
+    Detects if the user has defined a function with a print statement inside.
+
+    Args:
+        exceptions: A set of function names (or a single string) of functions to allow to print (e.g., `'main'`).
+    """
+    title = "Must Return in Function"
+    message_template = ("The function {name} is not returning."
+                        " However, that function is supposed to have a return statement.")
+
+    def __init__(self, exceptions=None, root=None, **kwargs):
+        report = kwargs.get('report', MAIN_REPORT)
+        root = root or parse_program(report=report)
+        fields = {'root': root, 'exceptions': exceptions}
+        super().__init__(fields=fields, **kwargs)
+
+    def condition(self, *args, **kwargs):
+        exceptions = self.fields['exceptions']
+        if exceptions is None:
+            exceptions = set()
+        elif isinstance(exceptions, str):
+            exceptions = {exceptions}
+        root = self.fields['root']
+        defs = root.find_all("FunctionDef")
+        for a_def in defs:
+            name = a_def._name
+            if name in exceptions:
+                continue
+            if not a_def.find_match("return"):
+                self.fields['name'] = name
+                return True
+        return False
+
+
+class only_printing_variables(AssertionFeedback):
+    """
+    Determines whether the user is only printing variables, as opposed to
+    literal values.
+
+    """
+    title="Print Variables, Not Values"
+    message_template=("You printed something other than a variable on"
+                      " line {location.line:line}. Although that is not a"
+                      " normally an issue, we want you to practice printing"
+                      " variables in this problem.")
+
+    def __init__(self, root=None, **kwargs):
+        fields = kwargs.setdefault('fields', {})
+        report = kwargs.setdefault('report', MAIN_REPORT)
+        fields['root'] = root or parse_program(report=report)
+        super().__init__(**kwargs)
+
+    def condition(self):
+        """ Uses find_all to detect matches, ignoring named values. """
+        print_calls = find_function_calls('print', root=self.fields['root'],
+                                          report=self.report)
+        for print_call in print_calls:
+            for arg in print_call.args:
+                if arg.ast_name != "Name":
+                    self.update_location(print_call.lineno)
+                    return True
+                elif arg.id in ("True", "False", "None"):
+                    self.update_location(print_call.lineno)
+                    return True
+        return False
+
+
+ADVANCED_ITERATION_FUNCTIONS = [
+    "sum", "map", "filter", "reduce",
+    "len", "max", "min", "max",
+    "sorted", "all", "any",
+    "getattr", "setattr",
+    "eval", "exec", "iter", "next"
+]
+
+
+@CompositeFeedbackFunction()
+def prevent_advanced_iteration(allow_while=False, allow_for=False,
+                               allow_function=None, **kwargs):
+    """ Prevents the student from using certain advanced iteration functions
+    and constructs. Does not currently support blocking recursion. """
+    if isinstance(allow_function, str):
+        allow_function = {allow_function}
+    elif allow_function is None:
+        allow_function = set()
+    if not allow_while:
+        prevent_ast("While")
+    if not allow_for:
+        prevent_ast("For")
+    for function_name in ADVANCED_ITERATION_FUNCTIONS:
+        if function_name not in allow_function:
+            prevent_function_call(function_name, **kwargs)
+
+
+class open_without_arguments(FeedbackResponse):
+    """
+    Detects if the user has called the `open` function without any arguments.
+    """
+    muted = False
+    title = "Opened Without Arguments"
+    message_template = ("You have called the `open` function "
+                        "without any arguments. It needs a filename.")
+    category = Feedback.CATEGORIES.INSTRUCTOR
+
+
+@CompositeFeedbackFunction(open_without_arguments, ensure_literal)
+def files_not_handled_correctly(*filenames, muted=False):
+    """
+    Statically detect if files have been opened and closed correctly.
+    This is only useful in the case of very simplistic file handling.
+
+    TODO: This could be vastly improved with line numbers and other information.
+    """
+    if filenames and isinstance(filenames[0], int):
+        num_filenames = filenames[0]
+        actual_filenames = False
+    else:
+        num_filenames = len(filenames)
+        actual_filenames = True
+    ast = parse_program()
+    calls = ast.find_all("Call")
+    called_open = []
+    closed = []
+    for a_call in calls:
+        if a_call.func.ast_name == 'Name':
+            if a_call.func.id == 'open':
+                if not a_call.args:
+                    open_without_arguments(muted)
+                    return True
+                called_open.append(a_call)
+            elif a_call.func.id == 'close':
+                explain("You have attempted to call `close` as a "
+                        "function, but it is actually a method of the "
+                        "file object.", label="used_close_as_function", title="Close Is a Method", priority='syntax')
+                return True
+        elif a_call.func.ast_name == 'Attribute':
+            if a_call.func.attr == 'open':
+                # TODO: Make these feedback functions
+                explain("You have attempted to call `open` as a "
+                        "method, but it is actually a built-in function.", label="used_open_as_method",
+                        title="Open Is a Function")
+                return True
+            elif a_call.func.attr == 'close':
+                closed.append(a_call)
+    if len(called_open) < num_filenames:
+        explain("You have not opened all the files you were supposed to.", label="unopened_files", title="Unopened Files")
+        return True
+    elif len(called_open) > num_filenames:
+        explain("You have opened more files than you were supposed to.", label="extra_open_files", title="Extra Opened Files")
+        return True
+    withs = ast.find_all("With")
+    if len(withs) + len(closed) < num_filenames:
+        explain("You have not closed all the files you were supposed to.", label="unclosed_files", title="Unclosed Files")
+        return True
+    elif len(withs) + len(closed) > num_filenames:
+        explain("You have closed more files than you were supposed to.", label="extra_closed_files", title="Extra Closed Files")
+        return True
+    if actual_filenames:
+        for filename in filenames:
+            ensured = ensure_literal(filename)
+            if ensured:
+                return ensured
+    return False

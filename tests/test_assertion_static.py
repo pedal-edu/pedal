@@ -144,3 +144,22 @@ class TestAssertions(ExecutionTestCase):
         """)) as e:
             self.assertFalse(ensure_function('sum_high', parameters=[list[int]], returns='int'))
         self.assertFeedback(e, SUCCESS_MESSAGE)
+
+    def test_prevent_printing_functions(self):
+        with Execution(dedent("""def x():\n print('Hello')\nx()""")) as e:
+            self.assertTrue(prevent_printing_functions())
+        self.assertFeedback(e, """Do Not Print in Function
+The function x is printing on line 2. However, that function is not supposed to print.""")
+
+        with Execution(dedent("""def x():\n return 'Hello' \nx()""")) as e:
+            self.assertFalse(prevent_printing_functions())
+        self.assertFeedback(e, "Complete\nGreat work!")
+
+        with Execution(dedent("""def x():\n return 'Hello' \ndef main():\n  print(x())\nmain()""")) as e:
+            self.assertFalse(prevent_printing_functions('main'))
+        self.assertFeedback(e, "Complete\nGreat work!")
+
+        with Execution(dedent("""def x():\n return 'Hello' \ndef main():\n  print(x())\nmain()""")) as e:
+            self.assertTrue(prevent_printing_functions('x'))
+        self.assertFeedback(e, """Do Not Print in Function
+The function main is printing on line 4. However, that function is not supposed to print.""")
