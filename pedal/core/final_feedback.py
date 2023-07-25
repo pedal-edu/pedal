@@ -69,6 +69,7 @@ class FinalFeedback:
         self.used = []
 
     def merge(self, feedback):
+        self.considered.append(feedback)
         category = feedback.category.lower()
         if category in self.suppressions:
             if True in self.suppressions[category]:
