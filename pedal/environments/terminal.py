@@ -44,25 +44,25 @@ class TerminalFormatter(Formatter):
 
 
 @make_resolver
-def resolve_on_terminal(report=MAIN_REPORT, file=sys.stdout):
+def resolve_on_terminal(report=MAIN_REPORT):
     # print("\033[47m", "-" * 35, "FEEDBACK", "-" * 35, "\033[0m", file=file)
     feedback = resolve(report)
-    print("", file=file)
-    print(f"{REVERSE}FEEDBACK{RESET} Based on your code, here are some tips and recommendations:\n", file=file)
+    print("")
+    print(f"{REVERSE}FEEDBACK{RESET} Based on your code, here are some tips and recommendations:\n")
     if feedback.correct:
-        print(f"{BOLD_GREEN}{CHECKMARK}{RESET}️  Your code ran successfully.\n", file=file)
-        print(f"{feedback.message}", file=file)
+        print(f"{BOLD_GREEN}{CHECKMARK}{RESET}️  Your code ran successfully.\n")
+        print(f"{feedback.message}")
     else:
-        print(f"{BOLD_RED}{CROSSMARK}{RESET}  {feedback.title}\n", file=file)
-        print(f"{feedback.message}", file=file)
-    print("", file=file)
+        print(f"{BOLD_RED}{CROSSMARK}{RESET}  {feedback.title}\n")
+        print(f"{feedback.message}")
+    print("")
 
     # if feedback.category not in (FeedbackCategory.SYNTAX, FeedbackCategory.RUNTIME):
     # Print out the first runtime/syntax error that we encounter
     for python_error in get_python_errors(report):
         if python_error:
-            print(f"{REVERSE}TERMINAL OUTPUT{RESET} For reference, here is the original Python error:", file=file)
-            print(to_native_message(python_error), file=file)
+            print(f"{REVERSE}TERMINAL OUTPUT{RESET} For reference, here is the original Python error:")
+            print(to_native_message(python_error))
         break
     return feedback
 

@@ -27,7 +27,7 @@ class TestEnvironmentTerminal(ExecutionTestCase):
     def test_correct(self):
         with io.StringIO() as f, redirect_stdout(f):
             terminal = setup_environment(main_code="""1+2""")
-            terminal.resolve(file=f)
+            terminal.resolve()
             clear_report()
             self.checkFeedback(f.getvalue(), '''
 [;7mYOUR CODE[0;0m We ran your code. Here's the output:
@@ -43,7 +43,7 @@ Great work! Based on your code submitted, there are no other recommendations ava
     def test_syntax_error(self):
         with io.StringIO() as f, redirect_stdout(f):
             terminal = setup_environment(main_code="""1 1 2 3""")
-            terminal.resolve(file=f)
+            terminal.resolve()
             clear_report()
             self.checkFeedback(f.getvalue(), '''
 [;7mYOUR CODE[0;0m We ran your code. Here's the output:
@@ -67,7 +67,7 @@ SyntaxError: Invalid syntax.
     def test_tifa_feedback(self):
         with io.StringIO() as f, redirect_stdout(f):
             terminal = setup_environment(main_code="""1+''""")
-            terminal.resolve(file=f)
+            terminal.resolve()
             clear_report()
             self.checkFeedback(f.getvalue(), '''
 [;7mYOUR CODE[0;0m We ran your code. Here's the output:
@@ -90,7 +90,7 @@ TypeError: Unsupported operand type(s) for +: 'int' and 'str'
     def test_runtime_feedback(self):
         with io.StringIO() as f, redirect_stdout(f):
             terminal = setup_environment(main_code="""import json\njson.loads('1')+''""")
-            terminal.resolve(file=f)
+            terminal.resolve()
             clear_report()
             self.checkFeedback(f.getvalue(), '''
 [;7mYOUR CODE[0;0m We ran your code. Here's the output:
@@ -122,7 +122,7 @@ TypeError: Unsupported operand type(s) for +: 'int' and 'str'
         with io.StringIO() as f, redirect_stdout(f):
             terminal = setup_environment(main_code="""import json\njson.loads('1')+''""")
             explain("You should not be using the JSON library at all.")
-            terminal.resolve(file=f)
+            terminal.resolve()
             clear_report()
             self.checkFeedback(f.getvalue(), '''
 [;7mYOUR CODE[0;0m We ran your code. Here's the output:
@@ -147,7 +147,7 @@ TypeError: Unsupported operand type(s) for +: 'int' and 'str'
         with io.StringIO() as f, redirect_stdout(f):
             terminal = setup_environment(main_code="""def x(): return 1+''\nx""")
             assert_equal(call('x'), 5)
-            terminal.resolve(file=f)
+            terminal.resolve()
             clear_report()
             self.checkFeedback(f.getvalue(), '''
 [;7mYOUR CODE[0;0m We ran your code. Here's the output:
