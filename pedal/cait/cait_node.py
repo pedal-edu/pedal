@@ -7,6 +7,7 @@ from types import MethodType
 
 from pedal.core.location import Location
 from pedal.core.report import MAIN_REPORT
+from pedal.utilities.system import IS_AT_LEAST_PYTHON_38
 
 
 class CaitNode:
@@ -480,7 +481,7 @@ class CaitNode:
             node_type_list = node_type
 
         for node_t in node_type_list:
-            if node_t in ('Num', 'Str', 'Bool'):
+            if IS_AT_LEAST_PYTHON_38 and node_t in ('Num', 'Str', 'Bool'):
                 func_name = 'visit_Constant'
                 func_ref = self._handle_visit_constant(node_t, main_visit)
             else:
