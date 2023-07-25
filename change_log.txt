@@ -1,3 +1,9 @@
+Version 2.5.7 (7/25/2023)
+-------------------------
+* Considered feedback is now collected in the Final Feedback object's `considered` field
+* Changed terminal to no longer allow output to a file
+* (Hopefully) fix Cait's find_all function for visit_Num in 3.7
+
 Version 2.5.6 (7/13/2023)
 -------------------------
 * Ported over `curriculum-sneks` good stuff: ensure_function_returns, prevent_function_prints, all the bakery test checks, etc.
