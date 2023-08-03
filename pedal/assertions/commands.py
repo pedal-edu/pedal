@@ -7,6 +7,7 @@ from pedal.sandbox.commands import call, clear_student_data, run, get_sandbox, C
 from pedal.assertions.static import *
 from pedal.assertions.runtime import *
 from pedal.assertions.runtime import _FIELDS
+from pedal.assertions.positive import close_output, correct_output
 
 try:
     from dataclasses import fields
