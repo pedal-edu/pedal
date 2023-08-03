@@ -1,3 +1,7 @@
+Version 2.5.8 (8/02/2023)
+-------------------------
+* Correctly importing close_output and correct_output from assertions.positive
+
 Version 2.5.7 (7/25/2023)
 -------------------------
 * Considered feedback is now collected in the Final Feedback object's `considered` field
