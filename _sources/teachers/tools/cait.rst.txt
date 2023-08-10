@@ -84,11 +84,11 @@ Subtree matching
 
   match = find_match("for _item_ in _list_:\n"
                      "    __exp__")
-  match['__exp__'].find_match("# whatever submatch")
+  match['__exp__'].parent.find_match("# whatever submatch")
 
 Normally CAIT will match to direct siblings. By using an expression, you can
 instead search everything contained in the body of the for loop, or other ast
-child nodes (see tutorial)
+child nodes (see tutorial). Note that __exp__ here will match to the first line in the body. To search the ENTIRE body, you will need to get the parent of __exp__ like in the example above
 
 Finding Data types
 ^^^^^^^^^^^^^^^^^^

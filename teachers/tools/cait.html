@@ -184,12 +184,12 @@ an ast sibling (so same indentation level as definition</p>
 <h2>Subtree matching<a class="headerlink" href="#subtree-matching" title="Permalink to this heading"></a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">match</span> <span class="o">=</span> <span class="n">find_match</span><span class="p">(</span><span class="s2">&quot;for _item_ in _list_:</span><span class="se">\n</span><span class="s2">&quot;</span>
                    <span class="s2">&quot;    __exp__&quot;</span><span class="p">)</span>
-<span class="k">match</span><span class="p">[</span><span class="s1">&#39;__exp__&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">find_match</span><span class="p">(</span><span class="s2">&quot;# whatever submatch&quot;</span><span class="p">)</span>
+<span class="k">match</span><span class="p">[</span><span class="s1">&#39;__exp__&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">find_match</span><span class="p">(</span><span class="s2">&quot;# whatever submatch&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Normally CAIT will match to direct siblings. By using an expression, you can
 instead search everything contained in the body of the for loop, or other ast
-child nodes (see tutorial)</p>
+child nodes (see tutorial). Note that __exp__ here will match to the first line in the body. To search the ENTIRE body, you will need to get the parent of __exp__ like in the example above</p>
 </section>
 <section id="finding-data-types">
 <h2>Finding Data types<a class="headerlink" href="#finding-data-types" title="Permalink to this heading"></a></h2>
