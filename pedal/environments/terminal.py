@@ -61,14 +61,18 @@ def resolve_on_terminal(report=MAIN_REPORT):
     # Print out the first runtime/syntax error that we encounter
     for python_error in get_python_errors(report):
         if python_error:
-            print(f"{REVERSE}TERMINAL OUTPUT{RESET} For reference, here is the original Python error:")
-            print(to_native_message(python_error))
+            python_error_native_message = to_native_message(python_error)
+            if python_error_native_message:
+                print(f"{REVERSE}TERMINAL OUTPUT{RESET} For reference, here is the original Python error:")
+                print(python_error_native_message)
         break
     return feedback
 
 
 def to_native_message(error):
-    return f"\n{error.fields['traceback_message']}\n{error.fields['exception_name']}: {error.fields['exception_message'].strip()}"
+    if not any(field in error.fields for field in ['traceback_message', 'exception_name', 'exception_message']):
+        return ""
+    return f"\n{error.fields.get('traceback_message', '')}\n{error.fields.get('exception_name', '')}: {error.fields.get('exception_message', '').strip()}"
 
 
 def enhance_native_errors():

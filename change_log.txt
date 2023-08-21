@@ -1,3 +1,7 @@
+Version 2.5.9 (8/21/2023)
+-------------------------
+* Fix error where a blank file would break the terminal environment.
+
 Version 2.5.8 (8/02/2023)
 -------------------------
 * Correctly importing close_output and correct_output from assertions.positive

@@ -40,6 +40,22 @@ class TestEnvironmentTerminal(ExecutionTestCase):
 Great work! Based on your code submitted, there are no other recommendations available. You can proceed to the next page by using the “Next” button in your lesson.
 ''')
 
+    def test_empty_source(self):
+        with io.StringIO() as f, redirect_stdout(f):
+            terminal = setup_environment(main_code="")
+            terminal.resolve()
+            clear_report()
+            self.checkFeedback(f.getvalue(), '''
+[;7mYOUR CODE[0;0m We ran your code. Here's the output:
+
+
+[;7mFEEDBACK[0;0m Based on your code, here are some tips and recommendations:
+
+[1;91m✗[0;0m  No Source Code
+
+Source code file is blank.
+''')
+
     def test_syntax_error(self):
         with io.StringIO() as f, redirect_stdout(f):
             terminal = setup_environment(main_code="""1 1 2 3""")
