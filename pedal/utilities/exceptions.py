@@ -6,7 +6,7 @@ import traceback
 import os
 import sys
 
-from pedal.utilities.system import IS_AT_LEAST_PYTHON_310, IS_AT_LEAST_PYTHON_311
+from pedal.utilities.system import IS_AT_LEAST_PYTHON_310, IS_AT_LEAST_PYTHON_311, IS_SKULPT
 from pedal.core.location import Location
 
 BuiltinKeyError = KeyError
@@ -158,13 +158,13 @@ class ExpandedTraceback:
         # https://docs.python.org/3/library/traceback.html#traceback.print_exception
         if isinstance(self.exception, SyntaxError):
             offset = self.exception.offset
-            if IS_AT_LEAST_PYTHON_310:
+            if IS_AT_LEAST_PYTHON_310 and not IS_SKULPT:
                 end_lineno = self.exception.end_lineno
                 end_offset = offset if self.exception.end_offset not in {None, 0} else offset
                 end_offset = offset + 1 if offset == end_offset or end_offset == -1 else end_offset
             else:
                 end_lineno = self.exception.lineno
-                end_offset = offset + 1
+                end_offset = 1 + offset
             fake_frame = FakeFrame("<module>", self.exception.filename,
                                    self.exception.lineno, None, offset-1, end_lineno, end_offset-1)
             self._fix_frame_line(fake_frame)

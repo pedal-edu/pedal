@@ -505,6 +505,25 @@ class assert_not_is_instance(RuntimeAssertionFeedback):
         return isinstance(obj.value, cls.value)
 
 
+def type_to_pedal_type(expected_type):
+    evaluated_expected_type = evaluate(expected_type) if isinstance(expected_type, str) else expected_type
+    expected_pedal_type = normalize_type(evaluated_expected_type, evaluate)
+    if not isinstance(expected_pedal_type, Exception):
+        expected_pedal_type = expected_pedal_type.as_type()
+        expected_pedal_type_name = expected_pedal_type.singular_name
+    else:
+        expected_pedal_type_name = ""
+    return expected_pedal_type, expected_pedal_type_name
+
+
+def value_to_pedal_type(value):
+    if isinstance(unwrap_value(value), Exception):
+        value_pedal_type = "An error"
+    else:
+        value_pedal_type = get_pedal_type_from_value(unwrap_value(value), evaluate)
+    return value_pedal_type
+
+
 class _compare_type(RuntimeAssertionFeedback):
     """
     TODO: Failing for assert_type({"test":1}, dict)
@@ -512,20 +531,11 @@ class _compare_type(RuntimeAssertionFeedback):
 
     def __init__(self, value, expected_type, **kwargs):
         fields = kwargs.setdefault('fields', {})
-        if isinstance(unwrap_value(value), Exception):
-            value_pedal_type = "An error"
-        else:
-            value_pedal_type = get_pedal_type_from_value(unwrap_value(value), evaluate)
-        evaluated_expected_type = evaluate(expected_type) if isinstance(expected_type, str) else expected_type
-        expected_pedal_type = normalize_type(evaluated_expected_type, evaluate)
-        if not isinstance(expected_pedal_type, Exception):
-            expected_pedal_type = expected_pedal_type.as_type()
-            expected_pedal_type_name = expected_pedal_type.singular_name
-        else:
-            expected_pedal_type_name = ""
+        value_pedal_type = value_to_pedal_type(value)
         singular_name = share_sandbox_context(value_pedal_type if
                                               isinstance(value_pedal_type, str) else
                                               value_pedal_type.singular_name, value)
+        expected_pedal_type, expected_pedal_type_name = type_to_pedal_type(expected_type)
         fields['value_raw'] = value
         fields['value_type'] = value_pedal_type
         fields['value_type_name'] = singular_name

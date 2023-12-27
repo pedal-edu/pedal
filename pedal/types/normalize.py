@@ -25,7 +25,7 @@ from pedal.types.new_types import (Type, AnyType, ImpossibleType, NumType, BoolT
                                    FunctionType, TYPE_STRINGS,
                                    LiteralStr, LiteralInt, LiteralFloat, LiteralBool, ClassType, InstanceType,
                                    widest_type, LiteralValue, TypeUnion, PEDAL_TYPE_NAMES, specify_subtype)
-from pedal.utilities.system import IS_AT_LEAST_PYTHON_39
+from pedal.utilities.system import IS_AT_LEAST_PYTHON_39, IS_SKULPT
 
 import types as dynamic_python_types
 
@@ -308,7 +308,7 @@ def get_pedal_type_from_ast(value: ast.AST, evaluate_name=None) -> Type:
     # Support new style subscripts (e.g., ``list[int]``)
     elif ((IS_AT_LEAST_PYTHON_39 and isinstance(value, ast.Subscript)) or
           isinstance(value, ast.Subscript) and isinstance(value.slice, ast.Index)):
-        if IS_AT_LEAST_PYTHON_39:
+        if IS_AT_LEAST_PYTHON_39 and not IS_SKULPT:
             slice = value.slice
         else:
             slice = value.slice.value

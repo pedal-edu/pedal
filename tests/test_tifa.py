@@ -4,6 +4,7 @@ import os
 import sys
 from textwrap import dedent
 from pprint import pprint
+from dataclasses import dataclass
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import pedal.tifa

@@ -5,7 +5,7 @@ Helper functions for traversing through the code structure.
 from pedal.cait import parse_program
 from pedal.core.report import MAIN_REPORT
 from pedal.utilities.operators import COMPARE_OP_NAMES, BOOL_OP_NAMES, BIN_OP_NAMES, UNARY_OP_NAMES
-from pedal.utilities.system import IS_AT_LEAST_PYTHON_38
+from pedal.utilities.system import IS_AT_LEAST_PYTHON_38, IS_SKULPT
 
 
 def is_top_level(ast_node, report=MAIN_REPORT) -> bool:
@@ -138,7 +138,7 @@ def find_function_definition(name, root=None, report=MAIN_REPORT):
 
 
 def get_slice_index_value(node):
-    if IS_AT_LEAST_PYTHON_38:
+    if IS_AT_LEAST_PYTHON_38 and not IS_SKULPT:
         return node.slice
     else:
         return node.slice.value

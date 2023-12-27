@@ -555,6 +555,8 @@ class ListType(ElementContainerType):
                 tifa.append_variable(callee.name, callee.type, location)
         return NoneType()
 
+    # TODO: extend function!
+
 
 class GeneratorType(ElementContainerType):
     name = "Generator"

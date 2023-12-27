@@ -129,8 +129,8 @@ class ensure_function_call(EnsureAssertionFeedback):
 
 class prevent_operation(PreventAssertionFeedback):
     """
-    Determines if the given operator `op_name` is not used anywhere, returning
-    the node of it if it is. Otherwise, returns `None`. You can specify the
+    Determines if the given operator `op_name` is not used anywhere.
+    Otherwise, returns `None`. You can specify the
     operator as a string like `"+"` or `"<<"`. Supports all comparison,
     boolean, binary, and unary operators.
 
@@ -815,7 +815,7 @@ ADVANCED_ITERATION_FUNCTIONS = [
 ]
 
 
-@CompositeFeedbackFunction()
+@CompositeFeedbackFunction(prevent_ast, prevent_function_call)
 def prevent_advanced_iteration(allow_while=False, allow_for=False,
                                allow_function=None, **kwargs):
     """ Prevents the student from using certain advanced iteration functions

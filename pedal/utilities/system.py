@@ -11,3 +11,4 @@ IS_AT_LEAST_PYTHON_38 = sys.version_info[:2] >= (3, 8)
 IS_AT_LEAST_PYTHON_39 = sys.version_info[:2] >= (3, 9)
 IS_AT_LEAST_PYTHON_310 = sys.version_info[:2] >= (3, 10)
 IS_AT_LEAST_PYTHON_311 = sys.version_info[:2] >= (3, 11)
+IS_SKULPT = sys.platform == 'skulpt'

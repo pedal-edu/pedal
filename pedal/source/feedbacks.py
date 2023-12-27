@@ -8,7 +8,6 @@ from pedal.core.location import Location
 from pedal.core.report import MAIN_REPORT
 from pedal.utilities.exceptions import ExpandedTraceback, get_exception_name
 from pedal.source.constants import TOOL_NAME
-from pedal.utilities.system import IS_AT_LEAST_PYTHON_310
 from pedal.utilities.text import add_indefinite_article
 from pedal.core.formatting import wrap_fields
 

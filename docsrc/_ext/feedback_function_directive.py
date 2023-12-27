@@ -42,10 +42,11 @@ class FeedbackFunctionDirective(Directive):
             item = nodes.list_item()
             lst += item
             item += nodes.emphasis(text="Muted by default")
-        item = nodes.list_item()
-        lst += item
-        item += nodes.strong(text="Justification: ")
-        item += nodes.inline(text=justification)
+        if justification:
+            item = nodes.list_item()
+            lst += item
+            item += nodes.strong(text="Justification: ")
+            item += nodes.inline(text=justification)
         item = nodes.list_item()
         lst += item
         item += nodes.strong(text="Response: ")

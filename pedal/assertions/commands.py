@@ -8,6 +8,7 @@ from pedal.assertions.static import *
 from pedal.assertions.runtime import *
 from pedal.assertions.runtime import _FIELDS
 from pedal.assertions.positive import close_output, correct_output
+from pedal.types.new_types import is_subtype
 
 try:
     from dataclasses import fields
@@ -245,34 +246,56 @@ def get_success_passed_failed_total_reason(student):
     return True, student_tests.successes, student_tests.failures, student_tests.tests, ''
 
 
+def check_type_signature(function_name, function, type_signature, type_failures):
+    if type_signature is None:
+        return function
+
+    def check_types(*args, **kwargs):
+        if len(type_signature)-1 != len(args):
+            type_failures.append(TypeError(f"Expected {len(type_signature)-1} arguments, but got {len(args)}"))
+        for i, (arg, expected_type) in enumerate(zip(args, type_signature[:-1])):
+            expected_type, _ = type_to_pedal_type(expected_type)
+            arg = value_to_pedal_type(arg)
+            if not is_subtype(arg, expected_type):
+                type_failures.append(f"Argument {i} should be {expected_type}, but got {type(arg)}")
+        result = function(*args, **kwargs)
+        expected_type, _ = type_to_pedal_type(type_signature[-1])
+        result_type = value_to_pedal_type(result)
+        if not is_subtype(result_type, expected_type):
+            type_failures.append(f"Expected return type of {expected_type}, but got {result_type}")
+        return result
+
+    return check_types
+
+
 def wheat_chaff_game(function_name, wheats, chaffs,
-                     else_message=None, score=None, partial_credit=True, **kwargs):
+                     else_message=None, score=None, partial_credit=True, type_signature=None,
+                     **kwargs):
     report = kwargs.get('report', MAIN_REPORT)
     each_score = partial_credit_logic([0] * (len(wheats) + len(chaffs)), score, partial_credit)
-    plusses, minuses = [], []
-    wheat_score, chaff_score = {}, {}
+    type_failures = []
     with wheat_chaff_game_class(function_name, wheats, chaffs, **kwargs) as group_result:
         sandbox = get_sandbox(report)
         last = 0
-        for i, (name, wheat) in enumerate(wheats.items()):
-            clear_student_data()
-            student = get_student_data(report)
-            student[function_name] = wheat
-            result = run(report=report, before='from bakery import assert_equal\nassert_equal.student_tests.reset()')
-            success, passed, failed, total, reason = get_success_passed_failed_total_reason(result)
-            group_result.wheat_outcome(name, not sandbox.exception and not failed and success and passed)
-            if 'assert_equal' in student:
-                student['assert_equal'].student_tests.reset()
-            last = i
-        for i, (name, chaff) in enumerate(chaffs.items(), start=last):
-            clear_student_data()
-            student = get_student_data(report)
-            student[function_name] = chaff
-            result = run(report=report, before='from bakery import assert_equal\nassert_equal.student_tests.reset()')
-            success, passed, failed, total, reason = get_success_passed_failed_total_reason(result)
-            group_result.chaff_outcome(name, sandbox.exception or failed or not success)
-            if 'assert_equal' in student:
-                student['assert_equal'].student_tests.reset()
+        for kind, iterator in [("wheat", wheats.items()), ("chaff", chaffs.items())]:
+            for i, (name, wheat) in enumerate(iterator, start=last):
+                clear_student_data()
+                student = get_student_data(report)
+                student[function_name] = check_type_signature(function_name, wheat, type_signature, type_failures)
+                result = run(report=report, before='from bakery import assert_equal\nassert_equal.student_tests.reset()')
+                success, passed, failed, total, reason = get_success_passed_failed_total_reason(result)
+                if kind == 'wheat':
+                    group_result.wheat_outcome(name, not sandbox.exception and not failed and success and passed)
+                else:
+                    group_result.chaff_outcome(name, sandbox.exception or failed or not success)
+                if 'assert_equal' in student:
+                    student['assert_equal'].student_tests.reset()
+                last = i
+
+    if type_failures:
+        return gently(f"""I ran your test cases against some of my own implementations of {function_name}.
+At least one of your tests had the wrong parameter or return type.
+Make sure that all of your tests have valid types.""", label='wheat_chaff_game_types', title='Invalid Type for Test', **kwargs)
     if partial_credit is False:
         group_result.score = score
     else:

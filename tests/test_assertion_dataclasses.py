@@ -4,6 +4,7 @@ Tests related to checking function definitions
 
 import unittest
 from dataclasses import dataclass
+from textwrap import dedent
 
 from pedal import unit_test, block_function
 from pedal.assertions.static import *
@@ -96,6 +97,93 @@ print(x)""") as e:
             # self.assertFalse(assert_dataclass_fields())
         self.assertFeedback(e, """Incorrect Arity
 The constructor function Dog was given the wrong number of arguments. You should have had 2 arguments, but instead you had 1 arguments.""")
+
+    def test_weird_forecast_issue(self):
+        @dataclass
+        class WeatherOptions:
+            raining: bool
+            cloudy: bool
+            snowing: bool
+
+        @dataclass
+        class Measurement:
+            amount: int
+            automatic: bool
+
+        @dataclass
+        class Report:
+            temperature: int
+            rainfall: list[Measurement]
+            weather: WeatherOptions
+
+        @dataclass
+        class Forecast:
+            when: str
+            where: str
+            reports: list[Report]
+
+        CLASSES = [Forecast, Report, Measurement, WeatherOptions]
+        NAMES = ["Forecast", "Report", "Measurement", "WeatherOptions"]
+        main_program = dedent("""from dataclasses import dataclass
+from bakery import assert_equal
+
+@dataclass
+class Measurement:
+    amount: int
+    automatic: bool
+
+@dataclass
+class WeatherOptions:
+    raining:bool
+    cloudy: bool
+    snowing: bool
+
+@dataclass
+class Report:
+    temperature: int
+    rainfall: list[Measurement]
+    weather: WeatherOptions
+
+@dataclass
+class Forecast:
+    when: str
+    where: str
+    reports: list[Report]
+
+def total_rainfall(forecasts: list[Forecast]) -> int:
+    total = 0
+    for forecast in forecasts:
+        for report in forecast.reports:
+            for rain in report.rainfall:
+                total = total + rain.amount
+    return total
+
+
+
+List1 = [
+    Forecast("Tuesday", "Dover", [
+        Report(20,
+               [Measurement(30, True)], 
+               WeatherOptions(True, True, False))
+    ])
+]
+List2 = [
+    Forecast("Wednesday", "Newark", [
+        Report(30,
+               [Measurement(40, True), Measurement(25, True)],
+               WeatherOptions(True, True, False))
+    ])
+]
+assert_equal(total_rainfall(List1), 30)
+assert_equal(total_rainfall(List2), 65)""")
+        with Execution(main_program):
+            for name, dc in zip(NAMES, CLASSES):
+                self.assertFalse(ensure_dataclass(dc, priority='instructor'))
+                self.assertFalse(assert_is_instance(evaluate(name), type))
+                #
+            # self.assertFalse(assert_dataclass_fields())
+        #self.assertFeedback(e, """Incorrect Arity
+        #The constructor function Dog was given the wrong number of arguments. You should have had 2 arguments, but instead you had 1 arguments.""")
 
 if __name__ == '__main__':
     unittest.main(buffer=False)

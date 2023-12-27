@@ -101,5 +101,20 @@ Here are the names for the good programs that incorrectly failed on your test ca
 Here are the names for the bad programs that incorrectly passed your tests:
     bad""", final.message.rstrip())
 
+    def test_wheatchaff_game_types_wrong(self):
+        clear_report()
+        set_source("""
+from bakery import assert_equal
+
+assert_equal(divide(1, "1"), "0%")
+        """)
+        game = wheat_chaff_game('divide', {'correct': correct}, {'bad': really_bad},
+                                type_signature=(int, int, str))
+        self.assertTrue(game)
+        final = simple.resolve()
+        self.assertEqual("""I ran your test cases against some of my own implementations of divide.
+At least one of your tests had the wrong parameter or return type.
+Make sure that all of your tests have valid types.""", final.message.rstrip())
+
 if __name__ == '__main__':
     unittest.main(buffer=False)
