@@ -67,8 +67,37 @@
 <li class="toctree-l3"><a class="reference internal" href="#student"><code class="docutils literal notranslate"><span class="pre">student</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#call"><code class="docutils literal notranslate"><span class="pre">call()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#run"><code class="docutils literal notranslate"><span class="pre">run()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#evaluate"><code class="docutils literal notranslate"><span class="pre">evaluate()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#clear_input"><code class="docutils literal notranslate"><span class="pre">clear_input()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#queue_input"><code class="docutils literal notranslate"><span class="pre">queue_input()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#set_input"><code class="docutils literal notranslate"><span class="pre">set_input()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#get_input"><code class="docutils literal notranslate"><span class="pre">get_input()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#clear_output"><code class="docutils literal notranslate"><span class="pre">clear_output()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#get_output"><code class="docutils literal notranslate"><span class="pre">get_output()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#get_raw_output"><code class="docutils literal notranslate"><span class="pre">get_raw_output()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#get_exception"><code class="docutils literal notranslate"><span class="pre">get_exception()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#get_python_errors"><code class="docutils literal notranslate"><span class="pre">get_python_errors()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#clear_student_data"><code class="docutils literal notranslate"><span class="pre">clear_student_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#get_student_data"><code class="docutils literal notranslate"><span class="pre">get_student_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#get_sandbox"><code class="docutils literal notranslate"><span class="pre">get_sandbox()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#clear_sandbox"><code class="docutils literal notranslate"><span class="pre">clear_sandbox()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#get_trace"><code class="docutils literal notranslate"><span class="pre">get_trace()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#get_call_arguments"><code class="docutils literal notranslate"><span class="pre">get_call_arguments()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#count_unique_calls"><code class="docutils literal notranslate"><span class="pre">count_unique_calls()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#start_trace"><code class="docutils literal notranslate"><span class="pre">start_trace()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#stop_trace"><code class="docutils literal notranslate"><span class="pre">stop_trace()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#check_coverage"><code class="docutils literal notranslate"><span class="pre">check_coverage()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#clear_mocks"><code class="docutils literal notranslate"><span class="pre">clear_mocks()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mock_function"><code class="docutils literal notranslate"><span class="pre">mock_function()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#allow_function"><code class="docutils literal notranslate"><span class="pre">allow_function()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#block_function"><code class="docutils literal notranslate"><span class="pre">block_function()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#allow_module"><code class="docutils literal notranslate"><span class="pre">allow_module()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#block_module"><code class="docutils literal notranslate"><span class="pre">block_module()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mock_module"><code class="docutils literal notranslate"><span class="pre">mock_module()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#get_module"><code class="docutils literal notranslate"><span class="pre">get_module()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#allow_real_io"><code class="docutils literal notranslate"><span class="pre">allow_real_io()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#block_real_io"><code class="docutils literal notranslate"><span class="pre">block_real_io()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#CommandBlock"><code class="docutils literal notranslate"><span class="pre">CommandBlock</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="assertions.html">Assertions</a></li>
@@ -157,18 +186,142 @@ includes the context of the call.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="run">
 <span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">student</span></span></span><a class="headerlink" href="#run" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">student</span></span></span></dt>
 <dd><p>Runs the given arbitrary code, as you might expect from calling <code class="docutils literal notranslate"><span class="pre">exec</span></code>.
 However, handles a lot of common sandboxing issues. For example, the
-students’ code is in a seperate thread and shouldn’t be able to modify
+students’ code is in a separate thread and shouldn’t be able to modify
 anything about the Report object or access files on disk (unless you
 explicitly allow them). Code with errors will have their errors adjusted
 to better provide the context of what went wrong and ensure that students
 understand why their code is wrong and not the instructors.</p>
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="evaluate">
+<span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Result</span></span></span><a class="headerlink" href="#evaluate" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'_'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Result</span></span></span></dt>
+<dd><p>Evaluates the given code, returning a Sandbox <code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code>. This is an
+extremely sophisticated type that attempts to perfectly imitate built-in
+values as much as possible. If a students’ code returns an integer, you
+can treat the returned value as if it were an integer (adding,
+subtracting, even using things like <code class="docutils literal notranslate"><span class="pre">isinstance</span></code>). However, extra meta
+information is sneakily included in the result, which allows more
+sophisticated output that includes the context of the call.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="clear_input">
+<span class="sig-name descname"><span class="pre">clear_input</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#clear_input" title="Link to this definition"></a></dt>
+<dd><p>Remove any existing inputs queued up for the current sandbox.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="queue_input">
+<span class="sig-name descname"><span class="pre">queue_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">inputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#queue_input" title="Link to this definition"></a></dt>
+<dd><p>Adds the given <code class="docutils literal notranslate"><span class="pre">inputs</span></code> strings to the queue of inputs that will be
+returned by the builtin <code class="docutils literal notranslate"><span class="pre">input</span></code> function. This allows you to test
+students’ code that involves the builtin <code class="docutils literal notranslate"><span class="pre">input</span></code> function, mocking
+whatever needs to be typed in. This does not remove any existing inputs.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">queue_input</span><span class="p">(</span><span class="s1">&#39;hello&#39;</span><span class="p">)</span>
+<span class="n">queue_input</span><span class="p">(</span><span class="s1">&#39;hello&#39;</span><span class="p">,</span> <span class="s1">&#39;world&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="set_input">
+<span class="sig-name descname"><span class="pre">set_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#set_input" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">set_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">set_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clear</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>Sets the given <code class="docutils literal notranslate"><span class="pre">inputs</span></code> strings to be the value that <code class="docutils literal notranslate"><span class="pre">input</span></code> will return.
+This allows you to test students’ code that involves the builtin <code class="docutils literal notranslate"><span class="pre">input</span></code>
+function, mocking whatever needs to be typed in.</p>
+<p>You can provide the <code class="docutils literal notranslate"><span class="pre">inputs</span></code> as a single string, a list of strings, or
+a function that will be called to generate the inputs. Non-string values will
+be converted to strings using <code class="docutils literal notranslate"><span class="pre">str()</span></code>.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">clear</span></code> is <code class="docutils literal notranslate"><span class="pre">True</span></code>, then any existing inputs will be removed.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">set_input</span><span class="p">(</span><span class="s1">&#39;hello&#39;</span><span class="p">)</span>
+<span class="n">set_input</span><span class="p">([</span><span class="s1">&#39;hello&#39;</span><span class="p">,</span> <span class="s1">&#39;world&#39;</span><span class="p">])</span>
+
+<span class="k">def</span> <span class="nf">generate_numbers</span><span class="p">(</span><span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">yield</span> <span class="n">i</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="n">set_input</span><span class="p">(</span><span class="n">generate_numbers</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="get_input">
+<span class="sig-name descname"><span class="pre">get_input</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#get_input" title="Link to this definition"></a></dt>
+<dd><p>Retrieves the current inputs that are available for execution.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">set_input</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">get_input</span><span class="p">())</span>
+
+<span class="n">set_input</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">get_input</span><span class="p">())</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="clear_output">
+<span class="sig-name descname"><span class="pre">clear_output</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#clear_output" title="Link to this definition"></a></dt>
+<dd><p>Remove any existing output from the current sandbox.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="get_output">
+<span class="sig-name descname"><span class="pre">get_output</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#get_output" title="Link to this definition"></a></dt>
+<dd><p>Retrieves the current output that has been generated by the students’ code.
+The result is <code class="docutils literal notranslate"><span class="pre">rstrip</span></code>’d to remove any trailing whitespace, including the
+newlines that broke the output up in the first place.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="get_raw_output">
+<span class="sig-name descname"><span class="pre">get_raw_output</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></span><a class="headerlink" href="#get_raw_output" title="Link to this definition"></a></dt>
+<dd><p>Returns the raw output of the students’ code, as a string.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="get_exception">
+<span class="sig-name descname"><span class="pre">get_exception</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.12)"><span class="pre">Exception</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#get_exception" title="Link to this definition"></a></dt>
+<dd><p>Returns the last exception that was raised by the students’ code, if any.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="get_python_errors">
+<span class="sig-name descname"><span class="pre">get_python_errors</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="../../developers/api.html#pedal.core.commands.Feedback" title="pedal.core.commands.Feedback"><span class="pre">Feedback</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#get_python_errors" title="Link to this definition"></a></dt>
+<dd><p>Returns any Feedback Objects that are in the <code class="docutils literal notranslate"><span class="pre">runtime</span></code> or <code class="docutils literal notranslate"><span class="pre">syntax</span></code>
+categories. This is useful for getting the errors that were raised by
+the students’ code.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="clear_student_data">
+<span class="sig-name descname"><span class="pre">clear_student_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#clear_student_data" title="Link to this definition"></a></dt>
+<dd><p>Clears all of the students’ data from the current sandbox.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="get_student_data">
+<span class="sig-name descname"><span class="pre">get_student_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#get_student_data" title="Link to this definition"></a></dt>
+<dd><p>Retrieves the current data in the student namespace. Note that this is
+the data itself - modifying the dictionary will modify the data in the
+students’ namespace for subsequent executions!</p>
+<p>See <code class="xref py py-data docutils literal notranslate"><span class="pre">data</span></code> for more information.</p>
+</dd></dl>
+
 <dl class="py data">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">student.data:</span> <span class="pre">dict[str,</span> <span class="pre">Any]</span></span></dt>
+<span class="sig-name descname"><span class="pre">data:</span> <span class="pre">dict[str,</span> <span class="pre">Any]</span></span></dt>
 <dd><p>All of the students’ created variables and functions will be stored in
 a dictionary attached to the <code class="docutils literal notranslate"><span class="pre">data</span></code> field. You can access it like so:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.sandbox</span> <span class="kn">import</span> <span class="n">run</span>
@@ -179,20 +332,182 @@ a dictionary attached to the <code class="docutils literal notranslate"><span cl
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="set_input">
-<span class="sig-name descname"><span class="pre">set_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">inputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#set_input" title="Link to this definition"></a></dt>
-<dd><p>Sets the given <code class="docutils literal notranslate"><span class="pre">inputs</span></code> strings to be the value that <code class="docutils literal notranslate"><span class="pre">input</span></code> will return.
-This allows you to test students’ code that involves the builtin <code class="docutils literal notranslate"><span class="pre">input</span></code>
-function, mocking whatever needs to be typed in.</p>
+<dt class="sig sig-object py" id="get_sandbox">
+<span class="sig-name descname"><span class="pre">get_sandbox</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#Sandbox" title="Sandbox"><span class="pre">Sandbox</span></a></span></span><a class="headerlink" href="#get_sandbox" title="Link to this definition"></a></dt>
+<dd><p>Returns the current Sandbox object. This will usually be the same as the
+<code class="docutils literal notranslate"><span class="pre">student</span></code> variable.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="get_raw_output">
-<span class="sig-name descname"><span class="pre">get_raw_output</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></span><a class="headerlink" href="#get_raw_output" title="Link to this definition"></a></dt>
-<dd><p>Returns the raw output of the students’ code, as a string.</p>
+<dt class="sig sig-object py" id="clear_sandbox">
+<span class="sig-name descname"><span class="pre">clear_sandbox</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#clear_sandbox" title="Link to this definition"></a></dt>
+<dd><p>Clears all of the data from the current sandbox.</p>
 </dd></dl>
 
-<p>TODO: Add in other pedal.sandbox.commands!</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="get_trace">
+<span class="sig-name descname"><span class="pre">get_trace</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#get_trace" title="Link to this definition"></a></dt>
+<dd><p>Retrieves the list of line numbers that have been traced (recognized as executed)
+by all the executions so far.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="get_call_arguments">
+<span class="sig-name descname"><span class="pre">get_call_arguments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">function_name</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#get_call_arguments" title="Link to this definition"></a></dt>
+<dd><p>Retrieves the list of arguments that have been passed to the given function
+name. Each argument is a dictionary mapping the parameter names to their values.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="count_unique_calls">
+<span class="sig-name descname"><span class="pre">count_unique_calls</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">function_name</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></span></span><a class="headerlink" href="#count_unique_calls" title="Link to this definition"></a></dt>
+<dd><p>Returns the number of unique calls that have been made to the given function
+name.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="start_trace">
+<span class="sig-name descname"><span class="pre">start_trace</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#start_trace" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">start_trace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tracer_style</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'native'</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>Starts tracing the execution of the students’ code. This will record the
+line numbers that are executed, which can be retrieved using
+<a class="reference internal" href="#get_trace" title="get_trace"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_trace()</span></code></a>. By default, the tracer is already set in most environments.</p>
+<p>The default  <code class="docutils literal notranslate"><span class="pre">tracer_style</span></code> is <code class="docutils literal notranslate"><span class="pre">'native'</span></code>, which uses the Python
+<code class="docutils literal notranslate"><span class="pre">sys.settrace</span></code> function to trace the execution.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="stop_trace">
+<span class="sig-name descname"><span class="pre">stop_trace</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stop_trace" title="Link to this definition"></a></dt>
+<dd><p>Stops tracing the execution of the students’ code. This will stop recording
+the line numbers that are executed.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="check_coverage">
+<span class="sig-name descname"><span class="pre">check_coverage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#check_coverage" title="Link to this definition"></a></dt>
+<dd><p>Checks that all the statements in the program have been executed.
+This function only works when a tracer_style has been set in the sandbox,
+or you are using an environment that automatically traces calls (e.g.,
+BlockPy).</p>
+<p>If the source file was not parsed, then the first value in the tuple will
+be None. Otherwise, it will be a set of the line numbers that were not
+executed. The second value is the percentage of lines that were executed.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="clear_mocks">
+<span class="sig-name descname"><span class="pre">clear_mocks</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#clear_mocks" title="Link to this definition"></a></dt>
+<dd><p>Clears all of the mocks that have been set up for the current sandbox.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mock_function">
+<span class="sig-name descname"><span class="pre">mock_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">function_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_version</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mock_function" title="Link to this definition"></a></dt>
+<dd><p>Mocks the given function name with the given new version. The new version
+can be a function.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">my_sum</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
+    <span class="k">return</span> <span class="mi">0</span>
+<span class="n">mock_function</span><span class="p">(</span><span class="s1">&#39;sum&#39;</span><span class="p">,</span> <span class="n">my_sum</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="allow_function">
+<span class="sig-name descname"><span class="pre">allow_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">function_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#allow_function" title="Link to this definition"></a></dt>
+<dd><p>Allows the given function name to be called. This is useful for testing
+students’ code that uses functions that you don’t want to mock.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">allow_function</span><span class="p">(</span><span class="s1">&#39;sum&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="block_function">
+<span class="sig-name descname"><span class="pre">block_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">function_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#block_function" title="Link to this definition"></a></dt>
+<dd><p>Blocks the given function name from being called. This is useful for
+testing students’ code that uses functions that you don’t want to be
+called.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">block_function</span><span class="p">(</span><span class="s1">&#39;sum&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="allow_module">
+<span class="sig-name descname"><span class="pre">allow_module</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#allow_module" title="Link to this definition"></a></dt>
+<dd><p>Allows the given module name to be imported. This is useful for testing
+students’ code that uses modules that you don’t want to mock.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">allow_module</span><span class="p">(</span><span class="s1">&#39;math&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="block_module">
+<span class="sig-name descname"><span class="pre">block_module</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#block_module" title="Link to this definition"></a></dt>
+<dd><p>Blocks the given module name from being imported. This is useful for
+testing students’ code that uses modules that you don’t want to be
+imported.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">block_module</span><span class="p">(</span><span class="s1">&#39;math&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mock_module">
+<span class="sig-name descname"><span class="pre">mock_module</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_version</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mock_module" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">mock_module</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_version</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">friendly_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>Mocks the given <code class="docutils literal notranslate"><span class="pre">module_name</span></code> with the given <code class="docutils literal notranslate"><span class="pre">new_version</span></code>. The new version
+can be a <code class="xref py py-class docutils literal notranslate"><span class="pre">mockedMockModule</span></code> or a dictionary. The
+dictionary is a mapping of fields to values.</p>
+<p>The optional <code class="docutils literal notranslate"><span class="pre">friendly_name</span></code> is an internal name to use to store the data
+for this module, accessible via Sandbox’s <code class="docutils literal notranslate"><span class="pre">modules</span></code> field.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">my_sum</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
+    <span class="k">return</span> <span class="mi">0</span>
+<span class="n">mock_module</span><span class="p">(</span><span class="s1">&#39;math&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;sum&#39;</span><span class="p">:</span> <span class="n">my_sum</span><span class="p">})</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="get_module">
+<span class="sig-name descname"><span class="pre">get_module</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#get_module" title="Link to this definition"></a></dt>
+<dd><p>Loads the data for the given mocked module, if available (otherwise raises a <code class="docutils literal notranslate"><span class="pre">ValueError</span></code>).
+This is useful for getting the results of a mocked module.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">get_module</span><span class="p">(</span><span class="s1">&#39;plotting&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="allow_real_io">
+<span class="sig-name descname"><span class="pre">allow_real_io</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#allow_real_io" title="Link to this definition"></a></dt>
+<dd><p>Allow the input() and print() functions to actually write to the real stdout.
+By default, Pedal will block this kind of writing/reading normally (although students can
+still use those functions).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="block_real_io">
+<span class="sig-name descname"><span class="pre">block_real_io</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#block_real_io" title="Link to this definition"></a></dt>
+<dd><p>Explicitly block students from using the input() and print() functions to write/read
+to the real stdout. This does not prevent them from using the functions, but it does
+prevent the output from appearing in the real console.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="CommandBlock">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CommandBlock</span></span><a class="headerlink" href="#CommandBlock" title="Link to this definition"></a></dt>
+<dd><p>A CommandBlock is a context manager that let’s you run multiple statements.
+These statements will be collapsed into a single context. When relevant
+assertions are made, the context shown will be the entire block, rather
+than just the last statement.</p>
+</dd></dl>
+
 </section>
 
 
