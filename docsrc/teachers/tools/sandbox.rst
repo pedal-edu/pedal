@@ -7,11 +7,23 @@ Typically, your environment will handle running the Sandbox for you. Sometimes, 
 the students' code using Pedal in favor of its own execution environment. However, they evaluate the students'
 code, most environments will provide a ``student`` variable that holds information about the executed code.
 
+.. class:: Sandbox
+
+    A Sandbox is a container where students' code can be executed.
+
 .. code-block:: python
 
     from pedal.sandbox import run
 
     student = run()
+
+.. data:: student
+    :type: Sandbox
+
+    The Sandbox object is a proxy for the students' code. It is a dictionary-like
+    object that contains all of the variables and functions that the students'
+    code created. It also contains a few other fields that are useful for
+    understanding the context of the students' code.
 
 .. function:: call(function: str, *arguments: Any, inputs: list[str]= None, target: str="_") -> Result
 
@@ -53,5 +65,9 @@ code, most environments will provide a ``student`` variable that holds informati
     Sets the given ``inputs`` strings to be the value that ``input`` will return.
     This allows you to test students' code that involves the builtin ``input``
     function, mocking whatever needs to be typed in.
+
+.. function:: get_raw_output() -> str
+
+    Returns the raw output of the students' code, as a string.
 
 TODO: Add in other pedal.sandbox.commands!

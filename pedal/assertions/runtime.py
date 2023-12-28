@@ -502,7 +502,10 @@ class assert_not_is_instance(RuntimeAssertionFeedback):
 
     def condition(self, obj, cls):
         """ Tests if the left and right are equal """
-        return isinstance(obj.value, cls.value)
+        value = cls.value
+        if value == int or value == float:
+            value = (int, float)
+        return isinstance(obj.value, value)
 
 
 def type_to_pedal_type(expected_type):

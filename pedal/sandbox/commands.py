@@ -209,6 +209,21 @@ def get_output(report=MAIN_REPORT):
     return sandbox.output
 
 
+def get_raw_output(report=MAIN_REPORT):
+    """
+    Retrieves the current output (whatever the student has printed) since
+    execution began, without any formatting. The result is a single string.
+
+    Args:
+        report (:py:class:`pedal.core.report.Report`): The report to get the output for.
+
+    Returns:
+        str: The current output.
+    """
+    sandbox: Sandbox = report[TOOL_NAME]['sandbox']
+    return sandbox.raw_output
+
+
 def get_exception(report=MAIN_REPORT):
     """
     Returns an exception if one occurred during the last execution,

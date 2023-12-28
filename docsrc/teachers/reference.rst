@@ -17,8 +17,9 @@ document all the features available - for that, you should refer to the :ref:`fu
     tools/tifa
     tools/cait
     tools/source
-    tools/assertions
     tools/sandbox
+    tools/assertions
+    tools/types
 
 tools/assertions
 
