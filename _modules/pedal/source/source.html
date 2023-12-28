@@ -1,21 +1,23 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pedal.source.source &mdash; Pedal 1.0 documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -113,7 +115,9 @@
 <span class="kn">from</span> <span class="nn">pedal.utilities.files</span> <span class="kn">import</span> <span class="n">find_possible_filenames</span>
 
 
-<div class="viewcode-block" id="reset"><a class="viewcode-back" href="../../../developers/tools/source.html#pedal.source.source.reset">[docs]</a><span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+<div class="viewcode-block" id="reset">
+<a class="viewcode-back" href="../../../developers/tools/source.html#pedal.source.source.reset">[docs]</a>
+<span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Resets the Source tool back to its initial configuration, removing any</span>
 <span class="sd">    previously stored code/parses/section info.</span>
@@ -138,10 +142,13 @@
     <span class="k">return</span> <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">]</span></div>
 
 
+
 <span class="n">Report</span><span class="o">.</span><span class="n">register_tool</span><span class="p">(</span><span class="n">TOOL_NAME</span><span class="p">,</span> <span class="n">reset</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="set_source"><a class="viewcode-back" href="../../../developers/tools/source.html#pedal.source.source.set_source">[docs]</a><span class="k">def</span> <span class="nf">set_source</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">DEFAULT_STUDENT_FILENAME</span><span class="p">,</span> <span class="n">sections</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<div class="viewcode-block" id="set_source">
+<a class="viewcode-back" href="../../../developers/tools/source.html#pedal.source.source.set_source">[docs]</a>
+<span class="k">def</span> <span class="nf">set_source</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">DEFAULT_STUDENT_FILENAME</span><span class="p">,</span> <span class="n">sections</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                <span class="n">independent</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Sets the contents of the Source to be the given code. Can also be</span>
@@ -182,10 +189,13 @@
         <span class="n">separate_into_sections</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span></div>
 
 
+
 <span class="c1"># TODO: source_prepend and source_append</span>
 
 
-<div class="viewcode-block" id="restore_code"><a class="viewcode-back" href="../../../developers/tools/source.html#pedal.source.source.restore_code">[docs]</a><span class="k">def</span> <span class="nf">restore_code</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+<div class="viewcode-block" id="restore_code">
+<a class="viewcode-back" href="../../../developers/tools/source.html#pedal.source.source.restore_code">[docs]</a>
+<span class="k">def</span> <span class="nf">restore_code</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Args:</span>
@@ -197,7 +207,10 @@
         <span class="n">verify</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="verify"><a class="viewcode-back" href="../../../developers/tools/source.html#pedal.source.source.verify">[docs]</a><span class="nd">@CompositeFeedbackFunction</span><span class="p">(</span><span class="n">blank_source</span><span class="p">,</span> <span class="n">syntax_error</span><span class="p">,</span> <span class="n">indentation_error</span><span class="p">,</span> <span class="n">source_file_not_found</span><span class="p">)</span>
+
+<div class="viewcode-block" id="verify">
+<a class="viewcode-back" href="../../../developers/tools/source.html#pedal.source.source.verify">[docs]</a>
+<span class="nd">@CompositeFeedbackFunction</span><span class="p">(</span><span class="n">blank_source</span><span class="p">,</span> <span class="n">syntax_error</span><span class="p">,</span> <span class="n">indentation_error</span><span class="p">,</span> <span class="n">source_file_not_found</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">verify</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">DEFAULT_STUDENT_FILENAME</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">,</span>
            <span class="n">muted</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">enhance</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -242,18 +255,24 @@
     <span class="k">return</span> <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;success&#39;</span><span class="p">]</span></div>
 
 
+
 <span class="c1"># Legacy verify_section; now done by verify since its aware of sections</span>
 <span class="n">verify_section</span> <span class="o">=</span> <span class="n">verify</span>
 
 
-<div class="viewcode-block" id="get_program"><a class="viewcode-back" href="../../../developers/tools/source.html#pedal.source.source.get_program">[docs]</a><span class="k">def</span> <span class="nf">get_program</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="get_program">
+<a class="viewcode-back" href="../../../developers/tools/source.html#pedal.source.source.get_program">[docs]</a>
+<span class="k">def</span> <span class="nf">get_program</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieves the current main file&#39;s code.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">report</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">main_code</span></div>
 
 
-<div class="viewcode-block" id="get_original_program"><a class="viewcode-back" href="../../../developers/tools/source.html#pedal.source.source.get_original_program">[docs]</a><span class="k">def</span> <span class="nf">get_original_program</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+
+<div class="viewcode-block" id="get_original_program">
+<a class="viewcode-back" href="../../../developers/tools/source.html#pedal.source.source.get_original_program">[docs]</a>
+<span class="k">def</span> <span class="nf">get_original_program</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieves the original version of the Submission&#39;s main code, ignoring all subsitutions.</span>
 <span class="sd">    Args:</span>
@@ -265,7 +284,10 @@
     <span class="k">return</span> <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;substitutions&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">code</span></div>
 
 
-<div class="viewcode-block" id="set_source_file"><a class="viewcode-back" href="../../../developers/tools/source.html#pedal.source.source.set_source_file">[docs]</a><span class="nd">@CompositeFeedbackFunction</span><span class="p">(</span><span class="n">source_file_not_found</span><span class="p">)</span>
+
+<div class="viewcode-block" id="set_source_file">
+<a class="viewcode-back" href="../../../developers/tools/source.html#pedal.source.source.set_source_file">[docs]</a>
+<span class="nd">@CompositeFeedbackFunction</span><span class="p">(</span><span class="n">source_file_not_found</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">set_source_file</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">sections</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">independent</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Uses the given `filename` on the filesystem as the new main file.</span>
@@ -297,6 +319,7 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">source_file_not_found</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">sections</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span>
         <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;success&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span></div>
+
 </pre></div>
 
            </div>

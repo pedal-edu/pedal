@@ -1,21 +1,23 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pedal.sandbox.commands &mdash; Pedal 1.0 documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -103,7 +105,9 @@
 <span class="kn">from</span> <span class="nn">pedal.utilities.ast_tools</span> <span class="kn">import</span> <span class="n">FindExecutableLines</span>
 
 
-<div class="viewcode-block" id="run"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.run">[docs]</a><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">inputs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">threaded</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="run">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.run">[docs]</a>
+<span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">inputs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">threaded</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">after</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">before</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    If both ``code`` and ``filename`` are None, then the submission&#39;s</span>
@@ -131,7 +135,10 @@
                        <span class="n">threaded</span><span class="o">=</span><span class="n">threaded</span><span class="p">,</span> <span class="n">after</span><span class="o">=</span><span class="n">after</span><span class="p">,</span> <span class="n">before</span><span class="o">=</span><span class="n">before</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="call"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.call">[docs]</a><span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="n">threaded</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">inputs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+
+<div class="viewcode-block" id="call">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.call">[docs]</a>
+<span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="n">threaded</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">inputs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
          <span class="n">function_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">args_locals</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">kwargs_locals</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
          <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -183,7 +190,10 @@
                         <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="evaluate"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.evaluate">[docs]</a><span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="n">threaded</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+
+<div class="viewcode-block" id="evaluate">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.evaluate">[docs]</a>
+<span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="n">threaded</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Evaluates the given code and assigns the result to the given target.</span>
 <span class="sd">    Will cause an error if ``code`` is not a valid expression.</span>
@@ -210,7 +220,10 @@
     <span class="k">return</span> <span class="n">sandbox</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">,</span> <span class="n">threaded</span><span class="o">=</span><span class="n">threaded</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="clear_input"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.clear_input">[docs]</a><span class="k">def</span> <span class="nf">clear_input</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+
+<div class="viewcode-block" id="clear_input">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.clear_input">[docs]</a>
+<span class="k">def</span> <span class="nf">clear_input</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Removes any existing inputs set up for the sandbox.</span>
 
@@ -221,7 +234,10 @@
     <span class="n">sandbox</span><span class="o">.</span><span class="n">clear_input</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="queue_input"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.queue_input">[docs]</a><span class="k">def</span> <span class="nf">queue_input</span><span class="p">(</span><span class="o">*</span><span class="n">inputs</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+
+<div class="viewcode-block" id="queue_input">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.queue_input">[docs]</a>
+<span class="k">def</span> <span class="nf">queue_input</span><span class="p">(</span><span class="o">*</span><span class="n">inputs</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Adds the given ``*inputs`` to be used as input during subsequent</span>
 <span class="sd">        executions (e.g., :py:func:`pedal.sandbox.commands.run`) if the</span>
@@ -238,7 +254,10 @@
     <span class="n">sandbox</span><span class="o">.</span><span class="n">set_input</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">clear</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="set_input"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.set_input">[docs]</a><span class="k">def</span> <span class="nf">set_input</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">clear</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+
+<div class="viewcode-block" id="set_input">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.set_input">[docs]</a>
+<span class="k">def</span> <span class="nf">set_input</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">clear</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Sets the given ``inputs`` to be used as input during subsequent</span>
 <span class="sd">        executions (e.g., :py:func:`pedal.sandbox.commands.run`) if the</span>
@@ -258,7 +277,10 @@
     <span class="n">sandbox</span><span class="o">.</span><span class="n">set_input</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">clear</span><span class="o">=</span><span class="n">clear</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_input"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.get_input">[docs]</a><span class="k">def</span> <span class="nf">get_input</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+
+<div class="viewcode-block" id="get_input">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.get_input">[docs]</a>
+<span class="k">def</span> <span class="nf">get_input</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieves the current inputs that are available for execution.</span>
 
@@ -275,7 +297,10 @@
     <span class="k">return</span> <span class="n">sandbox</span><span class="o">.</span><span class="n">inputs</span></div>
 
 
-<div class="viewcode-block" id="clear_output"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.clear_output">[docs]</a><span class="k">def</span> <span class="nf">clear_output</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+
+<div class="viewcode-block" id="clear_output">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.clear_output">[docs]</a>
+<span class="k">def</span> <span class="nf">clear_output</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Removes any existing outputs associated with the sandbox.</span>
 
@@ -286,7 +311,10 @@
     <span class="n">sandbox</span><span class="o">.</span><span class="n">clear_output</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="get_output"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.get_output">[docs]</a><span class="k">def</span> <span class="nf">get_output</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+
+<div class="viewcode-block" id="get_output">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.get_output">[docs]</a>
+<span class="k">def</span> <span class="nf">get_output</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieves the current output (whatever the student has printed) since</span>
 <span class="sd">    execution began.</span>
@@ -301,7 +329,28 @@
     <span class="k">return</span> <span class="n">sandbox</span><span class="o">.</span><span class="n">output</span></div>
 
 
-<div class="viewcode-block" id="get_exception"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.get_exception">[docs]</a><span class="k">def</span> <span class="nf">get_exception</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+
+<div class="viewcode-block" id="get_raw_output">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.get_raw_output">[docs]</a>
+<span class="k">def</span> <span class="nf">get_raw_output</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Retrieves the current output (whatever the student has printed) since</span>
+<span class="sd">    execution began, without any formatting. The result is a single string.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        report (:py:class:`pedal.core.report.Report`): The report to get the output for.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The current output.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sandbox</span><span class="p">:</span> <span class="n">Sandbox</span> <span class="o">=</span> <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;sandbox&#39;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">sandbox</span><span class="o">.</span><span class="n">raw_output</span></div>
+
+
+
+<div class="viewcode-block" id="get_exception">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.get_exception">[docs]</a>
+<span class="k">def</span> <span class="nf">get_exception</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns an exception if one occurred during the last execution,</span>
 <span class="sd">    otherwise returns None.</span>
@@ -315,7 +364,10 @@
     <span class="k">return</span> <span class="n">sandbox</span><span class="o">.</span><span class="n">exception</span></div>
 
 
-<div class="viewcode-block" id="clear_student_data"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.clear_student_data">[docs]</a><span class="k">def</span> <span class="nf">clear_student_data</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+
+<div class="viewcode-block" id="clear_student_data">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.clear_student_data">[docs]</a>
+<span class="k">def</span> <span class="nf">clear_student_data</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Removes any data in the student namespace.</span>
 
@@ -326,7 +378,10 @@
     <span class="n">sandbox</span><span class="o">.</span><span class="n">clear_data</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="get_student_data"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.get_student_data">[docs]</a><span class="k">def</span> <span class="nf">get_student_data</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+
+<div class="viewcode-block" id="get_student_data">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.get_student_data">[docs]</a>
+<span class="k">def</span> <span class="nf">get_student_data</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieves the current data in the student namespace. Note that this is</span>
 <span class="sd">    the data itself - modifying the dictionary will modify the data in the</span>
@@ -344,7 +399,10 @@
     <span class="k">return</span> <span class="n">sandbox</span><span class="o">.</span><span class="n">data</span></div>
 
 
-<div class="viewcode-block" id="get_sandbox"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.get_sandbox">[docs]</a><span class="k">def</span> <span class="nf">get_sandbox</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+
+<div class="viewcode-block" id="get_sandbox">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.get_sandbox">[docs]</a>
+<span class="k">def</span> <span class="nf">get_sandbox</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieves the current sandbox instance attached to this report.</span>
 <span class="sd">    Typically, this is used to retrieve the sandbox without running the</span>
@@ -360,13 +418,19 @@
     <span class="k">return</span> <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;sandbox&#39;</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="clear_sandbox"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.clear_sandbox">[docs]</a><span class="k">def</span> <span class="nf">clear_sandbox</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+
+<div class="viewcode-block" id="clear_sandbox">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.clear_sandbox">[docs]</a>
+<span class="k">def</span> <span class="nf">clear_sandbox</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Removes any existing data within the current sandbox instance. &quot;&quot;&quot;</span>
     <span class="n">sandbox</span><span class="p">:</span> <span class="n">Sandbox</span> <span class="o">=</span> <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;sandbox&#39;</span><span class="p">]</span>
     <span class="n">sandbox</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="get_trace"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.get_trace">[docs]</a><span class="k">def</span> <span class="nf">get_trace</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+
+<div class="viewcode-block" id="get_trace">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.get_trace">[docs]</a>
+<span class="k">def</span> <span class="nf">get_trace</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieves the list of line numbers that have been traced (recognized as executed).</span>
 
@@ -382,7 +446,10 @@
     <span class="k">return</span> <span class="n">sandbox</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">lines</span></div>
 
 
-<div class="viewcode-block" id="get_call_arguments"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.get_call_arguments">[docs]</a><span class="k">def</span> <span class="nf">get_call_arguments</span><span class="p">(</span><span class="n">function_name</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+
+<div class="viewcode-block" id="get_call_arguments">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.get_call_arguments">[docs]</a>
+<span class="k">def</span> <span class="nf">get_call_arguments</span><span class="p">(</span><span class="n">function_name</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieves all the arguments that were passed into the given function when it</span>
 <span class="sd">    was called.</span>
@@ -402,7 +469,10 @@
     <span class="k">return</span> <span class="n">sandbox</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">calls</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">function_name</span><span class="p">,</span> <span class="p">[])</span></div>
 
 
-<div class="viewcode-block" id="count_unique_calls"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.count_unique_calls">[docs]</a><span class="k">def</span> <span class="nf">count_unique_calls</span><span class="p">(</span><span class="n">function_name</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+
+<div class="viewcode-block" id="count_unique_calls">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.count_unique_calls">[docs]</a>
+<span class="k">def</span> <span class="nf">count_unique_calls</span><span class="p">(</span><span class="n">function_name</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Counts how many times the given function was called with unique arguments.</span>
 <span class="sd">    TODO: What about also tracking the number of &quot;top-level&quot; calls? So we know</span>
@@ -420,19 +490,28 @@
     <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">([</span><span class="nb">tuple</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="k">for</span> <span class="n">args</span> <span class="ow">in</span> <span class="n">calls</span><span class="p">]))</span></div>
 
 
-<div class="viewcode-block" id="start_trace"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.start_trace">[docs]</a><span class="k">def</span> <span class="nf">start_trace</span><span class="p">(</span><span class="n">tracer_style</span><span class="o">=</span><span class="s1">&#39;native&#39;</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+
+<div class="viewcode-block" id="start_trace">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.start_trace">[docs]</a>
+<span class="k">def</span> <span class="nf">start_trace</span><span class="p">(</span><span class="n">tracer_style</span><span class="o">=</span><span class="s1">&#39;native&#39;</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Start tracing using the coverage module. &quot;&quot;&quot;</span>
     <span class="n">sandbox</span><span class="p">:</span> <span class="n">Sandbox</span> <span class="o">=</span> <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;sandbox&#39;</span><span class="p">]</span>
     <span class="n">sandbox</span><span class="o">.</span><span class="n">tracer_style</span> <span class="o">=</span> <span class="n">tracer_style</span></div>
 
 
-<div class="viewcode-block" id="stop_trace"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.stop_trace">[docs]</a><span class="k">def</span> <span class="nf">stop_trace</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+
+<div class="viewcode-block" id="stop_trace">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.stop_trace">[docs]</a>
+<span class="k">def</span> <span class="nf">stop_trace</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Stop whatever tracing is going on. &quot;&quot;&quot;</span>
     <span class="n">sandbox</span><span class="p">:</span> <span class="n">Sandbox</span> <span class="o">=</span> <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;sandbox&#39;</span><span class="p">]</span>
     <span class="n">sandbox</span><span class="o">.</span><span class="n">clear_tracer</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="check_coverage"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.check_coverage">[docs]</a><span class="k">def</span> <span class="nf">check_coverage</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+
+<div class="viewcode-block" id="check_coverage">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.check_coverage">[docs]</a>
+<span class="k">def</span> <span class="nf">check_coverage</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Checks that all the statements in the program have been executed.</span>
 <span class="sd">    This function only works when a tracer_style has been set in the sandbox,</span>
@@ -465,37 +544,55 @@
     <span class="k">return</span> <span class="n">unexecuted_lines</span><span class="p">,</span> <span class="n">coverage_ratio</span></div>
 
 
-<div class="viewcode-block" id="clear_mocks"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.clear_mocks">[docs]</a><span class="k">def</span> <span class="nf">clear_mocks</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+
+<div class="viewcode-block" id="clear_mocks">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.clear_mocks">[docs]</a>
+<span class="k">def</span> <span class="nf">clear_mocks</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Reset mocked modules and functions to their defaults. &quot;&quot;&quot;</span>
     <span class="n">sandbox</span><span class="p">:</span> <span class="n">Sandbox</span> <span class="o">=</span> <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;sandbox&#39;</span><span class="p">]</span>
     <span class="n">sandbox</span><span class="o">.</span><span class="n">clear_mocks</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="mock_function"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.mock_function">[docs]</a><span class="k">def</span> <span class="nf">mock_function</span><span class="p">(</span><span class="n">function_name</span><span class="p">,</span> <span class="n">new_version</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+
+<div class="viewcode-block" id="mock_function">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.mock_function">[docs]</a>
+<span class="k">def</span> <span class="nf">mock_function</span><span class="p">(</span><span class="n">function_name</span><span class="p">,</span> <span class="n">new_version</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Provide a custom version of the built-in function. &quot;&quot;&quot;</span>
     <span class="n">sandbox</span><span class="p">:</span> <span class="n">Sandbox</span> <span class="o">=</span> <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;sandbox&#39;</span><span class="p">]</span>
     <span class="n">sandbox</span><span class="o">.</span><span class="n">mock_function</span><span class="p">(</span><span class="n">function_name</span><span class="p">,</span> <span class="n">new_version</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="allow_function"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.allow_function">[docs]</a><span class="k">def</span> <span class="nf">allow_function</span><span class="p">(</span><span class="n">function_name</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+
+<div class="viewcode-block" id="allow_function">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.allow_function">[docs]</a>
+<span class="k">def</span> <span class="nf">allow_function</span><span class="p">(</span><span class="n">function_name</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Explicitly allow students to use the given function. &quot;&quot;&quot;</span>
     <span class="n">sandbox</span><span class="p">:</span> <span class="n">Sandbox</span> <span class="o">=</span> <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;sandbox&#39;</span><span class="p">]</span>
     <span class="n">sandbox</span><span class="o">.</span><span class="n">allow_function</span><span class="p">(</span><span class="n">function_name</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="block_function"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.block_function">[docs]</a><span class="k">def</span> <span class="nf">block_function</span><span class="p">(</span><span class="n">function_name</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+
+<div class="viewcode-block" id="block_function">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.block_function">[docs]</a>
+<span class="k">def</span> <span class="nf">block_function</span><span class="p">(</span><span class="n">function_name</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Cause an error if students call the given function. &quot;&quot;&quot;</span>
     <span class="n">sandbox</span><span class="p">:</span> <span class="n">Sandbox</span> <span class="o">=</span> <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;sandbox&#39;</span><span class="p">]</span>
     <span class="n">sandbox</span><span class="o">.</span><span class="n">block_function</span><span class="p">(</span><span class="n">function_name</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="allow_module"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.allow_module">[docs]</a><span class="k">def</span> <span class="nf">allow_module</span><span class="p">(</span><span class="n">module_name</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+
+<div class="viewcode-block" id="allow_module">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.allow_module">[docs]</a>
+<span class="k">def</span> <span class="nf">allow_module</span><span class="p">(</span><span class="n">module_name</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Explicitly allow students to use the given module. &quot;&quot;&quot;</span>
     <span class="n">sandbox</span><span class="p">:</span> <span class="n">Sandbox</span> <span class="o">=</span> <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;sandbox&#39;</span><span class="p">]</span>
     <span class="n">sandbox</span><span class="o">.</span><span class="n">allow_module</span><span class="p">(</span><span class="n">module_name</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="allow_real_io"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.allow_real_io">[docs]</a><span class="k">def</span> <span class="nf">allow_real_io</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+
+<div class="viewcode-block" id="allow_real_io">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.allow_real_io">[docs]</a>
+<span class="k">def</span> <span class="nf">allow_real_io</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Allow the input() and print() functions to actually write to the real stdout.</span>
 <span class="sd">    By default, Pedal will block this kind of writing/reading normally (although students can</span>
@@ -506,7 +603,10 @@
     <span class="n">sandbox</span><span class="o">.</span><span class="n">set_input</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="block_real_io"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.block_real_io">[docs]</a><span class="k">def</span> <span class="nf">block_real_io</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+
+<div class="viewcode-block" id="block_real_io">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.block_real_io">[docs]</a>
+<span class="k">def</span> <span class="nf">block_real_io</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Explicitly block students from using the input() and print() functions to write/read</span>
 <span class="sd">    to the real stdout. This does not prevent them from using the functions, but it does</span>
@@ -516,7 +616,10 @@
     <span class="n">sandbox</span><span class="o">.</span><span class="n">clear_mocked_function</span><span class="p">(</span><span class="s1">&#39;print&#39;</span><span class="p">)</span>
     <span class="n">sandbox</span><span class="o">.</span><span class="n">clear_input</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="mock_module"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.mock_module">[docs]</a><span class="k">def</span> <span class="nf">mock_module</span><span class="p">(</span><span class="n">module_name</span><span class="p">,</span> <span class="n">new_version</span><span class="p">,</span> <span class="n">friendly_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+
+<div class="viewcode-block" id="mock_module">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.mock_module">[docs]</a>
+<span class="k">def</span> <span class="nf">mock_module</span><span class="p">(</span><span class="n">module_name</span><span class="p">,</span> <span class="n">new_version</span><span class="p">,</span> <span class="n">friendly_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Provide an alternative version of the given module.</span>
 
@@ -534,13 +637,19 @@
     <span class="n">sandbox</span><span class="o">.</span><span class="n">mock_module</span><span class="p">(</span><span class="n">module_name</span><span class="p">,</span> <span class="n">new_version</span><span class="p">,</span> <span class="n">friendly_name</span><span class="o">=</span><span class="n">friendly_name</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="block_module"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.block_module">[docs]</a><span class="k">def</span> <span class="nf">block_module</span><span class="p">(</span><span class="n">module_name</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+
+<div class="viewcode-block" id="block_module">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.block_module">[docs]</a>
+<span class="k">def</span> <span class="nf">block_module</span><span class="p">(</span><span class="n">module_name</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Cause an error if students use the given module. &quot;&quot;&quot;</span>
     <span class="n">sandbox</span><span class="p">:</span> <span class="n">Sandbox</span> <span class="o">=</span> <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;sandbox&#39;</span><span class="p">]</span>
     <span class="n">sandbox</span><span class="o">.</span><span class="n">block_module</span><span class="p">(</span><span class="n">module_name</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_module"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.get_module">[docs]</a><span class="k">def</span> <span class="nf">get_module</span><span class="p">(</span><span class="n">module_name</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+
+<div class="viewcode-block" id="get_module">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.get_module">[docs]</a>
+<span class="k">def</span> <span class="nf">get_module</span><span class="p">(</span><span class="n">module_name</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Loads the data for the given mocked module, if available (otherwise raises exception) &quot;&quot;&quot;</span>
     <span class="n">sandbox</span><span class="p">:</span> <span class="n">Sandbox</span> <span class="o">=</span> <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;sandbox&#39;</span><span class="p">]</span>
     <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">sandbox</span><span class="o">.</span><span class="n">modules</span><span class="p">,</span> <span class="n">module_name</span><span class="p">):</span>
@@ -548,7 +657,10 @@
     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown Sandbox Module: `</span><span class="si">{</span><span class="n">module_name</span><span class="si">}</span><span class="s2">`&quot;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_python_errors"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.get_python_errors">[docs]</a><span class="k">def</span> <span class="nf">get_python_errors</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+
+<div class="viewcode-block" id="get_python_errors">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.get_python_errors">[docs]</a>
+<span class="k">def</span> <span class="nf">get_python_errors</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieves any runtime or syntax errors from the report.</span>
 <span class="sd">    Args:</span>
@@ -562,7 +674,10 @@
             <span class="k">yield</span> <span class="n">feedback</span></div>
 
 
-<div class="viewcode-block" id="CommandBlock"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.CommandBlock">[docs]</a><span class="k">class</span> <span class="nc">CommandBlock</span><span class="p">:</span>
+
+<div class="viewcode-block" id="CommandBlock">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.CommandBlock">[docs]</a>
+<span class="k">class</span> <span class="nc">CommandBlock</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Context Manager for creating instructor blocks of code that will</span>
 <span class="sd">    be shown together to the student.</span>
@@ -584,6 +699,7 @@
     <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">context</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sandbox</span><span class="o">.</span><span class="n">get_context</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">context_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sandbox</span><span class="o">.</span><span class="n">stop_grouping_context</span><span class="p">()</span></div>
+
 
 
 <span class="c1"># TODO: Deprecate these!</span>

@@ -1,22 +1,24 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Compilation &mdash; Pedal 1.0 documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -96,11 +98,11 @@
            <div itemprop="articleBody">
              
   <section id="compilation">
-<h1>Compilation<a class="headerlink" href="#compilation" title="Permalink to this heading"></a></h1>
+<h1>Compilation<a class="headerlink" href="#compilation" title="Link to this heading"></a></h1>
 <p>Pedal is a pure Python library, with almost zero dependent <a class="reference internal" href="libraries.html#libraries"><span class="std std-ref">Necessary Libraries</span></a>. However, for deployment on certain platforms,
 you may need to compile Pedal. The most obvious example is BlockPy, which uses Skulpt to run Python code in the browser.</p>
 <section id="compiling-pedal-for-skulpt">
-<h2>Compiling Pedal for Skulpt<a class="headerlink" href="#compiling-pedal-for-skulpt" title="Permalink to this heading"></a></h2>
+<h2>Compiling Pedal for Skulpt<a class="headerlink" href="#compiling-pedal-for-skulpt" title="Link to this heading"></a></h2>
 <p>From within the <code class="xref py py-obj docutils literal notranslate"><span class="pre">blockpy-edu/skulpt</span></code> project’s main folder, you can run the following command (replacing <code class="docutils literal notranslate"><span class="pre">$PEDAL_PATH</span></code> with the path to the Pedal project folder):</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$&gt; npm run precompile $PEDAL_PATH/dist-js/skulpt-pedal.js $PEDAL_PATH/ pedal -- -m
 </pre></div>
@@ -110,7 +112,7 @@ you may find it helpful to remove those arguments to 1) make the compilation fas
 information that might be useful.</p>
 </section>
 <section id="compiling-pedal-for-pyodide">
-<h2>Compiling Pedal for Pyodide<a class="headerlink" href="#compiling-pedal-for-pyodide" title="Permalink to this heading"></a></h2>
+<h2>Compiling Pedal for Pyodide<a class="headerlink" href="#compiling-pedal-for-pyodide" title="Link to this heading"></a></h2>
 <p>Nothing special is needed!</p>
 </section>
 </section>

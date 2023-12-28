@@ -1,22 +1,24 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Formatter &mdash; Pedal 1.0 documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -82,8 +84,9 @@
 <li class="toctree-l2"><a class="reference internal" href="tifa.html">TIFA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cait.html">CAIT</a></li>
 <li class="toctree-l2"><a class="reference internal" href="source.html">Source</a></li>
-<li class="toctree-l2"><a class="reference internal" href="assertions.html">Assertions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sandbox.html">Sandbox</a></li>
+<li class="toctree-l2"><a class="reference internal" href="assertions.html">Assertions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="types.html">Pedal’s Type System</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../integrations.html">Autograder Integrations</a></li>
@@ -125,7 +128,7 @@
            <div itemprop="articleBody">
              
   <section id="formatter">
-<span id="teacher-formatter"></span><h1>Formatter<a class="headerlink" href="#formatter" title="Permalink to this heading"></a></h1>
+<span id="teacher-formatter"></span><h1>Formatter<a class="headerlink" href="#formatter" title="Link to this heading"></a></h1>
 <p>Pedal uses Formatters to adapt Feedback Function <a class="reference internal" href="ffs.html#message_template" title="message_template"><code class="xref py py-attr docutils literal notranslate"><span class="pre">message_template</span></code></a> fields to different
 environments. For example, it can be used to generate HTML or Markdown in web-based
 environments, or just regular text for consoles.</p>
@@ -145,39 +148,39 @@ formatting.</p>
 <p>The following</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="Formatter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Formatter</span></span><a class="headerlink" href="#Formatter" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Formatter</span></span><a class="headerlink" href="#Formatter" title="Link to this definition"></a></dt>
 <dd><p>The base formatter that all others inherit from.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="Formatter.python_code">
-<span class="sig-name descname"><span class="pre">python_code</span></span><a class="headerlink" href="#Formatter.python_code" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">python_code</span></span><a class="headerlink" href="#Formatter.python_code" title="Link to this definition"></a></dt>
 <dd><p>A block of Python code, which might be turned into syntax highlighted code.</p>
 <p>Defaults to returning a block of code with 4 spaces at the start of each line.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="Formatter.python_expression">
-<span class="sig-name descname"><span class="pre">python_expression</span></span><a class="headerlink" href="#Formatter.python_expression" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">python_expression</span></span><a class="headerlink" href="#Formatter.python_expression" title="Link to this definition"></a></dt>
 <dd><p>A span of Python code, which might be turned into syntax highlighted code. Should not have line breaks.</p>
 <p>Defaults to just returning the code unchanged.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="Formatter.python_value">
-<span class="sig-name descname"><span class="pre">python_value</span></span><a class="headerlink" href="#Formatter.python_value" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">python_value</span></span><a class="headerlink" href="#Formatter.python_value" title="Link to this definition"></a></dt>
 <dd><p>A span of Python code, which might be turned into syntax highlighted code. Should not have line breaks.</p>
 <p>Defaults to just returning the code unchanged.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="Formatter.name">
-<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#Formatter.name" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#Formatter.name" title="Link to this definition"></a></dt>
 <dd><p>A span of a Python name, such as the name of a function or class.</p>
 <p>Defaults to just returning the name unchanged.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="Formatter.inputs">
-<span class="sig-name descname"><span class="pre">inputs</span></span><a class="headerlink" href="#Formatter.inputs" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">inputs</span></span><a class="headerlink" href="#Formatter.inputs" title="Link to this definition"></a></dt>
 <dd><p>A block of inputs that were either entered by the user or provided to Pedal by the ICS. Meant to
 explain how a program was interacted with during execution. Think “standard input” inputs!</p>
 <p>Defaults to returning a block of text with 4 spaces at the start of each line, and additional new lines
@@ -186,7 +189,7 @@ before and after the block.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="Formatter.output">
-<span class="sig-name descname"><span class="pre">output</span></span><a class="headerlink" href="#Formatter.output" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">output</span></span><a class="headerlink" href="#Formatter.output" title="Link to this definition"></a></dt>
 <dd><p>A block of output text that was printed by the students’ program (or meant to be printed). Meant
 to explain how a program is supposed to render text during execution. Think “standard output” outputs!</p>
 <p>Defaults to returning a block fo text with 4 spaces at the start of each line.</p>
@@ -194,7 +197,7 @@ to explain how a program is supposed to render text during execution. Think “s
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="Formatter.line">
-<span class="sig-name descname"><span class="pre">line</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a></em><a class="headerlink" href="#Formatter.line" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">line</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></em><a class="headerlink" href="#Formatter.line" title="Link to this definition"></a></dt>
 <dd><p>A line number in code, which might be highlighted by the environment (in which case it assumes that the
 line is in the main file). Should therefore be numeric.</p>
 <p>Defaults to just returning the number.</p>
@@ -202,35 +205,35 @@ line is in the main file). Should therefore be numeric.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="Formatter.filename">
-<span class="sig-name descname"><span class="pre">filename</span></span><a class="headerlink" href="#Formatter.filename" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">filename</span></span><a class="headerlink" href="#Formatter.filename" title="Link to this definition"></a></dt>
 <dd><p>A filename, probably relevant to the project. An environment might hyperlink this to an actual file.</p>
 <p>Defaults to just returning the filename.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="Formatter.exception">
-<span class="sig-name descname"><span class="pre">exception</span></span><a class="headerlink" href="#Formatter.exception" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">exception</span></span><a class="headerlink" href="#Formatter.exception" title="Link to this definition"></a></dt>
 <dd><p>A block of an Exception trace. Mostly internal.</p>
 <p>Defaults to returning a block of text with 4 spaces at the start of each line.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="Formatter.frame">
-<span class="sig-name descname"><span class="pre">frame</span></span><a class="headerlink" href="#Formatter.frame" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">frame</span></span><a class="headerlink" href="#Formatter.frame" title="Link to this definition"></a></dt>
 <dd><p>A span of a code Frame. Mostly internal.</p>
 <p>Defaults to returning the text of the frame unmodified.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="Formatter.traceback">
-<span class="sig-name descname"><span class="pre">traceback</span></span><a class="headerlink" href="#Formatter.traceback" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">traceback</span></span><a class="headerlink" href="#Formatter.traceback" title="Link to this definition"></a></dt>
 <dd><p>A block of a traceback. Mostly internal.</p>
 <p>Defaults to returning the text of the frame unmodified.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Formatter.check_mark">
-<span class="sig-name descname"><span class="pre">check_mark</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Formatter.check_mark" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">check_mark</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Formatter.check_mark" title="Link to this definition"></a></dt>
 <dd><p>A check mark symbol, to indicate the student was correct. Must be called by using the report’s
 formatter, rather than as a conversion flag.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">formatter</span><span class="o">.</span><span class="n">check_mark</span><span class="p">()</span>
@@ -241,7 +244,7 @@ formatter, rather than as a conversion flag.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Formatter.negative_mark">
-<span class="sig-name descname"><span class="pre">negative_mark</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Formatter.negative_mark" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">negative_mark</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Formatter.negative_mark" title="Link to this definition"></a></dt>
 <dd><p>An “X” (cross) that indicates the student was incorrect. Must be called by using the report’s
 formatter, rather than as a conversion flag.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">formatter</span><span class="o">.</span><span class="n">negative_mark</span><span class="p">()</span>
@@ -252,7 +255,7 @@ formatter, rather than as a conversion flag.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Formatter.indent">
-<span class="sig-name descname"><span class="pre">indent</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Formatter.indent" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">indent</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Formatter.indent" title="Link to this definition"></a></dt>
 <dd><p>Generates an indentation in the text. Must be called by using the report’s
 formatter, rather than as a conversion flag.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">formatter</span><span class="o">.</span><span class="n">negative_mark</span><span class="p">()</span>
@@ -263,7 +266,7 @@ formatter, rather than as a conversion flag.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Formatter.table">
-<span class="sig-name descname"><span class="pre">table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rows</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Formatter.table" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rows</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Formatter.table" title="Link to this definition"></a></dt>
 <dd><p>A function provided by the formatter to create a table of data. Must provide both
 the columns and rows. Has to be called by using the report’s formatter, rather than as a conversion
 flag.</p>
@@ -279,8 +282,8 @@ flag.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>rows</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em><em>]</em>) – The 2D list of data to render inside the table</p></li>
-<li><p><strong>columns</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – The 1D list of columns to render on top of the table.</p></li>
+<li><p><strong>rows</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>]</em><em>]</em>) – The 2D list of data to render inside the table</p></li>
+<li><p><strong>columns</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>]</em>) – The 1D list of columns to render on top of the table.</p></li>
 </ul>
 </dd>
 </dl>
@@ -290,14 +293,14 @@ flag.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="TextFormatter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TextFormatter</span></span><a class="headerlink" href="#TextFormatter" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TextFormatter</span></span><a class="headerlink" href="#TextFormatter" title="Link to this definition"></a></dt>
 <dd><p>Generates regular text. Default for command line environments.
 Provides no additional conversion flags over the regular <a class="reference internal" href="#Formatter" title="Formatter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Formatter</span></code></a>, and uses its default behavior.</p>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="HtmlFormatter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">HtmlFormatter</span></span><a class="headerlink" href="#HtmlFormatter" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">HtmlFormatter</span></span><a class="headerlink" href="#HtmlFormatter" title="Link to this definition"></a></dt>
 <dd><p>Generates HTML formatted text. Default for HTML-capable environments like
 BlockPy.</p>
 </dd></dl>

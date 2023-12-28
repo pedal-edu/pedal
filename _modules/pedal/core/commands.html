@@ -1,21 +1,23 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pedal.core.commands &mdash; Pedal 1.0 documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -111,7 +113,9 @@
 
 <span class="c1"># TODO: force_success function, which ignores errors to give the points.</span>
 
-<div class="viewcode-block" id="set_correct"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.set_correct">[docs]</a><span class="k">class</span> <span class="nc">set_correct</span><span class="p">(</span><span class="n">FeedbackResponse</span><span class="p">):</span>
+<div class="viewcode-block" id="set_correct">
+<a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.set_correct">[docs]</a>
+<span class="k">class</span> <span class="nc">set_correct</span><span class="p">(</span><span class="n">FeedbackResponse</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    **(Feedback Function)**</span>
 
@@ -127,10 +131,13 @@
     <span class="n">valence</span> <span class="o">=</span> <span class="n">Feedback</span><span class="o">.</span><span class="n">POSITIVE_VALENCE</span></div>
 
 
+
 <span class="n">set_success</span> <span class="o">=</span> <span class="n">set_correct</span>
 
 
-<div class="viewcode-block" id="compliment"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.compliment">[docs]</a><span class="k">class</span> <span class="nc">compliment</span><span class="p">(</span><span class="n">FeedbackResponse</span><span class="p">):</span>
+<div class="viewcode-block" id="compliment">
+<a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.compliment">[docs]</a>
+<span class="k">class</span> <span class="nc">compliment</span><span class="p">(</span><span class="n">FeedbackResponse</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Create a positive feedback for the user, potentially on a specific line of</span>
 <span class="sd">    code.</span>
@@ -146,7 +153,10 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="give_partial"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.give_partial">[docs]</a><span class="k">class</span> <span class="nc">give_partial</span><span class="p">(</span><span class="n">FeedbackResponse</span><span class="p">):</span>
+
+<div class="viewcode-block" id="give_partial">
+<a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.give_partial">[docs]</a>
+<span class="k">class</span> <span class="nc">give_partial</span><span class="p">(</span><span class="n">FeedbackResponse</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Increases the user&#39;s current score by the `score`. &quot;&quot;&quot;</span>
     <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Partial Credit&quot;</span>
     <span class="n">message_template</span> <span class="o">=</span> <span class="s2">&quot;Partial credit&quot;</span>
@@ -160,7 +170,10 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">score</span><span class="o">=</span><span class="n">value</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="explain"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.explain">[docs]</a><span class="k">class</span> <span class="nc">explain</span><span class="p">(</span><span class="n">FeedbackResponse</span><span class="p">):</span>
+
+<div class="viewcode-block" id="explain">
+<a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.explain">[docs]</a>
+<span class="k">class</span> <span class="nc">explain</span><span class="p">(</span><span class="n">FeedbackResponse</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Give a high-priority piece of negative feedback to the student. &quot;&quot;&quot;</span>
     <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Instructor Feedback&quot;</span>
     <span class="n">muted</span> <span class="o">=</span> <span class="kc">False</span>
@@ -172,7 +185,10 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="gently"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.gently">[docs]</a><span class="k">class</span> <span class="nc">gently</span><span class="p">(</span><span class="n">FeedbackResponse</span><span class="p">):</span>
+
+<div class="viewcode-block" id="gently">
+<a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.gently">[docs]</a>
+<span class="k">class</span> <span class="nc">gently</span><span class="p">(</span><span class="n">FeedbackResponse</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Give a low-priority piece of negative feedback to the student.</span>
 
@@ -191,7 +207,10 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="guidance"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.guidance">[docs]</a><span class="k">class</span> <span class="nc">guidance</span><span class="p">(</span><span class="n">FeedbackResponse</span><span class="p">):</span>
+
+<div class="viewcode-block" id="guidance">
+<a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.guidance">[docs]</a>
+<span class="k">class</span> <span class="nc">guidance</span><span class="p">(</span><span class="n">FeedbackResponse</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Give instructions about a question. &quot;&quot;&quot;</span>
     <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Instructor Guidance&quot;</span>
     <span class="n">category</span> <span class="o">=</span> <span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">INSTRUCTIONS</span>
@@ -202,7 +221,10 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="hide_correctness"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.hide_correctness">[docs]</a><span class="k">def</span> <span class="nf">hide_correctness</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+
+<div class="viewcode-block" id="hide_correctness">
+<a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.hide_correctness">[docs]</a>
+<span class="k">def</span> <span class="nf">hide_correctness</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Force the report to not indicate score/correctness.</span>
 
@@ -213,7 +235,10 @@
     <span class="n">report</span><span class="o">.</span><span class="n">hide_correctness</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="suppress"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.suppress">[docs]</a><span class="k">def</span> <span class="nf">suppress</span><span class="p">(</span><span class="n">category</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+
+<div class="viewcode-block" id="suppress">
+<a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.suppress">[docs]</a>
+<span class="k">def</span> <span class="nf">suppress</span><span class="p">(</span><span class="n">category</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Hides a given category or label within a category from being considered</span>
 <span class="sd">    by the resolver.</span>
@@ -232,7 +257,10 @@
     <span class="n">report</span><span class="o">.</span><span class="n">suppress</span><span class="p">(</span><span class="n">category</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">fields</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="log"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.log">[docs]</a><span class="k">def</span> <span class="nf">log</span><span class="p">(</span><span class="o">*</span><span class="n">items</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+<div class="viewcode-block" id="log">
+<a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.log">[docs]</a>
+<span class="k">def</span> <span class="nf">log</span><span class="p">(</span><span class="o">*</span><span class="n">items</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Attach logging information to the Report as a piece of feedback.</span>
 
@@ -252,7 +280,10 @@
     <span class="n">feedback</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;log&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="debug"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.debug">[docs]</a><span class="k">def</span> <span class="nf">debug</span><span class="p">(</span><span class="o">*</span><span class="n">items</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+<div class="viewcode-block" id="debug">
+<a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.debug">[docs]</a>
+<span class="k">def</span> <span class="nf">debug</span><span class="p">(</span><span class="o">*</span><span class="n">items</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Attach logging information to the Report as a piece of feedback.</span>
 <span class="sd">    Works at a higher priority than :py:func:`~pedal.core.commands.log` and</span>
@@ -278,7 +309,10 @@
         <span class="n">feedback</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;debug&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="clear_report"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.clear_report">[docs]</a><span class="k">def</span> <span class="nf">clear_report</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+
+<div class="viewcode-block" id="clear_report">
+<a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.clear_report">[docs]</a>
+<span class="k">def</span> <span class="nf">clear_report</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Removes all existing data from the report, including any submissions,</span>
 <span class="sd">    suppressions, feedback, and Tool data.</span>
@@ -290,7 +324,10 @@
     <span class="n">report</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="contextualize_report"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.contextualize_report">[docs]</a><span class="k">def</span> <span class="nf">contextualize_report</span><span class="p">(</span><span class="n">submission</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;answer.py&#39;</span><span class="p">,</span> <span class="n">clear</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+
+<div class="viewcode-block" id="contextualize_report">
+<a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.contextualize_report">[docs]</a>
+<span class="k">def</span> <span class="nf">contextualize_report</span><span class="p">(</span><span class="n">submission</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;answer.py&#39;</span><span class="p">,</span> <span class="n">clear</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                          <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Updates the report with the submission. By default, clears out any old</span>
@@ -315,7 +352,10 @@
     <span class="n">report</span><span class="o">.</span><span class="n">contextualize</span><span class="p">(</span><span class="n">submission</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_submission"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.get_submission">[docs]</a><span class="k">def</span> <span class="nf">get_submission</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Submission</span><span class="p">:</span>
+
+<div class="viewcode-block" id="get_submission">
+<a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.get_submission">[docs]</a>
+<span class="k">def</span> <span class="nf">get_submission</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Submission</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get the current submission from the given report, or the default MAIN_REPORT.</span>
 
@@ -329,7 +369,10 @@
     <span class="k">return</span> <span class="n">report</span><span class="o">.</span><span class="n">submission</span></div>
 
 
-<div class="viewcode-block" id="get_all_feedback"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.get_all_feedback">[docs]</a><span class="k">def</span> <span class="nf">get_all_feedback</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+
+<div class="viewcode-block" id="get_all_feedback">
+<a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.get_all_feedback">[docs]</a>
+<span class="k">def</span> <span class="nf">get_all_feedback</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Gives access to the list of feedback from the report. Usually, you won&#39;t</span>
 <span class="sd">    need this; but if you want to build on the results of earlier tools, it</span>
@@ -349,7 +392,10 @@
     <span class="k">return</span> <span class="n">report</span><span class="o">.</span><span class="n">feedback</span></div>
 
 
-<div class="viewcode-block" id="system_error"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.system_error">[docs]</a><span class="k">class</span> <span class="nc">system_error</span><span class="p">(</span><span class="n">FeedbackResponse</span><span class="p">):</span>
+
+<div class="viewcode-block" id="system_error">
+<a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.system_error">[docs]</a>
+<span class="k">class</span> <span class="nc">system_error</span><span class="p">(</span><span class="n">FeedbackResponse</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Call this function to indicate that something has gone wrong at the system</span>
 <span class="sd">    level with Pedal. Ideally, this doesn&#39;t happen, but sometimes errors</span>
@@ -363,9 +409,12 @@
     <span class="n">muted</span> <span class="o">=</span> <span class="kc">True</span></div>
 
 
+
 <span class="c1"># TODO: set_line_offset(offset, filename=&#39;answer.py&#39;)</span>
 
-<div class="viewcode-block" id="set_formatter"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.set_formatter">[docs]</a><span class="k">def</span> <span class="nf">set_formatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+<div class="viewcode-block" id="set_formatter">
+<a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.set_formatter">[docs]</a>
+<span class="k">def</span> <span class="nf">set_formatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Set the formatter for the given report.</span>
 
@@ -377,6 +426,7 @@
 <span class="sd">            :py:data:`~pedal.core.report.MAIN_REPORT`).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">report</span><span class="o">.</span><span class="n">set_formatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">(</span><span class="n">report</span><span class="p">))</span></div>
+
 </pre></div>
 
            </div>

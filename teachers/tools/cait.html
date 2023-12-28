@@ -1,22 +1,24 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CAIT &mdash; Pedal 1.0 documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -68,8 +70,9 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="source.html">Source</a></li>
-<li class="toctree-l2"><a class="reference internal" href="assertions.html">Assertions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sandbox.html">Sandbox</a></li>
+<li class="toctree-l2"><a class="reference internal" href="assertions.html">Assertions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="types.html">Pedal’s Type System</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../integrations.html">Autograder Integrations</a></li>
@@ -111,7 +114,7 @@
            <div itemprop="articleBody">
              
   <section id="cait">
-<h1>CAIT<a class="headerlink" href="#cait" title="Permalink to this heading"></a></h1>
+<h1>CAIT<a class="headerlink" href="#cait" title="Link to this heading"></a></h1>
 <p>All the items in this guide may depend on one or more imports from the pedal package.
 However, most of these should work with the following imports</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.cait.cait_api</span> <span class="kn">import</span> <span class="o">*</span>
@@ -130,7 +133,7 @@ you’ll use the following pattern</p>
 ast_node class except with added fields or functionality. In general it should be easier to work
 with CaitNodes as many additional operations and matching functionality are supported with CaitNodes.</p>
 <section id="list-of-pedal-data-types">
-<h2>List of Pedal Data Types<a class="headerlink" href="#list-of-pedal-data-types" title="Permalink to this heading"></a></h2>
+<h2>List of Pedal Data Types<a class="headerlink" href="#list-of-pedal-data-types" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p>BoolType</p></li>
 <li><p>DictType</p></li>
@@ -147,14 +150,14 @@ with CaitNodes as many additional operations and matching functionality are supp
 </ul>
 </section>
 <section id="save-and-reference-variable">
-<h2>Save and reference variable<a class="headerlink" href="#save-and-reference-variable" title="Permalink to this heading"></a></h2>
+<h2>Save and reference variable<a class="headerlink" href="#save-and-reference-variable" title="Link to this heading"></a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">match</span> <span class="o">=</span> <span class="n">find_match</span><span class="p">(</span><span class="s2">&quot;_var_ = ___ + _var_&quot;</span><span class="p">)</span>
 <span class="n">student_var</span> <span class="o">=</span> <span class="n">match</span><span class="p">[</span><span class="s1">&#39;_var_&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
 </section>
 <section id="reference-a-function-call">
-<h2>Reference a function call<a class="headerlink" href="#reference-a-function-call" title="Permalink to this heading"></a></h2>
+<h2>Reference a function call<a class="headerlink" href="#reference-a-function-call" title="Link to this heading"></a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">match</span> <span class="o">=</span> <span class="n">find_match</span><span class="p">(</span><span class="s2">&quot;_var_ = _function_()&quot;</span><span class="p">)</span>
 <span class="n">student_func_call</span> <span class="o">=</span> <span class="n">match</span><span class="p">[</span><span class="s1">&#39;_function_&#39;</span><span class="p">]</span>
 <span class="n">args</span> <span class="o">=</span> <span class="n">student_func_call</span><span class="o">.</span><span class="n">args</span> <span class="c1">#access list of arguments as CaitNodes</span>
@@ -163,7 +166,7 @@ with CaitNodes as many additional operations and matching functionality are supp
 </div>
 </section>
 <section id="reference-a-function-definition">
-<h2>Reference a function definition<a class="headerlink" href="#reference-a-function-definition" title="Permalink to this heading"></a></h2>
+<h2>Reference a function definition<a class="headerlink" href="#reference-a-function-definition" title="Link to this heading"></a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">match</span> <span class="o">=</span> <span class="n">find_match</span><span class="p">(</span><span class="s2">&quot;def _my_func_():</span><span class="se">\n</span><span class="s2">&quot;</span>
                    <span class="s2">&quot;    pass</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="n">student_func_def</span> <span class="o">=</span> <span class="n">match</span><span class="p">[</span><span class="s1">&#39;_my_func_&#39;</span><span class="p">]</span> <span class="c1"># root node of function definition</span>
@@ -181,7 +184,7 @@ with CaitNodes as many additional operations and matching functionality are supp
 an ast sibling (so same indentation level as definition</p>
 </section>
 <section id="subtree-matching">
-<h2>Subtree matching<a class="headerlink" href="#subtree-matching" title="Permalink to this heading"></a></h2>
+<h2>Subtree matching<a class="headerlink" href="#subtree-matching" title="Link to this heading"></a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">match</span> <span class="o">=</span> <span class="n">find_match</span><span class="p">(</span><span class="s2">&quot;for _item_ in _list_:</span><span class="se">\n</span><span class="s2">&quot;</span>
                    <span class="s2">&quot;    __exp__&quot;</span><span class="p">)</span>
 <span class="k">match</span><span class="p">[</span><span class="s1">&#39;__exp__&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">find_match</span><span class="p">(</span><span class="s2">&quot;# whatever submatch&quot;</span><span class="p">)</span>
@@ -192,7 +195,7 @@ instead search everything contained in the body of the for loop, or other ast
 child nodes (see tutorial). Note that __exp__ here will match to the first line in the body. To search the ENTIRE body, you will need to get the parent of __exp__ like in the example above</p>
 </section>
 <section id="finding-data-types">
-<h2>Finding Data types<a class="headerlink" href="#finding-data-types" title="Permalink to this heading"></a></h2>
+<h2>Finding Data types<a class="headerlink" href="#finding-data-types" title="Link to this heading"></a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.tifa.type_definitions</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="n">match</span> <span class="o">=</span> <span class="n">find_match</span><span class="p">(</span><span class="s2">&quot;for _item_ in _list_:</span><span class="se">\n</span><span class="s2">&quot;</span>
                    <span class="s2">&quot;    _sum_ = _sum_ + _item_&quot;</span><span class="p">)</span>
@@ -207,7 +210,7 @@ child nodes (see tutorial). Note that __exp__ here will match to the first line 
 <span class="k">match</span><span class="p">[</span><span class="s1">&#39;_sum_&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">was_type</span><span class="p">(</span><span class="s1">&#39;NumType&#39;</span><span class="p">)</span> <span class="c1"># If you&#39;re only doing one access, you can use this</span>
 </pre></div>
 </div>
-<p>If you want to explore the data types yourself, recursively access the <a class="reference external" href="https://docs.python.org/3/library/trace.html#module-trace" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">trace</span></code></a> (a list of <code class="xref py py-obj docutils literal notranslate"><span class="pre">State</span></code> objects) attribute of data_state and check each state’s <a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">type</span></code></a> attribute. For example</p>
+<p>If you want to explore the data types yourself, recursively access the <a class="reference external" href="https://docs.python.org/3/library/trace.html#module-trace" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">trace</span></code></a> (a list of <code class="xref py py-obj docutils literal notranslate"><span class="pre">State</span></code> objects) attribute of data_state and check each state’s <a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">type</span></code></a> attribute. For example</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.types.definitions</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="sd">&#39;&#39;&#39;# Student Source Code</span>
 <span class="sd">var = 14</span>

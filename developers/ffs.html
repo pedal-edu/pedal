@@ -1,22 +1,24 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Developers: Feedback Functions &mdash; Pedal 1.0 documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -102,11 +104,11 @@
            <div itemprop="articleBody">
              
   <section id="developers-feedback-functions">
-<span id="developers-ffs"></span><h1>Developers: Feedback Functions<a class="headerlink" href="#developers-feedback-functions" title="Permalink to this heading"></a></h1>
+<span id="developers-ffs"></span><h1>Developers: Feedback Functions<a class="headerlink" href="#developers-feedback-functions" title="Link to this heading"></a></h1>
 <p>The most important unit of Pedal are its Feedback Functions.
 This document walks through Feedback Functions from a Tool developer’s perspective.</p>
 <section id="why-feedback-functions">
-<h2>Why Feedback Functions?<a class="headerlink" href="#why-feedback-functions" title="Permalink to this heading"></a></h2>
+<h2>Why Feedback Functions?<a class="headerlink" href="#why-feedback-functions" title="Link to this heading"></a></h2>
 <p>When we first started giving automated feedback, our scripts became a pile of <code class="docutils literal notranslate"><span class="pre">if</span></code> statements
 and messages. The complex logic was very delicate, and any reordering could
 potentially break the chain. Large chunks of code were clearly representing very
@@ -120,7 +122,7 @@ manner without sacrificing the power and flexibility of instructor logic.
 Not only are Feedback Functions reusable, but they are also (probably) easier to analyze.</p>
 </section>
 <section id="feedback-function-concepts">
-<h2>Feedback Function Concepts<a class="headerlink" href="#feedback-function-concepts" title="Permalink to this heading"></a></h2>
+<h2>Feedback Function Concepts<a class="headerlink" href="#feedback-function-concepts" title="Link to this heading"></a></h2>
 <p>This section goes into a little more depth about the major concepts of feedback functions.</p>
 <dl>
 <dt>Inheritance</dt><dd><p>All Feedback Functions descend from the main <code class="xref py py-obj docutils literal notranslate"><span class="pre">Feedback</span></code> class. This class
@@ -155,7 +157,7 @@ a specific FF instance is undefined behavior.</p>
 </dl>
 </section>
 <section id="creating-a-feedback-function">
-<h2>Creating a Feedback Function<a class="headerlink" href="#creating-a-feedback-function" title="Permalink to this heading"></a></h2>
+<h2>Creating a Feedback Function<a class="headerlink" href="#creating-a-feedback-function" title="Link to this heading"></a></h2>
 <p>Technically, you can create a new instance of a <code class="xref py py-obj docutils literal notranslate"><span class="pre">Feedback</span></code> class directly, and pass in arguments
 for all of its metadata and associated values. Simply calling the constructor will create a new
 instance of the Feedback Function AND automatically attaches it to a report. That means it will
@@ -268,7 +270,7 @@ pass in other fields, if they so choose.</p>
 <p>These are just some examples of what you can do with Feedback Functions!</p>
 </section>
 <section id="the-lifetime-of-a-feedback-function">
-<h2>The Lifetime of a Feedback Function<a class="headerlink" href="#the-lifetime-of-a-feedback-function" title="Permalink to this heading"></a></h2>
+<h2>The Lifetime of a Feedback Function<a class="headerlink" href="#the-lifetime-of-a-feedback-function" title="Link to this heading"></a></h2>
 <p>The following describes what happens when you create an instance of a Feedback Function.</p>
 <ol class="arabic simple">
 <li><p>The FF subclasses constructor is called.</p></li>
@@ -299,7 +301,7 @@ The parent might decide to post-processs the child feedback, or it might decide 
 </ol>
 </section>
 <section id="the-metadata-of-feedback-functions">
-<h2>The Metadata of Feedback Functions<a class="headerlink" href="#the-metadata-of-feedback-functions" title="Permalink to this heading"></a></h2>
+<h2>The Metadata of Feedback Functions<a class="headerlink" href="#the-metadata-of-feedback-functions" title="Link to this heading"></a></h2>
 <p>Feedback Functions have a number of fields that can be set to control their behavior.
 When you create a new FF class, you should probably at least minimally set some of these
 static class fields.</p>
@@ -332,7 +334,7 @@ Negative valence will have the score subtracted from the total, while positive
 valence will have the score added to the total.</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">tool</span></code> (str)</dt><dd><p>An internal name for indicating the tool that created
-this feedback. Should be taken directly from the Tool itself. If <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>, then
+this feedback. Should be taken directly from the Tool itself. If <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>, then
 this was not created by a tool but directly by the control script.</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">title</span></code> (str)</dt><dd><p>The descriptive name of the feedback to be shown to the learner.
@@ -381,7 +383,7 @@ user’s attention should be directed.</p>
 </dl>
 </section>
 <section id="different-ways-of-disabling-feedback">
-<h2>Different Ways of Disabling Feedback<a class="headerlink" href="#different-ways-of-disabling-feedback" title="Permalink to this heading"></a></h2>
+<h2>Different Ways of Disabling Feedback<a class="headerlink" href="#different-ways-of-disabling-feedback" title="Link to this heading"></a></h2>
 <p>There are a few different ways to control the behavior of Feedback Functions.</p>
 <ul class="simple">
 <li><dl class="simple">
@@ -421,7 +423,7 @@ and utterly skipped during the resolver phase. They will still have their condit
 </ul>
 </section>
 <section id="methods-of-feedback-functions">
-<h2>Methods of Feedback Functions<a class="headerlink" href="#methods-of-feedback-functions" title="Permalink to this heading"></a></h2>
+<h2>Methods of Feedback Functions<a class="headerlink" href="#methods-of-feedback-functions" title="Link to this heading"></a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">__init__</span></code></p>
 <blockquote>
 <div><p>If the Feedback object is not meant to be intelligent (e.g., it has no special fields or logic), then you don’t need to
@@ -449,7 +451,7 @@ For almost all FFs, this is not necessary. However, when a</p>
 </div></blockquote>
 </section>
 <section id="overriding-existing-feedback-functions">
-<h2>Overriding Existing Feedback Functions<a class="headerlink" href="#overriding-existing-feedback-functions" title="Permalink to this heading"></a></h2>
+<h2>Overriding Existing Feedback Functions<a class="headerlink" href="#overriding-existing-feedback-functions" title="Link to this heading"></a></h2>
 <p>If you are unhappy with the message we chose for a particular feedback, you can override it.
 In fact, you can override any of the attributes of existing Feedback Functions that were defined
 as classes.

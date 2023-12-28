@@ -1,21 +1,23 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pedal.cait.cait_api &mdash; Pedal 1.0 documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -113,8 +115,11 @@
 <span class="n">TIFA_TOOL_NAME</span> <span class="o">=</span> <span class="s1">&#39;tifa&#39;</span>
 
 
-<div class="viewcode-block" id="CaitException"><a class="viewcode-back" href="../../../developers/tools/cait.html#pedal.cait.cait_api.CaitException">[docs]</a><span class="k">class</span> <span class="nc">CaitException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<div class="viewcode-block" id="CaitException">
+<a class="viewcode-back" href="../../../developers/tools/cait.html#pedal.cait.cait_api.CaitException">[docs]</a>
+<span class="k">class</span> <span class="nc">CaitException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
     <span class="k">pass</span></div>
+
 
 
 <span class="k">def</span> <span class="nf">_parse_source</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
@@ -140,7 +145,9 @@
     <span class="k">return</span> <span class="n">parsed</span>
 
 
-<div class="viewcode-block" id="reparse_if_needed"><a class="viewcode-back" href="../../../developers/tools/cait.html#pedal.cait.cait_api.reparse_if_needed">[docs]</a><span class="k">def</span> <span class="nf">reparse_if_needed</span><span class="p">(</span><span class="n">student_code</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+<div class="viewcode-block" id="reparse_if_needed">
+<a class="viewcode-back" href="../../../developers/tools/cait.html#pedal.cait.cait_api.reparse_if_needed">[docs]</a>
+<span class="k">def</span> <span class="nf">reparse_if_needed</span><span class="p">(</span><span class="n">student_code</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieves the current report for CAIT. If there is no CAIT report, it will</span>
 <span class="sd">    generate one. If source code is given, that will be used instead of the</span>
@@ -176,7 +183,10 @@
     <span class="k">return</span> <span class="n">cait</span></div>
 
 
-<div class="viewcode-block" id="require_tifa"><a class="viewcode-back" href="../../../developers/tools/cait.html#pedal.cait.cait_api.require_tifa">[docs]</a><span class="k">def</span> <span class="nf">require_tifa</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="require_tifa">
+<a class="viewcode-back" href="../../../developers/tools/cait.html#pedal.cait.cait_api.require_tifa">[docs]</a>
+<span class="k">def</span> <span class="nf">require_tifa</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Confirms that TIFA was run successfully, otherwise raises a</span>
 <span class="sd">    CaitException.</span>
@@ -188,8 +198,11 @@
         <span class="k">raise</span> <span class="n">CaitException</span><span class="p">(</span><span class="s2">&quot;TIFA was not run prior to CAIT.&quot;</span><span class="p">)</span></div>
 
 
+
 <span class="c1"># noinspection PyBroadException</span>
-<div class="viewcode-block" id="parse_program"><a class="viewcode-back" href="../../../developers/tools/cait.html#pedal.cait.cait_api.parse_program">[docs]</a><span class="k">def</span> <span class="nf">parse_program</span><span class="p">(</span><span class="n">student_code</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+<div class="viewcode-block" id="parse_program">
+<a class="viewcode-back" href="../../../developers/tools/cait.html#pedal.cait.cait_api.parse_program">[docs]</a>
+<span class="k">def</span> <span class="nf">parse_program</span><span class="p">(</span><span class="n">student_code</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Parses student code and produces a CAIT representation.</span>
 
@@ -205,7 +218,10 @@
     <span class="k">return</span> <span class="n">cait_report</span><span class="p">[</span><span class="s1">&#39;ast&#39;</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="expire_cait_cache"><a class="viewcode-back" href="../../../developers/tools/cait.html#pedal.cait.cait_api.expire_cait_cache">[docs]</a><span class="k">def</span> <span class="nf">expire_cait_cache</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+
+<div class="viewcode-block" id="expire_cait_cache">
+<a class="viewcode-back" href="../../../developers/tools/cait.html#pedal.cait.cait_api.expire_cait_cache">[docs]</a>
+<span class="k">def</span> <span class="nf">expire_cait_cache</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Deletes the most recent CAIT run and any cached CAIT parses.</span>
 
@@ -216,7 +232,10 @@
     <span class="n">report</span><span class="p">[</span><span class="s1">&#39;cait&#39;</span><span class="p">][</span><span class="s1">&#39;cache&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span></div>
 
 
-<div class="viewcode-block" id="def_use_error"><a class="viewcode-back" href="../../../developers/tools/cait.html#pedal.cait.cait_api.def_use_error">[docs]</a><span class="k">def</span> <span class="nf">def_use_error</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+
+<div class="viewcode-block" id="def_use_error">
+<a class="viewcode-back" href="../../../developers/tools/cait.html#pedal.cait.cait_api.def_use_error">[docs]</a>
+<span class="k">def</span> <span class="nf">def_use_error</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Checks if node is a name and has a def_use_error</span>
 
@@ -244,8 +263,11 @@
     <span class="k">return</span> <span class="n">has_error</span></div>
 
 
+
 <span class="c1"># noinspection PyBroadException</span>
-<div class="viewcode-block" id="data_state"><a class="viewcode-back" href="../../../developers/tools/cait.html#pedal.cait.cait_api.data_state">[docs]</a><span class="k">def</span> <span class="nf">data_state</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+<div class="viewcode-block" id="data_state">
+<a class="viewcode-back" href="../../../developers/tools/cait.html#pedal.cait.cait_api.data_state">[docs]</a>
+<span class="k">def</span> <span class="nf">data_state</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Determines the Tifa State of the given node.</span>
 
@@ -267,7 +289,10 @@
         <span class="k">return</span> <span class="kc">None</span></div>
 
 
-<div class="viewcode-block" id="data_type"><a class="viewcode-back" href="../../../developers/tools/cait.html#pedal.cait.cait_api.data_type">[docs]</a><span class="k">def</span> <span class="nf">data_type</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+
+<div class="viewcode-block" id="data_type">
+<a class="viewcode-back" href="../../../developers/tools/cait.html#pedal.cait.cait_api.data_type">[docs]</a>
+<span class="k">def</span> <span class="nf">data_type</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Looks up the type of the node using Tifa&#39;s analysis.</span>
 
@@ -283,7 +308,10 @@
     <span class="k">return</span> <span class="kc">None</span></div>
 
 
-<div class="viewcode-block" id="find_match"><a class="viewcode-back" href="../../../developers/tools/cait.html#pedal.cait.cait_api.find_match">[docs]</a><span class="k">def</span> <span class="nf">find_match</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">student_code</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">,</span> <span class="n">cut</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_previous</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="find_match">
+<a class="viewcode-back" href="../../../developers/tools/cait.html#pedal.cait.cait_api.find_match">[docs]</a>
+<span class="k">def</span> <span class="nf">find_match</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">student_code</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">,</span> <span class="n">cut</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_previous</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Apply Tree Inclusion and return the first match of the `pattern` in the</span>
 <span class="sd">    `student_code`.</span>
@@ -307,7 +335,10 @@
         <span class="k">return</span> <span class="kc">None</span></div>
 
 
-<div class="viewcode-block" id="find_matches"><a class="viewcode-back" href="../../../developers/tools/cait.html#pedal.cait.cait_api.find_matches">[docs]</a><span class="k">def</span> <span class="nf">find_matches</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">student_code</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cut</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">,</span> <span class="n">use_previous</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="find_matches">
+<a class="viewcode-back" href="../../../developers/tools/cait.html#pedal.cait.cait_api.find_matches">[docs]</a>
+<span class="k">def</span> <span class="nf">find_matches</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">student_code</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cut</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">,</span> <span class="n">use_previous</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Apply Tree Inclusion and return all matches of the `pattern` in the</span>
 <span class="sd">    `student_code`.</span>
@@ -329,14 +360,20 @@
     <span class="k">return</span> <span class="n">matcher</span><span class="o">.</span><span class="n">find_matches</span><span class="p">(</span><span class="n">student_ast</span><span class="p">,</span> <span class="n">use_previous</span><span class="o">=</span><span class="n">use_previous</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="find_submatches"><a class="viewcode-back" href="../../../developers/tools/cait.html#pedal.cait.cait_api.find_submatches">[docs]</a><span class="k">def</span> <span class="nf">find_submatches</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">student_code</span><span class="p">,</span> <span class="n">is_mod</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+
+<div class="viewcode-block" id="find_submatches">
+<a class="viewcode-back" href="../../../developers/tools/cait.html#pedal.cait.cait_api.find_submatches">[docs]</a>
+<span class="k">def</span> <span class="nf">find_submatches</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">student_code</span><span class="p">,</span> <span class="n">is_mod</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Incomplete.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">find_expr_sub_matches</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">student_code</span><span class="p">,</span> <span class="n">is_mod</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="find_expr_sub_matches"><a class="viewcode-back" href="../../../developers/tools/cait.html#pedal.cait.cait_api.find_expr_sub_matches">[docs]</a><span class="k">def</span> <span class="nf">find_expr_sub_matches</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">student_code</span><span class="p">,</span> <span class="n">is_mod</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+
+<div class="viewcode-block" id="find_expr_sub_matches">
+<a class="viewcode-back" href="../../../developers/tools/cait.html#pedal.cait.cait_api.find_expr_sub_matches">[docs]</a>
+<span class="k">def</span> <span class="nf">find_expr_sub_matches</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">student_code</span><span class="p">,</span> <span class="n">is_mod</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Finds pattern in student_code</span>
 <span class="sd">    # TODO: Add code to make pattern accept CaitNodes</span>
@@ -358,7 +395,10 @@
     <span class="k">return</span> <span class="n">matcher</span><span class="o">.</span><span class="n">find_matches</span><span class="p">(</span><span class="n">student_code</span><span class="p">,</span> <span class="n">check_meta</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="find_asts"><a class="viewcode-back" href="../../../developers/tools/cait.html#pedal.cait.cait_api.find_asts">[docs]</a><span class="k">def</span> <span class="nf">find_asts</span><span class="p">(</span><span class="n">node_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">student_code</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+
+<div class="viewcode-block" id="find_asts">
+<a class="viewcode-back" href="../../../developers/tools/cait.html#pedal.cait.cait_api.find_asts">[docs]</a>
+<span class="k">def</span> <span class="nf">find_asts</span><span class="p">(</span><span class="n">node_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">student_code</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Find all occurrences of the given AST node, based on the name of the AST</span>
 <span class="sd">    node (e.g., `&quot;For&quot;` or `&quot;FunctionDef&quot;`).</span>
@@ -382,7 +422,10 @@
     <span class="k">return</span> <span class="n">student_ast</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">node_name</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="reset"><a class="viewcode-back" href="../../../developers/tools/cait.html#pedal.cait.cait_api.reset">[docs]</a><span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+
+<div class="viewcode-block" id="reset">
+<a class="viewcode-back" href="../../../developers/tools/cait.html#pedal.cait.cait_api.reset">[docs]</a>
+<span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Args:</span>
@@ -398,6 +441,7 @@
         <span class="s1">&#39;cache&#39;</span><span class="p">:</span> <span class="p">{}</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">]</span></div>
+
 
 
 <span class="n">Report</span><span class="o">.</span><span class="n">register_tool</span><span class="p">(</span><span class="n">TOOL_NAME</span><span class="p">,</span> <span class="n">reset</span><span class="p">)</span>

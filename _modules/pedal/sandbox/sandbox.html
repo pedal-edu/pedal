@@ -1,21 +1,23 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pedal.sandbox.sandbox &mdash; Pedal 1.0 documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -118,7 +120,9 @@
 <span class="kn">from</span> <span class="nn">pedal.sandbox.tracer</span> <span class="kn">import</span> <span class="n">TRACER_STYLES</span>
 
 
-<div class="viewcode-block" id="Sandbox"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox">[docs]</a><span class="k">class</span> <span class="nc">Sandbox</span><span class="p">:</span>
+<div class="viewcode-block" id="Sandbox">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox">[docs]</a>
+<span class="k">class</span> <span class="nc">Sandbox</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Args:</span>
 <span class="sd">        report (:py:class:`~pedal.core.report.Report`): The report that this</span>
@@ -287,7 +291,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_next_context_id</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="bp">self</span>
 
-<div class="viewcode-block" id="Sandbox.run"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">inputs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">threaded</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="Sandbox.run">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.run">[docs]</a>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">inputs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">threaded</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
             <span class="n">after</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">before</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">real_io</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        If both ``code`` and ``filename`` are None, then the submission&#39;s</span>
@@ -337,7 +343,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">clear_input</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="Sandbox.call"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.call">[docs]</a>    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="n">threaded</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+
+<div class="viewcode-block" id="Sandbox.call">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.call">[docs]</a>
+    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="n">threaded</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
              <span class="n">inputs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">function_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
              <span class="n">args_locals</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">kwargs_locals</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -415,7 +424,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_purge_temporaries</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_result</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">context_id</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Sandbox.evaluate"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.evaluate">[docs]</a>    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="n">threaded</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Sandbox.evaluate">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.evaluate">[docs]</a>
+    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="n">threaded</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Evaluates the given code and assigns the result to the given target.</span>
 <span class="sd">        Will cause an error if ``code`` is not a valid expression.</span>
@@ -447,6 +459,7 @@
                       <span class="n">SandboxContextKind</span><span class="o">.</span><span class="n">EVAL</span><span class="p">,</span> <span class="n">threaded</span><span class="o">=</span><span class="n">threaded</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_result</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">context_id</span><span class="p">)</span></div>
 
+
     <span class="k">def</span> <span class="nf">_handle_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">context_id</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Determine the appropriate return value (either an exception or the</span>
 <span class="sd">        value stored in target. Also updates self.result. &quot;&quot;&quot;</span>
@@ -467,7 +480,9 @@
     <span class="c1">############################################################################</span>
     <span class="c1"># Context (history of executions)</span>
 
-<div class="viewcode-block" id="Sandbox.get_context"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.get_context">[docs]</a>    <span class="k">def</span> <span class="nf">get_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Sandbox.get_context">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.get_context">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieve the most recent contexts.</span>
 
@@ -490,6 +505,7 @@
                     <span class="k">if</span> <span class="n">past_context_group_starts</span> <span class="o">&lt;</span> <span class="n">context_id</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span>
                         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_context</span><span class="p">[</span><span class="n">past_context_group_starts</span><span class="p">:</span><span class="n">context_id</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_context</span><span class="p">[:</span><span class="n">context_id</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span></div>
+
 
     <span class="k">def</span> <span class="nf">_guess_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -514,18 +530,27 @@
         <span class="c1"># Okay just give up</span>
         <span class="k">return</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="Sandbox.start_grouping_context"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.start_grouping_context">[docs]</a>    <span class="k">def</span> <span class="nf">start_grouping_context</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Sandbox.start_grouping_context">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.start_grouping_context">[docs]</a>
+    <span class="k">def</span> <span class="nf">start_grouping_context</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Any subsequent executions will be grouped. &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_context_group_start</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_next_context_id</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Sandbox.stop_grouping_context"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.stop_grouping_context">[docs]</a>    <span class="k">def</span> <span class="nf">stop_grouping_context</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Sandbox.stop_grouping_context">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.stop_grouping_context">[docs]</a>
+    <span class="k">def</span> <span class="nf">stop_grouping_context</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Stop grouping subsequent executions. &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_context_group_start</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="Sandbox.clear_context"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.clear_context">[docs]</a>    <span class="k">def</span> <span class="nf">clear_context</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Sandbox.clear_context">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.clear_context">[docs]</a>
+    <span class="k">def</span> <span class="nf">clear_context</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Removes the history of any previous executions. &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_context_group_start</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_context</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span></div>
+
 
     <span class="c1">############################################################################</span>
     <span class="c1"># Tracing</span>
@@ -540,9 +565,12 @@
 
     <span class="n">tracer_style</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">_get_tracer_style</span><span class="p">,</span> <span class="n">_set_tracer_style</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Sandbox.clear_tracer"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.clear_tracer">[docs]</a>    <span class="k">def</span> <span class="nf">clear_tracer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Sandbox.clear_tracer">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.clear_tracer">[docs]</a>
+    <span class="k">def</span> <span class="nf">clear_tracer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Stop tracing in this sandbox. &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tracer_style</span> <span class="o">=</span> <span class="s1">&#39;none&#39;</span></div>
+
 
     <span class="c1">############################################################################</span>
     <span class="c1"># Exception Handling</span>
@@ -583,10 +611,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">exception</span><span class="o">.</span><span class="n">feedback</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">feedback</span>
         <span class="k">return</span> <span class="kc">False</span>
 
-<div class="viewcode-block" id="Sandbox.clear_exception"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.clear_exception">[docs]</a>    <span class="k">def</span> <span class="nf">clear_exception</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Sandbox.clear_exception">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.clear_exception">[docs]</a>
+    <span class="k">def</span> <span class="nf">clear_exception</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Removes the latest exception information &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">exception</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">feedback</span> <span class="o">=</span> <span class="kc">None</span></div>
+
 
     <span class="c1">############################################################################</span>
     <span class="c1"># Patching and Mocking</span>
@@ -654,7 +685,9 @@
         <span class="k">for</span> <span class="n">a_patch</span> <span class="ow">in</span> <span class="n">patches</span><span class="p">:</span>
             <span class="n">a_patch</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
 
-<div class="viewcode-block" id="Sandbox.clear_mocks"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.clear_mocks">[docs]</a>    <span class="k">def</span> <span class="nf">clear_mocks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reset_default_mocks</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="Sandbox.clear_mocks">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.clear_mocks">[docs]</a>
+    <span class="k">def</span> <span class="nf">clear_mocks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reset_default_mocks</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Removes any module or builtin overrides currently in effect.</span>
 
@@ -666,7 +699,10 @@
         <span class="k">if</span> <span class="n">reset_default_mocks</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">reset_default_overrides</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="Sandbox.reset_default_overrides"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.reset_default_overrides">[docs]</a>    <span class="k">def</span> <span class="nf">reset_default_overrides</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Sandbox.reset_default_overrides">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.reset_default_overrides">[docs]</a>
+    <span class="k">def</span> <span class="nf">reset_default_overrides</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Resets the list of blocked functions and modules to its starting</span>
 <span class="sd">        state. This blocks ``compile``, ``eval``, ``exec``, ``globals``,</span>
@@ -687,6 +723,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">mock_module</span><span class="p">(</span><span class="s1">&#39;designer&#39;</span><span class="p">,</span> <span class="n">mocked</span><span class="o">.</span><span class="n">MockDesigner</span><span class="p">(),</span> <span class="s1">&#39;designer&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mock_module</span><span class="p">(</span><span class="s1">&#39;microbit&#39;</span><span class="p">,</span> <span class="n">mocked</span><span class="o">.</span><span class="n">MockMicrobit</span><span class="p">(),</span> <span class="s1">&#39;microbit&#39;</span><span class="p">)</span></div>
 
+
     <span class="k">def</span> <span class="nf">mock_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">function_name</span><span class="p">,</span> <span class="n">new_version</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_module_overrides</span><span class="p">[</span><span class="s1">&#39;__builtins__&#39;</span><span class="p">][</span><span class="n">function_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_version</span>
 
@@ -696,7 +733,9 @@
     <span class="k">def</span> <span class="nf">block_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">function_name</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_module_overrides</span><span class="p">[</span><span class="s1">&#39;__builtins__&#39;</span><span class="p">][</span><span class="n">function_name</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
 
-<div class="viewcode-block" id="Sandbox.clear_mocked_function"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.clear_mocked_function">[docs]</a>    <span class="k">def</span> <span class="nf">clear_mocked_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">function_name</span><span class="p">):</span>
+<div class="viewcode-block" id="Sandbox.clear_mocked_function">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.clear_mocked_function">[docs]</a>
+    <span class="k">def</span> <span class="nf">clear_mocked_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">function_name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Removes the mocking associated with the given function name.</span>
 
@@ -706,7 +745,10 @@
         <span class="k">if</span> <span class="n">function_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_module_overrides</span><span class="p">[</span><span class="s1">&#39;__builtins__&#39;</span><span class="p">]:</span>
             <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_module_overrides</span><span class="p">[</span><span class="s1">&#39;__builtins__&#39;</span><span class="p">][</span><span class="n">function_name</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="Sandbox.allow_module"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.allow_module">[docs]</a>    <span class="k">def</span> <span class="nf">allow_module</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_name</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Sandbox.allow_module">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.allow_module">[docs]</a>
+    <span class="k">def</span> <span class="nf">allow_module</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">        Args:</span>
@@ -718,7 +760,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_module_overrides</span><span class="p">[</span><span class="n">module_name</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="Sandbox.mock_module"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.mock_module">[docs]</a>    <span class="k">def</span> <span class="nf">mock_module</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_name</span><span class="p">,</span> <span class="n">new_version</span><span class="p">,</span> <span class="n">friendly_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Sandbox.mock_module">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.mock_module">[docs]</a>
+    <span class="k">def</span> <span class="nf">mock_module</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_name</span><span class="p">,</span> <span class="n">new_version</span><span class="p">,</span> <span class="n">friendly_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Create a mocked version of this module. &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">friendly_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">friendly_name</span> <span class="o">=</span> <span class="n">module_name</span>
@@ -728,7 +773,10 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">_module_overrides</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">mocked_version</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="Sandbox.block_module"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.block_module">[docs]</a>    <span class="k">def</span> <span class="nf">block_module</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_name</span><span class="p">,</span> <span class="n">friendly_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Sandbox.block_module">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.block_module">[docs]</a>
+    <span class="k">def</span> <span class="nf">block_module</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_name</span><span class="p">,</span> <span class="n">friendly_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Prevent the module from being loaded in student code.</span>
 <span class="sd">        Also unloads the module if it has been imported previously by</span>
@@ -751,6 +799,7 @@
                 <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
         <span class="c1"># self._module_overrides[module_name] = mocked.BlockedModule(module_name)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
+
 
     <span class="c1">############################################################################</span>
     <span class="c1"># Code generation</span>
@@ -817,7 +866,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
         <span class="k">return</span> <span class="n">key</span>
 
-<div class="viewcode-block" id="Sandbox.make_safe_variable"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.make_safe_variable">[docs]</a>    <span class="k">def</span> <span class="nf">make_safe_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<div class="viewcode-block" id="Sandbox.make_safe_variable">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.make_safe_variable">[docs]</a>
+    <span class="k">def</span> <span class="nf">make_safe_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Tries to construct a safe variable name in the current namespace, based</span>
 <span class="sd">        off the given one. This is accomplished by appending a &quot;_&quot; and a number</span>
@@ -837,6 +888,7 @@
             <span class="n">current_addition</span> <span class="o">=</span> <span class="s2">&quot;_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">attempt_index</span><span class="p">)</span>
             <span class="n">attempt_index</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="n">name</span> <span class="o">+</span> <span class="n">current_addition</span></div>
+
 
     <span class="c1">############################################################################</span>
     <span class="c1"># Data Namespace Management</span>
@@ -862,7 +914,9 @@
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">mocked</span><span class="o">.</span><span class="n">_default_builtins</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">data</span><span class="p">[</span><span class="s1">&#39;__builtins__&#39;</span><span class="p">][</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
 
-<div class="viewcode-block" id="Sandbox.set_student_data"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.set_student_data">[docs]</a>    <span class="k">def</span> <span class="nf">set_student_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_data</span><span class="p">):</span>
+<div class="viewcode-block" id="Sandbox.set_student_data">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.set_student_data">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_student_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_data</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Overwrites the existing student data with the keys and values from</span>
 <span class="sd">        the ``new_data``. This copies the data over, but does not modify the</span>
@@ -878,7 +932,10 @@
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">new_data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span></div>
 
-<div class="viewcode-block" id="Sandbox.get_names_by_type"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.get_names_by_type">[docs]</a>    <span class="k">def</span> <span class="nf">get_names_by_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">exclude_builtins</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Sandbox.get_names_by_type">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.get_names_by_type">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_names_by_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">exclude_builtins</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">        Args:</span>
@@ -896,7 +953,10 @@
                 <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">result</span></div>
 
-<div class="viewcode-block" id="Sandbox.get_values_by_type"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.get_values_by_type">[docs]</a>    <span class="k">def</span> <span class="nf">get_values_by_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">exclude_builtins</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Sandbox.get_values_by_type">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.get_values_by_type">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_values_by_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">exclude_builtins</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">        Args:</span>
@@ -909,7 +969,10 @@
         <span class="n">names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_names_by_type</span><span class="p">(</span><span class="nb">type</span><span class="p">,</span> <span class="n">exclude_builtins</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="Sandbox.get_variables_by_type"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.get_variables_by_type">[docs]</a>    <span class="k">def</span> <span class="nf">get_variables_by_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">exclude_builtins</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Sandbox.get_variables_by_type">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.get_variables_by_type">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_variables_by_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">exclude_builtins</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">        Args:</span>
@@ -921,6 +984,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_names_by_type</span><span class="p">(</span><span class="nb">type</span><span class="p">,</span> <span class="n">exclude_builtins</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">[(</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">name</span><span class="p">])</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">]</span></div>
+
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">functions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -979,12 +1043,17 @@
     <span class="c1">############################################################################</span>
     <span class="c1"># Input Handling</span>
 
-<div class="viewcode-block" id="Sandbox.clear_input"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.clear_input">[docs]</a>    <span class="k">def</span> <span class="nf">clear_input</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Sandbox.clear_input">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.clear_input">[docs]</a>
+    <span class="k">def</span> <span class="nf">clear_input</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Removes any inputs queued. &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_input</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="Sandbox.set_input"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.set_input">[docs]</a>    <span class="k">def</span> <span class="nf">set_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">clear</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Sandbox.set_input">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.set_input">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">clear</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Queues the given value as the next arguments to the `input` function.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1001,6 +1070,7 @@
         <span class="k">elif</span> <span class="n">inputs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span> <span class="o">=</span> <span class="n">inputs</span>
         <span class="k">return</span> <span class="bp">self</span></div>
+
 
     <span class="k">def</span> <span class="nf">_track_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context_inputs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1036,14 +1106,19 @@
     <span class="c1">############################################################################</span>
     <span class="c1"># Output Handling</span>
 
-<div class="viewcode-block" id="Sandbox.clear_output"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.clear_output">[docs]</a>    <span class="k">def</span> <span class="nf">clear_output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Sandbox.clear_output">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.clear_output">[docs]</a>
+    <span class="k">def</span> <span class="nf">clear_output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Remove any output currently attached to this sandbox. &quot;&quot;&quot;</span>
         <span class="c1"># Update outputs</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">raw_output</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="Sandbox.append_output"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.append_output">[docs]</a>    <span class="k">def</span> <span class="nf">append_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_output</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Sandbox.append_output">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.append_output">[docs]</a>
+    <span class="k">def</span> <span class="nf">append_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_output</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Adds the string of `raw_output` to the current `raw_output` attribute.</span>
 <span class="sd">        The added string will be split on newlines and rstripped to append</span>
@@ -1063,7 +1138,10 @@
             <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">line</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Sandbox.clear"><a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.clear">[docs]</a>    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Sandbox.clear">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.clear">[docs]</a>
+    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Removes any existing data in this sandbox. &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">clear_data</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">clear_context</span><span class="p">()</span>
@@ -1071,7 +1149,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">clear_exception</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">clear_input</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">clear_output</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">clear_tracer</span><span class="p">()</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clear_tracer</span><span class="p">()</span></div>
+</div>
+
 </pre></div>
 
            </div>

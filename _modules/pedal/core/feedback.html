@@ -1,21 +1,23 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pedal.core.feedback &mdash; Pedal 1.0 documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -111,7 +113,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_registered_feedback</span> <span class="o">=</span> <span class="p">{}</span>
 
 
-<div class="viewcode-block" id="Feedback"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.Feedback">[docs]</a><span class="k">class</span> <span class="nc">Feedback</span><span class="p">:</span>
+<div class="viewcode-block" id="Feedback">
+<a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.Feedback">[docs]</a>
+<span class="k">class</span> <span class="nc">Feedback</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A class for storing raw feedback.</span>
 
@@ -386,7 +390,9 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_exception</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">_exception</span>
 
-<div class="viewcode-block" id="Feedback.condition"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.Feedback.condition">[docs]</a>    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Feedback.condition">
+<a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.Feedback.condition">[docs]</a>
+    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Detect if this feedback is present in the code.</span>
 <span class="sd">        Defaults to true through the `activate` parameter.</span>
@@ -395,6 +401,7 @@
 <span class="sd">            bool: Whether this feedback&#39;s condition was detected.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">activate</span></div>
+
 
     <span class="k">def</span> <span class="nf">_get_message</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -526,13 +533,16 @@
             <span class="n">metadata</span> <span class="o">+=</span> <span class="s2">&quot;, &quot;</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">value</span><span class="si">!r}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">field</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
         <span class="k">return</span> <span class="s2">&quot;Feedback(</span><span class="si">{}{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Feedback.update_location"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.Feedback.update_location">[docs]</a>    <span class="k">def</span> <span class="nf">update_location</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">):</span>
+<div class="viewcode-block" id="Feedback.update_location">
+<a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.Feedback.update_location">[docs]</a>
+    <span class="k">def</span> <span class="nf">update_location</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Updates both the fields and location attribute.</span>
 <span class="sd">        TODO: Handle less information intelligently. &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
             <span class="n">location</span> <span class="o">=</span> <span class="n">Location</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">location</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;location&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">location</span></div>
+
 
     <span class="k">def</span> <span class="nf">_fields_to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
@@ -574,7 +584,10 @@
         <span class="bp">cls</span><span class="o">.</span><span class="n">_override_backups</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="FeedbackResponse"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.FeedbackResponse">[docs]</a><span class="k">class</span> <span class="nc">FeedbackResponse</span><span class="p">(</span><span class="n">Feedback</span><span class="p">):</span>
+
+<div class="viewcode-block" id="FeedbackResponse">
+<a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.FeedbackResponse">[docs]</a>
+<span class="k">class</span> <span class="nc">FeedbackResponse</span><span class="p">(</span><span class="n">Feedback</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An extension of :py:class:`~pedal.core.feedback.Feedback` that is meant</span>
 <span class="sd">    to indicate that the class should not have any condition behind its</span>
@@ -582,7 +595,10 @@
 <span class="sd">    &quot;&quot;&quot;</span></div>
 
 
-<div class="viewcode-block" id="CompositeFeedbackFunction"><a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.CompositeFeedbackFunction">[docs]</a><span class="k">def</span> <span class="nf">CompositeFeedbackFunction</span><span class="p">(</span><span class="o">*</span><span class="n">functions</span><span class="p">):</span>
+
+<div class="viewcode-block" id="CompositeFeedbackFunction">
+<a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.CompositeFeedbackFunction">[docs]</a>
+<span class="k">def</span> <span class="nf">CompositeFeedbackFunction</span><span class="p">(</span><span class="o">*</span><span class="n">functions</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Decorator for functions that return multiple types of feedback functions.</span>
 
@@ -606,6 +622,7 @@
         <span class="k">return</span> <span class="n">function</span>
 
     <span class="k">return</span> <span class="n">CompositeFeedbackFunction_with_attrs</span></div>
+
 
 
 <span class="k">class</span> <span class="nc">FeedbackGroup</span><span class="p">(</span><span class="n">Feedback</span><span class="p">):</span>

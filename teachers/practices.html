@@ -1,22 +1,24 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Best Practices &mdash; Pedal 1.0 documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -96,7 +98,7 @@
            <div itemprop="articleBody">
              
   <section id="best-practices">
-<h1>Best Practices<a class="headerlink" href="#best-practices" title="Permalink to this heading"></a></h1>
+<h1>Best Practices<a class="headerlink" href="#best-practices" title="Link to this heading"></a></h1>
 <p>This document attempts to summarize our positions on the best practices
 for using Pedal.</p>
 <div class="admonition warning">
@@ -104,26 +106,26 @@ for using Pedal.</p>
 <p>We aren’t quite ready with this page yet, sorry!</p>
 </div>
 <section id="documenting-feedback">
-<h2>Documenting Feedback<a class="headerlink" href="#documenting-feedback" title="Permalink to this heading"></a></h2>
+<h2>Documenting Feedback<a class="headerlink" href="#documenting-feedback" title="Link to this heading"></a></h2>
 <p><strong>Provide as much metadata about feedback as you can.</strong></p>
 <p>When creating any piece of feedback, there are a lot of fields you can use. A particularly critical one is <code class="docutils literal notranslate"><span class="pre">label</span></code>, since
 that will allow you to track usages of a piece of feedback:</p>
 <div class="literal-block-wrapper docutils container" id="id1">
-<div class="code-block-caption"><span class="caption-text">grade_assignment.py</span><a class="headerlink" href="#id1" title="Permalink to this code"></a></div>
+<div class="code-block-caption"><span class="caption-text">grade_assignment.py</span><a class="headerlink" href="#id1" title="Link to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">gently</span><span class="p">(</span><span class="s2">&quot;The output is wrong!&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;wrong_output&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <p>If possible, you can also label the condition category and response kind:</p>
 <div class="literal-block-wrapper docutils container" id="id2">
-<div class="code-block-caption"><span class="caption-text">grade_assignment.py</span><a class="headerlink" href="#id2" title="Permalink to this code"></a></div>
+<div class="code-block-caption"><span class="caption-text">grade_assignment.py</span><a class="headerlink" href="#id2" title="Link to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">gently</span><span class="p">(</span><span class="s2">&quot;Try to avoid type errors.&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="s1">&#39;runtime&#39;</span><span class="p">,</span> <span class="n">response</span><span class="o">=</span><span class="s1">&#39;hint&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </section>
 <section id="use-novice-friendly-language">
-<h2>Use Novice-Friendly Language<a class="headerlink" href="#use-novice-friendly-language" title="Permalink to this heading"></a></h2>
+<h2>Use Novice-Friendly Language<a class="headerlink" href="#use-novice-friendly-language" title="Link to this heading"></a></h2>
 </section>
 </section>
 

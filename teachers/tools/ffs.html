@@ -1,22 +1,24 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Feedback Functions &mdash; Pedal 1.0 documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -80,8 +82,9 @@
 <li class="toctree-l2"><a class="reference internal" href="tifa.html">TIFA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cait.html">CAIT</a></li>
 <li class="toctree-l2"><a class="reference internal" href="source.html">Source</a></li>
-<li class="toctree-l2"><a class="reference internal" href="assertions.html">Assertions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sandbox.html">Sandbox</a></li>
+<li class="toctree-l2"><a class="reference internal" href="assertions.html">Assertions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="types.html">Pedal’s Type System</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../integrations.html">Autograder Integrations</a></li>
@@ -123,7 +126,7 @@
            <div itemprop="articleBody">
              
   <section id="feedback-functions">
-<span id="teachers-ffs"></span><h1>Feedback Functions<a class="headerlink" href="#feedback-functions" title="Permalink to this heading"></a></h1>
+<span id="teachers-ffs"></span><h1>Feedback Functions<a class="headerlink" href="#feedback-functions" title="Link to this heading"></a></h1>
 <p>A major concept in Pedal is a <a class="reference internal" href="../../everyone/glossary.html#term-Feedback-Function"><span class="xref std std-term">Feedback Function</span></a>, which encapsulate the idea of a <a class="reference internal" href="../../everyone/glossary.html#term-Feedback-Condition"><span class="xref std std-term">Feedback Condition</span></a> and
 a <a class="reference internal" href="../../everyone/glossary.html#term-Feedback-Response"><span class="xref std std-term">Feedback Response</span></a> pair. Pedal provides a large number of Feedback Functions and mechanisms to create new ones.
 As instructors, you have can control and override the default behavior of these feedback functions in various ways.</p>
@@ -134,21 +137,21 @@ autograding scripts. If you are interested in extending Pedal, you might want to
 documentation page.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="title">
-<span class="sig-name descname"><span class="pre">title</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="headerlink" href="#title" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">title</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></em><a class="headerlink" href="#title" title="Link to this definition"></a></dt>
 <dd><p>The descriptive name for this Feedback Function that will be shown to students as a “header” of
 sorts.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="message">
-<span class="sig-name descname"><span class="pre">message</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="headerlink" href="#message" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">message</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></em><a class="headerlink" href="#message" title="Link to this definition"></a></dt>
 <dd><p>The actual text of the feedback that will be shown to the student. Depending on the current Formatter
 and Environment, may support HTML or Markdown. Will override the <a class="reference internal" href="#message_template" title="message_template"><code class="xref py py-attr docutils literal notranslate"><span class="pre">message_template</span></code></a> if provided.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="message_template">
-<span class="sig-name descname"><span class="pre">message_template</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="headerlink" href="#message_template" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">message_template</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></em><a class="headerlink" href="#message_template" title="Link to this definition"></a></dt>
 <dd><p>The string template used to generate the text to show the student if the <a class="reference internal" href="#message" title="message"><code class="xref py py-attr docutils literal notranslate"><span class="pre">message</span></code></a> is not provided.
 Any field names wrapped in curly braces will be interpolated when the Feedback Function meets its condition.
 These fields can be further manipulated by incorporating the <a class="reference internal" href="formatter.html#teacher-formatter"><span class="std std-ref">Formatter</span></a>’s supported conversion flags:</p>
@@ -167,7 +170,7 @@ These fields can be further manipulated by incorporating the <a class="reference
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="else_message">
-<span class="sig-name descname"><span class="pre">else_message</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="headerlink" href="#else_message" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">else_message</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></em><a class="headerlink" href="#else_message" title="Link to this definition"></a></dt>
 <dd><p>A string to render as the <a class="reference internal" href="#message" title="message"><code class="xref py py-attr docutils literal notranslate"><span class="pre">message</span></code></a> if the Feedback Function’s condition is NOT met.
 Except for Feedback Functions that have a positive valence - then this message is shown when the
 FF’s condition IS met.
@@ -182,7 +185,7 @@ that choose to render such things.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="else_message_template">
-<span class="sig-name descname"><span class="pre">else_message_template</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="headerlink" href="#else_message_template" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">else_message_template</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></em><a class="headerlink" href="#else_message_template" title="Link to this definition"></a></dt>
 <dd><p>The corresponding string template parameter for the <a class="reference internal" href="#else_message" title="else_message"><code class="xref py py-attr docutils literal notranslate"><span class="pre">else_message</span></code></a> parameter. Works the same as its
 corresponding <a class="reference internal" href="#message_template" title="message_template"><code class="xref py py-attr docutils literal notranslate"><span class="pre">message_template</span></code></a> field, just for providing text to the student in the case of no
 <code class="docutils literal notranslate"><span class="pre">else_message</span></code> being provided. Usually not used.</p>
@@ -190,79 +193,79 @@ corresponding <a class="reference internal" href="#message_template" title="mess
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="category">
-<span class="sig-name descname"><span class="pre">category</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../developers/api.html#pedal.core.feedback_category.FeedbackCategory" title="pedal.core.feedback_category.FeedbackCategory"><span class="pre">FeedbackCategory</span></a></em><a class="headerlink" href="#category" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">category</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../developers/api.html#pedal.core.feedback_category.FeedbackCategory" title="pedal.core.feedback_category.FeedbackCategory"><span class="pre">FeedbackCategory</span></a></em><a class="headerlink" href="#category" title="Link to this definition"></a></dt>
 <dd><p>An internal name categorizing the feedback condition, such as <code class="docutils literal notranslate"><span class="pre">&quot;syntax&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;runtime&quot;</span></code>.
 Usually you don’t want to change this.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="kind">
-<span class="sig-name descname"><span class="pre">kind</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../developers/api.html#pedal.core.feedback_category.FeedbackKind" title="pedal.core.feedback_category.FeedbackKind"><span class="pre">FeedbackKind</span></a></em><a class="headerlink" href="#kind" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">kind</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../developers/api.html#pedal.core.feedback_category.FeedbackKind" title="pedal.core.feedback_category.FeedbackKind"><span class="pre">FeedbackKind</span></a></em><a class="headerlink" href="#kind" title="Link to this definition"></a></dt>
 <dd><p>An internal name categorizing the feedback response, such as <code class="docutils literal notranslate"><span class="pre">&quot;hint&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;mistake&quot;</span></code>.
 Usually you don’t want to change this.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="fields">
-<span class="sig-name descname"><span class="pre">fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#fields" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#fields" title="Link to this definition"></a></dt>
 <dd><p>Internal data for the Feedback Function used in constructing its message and justification.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="field_names">
-<span class="sig-name descname"><span class="pre">field_names</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#field_names" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">field_names</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#field_names" title="Link to this definition"></a></dt>
 <dd><p>An explicit list of the field names for this Feedback Function. If not provided, then it will
 be inferred from the <a class="reference internal" href="#fields" title="fields"><code class="xref py py-attr docutils literal notranslate"><span class="pre">fields</span></code></a>. Usually you won’t need to do anything with this.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="tool">
-<span class="sig-name descname"><span class="pre">tool</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="headerlink" href="#tool" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">tool</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></em><a class="headerlink" href="#tool" title="Link to this definition"></a></dt>
 <dd><p>What Tool was responsible for creating this feedback function. Usually you don’t want to change this.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="label">
-<span class="sig-name descname"><span class="pre">label</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="headerlink" href="#label" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">label</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></em><a class="headerlink" href="#label" title="Link to this definition"></a></dt>
 <dd><p>A unique name for this general class of feedback. You might override this to give a more specific
 identifier to the feedback for future analysis purposes.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="justification">
-<span class="sig-name descname"><span class="pre">justification</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#justification" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">justification</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.12)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#justification" title="Link to this definition"></a></dt>
 <dd><p>An internal explanation for why this feedback was chosen (and/or not chosen), which can be shown
 to the instructor (but not the student). Usually you don’t want to change this.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="priority">
-<span class="sig-name descname"><span class="pre">priority</span></span><a class="headerlink" href="#priority" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">priority</span></span><a class="headerlink" href="#priority" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="score">
-<span class="sig-name descname"><span class="pre">score</span></span><a class="headerlink" href="#score" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">score</span></span><a class="headerlink" href="#score" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="correct">
-<span class="sig-name descname"><span class="pre">correct</span></span><a class="headerlink" href="#correct" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">correct</span></span><a class="headerlink" href="#correct" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="muted">
-<span class="sig-name descname"><span class="pre">muted</span></span><a class="headerlink" href="#muted" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">muted</span></span><a class="headerlink" href="#muted" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="unscored">
-<span class="sig-name descname"><span class="pre">unscored</span></span><a class="headerlink" href="#unscored" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">unscored</span></span><a class="headerlink" href="#unscored" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="activate">
-<span class="sig-name descname"><span class="pre">activate</span></span><a class="headerlink" href="#activate" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">activate</span></span><a class="headerlink" href="#activate" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </section>

@@ -1,26 +1,28 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Source &mdash; Pedal 1.0 documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Assertions" href="assertions.html" />
+    <link rel="next" title="Sandbox" href="sandbox.html" />
     <link rel="prev" title="CAIT" href="cait.html" /> 
 </head>
 
@@ -74,8 +76,9 @@
 <li class="toctree-l3"><a class="reference internal" href="#source-feedbacks">Source Feedbacks</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="assertions.html">Assertions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sandbox.html">Sandbox</a></li>
+<li class="toctree-l2"><a class="reference internal" href="assertions.html">Assertions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="types.html">Pedal’s Type System</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../integrations.html">Autograder Integrations</a></li>
@@ -117,14 +120,14 @@
            <div itemprop="articleBody">
              
   <section id="source">
-<h1>Source<a class="headerlink" href="#source" title="Permalink to this heading"></a></h1>
+<h1>Source<a class="headerlink" href="#source" title="Link to this heading"></a></h1>
 <p>Imported as:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.source</span> <span class="kn">import</span> <span class="o">*</span>
 </pre></div>
 </div>
 <dl class="py function">
 <dt class="sig sig-object py" id="verify">
-<span class="sig-name descname"><span class="pre">verify</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#verify" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">verify</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#verify" title="Link to this definition"></a></dt>
 <dd><p>Parses the current main code of the submission and reports any syntax errors as feedback.
 You can actually pass in explicit code and filename as strings, but by default uses the
 current submission.</p>
@@ -132,13 +135,13 @@ current submission.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="get_program">
-<span class="sig-name descname"><span class="pre">get_program</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></span><a class="headerlink" href="#get_program" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_program</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></span><a class="headerlink" href="#get_program" title="Link to this definition"></a></dt>
 <dd><p>Retrieves the current main code of the submission.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="set_source">
-<span class="sig-name descname"><span class="pre">set_source</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#set_source" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set_source</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#set_source" title="Link to this definition"></a></dt>
 <dd><p>Convenience function for overriding the current submission with some other code.
 Any checks that use the main code of the submission will use this code instead.
 No longer necessary, mostly a legacy solution in light of the new contextualization through
@@ -147,15 +150,15 @@ submissions.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="restore_code">
-<span class="sig-name descname"><span class="pre">restore_code</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#restore_code" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">restore_code</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#restore_code" title="Link to this definition"></a></dt>
 <dd><p>Undoes the latest set_source.</p>
 </dd></dl>
 
 <section id="sections">
-<h2>Sections<a class="headerlink" href="#sections" title="Permalink to this heading"></a></h2>
+<h2>Sections<a class="headerlink" href="#sections" title="Link to this heading"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="separate_into_sections">
-<span class="sig-name descname"><span class="pre">separate_into_sections</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pattern</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'^(#####</span> <span class="pre">Part</span> <span class="pre">.+)$'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#separate_into_sections" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">separate_into_sections</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pattern</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'^(#####</span> <span class="pre">Part</span> <span class="pre">.+)$'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#separate_into_sections" title="Link to this definition"></a></dt>
 <dd><p>Breaks the current main code file into multiple sections using the regular expression <code class="xref py py-obj docutils literal notranslate"><span class="pre">pattern</span></code>.
 The first section will be set as the main code submission, and you can advance through to the
 next one by calling <a class="reference internal" href="#next_section" title="next_section"><code class="xref py py-func docutils literal notranslate"><span class="pre">next_section()</span></code></a>, or verify that there are the right number of sections
@@ -164,7 +167,7 @@ with <a class="reference internal" href="#check_section_exists" title="check_sec
 
 <dl class="py function">
 <dt class="sig sig-object py" id="check_section_exists">
-<span class="sig-name descname"><span class="pre">check_section_exists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#check_section_exists" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">check_section_exists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#check_section_exists" title="Link to this definition"></a></dt>
 <dd><p>Verifies that the right number of expected sections exist after a separation is performed. Otherwise,
 creates new feedback indicating the issue.
 The prologue before the
@@ -175,20 +178,20 @@ you should pass in 3 and not 4 to verify that all of them exist.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="next_section">
-<span class="sig-name descname"><span class="pre">next_section</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#next_section" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">next_section</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#next_section" title="Link to this definition"></a></dt>
 <dd><p>Moves the current submission main code to be the next section that was found during separation.
 If used when there are no more sections, the <code class="xref py py-obj docutils literal notranslate"><span class="pre">not_enough_sections</span></code> feedback is given.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="stop_sections">
-<span class="sig-name descname"><span class="pre">stop_sections</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stop_sections" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">stop_sections</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stop_sections" title="Link to this definition"></a></dt>
 <dd><p>Removes any separations and restores the main code submission back to a single file.</p>
 </dd></dl>
 
 </section>
 <section id="source-feedbacks">
-<h2>Source Feedbacks<a class="headerlink" href="#source-feedbacks" title="Permalink to this heading"></a></h2>
+<h2>Source Feedbacks<a class="headerlink" href="#source-feedbacks" title="Link to this heading"></a></h2>
 <span class="sig-prename descclassname">Feedback Function: No Source Code</span><dd><ul>
 <li><strong>Label: </strong><span>blank_source</span></li>
 <li><strong>Justification: </strong><span>After stripping the code, there were no characters.</span></li>
@@ -214,7 +217,6 @@ If used when there are no more sections, the <code class="xref py py-obj docutil
 </ul>
 </dd><span class="sig-prename descclassname">Feedback Function: Incorrect Number of Sections</span><dd><ul>
 <li><strong>Label: </strong><span>incorrect_number_of_sections</span></li>
-<li><strong>Justification: </strong><span></span></li>
 <li><strong>Response: </strong><span>Incorrect number of sections in your file. Expected {count}, but only found {found}</span></li>
 </ul>
 </dd></section>
@@ -225,7 +227,7 @@ If used when there are no more sections, the <code class="xref py py-obj docutil
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="cait.html" class="btn btn-neutral float-left" title="CAIT" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="assertions.html" class="btn btn-neutral float-right" title="Assertions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="sandbox.html" class="btn btn-neutral float-right" title="Sandbox" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

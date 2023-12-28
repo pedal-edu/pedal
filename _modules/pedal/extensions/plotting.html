@@ -1,21 +1,23 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pedal.extensions.plotting &mdash; Pedal 1.0 documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -112,7 +114,9 @@
               <span class="s1">&#39;scatter&#39;</span><span class="p">:</span> <span class="s1">&#39;scatter plot&#39;</span><span class="p">}</span>
 
 
-<div class="viewcode-block" id="plt_rename_err"><a class="viewcode-back" href="../../../developers/tools/extensions.html#pedal.extensions.plotting.plt_rename_err">[docs]</a><span class="k">class</span> <span class="nc">plt_rename_err</span><span class="p">(</span><span class="n">Feedback</span><span class="p">):</span>
+<div class="viewcode-block" id="plt_rename_err">
+<a class="viewcode-back" href="../../../developers/tools/extensions.html#pedal.extensions.plotting.plt_rename_err">[docs]</a>
+<span class="k">class</span> <span class="nc">plt_rename_err</span><span class="p">(</span><span class="n">Feedback</span><span class="p">):</span>
     <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Wrong MatPlotLib Import&quot;</span>
     <span class="n">priority</span> <span class="o">=</span> <span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">SYNTAX</span>
     <span class="n">category</span> <span class="o">=</span> <span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">INSTRUCTOR</span>
@@ -125,15 +129,21 @@
                         <span class="s2">&quot;but you did not rename it to {actual:name} &quot;</span>
                         <span class="s2">&quot;using {suggestion:python_expression}.&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="plt_rename_err.condition"><a class="viewcode-back" href="../../../developers/tools/extensions.html#pedal.extensions.plotting.plt_rename_err.condition">[docs]</a>    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="plt_rename_err.condition">
+<a class="viewcode-back" href="../../../developers/tools/extensions.html#pedal.extensions.plotting.plt_rename_err.condition">[docs]</a>
+    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">ast</span> <span class="o">=</span> <span class="n">parse_program</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="p">)</span>
         <span class="n">plts</span> <span class="o">=</span> <span class="p">[</span><span class="n">n</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;Name&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">n</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="s1">&#39;plt&#39;</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">plts</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span><span class="n">def_use_error</span><span class="p">(</span><span class="n">plt</span><span class="p">)</span> <span class="k">for</span> <span class="n">plt</span> <span class="ow">in</span> <span class="n">plts</span><span class="p">):</span>
             <span class="k">return</span> <span class="kc">True</span>
-        <span class="k">return</span> <span class="kc">False</span></div></div>
+        <span class="k">return</span> <span class="kc">False</span></div>
+</div>
 
 
-<div class="viewcode-block" id="plt_wrong_import"><a class="viewcode-back" href="../../../developers/tools/extensions.html#pedal.extensions.plotting.plt_wrong_import">[docs]</a><span class="k">class</span> <span class="nc">plt_wrong_import</span><span class="p">(</span><span class="n">Feedback</span><span class="p">):</span>
+
+<div class="viewcode-block" id="plt_wrong_import">
+<a class="viewcode-back" href="../../../developers/tools/extensions.html#pedal.extensions.plotting.plt_wrong_import">[docs]</a>
+<span class="k">class</span> <span class="nc">plt_wrong_import</span><span class="p">(</span><span class="n">Feedback</span><span class="p">):</span>
     <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Missing MatPlotLib Import&quot;</span>
     <span class="n">priority</span> <span class="o">=</span> <span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">SYNTAX</span>
     <span class="n">category</span> <span class="o">=</span> <span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">INSTRUCTOR</span>
@@ -147,7 +157,9 @@
                         <span class="s2">&quot;recommend you use {actual:python_expression} instead, &quot;</span>
                         <span class="s2">&quot;after you use {suggestion:python_expression}.&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="plt_wrong_import.condition"><a class="viewcode-back" href="../../../developers/tools/extensions.html#pedal.extensions.plotting.plt_wrong_import.condition">[docs]</a>    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="plt_wrong_import.condition">
+<a class="viewcode-back" href="../../../developers/tools/extensions.html#pedal.extensions.plotting.plt_wrong_import.condition">[docs]</a>
+    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">ast</span> <span class="o">=</span> <span class="n">parse_program</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="p">)</span>
         <span class="n">matplotlib_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;hist&#39;</span><span class="p">,</span> <span class="s1">&#39;scatter&#39;</span><span class="p">,</span>
                             <span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="s1">&#39;xlabel&#39;</span><span class="p">,</span> <span class="s1">&#39;ylabel&#39;</span><span class="p">,</span> <span class="s1">&#39;show&#39;</span><span class="p">]</span>
@@ -158,16 +170,23 @@
                         <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;actual&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">name</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;expected&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;plt.&quot;</span> <span class="o">+</span> <span class="n">name</span>
                         <span class="k">return</span> <span class="kc">True</span>
-        <span class="k">return</span> <span class="kc">False</span></div></div>
+        <span class="k">return</span> <span class="kc">False</span></div>
+</div>
 
 
-<div class="viewcode-block" id="prevent_incorrect_plt"><a class="viewcode-back" href="../../../developers/tools/extensions.html#pedal.extensions.plotting.prevent_incorrect_plt">[docs]</a><span class="nd">@CompositeFeedbackFunction</span><span class="p">(</span><span class="n">plt_rename_err</span><span class="p">,</span> <span class="n">plt_wrong_import</span><span class="p">)</span>
+
+<div class="viewcode-block" id="prevent_incorrect_plt">
+<a class="viewcode-back" href="../../../developers/tools/extensions.html#pedal.extensions.plotting.prevent_incorrect_plt">[docs]</a>
+<span class="nd">@CompositeFeedbackFunction</span><span class="p">(</span><span class="n">plt_rename_err</span><span class="p">,</span> <span class="n">plt_wrong_import</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">prevent_incorrect_plt</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Confirms that matplotlib.pyplot is being imported correctly. &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">plt_rename_err</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="ow">or</span> <span class="n">plt_wrong_import</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="ensure_correct_plot"><a class="viewcode-back" href="../../../developers/tools/extensions.html#pedal.extensions.plotting.ensure_correct_plot">[docs]</a><span class="nd">@CompositeFeedbackFunction</span><span class="p">(</span><span class="n">prevent_function_call</span><span class="p">,</span> <span class="n">ensure_function_call</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ensure_correct_plot">
+<a class="viewcode-back" href="../../../developers/tools/extensions.html#pedal.extensions.plotting.ensure_correct_plot">[docs]</a>
+<span class="nd">@CompositeFeedbackFunction</span><span class="p">(</span><span class="n">prevent_function_call</span><span class="p">,</span> <span class="n">ensure_function_call</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">ensure_correct_plot</span><span class="p">(</span><span class="n">function_name</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Checks that the given plot type was correctly called. &quot;&quot;&quot;</span>
     <span class="n">ensure_function_call</span><span class="p">(</span><span class="n">function_name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -180,7 +199,10 @@
                                        <span class="sa">f</span><span class="s2">&quot;function, which makes a </span><span class="si">{</span><span class="n">description</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="ensure_show"><a class="viewcode-back" href="../../../developers/tools/extensions.html#pedal.extensions.plotting.ensure_show">[docs]</a><span class="k">class</span> <span class="nc">ensure_show</span><span class="p">(</span><span class="n">Feedback</span><span class="p">):</span>
+
+<div class="viewcode-block" id="ensure_show">
+<a class="viewcode-back" href="../../../developers/tools/extensions.html#pedal.extensions.plotting.ensure_show">[docs]</a>
+<span class="k">class</span> <span class="nc">ensure_show</span><span class="p">(</span><span class="n">Feedback</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Verifies that the `plt.show` function was called. &quot;&quot;&quot;</span>
     <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Missing Show Function&quot;</span>
     <span class="n">category</span> <span class="o">=</span> <span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">INSTRUCTOR</span>
@@ -189,11 +211,17 @@
                         <span class="s2">&quot;function, which actually creates the graph.&quot;</span><span class="p">)</span>
     <span class="n">justification</span> <span class="o">=</span> <span class="s2">&quot;The show function was not found as a function call.&quot;</span>
 
-<div class="viewcode-block" id="ensure_show.condition"><a class="viewcode-back" href="../../../developers/tools/extensions.html#pedal.extensions.plotting.ensure_show.condition">[docs]</a>    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="ow">not</span> <span class="n">function_is_called</span><span class="p">(</span><span class="s2">&quot;show&quot;</span><span class="p">)</span></div></div>
+<div class="viewcode-block" id="ensure_show.condition">
+<a class="viewcode-back" href="../../../developers/tools/extensions.html#pedal.extensions.plotting.ensure_show.condition">[docs]</a>
+    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="n">function_is_called</span><span class="p">(</span><span class="s2">&quot;show&quot;</span><span class="p">)</span></div>
+</div>
 
 
-<div class="viewcode-block" id="compare_data"><a class="viewcode-back" href="../../../developers/tools/extensions.html#pedal.extensions.plotting.compare_data">[docs]</a><span class="k">def</span> <span class="nf">compare_data</span><span class="p">(</span><span class="n">plt_type</span><span class="p">,</span> <span class="n">correct</span><span class="p">,</span> <span class="n">given</span><span class="p">,</span> <span class="n">special_comparison</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="compare_data">
+<a class="viewcode-back" href="../../../developers/tools/extensions.html#pedal.extensions.plotting.compare_data">[docs]</a>
+<span class="k">def</span> <span class="nf">compare_data</span><span class="p">(</span><span class="n">plt_type</span><span class="p">,</span> <span class="n">correct</span><span class="p">,</span> <span class="n">given</span><span class="p">,</span> <span class="n">special_comparison</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Determines whether the given data matches any of the data found in the</span>
 <span class="sd">    correct data. This handles plots of different types: if a histogram</span>
@@ -236,6 +264,7 @@
                 <span class="n">special_comparison</span><span class="p">(</span><span class="n">correct_ys</span><span class="p">,</span> <span class="n">given</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]))</span></div>
 
 
+
 <span class="k">def</span> <span class="nf">describe_data</span><span class="p">(</span><span class="n">given</span><span class="p">,</span> <span class="n">with_x</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">given</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;hist&#39;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">given</span><span class="p">[</span><span class="s1">&#39;values&#39;</span><span class="p">]</span>
@@ -266,7 +295,9 @@
             <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">format</span><span class="o">.</span><span class="n">python_value</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">a</span><span class="p">))</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">actual</span><span class="p">))</span>
 
 
-<div class="viewcode-block" id="BadGraphFeedback"><a class="viewcode-back" href="../../../developers/tools/extensions.html#pedal.extensions.plotting.BadGraphFeedback">[docs]</a><span class="k">class</span> <span class="nc">BadGraphFeedback</span><span class="p">(</span><span class="n">FeedbackResponse</span><span class="p">):</span>
+<div class="viewcode-block" id="BadGraphFeedback">
+<a class="viewcode-back" href="../../../developers/tools/extensions.html#pedal.extensions.plotting.BadGraphFeedback">[docs]</a>
+<span class="k">class</span> <span class="nc">BadGraphFeedback</span><span class="p">(</span><span class="n">FeedbackResponse</span><span class="p">):</span>
     <span class="n">category</span> <span class="o">=</span> <span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">SPECIFICATION</span>
     <span class="n">valence</span> <span class="o">=</span> <span class="n">Feedback</span><span class="o">.</span><span class="n">NEGATIVE_VALENCE</span>
     <span class="n">kind</span> <span class="o">=</span> <span class="n">Feedback</span><span class="o">.</span><span class="n">KINDS</span><span class="o">.</span><span class="n">CONSTRAINT</span>
@@ -288,31 +319,46 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">plt_type</span><span class="p">,</span> <span class="n">expected</span><span class="p">,</span> <span class="n">actual</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="other_plt"><a class="viewcode-back" href="../../../developers/tools/extensions.html#pedal.extensions.plotting.other_plt">[docs]</a><span class="k">class</span> <span class="nc">other_plt</span><span class="p">(</span><span class="n">BadGraphFeedback</span><span class="p">):</span>
+
+<div class="viewcode-block" id="other_plt">
+<a class="viewcode-back" href="../../../developers/tools/extensions.html#pedal.extensions.plotting.other_plt">[docs]</a>
+<span class="k">class</span> <span class="nc">other_plt</span><span class="p">(</span><span class="n">BadGraphFeedback</span><span class="p">):</span>
     <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Plotting Another Graph&quot;</span>
     <span class="n">message_template</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;You have created a </span><span class="si">{plt_type}</span><span class="s2">, but it does not &quot;</span>
                         <span class="s2">&quot;have the right data. That data appears to have been &quot;</span>
                         <span class="s2">&quot;plotted in another graph.</span><span class="si">{context_message}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="wrong_plt_data"><a class="viewcode-back" href="../../../developers/tools/extensions.html#pedal.extensions.plotting.wrong_plt_data">[docs]</a><span class="k">class</span> <span class="nc">wrong_plt_data</span><span class="p">(</span><span class="n">BadGraphFeedback</span><span class="p">):</span>
+
+<div class="viewcode-block" id="wrong_plt_data">
+<a class="viewcode-back" href="../../../developers/tools/extensions.html#pedal.extensions.plotting.wrong_plt_data">[docs]</a>
+<span class="k">class</span> <span class="nc">wrong_plt_data</span><span class="p">(</span><span class="n">BadGraphFeedback</span><span class="p">):</span>
     <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Plot Data Incorrect&quot;</span>
     <span class="n">message_template</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;You have created a </span><span class="si">{plt_type}</span><span class="s2">, but it does not have &quot;</span>
                         <span class="s2">&quot;the right data.</span><span class="si">{context_message}{diff_message}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="wrong_plt_type"><a class="viewcode-back" href="../../../developers/tools/extensions.html#pedal.extensions.plotting.wrong_plt_type">[docs]</a><span class="k">class</span> <span class="nc">wrong_plt_type</span><span class="p">(</span><span class="n">BadGraphFeedback</span><span class="p">):</span>
+
+<div class="viewcode-block" id="wrong_plt_type">
+<a class="viewcode-back" href="../../../developers/tools/extensions.html#pedal.extensions.plotting.wrong_plt_type">[docs]</a>
+<span class="k">class</span> <span class="nc">wrong_plt_type</span><span class="p">(</span><span class="n">BadGraphFeedback</span><span class="p">):</span>
     <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Wrong Plot Type&quot;</span>
     <span class="n">message_template</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;You have plotted the right data, but you appear to &quot;</span>
                         <span class="s2">&quot;have not plotted it as a </span><span class="si">{plt_type}</span><span class="s2">.</span><span class="si">{context_message}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="no_plt"><a class="viewcode-back" href="../../../developers/tools/extensions.html#pedal.extensions.plotting.no_plt">[docs]</a><span class="k">class</span> <span class="nc">no_plt</span><span class="p">(</span><span class="n">BadGraphFeedback</span><span class="p">):</span>
+
+<div class="viewcode-block" id="no_plt">
+<a class="viewcode-back" href="../../../developers/tools/extensions.html#pedal.extensions.plotting.no_plt">[docs]</a>
+<span class="k">class</span> <span class="nc">no_plt</span><span class="p">(</span><span class="n">BadGraphFeedback</span><span class="p">):</span>
     <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Missing Plot&quot;</span>
     <span class="n">message_template</span> <span class="o">=</span> <span class="s2">&quot;You have not created a </span><span class="si">{plt_type}</span><span class="s2"> with the proper data.</span><span class="si">{context_message}</span><span class="s2">&quot;</span></div>
 
 
-<div class="viewcode-block" id="assert_plot"><a class="viewcode-back" href="../../../developers/tools/extensions.html#pedal.extensions.plotting.assert_plot">[docs]</a><span class="nd">@CompositeFeedbackFunction</span><span class="p">(</span><span class="n">other_plt</span><span class="p">,</span> <span class="n">wrong_plt_data</span><span class="p">,</span> <span class="n">wrong_plt_type</span><span class="p">,</span> <span class="n">no_plt</span><span class="p">)</span>
+
+<div class="viewcode-block" id="assert_plot">
+<a class="viewcode-back" href="../../../developers/tools/extensions.html#pedal.extensions.plotting.assert_plot">[docs]</a>
+<span class="nd">@CompositeFeedbackFunction</span><span class="p">(</span><span class="n">other_plt</span><span class="p">,</span> <span class="n">wrong_plt_data</span><span class="p">,</span> <span class="n">wrong_plt_type</span><span class="p">,</span> <span class="n">no_plt</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">assert_plot</span><span class="p">(</span><span class="n">plt_type</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">special_comparison</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Check whether a plot with the given ``plt_type`` and ``data`` exists.</span>
@@ -355,7 +401,10 @@
         <span class="k">return</span> <span class="n">no_plt</span><span class="p">(</span><span class="n">plt_type</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">data_found</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_plots"><a class="viewcode-back" href="../../../developers/tools/extensions.html#pedal.extensions.plotting.get_plots">[docs]</a><span class="k">def</span> <span class="nf">get_plots</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+
+<div class="viewcode-block" id="get_plots">
+<a class="viewcode-back" href="../../../developers/tools/extensions.html#pedal.extensions.plotting.get_plots">[docs]</a>
+<span class="k">def</span> <span class="nf">get_plots</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieves any plots made by the user. The general structure is as follows:</span>
 
@@ -381,6 +430,7 @@
 <span class="sd">        ]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">get_sandbox</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">plots</span></div>
+
 
 
 <span class="k">def</span> <span class="nf">clear_plots</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>

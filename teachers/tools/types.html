@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pedal.sandbox &mdash; Pedal 1.0 documentation</title>
+  <title>Pedal’s Type System &mdash; Pedal 1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
 
@@ -20,7 +21,9 @@
         <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" /> 
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Autograder Integrations" href="../integrations.html" />
+    <link rel="prev" title="Assertions" href="assertions.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,21 +50,38 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../everyone/introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../everyone/installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../teachers/quickstart.html">Teacher Quick Start Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../teachers/examples.html">Teacher Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../teachers/reference.html">Teacher Reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../teachers/integrations.html">Autograder Integrations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../teachers/practices.html">Best Practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Teacher Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Teacher Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../reference.html">Teacher Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="core.html">Core Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ffs.html">Feedback Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="formatter.html">Formatter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tifa.html">TIFA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cait.html">CAIT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source.html">Source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sandbox.html">Sandbox</a></li>
+<li class="toctree-l2"><a class="reference internal" href="assertions.html">Assertions</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Pedal’s Type System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#generics">Generics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#objects">Objects</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#built-in-functions">Built-in Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#json-type-hints">JSON Type Hints</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../integrations.html">Autograder Integrations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../practices.html">Best Practices</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers/ffs.html">Developers: Feedback Functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers/api.html">Developer API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers/tools.html">Developer Tools Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers/conventions.html">Internal Naming Conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers/libraries.html">Necessary Libraries</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers/compilation.html">Compilation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../teachers/analysis.html">Researchers: Analyzing with Pedal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../analysis.html">Researchers: Analyzing with Pedal</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../everyone/glossary.html">Glossary</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../everyone/contact.html">Contact</a></li>
 </ul>
@@ -80,9 +100,10 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">pedal.sandbox</li>
+          <li class="breadcrumb-item"><a href="../reference.html">Teacher Reference</a></li>
+      <li class="breadcrumb-item active">Pedal’s Type System</li>
       <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/teachers/tools/types.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -90,37 +111,32 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for pedal.sandbox</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">pedal.core.report</span> <span class="kn">import</span> <span class="n">MAIN_REPORT</span><span class="p">,</span> <span class="n">Report</span>
-<span class="kn">from</span> <span class="nn">pedal.sandbox.constants</span> <span class="kn">import</span> <span class="n">TOOL_NAME</span>
-<span class="kn">from</span> <span class="nn">pedal.sandbox.sandbox</span> <span class="kn">import</span> <span class="n">Sandbox</span>
-<span class="kn">from</span> <span class="nn">pedal.sandbox.commands</span> <span class="kn">import</span> <span class="o">*</span>
+  <section id="pedal-s-type-system">
+<span id="pedal-types"></span><h1>Pedal’s Type System<a class="headerlink" href="#pedal-s-type-system" title="Link to this heading"></a></h1>
+<p>Pedal’s type system is a little unusual, trying to be internally consistent, simple,
+and easy to use. It is not a full type system, and it is not a full type checker.
+It is neither sound nor complete. It’s trying to be pedagogical, not practical.</p>
+<section id="generics">
+<h2>Generics<a class="headerlink" href="#generics" title="Link to this heading"></a></h2>
+</section>
+<section id="objects">
+<h2>Objects<a class="headerlink" href="#objects" title="Link to this heading"></a></h2>
+</section>
+<section id="built-in-functions">
+<h2>Built-in Functions<a class="headerlink" href="#built-in-functions" title="Link to this heading"></a></h2>
+</section>
+<section id="json-type-hints">
+<h2>JSON Type Hints<a class="headerlink" href="#json-type-hints" title="Link to this heading"></a></h2>
+</section>
+</section>
 
-
-<div class="viewcode-block" id="reset">
-<a class="viewcode-back" href="../../developers/tools/sandbox.html#pedal.sandbox.reset">[docs]</a>
-<span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Resets (or initializes) the Sandbox instance for this report.</span>
-<span class="sd">    Completely destroys the existing Sandbox instance attached to this report;</span>
-<span class="sd">    if you want to just clear out its data, then instead use</span>
-<span class="sd">    :py:func:`pedal.sandbox.commands.clear_sandbox`.</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        report: The report to reset the Sandbox for.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">&#39;sandbox&#39;</span><span class="p">:</span> <span class="n">Sandbox</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span>
-    <span class="p">}</span></div>
-
-
-
-<span class="n">Report</span><span class="o">.</span><span class="n">register_tool</span><span class="p">(</span><span class="n">TOOL_NAME</span><span class="p">,</span> <span class="n">reset</span><span class="p">)</span>
-</pre></div>
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="assertions.html" class="btn btn-neutral float-left" title="Assertions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../integrations.html" class="btn btn-neutral float-right" title="Autograder Integrations" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 
