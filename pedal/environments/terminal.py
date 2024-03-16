@@ -49,7 +49,7 @@ class TerminalFormatter(Formatter):
 
     def table(self, rows, columns):
         if tabulate:
-            return self.pre(tabulate.tabulate(rows, headers=columns, tablefmt="plain"))
+            return "\n" + self.pre(tabulate.tabulate(rows, headers=columns, tablefmt="plain"))
         else:
             return super().table(rows, columns)
 
