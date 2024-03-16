@@ -2,7 +2,8 @@
 Utilities and classes related to formatting a Feedback Message.
 """
 from pedal.core.location import Location
-from pedal.utilities.text import inject_line
+from pedal.utilities.text import inject_line, render_table
+
 
 def chomp_spec(format_spec, word):
     """ Return a new version of format_spec without the ``word`` and
@@ -126,10 +127,7 @@ class Formatter:
         return self.pre(exception)
 
     def table(self, rows, columns):
-        result = [" | ".join(columns)]
-        for row in rows:
-            result.append(" | ".join(row))
-        return "\n" + ("\n".join(result))
+        return "\n" + render_table(rows, columns, " | ")
 
     def check_mark(self):
         # TODO: should be ✓, right?

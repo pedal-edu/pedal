@@ -256,10 +256,11 @@ Student code failed instructor tests.
 You passed 1/3 tests.
 
 I ran your function add on some new arguments.
- | Arguments | Returned | Expected
-  |     1, 2 | 3 | 3
-× |     1, 4 | 5 | 6
-× |     1, '2' | unsupported operand type(s) for +: 'int' and 'str' | 3""")
+  |  Arguments |                                           Returned | Expected
+==============================================================================
+  |       1, 2 |                                                  3 |        3
+× |       1, 4 |                                                  5 |        6
+× |     1, '2' | unsupported operand type(s) for +: 'int' and 'str' |        3""")
 
     def test_assert_group_fails_all(self):
         with Execution('def add(a, b): return a+b', run_tifa=False) as e:
@@ -272,10 +273,11 @@ Student code failed instructor tests.
 You passed 0/3 tests.
 
 I ran your function add on some new arguments.
- | Arguments | Returned | Expected
-× |     1, 3 | 4 | 3
-× |     1, 4 | 5 | 6
-× |     1, 3 | 4 | 3""")
+  | Arguments | Returned | Expected
+===================================
+× |      1, 3 |        4 |        3
+× |      1, 4 |        5 |        6
+× |      1, 3 |        4 |        3""")
 
     def test_assert_group_passes(self):
         with Execution('def add(a, b): return a+b', run_tifa=False) as e:

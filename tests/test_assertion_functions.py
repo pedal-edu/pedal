@@ -78,12 +78,13 @@ Student code failed instructor tests.
 You passed 3/5 tests.
 
 I ran your function add on some new arguments.
- | Arguments | Returned | Expected
-× |     1, 2 | 2 | 3
-  |     0, 0 | 0 | 0
-  |     0, 3 | 3 | 3
-  |     0, 5 | 5 | 5
-× |     1, 3 | 3 | 4""")
+  | Arguments | Returned | Expected
+===================================
+× |      1, 2 |        2 |        3
+  |      0, 0 |        0 |        0
+  |      0, 3 |        3 |        3
+  |      0, 5 |        5 |        5
+× |      1, 3 |        3 |        4""")
 
     def test_bad_name_error_concatenation(self):
         with Execution("""
@@ -125,9 +126,10 @@ Student code failed instructor tests.
 You passed 1/2 tests.
 
 I ran your function add on some new arguments.
- | Arguments | Returned | Expected
-× |     1, 2 | -1 | 3
-  |     0, 0 | 0 | 0""")
+  | Arguments | Returned | Expected
+===================================
+× |      1, 2 |       -1 |        3
+  |      0, 0 |        0 |        0""")
 
     def test_unit_test_blocked_function(self):
         with Execution("""
@@ -142,8 +144,9 @@ Student code failed instructor tests.
 You passed 0/1 tests.
 
 I ran your function summate on some new arguments.
- | Arguments | Returned | Expected
-× |     [1, 2, 3] | You are not allowed to call 'sum'. | 6""")
+  |     Arguments |                           Returned | Expected
+=================================================================
+× |     [1, 2, 3] | You are not allowed to call 'sum'. |        6""")
 
     def test_unit_test_extra_context(self):
         with Execution('def add(a, b): return b', run_tifa=False) as e:
@@ -163,9 +166,10 @@ I ran the code:
     data = [5, 3, 4]
 
 I ran your function add on some new arguments.
- | Arguments | Returned | Expected
-× |     data, 5 | 5 | 17
-× |     [3, 3], 3 | 3 | 9""")
+  |     Arguments | Returned | Expected
+=======================================
+× |       data, 5 |        5 |       17
+× |     [3, 3], 3 |        3 |        9""")
 
     def test_unit_test_extra_context_run(self):
         with Execution('def add(a, b): return b', run_tifa=False) as e:
@@ -187,9 +191,10 @@ I ran the code:
     data2 = [1,2,3]
 
 I ran your function add on some new arguments.
- | Arguments | Returned | Expected
-× |     data, 5 | 5 | 17
-× |     [3, 3], 3 | 3 | 9""")
+  |     Arguments | Returned | Expected
+=======================================
+× |       data, 5 |        5 |       17
+× |     [3, 3], 3 |        3 |        9""")
 
     def test_unit_test_extra_context_calls(self):
         with Execution('def add(a, b): return b', run_tifa=False) as e:
@@ -214,10 +219,11 @@ I ran the code:
     data2 = [1,2,3]
 
 I ran your function add on some new arguments.
- | Arguments | Returned | Expected
-× |     data, 5 | 5 | 17
-× |     data2, 5 | 5 | 17
-× |     [3, 3], 3 | 3 | 9""")
+  |     Arguments | Returned | Expected
+=======================================
+× |       data, 5 |        5 |       17
+× |      data2, 5 |        5 |       17
+× |     [3, 3], 3 |        3 |        9""")
 
 if __name__ == '__main__':
     unittest.main(buffer=False)

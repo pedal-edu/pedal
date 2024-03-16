@@ -84,3 +84,35 @@ def inject_line(code, line_number, new_line):
     lines = code.split("\n")
     lines.insert(line_number, new_line)
     return "\n".join(lines)
+
+
+def render_table(rows, headers=None, separator=" | ", max_width=120):
+    """
+    Simple function to render table with fixed width.
+
+    TODO: Try to resize table to make it fit comfortably within 120 characters,
+        e.g., by removing separators, or by wrapping text.
+
+    Based on: https://stackoverflow.com/a/52247284/1718155
+    """
+    table = [headers] + rows if headers else rows
+    longest_cols = [
+        (max([len(str(row[i])) for row in table]))
+        for i in range(len(table[0]))
+    ]
+    total_width = sum(longest_cols) + (len(longest_cols)-1) * len(separator)
+    if max_width is not None:
+        if total_width > max_width:
+            # Maybe we can trim the separator?
+            if separator:
+                shorter_separator = separator.strip()
+                # Oops, we already tried stripping. What about removing it?
+                if shorter_separator == separator:
+                    shorter_separator = ""
+                return render_table(rows, headers, shorter_separator, max_width)
+    row_format = separator.join(["{:>" + str(longest_col) + "}"
+                                for longest_col in longest_cols])
+    result = [row_format.format(*row) for row in table]
+    if headers:
+        result.insert(1, "="*total_width)
+    return "\n".join(result)

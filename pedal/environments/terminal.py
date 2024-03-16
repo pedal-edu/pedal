@@ -13,6 +13,11 @@ from pedal.tifa import tifa_analysis
 from pedal.resolvers.simple import resolve
 from pedal.core.formatting import Formatter
 
+try:
+    import tabulate
+except ImportError:
+    tabulate = None
+
 RESET = "\033[0;0m"
 REVERSE = "\033[;7m"
 UNDERLINE = "\033[4m"
@@ -41,6 +46,12 @@ class TerminalFormatter(Formatter):
         else:
             filename = os.path.basename(filename)
         return f"{UNDERLINE}{filename}{RESET}"
+
+    def table(self, rows, columns):
+        if tabulate:
+            return self.pre(tabulate.tabulate(rows, headers=columns, tablefmt="plain"))
+        else:
+            return super().table(rows, columns)
 
 
 @make_resolver
