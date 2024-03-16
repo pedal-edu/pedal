@@ -245,17 +245,22 @@ def assert_plot(plt_type, data, context=None, special_comparison=None, **kwargs)
     for graph in plots:
         for a_plot in graph['data']:
             data_found_here = compare_data(plt_type, data, a_plot, special_comparison=special_comparison)
+            expected_two_lists = isinstance(data, (tuple, list))
+            had_x_values = 'x' in a_plot
             if a_plot['type'] == plt_type and data_found_here:
                 return False
             if a_plot['type'] == plt_type:
                 type_found = True
-                appropriate_plots.append(describe_data(a_plot, not isinstance(data, (tuple, list))))
+                appropriate_plots.append(describe_data(a_plot, not expected_two_lists))
+                incompatible_plot_amounts = had_x_values and not expected_two_lists
             if data_found_here:
                 data_found = data_found_here
     # Figure out what kind of mistake was made.
     plt_type = GRAPH_TYPES.get(plt_type, plt_type)
     if type_found and data_found:
         return other_plt(plt_type, data, data_found)
+    elif plt_type == 'line' and type_found and not data_found and incompatible_plot_amounts:
+        return wrong_plt_data(plt_type, data, appropriate_plots, context=context)
     elif type_found:
         return wrong_plt_data(plt_type, data, appropriate_plots, context=context)
     elif data_found:

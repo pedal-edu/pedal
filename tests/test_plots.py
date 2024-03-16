@@ -16,6 +16,13 @@ plt.show()
 plt.plot([4,5,6])
 plt.show()''')[1:]
 
+code_xy_plot_wrong = ('''
+import matplotlib.pyplot as plt
+plt.plot([1,2,3], [4,5,6])
+plt.title("My line plot")
+plt.show()
+''')
+
 
 class TestPlots(ExecutionTestCase):
 
@@ -48,6 +55,16 @@ class TestPlots(ExecutionTestCase):
                                "    [4, 5, 6, 7]\n"
                                "But instead, the data was:\n"
                                "    [4, 5, 6]")
+
+    def test_check_for_xy_plot(self):
+        with Execution(code_xy_plot_wrong) as e:
+            assert_plot('line', [4, 5, 6])
+        self.assertFeedback(e, "Plot Data Incorrect\n"
+                               "You have created a line plot, but it does not have the right data.\n"
+                               "I expected the data to be:\n"
+                               "    [4, 5, 6]\n"
+                               "But instead, the data was:\n"
+                               "    [[1, 2, 3], [4, 5, 6]]")
 
     def test_assert_plot_wrong_type_of_plot(self):
         student_code = dedent('''
