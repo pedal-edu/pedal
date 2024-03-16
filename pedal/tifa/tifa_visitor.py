@@ -35,7 +35,7 @@ from pedal.tifa.feedbacks import (action_after_return, return_outside_function,
                                   module_not_found, nested_function_definition,
                                   unused_returned_value, invalid_indexing,
                                   attribute_type_change)
-from pedal.utilities.system import IS_AT_LEAST_PYTHON_38
+from pedal.utilities.system import IS_AT_LEAST_PYTHON_38, IS_SKULPT
 
 
 class Tifa(TifaCore, ast.NodeVisitor):
@@ -662,7 +662,7 @@ class Tifa(TifaCore, ast.NodeVisitor):
             pass
         # Pull apart args into a coherent set of data PRIOR to execution
         args = node.args
-        pos_parameters = args.posonlyargs + args.args if IS_AT_LEAST_PYTHON_38 else args.args
+        pos_parameters = args.posonlyargs + args.args if IS_AT_LEAST_PYTHON_38 and not IS_SKULPT else args.args
         none_padding = [SkipType] * (len(pos_parameters) - len(args.defaults))
         pos_defaults = none_padding + [self.visit(d) for d in args.defaults]
         kwarg_parameter = args.kwarg
