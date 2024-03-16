@@ -128,7 +128,7 @@
                                   <span class="n">module_not_found</span><span class="p">,</span> <span class="n">nested_function_definition</span><span class="p">,</span>
                                   <span class="n">unused_returned_value</span><span class="p">,</span> <span class="n">invalid_indexing</span><span class="p">,</span>
                                   <span class="n">attribute_type_change</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">pedal.utilities.system</span> <span class="kn">import</span> <span class="n">IS_AT_LEAST_PYTHON_38</span>
+<span class="kn">from</span> <span class="nn">pedal.utilities.system</span> <span class="kn">import</span> <span class="n">IS_AT_LEAST_PYTHON_38</span><span class="p">,</span> <span class="n">IS_SKULPT</span>
 
 
 <div class="viewcode-block" id="Tifa">
@@ -814,7 +814,7 @@
             <span class="k">pass</span>
         <span class="c1"># Pull apart args into a coherent set of data PRIOR to execution</span>
         <span class="n">args</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">args</span>
-        <span class="n">pos_parameters</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">posonlyargs</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">args</span> <span class="k">if</span> <span class="n">IS_AT_LEAST_PYTHON_38</span> <span class="k">else</span> <span class="n">args</span><span class="o">.</span><span class="n">args</span>
+        <span class="n">pos_parameters</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">posonlyargs</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">args</span> <span class="k">if</span> <span class="n">IS_AT_LEAST_PYTHON_38</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">IS_SKULPT</span> <span class="k">else</span> <span class="n">args</span><span class="o">.</span><span class="n">args</span>
         <span class="n">none_padding</span> <span class="o">=</span> <span class="p">[</span><span class="n">SkipType</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pos_parameters</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">defaults</span><span class="p">))</span>
         <span class="n">pos_defaults</span> <span class="o">=</span> <span class="n">none_padding</span> <span class="o">+</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">defaults</span><span class="p">]</span>
         <span class="n">kwarg_parameter</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">kwarg</span>

@@ -721,6 +721,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">mock_module</span><span class="p">(</span><span class="s1">&#39;turtle&#39;</span><span class="p">,</span> <span class="n">mocked</span><span class="o">.</span><span class="n">MockTurtle</span><span class="p">(),</span> <span class="s1">&#39;turtles&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mock_module</span><span class="p">(</span><span class="s1">&#39;matplotlib.pyplot&#39;</span><span class="p">,</span> <span class="n">mocked</span><span class="o">.</span><span class="n">MockPlt</span><span class="p">(),</span> <span class="s1">&#39;plotting&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mock_module</span><span class="p">(</span><span class="s1">&#39;designer&#39;</span><span class="p">,</span> <span class="n">mocked</span><span class="o">.</span><span class="n">MockDesigner</span><span class="p">(),</span> <span class="s1">&#39;designer&#39;</span><span class="p">)</span>
+        <span class="c1">#self.mock_module(&#39;drafter&#39;, mocked.MockDrafter(), &#39;drafter&#39;)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mock_module</span><span class="p">(</span><span class="s1">&#39;microbit&#39;</span><span class="p">,</span> <span class="n">mocked</span><span class="o">.</span><span class="n">MockMicrobit</span><span class="p">(),</span> <span class="s1">&#39;microbit&#39;</span><span class="p">)</span></div>
 
 
@@ -785,7 +786,9 @@
 <span class="sd">        Args:</span>
 <span class="sd">            module_name (str): The name of the module to prevent, as it would</span>
 <span class="sd">                be used by import (e.g., ``&quot;matplotlib.pyplot&quot;``).</span>
-
+<span class="sd">            friendly_name (str): A more human-readable name for the module.</span>
+<span class="sd">                When accessing the module from the Sandbox, this will be the name</span>
+<span class="sd">                to use.</span>
 <span class="sd">        Returns:</span>
 <span class="sd">            Sandbox: This sandbox.</span>
 <span class="sd">        &quot;&quot;&quot;</span>

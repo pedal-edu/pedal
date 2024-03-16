@@ -439,7 +439,11 @@ You can provide either a string and fields, or an instructor-defined version</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> or </em><em>dataclass</em>) – Either the name of the expected dataclass, or a
 dataclass object (not an instance).</p></li>
-<li><p><strong>fields</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – </p></li>
+<li><p><strong>fields</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a>) – A dictionary of field names to types.</p></li>
+<li><p><strong>root</strong> (<em>CaitNode</em>) – The AST to search through; defaults to program root.</p></li>
+<li><p><strong>compliment</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – If True, will use the compliment function to
+provide positive feedback. If a string, will use that string as the
+compliment. If False, will not provide positive feedback.</p></li>
 </ul>
 </dd>
 </dl>

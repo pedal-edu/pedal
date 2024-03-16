@@ -755,7 +755,11 @@
 <span class="sd">    Arguments:</span>
 <span class="sd">        name (str or dataclass): Either the name of the expected dataclass, or a</span>
 <span class="sd">            dataclass object (not an instance).</span>
-<span class="sd">        fields (dict):</span>
+<span class="sd">        fields (dict): A dictionary of field names to types.</span>
+<span class="sd">        root (CaitNode): The AST to search through; defaults to program root.</span>
+<span class="sd">        compliment (str or bool): If True, will use the compliment function to</span>
+<span class="sd">            provide positive feedback. If a string, will use that string as the</span>
+<span class="sd">            compliment. If False, will not provide positive feedback.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="c1"># Fields will be a dictionary or class</span>

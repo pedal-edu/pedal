@@ -432,8 +432,13 @@ Also unloads the module if it has been imported previously by
 destroying the variable in the current student <a class="reference internal" href="#pedal.sandbox.sandbox.Sandbox.data" title="pedal.sandbox.sandbox.Sandbox.data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">data</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>module_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – The name of the module to prevent, as it would
-be used by import (e.g., <code class="docutils literal notranslate"><span class="pre">&quot;matplotlib.pyplot&quot;</span></code>).</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>module_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – The name of the module to prevent, as it would
+be used by import (e.g., <code class="docutils literal notranslate"><span class="pre">&quot;matplotlib.pyplot&quot;</span></code>).</p></li>
+<li><p><strong>friendly_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – A more human-readable name for the module.
+When accessing the module from the Sandbox, this will be the name
+to use.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>This sandbox.</p>
