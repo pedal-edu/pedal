@@ -658,6 +658,18 @@
 
 
 
+<div class="viewcode-block" id="get_function">
+<a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.get_function">[docs]</a>
+<span class="k">def</span> <span class="nf">get_function</span><span class="p">(</span><span class="n">function_name</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates an executable function from the given name, based on the</span>
+<span class="sd">    students&#39; namespace. This will be executed using the call method.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sandbox</span><span class="p">:</span> <span class="n">Sandbox</span> <span class="o">=</span> <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;sandbox&#39;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">sandbox</span><span class="o">.</span><span class="n">get_function</span><span class="p">(</span><span class="n">function_name</span><span class="p">)</span></div>
+
+
+
 <div class="viewcode-block" id="get_python_errors">
 <a class="viewcode-back" href="../../../developers/tools/sandbox.html#pedal.sandbox.commands.get_python_errors">[docs]</a>
 <span class="k">def</span> <span class="nf">get_python_errors</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>

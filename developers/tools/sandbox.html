@@ -96,6 +96,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#pedal.sandbox.sandbox.Sandbox.evaluate"><code class="docutils literal notranslate"><span class="pre">Sandbox.evaluate()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pedal.sandbox.sandbox.Sandbox.functions"><code class="docutils literal notranslate"><span class="pre">Sandbox.functions</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pedal.sandbox.sandbox.Sandbox.get_context"><code class="docutils literal notranslate"><span class="pre">Sandbox.get_context()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.sandbox.sandbox.Sandbox.get_function"><code class="docutils literal notranslate"><span class="pre">Sandbox.get_function()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pedal.sandbox.sandbox.Sandbox.get_names_by_type"><code class="docutils literal notranslate"><span class="pre">Sandbox.get_names_by_type()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pedal.sandbox.sandbox.Sandbox.get_values_by_type"><code class="docutils literal notranslate"><span class="pre">Sandbox.get_values_by_type()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pedal.sandbox.sandbox.Sandbox.get_variables_by_type"><code class="docutils literal notranslate"><span class="pre">Sandbox.get_variables_by_type()</span></code></a></li>
@@ -151,6 +152,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.commands.evaluate"><code class="docutils literal notranslate"><span class="pre">evaluate()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.commands.get_call_arguments"><code class="docutils literal notranslate"><span class="pre">get_call_arguments()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.commands.get_exception"><code class="docutils literal notranslate"><span class="pre">get_exception()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.commands.get_function"><code class="docutils literal notranslate"><span class="pre">get_function()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.commands.get_input"><code class="docutils literal notranslate"><span class="pre">get_input()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.commands.get_module"><code class="docutils literal notranslate"><span class="pre">get_module()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pedal.sandbox.commands.get_output"><code class="docutils literal notranslate"><span class="pre">get_output()</span></code></a></li>
@@ -620,6 +622,14 @@ In other words, get a list of all the functions the student defined.</p>
 <dd class="field-even"><p>list[<code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.sandbox.sandbox_mixins.SandboxContext</span></code>]</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pedal.sandbox.sandbox.Sandbox.get_function">
+<span class="sig-name descname"><span class="pre">get_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">by_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/sandbox.html#Sandbox.get_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.sandbox.Sandbox.get_function" title="Link to this definition"></a></dt>
+<dd><p>Creates an executable function from the given name, based
+on the student’s namespace. This will be executed using the call
+method.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -1204,6 +1214,13 @@ otherwise returns None.</p>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.12)"><em>Exception</em></a> or <em>None</em></p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pedal.sandbox.commands.get_function">
+<span class="sig-name descname"><span class="pre">get_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">function_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report=&lt;pedal.core.report.Report</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/sandbox/commands.html#get_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.sandbox.commands.get_function" title="Link to this definition"></a></dt>
+<dd><p>Creates an executable function from the given name, based on the
+students’ namespace. This will be executed using the call method.</p>
 </dd></dl>
 
 <dl class="py function">
