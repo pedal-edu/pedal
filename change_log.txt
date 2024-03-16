@@ -1,3 +1,9 @@
+Version 2.6.0 (3/16/2024)
+-------------------------
+* Allow unit_test to be used as a context manager
+* Various documentation improvements
+*
+
 Version 2.5.9 (8/21/2023)
 -------------------------
 * Fix error where a blank file would break the terminal environment.
