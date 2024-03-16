@@ -314,7 +314,7 @@ class CaitNode:
                 if child.astNode == node:
                     return child
         elif isinstance(node, int):
-            return self.children(node)
+            return self.children[node]
         return None
 
     @staticmethod
