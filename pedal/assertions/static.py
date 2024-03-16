@@ -572,7 +572,11 @@ def ensure_dataclass(name, fields=None, root=None, compliment=False, **kwargs):
     Arguments:
         name (str or dataclass): Either the name of the expected dataclass, or a
             dataclass object (not an instance).
-        fields (dict):
+        fields (dict): A dictionary of field names to types.
+        root (CaitNode): The AST to search through; defaults to program root.
+        compliment (str or bool): If True, will use the compliment function to
+            provide positive feedback. If a string, will use that string as the
+            compliment. If False, will not provide positive feedback.
     """
     if isinstance(name, str):
         # Fields will be a dictionary or class

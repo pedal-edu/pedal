@@ -61,6 +61,9 @@ def normalize_type(type_expression, evaluate_name=None) -> Type:
         type_expression (Any): Any kind of supported "Type Expression". This
             includes builtin Python types, string representations, AST nodes,
             JSON-Encoded representations.
+        evaluate_name (function): A function that takes a string and returns
+            a PedalType. This is used to evaluate strings into types, possibly via the current
+            student runtime environment.
 
     Returns:
         :py:class:`pedal.types.new_types.Type`: A normalized Pedal Type.

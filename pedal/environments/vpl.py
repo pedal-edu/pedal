@@ -145,9 +145,7 @@ def set_maximum_score(number):
     TODO: Attach data to the Report instead of a global variable.
 
     Args:
-        number:
-        cap:
-        report:
+        number: The maximum score to give.
     """
     global score_maximum
     score_maximum = number

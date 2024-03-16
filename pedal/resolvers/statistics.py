@@ -14,7 +14,8 @@ def resolve(clean=False, report=MAIN_REPORT):
     """
 
     Args:
-        report:
+        clean (bool): Whether to clean the JSON output.
+        report (Report): The report to resolve. Defaults to MAIN_REPORT.
 
     Returns:
 

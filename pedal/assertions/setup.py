@@ -12,7 +12,8 @@ def resolve_all(set_successful=False, no_phases_is_success=False, report=MAIN_RE
     """
 
     Args:
-        set_success:
+        set_successful (bool or function): Whether to set the report as successful
+        no_phases_is_success (bool): Whether to consider the absence of phases as success
         report:
     """
     _setup_assertions(report)
