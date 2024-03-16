@@ -471,6 +471,15 @@ def get_module(module_name, report=MAIN_REPORT):
     raise ValueError(f"Unknown Sandbox Module: `{module_name}`")
 
 
+def get_function(function_name, report=MAIN_REPORT):
+    """
+    Creates an executable function from the given name, based on the
+    students' namespace. This will be executed using the call method.
+    """
+    sandbox: Sandbox = report[TOOL_NAME]['sandbox']
+    return sandbox.get_function(function_name)
+
+
 def get_python_errors(report=MAIN_REPORT):
     """
     Retrieves any runtime or syntax errors from the report.

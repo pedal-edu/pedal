@@ -853,6 +853,14 @@ class Sandbox:
         """
         return {k: SandboxVariable(k, v) for k, v in self.data.items()}
 
+    def get_function(self, by_name):
+        """
+        Creates an executable function from the given name, based
+        on the student's namespace. This will be executed using the call
+        method.
+        """
+        return lambda *args, **kwargs: self.call(by_name, *args, **kwargs)
+
     def __getitem__(self, item):
         value, exception = None, None
         try:
