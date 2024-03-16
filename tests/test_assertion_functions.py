@@ -5,8 +5,9 @@ Tests related to checking function definitions
 import unittest
 
 from pedal.utilities.system import IS_AT_LEAST_PYTHON_311
-from pedal import unit_test, block_function, evaluate, CommandBlock, run
+from pedal import unit_test, block_function, evaluate, CommandBlock, run, call
 from pedal.assertions.static import *
+from pedal.assertions.runtime import assert_equal, assert_greater, assert_output_contains
 from pedal.types.new_types import DictType, LiteralStr, StrType
 from tests.execution_helper import Execution, ExecutionTestCase, SUCCESS_MESSAGE
 
@@ -111,6 +112,22 @@ Line 3 of file answer.py in make_polite
 Type errors occur when you use an operator or function on the wrong type of value. For example, using `+` to add to a list (instead of `.append`), or dividing a string by a number.
 
 Suggestion: To fix a type error, you should trace through your code. Make sure each expression has the type you expect it to have.""")
+
+    def test_unit_test_with_style(self):
+        with Execution("""
+def add(a, b):
+    return a - b""", run_tifa=False) as e:
+            with unit_test('add'):
+                assert_equal(call('add', 1, 2), 3)
+                assert_equal(call('add', 0, 0), 0)
+        self.assertFeedback(e, """Failed Instructor Test
+Student code failed instructor tests.
+You passed 1/2 tests.
+
+I ran your function add on some new arguments.
+ | Arguments | Returned | Expected
+× |     1, 2 | -1 | 3
+  |     0, 0 | 0 | 0""")
 
     def test_unit_test_blocked_function(self):
         with Execution("""
