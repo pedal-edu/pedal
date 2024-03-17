@@ -9,6 +9,7 @@ from pedal.assertions.runtime import *
 from pedal.assertions.runtime import _FIELDS
 from pedal.assertions.positive import close_output, correct_output
 from pedal.types.new_types import is_subtype
+from pedal.assertions.testing_libraries import *
 
 try:
     from dataclasses import fields
