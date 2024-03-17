@@ -4,6 +4,7 @@ Version 2.6.0 (3/16/2024)
 * Various documentation improvements
 * Improved table output on terminal
 * Provide Sandbox command get_function to wrap a function with call
+* Testing libraries are now exposed in the top-level import
 
 Version 2.5.9 (8/21/2023)
 -------------------------
