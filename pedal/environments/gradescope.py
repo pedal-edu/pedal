@@ -194,6 +194,7 @@ def resolve(report=MAIN_REPORT, customize_failure_message= None, leaderboard=Non
         tests=tests,
         **extra
     )
+    return final
 
 
 def show_as_hidden(feedback):
