@@ -187,3 +187,49 @@ __test_suite.run(__test_result)
                               'tests': tests},
                       **kwargs)
     return False
+
+@CompositeFeedbackFunction()
+def ensure_pytest_tests(test_count=None, report=MAIN_REPORT, **kwargs):
+    """
+    Ensure that the student has not failed their own tests.
+    This is for the specific ``pytest`` library.
+
+    Args:
+        test_count (int): The number of tests that the student should have written. If `None`, any number is fine.
+    """
+    # Call the unittest.main just in case it wasn't explicitly run
+    # Check whether the tests were successful
+    # Check that the right number of tests were run
+    # TODO: Make all of this more flexible, if people request it.
+
+    student = get_student_data()
+
+    test_names = {name for name, value in student.items() if name.startswith("test")}
+    result = run(f"""
+__successes, __failures = 0, 0
+for __a_test in [{", ".join(test_names)}]:
+    try:
+        __a_test()
+        __successes += 1
+    except:
+        __failures += 1
+""", report=report)
+    successes = evaluate("__successes", report=report)
+    failures = evaluate("__failures", report=report)
+    tests_run = successes+failures
+    if test_count and tests_run == 0:
+        return gently("You are not unit testing the result.",
+                      title="No Student Unit Tests",
+                      label="no_student_tests", **kwargs)
+    elif test_count is not None and tests_run < test_count:
+        return gently("You have not written enough unit tests.",
+                      label="not_enough_tests",
+                      title="Not Enough Student Unit Tests", **kwargs)
+    elif failures + successes > 0:
+        return gently(f"{failures}/{tests_run} of your unit tests are not passing.",
+                      label="failing_student_tests",
+                      title="Student Unit Tests Failing",
+                      fields={'failures': failures, 'successes': successes,
+                              'tests': tests_run},
+                      **kwargs)
+    return False

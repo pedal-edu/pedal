@@ -45,5 +45,25 @@ class TestUnittest(ExecutionTestCase):
         final = simple.resolve()
         self.assertEqual("""2/3 of your unit tests are not passing.""", final.message.rstrip())
 
+class TestPyTest(ExecutionTestCase):
+    def test_pytest_library(self):
+        clear_report()
+        set_source("""import pytest
+def divide(a, b):
+    return a / b
+
+def test_divide_success():
+    assert divide(1, 1) == 1
+def test_divide_error():
+    assert divide(1, 0) == 0
+def test_divide_failure():
+    assert divide(1, 2) == 2""")
+        run()
+        ensure_pytest_tests()
+        final = simple.resolve()
+        self.assertEqual("""2/3 of your unit tests are not passing.""", final.message.rstrip())
+
 if __name__ == '__main__':
     unittest.main(buffer=False)
+
+
