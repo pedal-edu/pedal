@@ -6,3 +6,4 @@ wheel
 jupyter
 
 bakery
+pytest

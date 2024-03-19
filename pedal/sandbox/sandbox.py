@@ -189,6 +189,12 @@ class Sandbox:
             self._stop_mocking(context)
             self._capture_exception(user_exception, sys.exc_info(),
                                     code, filename)
+        # NOTE: https://docs.python.org/3/library/exceptions.html#SystemExit
+        # This exception does not inherit from Exception and has to be caught separately
+        except SystemExit as system_exit:
+            self._stop_mocking(context)
+            self._capture_exception(system_exit, sys.exc_info(),
+                                    code, filename)
         else:
             self._stop_mocking(context)
 
