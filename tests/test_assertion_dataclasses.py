@@ -11,7 +11,7 @@ from pedal.assertions.static import *
 from pedal.assertions.commands import *
 from pedal.assertions.runtime import *
 from pedal.types.new_types import DictType, LiteralStr, StrType
-from pedal.utilities.system import IS_AT_LEAST_PYTHON_38
+from pedal.utilities.system import IS_AT_LEAST_PYTHON_39
 from tests.execution_helper import Execution, ExecutionTestCase, SUCCESS_MESSAGE
 
 
@@ -99,7 +99,7 @@ print(x)""") as e:
         self.assertFeedback(e, """Incorrect Arity
 The constructor function Dog was given the wrong number of arguments. You should have had 2 arguments, but instead you had 1 arguments.""")
 
-    @unittest.skipIf(not IS_AT_LEAST_PYTHON_38, "Cannot subscript literals in Python 3.7")
+    @unittest.skipIf(not IS_AT_LEAST_PYTHON_39, "Cannot subscript literals in Python 3.7")
     def test_weird_forecast_issue(self):
         @dataclass
         class WeatherOptions:
