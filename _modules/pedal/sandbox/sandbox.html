@@ -285,6 +285,12 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_stop_mocking</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_capture_exception</span><span class="p">(</span><span class="n">user_exception</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">(),</span>
                                     <span class="n">code</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+        <span class="c1"># NOTE: https://docs.python.org/3/library/exceptions.html#SystemExit</span>
+        <span class="c1"># This exception does not inherit from Exception and has to be caught separately</span>
+        <span class="k">except</span> <span class="ne">SystemExit</span> <span class="k">as</span> <span class="n">system_exit</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_stop_mocking</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_capture_exception</span><span class="p">(</span><span class="n">system_exit</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">(),</span>
+                                    <span class="n">code</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_stop_mocking</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
 
