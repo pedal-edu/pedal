@@ -9,21 +9,30 @@ Imported as::
 
     Set this submission as correct/complete/successful. Typically resolved as overriding
     all other feedback. Often triggered as part of a conditional. You can optionally set
-    an (internal) `justification` message for why this was triggered.
+    an (internal) ``justification`` message for why this was triggered.
 
     ::
 
         set_success()
 
 .. function:: compliment(message: str, value: float = 0, justification: str = None)
+              compliment(message_template: str, fields=dict)
 
-    Provides a `message` to the student complimenting them on something they did correctly.
-    You can also specify a numeric `value` that will be added as partial credit.
-    Finally, you can optionally set an internal `justification` message for why this was triggered.
+    Provides a ``message`` to the student complimenting them on something they did correctly.
+    You can also specify a numeric ``value`` that will be added as partial credit.
+    Finally, you can optionally set an internal ``justification`` message for why this was triggered.
 
     ::
 
         compliment("Your `for` loop looks correct!")
+
+    If you provide a ``message_template`` keyword parameter instead of a ``message``, you can have fields
+    with proper formatting. Fields can either be provided explicitly as a dictionary, or as additional keyword
+    arguments (assuming they do not overlap with any Feedback Function parameters).
+
+    ::
+
+        compliment(message_template="Hello {name:python_code}!", fields={"name": "Ada"})
 
 .. function:: give_partial(value: float, justification: str = None)
 
@@ -35,6 +44,7 @@ Imported as::
         give_partial(.5)
 
 .. function:: explain(message: str, label: str = "explain", justification: str = None)
+              explain(message_template: str, fields: dict)
 
     A core feedback function, used to display a specific feedback `message` response to the
     learner. The `label` can be given to help track this piece of feedback; we strongly recommend
@@ -49,6 +59,7 @@ Imported as::
         explain("You need to use a For loop for this problem!", label="do_not_use_for_loop")
 
 .. function:: gently(message: str, label: str, justification: str = None)
+              gently(message_template: str, fields: dict)
 
     A core feedback function, used to display a specific feedback `message` to the learner.
     Basically the same as the :py:func:`explain`, except the priority is much lower. This will not
@@ -65,6 +76,7 @@ Imported as::
                label="need_multiplication")
 
 .. function:: guidance(message: str, label: str = "guidance", justification: str = None)
+              guidance(message_template: str, fields: dict)
 
     Used to display guiding feedback such as a hint or revised instructions via the `message` to the learner.
     You are recommended to include a :term:`Feedback Label`, but not obligated. You can also optionally
