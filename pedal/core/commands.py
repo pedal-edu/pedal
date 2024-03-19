@@ -49,10 +49,12 @@ class compliment(FeedbackResponse):
     valence = Feedback.POSITIVE_VALENCE
     correct = True
 
-    def __init__(self, message, title=None, **kwargs):
+    def __init__(self, message=None, title=None, message_template=None, **kwargs):
         if title is None:
             title = message
-        super().__init__(message=message, title=title, **kwargs)
+        if message is None and message_template is None:
+            raise ValueError("compliment requires at least either message or message_template")
+        super().__init__(message=message, title=title, message_template=message_template, **kwargs)
 
 
 class give_partial(FeedbackResponse):
@@ -77,8 +79,10 @@ class explain(FeedbackResponse):
     kind = FeedbackKind.MISTAKE
     valence = Feedback.NEGATIVE_VALENCE
 
-    def __init__(self, message, **kwargs):
-        super().__init__(message=message, **kwargs)
+    def __init__(self, message=None, message_template=None, **kwargs):
+        if message is None and message_template is None:
+            raise ValueError("explain requires at least either message or message_template")
+        super().__init__(message=message, message_template=message_template, **kwargs)
 
 
 class gently(FeedbackResponse):
@@ -96,8 +100,10 @@ class gently(FeedbackResponse):
     kind = FeedbackKind.MISTAKE
     valence = Feedback.NEGATIVE_VALENCE
 
-    def __init__(self, message, **kwargs):
-        super().__init__(message=message, **kwargs)
+    def __init__(self, message=None, message_template=None, **kwargs):
+        if message is None and message_template is None:
+            raise ValueError("gently requires at least either message or message_template")
+        super().__init__(message=message, message_template=message_template, **kwargs)
 
 
 class guidance(FeedbackResponse):
@@ -107,8 +113,10 @@ class guidance(FeedbackResponse):
     kind = FeedbackKind.INSTRUCTIONAL
     valence = Feedback.NEUTRAL_VALENCE
 
-    def __init__(self, message, **kwargs):
-        super().__init__(message=message, **kwargs)
+    def __init__(self, message=None, message_template=None, **kwargs):
+        if message is None and message_template is None:
+            raise ValueError("compliment requires at least either message or message_template")
+        super().__init__(message=message, message_template=message_template, **kwargs)
 
 
 def hide_correctness(report=MAIN_REPORT):
