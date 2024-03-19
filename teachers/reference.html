@@ -63,7 +63,8 @@
 <li class="toctree-l2"><a class="reference internal" href="tools/cait.html">CAIT</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tools/source.html">Source</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tools/sandbox.html">Sandbox</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tools/assertions.html">Assertions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/static_assertions.html">Static Assertions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/runtime_assertions.html">Runtime Assertions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tools/types.html">Pedal’s Type System</a></li>
 </ul>
 </li>
@@ -215,9 +216,79 @@ document all the features available - for that, you should refer to the <a class
 <li class="toctree-l2"><a class="reference internal" href="tools/sandbox.html#CommandBlock"><code class="docutils literal notranslate"><span class="pre">CommandBlock</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="tools/assertions.html">Assertions</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="tools/assertions.html#static">Static</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tools/assertions.html#runtime">Runtime</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools/static_assertions.html">Static Assertions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tools/static_assertions.html#prevent_function_call"><code class="docutils literal notranslate"><span class="pre">prevent_function_call()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/static_assertions.html#ensure_function_call"><code class="docutils literal notranslate"><span class="pre">ensure_function_call()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/static_assertions.html#prevent_operation"><code class="docutils literal notranslate"><span class="pre">prevent_operation()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/static_assertions.html#prevent_operator"><code class="docutils literal notranslate"><span class="pre">prevent_operator()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/static_assertions.html#ensure_operation"><code class="docutils literal notranslate"><span class="pre">ensure_operation()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/static_assertions.html#ensure_operator"><code class="docutils literal notranslate"><span class="pre">ensure_operator()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/static_assertions.html#prevent_literal"><code class="docutils literal notranslate"><span class="pre">prevent_literal()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/static_assertions.html#ensure_literal"><code class="docutils literal notranslate"><span class="pre">ensure_literal()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/static_assertions.html#prevent_literal_type"><code class="docutils literal notranslate"><span class="pre">prevent_literal_type()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/static_assertions.html#ensure_literal_type"><code class="docutils literal notranslate"><span class="pre">ensure_literal_type()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/static_assertions.html#prevent_ast"><code class="docutils literal notranslate"><span class="pre">prevent_ast()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/static_assertions.html#ensure_ast"><code class="docutils literal notranslate"><span class="pre">ensure_ast()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/static_assertions.html#function_prints"><code class="docutils literal notranslate"><span class="pre">function_prints()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/static_assertions.html#ensure_import"><code class="docutils literal notranslate"><span class="pre">ensure_import()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/static_assertions.html#prevent_import"><code class="docutils literal notranslate"><span class="pre">prevent_import()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/static_assertions.html#ensure_documented_functions"><code class="docutils literal notranslate"><span class="pre">ensure_documented_functions()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/static_assertions.html#ensure_function"><code class="docutils literal notranslate"><span class="pre">ensure_function()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/static_assertions.html#ensure_dataclass"><code class="docutils literal notranslate"><span class="pre">ensure_dataclass()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/static_assertions.html#ensure_prints_exactly"><code class="docutils literal notranslate"><span class="pre">ensure_prints_exactly()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/static_assertions.html#ensure_starting_code"><code class="docutils literal notranslate"><span class="pre">ensure_starting_code()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/static_assertions.html#prevent_embedded_answer"><code class="docutils literal notranslate"><span class="pre">prevent_embedded_answer()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/static_assertions.html#prevent_printing_functions"><code class="docutils literal notranslate"><span class="pre">prevent_printing_functions()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/static_assertions.html#ensure_functions_return"><code class="docutils literal notranslate"><span class="pre">ensure_functions_return()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/static_assertions.html#only_printing_variables"><code class="docutils literal notranslate"><span class="pre">only_printing_variables()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/static_assertions.html#prevent_advanced_iteration"><code class="docutils literal notranslate"><span class="pre">prevent_advanced_iteration()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/static_assertions.html#files_not_handled_correctly"><code class="docutils literal notranslate"><span class="pre">files_not_handled_correctly()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tools/runtime_assertions.html">Runtime Assertions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tools/runtime_assertions.html#unit_test"><code class="docutils literal notranslate"><span class="pre">unit_test()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/runtime_assertions.html#check_dataclass_instance"><code class="docutils literal notranslate"><span class="pre">check_dataclass_instance()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/runtime_assertions.html#assert_equal"><code class="docutils literal notranslate"><span class="pre">assert_equal()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/runtime_assertions.html#assert_not_equal"><code class="docutils literal notranslate"><span class="pre">assert_not_equal()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/runtime_assertions.html#assert_less"><code class="docutils literal notranslate"><span class="pre">assert_less()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/runtime_assertions.html#assert_less_equal"><code class="docutils literal notranslate"><span class="pre">assert_less_equal()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/runtime_assertions.html#assert_greater"><code class="docutils literal notranslate"><span class="pre">assert_greater()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/runtime_assertions.html#assert_greater_equal"><code class="docutils literal notranslate"><span class="pre">assert_greater_equal()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/runtime_assertions.html#assert_in"><code class="docutils literal notranslate"><span class="pre">assert_in()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/runtime_assertions.html#assert_not_in"><code class="docutils literal notranslate"><span class="pre">assert_not_in()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/runtime_assertions.html#assert_contains_subset"><code class="docutils literal notranslate"><span class="pre">assert_contains_subset()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/runtime_assertions.html#assert_not_contains_subset"><code class="docutils literal notranslate"><span class="pre">assert_not_contains_subset()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/runtime_assertions.html#assert_is"><code class="docutils literal notranslate"><span class="pre">assert_is()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/runtime_assertions.html#assert_is_not"><code class="docutils literal notranslate"><span class="pre">assert_is_not()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/runtime_assertions.html#assert_is_none"><code class="docutils literal notranslate"><span class="pre">assert_is_none()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/runtime_assertions.html#assert_is_not_none"><code class="docutils literal notranslate"><span class="pre">assert_is_not_none()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/runtime_assertions.html#assert_is_dataclass"><code class="docutils literal notranslate"><span class="pre">assert_is_dataclass()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/runtime_assertions.html#assert_is_not_dataclass"><code class="docutils literal notranslate"><span class="pre">assert_is_not_dataclass()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/runtime_assertions.html#assert_true"><code class="docutils literal notranslate"><span class="pre">assert_true()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/runtime_assertions.html#assert_false"><code class="docutils literal notranslate"><span class="pre">assert_false()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/runtime_assertions.html#assert_length_equal"><code class="docutils literal notranslate"><span class="pre">assert_length_equal()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/runtime_assertions.html#assert_length_not_equal"><code class="docutils literal notranslate"><span class="pre">assert_length_not_equal()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/runtime_assertions.html#assert_length_less"><code class="docutils literal notranslate"><span class="pre">assert_length_less()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/runtime_assertions.html#assert_length_less_equal"><code class="docutils literal notranslate"><span class="pre">assert_length_less_equal()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/runtime_assertions.html#assert_length_greater"><code class="docutils literal notranslate"><span class="pre">assert_length_greater()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/runtime_assertions.html#assert_length_greater_equal"><code class="docutils literal notranslate"><span class="pre">assert_length_greater_equal()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/runtime_assertions.html#assert_is_instance"><code class="docutils literal notranslate"><span class="pre">assert_is_instance()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/runtime_assertions.html#assert_is_not_instance"><code class="docutils literal notranslate"><span class="pre">assert_is_not_instance()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/runtime_assertions.html#assert_type"><code class="docutils literal notranslate"><span class="pre">assert_type()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/runtime_assertions.html#assert_not_type"><code class="docutils literal notranslate"><span class="pre">assert_not_type()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/runtime_assertions.html#assert_regex"><code class="docutils literal notranslate"><span class="pre">assert_regex()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/runtime_assertions.html#assert_not_regex"><code class="docutils literal notranslate"><span class="pre">assert_not_regex()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/runtime_assertions.html#assert_output"><code class="docutils literal notranslate"><span class="pre">assert_output()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/runtime_assertions.html#assert_not_output"><code class="docutils literal notranslate"><span class="pre">assert_not_output()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/runtime_assertions.html#assert_output_contains"><code class="docutils literal notranslate"><span class="pre">assert_output_contains()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/runtime_assertions.html#assert_not_output_contains"><code class="docutils literal notranslate"><span class="pre">assert_not_output_contains()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/runtime_assertions.html#assert_has_attr"><code class="docutils literal notranslate"><span class="pre">assert_has_attr()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/runtime_assertions.html#assert_has_variable"><code class="docutils literal notranslate"><span class="pre">assert_has_variable()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/runtime_assertions.html#assert_has_function"><code class="docutils literal notranslate"><span class="pre">assert_has_function()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/runtime_assertions.html#ensure_coverage"><code class="docutils literal notranslate"><span class="pre">ensure_coverage()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/runtime_assertions.html#ensure_called_uniquely"><code class="docutils literal notranslate"><span class="pre">ensure_called_uniquely()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/runtime_assertions.html#ensure_function_callable"><code class="docutils literal notranslate"><span class="pre">ensure_function_callable()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/runtime_assertions.html#equivalent-names">Equivalent Names</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="tools/types.html">Pedal’s Type System</a><ul>

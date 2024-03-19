@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Static Assertions &mdash; Pedal 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Runtime Assertions" href="runtime_assertions.html" />
+    <link rel="prev" title="Sandbox" href="sandbox.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Pedal
+              <img src="../../_static/pedal-logo-v3.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../everyone/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../everyone/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Teacher Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Teacher Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../reference.html">Teacher Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="core.html">Core Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ffs.html">Feedback Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="formatter.html">Formatter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tifa.html">TIFA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cait.html">CAIT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source.html">Source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sandbox.html">Sandbox</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Static Assertions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#prevent_function_call"><code class="docutils literal notranslate"><span class="pre">prevent_function_call()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ensure_function_call"><code class="docutils literal notranslate"><span class="pre">ensure_function_call()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#prevent_operation"><code class="docutils literal notranslate"><span class="pre">prevent_operation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#prevent_operator"><code class="docutils literal notranslate"><span class="pre">prevent_operator()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ensure_operation"><code class="docutils literal notranslate"><span class="pre">ensure_operation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ensure_operator"><code class="docutils literal notranslate"><span class="pre">ensure_operator()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#prevent_literal"><code class="docutils literal notranslate"><span class="pre">prevent_literal()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ensure_literal"><code class="docutils literal notranslate"><span class="pre">ensure_literal()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#prevent_literal_type"><code class="docutils literal notranslate"><span class="pre">prevent_literal_type()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ensure_literal_type"><code class="docutils literal notranslate"><span class="pre">ensure_literal_type()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#prevent_ast"><code class="docutils literal notranslate"><span class="pre">prevent_ast()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ensure_ast"><code class="docutils literal notranslate"><span class="pre">ensure_ast()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function_prints"><code class="docutils literal notranslate"><span class="pre">function_prints()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ensure_import"><code class="docutils literal notranslate"><span class="pre">ensure_import()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#prevent_import"><code class="docutils literal notranslate"><span class="pre">prevent_import()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ensure_documented_functions"><code class="docutils literal notranslate"><span class="pre">ensure_documented_functions()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ensure_function"><code class="docutils literal notranslate"><span class="pre">ensure_function()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ensure_dataclass"><code class="docutils literal notranslate"><span class="pre">ensure_dataclass()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ensure_prints_exactly"><code class="docutils literal notranslate"><span class="pre">ensure_prints_exactly()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ensure_starting_code"><code class="docutils literal notranslate"><span class="pre">ensure_starting_code()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#prevent_embedded_answer"><code class="docutils literal notranslate"><span class="pre">prevent_embedded_answer()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#prevent_printing_functions"><code class="docutils literal notranslate"><span class="pre">prevent_printing_functions()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ensure_functions_return"><code class="docutils literal notranslate"><span class="pre">ensure_functions_return()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#only_printing_variables"><code class="docutils literal notranslate"><span class="pre">only_printing_variables()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#prevent_advanced_iteration"><code class="docutils literal notranslate"><span class="pre">prevent_advanced_iteration()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#files_not_handled_correctly"><code class="docutils literal notranslate"><span class="pre">files_not_handled_correctly()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="runtime_assertions.html">Runtime Assertions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="types.html">Pedal’s Type System</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../integrations.html">Autograder Integrations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../practices.html">Best Practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers/ffs.html">Developers: Feedback Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers/api.html">Developer API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers/tools.html">Developer Tools Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers/conventions.html">Internal Naming Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers/libraries.html">Necessary Libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers/compilation.html">Compilation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../analysis.html">Researchers: Analyzing with Pedal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../everyone/glossary.html">Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../everyone/contact.html">Contact</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Pedal</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../reference.html">Teacher Reference</a></li>
+      <li class="breadcrumb-item active">Static Assertions</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/teachers/tools/static_assertions.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="static-assertions">
+<h1>Static Assertions<a class="headerlink" href="#static-assertions" title="Link to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="prevent_function_call">
+<span class="sig-name descname"><span class="pre">prevent_function_call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">function_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">at_most</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../../developers/api.html#pedal.core.commands.Feedback" title="pedal.core.commands.Feedback"><span class="pre">Feedback</span></a></span></span><a class="headerlink" href="#prevent_function_call" title="Link to this definition"></a></dt>
+<dd><p>Confirms that the function is not called, generating Feedback if it is.
+This is a very simple check, simply looking for any <code class="docutils literal notranslate"><span class="pre">function_name</span></code> calls inside the
+code. It does not check if the function is actually called at runtime, or
+if that code is reachable!</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">at_most</span></code> is provided, allows them to call the function at most that many times.
+If a <code class="docutils literal notranslate"><span class="pre">root</span></code> is provided, allows you to start the search from a specific node.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Student will not be able to call the function &quot;hello_world&quot;</span>
+<span class="n">prevent_function_call</span><span class="p">(</span><span class="s2">&quot;hello_world&quot;</span><span class="p">)</span>
+<span class="c1"># Students can&#39;t call &quot;hello_world&quot; more than twice</span>
+<span class="n">prevent_function_call</span><span class="p">(</span><span class="s2">&quot;hello_world&quot;</span><span class="p">,</span> <span class="n">at_most</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="c1"># Students can&#39;t call the function &quot;add&quot;</span>
+<span class="n">prevent_function_call</span><span class="p">(</span><span class="s2">&quot;add&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<span class="sig-prename descclassname">Feedback Function: May Not Use Function</span><dd><ul>
+<li><strong>Label: </strong><span>prevent_function_call</span></li>
+<li><strong>Response: </strong><span>You used the function {name_message} on line {location.line}. You may not use that function{capacity}.</span></li>
+</ul>
+</dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ensure_function_call">
+<span class="sig-name descname"><span class="pre">ensure_function_call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">function_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">at_least</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../../developers/api.html#pedal.core.commands.Feedback" title="pedal.core.commands.Feedback"><span class="pre">Feedback</span></a></span></span><a class="headerlink" href="#ensure_function_call" title="Link to this definition"></a></dt>
+<dd><p>Confirms that the function IS called, generating feedback if it is not.
+This is a very simple check, simply looking for any <code class="docutils literal notranslate"><span class="pre">function_name</span></code> calls inside the
+code. It does not check if the function is actually called at runtime, or
+if that code is reachable!</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">at_least</span></code> is provided, requires they call the function at least that many times.
+If a <code class="docutils literal notranslate"><span class="pre">root</span></code> is provided, allows you to start the search from a specific node.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Student must call the function &quot;hello_world&quot;</span>
+<span class="n">ensure_function_call</span><span class="p">(</span><span class="s2">&quot;hello_world&quot;</span><span class="p">)</span>
+<span class="c1"># Students must call &quot;hello_world&quot; at least twice</span>
+<span class="n">ensure_function_call</span><span class="p">(</span><span class="s2">&quot;hello_world&quot;</span><span class="p">,</span> <span class="n">at_least</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="c1"># Students must call the function &quot;add&quot;</span>
+<span class="n">ensure_function_call</span><span class="p">(</span><span class="s2">&quot;add&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<span class="sig-prename descclassname">Feedback Function: Must Use Function</span><dd><ul>
+<li><strong>Label: </strong><span>ensure_function_call</span></li>
+<li><strong>Response: </strong><span>You must use the function {name_message}{capacity}.</span></li>
+</ul>
+</dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="prevent_operation">
+<span class="sig-name descname"><span class="pre">prevent_operation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">at_most</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../../developers/api.html#pedal.core.commands.Feedback" title="pedal.core.commands.Feedback"><span class="pre">Feedback</span></a></span></span><a class="headerlink" href="#prevent_operation" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="prevent_operator">
+<span class="sig-name descname"><span class="pre">prevent_operator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">at_most</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../../developers/api.html#pedal.core.commands.Feedback" title="pedal.core.commands.Feedback"><span class="pre">Feedback</span></a></span></span><a class="headerlink" href="#prevent_operator" title="Link to this definition"></a></dt>
+<dd><p>Confirms that the operation is not in the code, generating Feedback if it is.
+This is a very simple check, simply looking for any <code class="docutils literal notranslate"><span class="pre">operation</span></code> calls inside the
+code. It does not check if the operation is actually called at runtime, or
+if that code is reachable!</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">operation</span></code> should be provided as a string like <code class="docutils literal notranslate"><span class="pre">&quot;+&quot;</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">&quot;&lt;&lt;&quot;`</span></code>. All
+comparison, boolean, binary, and unary operations are supported.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">at_most</span></code> is provided, allows them to use the operation at most that many times.
+If a <code class="docutils literal notranslate"><span class="pre">root</span></code> is provided, allows you to start the search from a specific node.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Student will not be able to use the addition operator</span>
+<span class="n">prevent_operation</span><span class="p">(</span><span class="s2">&quot;+&quot;</span><span class="p">)</span>
+<span class="c1"># Students can&#39;t use multiplication more than twice</span>
+<span class="n">prevent_operation</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="n">at_most</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="c1"># Students can&#39;t use the bitwise invert operator</span>
+<span class="n">prevent_operation</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<span class="sig-prename descclassname">Feedback Function: May Not Use Operator</span><dd><ul>
+<li><strong>Label: </strong><span>prevent_operation</span></li>
+<li><strong>Response: </strong><span>You used the operator {name_message} on line {location.line}. You may not use that operator{capacity}.</span></li>
+</ul>
+</dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ensure_operation">
+<span class="sig-name descname"><span class="pre">ensure_operation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">at_least</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../../developers/api.html#pedal.core.commands.Feedback" title="pedal.core.commands.Feedback"><span class="pre">Feedback</span></a></span></span><a class="headerlink" href="#ensure_operation" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="ensure_operator">
+<span class="sig-name descname"><span class="pre">ensure_operator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">at_least</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../../developers/api.html#pedal.core.commands.Feedback" title="pedal.core.commands.Feedback"><span class="pre">Feedback</span></a></span></span><a class="headerlink" href="#ensure_operator" title="Link to this definition"></a></dt>
+<dd><p>Confirms that the operation IS in the code, generating feedback if it is not.
+This is a very simple check, simply looking for any <code class="docutils literal notranslate"><span class="pre">operation</span></code> calls inside the
+code. It does not check if the operation is actually called at runtime, or
+if that code is reachable!</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">operation</span></code> should be provided as a string like <code class="docutils literal notranslate"><span class="pre">&quot;+&quot;</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">&quot;&lt;&lt;&quot;`</span></code>. All
+comparison, boolean, binary, and unary operations are supported.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">at_least</span></code> is provided, requires they use the operation at least that many times.
+If a <code class="docutils literal notranslate"><span class="pre">root</span></code> is provided, allows you to start the search from a specific node.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Student must use the addition operator</span>
+<span class="n">ensure_operation</span><span class="p">(</span><span class="s2">&quot;+&quot;</span><span class="p">)</span>
+<span class="c1"># Students must use multiplication at least twice</span>
+<span class="n">ensure_operation</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="n">at_least</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="c1"># Students must use the bitwise invert operator</span>
+<span class="n">ensure_operation</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<span class="sig-prename descclassname">Feedback Function: Must Use Operator</span><dd><ul>
+<li><strong>Label: </strong><span>ensure_operation</span></li>
+<li><strong>Response: </strong><span>You must use the operator {name_message}{capacity}.</span></li>
+</ul>
+</dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="prevent_literal">
+<span class="sig-name descname"><span class="pre">prevent_literal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">literal</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">at_most</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../../developers/api.html#pedal.core.commands.Feedback" title="pedal.core.commands.Feedback"><span class="pre">Feedback</span></a></span></span><a class="headerlink" href="#prevent_literal" title="Link to this definition"></a></dt>
+<dd><p>Confirms that the literal is not in the code, generating Feedback if it is.
+You can use literal any values including strings, integers, floats, booleans,
+lists, sets, tuples, dictionaries, and None.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">at_most</span></code> is provided, allows them to use the literal at most that many times.
+If a <code class="docutils literal notranslate"><span class="pre">root</span></code> is provided, allows you to start the search from a specific node.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Student will not be able to embed the literal 5</span>
+<span class="n">prevent_literal</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="c1"># Students can&#39;t use 5 more than twice</span>
+<span class="n">prevent_literal</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">at_most</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="c1"># Students can&#39;t use the string &quot;hello&quot;</span>
+<span class="n">prevent_literal</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<span class="sig-prename descclassname">Feedback Function: May Not Use Literal Value</span><dd><ul>
+<li><strong>Label: </strong><span>prevent_literal</span></li>
+<li><strong>Response: </strong><span>You used the literal value {literal_message:python_expression} on line {location.line}. You may not use that value{capacity}.</span></li>
+</ul>
+</dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ensure_literal">
+<span class="sig-name descname"><span class="pre">ensure_literal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">literal</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../../developers/api.html#pedal.core.commands.Feedback" title="pedal.core.commands.Feedback"><span class="pre">Feedback</span></a></span></span><a class="headerlink" href="#ensure_literal" title="Link to this definition"></a></dt>
+<dd><p>Confirms that the literal IS in the code, generating feedback if it is.
+You can use literal any values including strings, integers, floats, booleans,
+lists, sets, tuples, dictionaries, and None.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">at_least</span></code> is provided, requires they use the literal at least that many times.
+If a <code class="docutils literal notranslate"><span class="pre">root</span></code> is provided, allows you to start the search from a specific node.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Student must use the literal 5</span>
+<span class="n">ensure_literal</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="c1"># Students must use 5 at least twice</span>
+<span class="n">ensure_literal</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">at_least</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="c1"># Students must use the string &quot;hello&quot;</span>
+<span class="n">ensure_literal</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<span class="sig-prename descclassname">Feedback Function: Must Use Literal Value</span><dd><ul>
+<li><strong>Label: </strong><span>ensure_literal</span></li>
+<li><strong>Response: </strong><span>You must use the literal value {literal_message}{capacity}.</span></li>
+</ul>
+</dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="prevent_literal_type">
+<span class="sig-name descname"><span class="pre">prevent_literal_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">literal_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.12)"><span class="pre">type</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">at_most</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../../developers/api.html#pedal.core.commands.Feedback" title="pedal.core.commands.Feedback"><span class="pre">Feedback</span></a></span></span><a class="headerlink" href="#prevent_literal_type" title="Link to this definition"></a></dt>
+<dd><p>Confirms that the literal type is not in the code, generating Feedback if it is.
+You can use the following literal types: <code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">float</span></code>, <code class="docutils literal notranslate"><span class="pre">str</span></code>, <code class="docutils literal notranslate"><span class="pre">bool</span></code>,
+<code class="docutils literal notranslate"><span class="pre">list</span></code>, <code class="docutils literal notranslate"><span class="pre">set</span></code>, <code class="docutils literal notranslate"><span class="pre">tuple</span></code>, <code class="docutils literal notranslate"><span class="pre">dict</span></code>, and <code class="docutils literal notranslate"><span class="pre">None</span></code>.
+Note that generics are not currently recognized!</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">at_most</span></code> is provided, allows them to use the literal at most that many times.
+If a <code class="docutils literal notranslate"><span class="pre">root</span></code> is provided, allows you to start the search from a specific node.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Student will not be able to write any integer literals</span>
+<span class="n">prevent_literal_type</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="c1"># Students can&#39;t use integers more than twice</span>
+<span class="n">prevent_literal_type</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">at_most</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="c1"># Students can&#39;t use any strings</span>
+<span class="n">prevent_literal_type</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+</pre></div>
+</div>
+<span class="sig-prename descclassname">Feedback Function: May Not Use Type of Literal Value</span><dd><ul>
+<li><strong>Label: </strong><span>prevent_literal_type</span></li>
+<li><strong>Response: </strong><span>You used the literal value type {literal_type_message:python_expression} on line {location.line}. You may not use that type of value{capacity}.</span></li>
+</ul>
+</dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ensure_literal_type">
+<span class="sig-name descname"><span class="pre">ensure_literal_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">literal_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.12)"><span class="pre">type</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">at_least</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../../developers/api.html#pedal.core.commands.Feedback" title="pedal.core.commands.Feedback"><span class="pre">Feedback</span></a></span></span><a class="headerlink" href="#ensure_literal_type" title="Link to this definition"></a></dt>
+<dd><p>Confirms that the literal type IS in the code, generating feedback if it is.
+You can use the following literal types: <code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">float</span></code>, <code class="docutils literal notranslate"><span class="pre">str</span></code>, <code class="docutils literal notranslate"><span class="pre">bool</span></code>,
+<code class="docutils literal notranslate"><span class="pre">list</span></code>, <code class="docutils literal notranslate"><span class="pre">set</span></code>, <code class="docutils literal notranslate"><span class="pre">tuple</span></code>, <code class="docutils literal notranslate"><span class="pre">dict</span></code>, and <code class="docutils literal notranslate"><span class="pre">None</span></code>.
+Note that generics are not currently recognized!</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">at_least</span></code> is provided, requires they use the literal at least that many times.
+If a <code class="docutils literal notranslate"><span class="pre">root</span></code> is provided, allows you to start the search from a specific node.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Student must use at least one integer literal</span>
+<span class="n">ensure_literal_type</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="c1"># Students must use integers at least twice</span>
+<span class="n">ensure_literal_type</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">at_least</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="c1"># Students must use at least one string</span>
+<span class="n">ensure_literal_type</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+</pre></div>
+</div>
+<span class="sig-prename descclassname">Feedback Function: Must Use Type of Literal Value</span><dd><ul>
+<li><strong>Label: </strong><span>ensure_literal_type</span></li>
+<li><strong>Response: </strong><span>You must use a literal value of type {literal_type_message:python_expression}{capacity}.</span></li>
+</ul>
+</dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="prevent_ast">
+<span class="sig-name descname"><span class="pre">prevent_ast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ast_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">at_most</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../../developers/api.html#pedal.core.commands.Feedback" title="pedal.core.commands.Feedback"><span class="pre">Feedback</span></a></span></span><a class="headerlink" href="#prevent_ast" title="Link to this definition"></a></dt>
+<dd><p>Confirms that the AST type is not in the code, generating Feedback if it is.
+You should use the type of AST element you are looking for, provided as a string.
+Refer to the AST documentation for more information, or to
+<a class="reference external" href="https://greentreesnakes.readthedocs.io/en/latest/">GreenTreeSnakes</a>.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">at_most</span></code> is provided, allows them to use the literal at most that many times.
+If a <code class="docutils literal notranslate"><span class="pre">root</span></code> is provided, allows you to start the search from a specific node.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Student will not be able to write any integer literals</span>
+<span class="n">prevent_ast</span><span class="p">(</span><span class="s2">&quot;Num&quot;</span><span class="p">)</span>
+<span class="c1"># Students can&#39;t for loops more than twice</span>
+<span class="n">prevent_ast</span><span class="p">(</span><span class="s2">&quot;For&quot;</span><span class="p">,</span> <span class="n">at_most</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="c1"># Students can&#39;t use any function calls</span>
+<span class="n">prevent_ast</span><span class="p">(</span><span class="s2">&quot;Call&quot;</span><span class="p">)</span>
+<span class="c1"># Students can&#39;t use subscripts</span>
+<span class="n">prevent_ast</span><span class="p">(</span><span class="s2">&quot;Subscript&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<span class="sig-prename descclassname">Feedback Function: May Not Use Code</span><dd><ul>
+<li><strong>Label: </strong><span>prevent_ast</span></li>
+<li><strong>Response: </strong><span>You used {name_message} on line {location.line}. You may not use that{capacity}.</span></li>
+</ul>
+</dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ensure_ast">
+<span class="sig-name descname"><span class="pre">ensure_ast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ast_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">at_least</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../../developers/api.html#pedal.core.commands.Feedback" title="pedal.core.commands.Feedback"><span class="pre">Feedback</span></a></span></span><a class="headerlink" href="#ensure_ast" title="Link to this definition"></a></dt>
+<dd><p>Confirms that the AST type IS in the code, generating feedback if it is.
+You should use the type of AST element you are looking for, provided as a string.
+Refer to the AST documentation for more information, or to
+<a class="reference external" href="https://greentreesnakes.readthedocs.io/en/latest/">GreenTreeSnakes</a>.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">at_least</span></code> is provided, requires they use the literal at least that many times.
+If a <code class="docutils literal notranslate"><span class="pre">root</span></code> is provided, allows you to start the search from a specific node.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Student must use at least one integer literal</span>
+<span class="n">ensure_ast</span><span class="p">(</span><span class="s2">&quot;Num&quot;</span><span class="p">)</span>
+<span class="c1"># Students must use for loops at least twice</span>
+<span class="n">ensure_ast</span><span class="p">(</span><span class="s2">&quot;For&quot;</span><span class="p">,</span> <span class="n">at_least</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="c1"># Students must use at least one function call</span>
+<span class="n">ensure_ast</span><span class="p">(</span><span class="s2">&quot;Call&quot;</span><span class="p">)</span>
+<span class="c1"># Students must use subscripts</span>
+<span class="n">ensure_ast</span><span class="p">(</span><span class="s2">&quot;Subscript&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<span class="sig-prename descclassname">Feedback Function: Must Use Code</span><dd><ul>
+<li><strong>Label: </strong><span>ensure_ast</span></li>
+<li><strong>Response: </strong><span>You must use {name_message}{capacity}.</span></li>
+</ul>
+</dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="function_prints">
+<span class="sig-name descname"><span class="pre">function_prints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">function_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../../developers/api.html#pedal.core.commands.Feedback" title="pedal.core.commands.Feedback"><span class="pre">Feedback</span></a></span></span><a class="headerlink" href="#function_prints" title="Link to this definition"></a></dt>
+<dd><p>Confirms that the function prints something, generating feedback if it does not.
+This is a very simple check, simply looking for any <code class="docutils literal notranslate"><span class="pre">print</span></code> calls inside the
+function. It does not check if the function is actually called at runtime, or
+if that code is reachable!</p>
+<p>This is just a wrapper around <a class="reference internal" href="#ensure_function_call" title="ensure_function_call"><code class="xref py py-func docutils literal notranslate"><span class="pre">ensure_function_call()</span></code></a>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Student must have a function named &quot;hello_world&quot; with a print statement.</span>
+<span class="n">function_prints</span><span class="p">(</span><span class="s2">&quot;hello_world&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<span class="sig-prename descclassname">Feedback Function: Must Use Function</span><dd><ul>
+<li><strong>Label: </strong><span>ensure_function_call</span></li>
+<li><strong>Response: </strong><span>You must use the function {name_message}{capacity}.</span></li>
+</ul>
+</dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ensure_import">
+<span class="sig-name descname"><span class="pre">ensure_import</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../../developers/api.html#pedal.core.commands.Feedback" title="pedal.core.commands.Feedback"><span class="pre">Feedback</span></a></span></span><a class="headerlink" href="#ensure_import" title="Link to this definition"></a></dt>
+<dd><p>Confirms that the module is imported, generating feedback if it is not.
+This is a very simple check, simply looking for any <code class="docutils literal notranslate"><span class="pre">import</span></code> or <code class="docutils literal notranslate"><span class="pre">from</span></code>
+statements inside the code. It does not check if the module is actually used
+at runtime, or if that code is reachable! There is no <code class="docutils literal notranslate"><span class="pre">at_least</span></code> parameter
+because it is assumed that the student will need to import the module at least once.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Student must import the &quot;math&quot; module</span>
+<span class="n">ensure_import</span><span class="p">(</span><span class="s2">&quot;math&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<span class="sig-prename descclassname">Feedback Function: Must Import Module</span><dd><ul>
+<li><strong>Label: </strong><span>ensure_import</span></li>
+<li><strong>Response: </strong><span>You must import the module {name_message}.</span></li>
+</ul>
+</dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="prevent_import">
+<span class="sig-name descname"><span class="pre">prevent_import</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../../developers/api.html#pedal.core.commands.Feedback" title="pedal.core.commands.Feedback"><span class="pre">Feedback</span></a></span></span><a class="headerlink" href="#prevent_import" title="Link to this definition"></a></dt>
+<dd><p>Confirms that the module is not imported, generating feedback if it is.
+This is a very simple check, simply looking for any <code class="docutils literal notranslate"><span class="pre">import</span></code> or <code class="docutils literal notranslate"><span class="pre">from</span></code>
+statements inside the code. It does not check if the module is actually used
+at runtime, or if that code is reachable!</p>
+<p>If a <code class="docutils literal notranslate"><span class="pre">root</span></code> is provided, allows you to start the search from a specific node.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Student must not import the &quot;math&quot; module</span>
+<span class="n">prevent_import</span><span class="p">(</span><span class="s2">&quot;math&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<span class="sig-prename descclassname">Feedback Function: May Not Import Module</span><dd><ul>
+<li><strong>Label: </strong><span>prevent_import</span></li>
+<li><strong>Response: </strong><span>You may not import the module {name_message}.</span></li>
+</ul>
+</dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ensure_documented_functions">
+<span class="sig-name descname"><span class="pre">ensure_documented_functions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../../developers/api.html#pedal.core.commands.Feedback" title="pedal.core.commands.Feedback"><span class="pre">Feedback</span></a></span></span><a class="headerlink" href="#ensure_documented_functions" title="Link to this definition"></a></dt>
+<dd><p>Confirms that all functions are documented, generating feedback if they are not.
+Only proper docstrings are accepted, not comments. The docstring must be the
+first thing in the function, and must be a string literal. Students will be
+given a list of names of the functions that are not documented.</p>
+<p>If a <code class="docutils literal notranslate"><span class="pre">root</span></code> is provided, allows you to start the search from a specific node.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ensure_documented_functions</span><span class="p">()</span>
+</pre></div>
+</div>
+<span class="sig-prename descclassname">Feedback Function: Must Document Functions</span><dd><ul>
+<li><strong>Label: </strong><span>ensure_documented_functions</span></li>
+<li><strong>Response: </strong><span>You must document the following function{plural}: {names_message}.</span></li>
+</ul>
+</dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ensure_function">
+<span class="sig-name descname"><span class="pre">ensure_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">returns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compliment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../../developers/api.html#pedal.core.commands.Feedback" title="pedal.core.commands.Feedback"><span class="pre">Feedback</span></a></span></span><a class="headerlink" href="#ensure_function" title="Link to this definition"></a></dt>
+<dd><p>Confirms that the function is defined, generating feedback if it is not.
+This checks a number of things about the function:</p>
+<ol class="arabic simple">
+<li><p>Whether or not the function exists, and whether it has been defined multiple times.</p></li>
+<li><p>If found, then the function will move on to check the <code class="docutils literal notranslate"><span class="pre">arity</span></code> (number of parameters) if
+that was provided.</p></li>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">parameters</span></code> is provided, then it will check that the parameters are of the correct types.
+The parameters should be a list of types, and can be given as strings or integers (generics are respected).</p></li>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">returns</span></code> is provided, then it will check that the return type is correct. The return type
+should be a type, and can be given as a string or integer (generics are respected).</p></li>
+</ol>
+<p>If <code class="docutils literal notranslate"><span class="pre">compliment</span></code> is a string, then it will use that to generate a <a class="reference internal" href="core.html#compliment" title="compliment"><code class="xref py py-func docutils literal notranslate"><span class="pre">compliment()</span></code></a>
+feedback if the function is found. If <code class="docutils literal notranslate"><span class="pre">compliment</span></code> is <code class="docutils literal notranslate"><span class="pre">True</span></code>, then it will
+generate a default compliment.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">score</span></code> is provided, then it will use <a class="reference internal" href="core.html#give_partial" title="give_partial"><code class="xref py py-func docutils literal notranslate"><span class="pre">give_partial()</span></code></a> to give partial
+credit.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ensure_function</span><span class="p">(</span><span class="s1">&#39;add&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">returns</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+<span class="n">ensure_function</span><span class="p">(</span><span class="s1">&#39;double&#39;</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span>
+<span class="n">ensure_function</span><span class="p">(</span><span class="s1">&#39;clean_data&#39;</span><span class="p">,</span> <span class="n">compliment</span><span class="o">=</span><span class="s2">&quot;You defined the clean_data function!&quot;</span><span class="p">)</span>
+<span class="n">ensure_function</span><span class="p">(</span><span class="s1">&#39;move_forward&#39;</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Sprite&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">returns</span><span class="o">=</span><span class="s1">&#39;Sprite&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul>
+<li><span class="sig-prename descclassname">Feedback Function: Missing Function</span><dd><ul>
+<li><strong>Label: </strong><span>missing_function</span></li>
+<li><strong>Response: </strong><span>No function named {name_message} was found.</span></li>
+</ul>
+</dd></li>
+<li><span class="sig-prename descclassname">Feedback Function: Duplicate Function Definition</span><dd><ul>
+<li><strong>Label: </strong><span>duplicate_function_definition</span></li>
+<li><strong>Response: </strong><span>The function {name_message} was defined multiple times, on lines {lines_message}.</span></li>
+</ul>
+</dd></li>
+<li><span class="sig-prename descclassname">Feedback Function: Too Few Parameters</span><dd><ul>
+<li><strong>Label: </strong><span>too_few_parameters</span></li>
+<li><strong>Response: </strong><span>The function named {name_message} has fewer parameters ({found}) than expected ({expected}).</span></li>
+</ul>
+</dd></li>
+<li><span class="sig-prename descclassname">Feedback Function: Too Many Parameters</span><dd><ul>
+<li><strong>Label: </strong><span>too_many_parameters</span></li>
+<li><strong>Response: </strong><span>The function named {name_message} has more parameters ({found}) than expected ({expected}).</span></li>
+</ul>
+</dd></li>
+<li><span class="sig-prename descclassname">Feedback Function: Missing Parameter Type</span><dd><ul>
+<li><strong>Label: </strong><span>missing_parameter_type</span></li>
+<li><strong>Response: </strong><span>The function named {name_message} has a parameter named {parameter_message}, but that parameter does not have a type specified.</span></li>
+</ul>
+</dd></li>
+<li><span class="sig-prename descclassname">Feedback Function: Invalid Parameter Type</span><dd><ul>
+<li><strong>Label: </strong><span>invalid_parameter_type</span></li>
+<li><strong>Response: </strong><span>The function named {name_message} has a parameter named {parameter_message} with an invalid type.</span></li>
+</ul>
+</dd></li>
+<li><span class="sig-prename descclassname">Feedback Function: Wrong Parameter Type</span><dd><ul>
+<li><strong>Label: </strong><span>wrong_parameter_type</span></li>
+<li><strong>Response: </strong><span>The function named {name_message} has a parameter named {parameter_message} that is {actual_message}, but should be {expected_message}.</span></li>
+</ul>
+</dd></li>
+<li><span class="sig-prename descclassname">Feedback Function: Wrong Return Type</span><dd><ul>
+<li><strong>Label: </strong><span>wrong_return_type</span></li>
+<li><strong>Response: </strong><span>The function named {name_message} was expected to return {expected_message}, but instead its header specifies that it returns {actual_message}. </span></li>
+</ul>
+</dd></li>
+<li><span class="sig-prename descclassname">Feedback Function: Missing Return Type</span><dd><ul>
+<li><strong>Label: </strong><span>missing_return_type</span></li>
+<li><strong>Response: </strong><span>The function named {name_message} does not have a return type specified in its header.</span></li>
+</ul>
+</dd></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ensure_dataclass">
+<span class="sig-name descname"><span class="pre">ensure_dataclass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">example</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dataclass</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compliment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../../developers/api.html#pedal.core.commands.Feedback" title="pedal.core.commands.Feedback"><span class="pre">Feedback</span></a></span></span><a class="headerlink" href="#ensure_dataclass" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">ensure_dataclass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">fields</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compliment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../../developers/api.html#pedal.core.commands.Feedback" title="pedal.core.commands.Feedback"><span class="pre">Feedback</span></a></span></span></dt>
+<dd><p>Confirms that the dataclass is defined, generating feedback if it is not.
+This checks a number of things about the dataclass:</p>
+<ol class="arabic simple">
+<li><p>Whether or not the dataclass exists, and whether it has been defined multiple times.</p></li>
+<li><p>If found, then the dataclass will move on to check the <code class="docutils literal notranslate"><span class="pre">fields</span></code> (names and types) if
+that was provided. The fields should be a dictionary of names to types, and can be given as strings or integers (generics are respected).
+Alternatively, you can provide the instructor version of the dataclass, and it will check
+that the student version has the same fields.</p></li>
+</ol>
+<p>If <code class="docutils literal notranslate"><span class="pre">compliment</span></code> is a string, then it will use that to generate a <a class="reference internal" href="core.html#compliment" title="compliment"><code class="xref py py-func docutils literal notranslate"><span class="pre">compliment()</span></code></a>
+feedback if the dataclass is found. If <code class="docutils literal notranslate"><span class="pre">compliment</span></code> is <code class="docutils literal notranslate"><span class="pre">True</span></code>, then it will
+generate a default compliment.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">score</span></code> is provided, then it will use <a class="reference internal" href="core.html#give_partial" title="give_partial"><code class="xref py py-func docutils literal notranslate"><span class="pre">give_partial()</span></code></a> to give partial
+credit.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ensure_dataclass</span><span class="p">(</span><span class="s1">&#39;Person&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">})</span>
+<span class="n">ensure_dataclass</span><span class="p">(</span><span class="s1">&#39;Sprite&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">},</span> <span class="n">compliment</span><span class="o">=</span><span class="s2">&quot;You defined the Sprite dataclass!&quot;</span><span class="p">)</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">Person</span><span class="p">:</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">age</span><span class="p">:</span> <span class="nb">int</span>
+<span class="n">ensure_dataclass</span><span class="p">(</span><span class="n">Person</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul>
+<li><span class="sig-prename descclassname">Feedback Function: Missing Dataclass</span><dd><ul>
+<li><strong>Label: </strong><span>missing_dataclass</span></li>
+<li><strong>Response: </strong><span>No dataclass named {name_message} was found.</span></li>
+</ul>
+</dd></li>
+<li><span class="sig-prename descclassname">Feedback Function: Duplicate Dataclass Definition</span><dd><ul>
+<li><strong>Label: </strong><span>duplicate_dataclass_definition</span></li>
+<li><strong>Response: </strong><span>The dataclass {name_message} was defined multiple times, on lines {lines_message}.</span></li>
+</ul>
+</dd></li>
+<li><span class="sig-prename descclassname">Feedback Function: Too Few Fields</span><dd><ul>
+<li><strong>Label: </strong><span>too_few_fields</span></li>
+<li><strong>Response: </strong><span>The dataclass named {name_message} has fewer fields ({found}) than expected ({expected}).</span></li>
+</ul>
+</dd></li>
+<li><span class="sig-prename descclassname">Feedback Function: Too Many Fields</span><dd><ul>
+<li><strong>Label: </strong><span>too_many_fields</span></li>
+<li><strong>Response: </strong><span>The dataclass named {name_message} has more fields ({found}) than expected ({expected}).</span></li>
+</ul>
+</dd></li>
+<li><span class="sig-prename descclassname">Feedback Function: Invalid Field Type</span><dd><ul>
+<li><strong>Label: </strong><span>invalid_field_type</span></li>
+<li><strong>Response: </strong><span>The dataclass named {name_message} has a field named {field_message} with an invalid type.</span></li>
+</ul>
+</dd></li>
+<li><span class="sig-prename descclassname">Feedback Function: Unknown Field</span><dd><ul>
+<li><strong>Label: </strong><span>unknown_field</span></li>
+<li><strong>Response: </strong><span>The dataclass named {name_message} had a field named {field_message} but that field is not supposed to be there. Are you sure you got the name right?</span></li>
+</ul>
+</dd></li>
+<li><span class="sig-prename descclassname">Feedback Function: Missing Field Type</span><dd><ul>
+<li><strong>Label: </strong><span>missing_field_type</span></li>
+<li><strong>Response: </strong><span>The dataclass named {name_message} has a field named {field_message}, but that field does not have a type specified.</span></li>
+</ul>
+</dd></li>
+<li><span class="sig-prename descclassname">Feedback Function: Wrong Fields Type</span><dd><ul>
+<li><strong>Label: </strong><span>wrong_fields_type</span></li>
+<li><strong>Response: </strong><span>The dataclass named {name_message} has a field named {field_message} that is {actual_message}, but should be {expected_message}.</span></li>
+</ul>
+</dd></li>
+<li><span class="sig-prename descclassname">Feedback Function: Name Is Not a Dataclass</span><dd><ul>
+<li><strong>Label: </strong><span>name_is_not_a_dataclass</span></li>
+<li><strong>Response: </strong><span>You defined `{name_message}`, but did not define it as a dataclass.</span></li>
+</ul>
+</dd></li>
+<li><span class="sig-prename descclassname">Feedback Function: Dataclass Not Available</span><dd><ul>
+<li><strong>Label: </strong><span>dataclass_not_available</span></li>
+<li><strong>Response: </strong><span>You may have defined `{name_message}`, but it was not available to be called in the top-level scope. Perhaps you mistakenly defined it inside another dataclass or scope?</span></li>
+</ul>
+</dd></li>
+<li><span class="sig-prename descclassname">Feedback Function: Dataclass Annotation Missing</span><dd><ul>
+<li><strong>Label: </strong><span>missing_dataclass_annotation</span></li>
+<li><strong>Response: </strong><span>You have defined {name_message}, but you did not include the {dc_annotation} annotation. Make sure you import and include the {dc_annotation} annotation directly before the class definition.</span></li>
+</ul>
+</dd></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ensure_prints_exactly">
+<span class="sig-name descname"><span class="pre">ensure_prints_exactly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">count</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../../developers/api.html#pedal.core.commands.Feedback" title="pedal.core.commands.Feedback"><span class="pre">Feedback</span></a></span></span><a class="headerlink" href="#ensure_prints_exactly" title="Link to this definition"></a></dt>
+<dd><p>Confirms that the student prints exactly the given number of times, generating feedback if they do not.
+This is just a wrapper around <a class="reference internal" href="#ensure_function_call" title="ensure_function_call"><code class="xref py py-func docutils literal notranslate"><span class="pre">ensure_function_call()</span></code></a> and <a class="reference internal" href="#prevent_function_call" title="prevent_function_call"><code class="xref py py-func docutils literal notranslate"><span class="pre">prevent_function_call()</span></code></a>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ensure_prints_exactly</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ensure_starting_code">
+<span class="sig-name descname"><span class="pre">ensure_starting_code</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../../developers/api.html#pedal.core.commands.Feedback" title="pedal.core.commands.Feedback"><span class="pre">Feedback</span></a></span></span><a class="headerlink" href="#ensure_starting_code" title="Link to this definition"></a></dt>
+<dd><p>Confirms that the student’s code has the given code, generating feedback if it does not.
+This is most useful for providing some starting code that students are instructed to not
+mess with.</p>
+<p>The given string of code will be parsed and checked with CAIT, so you can be a little flexible.
+It will not be a problem if the student introduces whitespace or comments, but changing
+variable names or something else will be detected.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ensure_starting_code</span><span class="p">(</span><span class="s2">&quot;import math&quot;</span><span class="p">)</span>
+<span class="n">ensure_starting_code</span><span class="p">(</span><span class="s2">&quot;def hello():</span><span class="se">\n</span><span class="s2">    print(&#39;hello&#39;)&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<span class="sig-prename descclassname">Feedback Function: Don't Change Starting Code</span><dd><ul>
+<li><strong>Label: </strong><span>ensure_starting_code</span></li>
+<li><strong>Response: </strong><span>You have changed or removed the starting code. </span></li>
+</ul>
+</dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="prevent_embedded_answer">
+<span class="sig-name descname"><span class="pre">prevent_embedded_answer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../../developers/api.html#pedal.core.commands.Feedback" title="pedal.core.commands.Feedback"><span class="pre">Feedback</span></a></span></span><a class="headerlink" href="#prevent_embedded_answer" title="Link to this definition"></a></dt>
+<dd><p>Confirms that the student’s code does not have the given code, generating feedback if it does.
+This is most useful for checking to make sure that the student did not embed some exact literal solution.</p>
+<p>The given string of code will be parsed and checked with CAIT, so you can be a little flexible.
+It will not be a problem if the student introduces whitespace or comments, but changing
+variable names or something else will be sufficient to beat this check.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">prevent_embedded_answer</span><span class="p">(</span><span class="s2">&quot;print(3)&quot;</span><span class="p">)</span>
+<span class="n">prevent_embedded_answer</span><span class="p">(</span><span class="s2">&quot;def hello():</span><span class="se">\n</span><span class="s2">    print(&#39;hello&#39;)&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<span class="sig-prename descclassname">Feedback Function: Don't Write Answer Directly</span><dd><ul>
+<li><strong>Label: </strong><span>prevent_embedded_answer</span></li>
+<li><strong>Response: </strong><span>You have embedded the answer directly in your code, instead of writing code to compute the answer.</span></li>
+</ul>
+</dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="prevent_printing_functions">
+<span class="sig-name descname"><span class="pre">prevent_printing_functions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exception</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../../developers/api.html#pedal.core.commands.Feedback" title="pedal.core.commands.Feedback"><span class="pre">Feedback</span></a></span></span><a class="headerlink" href="#prevent_printing_functions" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">prevent_printing_functions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exceptions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../../developers/api.html#pedal.core.commands.Feedback" title="pedal.core.commands.Feedback"><span class="pre">Feedback</span></a></span></span></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">prevent_printing_functions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../../developers/api.html#pedal.core.commands.Feedback" title="pedal.core.commands.Feedback"><span class="pre">Feedback</span></a></span></span></dt>
+<dd><p>Confirms that the student’s code does not have any print statements in functions, generating feedback if it does.
+This is a common enough problem that it is worth checking for. You can provide a list of function names
+that are allowed to print (e.g., <code class="docutils literal notranslate"><span class="pre">main</span></code>). You can also provide a single string.</p>
+<p>This does not actually check that <code class="docutils literal notranslate"><span class="pre">print</span></code> is called at runtime, and will not allow mundane
+uses of print (e.g., print-statement-debugging). It can also be defeated
+by things like <code class="docutils literal notranslate"><span class="pre">sys.stdout.write</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">prevent_printing_functions</span><span class="p">()</span>
+<span class="n">prevent_printing_functions</span><span class="p">(</span><span class="s1">&#39;main&#39;</span><span class="p">)</span>
+<span class="n">prevent_printing_functions</span><span class="p">([</span><span class="s1">&#39;main&#39;</span><span class="p">,</span> <span class="s1">&#39;log&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<span class="sig-prename descclassname">Feedback Function: Do Not Print in Function</span><dd><ul>
+<li><strong>Label: </strong><span>prevent_printing_functions</span></li>
+<li><strong>Response: </strong><span>The function {name} is printing on line {location.line:line}. However, that function is not supposed to print.</span></li>
+</ul>
+</dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ensure_functions_return">
+<span class="sig-name descname"><span class="pre">ensure_functions_return</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../../developers/api.html#pedal.core.commands.Feedback" title="pedal.core.commands.Feedback"><span class="pre">Feedback</span></a></span></span><a class="headerlink" href="#ensure_functions_return" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">ensure_functions_return</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exception</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../../developers/api.html#pedal.core.commands.Feedback" title="pedal.core.commands.Feedback"><span class="pre">Feedback</span></a></span></span></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">ensure_functions_return</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exceptions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../../developers/api.html#pedal.core.commands.Feedback" title="pedal.core.commands.Feedback"><span class="pre">Feedback</span></a></span></span></dt>
+<dd><p>Confirms that the student’s functions return something, generating feedback if they do not.
+This is a common enough problem that it is worth checking for. You can provide a list of function names
+that do not have to return (e.g., <code class="docutils literal notranslate"><span class="pre">main</span></code>). You can also provide a single string.</p>
+<p>This does not actually check that the function returns at runtime along every
+branch, and that the <code class="docutils literal notranslate"><span class="pre">return</span></code> statement is even reachable.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ensure_functions_return</span><span class="p">()</span>
+<span class="n">ensure_functions_return</span><span class="p">(</span><span class="s1">&#39;main&#39;</span><span class="p">)</span>
+<span class="n">ensure_functions_return</span><span class="p">([</span><span class="s1">&#39;main&#39;</span><span class="p">,</span> <span class="s1">&#39;save_to_file&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<span class="sig-prename descclassname">Feedback Function: Must Return in Function</span><dd><ul>
+<li><strong>Label: </strong><span>ensure_functions_return</span></li>
+<li><strong>Response: </strong><span>The function {name} is not returning. However, that function is supposed to have a return statement.</span></li>
+</ul>
+</dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="only_printing_variables">
+<span class="sig-name descname"><span class="pre">only_printing_variables</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#only_printing_variables" title="Link to this definition"></a></dt>
+<dd><p>Confirms that the student’s code only prints variables, generating feedback if it does not.
+This is a narrow use case, to be sure.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">only_printing_variables</span><span class="p">()</span>
+</pre></div>
+</div>
+<span class="sig-prename descclassname">Feedback Function: Print Variables, Not Values</span><dd><ul>
+<li><strong>Label: </strong><span>only_printing_variables</span></li>
+<li><strong>Response: </strong><span>You printed something other than a variable on line {location.line:line}. Although that is not a normally an issue, we want you to practice printing variables in this problem.</span></li>
+</ul>
+</dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="prevent_advanced_iteration">
+<span class="sig-name descname"><span class="pre">prevent_advanced_iteration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">allow_while</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_for</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#prevent_advanced_iteration" title="Link to this definition"></a></dt>
+<dd><p>Confirms that the student’s code does not use any iteration, generating feedback if it does.
+By default, all forms of iteration that can be detected easily are blocked
+(<code class="docutils literal notranslate"><span class="pre">while</span></code> loops, <code class="docutils literal notranslate"><span class="pre">for</span></code> loops). You can allow specific forms of iteration
+via the boolean flag parameters.</p>
+<p>By default, most built-in looping functions are blocked.
+You can override this list by providing a list of function names to allow.
+Otherwise, the following functions are blocked: <code class="docutils literal notranslate"><span class="pre">sum</span></code>, <code class="docutils literal notranslate"><span class="pre">map</span></code>, <code class="docutils literal notranslate"><span class="pre">filter</span></code>,
+<code class="docutils literal notranslate"><span class="pre">any</span></code>, <code class="docutils literal notranslate"><span class="pre">all</span></code>, <code class="docutils literal notranslate"><span class="pre">reduce</span></code>, <code class="docutils literal notranslate"><span class="pre">sorted</span></code>, <code class="docutils literal notranslate"><span class="pre">reduce</span></code>, <code class="docutils literal notranslate"><span class="pre">len</span></code>, <code class="docutils literal notranslate"><span class="pre">max</span></code>, <code class="docutils literal notranslate"><span class="pre">min</span></code>,
+<code class="docutils literal notranslate"><span class="pre">getattr</span></code>, <code class="docutils literal notranslate"><span class="pre">setattr</span></code>, <code class="docutils literal notranslate"><span class="pre">eval</span></code>, <code class="docutils literal notranslate"><span class="pre">exec</span></code>, <code class="docutils literal notranslate"><span class="pre">iter</span></code>, <code class="docutils literal notranslate"><span class="pre">next</span></code>.</p>
+<p>Surprisingly, does not block comprehensions of any kind. Unsurprisingly, does
+not block recursion.</p>
+<p>Technically, this is just a wrapper around <a class="reference internal" href="#prevent_function_call" title="prevent_function_call"><code class="xref py py-func docutils literal notranslate"><span class="pre">prevent_function_call()</span></code></a>
+and <a class="reference internal" href="#prevent_ast" title="prevent_ast"><code class="xref py py-func docutils literal notranslate"><span class="pre">prevent_ast()</span></code></a>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">prevent_advanced_iteration</span><span class="p">()</span>
+<span class="n">prevent_advanced_iteration</span><span class="p">(</span><span class="n">allow_while</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">prevent_advanced_iteration</span><span class="p">(</span><span class="n">allow_for</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">prevent_advanced_iteration</span><span class="p">(</span><span class="n">allow_function</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;len&#39;</span><span class="p">,</span> <span class="s1">&#39;sum&#39;</span><span class="p">])</span>
+<span class="n">prevent_advanced_iteration</span><span class="p">(</span><span class="n">allow_function</span><span class="o">=</span><span class="s1">&#39;sorted&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="files_not_handled_correctly">
+<span class="sig-name descname"><span class="pre">files_not_handled_correctly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">filenames</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#files_not_handled_correctly" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">files_not_handled_correctly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_of_filenames</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span></dt>
+<dd><p>Statically detects whether the files have all been opened and closed correctly.
+This is a very simple check, simply looking for corresponding <code class="docutils literal notranslate"><span class="pre">open</span></code> function
+calls and <code class="docutils literal notranslate"><span class="pre">close</span></code> method calls, or if <code class="docutils literal notranslate"><span class="pre">with</span></code> was used (which counts as an
+implicit <code class="docutils literal notranslate"><span class="pre">close</span></code>). It does not check if the file is actually used, and that the
+files were opened and closed in the correct order or actually closed at runtime!</p>
+<p>If a <code class="docutils literal notranslate"><span class="pre">number_of_filenames</span></code> is provided, then it will check for that many files.
+If a list of strings is proivded, then it will check for those specific files.</p>
+<p>This function will also check if the student incorrectly uses <code class="docutils literal notranslate"><span class="pre">close</span></code> as a function
+or <code class="docutils literal notranslate"><span class="pre">open</span></code> as a method, providing cutom feedback.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Student must open and close exactly one file</span>
+<span class="n">files_not_handled_correctly</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="c1"># Student must open and close exactly two files</span>
+<span class="n">files_not_handled_correctly</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="c1"># Student must open and close the files &quot;data.txt&quot; and &quot;output.txt&quot;</span>
+<span class="n">files_not_handled_correctly</span><span class="p">(</span><span class="s2">&quot;data.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;output.txt&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<span class="sig-prename descclassname">Feedback Function: Opened Without Arguments</span><dd><ul>
+<li><strong>Label: </strong><span>open_without_arguments</span></li>
+<li><strong>Response: </strong><span>You have called the `open` function without any arguments. It needs a filename.</span></li>
+</ul>
+</dd></dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="sandbox.html" class="btn btn-neutral float-left" title="Sandbox" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="runtime_assertions.html" class="btn btn-neutral float-right" title="Runtime Assertions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, acbart, lukesg08.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
