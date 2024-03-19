@@ -18,7 +18,8 @@ document all the features available - for that, you should refer to the :ref:`fu
     tools/cait
     tools/source
     tools/sandbox
-    tools/assertions
+    tools/static_assertions
+    tools/runtime_assertions
     tools/types
 
 tools/assertions
