@@ -13,7 +13,7 @@ GradeScope
 
 You will need to create an instructor control script (e.g., `ics.py`) and upload it along with the following files:
 
-.. code-block:: console
+.. code-block:: bash
     :caption: setup.sh
 
     python3 -m pip install pedal
@@ -23,7 +23,7 @@ You will need to create an instructor control script (e.g., `ics.py`) and upload
     # python3 -m pip install git+git://github.com/pedal-edu/curriculum-sneks.git
     # python3 -m pip install git+git://github.com/pedal-edu/curriculum-ctvt.git
 
-.. code-block:: console
+.. code-block:: bash
     :caption: run_autograder
 
     #!/usr/bin/env bash
