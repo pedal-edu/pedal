@@ -46,6 +46,9 @@ Save and reference variable
 
     match = find_match("_var_ = ___ + _var_")
     student_var = match['_var_']
+    student_var_name = student_var.id
+
+This will get you the name of a specific student variable. Similar functionality is available for class and function identifiers as well.
 
 Reference a function call
 ^^^^^^^^^^^^^^^^^^^^^^^^^
