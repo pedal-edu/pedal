@@ -116,8 +116,8 @@ def parse_args(reduced_mode=False):
                                         ' submissions are run. Mostly for testing'
                                         ' purposes.',
                         default=None)
-    parser.add_argument('--resolver', help='Choose a different resolver to use.',
-                        default='resolve', choices=['resolve', 'stats_resolve'])
+    parser.add_argument('--resolver', help='Choose a different resolver to use (the name of a function defined in the instructor control script).',
+                        default='resolve')
     parser.add_argument('--ics_direct', help="Give the instructor code directly"
                                              " instead of loading from a file.",
                         default=False, action='store_true')
