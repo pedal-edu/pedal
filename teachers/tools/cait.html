@@ -154,8 +154,10 @@ with CaitNodes as many additional operations and matching functionality are supp
 <h2>Save and reference variable<a class="headerlink" href="#save-and-reference-variable" title="Link to this heading"></a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">match</span> <span class="o">=</span> <span class="n">find_match</span><span class="p">(</span><span class="s2">&quot;_var_ = ___ + _var_&quot;</span><span class="p">)</span>
 <span class="n">student_var</span> <span class="o">=</span> <span class="n">match</span><span class="p">[</span><span class="s1">&#39;_var_&#39;</span><span class="p">]</span>
+<span class="n">student_var_name</span> <span class="o">=</span> <span class="n">student_var</span><span class="o">.</span><span class="n">id</span>
 </pre></div>
 </div>
+<p>This will get you the name of a specific student variable. Similar functionality is available for class and function identifiers as well.</p>
 </section>
 <section id="reference-a-function-call">
 <h2>Reference a function call<a class="headerlink" href="#reference-a-function-call" title="Link to this heading"></a></h2>
