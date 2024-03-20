@@ -233,6 +233,7 @@ def sectional_resolve(report=MAIN_REPORT, priority_key=by_priority):
         output="Feedback is below",
         tests=tests
     )
+    return list(finals.values())[0]
 
 
 def set_maximum_score(number):
