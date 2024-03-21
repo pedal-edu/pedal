@@ -1,6 +1,10 @@
 Version 2.6.1 (3/19/2024)
 -------------------------
 * The explain, gently, guidance, and compliment functions can now take `message_template` as a keyword parameter INSTEAD of `message`
+* Fixed a bug in assert_regex and assert_not_regex
+* Added in assert_output_regex and assert_not_output_regex
+* Custom resolvers now better supported from command line
+* Added simple/single resolver to gradescope
 
 Version 2.6.0 (3/16/2024)
 -------------------------
