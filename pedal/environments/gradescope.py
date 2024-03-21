@@ -92,6 +92,8 @@ class GradeScopeEnvironment(Environment):
             'resolve': resolve,
             'next_section': self.next_section,
             'sectional_resolve': sectional_resolve,
+            'simple': single_resolve,
+            'single': single_resolve,
             'show_as_hidden': show_as_hidden
         }
 
@@ -192,6 +194,22 @@ def resolve(report=MAIN_REPORT, customize_failure_message= None, leaderboard=Non
         score=round(final.score*score_maximum, 2),
         output=f"<strong>{final.title}</strong><br>\n{final.message}",
         tests=tests,
+        **extra
+    )
+    return final
+
+
+def single_resolve(report=MAIN_REPORT, leaderboard=None):
+    final = full_resolve(report)
+    extra = {}
+    if isinstance(leaderboard, list):
+        extra['leaderboard'] = leaderboard
+    elif leaderboard is not None:
+        extra['leaderboard'] = leaderboard(final)
+
+    dump_feedback(
+        score=round(final.score * score_maximum, 2),
+        output=f"<strong>{final.title}</strong><br>\n{final.message}",
         **extra
     )
     return final
