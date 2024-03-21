@@ -693,6 +693,41 @@ class assert_not_output_contains(RuntimePrintingAssertionFeedback):
         return str(text.value) in self.get_output(execution)
 
 
+class assert_output_regex(RuntimePrintingAssertionFeedback):
+    """
+    Determine if the ``execution`` output matches the given regex, similar to assert_output and assert_regex.
+    """
+    justification = "Did not print the output matching the regex"
+    _expected_verb = "the output to match the regex"
+    _inverse_operator = "does not match the text"
+
+    def __init__(self, pattern, execution, exact_strings=False, **kwargs):
+        super().__init__(execution, pattern,
+                         exact_strings=exact_strings, **kwargs)
+
+    def condition(self, execution, text, exact_strings):
+        """ Tests if the regex does not match the text """
+        return errors(execution) or re.search(str(text.value), self.get_output(execution)) is None
+
+
+class assert_not_output_regex(RuntimePrintingAssertionFeedback):
+    """
+    Determine if the ``execution`` does not output ``text``. Simply the inverse of
+    :py:func:`pedal.assertions.runtime.assert_output` so check the rules there for more information.
+    """
+    justification = "Printed the output matching the regex"
+    _expected_verb = "the output to not match the regex"
+    _inverse_operator = "matches the text"
+
+    def __init__(self, pattern, execution, exact_strings=False, **kwargs):
+        super().__init__(execution, pattern,
+                         exact_strings=exact_strings, **kwargs)
+
+    def condition(self, execution, text, exact_strings):
+        """ Tests if the regex does not match the text """
+        return re.search(str(text.value), self.get_output(execution)) is not None
+
+
 class assert_has_attr(RuntimeAssertionFeedback):
     """
     Determine if the ``object`` has the ``name``

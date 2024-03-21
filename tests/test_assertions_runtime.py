@@ -568,6 +568,38 @@ But I expected the result to not match the text:
             assert_not_regex("World!?", call('message'))
         self.assertFeedback(e, SUCCESS_MESSAGE)
 
+    def test_assert_output_regex_passes(self):
+        with Execution('print("Hello World!")') as e:
+            assert_output_regex("World!?", e.student)
+        self.assertFeedback(e, SUCCESS_MESSAGE)
+
+    def test_assert_output_regex_fails(self):
+        with Execution('print("Banana")') as e:
+            assert_output_regex("World!?", e.student)
+        self.assertFeedback(e, """Failed Instructor Test
+Student code failed instructor test.
+I ran your code.
+The printed output was:
+    Banana
+But I expected the output to match the regex:
+    World!?""")
+
+    def test_assert_not_output_regex_fails(self):
+        with Execution('print("Hello World!")') as e:
+            assert_not_output_regex("World!?", e.student)
+        self.assertFeedback(e, """Failed Instructor Test
+Student code failed instructor test.
+I ran your code.
+The printed output was:
+    Hello World!
+But I expected the output to not match the regex:
+    World!?""")
+
+    def test_assert_not_output_regex_passes(self):
+        with Execution('print("Banana")') as e:
+            assert_not_output_regex("World!?", e.student)
+        self.assertFeedback(e, SUCCESS_MESSAGE)
+
 
 if __name__ == '__main__':
     unittest.main(buffer=False)
