@@ -584,7 +584,7 @@ class assert_regex(RuntimeAssertionFeedback):
 
     def condition(self, regex, text):
         """ Tests if the regex matches the text """
-        return re.search(regex.value, text.value) is None
+        return re.search(regex.value, str(text.value)) is None
 
 
 class assert_not_regex(RuntimeAssertionFeedback):
@@ -596,11 +596,11 @@ class assert_not_regex(RuntimeAssertionFeedback):
     _inverse_operator = "matches the text"
 
     def __init__(self, regex, text, **kwargs):
-        super().__init__(SandboxedValue(regex.value), SandboxedValue(text.value), **kwargs)
+        super().__init__(SandboxedValue(regex), SandboxedValue(text), **kwargs)
 
     def condition(self, regex, text):
         """ Tests if the regex does not match the text """
-        return re.search(regex, text) is not None
+        return re.search(regex.value, str(text.value)) is not None
 
 
 class assert_almost_equal(assert_equal):

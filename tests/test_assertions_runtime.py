@@ -534,6 +534,40 @@ The value of the result was:
 But I expected the result to be equal to:
     'AB'""")
 
+    def test_assert_regex_passes(self):
+        with Execution('def message(): return "Hello World!"\nmessage') as e:
+            assert_regex("World!?", call('message'))
+        self.assertFeedback(e, SUCCESS_MESSAGE)
+
+    def test_assert_regex_fails(self):
+        with Execution('def message(): return "Banana"\nmessage') as e:
+            assert_regex("World!?", call('message'))
+        self.assertFeedback(e, """Failed Instructor Test
+Student code failed instructor test.
+I ran the code:
+    message()
+The value of the result was:
+    'Banana'
+But I expected the result to match the text:
+    'World!?'""")
+
+    def test_assert_not_regex_fails(self):
+        with Execution('def message(): return "Hello World!"\nmessage') as e:
+            assert_not_regex("World!?", call('message'))
+        self.assertFeedback(e, """Failed Instructor Test
+Student code failed instructor test.
+I ran the code:
+    message()
+The value of the result was:
+    'Hello World!'
+But I expected the result to not match the text:
+    'World!?'""")
+
+    def test_assert_not_regex_passes(self):
+        with Execution('def message(): return "Banana"\nmessage') as e:
+            assert_not_regex("World!?", call('message'))
+        self.assertFeedback(e, SUCCESS_MESSAGE)
+
 
 if __name__ == '__main__':
     unittest.main(buffer=False)
