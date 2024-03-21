@@ -22,7 +22,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Best Practices" href="practices.html" />
+    <link rel="next" title="Developers: Feedback Functions" href="../developers/ffs.html" />
     <link rel="prev" title="Pedal’s Type System" href="tools/types.html" /> 
 </head>
 
@@ -64,7 +64,6 @@
 <li class="toctree-l2"><a class="reference internal" href="#jupyter-notebooks">Jupyter Notebooks</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="practices.html">Best Practices</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers/ffs.html">Developers: Feedback Functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers/api.html">Developer API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers/tools.html">Developer Tools Reference</a></li>
@@ -151,6 +150,22 @@ pedal<span class="w"> </span>grade<span class="w"> </span><span class="se">\</sp
 <li><p>Only show the highest priority feedback message, rather than all possible feedback</p></li>
 </ul>
 <img alt="../_images/gradescope_example.png" src="../_images/gradescope_example.png" />
+<p>If you want to run Pedal with Gradescope and only output a single (highest priority) feedback object, you can use
+one of its alternative resolvers (e.g., <code class="docutils literal notranslate"><span class="pre">single</span></code>):</p>
+<div class="literal-block-wrapper docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-text">run_autograder</span><a class="headerlink" href="#id4" title="Link to this code"></a></div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env bash</span>
+<span class="c1"># Runs the first python file that the student submitted</span>
+<span class="nv">files</span><span class="o">=(</span><span class="w"> </span>/autograder/submission/*.py<span class="w"> </span><span class="o">)</span>
+pedal<span class="w"> </span>grade<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>/autograder/source/ics.py<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">files</span><span class="p">[0]</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>--environment<span class="w"> </span>gradescope<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>--resolver<span class="w"> </span>single<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>--output<span class="w"> </span><span class="s2">&quot;/autograder/results/results.json&quot;</span>
+</pre></div>
+</div>
+</div>
 </section>
 <section id="blockpy">
 <h2>BlockPy<a class="headerlink" href="#blockpy" title="Link to this heading"></a></h2>
@@ -160,8 +175,8 @@ pedal<span class="w"> </span>grade<span class="w"> </span><span class="se">\</sp
 <section id="vpl">
 <h2>VPL<a class="headerlink" href="#vpl" title="Link to this heading"></a></h2>
 <p>You will need to create an instructor control script (e.g., <code class="xref py py-obj docutils literal notranslate"><span class="pre">ics.py</span></code>), and upload it along with a <code class="xref py py-obj docutils literal notranslate"><span class="pre">vpl_evaluate.sh</span></code> file:</p>
-<div class="literal-block-wrapper docutils container" id="id4">
-<div class="code-block-caption"><span class="caption-text">vpl_evaluate.sh</span><a class="headerlink" href="#id4" title="Link to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id5">
+<div class="code-block-caption"><span class="caption-text">vpl_evaluate.sh</span><a class="headerlink" href="#id5" title="Link to this code"></a></div>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span>Run<span class="w"> </span>the<span class="w"> </span>environment<span class="w"> </span>variable<span class="w"> </span>initializer<span class="w"> </span>to<span class="w"> </span>get<span class="w"> </span>access<span class="w"> </span>to<span class="w"> </span>its<span class="w"> </span>variables
 <span class="go">source ./vpl_environment.sh</span>
 <span class="go">echo &quot;#!/bin/bash&quot; &gt; vpl_execution</span>
@@ -201,7 +216,7 @@ other interface changes).</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="tools/types.html" class="btn btn-neutral float-left" title="Pedal’s Type System" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="practices.html" class="btn btn-neutral float-right" title="Best Practices" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../developers/ffs.html" class="btn btn-neutral float-right" title="Developers: Feedback Functions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

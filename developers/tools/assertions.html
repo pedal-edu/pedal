@@ -57,7 +57,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../teachers/examples.html">Teacher Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../teachers/reference.html">Teacher Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../teachers/integrations.html">Autograder Integrations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../teachers/practices.html">Best Practices</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../ffs.html">Developers: Feedback Functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api.html">Developer API</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../tools.html">Developer Tools Reference</a><ul class="current">
@@ -309,6 +308,10 @@
 <li class="toctree-l4"><a class="reference internal" href="#pedal.assertions.runtime.assert_not_output_contains.condition"><code class="docutils literal notranslate"><span class="pre">assert_not_output_contains.condition()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.assertions.runtime.assert_not_output_regex"><code class="docutils literal notranslate"><span class="pre">assert_not_output_regex</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.assertions.runtime.assert_not_output_regex.condition"><code class="docutils literal notranslate"><span class="pre">assert_not_output_regex.condition()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#pedal.assertions.runtime.assert_not_regex"><code class="docutils literal notranslate"><span class="pre">assert_not_regex</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#pedal.assertions.runtime.assert_not_regex.condition"><code class="docutils literal notranslate"><span class="pre">assert_not_regex.condition()</span></code></a></li>
 </ul>
@@ -323,6 +326,10 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#pedal.assertions.runtime.assert_output_contains"><code class="docutils literal notranslate"><span class="pre">assert_output_contains</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#pedal.assertions.runtime.assert_output_contains.condition"><code class="docutils literal notranslate"><span class="pre">assert_output_contains.condition()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.assertions.runtime.assert_output_regex"><code class="docutils literal notranslate"><span class="pre">assert_output_regex</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.assertions.runtime.assert_output_regex.condition"><code class="docutils literal notranslate"><span class="pre">assert_output_regex.condition()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#pedal.assertions.runtime.assert_prints"><code class="docutils literal notranslate"><span class="pre">assert_prints</span></code></a></li>
@@ -1575,6 +1582,19 @@ If delta is None, then the default Delta will be used (.001).</p></li>
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="pedal.assertions.runtime.assert_not_output_regex">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">assert_not_output_regex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pattern</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">execution</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exact_strings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_not_output_regex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_not_output_regex" title="Link to this definition"></a></dt>
+<dd><p>Determine if the <code class="docutils literal notranslate"><span class="pre">execution</span></code> does not output <code class="docutils literal notranslate"><span class="pre">text</span></code>. Simply the inverse of
+<a class="reference internal" href="#pedal.assertions.runtime.assert_output" title="pedal.assertions.runtime.assert_output"><code class="xref py py-func docutils literal notranslate"><span class="pre">pedal.assertions.runtime.assert_output()</span></code></a> so check the rules there for more information.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pedal.assertions.runtime.assert_not_output_regex.condition">
+<span class="sig-name descname"><span class="pre">condition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">execution</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exact_strings</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_not_output_regex.condition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_not_output_regex.condition" title="Link to this definition"></a></dt>
+<dd><p>Tests if the regex does not match the text</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="pedal.assertions.runtime.assert_not_regex">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">assert_not_regex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">regex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_not_regex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_not_regex" title="Link to this definition"></a></dt>
 <dd><p>Determine if the <code class="docutils literal notranslate"><span class="pre">regex</span></code> does not match <code class="docutils literal notranslate"><span class="pre">text</span></code>.</p>
@@ -1632,6 +1652,18 @@ part of the output, though, so the check will not work across lines unless the <
 <dl class="py method">
 <dt class="sig sig-object py" id="pedal.assertions.runtime.assert_output_contains.condition">
 <span class="sig-name descname"><span class="pre">condition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">execution</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exact_strings</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_output_contains.condition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_output_contains.condition" title="Link to this definition"></a></dt>
+<dd><p>Tests if the regex does not match the text</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pedal.assertions.runtime.assert_output_regex">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">assert_output_regex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pattern</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">execution</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exact_strings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_output_regex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_output_regex" title="Link to this definition"></a></dt>
+<dd><p>Determine if the <code class="docutils literal notranslate"><span class="pre">execution</span></code> output matches the given regex, similar to assert_output and assert_regex.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pedal.assertions.runtime.assert_output_regex.condition">
+<span class="sig-name descname"><span class="pre">condition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">execution</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exact_strings</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pedal/assertions/runtime.html#assert_output_regex.condition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.assertions.runtime.assert_output_regex.condition" title="Link to this definition"></a></dt>
 <dd><p>Tests if the regex does not match the text</p>
 </dd></dl>
 

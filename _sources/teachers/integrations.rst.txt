@@ -55,6 +55,22 @@ By default, the GradeScope environment will:
 
 .. image:: ../_static/gradescope_example.png
 
+If you want to run Pedal with Gradescope and only output a single (highest priority) feedback object, you can use
+one of its alternative resolvers (e.g., ``single``):
+
+.. code-block:: bash
+    :caption: run_autograder
+
+    #!/usr/bin/env bash
+    # Runs the first python file that the student submitted
+    files=( /autograder/submission/*.py )
+    pedal grade \
+            /autograder/source/ics.py \
+            "${files[0]}" \
+            --environment gradescope \
+            --resolver single \
+            --output "/autograder/results/results.json"
+
 BlockPy
 -------
 

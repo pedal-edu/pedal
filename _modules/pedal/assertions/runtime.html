@@ -54,7 +54,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../teachers/examples.html">Teacher Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../teachers/reference.html">Teacher Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../teachers/integrations.html">Autograder Integrations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../teachers/practices.html">Best Practices</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers/ffs.html">Developers: Feedback Functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers/api.html">Developer API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers/tools.html">Developer Tools Reference</a></li>
@@ -847,7 +846,7 @@
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_regex.condition">[docs]</a>
     <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">regex</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Tests if the regex matches the text &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">regex</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">text</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span></div>
+        <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">regex</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">value</span><span class="p">))</span> <span class="ow">is</span> <span class="kc">None</span></div>
 </div>
 
 
@@ -863,13 +862,13 @@
     <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">&quot;matches the text&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">regex</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">SandboxedValue</span><span class="p">(</span><span class="n">regex</span><span class="o">.</span><span class="n">value</span><span class="p">),</span> <span class="n">SandboxedValue</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">value</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">SandboxedValue</span><span class="p">(</span><span class="n">regex</span><span class="p">),</span> <span class="n">SandboxedValue</span><span class="p">(</span><span class="n">text</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 <div class="viewcode-block" id="assert_not_regex.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_not_regex.condition">[docs]</a>
     <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">regex</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Tests if the regex does not match the text &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">regex</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></div>
+        <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">regex</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">value</span><span class="p">))</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></div>
 </div>
 
 
@@ -993,6 +992,53 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">exact_strings</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_output</span><span class="p">(</span><span class="n">execution</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
         <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_output</span><span class="p">(</span><span class="n">execution</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="assert_output_regex">
+<a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_output_regex">[docs]</a>
+<span class="k">class</span> <span class="nc">assert_output_regex</span><span class="p">(</span><span class="n">RuntimePrintingAssertionFeedback</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Determine if the ``execution`` output matches the given regex, similar to assert_output and assert_regex.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">justification</span> <span class="o">=</span> <span class="s2">&quot;Did not print the output matching the regex&quot;</span>
+    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="s2">&quot;the output to match the regex&quot;</span>
+    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">&quot;does not match the text&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">execution</span><span class="p">,</span> <span class="n">exact_strings</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">execution</span><span class="p">,</span> <span class="n">pattern</span><span class="p">,</span>
+                         <span class="n">exact_strings</span><span class="o">=</span><span class="n">exact_strings</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="assert_output_regex.condition">
+<a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_output_regex.condition">[docs]</a>
+    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">execution</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">exact_strings</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Tests if the regex does not match the text &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">errors</span><span class="p">(</span><span class="n">execution</span><span class="p">)</span> <span class="ow">or</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">value</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_output</span><span class="p">(</span><span class="n">execution</span><span class="p">))</span> <span class="ow">is</span> <span class="kc">None</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="assert_not_output_regex">
+<a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_not_output_regex">[docs]</a>
+<span class="k">class</span> <span class="nc">assert_not_output_regex</span><span class="p">(</span><span class="n">RuntimePrintingAssertionFeedback</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Determine if the ``execution`` does not output ``text``. Simply the inverse of</span>
+<span class="sd">    :py:func:`pedal.assertions.runtime.assert_output` so check the rules there for more information.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">justification</span> <span class="o">=</span> <span class="s2">&quot;Printed the output matching the regex&quot;</span>
+    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="s2">&quot;the output to not match the regex&quot;</span>
+    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">&quot;matches the text&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">execution</span><span class="p">,</span> <span class="n">exact_strings</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">execution</span><span class="p">,</span> <span class="n">pattern</span><span class="p">,</span>
+                         <span class="n">exact_strings</span><span class="o">=</span><span class="n">exact_strings</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="assert_not_output_regex.condition">
+<a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_not_output_regex.condition">[docs]</a>
+    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">execution</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">exact_strings</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Tests if the regex does not match the text &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">value</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_output</span><span class="p">(</span><span class="n">execution</span><span class="p">))</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></div>
 </div>
 
 
