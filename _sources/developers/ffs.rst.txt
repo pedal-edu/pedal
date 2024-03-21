@@ -132,7 +132,7 @@ actually be activated.
         category=Feedback.CATEGORIES.SPECIFICATION
 
         def condition(self):
-            return "+" in self.report.submission.main_code
+            return find_matches("___ + ___")
 
     # Then, in your instructor control script, you can just call:
     addition_error()
@@ -152,7 +152,7 @@ non-default keyword arguments will be passed to the ``condition`` method.
         category=Feedback.CATEGORIES.SPECIFICATION
 
         def condition(self, operator):
-            return operator in self.report.submission.main_code
+            return find_matches(f"___{operator}___")
 
     # Then, in your instructor control script, you can just call:
     addition_error("+")
