@@ -134,6 +134,7 @@ def resolve(report=MAIN_REPORT, priority_key=by_priority):
         str: A string of HTML feedback to be delivered
     """
     # Prepare feedbacks
+    report.finalize_feedbacks()
     feedbacks = report.feedback + report.ignored_feedback
     feedbacks.sort(key=priority_key)
     # Create the initial final feedback

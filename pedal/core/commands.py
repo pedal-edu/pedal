@@ -294,3 +294,14 @@ def set_formatter(formatter, report=MAIN_REPORT):
             :py:data:`~pedal.core.report.MAIN_REPORT`).
     """
     report.set_formatter(formatter(report))
+
+
+def set_pools(pools, report=MAIN_REPORT):
+    """
+    Ability to have A/B testing on a per-feedback basis.
+
+    Args:
+        pools (int or list[str]): Either the number of pools or the names of the pools. If a number is given,
+            the pools are given the identifiers A/B/C/etc.
+    """
+    report.set_pools(pools)

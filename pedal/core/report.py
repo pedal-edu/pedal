@@ -7,6 +7,7 @@ useful very often. Usually you want to just rely on the global MAIN_REPORT.
 
 __all__ = ['Report', 'MAIN_REPORT']
 import logging
+import random
 
 from pedal.core.errors import PedalToolNotRegistered, PedalToolAlreadyRegistered
 from pedal.core.feedback_category import FeedbackCategory
@@ -80,6 +81,8 @@ class Report:
         self.format = Formatter()
         self.result = None
         self.resolves = []
+        self.pools = []
+        self.chosen_pool = None
         self.overridden_feedbacks = set()
         log.debug("New Pedal Report created.")
 
@@ -118,6 +121,11 @@ class Report:
 
     def override_feedback(self, feedback_class):
         self.overridden_feedbacks.add(feedback_class)
+
+    def set_pools(self, pools):
+        if isinstance(pools, int):
+            pools = list('ABCDEFGHIJKLMNOPQRSTUVWXYZ'[:pools])
+        self.pools = pools
 
     def contextualize(self, submission):
         """
@@ -341,6 +349,14 @@ class Report:
         if self.groups:
             self.groups.remove(group)
 
+    def finalize_pools(self):
+        if self.pools:
+            self.chosen_pool = random.choice(self.pools)
+
+    def finalize_feedbacks(self):
+        self.finalize_pools()
+        for feedback in self.feedback + self.ignored_feedback:
+            feedback._finalize()
 
 #: The global Report object. Meant to be used as a default singleton
 #: for any tool, so that instructors do not have to create their own Report.

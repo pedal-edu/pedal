@@ -151,6 +151,7 @@ class Feedback:
     _stored_args: tuple
     _stored_kwargs: dict
     _override_backups = None
+    _pools = {}
 
     resolved_score = None
     unused_message = None
@@ -481,6 +482,24 @@ class Feedback:
         for field, old_value in cls._override_backups.items():
             setattr(cls, field, old_value)
         cls._override_backups.clear()
+
+
+    @classmethod
+    def override_for_pool(cls, pool, **fields):
+        if isinstance(pool, str):
+            pool = [pool]
+        for each_pool in pool:
+            if each_pool not in cls._pools:
+                cls._pools[each_pool] = {}
+            cls._pools[each_pool].update(fields)
+
+    def _finalize(self):
+        # TODO: Move this to be earlier, when we create a feedback.
+        #       Otherwise there might be fields that are not interpolated correctly!
+        possible_overrides = self._pools.get(self.report.chosen_pool)
+        if possible_overrides:
+            for key, value in possible_overrides.items():
+                setattr(self, key, value)
 
 
 class FeedbackResponse(Feedback):
