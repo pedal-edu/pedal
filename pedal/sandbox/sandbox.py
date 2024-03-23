@@ -599,7 +599,7 @@ class Sandbox:
         self.mock_module('turtle', mocked.MockTurtle(), 'turtles')
         self.mock_module('matplotlib.pyplot', mocked.MockPlt(), 'plotting')
         self.mock_module('designer', mocked.MockDesigner(), 'designer')
-        #self.mock_module('drafter', mocked.MockDrafter(), 'drafter')
+        self.mock_module('drafter', mocked.MockDrafter(), 'drafter')
         self.mock_module('microbit', mocked.MockMicrobit(), 'microbit')
 
     def mock_function(self, function_name, new_version):

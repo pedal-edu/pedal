@@ -320,5 +320,43 @@ class MockPedal(BlockedModule):
     module_name = "pedal"
 
 
-from pedal.sandbox.library import *
+def generic_function_capture(self, function_name):
+    def _call(*args, **kwargs):
+        """ This function does nothing. """
+        # TODO: Capture name; does this need to be a decorated function?
+        self._unknown_calls.append((function_name, args, kwargs))
+    return _call
 
+
+class MethodExposer:
+    def __init__(self):
+        self.tracked_functions = {}
+
+    def __call__(self, function):
+        self.tracked_functions[function.__name__] = function
+        return function
+
+    def add_with_name(self, function, name):
+        self.tracked_functions[name] = function
+        return function
+
+
+class MockModuleExposing(MockModule):
+    expose: MethodExposer
+    UNKNOWN_FUNCTIONS: list
+
+    def get_submodules(self):
+        return {}
+
+    def _generate_patches(self):
+        # Use function descriptor to get a bound version of each method
+        fields = {n: f.__get__(self) for n, f in self.expose.tracked_functions.items()}
+        fields.update({
+            name: generic_function_capture(self, name)
+            for name in self.UNKNOWN_FUNCTIONS
+        })
+        fields.update(self.get_submodules())
+        return fields
+
+
+from pedal.sandbox.library import *

@@ -4,9 +4,10 @@ from pedal.types.new_types import ModuleType, FunctionType, void_function, Class
 # TODO: route, Button, ...
 
 _VOID_FUNCTIONS = ['start_server', 'show_debug_information', 'hide_debug_information']
-_COMPONENT_FUNCTIONS = ["Image", "Link", "TextBox", "TextArea", "SelectBox",
-                        "CheckBox", "LineBreak", "HorizontalRule", "Button",
-                        "NumberedList", "BulletedList", "Header", "Table"]
+_COMPONENT_FUNCTIONS = ['BulletedList', 'Button', 'CheckBox',
+                        'Header', 'HorizontalRule', 'Image', 'LineBreak', 'Link', 'LinkContent',
+                        'NumberedList', 'PageContent', 'SelectBox',
+                        'SubmitButton', 'Table', 'Text', 'TextArea', 'TextBox']
 _IDENTITY_FUNCTIONS = ["route"]
 
 
