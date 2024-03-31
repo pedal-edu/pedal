@@ -14,6 +14,11 @@ from pedal import contextualize_report, Submission, evaluate
 from pedal.tifa import tifa_provide_module_type
 
 unit_tests = {
+
+    # Function decorator
+    'function_decorator':
+        ['def dec(f):\n    return f\n@dec\ndef x(a: int):\n    return a\nx()', ['unused_variable'], []],
+
     # Source Code, Shouldn't catch this, Should catch this
     'builtin_True': ['print(True)', ['initialization_problem'], []],
     'unread_variable': ['a = 0', [], ['unused_variable']],
@@ -515,7 +520,7 @@ unit_tests = {
     # Enumerate
     'enumerate_function_in_function':
         ['def do_it(data):\n    v = 0\n    for i, _ in enumerate(data):\n        v += i\n    return v\ndo_it("ab")',
-         ['unused_variable'], []]
+         ['unused_variable'], []],
 }
 
 
@@ -523,7 +528,7 @@ class TestCode(unittest.TestCase):
     pass
 
 
-SILENCE_EXCEPT = 'enumerate_function_in_function' # 'possibly_overwritten_in_elif_branch' # None  # 'read_not_out_of_scope'
+SILENCE_EXCEPT = None #'enumerate_function_in_function' # 'possibly_overwritten_in_elif_branch' # None  # 'read_not_out_of_scope'
 
 
 def make_tester(internal_name, code, nones, somes):
