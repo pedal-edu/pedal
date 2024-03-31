@@ -4,7 +4,7 @@ from pedal.assertions.feedbacks import assert_group
 from pedal.assertions.runtime import *
 from pedal.sandbox.commands import call, start_trace, get_sandbox, evaluate, CommandBlock, run
 from tests.execution_helper import Execution, ExecutionTestCase, SUCCESS_MESSAGE
-from pedal.sandbox.library.drafter import MockDrafter
+from pedal.sandbox.library.drafter_library import MockDrafter
 import unittest
 
 

@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from pedal.sandbox.mocked import MockModuleExposing, MethodExposer
 from pedal.sandbox.mocked import MockModule
 from pedal.utilities.system import IS_PYTHON_36
@@ -17,6 +18,7 @@ def friendly_urls(url: str) -> str:
     return url
 
 
+@dataclass
 class GenericComponent:
     def __init__(self, name, *args, **kwargs):
         self.name = name
@@ -26,10 +28,13 @@ class GenericComponent:
 
 def _load_drafter_component(name):
 
-    #@wraps(name)
+    @wraps(name)
     def call_drafter_component(*args, **kwargs):
         if drafter is not None:
-            return getattr(drafter, name)(*args, **kwargs)
+            component = getattr(drafter, name)
+            # Component Button <class 'drafter.Button'> (MockDrafter(), 'Change the Message', <function change_message>) {}
+            # raise Exception(f"Component {name} {component} {args} {kwargs}")
+            return component(*args[1:], **kwargs)
         else:
             return GenericComponent(name, *args, **kwargs)
 
