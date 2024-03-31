@@ -14,10 +14,24 @@ from pedal import contextualize_report, Submission, evaluate
 from pedal.tifa import tifa_provide_module_type
 
 unit_tests = {
+    'add_assign_inside_dataclass_function':
+        ['from dataclasses import dataclass\n@dataclass\nclass X:\n    y: int = 0\ndef inc(z: X):\n    z.y += 1\ninc(X(0))',
+            ['incompatible_types'], []],
+    'assign_inside_dataclass_function':
+        ['from dataclasses import dataclass\n@dataclass\nclass X:\n    y: int = 0\ndef inc(z: X):\n    z.y = 1\ninc(X(0))',
+            ['incompatible_types'], []],
+
 
     # Function decorator
     'function_decorator':
         ['def dec(f):\n    return f\n@dec\ndef x(a: int):\n    return a\nx()', ['unused_variable'], []],
+    'fancy_drafter_route':
+        ['from bakery import assert_equal\nfrom drafter import *\nfrom dataclasses import dataclass\n\n@dataclass\nclass State:\n    cookies: int\n\n@route\ndef cookie(state: State) -> Page:\n    state.cookies += 1\n    return Page(state, [])\n\nassert_equal(\n    cookie(State(cookies=100)),\n    Page(\n        state=State(cookies=101),\n        content=[],\n    ),\n)\n\n#start_server(State(0))\n',
+            ['incompatible_types'], []],
+    'drafter_route':
+        ['from drafter import *\nfrom dataclasses import dataclass\n@dataclass\nclass State: pass\n@route\ndef index(state: State) -> Page:\n    return Page()\nindex(State())',
+            ['initialization_problem'], []],
+
 
     # Source Code, Shouldn't catch this, Should catch this
     'builtin_True': ['print(True)', ['initialization_problem'], []],
@@ -528,7 +542,7 @@ class TestCode(unittest.TestCase):
     pass
 
 
-SILENCE_EXCEPT = None #'enumerate_function_in_function' # 'possibly_overwritten_in_elif_branch' # None  # 'read_not_out_of_scope'
+SILENCE_EXCEPT = None #'add_assign_inside_dataclass_function' # 'possibly_overwritten_in_elif_branch' # None  # 'read_not_out_of_scope'
 
 
 def make_tester(internal_name, code, nones, somes):

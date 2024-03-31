@@ -261,7 +261,8 @@ class Tifa(TifaCore, ast.NodeVisitor):
             original_type = self.visit(target.value)
             origin = self.identify_caller(target.value)
             if operation:
-                new_target_type = apply_binary_operation(operation, original_type, target_type)
+                original_type_field = original_type.get_attr(target.attr)
+                new_target_type = apply_binary_operation(operation, original_type_field, target_type)
                 if isinstance(new_target_type, ImpossibleType):
                     self._issue(incompatible_types(self.locate(), operation, original_type, target_type, report=self.report))
             else:
