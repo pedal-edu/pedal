@@ -75,7 +75,19 @@ class Score:
         return ("!" if self.invert else "") + operator + value + "%" + self.leftovers
 
     def add_to_current(self, current):
-        if self.operator in ("+", None, "") and not self.invert:
+        """
+        if self.operator == "+":
+            if not self.invert:
+                current += self.value
+            else:
+                current -= self.value
+        elif self.operator == "-":
+            if not self.invert:
+                current -= self.value
+            else:
+                current += self.value
+        """
+        if self.operator in (None, "", "+") and not self.invert:
             current += self.value
         elif self.operator == "-" and not self.invert:
             current -= self.value

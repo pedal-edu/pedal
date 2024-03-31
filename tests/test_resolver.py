@@ -108,6 +108,16 @@ class TestResolver(ExecutionTestCase):
         self.assertEqual(e.final.score, 1.2)
         self.assertTrue(e.final.success)
 
+    @unittest.skip("This test is not currently working.")
+    def test_gently_subtracts_points(self):
+        with Execution('0') as e:
+            gently("You were incorrect.", score="+5%")
+            give_partial("+10%", message="You had a zero in your code.")
+            give_partial("+10%", message="You looped correctly.")
+        self.assertFeedback(e, "Instructor Feedback\nYou were incorrect.")
+        self.assertEqual(.15, e.final.score)
+        self.assertFalse(e.final.success)
+
     def test_analyzer_suppression(self):
         clear_report()
         contextualize_report('1+"Hello"')
