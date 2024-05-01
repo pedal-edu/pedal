@@ -59,7 +59,7 @@ def resolve_on_terminal(report=MAIN_REPORT):
     # print("\033[47m", "-" * 35, "FEEDBACK", "-" * 35, "\033[0m", file=file)
     feedback = resolve(report)
     print("")
-    print(f"{REVERSE}FEEDBACK{RESET} Based on your code, here are some tips and recommendations:\n")
+    print(f"{REVERSE} FEEDBACK {RESET} Based on your code, here are some tips and recommendations:\n")
     if feedback.correct:
         print(f"{BOLD_GREEN}{CHECKMARK}{RESET}️  Your code ran successfully.\n")
         print(f"{feedback.message}")
@@ -74,7 +74,7 @@ def resolve_on_terminal(report=MAIN_REPORT):
         if python_error:
             python_error_native_message = to_native_message(python_error)
             if python_error_native_message:
-                print(f"{REVERSE}TERMINAL OUTPUT{RESET} For reference, here is the original Python error:")
+                print(f"{REVERSE} TERMINAL OUTPUT {RESET} For reference, here is the original Python error:")
                 print(python_error_native_message)
         break
     return feedback
@@ -129,7 +129,7 @@ class TerminalEnvironment(Environment):
         if skip_run:
             student = get_sandbox(report=report)
         else:
-            print(f"{REVERSE}YOUR CODE{RESET} We ran your code. Here's the output:\n")
+            print(f"{REVERSE} YOUR CODE {RESET} We ran your code. Here's the output:\n")
             if trace:
                 start_trace()
             if real_io:
