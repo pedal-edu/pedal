@@ -245,6 +245,7 @@
     <span class="n">_stored_args</span><span class="p">:</span> <span class="nb">tuple</span>
     <span class="n">_stored_kwargs</span><span class="p">:</span> <span class="nb">dict</span>
     <span class="n">_override_backups</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_pools</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="n">resolved_score</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">unused_message</span> <span class="o">=</span> <span class="kc">None</span>
@@ -580,7 +581,25 @@
     <span class="k">def</span> <span class="nf">_restore_overrides</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">field</span><span class="p">,</span> <span class="n">old_value</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_override_backups</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="nb">setattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">old_value</span><span class="p">)</span>
-        <span class="bp">cls</span><span class="o">.</span><span class="n">_override_backups</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span></div>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">_override_backups</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">override_for_pool</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">pool</span><span class="p">,</span> <span class="o">**</span><span class="n">fields</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pool</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">pool</span> <span class="o">=</span> <span class="p">[</span><span class="n">pool</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">each_pool</span> <span class="ow">in</span> <span class="n">pool</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">each_pool</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_pools</span><span class="p">:</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">_pools</span><span class="p">[</span><span class="n">each_pool</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">_pools</span><span class="p">[</span><span class="n">each_pool</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_finalize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># TODO: Move this to be earlier, when we create a feedback.</span>
+        <span class="c1">#       Otherwise there might be fields that are not interpolated correctly!</span>
+        <span class="n">possible_overrides</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pools</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">chosen_pool</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">possible_overrides</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">possible_overrides</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
 
 
 

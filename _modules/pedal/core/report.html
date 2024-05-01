@@ -99,6 +99,7 @@
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Report&#39;</span><span class="p">,</span> <span class="s1">&#39;MAIN_REPORT&#39;</span><span class="p">]</span>
 <span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">random</span>
 
 <span class="kn">from</span> <span class="nn">pedal.core.errors</span> <span class="kn">import</span> <span class="n">PedalToolNotRegistered</span><span class="p">,</span> <span class="n">PedalToolAlreadyRegistered</span>
 <span class="kn">from</span> <span class="nn">pedal.core.feedback_category</span> <span class="kn">import</span> <span class="n">FeedbackCategory</span>
@@ -174,6 +175,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">Formatter</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resolves</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pools</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">chosen_pool</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">overridden_feedbacks</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
         <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;New Pedal Report created.&quot;</span><span class="p">)</span>
 
@@ -218,6 +221,11 @@
 
     <span class="k">def</span> <span class="nf">override_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feedback_class</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">overridden_feedbacks</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">feedback_class</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">set_pools</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pools</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pools</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="n">pools</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="s1">&#39;ABCDEFGHIJKLMNOPQRSTUVWXYZ&#39;</span><span class="p">[:</span><span class="n">pools</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pools</span> <span class="o">=</span> <span class="n">pools</span>
 
 <div class="viewcode-block" id="Report.contextualize">
 <a class="viewcode-back" href="../../../developers/api.html#pedal.core.report.Report.contextualize">[docs]</a>
@@ -472,8 +480,16 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">group</span><span class="p">)</span></div>
-</div>
 
+
+    <span class="k">def</span> <span class="nf">finalize_pools</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pools</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">chosen_pool</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pools</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">finalize_feedbacks</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">finalize_pools</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">feedback</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">feedback</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">ignored_feedback</span><span class="p">:</span>
+            <span class="n">feedback</span><span class="o">.</span><span class="n">_finalize</span><span class="p">()</span></div>
 
 
 <span class="c1">#: The global Report object. Meant to be used as a default singleton</span>
