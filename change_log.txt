@@ -1,3 +1,13 @@
+Version 2.6.2 (5/1/2024)
+------------------------
+* Changed spacing in the terminal environment
+* Temporarily disabled unit_test as a context manager while the skulpt version is fixed
+* Fixed TIFA bug with update assignment of attributes
+* Initial type and runtime support for Drafter
+* First version of Cloud tool
+* Some of the code for the Pools feature
+* Ongoing work related to fixing up the Score API
+
 Version 2.6.1 (3/19/2024)
 -------------------------
 * The explain, gently, guidance, and compliment functions can now take `message_template` as a keyword parameter INSTEAD of `message`
