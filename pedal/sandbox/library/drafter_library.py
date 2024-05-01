@@ -98,7 +98,7 @@ class MockDrafter(MockModuleExposing):
 
 COMPONENTS = ['BulletedList', 'Button', 'CheckBox',
               'Header', 'HorizontalRule', 'Image', 'LineBreak', 'Link', 'LinkContent',
-              'NumberedList', 'Page', 'PageContent', 'SelectBox',
+              'NumberedList', 'Page', 'PageContent', 'SelectBox', 'Span', "Argument",
               'SubmitButton', 'Table', 'Text', 'TextArea', 'TextBox']
 for component in COMPONENTS:
     loaded_component = _load_drafter_component(component)

@@ -7,7 +7,7 @@ _VOID_FUNCTIONS = ['start_server', 'show_debug_information', 'hide_debug_informa
 _COMPONENT_FUNCTIONS = ['BulletedList', 'Button', 'CheckBox',
                         'Header', 'HorizontalRule', 'Image', 'LineBreak', 'Link', 'LinkContent',
                         'NumberedList', 'PageContent', 'SelectBox',
-                        'SubmitButton', 'Table', 'Text', 'TextArea', 'TextBox']
+                        'SubmitButton', 'Table', 'Text', 'TextArea', 'TextBox', 'Span', 'Argument']
 _IDENTITY_FUNCTIONS = ["route"]
 
 
