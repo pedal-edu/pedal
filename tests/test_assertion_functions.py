@@ -114,6 +114,7 @@ Type errors occur when you use an operator or function on the wrong type of valu
 
 Suggestion: To fix a type error, you should trace through your code. Make sure each expression has the type you expect it to have.""")
 
+    @unittest.skip("Temporarily disabled while we fix skulpt's context manager")
     def test_unit_test_with_style(self):
         with Execution("""
 def add(a, b):
