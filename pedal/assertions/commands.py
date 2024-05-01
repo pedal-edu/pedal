@@ -21,7 +21,7 @@ class unit_test(assert_group):
     justification_template = ("Some of the feedback in this group was triggered.",
                               "None of the feedback in this group was triggered.")
 
-    def __init__(self, function_name, given_partial_credit=None, given_score=None, **kwargs):
+    """def __init__(self, function_name, given_partial_credit=None, given_score=None, **kwargs):
         super().__init__(function_name, **kwargs)
         self.given_partial_credit = given_partial_credit
         self.given_score = given_score
@@ -35,7 +35,7 @@ class unit_test(assert_group):
             self.score = combine_scores([success.score for success in self.successes],
                                         [failure.score for failure in self.failures] +
                                         [error.score for error in self.errors])
-        return False
+        return False"""
 
 
 _unit_test_class = unit_test
@@ -84,21 +84,34 @@ def unit_test(function, *tests, else_message=None, else_message_template=None,
             context = context.context
         else:
             context = get_sandbox().get_context(context._actual_context_id)
-    unit_test_context = _unit_test_class(function,
-                                         else_message=else_message,
-                                         else_message_template=else_message_template,
-                                         context=context, given_partial_credit=partial_credit,
-                                         given_score=score, **kwargs)
-    if not tests:
-        return unit_test_context
+    #if not tests:
+    #    return _unit_test_class(function,
+    #                             else_message=else_message,
+    #                             else_message_template=else_message_template,
+    #                             context=context, given_partial_credit=partial_credit,
+    #                             given_score=score, **kwargs)
     # TODO: Make it so unit_test can document its cases
-    with unit_test_context as group_result:
+    #with _unit_test_class(function,
+    #                     else_message=else_message,
+    #                     else_message_template=else_message_template,
+    #                     context=context, given_partial_credit=partial_credit,
+    #                     given_score=score, **kwargs) as group_result:
+    with _unit_test_class(function, else_message=else_message,
+                          else_message_template=else_message_template,
+                          context=context, **kwargs) as group_result:
         for test_index, test in enumerate(tests):
             args, expected = test
             if isinstance(args, str):
                 assert_function(call(function, args_locals=[args]), expected, score=each_score[test_index], **kwargs)
             else:
                 assert_function(call(function, *args), expected, score=each_score[test_index], **kwargs)
+    if partial_credit is False:
+        group_result.score = score
+    else:
+        group_result.valence = group_result.POSITIVE_VALENCE
+        group_result.score = combine_scores([success.score for success in group_result.successes],
+                                            [failure.score for failure in group_result.failures] +
+                                            [error.score for error in group_result.errors])
 
     return not group_result
 
