@@ -90,7 +90,7 @@ def create_open_function(report: Report, forbidden_names=_OPEN_FORBIDDEN_NAMES, 
     Returns:
 
     """
-    def _restricted_open(name, mode='r', buffering=-1):
+    def _restricted_open(name, mode='r', buffering=-1, encoding=None, errors=None, newline=None, closefd=True, opener=None):
         if forbidden_names.search(name):
             raise RuntimeError("The filename you passed to 'open' is restricted.")
         elif forbidden_modes.search(mode):
@@ -98,7 +98,7 @@ def create_open_function(report: Report, forbidden_names=_OPEN_FORBIDDEN_NAMES, 
         elif report.submission and name in report.submission.files:
             return StringIO(report.submission.files[name])
         else:
-            return ORIGINAL_BUILTINS['open'](name, mode, buffering)
+            return ORIGINAL_BUILTINS['open'](name, mode, buffering, encoding, errors, newline, closefd, opener)
     return _restricted_open
 
 # TODO: Allow this to be flexible

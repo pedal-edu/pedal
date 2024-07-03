@@ -142,6 +142,18 @@ def enumerate_definition(tifa, function, callee, arguments, named_arguments, loc
     return ImpossibleType()
 
 
+def iter_definition(tifa, function, callee, arguments, named_arguments, location):
+    if arguments:
+        return GeneratorType(arguments[0].is_empty, arguments[0].iterate())
+    return ImpossibleType()
+
+
+def next_definition(tifa, function, callee, arguments, named_arguments, location):
+    if arguments:
+        return arguments[0].iterate()
+    return ImpossibleType()
+
+
 # TODO: Type guard with `isinstance`
 # TODO: all the built-in exceptions!
 
@@ -164,6 +176,7 @@ BUILTIN_NAMES.update({
     name: exception_function(name) for name in BUILT_EXCEPTION_NAMES
 })
 
+# TODO: aiter, anext, breakpoint, bytes, bytesarray, compile, complex, eval, exec, object, property, slice, super
 BUILTIN_NAMES.update({
     f.name: f for f in [
         TYPE_TYPE,
@@ -171,27 +184,49 @@ BUILTIN_NAMES.update({
         ListConstructor(), SetConstructor(), FrozenSetConstructor(),
         DictConstructor(), TupleConstructor(),
         void_function('Exception'), void_function("ValueError"),
-        void_function('print'), int_function("abs"), int_function('len'),
-        int_function('id'),
-        int_function('ord'), num_function('pow'), num_function('sum'),
-        bool_function('all'), bool_function('any'), bool_function('isinstance'),
-        str_function('chr'), str_function('bin'), str_function('repr'), str_function('input'),
-        FunctionType('open', returns=FileType),
-        FunctionType('map', definition=map_definition),
-        FunctionType('round', definition=round_definition),
-        FunctionType('sorted', definition='identity'),
-        FunctionType('reversed', definition='identity'),
-        FunctionType('filter', definition='identity'),
-        FunctionType('range', returns=lambda: ListType(False, IntType())),
+        int_function("abs"), bool_function('all'), bool_function('any'), str_function('ascii'),
+        str_function('bin'), bool_function('callable'), str_function('chr'),
+        FunctionType('classmethod', returns='identity'),
+        void_function('delattr'),
         FunctionType('dir', returns=lambda: ListType(False, StrType())),
+        FunctionType('divmod', returns=lambda: TupleType([IntType(), IntType()])),
+        FunctionType('enumerate', definition=enumerate_definition),
+        FunctionType('filter', definition='identity'),
+        str_function('format'),
+        FunctionType('getattr', returns=AnyType),
+        FunctionType('globals', returns=lambda: DictType([(StrType(), AnyType())])),
+        bool_function('hasattr'),
+        int_function('hash'),
+        void_function('help'),
+        str_function('hex'),
+        int_function('id'),
+        str_function('input'),
+        bool_function('isinstance'),
+        bool_function('issubclass'),
+        FunctionType('iter', definition=iter_definition),
+        int_function('len'),
+        FunctionType('locals', returns=lambda: DictType([(StrType(), AnyType())])),
+        FunctionType('map', definition=map_definition),
         FunctionType('max', returns='element'),
         FunctionType('min', returns='element'),
-        FunctionType('enumerate', definition=enumerate_definition),
+        FunctionType('next', definition=next_definition),
+        str_function('oct'),
+        FunctionType('open', returns=FileType),
+        int_function('ord'),
+        num_function('pow'),
+        void_function('print'),
+        FunctionType('range', returns=lambda: ListType(False, IntType())),
+        str_function('repr'),
+        FunctionType('reversed', definition='identity'),
+        FunctionType('round', definition=round_definition),
+        void_function('setattr'),
+        FunctionType('sorted', definition='identity'),
+        FunctionType('staticmethod', returns='identity'),
+        num_function('sum'),
+        FunctionType('super', returns='identity'), # TODO: This is not quite right, should really be parent type
+        FunctionType('vars', returns=lambda: DictType([(StrType(), AnyType())])),
         FunctionType('zip', definition=zip_definition),
         FunctionType('__import__', returns=ModuleType),
-        FunctionType('globals', returns=lambda: DictType([(StrType(), AnyType())])),
-        FunctionType('classmethod', returns='identity'),
-        FunctionType('staticmethod', returns='identity'),
     ]
 })
 

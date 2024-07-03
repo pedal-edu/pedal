@@ -535,6 +535,10 @@ unit_tests = {
     'enumerate_function_in_function':
         ['def do_it(data):\n    v = 0\n    for i, _ in enumerate(data):\n        v += i\n    return v\ndo_it("ab")',
          ['unused_variable'], []],
+
+    # Next
+    'next_function':
+        ['x = iter([1,2,3])\ny = next(x)\ny = y + x[0]\nprint(y)', ['initialization_problem'], []],
 }
 
 
