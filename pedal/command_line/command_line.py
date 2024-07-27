@@ -69,11 +69,11 @@ def main(args=None):
     return pipeline(args).execute()
 
 
-def parse_args(reduced_mode=False):
-    """ Parse the arguments passed into the command line. """
+def build_parser(reduced_mode=False):
     parser = argparse.ArgumentParser(description='Run instructor control '
                                                  'script on student submissions.')
-    parser.add_argument('mode', help="What kind of Pedal analysis you're running",
+    parser.add_argument('mode',
+                        help="What kind of Pedal analysis you're running. See the description of each mode above.",
                         choices=list(MODES.PIPELINES))
     if not reduced_mode:
         parser.add_argument('instructor', help='The path to the instructor control '
@@ -105,7 +105,7 @@ def parse_args(reduced_mode=False):
                              " more friendly. If not given, then will default"
                              " to the instructor filename.", default=None)
     parser.add_argument('--progsnap_profile',
-                        default='blockpy', # TODO: Change this biased default
+                        default='blockpy',  # TODO: Change this biased default
                         help="Uses the given profile's default settings for"
                              " loading in a ProgSnap2 dataset",
                         )
@@ -116,7 +116,8 @@ def parse_args(reduced_mode=False):
                                         ' submissions are run. Mostly for testing'
                                         ' purposes.',
                         default=None)
-    parser.add_argument('--resolver', help='Choose a different resolver to use (the name of a function defined in the instructor control script).',
+    parser.add_argument('--resolver',
+                        help='Choose a different resolver to use (the name of a function defined in the instructor control script).',
                         default='resolve')
     parser.add_argument('--ics_direct', help="Give the instructor code directly"
                                              " instead of loading from a file.",
@@ -155,6 +156,11 @@ def parse_args(reduced_mode=False):
                                                    "running scripts in parallel.",
                         choices=["threads", "processes", "none"])
     '''
+    return parser
+
+def parse_args(reduced_mode=False):
+    """ Parse the arguments passed into the command line. """
+    parser = build_parser(reduced_mode)
     args = parser.parse_args()
     if args.instructor_name is None:
         args.instructor_name = args.instructor

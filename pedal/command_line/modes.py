@@ -59,6 +59,11 @@ def get_python_files(paths):
 
 
 class BundleResult:
+    """
+    Represents the result of running an instructor control script on a submission.
+    This includes not only the output and error, but also the resolution of the feedback (aka
+    the final feedback). Also includes the data that was generated during the execution.
+    """
     def __init__(self, data, output, error, resolution):
         self.data = data
         self.output = output
@@ -78,6 +83,12 @@ class BundleResult:
         )
 
 class Bundle:
+    """
+    Represents the combination of an instructor control script and a submission that it is
+    being run on. Also includes the environment that the script is being run in, and the
+    result of the execution (once the execution is finished). Finally, also includes the configuration
+    that was used to run the bundle.
+    """
     def __init__(self, config, script, submission):
         self.config = config
         self.script = script
@@ -118,8 +129,6 @@ class Bundle:
                     grader_exec = compile(self.script,
                                           self.submission.instructor_file, 'exec')
                     exec(grader_exec, global_data)
-                    #print(repr(self.script), file=x)
-                    #print(list(global_data.keys()), file=x)
                     if 'MAIN_REPORT' in global_data:
                         if not global_data['MAIN_REPORT'].resolves:
                             if resolver in global_data:
@@ -137,8 +146,11 @@ class Bundle:
 
 
 class AbstractPipeline:
-    """ Generic pipeline for handling all the phases of executing instructor
-    control scripts on submissions, and reformating the output. """
+    """
+    Generic pipeline for handling all the phases of executing instructor
+    control scripts on submissions, and reformating the output.
+    Should be subclassed instead of used directly.
+    """
 
     def __init__(self, config):
         if isinstance(config, dict):
@@ -318,6 +330,11 @@ class AbstractPipeline:
 
 
 class FeedbackPipeline(AbstractPipeline):
+    """
+    ``feedback``: Pipeline for running the instructor control script on a submission and
+    then printing the resolver output to the console. Often the most useful
+    if you are trying to deliver the feedback without a grade.
+    """
     def process_output(self):
         for bundle in self.submissions:
             #print(bundle.submission.instructor_file,
@@ -334,10 +351,16 @@ class FeedbackPipeline(AbstractPipeline):
 
 
 class RunPipeline(AbstractPipeline):
+    """
+    ``run``: Pipeline for running the instructor control script on a submission and generating a report
+    file in the `ini` file format. This is a simple file format that has a lot of the interesting
+    fields. The file is not actually dumped to the filesystem, but instead printed directly.
+    So this is a good way to run students' code in a sandbox and see what comes out.
+    """
     def process_output(self):
         for bundle in self.submissions:
-            print(bundle.submission.instructor_file,
-                  bundle.submission.main_file)
+            #print(bundle.submission.instructor_file,
+            #      bundle.submission.main_file)
             if bundle.result.error:
                 print(bundle.result.error)
             elif bundle.result.resolution:
@@ -348,6 +371,11 @@ class RunPipeline(AbstractPipeline):
 
 
 class StatsPipeline(AbstractPipeline):
+    """
+    ``stats``: Pipeline for running the instructor control script on a submission and then
+    dumping a JSON report with all the feedback objects. This is useful for
+    analyzing the feedback objects in a more programmatic way.
+    """
     def run_control_scripts(self):
         for bundle in tqdm(self.submissions):
             bundle.run_ics_bundle(resolver='stats_resolve', skip_tifa=self.config.skip_tifa,
@@ -380,6 +408,14 @@ class StatsPipeline(AbstractPipeline):
 
 
 class VerifyPipeline(AbstractPipeline):
+    """
+    ``verify``: Pipeline for running the instructor control script on a submission and then
+    comparing the output to an expected output file. This is useful for verifying
+    that the feedback is correct (at least, as correct as the expected output).
+
+    You can also use this pipeline to generate the output files, to quickly create
+    regression "tests" of your feedback scripts.
+    """
     def process_output(self):
         for bundle in self.submissions:
             bundle.run_ics_bundle(resolver=self.config.resolver, skip_tifa=self.config.skip_tifa,
@@ -475,6 +511,13 @@ class VerifyPipeline(AbstractPipeline):
 
 
 class GradePipeline(AbstractPipeline):
+    """
+    ``grade``: Pipeline for running the instructor control script on a submission and then outputing
+    the grade to the console. This is useful for quickly grading a set of submissions.
+    The instructor file, student data, and assignment are also all printed out in the following CSV format:
+
+    instructor_file, student_file, student_email, assignment_name, score, correct
+    """
     def process_output(self):
         if self.config.output == 'stdout':
             self.print_bundles(sys.stdout)
@@ -499,7 +542,12 @@ class GradePipeline(AbstractPipeline):
 
 
 class SandboxPipeline(AbstractPipeline):
-    """ Run the given script in a sandbox. """
+    """
+    ``sandbox``: Pipeline for running ONLY the student's code, and then outputing the results to the console.
+    There is no instructor control script logic, although the Source tool does check that the
+    student's code is syntactically correct. Otherwise, the students' code is run in a Sandbox mode.
+    This is useful if you just want to safely execute student code and observe their output.
+    """
 
     ICS = """from pedal import *
 verify()
@@ -546,6 +594,12 @@ run()"""
 
 
 class DebugPipeline(AbstractPipeline):
+    """
+    ``debug``: Pipeline for running the instructor control script on a submission and then outputing
+    the full results to the console. This is useful for debugging the instructor control
+    script, as it will show the full output, error, all of the feedback objects considered,
+    and the final feedback.
+    """
     def process_output(self):
         for bundle in self.submissions:
             print(bundle.submission.instructor_file,
