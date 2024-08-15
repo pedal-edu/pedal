@@ -208,23 +208,23 @@ I had {wheat_count} programs I expected to pass, and {chaff_count} programs I ex
     def format_message(self):
         missing_wheats = len(self.wheats) - len(self.correct_wheats)
         if missing_wheats:
-            self.fields['wheat_outcome'] = f"Your tests did not pass {missing_wheats} of my good programs.\n"
+            self.fields['wheat_outcome'] = f"Your tests did not pass {missing_wheats} of my genuine programs.\n"
             names = "\n".join([name for name in self.wheats.keys() if name not in self.correct_wheats])
             self.fields[
-                'wheat_names'] = "Here are the names for the good programs that incorrectly failed on your test cases:\n" + self.report.format.output(
+                'wheat_names'] = "Here are the names for the genuine programs that incorrectly failed on your test cases:\n" + self.report.format.output(
                 names) + "\n"
         else:
-            self.fields['wheat_outcome'] = "Your tests passed all of my good programs.\n"
+            self.fields['wheat_outcome'] = "Your tests passed all of my genuine programs.\n"
             self.fields['wheat_names'] = ""
         missing_chaffs = len(self.chaffs) - len(self.correct_chaffs)
         if missing_chaffs:
-            self.fields['chaff_outcome'] = f"Your tests did not catch {missing_chaffs} of my bad programs.\n"
+            self.fields['chaff_outcome'] = f"Your tests did not catch {missing_chaffs} of my impostor programs.\n"
             names = "\n".join([name for name in self.chaffs.keys() if name not in self.correct_chaffs])
             self.fields[
-                'chaff_names'] = "Here are the names for the bad programs that incorrectly passed your tests:\n" + self.report.format.output(
+                'chaff_names'] = "Here are the names for the impostor programs that incorrectly passed your tests:\n" + self.report.format.output(
                 names)
         else:
-            self.fields['chaff_outcome'] = "At least one of your tests correctly failed for all of my bad programs.\n"
+            self.fields['chaff_outcome'] = "At least one of your tests correctly failed for all of my impostor programs.\n"
             self.fields['chaff_names'] = ""
 
     def wheat_outcome(self, wheat, success):

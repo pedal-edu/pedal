@@ -93,12 +93,12 @@ assert_equal(divide(1, 1), "0%")
         self.assertEqual("""
 I ran your test cases against some of my own implementations of divide.
 I had 1 programs I expected to pass, and 1 programs I expected to fail.
-Your tests did not pass 1 of my good programs.
-Your tests did not catch 1 of my bad programs.
+Your tests did not pass 1 of my genuine programs.
+Your tests did not catch 1 of my impostor programs.
 
-Here are the names for the good programs that incorrectly failed on your test cases:
+Here are the names for the genuine programs that incorrectly failed on your test cases:
     correct
-Here are the names for the bad programs that incorrectly passed your tests:
+Here are the names for the impostor programs that incorrectly passed your tests:
     bad""", final.message.rstrip())
 
     def test_wheatchaff_game_types_wrong(self):
