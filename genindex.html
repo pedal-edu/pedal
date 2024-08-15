@@ -6,6 +6,7 @@
   <title>Index &mdash; Pedal 1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/argparse.css?v=441cd8df" />
 
   
     <link rel="shortcut icon" href="_static/favicon.ico"/>
@@ -53,6 +54,7 @@
 <li class="toctree-l1"><a class="reference internal" href="teachers/quickstart.html">Teacher Quick Start Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="teachers/examples.html">Teacher Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="teachers/reference.html">Teacher Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="teachers/cli.html">Command-Line Interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="teachers/integrations.html">Autograder Integrations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="developers/ffs.html">Developers: Feedback Functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="developers/api.html">Developer API</a></li>
@@ -1241,8 +1243,6 @@
 </li>
       <li><a href="developers/tools/cait.html#pedal.cait.cait_api.data_type">data_type() (in module pedal.cait.cait_api)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     debug()
 
@@ -1250,7 +1250,11 @@
         <li><a href="teachers/tools/core.html#debug">built-in function</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="developers/api.html#pedal.core.commands.debug">debug() (in module pedal.core.commands)</a>
+</li>
+      <li><a href="teachers/cli.html#pedal.command_line.modes.DebugPipeline">DebugPipeline (class in pedal.command_line.modes)</a>
 </li>
       <li><a href="developers/tools/cait.html#pedal.cait.cait_api.def_use_error">def_use_error() (in module pedal.cait.cait_api)</a>
 </li>
@@ -1518,6 +1522,8 @@
         <li><a href="developers/api.html#pedal.core.feedback_category.FeedbackKind">(class in pedal.core.feedback_category)</a>
 </li>
       </ul></li>
+      <li><a href="teachers/cli.html#pedal.command_line.modes.FeedbackPipeline">FeedbackPipeline (class in pedal.command_line.modes)</a>
+</li>
       <li><a href="developers/api.html#pedal.core.feedback.FeedbackResponse">FeedbackResponse (class in pedal.core.feedback)</a>
 </li>
       <li><a href="developers/api.html#pedal.core.feedback_category.FeedbackStatus">FeedbackStatus (class in pedal.core.feedback_category)</a>
@@ -1536,10 +1542,10 @@
         <li><a href="developers/api.html#pedal.core.location.Location.filename">(Location attribute)</a>
 </li>
       </ul></li>
-      <li><a href="developers/api.html#pedal.core.submission.Submission.files">files (Submission attribute)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="developers/api.html#pedal.core.submission.Submission.files">files (Submission attribute)</a>
+</li>
       <li>
     files_not_handled_correctly()
 
@@ -1754,6 +1760,8 @@
         <li><a href="teachers/tools/core.html#give_partial">built-in function</a>
 </li>
       </ul></li>
+      <li><a href="teachers/cli.html#pedal.command_line.modes.GradePipeline">GradePipeline (class in pedal.command_line.modes)</a>
+</li>
       <li><a href="developers/api.html#pedal.core.report.Report.group">group (Report attribute)</a>
 </li>
       <li><a href="developers/api.html#pedal.core.report.Report.group_names">group_names (Report attribute)</a>
@@ -2437,10 +2445,10 @@
         <li><a href="developers/tools/source.html#pedal.source.source.reset">(in module pedal.source.source)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.reset_default_overrides">reset_default_overrides() (Sandbox method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="developers/tools/sandbox.html#pedal.sandbox.commands.reset_output">reset_output() (in module pedal.sandbox.commands)</a>
 </li>
       <li><a href="everyone/glossary.html#term-Resolver"><strong>Resolver</strong></a>
@@ -2475,6 +2483,8 @@
         <li><a href="developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox.run">(Sandbox method)</a>
 </li>
       </ul></li>
+      <li><a href="teachers/cli.html#pedal.command_line.modes.RunPipeline">RunPipeline (class in pedal.command_line.modes)</a>
+</li>
       <li><a href="developers/api.html#pedal.core.feedback.FeedbackCategory.RUNTIME">RUNTIME (FeedbackCategory attribute)</a>, <a href="developers/api.html#pedal.core.feedback_category.FeedbackCategory.RUNTIME">[1]</a>
 </li>
       <li><a href="developers/tools/sandbox.html#pedal.sandbox.feedbacks.runtime_error">runtime_error (class in pedal.sandbox.feedbacks)</a>
@@ -2491,6 +2501,8 @@
         <li><a href="developers/tools/sandbox.html#pedal.sandbox.sandbox.Sandbox">(class in pedal.sandbox.sandbox)</a>
 </li>
       </ul></li>
+      <li><a href="teachers/cli.html#pedal.command_line.modes.SandboxPipeline">SandboxPipeline (class in pedal.command_line.modes)</a>
+</li>
       <li><a href="developers/tools/tifa.html#term-Scope"><strong>Scope</strong></a>
 </li>
       <li><a href="developers/tools/tifa.html#term-Scope-Chain"><strong>Scope Chain</strong></a>
@@ -2571,6 +2583,8 @@
       <li><a href="developers/tools/sandbox.html#pedal.sandbox.commands.start_trace">start_trace() (in module pedal.sandbox.commands)</a>
 </li>
       <li><a href="developers/tools/tifa.html#term-State"><strong>State</strong></a>
+</li>
+      <li><a href="teachers/cli.html#pedal.command_line.modes.StatsPipeline">StatsPipeline (class in pedal.command_line.modes)</a>
 </li>
       <li><a href="developers/api.html#pedal.core.report.Report.stop_group">stop_group() (Report method)</a>
 </li>
@@ -2743,6 +2757,8 @@
       <li><a href="developers/tools/source.html#pedal.source.source.verify">verify() (in module pedal.source.source)</a>
 </li>
       <li><a href="developers/tools/source.html#pedal.source.source.verify_section">verify_section() (in module pedal.source.source)</a>
+</li>
+      <li><a href="teachers/cli.html#pedal.command_line.modes.VerifyPipeline">VerifyPipeline (class in pedal.command_line.modes)</a>
 </li>
       <li><a href="developers/api.html#pedal.core.commands.Feedback.version">version (Feedback attribute)</a>, <a href="developers/api.html#pedal.core.feedback.Feedback.version">[1]</a>
 </li>

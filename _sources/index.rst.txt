@@ -30,6 +30,7 @@ rather than an afterthought.
     teachers/quickstart
     teachers/examples
     teachers/reference
+    teachers/cli
     teachers/integrations
     developers/ffs
     developers/api

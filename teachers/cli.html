@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Command-Line Interface &mdash; Pedal 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/argparse.css?v=441cd8df" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Autograder Integrations" href="integrations.html" />
+    <link rel="prev" title="Pedal’s Type System" href="tools/types.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Pedal
+              <img src="../_static/pedal-logo-v3.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../everyone/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../everyone/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Teacher Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Teacher Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">Teacher Reference</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Command-Line Interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#command-line-modes">Command Line Modes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.command_line.modes.SandboxPipeline"><code class="docutils literal notranslate"><span class="pre">SandboxPipeline</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.command_line.modes.RunPipeline"><code class="docutils literal notranslate"><span class="pre">RunPipeline</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.command_line.modes.FeedbackPipeline"><code class="docutils literal notranslate"><span class="pre">FeedbackPipeline</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.command_line.modes.GradePipeline"><code class="docutils literal notranslate"><span class="pre">GradePipeline</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.command_line.modes.StatsPipeline"><code class="docutils literal notranslate"><span class="pre">StatsPipeline</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.command_line.modes.VerifyPipeline"><code class="docutils literal notranslate"><span class="pre">VerifyPipeline</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pedal.command_line.modes.DebugPipeline"><code class="docutils literal notranslate"><span class="pre">DebugPipeline</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#file-formats">File Formats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#command-line-parameters">Command Line Parameters</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#positional-arguments">Positional Arguments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#named-arguments">Named Arguments</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="integrations.html">Autograder Integrations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers/ffs.html">Developers: Feedback Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers/api.html">Developer API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers/tools.html">Developer Tools Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers/conventions.html">Internal Naming Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers/libraries.html">Necessary Libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers/compilation.html">Compilation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis.html">Researchers: Analyzing with Pedal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../everyone/glossary.html">Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../everyone/contact.html">Contact</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Pedal</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Command-Line Interface</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/teachers/cli.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="command-line-interface">
+<span id="cli"></span><h1>Command-Line Interface<a class="headerlink" href="#command-line-interface" title="Link to this heading"></a></h1>
+<p>In addition to being a library, Pedal also provides a command-line interface (CLI) for analyzing student code.
+This is useful for batch processing or on individual submissions (e.g., through a platform like GradeScope or VSCodeEdu).
+For specific integrations, see the <a class="reference internal" href="integrations.html#integrations"><span class="std std-ref">Autograder Integrations</span></a> section.</p>
+<section id="command-line-modes">
+<h2>Command Line Modes<a class="headerlink" href="#command-line-modes" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pedal.command_line.modes.SandboxPipeline">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SandboxPipeline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pedal/command_line/modes.html#SandboxPipeline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.command_line.modes.SandboxPipeline" title="Link to this definition"></a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">sandbox</span></code>: Pipeline for running ONLY the student’s code, and then outputing the results to the console.
+There is no instructor control script logic, although the Source tool does check that the
+student’s code is syntactically correct. Otherwise, the students’ code is run in a Sandbox mode.
+This is useful if you just want to safely execute student code and observe their output.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pedal.command_line.modes.RunPipeline">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">RunPipeline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pedal/command_line/modes.html#RunPipeline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.command_line.modes.RunPipeline" title="Link to this definition"></a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">run</span></code>: Pipeline for running the instructor control script on a submission and generating a report
+file in the <code class="xref py py-obj docutils literal notranslate"><span class="pre">ini</span></code> file format. This is a simple file format that has a lot of the interesting
+fields. The file is not actually dumped to the filesystem, but instead printed directly.
+So this is a good way to run students’ code in a sandbox and see what comes out.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pedal.command_line.modes.FeedbackPipeline">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FeedbackPipeline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pedal/command_line/modes.html#FeedbackPipeline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.command_line.modes.FeedbackPipeline" title="Link to this definition"></a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">feedback</span></code>: Pipeline for running the instructor control script on a submission and
+then printing the resolver output to the console. Often the most useful
+if you are trying to deliver the feedback without a grade.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pedal.command_line.modes.GradePipeline">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">GradePipeline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pedal/command_line/modes.html#GradePipeline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.command_line.modes.GradePipeline" title="Link to this definition"></a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">grade</span></code>: Pipeline for running the instructor control script on a submission and then outputing
+the grade to the console. This is useful for quickly grading a set of submissions.
+The instructor file, student data, and assignment are also all printed out in the following CSV format:</p>
+<p>instructor_file, student_file, student_email, assignment_name, score, correct</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pedal.command_line.modes.StatsPipeline">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">StatsPipeline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pedal/command_line/modes.html#StatsPipeline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.command_line.modes.StatsPipeline" title="Link to this definition"></a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">stats</span></code>: Pipeline for running the instructor control script on a submission and then
+dumping a JSON report with all the feedback objects. This is useful for
+analyzing the feedback objects in a more programmatic way.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pedal.command_line.modes.VerifyPipeline">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">VerifyPipeline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pedal/command_line/modes.html#VerifyPipeline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.command_line.modes.VerifyPipeline" title="Link to this definition"></a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">verify</span></code>: Pipeline for running the instructor control script on a submission and then
+comparing the output to an expected output file. This is useful for verifying
+that the feedback is correct (at least, as correct as the expected output).</p>
+<p>You can also use this pipeline to generate the output files, to quickly create
+regression “tests” of your feedback scripts.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pedal.command_line.modes.DebugPipeline">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DebugPipeline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pedal/command_line/modes.html#DebugPipeline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.command_line.modes.DebugPipeline" title="Link to this definition"></a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">debug</span></code>: Pipeline for running the instructor control script on a submission and then outputing
+the full results to the console. This is useful for debugging the instructor control
+script, as it will show the full output, error, all of the feedback objects considered,
+and the final feedback.</p>
+</dd></dl>
+
+</section>
+<section id="file-formats">
+<h2>File Formats<a class="headerlink" href="#file-formats" title="Link to this heading"></a></h2>
+<p>Pedal can read and write several file formats. The most common are:</p>
+<ul class="simple">
+<li><p>Python files (<code class="docutils literal notranslate"><span class="pre">.py</span></code>)</p></li>
+<li><p>Folders containing Python files</p></li>
+<li><p>Archive files (<code class="docutils literal notranslate"><span class="pre">.zip</span></code>, <code class="docutils literal notranslate"><span class="pre">.tar.gz</span></code>, etc.) containing Python files</p></li>
+<li><p>JSON files (<code class="docutils literal notranslate"><span class="pre">.json</span></code>) that have Python code embedded in them</p></li>
+<li><p>CSV files (<code class="docutils literal notranslate"><span class="pre">.csv</span></code>) that contain Python code</p></li>
+</ul>
+<p>Pedal can also work with ProgSnap data dumps, containing code snapshots:
+- Zip files (<code class="docutils literal notranslate"><span class="pre">.zip</span></code>)
+- CSV files (<code class="docutils literal notranslate"><span class="pre">.csv</span></code>)
+- Sqlite files (<code class="docutils literal notranslate"><span class="pre">.db</span></code>) - this is often the fastest file format!</p>
+<p>By far, the simplest option is just Python files or folders containing Python files.
+However, the other formats can be useful for more complex scenarios with additional metadata.</p>
+<p>Pedal Job Files (<code class="docutils literal notranslate"><span class="pre">.pedal</span></code>) can be used to store the configuration for a Pedal job.</p>
+</section>
+<section id="command-line-parameters">
+<h2>Command Line Parameters<a class="headerlink" href="#command-line-parameters" title="Link to this heading"></a></h2>
+<p>The CLI is invoked with the <code class="docutils literal notranslate"><span class="pre">pedal</span></code> command. It accepts the following parameters:</p>
+<p><p>Run instructor control script on student submissions.</p>
+</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">pedal</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">alternate_filenames</span> <span class="n">ALTERNATE_FILENAMES</span><span class="p">]</span>
+             <span class="p">[</span><span class="o">--</span><span class="n">output</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">config</span> <span class="n">CONFIG</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">create_output</span><span class="p">]</span>
+             <span class="p">[</span><span class="o">--</span><span class="n">environment</span> <span class="p">{</span><span class="n">blockpy</span><span class="p">,</span><span class="n">gradescope</span><span class="p">,</span><span class="n">jupyter</span><span class="p">,</span><span class="n">standard</span><span class="p">,</span><span class="n">vpl</span><span class="p">,</span><span class="n">terminal</span><span class="p">}]</span>
+             <span class="p">[</span><span class="o">--</span><span class="n">instructor_name</span> <span class="n">INSTRUCTOR_NAME</span><span class="p">]</span>
+             <span class="p">[</span><span class="o">--</span><span class="n">progsnap_profile</span> <span class="n">PROGSNAP_PROFILE</span><span class="p">]</span>
+             <span class="p">[</span><span class="o">--</span><span class="n">include_scripts</span> <span class="n">INCLUDE_SCRIPTS</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">limit</span> <span class="n">LIMIT</span><span class="p">]</span>
+             <span class="p">[</span><span class="o">--</span><span class="n">resolver</span> <span class="n">RESOLVER</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">ics_direct</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">skip_tifa</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">skip_run</span><span class="p">]</span>
+             <span class="p">[</span><span class="o">--</span><span class="n">progsnap_events</span> <span class="p">{</span><span class="n">run</span><span class="p">,</span><span class="n">edit</span><span class="p">,</span><span class="n">last</span><span class="p">,</span><span class="nb">compile</span><span class="p">}]</span> <span class="p">[</span><span class="o">--</span><span class="n">cache</span> <span class="n">CACHE</span><span class="p">]</span>
+             <span class="p">[</span><span class="o">--</span><span class="n">threaded</span> <span class="n">THREADED</span><span class="p">]</span>
+             <span class="p">[</span><span class="o">--</span><span class="n">log_level</span> <span class="p">{</span><span class="n">DEBUG</span><span class="p">,</span><span class="n">INFO</span><span class="p">,</span><span class="n">WARNING</span><span class="p">,</span><span class="n">ERROR</span><span class="p">,</span><span class="n">CRITICAL</span><span class="p">}]</span>
+             <span class="p">[</span><span class="o">--</span><span class="n">gpt</span><span class="o">-</span><span class="n">api</span><span class="o">-</span><span class="n">key</span> <span class="n">GPT_API_KEY</span><span class="p">]</span>
+             <span class="p">{</span><span class="n">run</span><span class="p">,</span><span class="n">feedback</span><span class="p">,</span><span class="n">grade</span><span class="p">,</span><span class="n">stats</span><span class="p">,</span><span class="n">sandbox</span><span class="p">,</span><span class="n">verify</span><span class="p">,</span><span class="n">debug</span><span class="p">}</span> <span class="n">instructor</span>
+             <span class="p">[</span><span class="n">submissions</span><span class="p">]</span>
+</pre></div>
+</div>
+<section id="positional-arguments">
+<h3>Positional Arguments<a class="headerlink" href="#positional-arguments" title="Link to this heading"></a></h3>
+<dl class="option-list">
+<dt><kbd>mode</kbd></dt>
+<dd><p>Possible choices: run, feedback, grade, stats, sandbox, verify, debug</p>
+<p>What kind of Pedal analysis you’re running. See the description of each mode above.</p>
+</dd>
+<dt><kbd>instructor</kbd></dt>
+<dd><p>The path to the instructor control script, or multiple scripts.</p>
+</dd>
+<dt><kbd>submissions</kbd></dt>
+<dd><p>The path to the student submissions. Defaults to a folder named submissions adjacent to the instructor control script.</p>
+<p>Default: “submissions”</p>
+</dd>
+</dl>
+</section>
+<section id="named-arguments">
+<h3>Named Arguments<a class="headerlink" href="#named-arguments" title="Link to this heading"></a></h3>
+<dl class="option-list">
+<dt><kbd>--alternate_filenames</kbd></dt>
+<dd><p>A semicolon separated list of potential filenames to try if the main isn’t found.</p>
+<p>Default: “”</p>
+</dd>
+<dt><kbd>--output, -o</kbd></dt>
+<dd><p>The output file path for the result. Defaults to stdout.</p>
+<p>Default: “stdout”</p>
+</dd>
+<dt><kbd>--config, -c</kbd></dt>
+<dd><p>Uses the configuration file to get settings.</p>
+</dd>
+<dt><kbd>--create_output, -m</kbd></dt>
+<dd><p>In verify mode, creates any missing outputs.</p>
+<p>Default: False</p>
+</dd>
+<dt><kbd>--environment, -e</kbd></dt>
+<dd><p>Possible choices: blockpy, gradescope, jupyter, standard, vpl, terminal</p>
+<p>Sets the environment context for this script, which can run special setups and override tools as needed.</p>
+<p>Default: “standard”</p>
+</dd>
+<dt><kbd>--instructor_name</kbd></dt>
+<dd><p>Sets the name of the instructor file to something more friendly. If not given, then will default to the instructor filename.</p>
+</dd>
+<dt><kbd>--progsnap_profile</kbd></dt>
+<dd><p>Uses the given profile’s default settings for loading in a ProgSnap2 dataset</p>
+<p>Default: “blockpy”</p>
+</dd>
+<dt><kbd>--include_scripts</kbd></dt>
+<dd><p>An optional filter to only include certain scripts</p>
+</dd>
+<dt><kbd>--limit</kbd></dt>
+<dd><p>An optional limit to how many submissions are run. Mostly for testing purposes.</p>
+</dd>
+<dt><kbd>--resolver</kbd></dt>
+<dd><p>Choose a different resolver to use (the name of a function defined in the instructor control script).</p>
+<p>Default: “resolve”</p>
+</dd>
+<dt><kbd>--ics_direct</kbd></dt>
+<dd><p>Give the instructor code directly instead of loading from a file.</p>
+<p>Default: False</p>
+</dd>
+<dt><kbd>--skip_tifa</kbd></dt>
+<dd><p>Skip using TIFA in the environment</p>
+<p>Default: False</p>
+</dd>
+<dt><kbd>--skip_run</kbd></dt>
+<dd><p>Skip automatically running student code in the environment</p>
+<p>Default: False</p>
+</dd>
+<dt><kbd>--progsnap_events</kbd></dt>
+<dd><p>Possible choices: run, edit, last, compile</p>
+<p>Choose what level of event to capture from Progsnap event logs.</p>
+<p>Default: “run”</p>
+</dd>
+<dt><kbd>--cache</kbd></dt>
+<dd><p>Use the given directory to hold the cache. You can use “./” to use the current directory.</p>
+<p>Default: False</p>
+</dd>
+<dt><kbd>--threaded</kbd></dt>
+<dd><p>Run the instructor script in a separate thread to avoid timeout crashes.</p>
+<p>Default: False</p>
+</dd>
+<dt><kbd>--log_level</kbd></dt>
+<dd><p>Possible choices: DEBUG, INFO, WARNING, ERROR, CRITICAL</p>
+<p>Set the logging level for Pedal.</p>
+<p>Default: “ERROR”</p>
+</dd>
+<dt><kbd>--gpt-api-key</kbd></dt>
+<dd><p>Set the GPT API key</p>
+</dd>
+</dl>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="tools/types.html" class="btn btn-neutral float-left" title="Pedal’s Type System" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="integrations.html" class="btn btn-neutral float-right" title="Autograder Integrations" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, acbart, lukesg08.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
