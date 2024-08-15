@@ -65,6 +65,18 @@ But I expected the result to be equal to:
             assert_equal(3, e.student.call('add', 1, 2))
         self.assertFeedback(e, SUCCESS_MESSAGE)
 
+    def test_assert_equal_type_mismatch_float_int(self):
+        with Execution('def add(a, b): return 0', run_tifa=False) as e:
+            assert_equal(e.student.call('add', 1, 2), 3.0)
+        self.assertFeedback(e, """Failed Instructor Test
+Student code failed instructor test.
+I ran the code:
+    add(1, 2)
+The value of the result was:
+    0
+But I expected the result to be equal to:
+    3.0""")
+
     def test_assert_in_call_left_fails(self):
         with Execution('def make_int(): return 7', run_tifa=False) as e:
             assert_in(e.student.call('make_int'), [1, 2, 3])

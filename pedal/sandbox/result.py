@@ -214,115 +214,199 @@ class SandboxResult:
     # Numeric Operations
 
     def __add__(self, other):
-        if isinstance(other, SandboxResult):
-            return self._clone_this_result(self.value + other.value)
-        return self._clone_this_result(self.value + other)
+        left, right = _unwrap_value_pair(self, other)
+        result = left + right
+        if result == NotImplemented:
+            result = right + left
+        return self._clone_this_result(result)
 
     def __sub__(self, other):
-        if isinstance(other, SandboxResult):
-            return self._clone_this_result(self.value - other.value)
-        return self._clone_this_result(self.value - other)
+        left, right = _unwrap_value_pair(self, other)
+        result = left - right
+        if result == NotImplemented:
+            result = right.__rsub__(left)
+        return self._clone_this_result(result)
 
     def __mul__(self, other):
-        if isinstance(other, SandboxResult):
-            return self._clone_this_result(self.value * other.value)
-        return self._clone_this_result(self.value * other)
+        left, right = _unwrap_value_pair(self, other)
+        result = left.__mul__(right)
+        print("RMUL", left, right, result)
+        if result == NotImplemented:
+            result = right.__rmul__(left)
+        print("RMUL2", left, right, result)
+        return self._clone_this_result(result)
 
     def __matmul__(self, other):
-        if isinstance(other, SandboxResult):
-            return self._clone_this_result(self.value.__matmul__(other.value))
-        return self._clone_this_result(self.value.__matmul__(other))
+        left, right = _unwrap_value_pair(self, other)
+        result = left.__matmul__(right)
+        if result == NotImplemented:
+            result = right.__rmatmul__(left)
+        return self._clone_this_result(result)
+
 
     def __truediv__(self, other):
-        if isinstance(other, SandboxResult):
-            return self._clone_this_result(self.value.__truediv__(other.value))
-        return self._clone_this_result(self.value.__truediv__(other))
+        left, right = _unwrap_value_pair(self, other)
+        result = left.__truediv__(right)
+        if result == NotImplemented:
+            result = right.__rtruediv__(left)
+        return self._clone_this_result(result)
 
     def __floordiv__(self, other):
-        if isinstance(other, SandboxResult):
-            return self._clone_this_result(self.value.__floordiv__(other.value))
-        return self._clone_this_result(self.value.__floordiv__(other))
+        left, right = _unwrap_value_pair(self, other)
+        result = left.__floordiv__(right)
+        if result == NotImplemented:
+            result = right.__rfloordiv__(left)
+        return self._clone_this_result(result)
 
     def __mod__(self, other):
-        if isinstance(other, SandboxResult):
-            return self._clone_this_result(self.value.__mod__(other.value))
-        return self._clone_this_result(self.value.__mod__(other))
+        left, right = _unwrap_value_pair(self, other)
+        result = left.__mod__(right)
+        if result == NotImplemented:
+            result = right.__rmod__(left)
+        return self._clone_this_result(result)
 
     def __divmod__(self, other):
-        if isinstance(other, SandboxResult):
-            return self._clone_this_result(self.value.__divmod__(other.value))
-        return self._clone_this_result(self.value.__divmod__(other))
+        left, right = _unwrap_value_pair(self, other)
+        result = left.__divmod__(right)
+        if result == NotImplemented:
+            result = right.__rdivmod__(left)
+        return self._clone_this_result(result)
 
     def __pow__(self, other, *modulo):
-        if isinstance(other, SandboxResult):
-            return self._clone_this_result(self.value.__pow__(other.value, *modulo))
-        return self._clone_this_result(self.value.__pow__(other, *modulo))
+        left, right = _unwrap_value_pair(self, other)
+        result = left.__pow__(right)
+        if result == NotImplemented:
+            result = right.__rpow__(left)
+        return self._clone_this_result(result)
 
     def __lshift__(self, other):
-        if isinstance(other, SandboxResult):
-            return self._clone_this_result(self.value.__lshift__(other.value))
-        return self._clone_this_result(self.value.__lshift__(other))
+        left, right = _unwrap_value_pair(self, other)
+        result = left.__lshift__(right)
+        if result == NotImplemented:
+            result = right.__rlshift__(left)
+        return self._clone_this_result(result)
 
     def __rshift__(self, other):
-        if isinstance(other, SandboxResult):
-            return self._clone_this_result(self.value.__rshift__(other.value))
-        return self._clone_this_result(self.value.__rshift__(other))
+        left, right = _unwrap_value_pair(self, other)
+        result = left.__rshift__(right)
+        if result == NotImplemented:
+            result = right.__rrshift__(left)
+        return self._clone_this_result(result)
 
     def __and__(self, other):
-        if isinstance(other, SandboxResult):
-            return self._clone_this_result(self.value.__and__(other.value))
-        return self._clone_this_result(self.value.__and__(other))
+        left, right = _unwrap_value_pair(self, other)
+        result = left.__and__(right)
+        if result == NotImplemented:
+            result = right.__rand__(left)
+        return self._clone_this_result(result)
 
     def __xor__(self, other):
-        if isinstance(other, SandboxResult):
-            return self._clone_this_result(self.value.__xor__(other.value))
-        return self._clone_this_result(self.value.__xor__(other))
+        left, right = _unwrap_value_pair(self, other)
+        result = left.__xor__(right)
+        if result == NotImplemented:
+            result = right.__rxor__(left)
+        return self._clone_this_result(result)
 
     def __or__(self, other):
-        if isinstance(other, SandboxResult):
-            return self._clone_this_result(self.value.__or__(other.value))
-        return self._clone_this_result(self.value.__or__(other))
+        left, right = _unwrap_value_pair(self, other)
+        result = left.__or__(right)
+        if result == NotImplemented:
+            result = right.__ror__(left)
+        return self._clone_this_result(result)
 
     def __radd__(self, other):
-        if isinstance(self.value, str):
-            return self._clone_this_result(self.value.__add__(other))
-        return self._clone_this_result(self.value.__radd__(other))
+        left, right = _unwrap_value_pair(self, other)
+        result = left.__radd__(right)
+        if result == NotImplemented:
+            result = right.__add__(left)
+        return self._clone_this_result(result)
+        #if isinstance(self.value, str):
+        #    return self._clone_this_result(self.value.__add__(other))
+        #return self._clone_this_result(self.value.__radd__(other))
 
     def __rsub__(self, other):
-        return self._clone_this_result(self.value.__rsub__(other))
+        left, right = _unwrap_value_pair(self, other)
+        result = left.__rsub__(right)
+        if result == NotImplemented:
+            result = right.__sub__(left)
+        return self._clone_this_result(result)
 
     def __rmul__(self, other):
-        return self._clone_this_result(self.value.__rmul__(other))
+        left, right = _unwrap_value_pair(self, other)
+        result = left.__rmul__(right)
+        if result == NotImplemented:
+            result = right.__mul__(left)
+        return self._clone_this_result(result)
 
     def __rmatmul__(self, other):
-        return self._clone_this_result(self.value.__rmatmul__(other))
+        left, right = _unwrap_value_pair(self, other)
+        result = left.__rmatmul__(right)
+        if result == NotImplemented:
+            result = right.__matmul__(left)
+        return self._clone_this_result(result)
 
     def __rtruediv__(self, other):
-        return self._clone_this_result(self.value.__rtruediv__(other))
+        left, right = _unwrap_value_pair(self, other)
+        result = left.__rtruediv__(right)
+        if result == NotImplemented:
+            result = right.__truediv__(left)
+        return self._clone_this_result(result)
 
     def __rfloordiv__(self, other):
-        return self._clone_this_result(self.value.__rfloordiv__(other))
+        left, right = _unwrap_value_pair(self, other)
+        result = left.__rfloordiv__(right)
+        if result == NotImplemented:
+            result = right.__floordiv__(left)
+        return self._clone_this_result(result)
 
     def __rmod__(self, other):
-        return self._clone_this_result(self.value.__rmod__(other))
+        left, right = _unwrap_value_pair(self, other)
+        result = left.__rmod__(right)
+        if result == NotImplemented:
+            result = right.__mod__(left)
+        return self._clone_this_result(result)
 
     def __rdivmod__(self, other):
-        return self._clone_this_result(self.value.__rdivmod__(other))
+        left, right = _unwrap_value_pair(self, other)
+        result = left.__rdivmod__(right)
+        if result == NotImplemented:
+            result = right.__divmod__(left)
+        return self._clone_this_result(result)
 
     def __rpow__(self, other):
-        return self._clone_this_result(self.value.__rpow__(other))
+        left, right = _unwrap_value_pair(self, other)
+        result = left.__rpow__(right)
+        if result == NotImplemented:
+            result = right.__pow__(left)
+        return self._clone_this_result(result)
 
     def __rlshift__(self, other):
-        return self._clone_this_result(self.value.__rlshift__(other))
+        left, right = _unwrap_value_pair(self, other)
+        result = left.__rlshift__(right)
+        if result == NotImplemented:
+            result = right.__lshift__(left)
+        return self._clone_this_result(result)
 
     def __rand__(self, other):
-        return self._clone_this_result(self.value.__rand__(other))
+        left, right = _unwrap_value_pair(self, other)
+        result = left.__rand__(right)
+        if result == NotImplemented:
+            result = right.__and__(left)
+        return self._clone_this_result(result)
 
     def __rxor__(self, other):
-        return self._clone_this_result(self.value.__rxor__(other))
+        left, right = _unwrap_value_pair(self, other)
+        result = left.__rxor__(right)
+        if result == NotImplemented:
+            result = right.__xor__(left)
+        return self._clone_this_result(result)
 
     def __ror__(self, other):
-        return self._clone_this_result(self.value.__ror__(other))
+        left, right = _unwrap_value_pair(self, other)
+        result = left.__ror__(right)
+        if result == NotImplemented:
+            result = right.__or__(left)
+        return self._clone_this_result(result)
 
     # TODO: __iadd__ and other in-place assignment operators?
 
@@ -430,3 +514,14 @@ def unwrap_value(value):
     else:
         return value
 
+
+def _unwrap_value_pair(left, right):
+    """
+    Given a pair of values, make sure we have the actual values.
+    This assumes that the left is a SandboxResult, and the right is either
+    a SandboxResult or a regular value.
+    """
+    left = left.value
+    if is_sandbox_result(right):
+        right = right.value
+    return left, right

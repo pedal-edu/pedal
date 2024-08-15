@@ -4,12 +4,14 @@ from pprint import pprint
 import os
 import sys
 import json
+import itertools
 
 from pedal.core.submission import Submission
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from pedal.core.commands import MAIN_REPORT, clear_report, contextualize_report
 from pedal.sandbox import Sandbox, run
+from pedal.sandbox.result import SandboxResult
 import pedal.sandbox.commands as commands
 from pedal.source import set_source
 from pedal.utilities.system import IS_AT_LEAST_PYTHON_311, IS_AT_LEAST_PYTHON_310
@@ -552,6 +554,33 @@ def to_pig_latin(str):
         self.assertEqual(["", "XYZ"], commands.get_output())
 
     # TODO: test `import builtins` strategy to access original builtins
+
+    def test_sandbox_result_all_operators_int_float(self):
+        operators = [
+            ('*', '__mul__', lambda x, y: x * y),
+            ('+', '__add__', lambda x, y: x + y),
+            ('-', '__sub__', lambda x, y: x - y),
+            ('/', '__truediv__', lambda x, y: x / y),
+            ('//', '__floordiv__', lambda x, y: x // y),
+            ('%', '__mod__', lambda x, y: x % y),
+        ]
+        types = [
+            ('sandbox_int', SandboxResult(7), 7),
+            ('float', 3.0, 3.0),
+            ('int', 5, 5),
+            ('sandbox_float', SandboxResult(2.0), 2.0),
+        ]
+        for operator, name, as_function in operators:
+            for (type1, value1, e1), (type2, value2, e2) in itertools.product(types, types):
+                with self.subTest(operator=operator, type1=type1, value1=value1, type2=type2, value2=value2):
+                    student_code = f"x = {value1}\ny = {value2}"
+                    set_source(student_code)
+                    actual = as_function(value1, value2)
+                    expected = as_function(e1, e2)
+                    print(value1, operator, value2, "=", actual, expected)
+                    self.assertEqual(actual, expected, msg=f"actual={actual}, expected={expected}, "
+                                                           f"operator={operator}, name={name}, type1={type1}, "
+                                                           f"value1={value1}, type2={type2}, value2={value2}")
 
 if __name__ == '__main__':
     unittest.main(buffer=False)
