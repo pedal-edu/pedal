@@ -1,3 +1,8 @@
+Version 2.6.3 (8/15/2024)
+-------------------------
+* Fixed bug with `SandboxResult` not handling integer/float operations correctly in some cases
+* Changed Wheat Chaff game language to use "imposter" and "genuine" terminology
+
 Version 2.6.2 (5/1/2024)
 ------------------------
 * Changed spacing in the terminal environment
