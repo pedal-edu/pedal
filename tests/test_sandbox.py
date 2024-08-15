@@ -563,6 +563,7 @@ def to_pig_latin(str):
             ('/', '__truediv__', lambda x, y: x / y),
             ('//', '__floordiv__', lambda x, y: x // y),
             ('%', '__mod__', lambda x, y: x % y),
+            ('**', '__pow__', lambda x, y: x ** y),
         ]
         types = [
             ('sandbox_int', SandboxResult(7), 7),
@@ -582,5 +583,38 @@ def to_pig_latin(str):
                                                            f"operator={operator}, name={name}, type1={type1}, "
                                                            f"value1={value1}, type2={type2}, value2={value2}")
 
+    def test_sandbox_result_all_operators_str(self):
+        test_cases = [
+            # Multiplication
+            ('*', lambda x, y: x * y, [
+                ('int', 5, 5, 'str', "Hello", "Hello"),
+                ('sandbox_int', SandboxResult(5), 5, 'str', "Hello", "Hello"),
+                ('int', 5, 5, 'sandbox_str', SandboxResult("Hello"), "Hello"),
+                ('sandbox_int', SandboxResult(5), 5, 'sandbox_str', SandboxResult("Hello"), "Hello"),
+                ('str', "Hello", "Hello", 'int', 5, 5),
+                ('sandbox_str', SandboxResult("Hello"), "Hello", 'int', 5, 5),
+                ('str', "Hello", "Hello", 'sandbox_int', SandboxResult(5), 5),
+                ('sandbox_str', SandboxResult("Hello"), "Hello", 'sandbox_int', SandboxResult(5), 5),
+            ]),
+            # Addition
+            ('+', lambda x, y: x + y, [
+                ('str', "Hello", "Hello", 'str', " World", " World"),
+                ('sandbox_str', SandboxResult("Hello"), "Hello", 'str', " World", " World"),
+                ('str', "Hello", "Hello", 'sandbox_str', SandboxResult(" World"), " World"),
+                ('sandbox_str', SandboxResult("Hello"), "Hello", 'sandbox_str', SandboxResult(" World"),
+                 " World"),
+            ])
+        ]
+        for operator, as_function, test_cases in test_cases:
+            for type1, value1, e1, type2, value2, e2 in test_cases:
+                with self.subTest(operator=operator, type1=type1, value1=value1, type2=type2, value2=value2):
+                    student_code = f"x = {value1}\ny = {value2}"
+                    set_source(student_code)
+                    actual = as_function(value1, value2)
+                    expected = as_function(e1, e2)
+                    print(value1, operator, value2, "=", actual, expected)
+                    self.assertEqual(actual, expected, msg=f"actual={actual}, expected={expected}, "
+                                                           f"operator={operator}, type1={type1}, value1={value1}, "
+                                                           f"type2={type2}, value2={value2}")
 if __name__ == '__main__':
     unittest.main(buffer=False)

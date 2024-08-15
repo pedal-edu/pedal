@@ -316,13 +316,12 @@ class SandboxResult:
 
     def __radd__(self, other):
         left, right = _unwrap_value_pair(self, other)
+        if isinstance(left, str):
+            return self._clone_this_result(right.__add__(left))
         result = left.__radd__(right)
         if result == NotImplemented:
             result = right.__add__(left)
         return self._clone_this_result(result)
-        #if isinstance(self.value, str):
-        #    return self._clone_this_result(self.value.__add__(other))
-        #return self._clone_this_result(self.value.__radd__(other))
 
     def __rsub__(self, other):
         left, right = _unwrap_value_pair(self, other)
