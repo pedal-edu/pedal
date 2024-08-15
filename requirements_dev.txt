@@ -1,6 +1,7 @@
 sphinx
 sphinx_rtd_theme
 sphinx-autobuild
+sphinx-argparse
 wheel
 
 jupyter
