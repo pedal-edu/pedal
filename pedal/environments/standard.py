@@ -82,6 +82,18 @@ class StandardEnvironment(Environment):
         print("Label:", result.label)
         print("Score:", result.score)
         print("Message:", result.message)
+        if result.positives:
+            print("Compliments:")
+            for compliment in result.positives:
+                title = compliment.title or compliment.label
+                if title and compliment.message and compliment.message != title:
+                    print(f"  - {title}: {compliment.message}")
+                elif title:
+                    print(f"  - {title}")
+                elif compliment.message:
+                    print(f"  - {compliment.message}")
+                else:
+                    print("  - (empty)")
         return result
 
     def get_fields(self):
