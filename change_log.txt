@@ -1,3 +1,7 @@
+Version 2.6.4 (9/20/2024)
+-------------------------
+* Standard environment now also reports compliments (positive feedback)
+
 Version 2.6.3 (8/15/2024)
 -------------------------
 * Fixed bug with `SandboxResult` not handling integer/float operations correctly in some cases
