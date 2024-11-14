@@ -46,7 +46,19 @@ class MockDrafter(MockModuleExposing):
     Mock Drafter library that can be used to capture data from the students' program execution.
     """
     expose = MethodExposer()
-    UNKNOWN_FUNCTIONS = []
+    UNKNOWN_FUNCTIONS = [
+              'abort', 'add_website_css', 'add_website_header', 'assert_equal', 'bold',
+              'change_background_color', 'change_border', 'change_color', 'change_height', 'change_margin',
+              'change_padding', 'change_text_align', 'change_text_decoration', 'change_text_font', 'change_text_size',
+              'change_text_transform', 'change_width',
+              'deploy_site', 'float_left', 'float_right',
+              'get_server_setting', 'hide_debug_information',
+              'italic', 'large_font', 'monospace',
+              'set_website_framed', 'set_website_style', 'set_website_title',
+              'show_debug_information', 'small_font', 'strikethrough',
+              'underline', 'update_attr', 'update_style'
+    ]
+
 
     def __init__(self):
         super().__init__()
@@ -96,10 +108,15 @@ class MockDrafter(MockModuleExposing):
 
         return make_route
 
-COMPONENTS = ['BulletedList', 'Button', 'CheckBox',
-              'Header', 'HorizontalRule', 'Image', 'LineBreak', 'Link', 'LinkContent',
-              'NumberedList', 'Page', 'PageContent', 'SelectBox', 'Span', "Argument",
-              'SubmitButton', 'Table', 'Text', 'TextArea', 'TextBox']
+COMPONENTS = ['Argument', 'Box', 'BulletedList', 'Button', 'CheckBox',
+              'Div', 'Division', 'Download', 'FileUpload', 'Header',
+              'HorizontalRule', 'Image', 'LineBreak', 'Link', 'LinkContent',
+              'MatPlotLibPlot', 'NumberedList', 'PageContent',
+              'Page',
+              'Pre', 'PreformattedText', 'Row', 'SelectBox', 'Span',
+              'SubmitButton',
+              'Table', 'Text', 'TextArea', 'TextBox']
+
 for component in COMPONENTS:
     loaded_component = _load_drafter_component(component)
     setattr(MockDrafter, component, loaded_component)

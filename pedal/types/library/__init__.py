@@ -4,3 +4,4 @@ import pedal.types.library.designer
 import pedal.types.library.drafter
 import pedal.types.library.turtles
 import pedal.types.library.microbit
+import pedal.types.library.pillow
