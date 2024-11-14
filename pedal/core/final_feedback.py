@@ -69,7 +69,21 @@ class FinalFeedback:
         self.used = []
 
     def merge(self, feedback):
+        """
+        Process a single piece of feedback, and modify ourselves based on the
+        data found there. This includes updating the correctness, the message,
+        the title, and any other attributes.
+
+        Also keep track of the feedback that was considered, any positive
+        feedback, instructional feedback, and system messages.
+
+        If the feedback was ultimately not meant to be used, we return None.
+        Otherwise, we return the feedback object to indicate that we have
+        incorporated it into our final feedback.
+        """
         self.considered.append(feedback)
+        # Check if we should suppress this feedback based on its
+        # category and label (and also potentially fields)
         category = feedback.category.lower()
         if category in self.suppressions:
             if True in self.suppressions[category]:
@@ -87,6 +101,7 @@ class FinalFeedback:
                         else:
                             # Oh hey, a match, let's skip this guy
                             return
+        # Check if this label has been suppressed specifically
         if feedback.label in self.suppressed_labels:
             list_of_fields = self.suppressed_labels[feedback.label]
             # Go through each of the sets of fields
@@ -97,9 +112,12 @@ class FinalFeedback:
                         break
                 else:
                     return
+        # Parse the feedback for its settings
         correct, partial, message, title, data = parse_feedback(feedback)
+        # If it's a system message, just add it to the systems feedback list
         if feedback and feedback.category == Feedback.CATEGORIES.SYSTEM:
             self.systems.append(feedback)
+        # Resolve the score, if present, making sure to handle valence
         if not feedback.unscored and feedback.score is not None:
             # Triggered Negative leads to opposite behavior for operator
             # Also untriggered positive feedback
@@ -107,17 +125,24 @@ class FinalFeedback:
             inversion = "!" if invert_logic else ""
             self._scores.append(f"{inversion}{partial}")
             feedback.resolved_score = Score.parse(f"{inversion}{partial}").to_percent_string()
+        # If this is was not triggered but had an else message, then add it to the positives list
         if not feedback and feedback.else_message:
             self.positives.append(feedback)
             return feedback
+        # If this feedback was not activated, or was muted, then don't do anything with it
         if not feedback or feedback.muted:
             return
+        # If this is explicitly a positive feedback, add it to the positives list and stop
         if feedback.kind == Feedback.KINDS.COMPLIMENT:
             self.positives.append(feedback)
             return feedback
+        # If this is explicitly instructional, add it to the instructions list
         if feedback.kind == Feedback.KINDS.INSTRUCTIONAL:
             self.instructions.append(feedback)
+        # If this feedback was correct, then update the correctness
+        # Once we have a single incorrect feedback, the whole thing is incorrect
         self.success = self.correct = correct and self.correct
+        # If we don't have a message yet, then use this one
         if message is not None and self.message is None:
             self.message = message
             self.title = title
@@ -125,13 +150,22 @@ class FinalFeedback:
             self.label = feedback.label
             self.data = data
             self.used.append(feedback)
+        # All done, return the feedback out of politeness
         return feedback
 
     def finalize(self):
+        """
+        Finalize the feedback object, setting the title and message to
+        defaults if they are not already set. Also, combine the scores
+        into a single score.
+        """
+        # If we don't have a message yet, then use the default message
         if self.message is None:
             self.title = self.DEFAULT_NO_FEEDBACK_TITLE
             self.message = self.DEFAULT_NO_FEEDBACK_MESSAGE
+        # If we have suppressed correctness, then update that flag
         self.hide_correctness = self.suppressions.get('correct', self.suppressions.get('success', False))
+        # As long as we are allowed, change the default message to the "correct" message
         if (not self.hide_correctness and
                 self.label == self.DEFAULT_NO_FEEDBACK_LABEL and
                 self.category == Feedback.CATEGORIES.COMPLETE):
@@ -141,7 +175,9 @@ class FinalFeedback:
             self.score = 1
             self.success = self.correct = True
         else:
+            # If they weren't correct, we need to combine the scores
             self.score = combine_scores(self._scores)
+        # Update the success/correct flags
         self.success = self.correct = bool(self.correct)
         return self
 
