@@ -81,11 +81,13 @@ class TifaCore:
     scope_chain: list
     path_chain: list
     definition_chain: list
+    loop_chain: list
 
     # dict[paths, dict[names, State]]
     name_map: dict
     class_scopes: dict
     path_parents: dict
+    loop_usages: dict
 
     final_node: ast.AST or None
 
@@ -153,6 +155,7 @@ class TifaCore:
         self.scope_chain = [self.scope_id]
         self.path_chain = [self.path_id]
         self.name_map = {self.path_id: {}}
+        self.loop_usages = {}
         self.definition_chain = []
         self.path_parents = {}
         self.final_node = None
@@ -231,7 +234,19 @@ class TifaCore:
                     position = state.over_position
                     self._issue(overwritten_variable(position, state.name))
                 if state.read == 'no' and state.name != '_':
+                    # Check if the variable was possibly read in a previous loop iteration
                     self._issue(unused_variable(state.position, state.name, state.type, report=self.report))
+
+    def _finish_loop(self):
+        path_id = self.path_chain[0]
+        for name in self.name_map[path_id]:
+            if self.in_scope(name, self.scope_chain):
+                state = self.name_map[path_id][name]
+                if self._read_in_loop(path_id, name):
+                    state.read = 'maybe'
+
+    def _read_in_loop(self, path_id, name):
+        return name in self.loop_usages.get(path_id, [])
 
     def _scope_chain_str(self, name=None):
         """
@@ -268,6 +283,17 @@ class TifaCore:
         elif isinstance(node, (ast.Attribute, ast.Subscript)):
             return self.identify_caller(node.value)
         return None
+
+    def check_variable_exists(self, name):
+        """
+        Check if a variable exists in the current scope.
+
+        Args:
+            name (str): The name of the variable.
+        Returns:
+            bool: Whether the variable exists.
+        """
+        return self.find_variable_scope(name).exists
 
     def iterate_variable(self, name, position=None):
         """
@@ -381,6 +407,11 @@ class TifaCore:
         Returns:
             State: The current state of the variable.
         """
+        # TODO: Handle the looping case of a previous variable
+        # If we are currently in a loop, mark that this loop (and therefore any children loop)
+        # may subsequently need to know that this variable has been READ within the loop.
+        # So the finalization can check whether a variable has been read within a loop,
+        # if the regular check doesn't seem to indicate that it's been read.
         full_name = self._scope_chain_str(name)
         current_path = self.path_chain[0]
         variable = self.find_variable_scope(name)
@@ -404,6 +435,7 @@ class TifaCore:
                 if name != '*return':
                     self._issue(possible_initialization_problem(self.locate(), name))
             new_state.read = 'yes'
+            self.loop_usages.setdefault(current_path, []).append(full_name)
             if not variable.in_scope:
                 self.name_map[current_path][variable.scoped_name] = new_state
             else:
@@ -435,7 +467,6 @@ class TifaCore:
                 return base_module
 
         # Non-student file, maybe it has _tifa_definitions?
-        error = None
         try:
             actual_module = __import__(chain, globals(), {},
                                        ['_tifa_definitions'])

@@ -14,7 +14,7 @@ from pedal.types.new_types import (Type, AnyType, ImpossibleType, FunctionType, 
                                    ListType, StrType, SetType, DictType,
                                    ClassType, InstanceType, BuiltinConstructorType, NumType, NoneType,
                                    LiteralValue, LiteralInt, LiteralFloat, LiteralStr, LiteralBool,
-                                   TypeUnion, widen_type, widest_type)
+                                   TypeUnion, widen_type, widest_type, ModuleType)
 from pedal.types.new_types import is_subtype, specify_subtype
 from pedal.types.normalize import get_pedal_type_from_value
 from pedal.types.builtin import get_builtin_name
@@ -626,6 +626,7 @@ class Tifa(TifaCore, ast.NodeVisitor):
         Args:
             node:
         """
+        self.loop_usages[self.path_chain[0]] = []
         was_empty = self._visit_collection_loop(node)
         # Handle the bodies
         # if not was_empty:
@@ -634,6 +635,8 @@ class Tifa(TifaCore, ast.NodeVisitor):
         # with non_empty_path:
         self.visit_statements(node.body)
         self.visit_statements(node.orelse)
+
+        #self._finish_loop()
 
     def visit_FunctionDef(self, node):
         """
@@ -651,7 +654,13 @@ class Tifa(TifaCore, ast.NodeVisitor):
         function = FunctionType(function_name, definition=definition)
         self.store_variable(function_name, function)
 
-        if len(self.node_chain) > 2:
+        # Need to walk up the node chain to the latest module (or the beginning)
+        steps = 0
+        for i, higher_node in enumerate(reversed(self.node_chain)):
+            if isinstance(higher_node, ast.Module):
+                break
+            steps += 1
+        if steps > 1:
             self._issue(nested_function_definition(self.locate(), function_name))
 
         return self.apply_decorators(function_name, function, node.decorator_list)
@@ -856,16 +865,28 @@ class Tifa(TifaCore, ast.NodeVisitor):
             if alias.name == '*':
                 module_type = self.load_module(node.module)
                 for field, value in module_type.fields.items():
+                    if isinstance(module_type, ModuleType):
+                        if field in module_type.redefines:
+                            if self.check_variable_exists(field):
+                                self.load_variable(field)
                     self.store_read_variable(field, value)
             else:
                 if node.module is None:
+                    module_name = ""
                     asname = alias.asname or alias.name
                     module_type = self.load_module(alias.name)
                 else:
                     module_name = node.module
                     asname = alias.asname or alias.name
                     module_type = self.load_module(module_name)
-                name_type = module_type.get_attr(alias.name)
+                if module_type.has_attr(alias.name):
+                    # Was it already a top-level?
+                    name_type = module_type.get_attr(alias.name)
+                else:
+                    # Is it an importable submodule?
+                    # TODO: This should throw a more specialized error message!
+                    full_name = module_name + '.' + alias.name if module_name else alias.name
+                    name_type = self.load_module(full_name)
                 self.store_variable(asname, name_type)
 
     def visit_Lambda(self, node):
@@ -1140,7 +1161,11 @@ class Tifa(TifaCore, ast.NodeVisitor):
         self.visit(node.test)
 
         # Visit the bodies
-        this_path_id = self.path_id
+        this_path_id = self.path_chain[0]
+
+        # Track that we are in the loop
+        self.loop_usages[self.path_chain[0]] = []
+
         # One path is that we never enter the body
         empty_path = NewPath(self, this_path_id, "e")
         with empty_path:
@@ -1161,6 +1186,8 @@ class Tifa(TifaCore, ast.NodeVisitor):
         # Combine two paths into one
         # Check for any names that are on the IF path
         self.merge_paths(this_path_id, body_path.id, empty_path.id)
+
+        self._finish_loop()
 
     def visit_With(self, node):
         """

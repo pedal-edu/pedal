@@ -150,6 +150,9 @@ class Type:
             return ImpossibleType()
         return value
 
+    def has_attr(self, field: str):
+        return self.find_field(field, set()) is not None
+
     def add_attr(self, field: str, value):
         self.fields[field] = value
 
@@ -1142,11 +1145,14 @@ class ModuleType(Type):
     parents = []
     submodules: dict
 
-    def __init__(self, name, fields, submodules=None):
+    redefines: set[str]
+
+    def __init__(self, name, fields, submodules=None, redefines=None):
         super().__init__()
         self.name = name
         self.fields = fields
         self.submodules = submodules if submodules is not None else {}
+        self.redefines = set(redefines) if redefines is not None else set()
 
     def clone(self):
         """ Create a copy of this ModuleType """
@@ -1389,7 +1395,7 @@ def float_function(name):
 
 
 def num_function(name):
-    return FunctionType(name, returns=FloatType)
+    return FunctionType(name, returns=NumType)
 
 
 def bool_function(name):

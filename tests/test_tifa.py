@@ -1247,5 +1247,211 @@ forecast1 = [Forecast([1,2,3])]
         self.assertIsNone(result.error)
         self.assertFalse(result.issues)
 
+    def test_simple_while_function_usage(self):
+        main_program = dedent("""
+def add_one(a: int) -> int:
+    return a+1
+
+def do_thrice(a: int) -> int:
+    i = 0
+    while i < 3:
+        a = add_one(a)
+        i += 1
+    return a
+    
+print(do_thrice(5))
+""")
+        tifa = pedal.tifa.Tifa()
+        result = tifa.process_code(main_program, filename="student.py")
+        if result.error:
+            raise result.error
+        self.assertIsNone(result.error)
+        self.assertFalse(result.issues)
+
+    def test_simple_while_function_if_usage(self):
+        main_program = dedent("""
+    def add_one(BBB: int) -> int:
+        return BBB+1
+
+    def do_thrice(AX: int) -> int:
+        if AX > 0:
+            return 5
+        JJL = 0
+        while JJL < 3:
+            AX = add_one(AX)
+            JJL += 1
+        return AX
+
+    print(do_thrice(5))
+    """)
+        tifa = pedal.tifa.Tifa()
+        result = tifa.process_code(main_program, filename="student.py")
+        if result.error:
+            raise result.error
+        self.assertIsNone(result.error)
+        self.assertFalse(result.issues)
+
+    def test_while_uses_parameter(self):
+        main_program = dedent("""
+    def do_thrice(AX: int) -> int:
+        if True:
+            return 5
+        while False:
+            print(AX)
+        return 0
+
+    print(do_thrice(5))
+    """)
+        tifa = pedal.tifa.Tifa()
+        result = tifa.process_code(main_program, filename="student.py")
+        if result.error:
+            raise result.error
+        self.assertIsNone(result.error)
+        self.assertFalse(result.issues)
+
+    def test_imported_function_was_used(self):
+        decode_single = """
+def decode_single_char(colors: list[int])->str:
+    colors
+    return ""   
+"""
+        main_program = dedent("""from decode_single import decode_single_char
+
+def decode_chars(colors: list[int], num: int)->str:
+    """
+    """
+    if len(colors) != num*8:
+        return ""
+    i=0
+    char_str = ""
+    while i < 5:
+        num
+        char_str += decode_single_char(colors)
+        i+=8
+    return char_str
+    
+print(decode_chars([2,4,6,8,10,12,14,16], 2))""")
+        contextualize_report(Submission(files={'student.py': main_program, 'decode_single.py': decode_single}))
+        tifa = pedal.tifa.Tifa()
+        result = tifa.process_code(main_program, filename="student.py", )
+        if result.error:
+            raise result.error
+        self.assertIsNone(result.error)
+        self.assertFalse(result.issues)
+
+    def test_pillow_import(self):
+        pedal.tifa.reset()
+        main_program = dedent("""
+from PIL import Image
+
+img = Image.open("image.jpg")
+img = img.convert("RGBA")
+img.transpose(Image.Transpose.ROTATE_90).show()
+img.show()
+
+pixel = img.getpixel((0, 0))
+img.putpixel((5, 3), pixel)
+red, green, blue = pixel
+img.putpixel((3, 5), (red, green, blue, 255))
+""")
+        tifa = pedal.tifa.Tifa()
+        result = tifa.process_code(main_program, filename="student.py")
+        if result.error:
+            raise result.error
+        self.assertIsNone(result.error)
+        self.assertFalse(result.issues)
+
+    def test_matplotlib_simple(self):
+        main_program = dedent("""
+import matplotlib.pyplot as plt
+
+plt.plot([1,2,3,4])
+
+plt.show()
+""")
+        tifa = pedal.tifa.Tifa()
+        result = tifa.process_code(main_program, filename="student.py")
+        if result.error:
+            raise result.error
+        self.assertIsNone(result.error)
+        self.assertFalse(result.issues)
+
+    def test_unused_previous_variable(self):
+        main_program = dedent("""
+previous = 0
+values = []
+for i in range(1, 10):
+    values.append([previous, i])
+    previous = i
+
+print(values)""")
+        tifa = pedal.tifa.Tifa()
+        result = tifa.process_code(main_program, filename="student.py")
+        if result.error:
+            raise result.error
+        self.assertIsNone(result.error)
+        self.assertFalse(result.issues)
+
+    def test_nested_unused_previous_variable(self):
+        main_program = dedent("""
+def a():
+    px, py = 0, 0
+    points = []
+    for y in range(10):
+        for x in range(5):
+            points.append((x, y, px, py))
+            px = x
+        py = y
+    print(points)
+a()
+""")
+        tifa = pedal.tifa.Tifa()
+        result = tifa.process_code(main_program, filename="student.py")
+        if result.error:
+            raise result.error
+        self.assertIsNone(result.error)
+        self.assertFalse(result.issues)
+
+    def test_unused_loop_variable(self):
+        main_program = dedent("""
+old = [1,2,3]
+new=[]
+for x in old:
+	new.append(x)
+	""")
+        tifa = pedal.tifa.Tifa()
+        result = tifa.process_code(main_program, filename="student.py")
+        if result.error:
+            raise result.error
+        self.assertIsNone(result.error)
+        self.assertTrue(result.issues)
+        self.assertEqual("Unused",
+                         result.issues['unused_variables'][0].message)
+
+    def test_drafter_bakery_order_import(self):
+        drafter_first = dedent("""
+from drafter import *
+from bakery import assert_equal
+
+assert_equal(5, 5)
+""")
+        bakery_first = dedent("""
+from bakery import assert_equal
+from drafter import *
+
+assert_equal(5, 5)""")
+        without_bakery = dedent("""
+from drafter import *
+
+assert_equal(5, 5)""")
+        for main_program in [drafter_first, bakery_first, without_bakery]:
+            contextualize_report(Submission(files={'student.py': main_program}))
+            tifa = pedal.tifa.Tifa()
+            result = tifa.process_code(main_program, filename="student.py")
+            if result.error:
+                raise result.error
+            self.assertIsNone(result.error)
+            self.assertFalse(result.issues)
+
 if __name__ == '__main__':
     unittest.main(buffer=False)
