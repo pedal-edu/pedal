@@ -114,6 +114,7 @@ class ExpandedTraceback:
     """
     Class for reformatting tracebacks to have more pertinent information.
     """
+    MAXIMUM_RELEVANT_FRAMES = 8
 
     def __init__(self, exception, exc_info, full_traceback,
                  hide_filenames, line_offsets, show_filenames,
@@ -247,6 +248,9 @@ class ExpandedTraceback:
 
         # TODO: In 3.10 (or 11?), the colno is available. Indents are not automatically applied. So we need to have
         # different behavior for those versions to show off the entire line and also highlight "the good bit".
+        if len(traceback_stack) > self.MAXIMUM_RELEVANT_FRAMES:
+            MIDWAY_POINT = self.MAXIMUM_RELEVANT_FRAMES // 2
+            traceback_stack = traceback_stack[:MIDWAY_POINT] + [None] + traceback_stack[-MIDWAY_POINT:]
         traceback_message = "\n".join([
             (f"Line {formatter.line(frame.lineno)}"
              f" of file {formatter.filename(frame.filename)}" +
@@ -254,6 +258,7 @@ class ExpandedTraceback:
               if frame.name != "<module>" and frame.name is not None
               else "\n") +
              f"{self.format_line(formatter, frame)}\n")
+            if frame is not None else "...\n"
             for frame in traceback_stack
         ])
         if not traceback_message:
