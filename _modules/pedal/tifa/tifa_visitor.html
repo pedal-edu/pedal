@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
@@ -5,20 +7,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pedal.tifa.tifa_visitor &mdash; Pedal 1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/argparse.css?v=441cd8df" />
 
   
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=f2a433a1"></script>
-        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=f2a433a1"></script>
+      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -36,9 +34,6 @@
             Pedal
               <img src="../../../_static/pedal-logo-v3.png" class="logo" alt="Logo"/>
           </a>
-              <div class="version">
-                1.0
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -108,7 +103,7 @@
                                    <span class="n">ListType</span><span class="p">,</span> <span class="n">StrType</span><span class="p">,</span> <span class="n">SetType</span><span class="p">,</span> <span class="n">DictType</span><span class="p">,</span>
                                    <span class="n">ClassType</span><span class="p">,</span> <span class="n">InstanceType</span><span class="p">,</span> <span class="n">BuiltinConstructorType</span><span class="p">,</span> <span class="n">NumType</span><span class="p">,</span> <span class="n">NoneType</span><span class="p">,</span>
                                    <span class="n">LiteralValue</span><span class="p">,</span> <span class="n">LiteralInt</span><span class="p">,</span> <span class="n">LiteralFloat</span><span class="p">,</span> <span class="n">LiteralStr</span><span class="p">,</span> <span class="n">LiteralBool</span><span class="p">,</span>
-                                   <span class="n">TypeUnion</span><span class="p">,</span> <span class="n">widen_type</span><span class="p">,</span> <span class="n">widest_type</span><span class="p">)</span>
+                                   <span class="n">TypeUnion</span><span class="p">,</span> <span class="n">widen_type</span><span class="p">,</span> <span class="n">widest_type</span><span class="p">,</span> <span class="n">ModuleType</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">pedal.types.new_types</span> <span class="kn">import</span> <span class="n">is_subtype</span><span class="p">,</span> <span class="n">specify_subtype</span>
 <span class="kn">from</span> <span class="nn">pedal.types.normalize</span> <span class="kn">import</span> <span class="n">get_pedal_type_from_value</span>
 <span class="kn">from</span> <span class="nn">pedal.types.builtin</span> <span class="kn">import</span> <span class="n">get_builtin_name</span>
@@ -775,6 +770,7 @@
 <span class="sd">        Args:</span>
 <span class="sd">            node:</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loop_usages</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">path_chain</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">was_empty</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_visit_collection_loop</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
         <span class="c1"># Handle the bodies</span>
         <span class="c1"># if not was_empty:</span>
@@ -784,6 +780,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">visit_statements</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">visit_statements</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">orelse</span><span class="p">)</span></div>
 
+
+        <span class="c1">#self._finish_loop()</span>
 
 <div class="viewcode-block" id="Tifa.visit_FunctionDef">
 <a class="viewcode-back" href="../../../developers/tools/tifa.html#pedal.tifa.Tifa.visit_FunctionDef">[docs]</a>
@@ -803,7 +801,13 @@
         <span class="n">function</span> <span class="o">=</span> <span class="n">FunctionType</span><span class="p">(</span><span class="n">function_name</span><span class="p">,</span> <span class="n">definition</span><span class="o">=</span><span class="n">definition</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">store_variable</span><span class="p">(</span><span class="n">function_name</span><span class="p">,</span> <span class="n">function</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">node_chain</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="c1"># Need to walk up the node chain to the latest module (or the beginning)</span>
+        <span class="n">steps</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">higher_node</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">node_chain</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">higher_node</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+                <span class="k">break</span>
+            <span class="n">steps</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">steps</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_issue</span><span class="p">(</span><span class="n">nested_function_definition</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">locate</span><span class="p">(),</span> <span class="n">function_name</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">apply_decorators</span><span class="p">(</span><span class="n">function_name</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">decorator_list</span><span class="p">)</span></div>
@@ -1023,16 +1027,28 @@
             <span class="k">if</span> <span class="n">alias</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;*&#39;</span><span class="p">:</span>
                 <span class="n">module_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_module</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">module</span><span class="p">)</span>
                 <span class="k">for</span> <span class="n">field</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">module_type</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">module_type</span><span class="p">,</span> <span class="n">ModuleType</span><span class="p">):</span>
+                        <span class="k">if</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">module_type</span><span class="o">.</span><span class="n">redefines</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_variable_exists</span><span class="p">(</span><span class="n">field</span><span class="p">):</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">load_variable</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">store_read_variable</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">module</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">module_name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
                     <span class="n">asname</span> <span class="o">=</span> <span class="n">alias</span><span class="o">.</span><span class="n">asname</span> <span class="ow">or</span> <span class="n">alias</span><span class="o">.</span><span class="n">name</span>
                     <span class="n">module_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_module</span><span class="p">(</span><span class="n">alias</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">module_name</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">module</span>
                     <span class="n">asname</span> <span class="o">=</span> <span class="n">alias</span><span class="o">.</span><span class="n">asname</span> <span class="ow">or</span> <span class="n">alias</span><span class="o">.</span><span class="n">name</span>
                     <span class="n">module_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_module</span><span class="p">(</span><span class="n">module_name</span><span class="p">)</span>
-                <span class="n">name_type</span> <span class="o">=</span> <span class="n">module_type</span><span class="o">.</span><span class="n">get_attr</span><span class="p">(</span><span class="n">alias</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">module_type</span><span class="o">.</span><span class="n">has_attr</span><span class="p">(</span><span class="n">alias</span><span class="o">.</span><span class="n">name</span><span class="p">):</span>
+                    <span class="c1"># Was it already a top-level?</span>
+                    <span class="n">name_type</span> <span class="o">=</span> <span class="n">module_type</span><span class="o">.</span><span class="n">get_attr</span><span class="p">(</span><span class="n">alias</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># Is it an importable submodule?</span>
+                    <span class="c1"># TODO: This should throw a more specialized error message!</span>
+                    <span class="n">full_name</span> <span class="o">=</span> <span class="n">module_name</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="n">alias</span><span class="o">.</span><span class="n">name</span> <span class="k">if</span> <span class="n">module_name</span> <span class="k">else</span> <span class="n">alias</span><span class="o">.</span><span class="n">name</span>
+                    <span class="n">name_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_module</span><span class="p">(</span><span class="n">full_name</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">store_variable</span><span class="p">(</span><span class="n">asname</span><span class="p">,</span> <span class="n">name_type</span><span class="p">)</span></div>
 
 
@@ -1352,7 +1368,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">test</span><span class="p">)</span>
 
         <span class="c1"># Visit the bodies</span>
-        <span class="n">this_path_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_id</span>
+        <span class="n">this_path_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_chain</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># Track that we are in the loop</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loop_usages</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">path_chain</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+
         <span class="c1"># One path is that we never enter the body</span>
         <span class="n">empty_path</span> <span class="o">=</span> <span class="n">NewPath</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">this_path_id</span><span class="p">,</span> <span class="s2">&quot;e&quot;</span><span class="p">)</span>
         <span class="k">with</span> <span class="n">empty_path</span><span class="p">:</span>
@@ -1372,7 +1392,9 @@
 
         <span class="c1"># Combine two paths into one</span>
         <span class="c1"># Check for any names that are on the IF path</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">merge_paths</span><span class="p">(</span><span class="n">this_path_id</span><span class="p">,</span> <span class="n">body_path</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">empty_path</span><span class="o">.</span><span class="n">id</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">merge_paths</span><span class="p">(</span><span class="n">this_path_id</span><span class="p">,</span> <span class="n">body_path</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">empty_path</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_finish_loop</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="Tifa.visit_With">

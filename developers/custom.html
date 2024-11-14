@@ -1,0 +1,236 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Customizing Pedal &mdash; Pedal 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/argparse.css?v=441cd8df" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=f2a433a1"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Pedal
+              <img src="../_static/pedal-logo-v3.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../everyone/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../everyone/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../teachers/quickstart.html">Teacher Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../teachers/examples.html">Teacher Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../teachers/reference.html">Teacher Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../teachers/cli.html">Command-Line Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../teachers/integrations.html">Autograder Integrations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ffs.html">Developers: Feedback Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">Developer API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">Developer Tools Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conventions.html">Internal Naming Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="libraries.html">Necessary Libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="compilation.html">Compilation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../teachers/analysis.html">Researchers: Analyzing with Pedal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../everyone/glossary.html">Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../everyone/contact.html">Contact</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Pedal</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Customizing Pedal</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/developers/custom.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="customizing-pedal">
+<h1>Customizing Pedal<a class="headerlink" href="#customizing-pedal" title="Link to this heading"></a></h1>
+<p>There are a few major ways to extend Pedal with new functionality.</p>
+<section id="custom-environments">
+<h2>Custom Environments<a class="headerlink" href="#custom-environments" title="Link to this heading"></a></h2>
+</section>
+<section id="custom-tools">
+<h2>Custom Tools<a class="headerlink" href="#custom-tools" title="Link to this heading"></a></h2>
+</section>
+<section id="custom-resolvers">
+<h2>Custom Resolvers<a class="headerlink" href="#custom-resolvers" title="Link to this heading"></a></h2>
+<p>Technically, all that you need to do to create a custom resolver is to create a function that takes in a <code class="docutils literal notranslate"><span class="pre">Report</span></code> and returns a <code class="docutils literal notranslate"><span class="pre">FinalFeedback</span></code> object.
+Then attach the <code class="docutils literal notranslate"><span class="pre">make_resolver</span></code> decorator to the function.
+It’s also a good idea to call the <code class="docutils literal notranslate"><span class="pre">report.finalize_feedbacks()</span></code> method to ensure that all the feedback objects have been created before you start working with them.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.resolvers.core</span> <span class="kn">import</span> <span class="n">make_resolver</span>
+<span class="kn">from</span> <span class="nn">pedal.core.report</span> <span class="kn">import</span> <span class="n">Report</span><span class="p">,</span> <span class="n">MAIN_REPORT</span>
+<span class="kn">from</span> <span class="nn">pedal.core.final_feedback</span> <span class="kn">import</span> <span class="n">FinalFeedback</span>
+
+<span class="nd">@make_resolver</span>
+<span class="k">def</span> <span class="nf">my_resolver</span><span class="p">(</span><span class="n">report</span><span class="p">:</span> <span class="n">Report</span> <span class="o">=</span> <span class="n">MAIN_REPORT</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FinalFeedback</span><span class="p">:</span>
+    <span class="n">report</span><span class="o">.</span><span class="n">finalize_feedbacks</span><span class="p">()</span>
+    <span class="c1"># ...</span>
+    <span class="k">return</span> <span class="n">FinalFeedback</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Of course, the actual work of populating the <code class="docutils literal notranslate"><span class="pre">FinalFeedback</span></code> object is up to you.
+You can use the <code class="docutils literal notranslate"><span class="pre">report</span></code> object to access the <code class="docutils literal notranslate"><span class="pre">Feedback</span></code> objects that have been created by the tools, and use that information to create your own feedback.</p>
+<p>Let’s take a look at what the <code class="docutils literal notranslate"><span class="pre">simple</span></code> resolver does, with some details simplified for explanatory purposes:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@make_resolver</span>
+<span class="k">def</span> <span class="nf">resolve</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+    <span class="c1"># Prepare feedbacks</span>
+    <span class="n">report</span><span class="o">.</span><span class="n">finalize_feedbacks</span><span class="p">()</span>
+    <span class="n">feedbacks</span> <span class="o">=</span> <span class="n">report</span><span class="o">.</span><span class="n">feedback</span> <span class="o">+</span> <span class="n">report</span><span class="o">.</span><span class="n">ignored_feedback</span>
+    <span class="n">feedbacks</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">by_priority</span><span class="p">)</span>
+    <span class="c1"># Create the initial final feedback</span>
+    <span class="n">final</span> <span class="o">=</span> <span class="n">set_correct_no_errors</span><span class="p">(</span><span class="n">report</span><span class="p">)</span>
+    <span class="c1"># Process each feedback in turn</span>
+    <span class="k">for</span> <span class="n">feedback</span> <span class="ow">in</span> <span class="n">feedbacks</span><span class="p">:</span>
+        <span class="n">final</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">feedback</span><span class="p">)</span>
+    <span class="c1"># Override empty message</span>
+    <span class="n">final</span><span class="o">.</span><span class="n">finalize</span><span class="p">()</span>
+    <span class="c1"># Keep track of the final object and also return it</span>
+    <span class="c1"># IDK how important this is, but you should probably do it too</span>
+    <span class="n">report</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="n">final</span>
+    <span class="n">report</span><span class="o">.</span><span class="n">resolves</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">final</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">final</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">by_priority</span></code> function is a simple key function that returns the priority of a feedback object.
+This largely relies on the <code class="docutils literal notranslate"><span class="pre">DEFAULT_CATEGORY_PRIORITY</span></code> dictionary that is defined in the <code class="docutils literal notranslate"><span class="pre">pedal.core.feedback</span></code> module.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># pedal/core/feedback.py</span>
+<span class="n">DEFAULT_CATEGORY_PRIORITY</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;highest&quot;</span><span class="p">,</span>
+    <span class="c1"># Static</span>
+    <span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">SYNTAX</span><span class="p">,</span>
+    <span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">MISTAKES</span><span class="p">,</span>
+    <span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">INSTRUCTOR</span><span class="p">,</span>
+    <span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">ALGORITHMIC</span><span class="p">,</span>
+    <span class="c1"># Dynamic</span>
+    <span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">RUNTIME</span><span class="p">,</span>
+    <span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">STUDENT</span><span class="p">,</span>
+    <span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">SPECIFICATION</span><span class="p">,</span>
+    <span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">POSITIVE</span><span class="p">,</span>
+    <span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">INSTRUCTIONS</span><span class="p">,</span>
+    <span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">UNKNOWN</span><span class="p">,</span>
+    <span class="s2">&quot;lowest&quot;</span>
+<span class="p">]</span>
+
+<span class="c1"># pedal/resolvers/simple.py</span>
+<span class="k">def</span> <span class="nf">by_priority</span><span class="p">(</span><span class="n">feedback</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts a feedback into a numeric representation for sorting.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        feedback (Feedback): The feedback object to convert</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        float: A decimal number representing the feedback&#39;s relative priority.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">category</span> <span class="o">=</span> <span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">UNKNOWN</span>
+    <span class="k">if</span> <span class="n">feedback</span><span class="o">.</span><span class="n">category</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">category</span> <span class="o">=</span> <span class="n">feedback</span><span class="o">.</span><span class="n">category</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="n">priority</span> <span class="o">=</span> <span class="s1">&#39;medium&#39;</span>
+    <span class="k">if</span> <span class="n">feedback</span><span class="o">.</span><span class="n">priority</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">priority</span> <span class="o">=</span> <span class="n">feedback</span><span class="o">.</span><span class="n">priority</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="n">priority</span> <span class="o">=</span> <span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">ALIASES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">priority</span><span class="p">,</span> <span class="n">priority</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">category</span> <span class="ow">in</span> <span class="n">DEFAULT_CATEGORY_PRIORITY</span><span class="p">:</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">DEFAULT_CATEGORY_PRIORITY</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">category</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">DEFAULT_CATEGORY_PRIORITY</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">priority</span> <span class="ow">in</span> <span class="n">DEFAULT_CATEGORY_PRIORITY</span><span class="p">:</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">DEFAULT_CATEGORY_PRIORITY</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">priority</span><span class="p">)</span>
+        <span class="n">priority</span> <span class="o">=</span> <span class="s1">&#39;medium&#39;</span>
+    <span class="n">offset</span> <span class="o">=</span> <span class="n">priority_offset</span><span class="p">(</span><span class="n">priority</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">value</span> <span class="o">+</span> <span class="n">offset</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">set_correct_no_errors</span></code> function is from the <code class="docutils literal notranslate"><span class="pre">pedal.core.final_feedback</span></code> module,
+and is a convenience function that creates a new <code class="docutils literal notranslate"><span class="pre">FinalFeedback</span></code> object with the
+<code class="docutils literal notranslate"><span class="pre">correct</span></code> field set to <code class="docutils literal notranslate"><span class="pre">True</span></code>, a blank title and message, and feedback that basically says “No feedback was provided”.
+The expectation is that this information will be completely overwritten by other feedback.</p>
+<p>Most of the actual logic for “merging” the individual feedback objects and then finalizing the result is
+in the <code class="docutils literal notranslate"><span class="pre">FinalFeedback</span></code> class itself.
+This class is <em>very</em> similar to the <code class="docutils literal notranslate"><span class="pre">Feedback</span></code> class, but it has fewer features, is meant to be serializable
+to a JSON object, and has a few extra methods for merging and finalizing the feedback.</p>
+<p>Your custom resolver might not take advantage of the <code class="docutils literal notranslate"><span class="pre">merge</span></code> method, but it’s still very useful to review
+what that function does in order to understand how Pedal currently defaults to handling feedback objects.
+We strongly recommend checking its source code in <code class="docutils literal notranslate"><span class="pre">pedal/core/final_feedback.py</span></code>.</p>
+<p>Note that the <code class="docutils literal notranslate"><span class="pre">finalize</span></code> method does rely on <code class="docutils literal notranslate"><span class="pre">combine_scores</span></code>,
+which is actually fairly complex. Mostly, you should just be aware that it exists and that it is used to combine the scores of the feedback objects.</p>
+</section>
+<section id="custom-feedback">
+<h2>Custom Feedback<a class="headerlink" href="#custom-feedback" title="Link to this heading"></a></h2>
+</section>
+<section id="custom-hooks">
+<h2>Custom Hooks<a class="headerlink" href="#custom-hooks" title="Link to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, acbart, lukesg08.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
