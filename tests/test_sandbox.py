@@ -616,5 +616,53 @@ def to_pig_latin(str):
                     self.assertEqual(actual, expected, msg=f"actual={actual}, expected={expected}, "
                                                            f"operator={operator}, type1={type1}, value1={value1}, "
                                                            f"type2={type2}, value2={value2}")
+
+    def test_infinite_recursion(self):
+        student_code = dedent('''
+            def x():
+                return x()
+            x()
+        ''')
+        set_source(student_code)
+        student = Sandbox()
+        student.run(student_code, filename='student.py')
+        self.assertIsNotNone(student.feedback)
+        self.assertEqual(str(student.feedback.fields['traceback_message']),
+                         ('Line 4 of file student.py\n'
+                          '    x()\n'
+                          '    ^^^\n'
+                          '\n'
+                          'Line 3 of file student.py in x\n'
+                          '        return x()\n'
+                          '               ^^^\n'
+                          '\n'
+                          'Line 3 of file student.py in x\n'
+                          '        return x()\n'
+                          '               ^^^\n'
+                          '\n'
+                          'Line 3 of file student.py in x\n'
+                          '        return x()\n'
+                          '               ^^^\n'
+                          '\n'
+                          '...\n'
+                          '\n'
+                          'Line 3 of file student.py in x\n'
+                          '        return x()\n'
+                          '               ^^^\n'
+                          '\n'
+                          'Line 3 of file student.py in x\n'
+                          '        return x()\n'
+                          '               ^^^\n'
+                          '\n'
+                          'Line 3 of file student.py in x\n'
+                          '        return x()\n'
+                          '               ^^^\n'
+                          '\n'
+                          'Line 3 of file student.py in x\n'
+                          '        return x()\n'
+                          '               ^^^\n')
+                         )
+
+
 if __name__ == '__main__':
     unittest.main(buffer=False)
