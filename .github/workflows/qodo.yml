@@ -22,17 +22,19 @@ jobs:
         pip install pytest mypy
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         if [ -f requirements_dev.txt ]; then pip install -r requirements_dev.txt; fi
-    - name: Test with pytest
+        pip install -e .
+    - name: Test with unittest
       run: |
-        python -m pytest ./tests/
+        cd tests/
+        python -m unittest discover ./
     - name: Suggest Tests with Qodo
       uses: qodo-ai/qodo-ci/.github/actions/qodo-cover@v0.1.1
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         project_language: python
-        project_root: ./drafter/
+        project_root: ./pedal/
         code_coverage_report_path: ./coverage.xml
-        test_command: "python -m pytest ./tests/ --cov=./drafter/ --cov-report=xml --cov-report=term"
+        test_command: "coverage run -m unittest discover ./ && coverage xml -o coverage.xml"
         model: gpt-4o
 
       env:
