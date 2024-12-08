@@ -27,7 +27,6 @@ class GenericComponent:
 
 
 def _load_drafter_component(name):
-
     @wraps(name)
     def call_drafter_component(*args, **kwargs):
         if drafter is not None:
@@ -37,8 +36,16 @@ def _load_drafter_component(name):
             return component(*args[1:], **kwargs)
         else:
             return GenericComponent(name, *args, **kwargs)
-
     return call_drafter_component
+
+def _update_style(name):
+    @wraps(name)
+    def call_drafter_style(*args, **kwargs):
+        if drafter is not None:
+            return getattr(drafter, name)(*args[1:], **kwargs)
+        else:
+            return args[0]
+    return call_drafter_style
 
 
 class MockDrafter(MockModuleExposing):
@@ -47,16 +54,9 @@ class MockDrafter(MockModuleExposing):
     """
     expose = MethodExposer()
     UNKNOWN_FUNCTIONS = [
-              'abort', 'add_website_css', 'add_website_header', 'assert_equal', 'bold',
-              'change_background_color', 'change_border', 'change_color', 'change_height', 'change_margin',
-              'change_padding', 'change_text_align', 'change_text_decoration', 'change_text_font', 'change_text_size',
-              'change_text_transform', 'change_width',
-              'deploy_site', 'float_left', 'float_right',
-              'get_server_setting', 'hide_debug_information',
-              'italic', 'large_font', 'monospace',
-              'set_website_framed', 'set_website_style', 'set_website_title',
-              'show_debug_information', 'small_font', 'strikethrough',
-              'underline', 'update_attr', 'update_style'
+        'abort', 'add_website_css', 'add_website_header',
+        'deploy_site', 'get_server_setting',
+        'set_website_framed', 'set_website_style', 'set_website_title',
     ]
 
 
@@ -116,28 +116,25 @@ COMPONENTS = ['Argument', 'Box', 'BulletedList', 'Button', 'CheckBox',
               'Pre', 'PreformattedText', 'Row', 'SelectBox', 'Span',
               'SubmitButton',
               'Table', 'Text', 'TextArea', 'TextBox']
+STYLE_FUNCTIONS = [
+    'bold', 'change_background_color', 'change_border',
+    'change_color', 'change_height', 'change_margin', 'change_padding', 'change_text_align',
+    'change_text_decoration',
+    'change_text_font', 'change_text_size', 'change_text_transform', 'change_width',
+    'float_left',
+    'float_right',
+    'italic',
+    'large_font', 'monospace',
+    'small_font', 'strikethrough', 'underline',
+    'update_attr', 'update_style'
+]
 
 for component in COMPONENTS:
     loaded_component = _load_drafter_component(component)
     setattr(MockDrafter, component, loaded_component)
     MockDrafter.expose.add_with_name(loaded_component, component)
 
-
-
-"""
-route, start_server
-'show_debug_information', 
-'hide_debug_information',
-'route', 'start_server',
-         
-         'bold', 'change_background_color', 'change_border',
-         'change_color', 'change_height', 'change_margin', 'change_padding', 'change_text_align',
-         'change_text_decoration',
-         'change_text_font', 'change_text_size', 'change_text_transform', 'change_width',
-         'float_left',
-         'float_right',  
-         'italic', 
-         'large_font', 'monospace',
-         'small_font', 'strikethrough', 'underline',
-         'update_attr', 'update_style']
-"""
+for style_func in STYLE_FUNCTIONS:
+    loaded_style = _update_style(style_func)
+    setattr(MockDrafter, style_func, loaded_style)
+    MockDrafter.expose.add_with_name(loaded_style, style_func)
