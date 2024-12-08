@@ -628,40 +628,40 @@ def to_pig_latin(str):
         student.run(student_code, filename='student.py')
         self.assertIsNotNone(student.feedback)
         self.assertEqual(str(student.feedback.fields['traceback_message']),
-                         ('Line 4 of file student.py\n'
-                          '    x()\n'
-                          '    ^^^\n' if IS_AT_LEAST_PYTHON_311 else ""
-                          '\n'
-                          'Line 3 of file student.py in x\n'
-                          '        return x()\n'
-                          '               ^^^\n' if IS_AT_LEAST_PYTHON_311 else ""
-                          '\n'
-                          'Line 3 of file student.py in x\n'
-                          '        return x()\n'
-                          '               ^^^\n' if IS_AT_LEAST_PYTHON_311 else ""
-                          '\n'
-                          'Line 3 of file student.py in x\n'
-                          '        return x()\n'
-                          '               ^^^\n' if IS_AT_LEAST_PYTHON_311 else ""
-                          '\n'
-                          '...\n'
-                          '\n'
-                          'Line 3 of file student.py in x\n'
-                          '        return x()\n'
-                          '               ^^^\n' if IS_AT_LEAST_PYTHON_311 else ""
-                          '\n'
-                          'Line 3 of file student.py in x\n'
-                          '        return x()\n'
-                          '               ^^^\n' if IS_AT_LEAST_PYTHON_311 else ""
-                          '\n'
-                          'Line 3 of file student.py in x\n'
-                          '        return x()\n'
-                          '               ^^^\n' if IS_AT_LEAST_PYTHON_311 else ""
-                          '\n'
-                          'Line 3 of file student.py in x\n'
-                          '        return x()\n'
-                          '               ^^^\n' if IS_AT_LEAST_PYTHON_311 else "")
-                         )
+                         ('Line 4 of file student.py\n'+
+                          '    x()\n'+
+                          ('    ^^^\n'  if IS_AT_LEAST_PYTHON_311 else "")+
+                          '\n'+
+                          'Line 3 of file student.py in x\n'+
+                          '        return x()\n'+
+                          ('               ^^^\n'  if IS_AT_LEAST_PYTHON_311 else "")+
+                          '\n'+
+                          'Line 3 of file student.py in x\n'+
+                          '        return x()\n'+
+                          ('               ^^^\n'  if IS_AT_LEAST_PYTHON_311 else "")+
+                          '\n'+
+                          'Line 3 of file student.py in x\n'+
+                          '        return x()\n'+
+                          ('               ^^^\n'  if IS_AT_LEAST_PYTHON_311 else "")+
+                          '\n'+
+                          '...\n'+
+                          '\n'+
+                          'Line 3 of file student.py in x\n'+
+                          '        return x()\n'+
+                          ('               ^^^\n'  if IS_AT_LEAST_PYTHON_311 else "")+
+                          '\n'+
+                          'Line 3 of file student.py in x\n'+
+                          '        return x()\n'+
+                          ('               ^^^\n'  if IS_AT_LEAST_PYTHON_311 else "")+
+                          '\n'+
+                          'Line 3 of file student.py in x\n'+
+                          '        return x()\n'+
+                          ('               ^^^\n'  if IS_AT_LEAST_PYTHON_311 else "")+
+                          '\n'+
+                          'Line 3 of file student.py in x\n'+
+                          '        return x()\n'+
+                          ('               ^^^\n'  if IS_AT_LEAST_PYTHON_311 else "")
+                         ))
 
 
 if __name__ == '__main__':
