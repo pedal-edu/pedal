@@ -1,8 +1,9 @@
 from dataclasses import dataclass
+from typing import List
 
 @dataclass
 class GptFunctionPrompt:
-    messages: list[dict]
+    messages: List[dict]
     function: dict
 
 
@@ -28,7 +29,7 @@ class PromptMetadata:
     name: str
     version: str
     prompt_structure_version: str
-    authors: list[str]
+    authors: List[str]
     date: str
     description: str
     based_on: str
