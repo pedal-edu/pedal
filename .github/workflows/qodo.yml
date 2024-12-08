@@ -27,14 +27,15 @@ jobs:
       run: |
         cd tests/
         python -m unittest discover ./
+        cd ../
     - name: Suggest Tests with Qodo
       uses: qodo-ai/qodo-ci/.github/actions/qodo-cover@v0.1.1
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         project_language: python
-        project_root: ./pedal/
-        code_coverage_report_path: ./coverage.xml
-        test_command: "coverage run -m unittest discover ./ && coverage xml -o coverage.xml"
+        project_root: ./
+        code_coverage_report_path: ./tests/coverage.xml
+        test_command: "cd tests/ && coverage run -m unittest discover ./ && coverage xml -o coverage.xml && cd ../"
         model: gpt-4o
 
       env:
