@@ -1,0 +1,8 @@
+[report]
+omit =
+    ./another.py
+    ./answer.py
+    ./bank.py
+    ./datafiles/student_example.py
+    ./instructor_tests.py
+    ./student.py

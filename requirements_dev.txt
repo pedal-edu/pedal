@@ -8,3 +8,4 @@ jupyter
 
 bakery
 pytest
+coverage
