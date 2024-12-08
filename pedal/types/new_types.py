@@ -39,6 +39,7 @@ Still to do:
  - [ ] Finish built-in constructor types
 
 """
+from typing import Set
 from pedal.utilities.text import join_list_with_and, add_indefinite_article
 
 
@@ -193,6 +194,14 @@ class Type:
         return receiving_type
 
     def add_type_arguments(self, type_arguments):
+        """
+        Add the given type arguments to this type, in whatever way makes sense
+        for the child class.
+
+        Args:
+            type_arguments (tuple[Type]): The type arguments to add.
+                This will always be a tuple, even if there is only one argument.
+        """
         return self
 
     @staticmethod
@@ -205,6 +214,8 @@ class Type:
     def is_equal(self, other):
         """ DEPRECATED """
         import pedal.types.normalize as normalize
+        if other == 'num':
+            other = normalize.NumType
         return is_subtype(self, normalize.normalize_type(other).as_type())
 
 
@@ -480,8 +491,11 @@ class ElementContainerType(Type):
             return receiving_type
 
     def add_type_arguments(self, type_arguments):
-        self.element_type = (type_arguments[0] if len(type_arguments) == 1
-                             else TupleType(type_arguments))
+        if isinstance(type_arguments, tuple):
+            self.element_type = (type_arguments[0] if len(type_arguments) == 1
+                                 else TupleType(type_arguments))
+        else:
+            self.element_type = type_arguments
         return self
 
     def break_apart(self):
@@ -623,12 +637,12 @@ class TupleType(Type):
             if key.value >= len(self.element_types):
                 return ImpossibleType()
             return self.element_types[key.value]
-        elif is_subtype(key, IntType()) and self.element_types:
-            return self.element_types[0]
         elif isinstance(key, int):
             if key >= len(self.element_types):
                 return ImpossibleType()
             return self.element_types[key]
+        elif is_subtype(key, IntType()) and self.element_types:
+            return self.element_types[0]
         else:
             return ImpossibleType()
 
@@ -755,6 +769,10 @@ class DictType(Type):
         return False
 
     def add_type_arguments(self, type_arguments):
+        if len(type_arguments) != 2:
+            return ImpossibleType()
+        # Put the single tuple pair into a new list
+        # DictType has a list of pairs, representing possible mappings
         self.element_types = [type_arguments]
         return self
 
@@ -929,7 +947,10 @@ class BuiltinConstructorType(Type):
         return self.definition(tifa, self, None, [], [], location)
 
     def add_type_arguments(self, type_arguments):
-        self.type_arguments = type_arguments[0] if len(type_arguments) == 1 else TupleType(type_arguments)
+        if isinstance(type_arguments, (tuple, list)):
+            self.type_arguments = type_arguments[0] if len(type_arguments) == 1 else TupleType(type_arguments)
+        else:
+            self.type_arguments = type_arguments
         return self
 
 class IntConstructor(BuiltinConstructorType):
@@ -1145,7 +1166,7 @@ class ModuleType(Type):
     parents = []
     submodules: dict
 
-    redefines: set[str]
+    redefines: Set[str]
 
     def __init__(self, name, fields, submodules=None, redefines=None):
         super().__init__()
@@ -1362,14 +1383,20 @@ TYPE_STRINGS = {
     "complex": NumType,
     "bool": BoolType, "boolean": BoolType,
     "none": NoneType, "nonetype": NoneType,
-    "dict": DictType, "dictionary": DictType,
+    "dict": DictConstructor,
+    "dictionary": DictConstructor,
     "list": ListConstructor,
-    "tuple": TupleType,
+    "tuple": TupleConstructor,
     "set": SetConstructor,
     "file": FileType,
     "func": FunctionType, "function": FunctionType,
     "class": ClassType,
 }
+
+STANDARD_NAMES = [
+    "str", "int", "float", "complex", "num",
+    "bool", "none", "dict", "list", "tuple", "set"
+]
 
 
 """ TOBEDEPRECATED: legacy support for using NumType and other similar names """

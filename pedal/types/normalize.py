@@ -22,7 +22,7 @@ from pedal.types.new_types import (Type, AnyType, ImpossibleType, NumType, BoolT
                                    TupleType, ListType, StrType,
                                    DictType, SetType, GeneratorType,
                                    ModuleType, NoneType, FrozenSetType,
-                                   FunctionType, TYPE_STRINGS,
+                                   FunctionType, TYPE_STRINGS, STANDARD_NAMES,
                                    LiteralStr, LiteralInt, LiteralFloat, LiteralBool, ClassType, InstanceType,
                                    widest_type, LiteralValue, TypeUnion, PEDAL_TYPE_NAMES, specify_subtype)
 from pedal.utilities.system import IS_AT_LEAST_PYTHON_39, IS_SKULPT
@@ -113,7 +113,7 @@ def normalize_type(type_expression, evaluate_name=None) -> Type:
                              f"a Pedal type:\n This was not an expression.")
         try:
             return normalize_type(first_line, evaluate_name=evaluate_name)
-        except:
+        except Exception as e:
             return ImpossibleType()
     # Might be a JSON-Encoded dictionary
     if isinstance(type_expression, dict):
@@ -205,7 +205,7 @@ def get_pedal_type_from_str(value, evaluate_name=None):
     """
     # if value in custom_types:
     #    return custom_types[value]
-    if value.lower() in TYPE_STRINGS:
+    if value.lower() in STANDARD_NAMES:
         return TYPE_STRINGS[value.lower()]()
     elif evaluate_name:
         potential = normalize_type(evaluate_name(value), evaluate_name)
@@ -309,19 +309,39 @@ def get_pedal_type_from_ast(value: ast.AST, evaluate_name=None) -> Type:
                           get_pedal_type_from_ast(v, evaluate_name))
                          for k, v in zip(value.keys, value.values)])
     # Support new style subscripts (e.g., ``list[int]``)
-    elif ((IS_AT_LEAST_PYTHON_39 and isinstance(value, ast.Subscript)) or
-          isinstance(value, ast.Subscript) and isinstance(value.slice, ast.Index)):
+
+    if isinstance(value, ast.Slice):
+        return TupleType(
+            [get_pedal_type_from_ast(piece, evaluate_name)
+             for piece in [value.lower, value.upper, value.step]
+             if piece is not None]
+        )
+
+    if isinstance(value, ast.Subscript):
+        # Need to handle new style subscripts starting in 3.9 and not Skulpt
         if IS_AT_LEAST_PYTHON_39 and not IS_SKULPT:
-            slice = value.slice
+            if isinstance(value.slice, ast.Tuple):
+                slice_types = [get_pedal_type_from_ast(k, evaluate_name)
+                                for k in value.slice.elts]
+            else:
+                slice_types = get_pedal_type_from_ast(value.slice, evaluate_name)
+            value_type = get_pedal_type_from_ast(value.value, evaluate_name)
+            value_type.add_type_arguments(slice_types)
+            return value_type
+        # Need to handle old style subscripts in Skulpt and older versions
         else:
-            slice = value.slice.value
-        slice_type = get_pedal_type_from_ast(slice, evaluate_name)
-        value_type = get_pedal_type_from_ast(value.value, evaluate_name)
-        result = value_type.index(slice_type)
-        if isinstance(slice, ast.Slice):
-            return value_type.shallow_clone()
-        else:
-            return result
+            if isinstance(value.slice, ast.Index):
+                slice_types = (get_pedal_type_from_ast(value.slice.value, evaluate_name),)
+            elif isinstance(value.slice, ast.Slice):
+                slice_types = get_pedal_type_from_ast(value.slice, evaluate_name)
+            else:
+                slice_types = [
+                    get_pedal_type_from_ast(slice, evaluate_name)
+                    for slice in value.slice.dims
+                ]
+            value_type = get_pedal_type_from_ast(value.value, evaluate_name)
+            value_type.add_type_arguments(slice_types)
+            return value_type
     # Top-level Module, parse it and get it back
     if isinstance(value, ast.Module) and value.body:
         if isinstance(value.body[0], ast.Expr):
