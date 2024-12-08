@@ -733,6 +733,8 @@ class Tifa(TifaCore, ast.NodeVisitor):
                     return_state = self.load_variable("*return", call_position)
                     return_value = return_state.type
                     if expected_returns:
+                        # TODO: Check that the maybe status is not present, unless
+                        # the expected return type is None, in which case it's fine.
                         if not is_subtype(return_value, expected_returns):
                             self._issue(multiple_return_types(return_state.position,
                                                               expected_returns.singular_name,
