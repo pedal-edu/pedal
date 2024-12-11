@@ -1,0 +1,436 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Testing Your Tests &mdash; Pedal 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/argparse.css?v=441cd8df" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=f2a433a1"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Autograder Integrations" href="integrations.html" />
+    <link rel="prev" title="Command-Line Interface" href="cli.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Pedal
+              <img src="../_static/pedal-logo-v3.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../everyone/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../everyone/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Teacher Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Teacher Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">Teacher Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">Command-Line Interface</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Testing Your Tests</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#verify-mode">Verify Mode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example">Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#output-file-format">Output File Format</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="integrations.html">Autograder Integrations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers/ffs.html">Developers: Feedback Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers/api.html">Developer API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers/tools.html">Developer Tools Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers/conventions.html">Internal Naming Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers/libraries.html">Necessary Libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers/compilation.html">Compilation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis.html">Researchers: Analyzing with Pedal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../everyone/glossary.html">Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../everyone/contact.html">Contact</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Pedal</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Testing Your Tests</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/teachers/testing.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="testing-your-tests">
+<h1>Testing Your Tests<a class="headerlink" href="#testing-your-tests" title="Link to this heading"></a></h1>
+<p>A major feature of Pedal is the ability to “test your tests”.
+You can create example student <code class="docutils literal notranslate"><span class="pre">Submission</span></code>, and then also create
+the expected output of those submissions. You can then run your
+autograding script on those submissions, and see if the feedback
+you expect is generated.</p>
+<p>The system is also capable of saving the output generated from a given
+submission, for future comparisons, as a way of “freezing” the expected
+output. This is basically the same as regression testing, but for
+autograding feedback!</p>
+<section id="verify-mode">
+<h2>Verify Mode<a class="headerlink" href="#verify-mode" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">verify</span></code> mode is a special mode of the <code class="docutils literal notranslate"><span class="pre">pedal</span></code> command line tool
+that allows you to run your autograding script on a submission, and
+compare the output to a “frozen” version of the output. You can
+run the command as follows:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">pedal verify grade_assignment.py submissions/</span>
+</pre></div>
+</div>
+<p>The names of the <code class="docutils literal notranslate"><span class="pre">grade_assignment.py</span></code> script and the <code class="docutils literal notranslate"><span class="pre">submissions/</span></code> folder
+are completely under your control. They simply expect the path to a
+Pedal autograding script, and a folder containing submissions.
+The system will run the script on all of the Python files in the
+submissions folder, and compare them to the output files with the same
+names.</p>
+<p>If you have not yet created the output files, you can use the <code class="docutils literal notranslate"><span class="pre">--create_output</span></code>
+argument to generate them (note that this will delete existing output files):</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">pedal verify grade_assignment.py submissions/ --create_output</span>
+</pre></div>
+</div>
+<p>This will run the autograding script on all of the submissions, and save
+the output to the output files. The expected output is stored in easy-to-read
+<code class="docutils literal notranslate"><span class="pre">.out</span></code> files using a format similar to <code class="docutils literal notranslate"><span class="pre">ini</span></code> files. The results are shown
+using the built-in unittest module, so inconsistencies will be shown as passing
+and failing unit tests.</p>
+</section>
+<section id="example">
+<h2>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h2>
+<p>Let’s try an example of testing a simple autograding script. Let us say
+that the students were assigned the following prompt:</p>
+<blockquote>
+<div><p>The code below stores the string value <code class="docutils literal notranslate"><span class="pre">&quot;order</span> <span class="pre">out</span> <span class="pre">of&quot;</span></code> into the variable
+<code class="docutils literal notranslate"><span class="pre">a_phrase</span></code>. Using only string subscripting and the addition operator,
+print the phrase <code class="docutils literal notranslate"><span class="pre">&quot;out</span> <span class="pre">of</span> <span class="pre">order&quot;</span></code>.</p>
+</div></blockquote>
+<p>And they had the following starting code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">a_phrase</span> <span class="o">=</span> <span class="s2">&quot;order out of&quot;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">a_phrase</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The autograding script might look like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">ensure_literal</span><span class="p">(</span><span class="s2">&quot;order out of&quot;</span><span class="p">)</span>
+<span class="n">prevent_ast</span><span class="p">(</span><span class="s2">&quot;Str&quot;</span><span class="p">,</span> <span class="n">at_most</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">ensure_ast</span><span class="p">(</span><span class="s2">&quot;Subscript&quot;</span><span class="p">,</span> <span class="n">at_least</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">prevent_ast</span><span class="p">(</span><span class="s2">&quot;Subscript&quot;</span><span class="p">,</span> <span class="n">at_most</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">ensure_function_call</span><span class="p">(</span><span class="s2">&quot;print&quot;</span><span class="p">)</span>
+
+<span class="n">assert_not_output</span><span class="p">(</span><span class="n">student</span><span class="p">,</span> <span class="s2">&quot;out of order &quot;</span><span class="p">,</span> <span class="n">exact_strings</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">message</span><span class="o">=</span><span class="s2">&quot;There&#39;s an extra space at the end!&quot;</span><span class="p">,</span>
+                    <span class="n">label</span><span class="o">=</span><span class="s2">&quot;printing_extra_space&quot;</span><span class="p">)</span>
+<span class="n">assert_output</span><span class="p">(</span><span class="n">student</span><span class="p">,</span> <span class="s2">&quot;out of order&quot;</span><span class="p">,</span> <span class="n">exact_strings</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This shows off a number of the features of Pedal:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="tools/static_assertions.html#ensure_literal" title="ensure_literal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ensure_literal</span></code></a> checks that the student has the string “order out of” in their code.</p></li>
+<li><p><a class="reference internal" href="tools/static_assertions.html#ensure_ast" title="ensure_ast"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ensure_ast</span></code></a> and <a class="reference internal" href="tools/static_assertions.html#prevent_ast" title="prevent_ast"><code class="xref py py-obj docutils literal notranslate"><span class="pre">prevent_ast</span></code></a> checks that the student has at least 2, but no more than 5, subscripts.</p></li>
+<li><p><a class="reference internal" href="tools/static_assertions.html#prevent_ast" title="prevent_ast"><code class="xref py py-obj docutils literal notranslate"><span class="pre">prevent_ast</span></code></a> stops them from adding any string literals to their code, besides the one given.</p></li>
+<li><p><a class="reference internal" href="tools/static_assertions.html#ensure_function_call" title="ensure_function_call"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ensure_function_call</span></code></a> checks that they are using the <a class="reference external" href="https://docs.python.org/3/library/functions.html#print" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">print</span></code></a> function.</p></li>
+<li><dl class="simple">
+<dt><a class="reference internal" href="tools/runtime_assertions.html#assert_not_output" title="assert_not_output"><code class="xref py py-obj docutils literal notranslate"><span class="pre">assert_not_output</span></code></a> checks that they are not printing “out of order “ with an extra space at the end, with a custom</dt><dd><p>message and label.</p>
+</dd>
+</dl>
+</li>
+<li><p><a class="reference internal" href="tools/runtime_assertions.html#assert_output" title="assert_output"><code class="xref py py-obj docutils literal notranslate"><span class="pre">assert_output</span></code></a> actually checks that they are printing “out of order” in the end.</p></li>
+</ul>
+<p>A correct solution to this problem is provided on the left, and the output file that would be generated
+is on the right. The exact syntax of the output file is explained further below, but for now you can see that
+the file lists the fields and their values of the <code class="xref py py-obj docutils literal notranslate"><span class="pre">Feedback</span></code> object that was generated by the autograding script.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Correct.py</strong></p></th>
+<th class="head"><p><strong>Expected Output</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a_phrase</span>   <span class="o">=</span>  <span class="s2">&quot;order out of&quot;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">a_phrase</span><span class="p">[</span><span class="mi">6</span><span class="p">:]</span> <span class="o">+</span> <span class="n">a_phrase</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">+</span> <span class="n">a_phrase</span><span class="p">[:</span><span class="mi">5</span><span class="p">])</span>
+</pre></div>
+</div>
+</td>
+<td><div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[standard.final]</span>
+<span class="na">correct</span><span class="o">:</span><span class="w"> </span><span class="s">True</span>
+<span class="na">success</span><span class="o">:</span><span class="w"> </span><span class="s">True</span>
+<span class="na">score</span><span class="o">:</span><span class="w"> </span><span class="s">1</span>
+<span class="na">scores</span><span class="o">:</span><span class="w"> </span><span class="s">[]</span>
+<span class="na">category</span><span class="o">:</span><span class="w"> </span><span class="s">complete</span>
+<span class="na">label</span><span class="o">:</span><span class="w"> </span><span class="s">set_correct_no_errors</span>
+<span class="na">title</span><span class="o">:</span><span class="w"> </span><span class="s">Complete</span>
+<span class="na">message</span><span class="o">:</span><span class="w"> </span><span class="s">Great work!</span>
+<span class="na">location</span><span class="o">:</span><span class="w"> </span><span class="s">None</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<p>This is a difficult problem for students, and they might make a number of mistakes.
+For example, they could forget to add the space in the middle of the phrase:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Incorrect: Missing Space</strong></p></th>
+<th class="head"><p><strong>Expected Output</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a_phrase</span> <span class="o">=</span> <span class="s2">&quot;order out of&quot;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">a_phrase</span><span class="p">[</span><span class="mi">6</span><span class="p">:]</span> <span class="o">+</span> <span class="n">a_phrase</span><span class="p">[:</span><span class="mi">5</span><span class="p">])</span>
+</pre></div>
+</div>
+</td>
+<td><div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[standard.final]</span>
+<span class="na">correct</span><span class="o">:</span><span class="w"> </span><span class="s">False</span>
+<span class="na">success</span><span class="o">:</span><span class="w"> </span><span class="s">False</span>
+<span class="na">score</span><span class="o">:</span><span class="w"> </span><span class="s">0</span>
+<span class="na">scores</span><span class="o">:</span><span class="w"> </span><span class="s">[]</span>
+<span class="na">category</span><span class="o">:</span><span class="w"> </span><span class="s">specification</span>
+<span class="na">label</span><span class="o">:</span><span class="w"> </span><span class="s">assert_output</span>
+<span class="na">title</span><span class="o">:</span><span class="w"> </span><span class="s">Failed Instructor Test</span>
+<span class="na">message</span><span class="o">:</span>
+<span class="w">    </span><span class="na">Student code failed instructor test.</span>
+<span class="w">    </span><span class="na">I ran your code.</span>
+<span class="w">    </span><span class="na">The printed output was</span><span class="o">:</span>
+<span class="w">        </span><span class="na">out oforder</span>
+<span class="w">    </span><span class="na">But I expected the output to be</span><span class="o">:</span>
+<span class="w">        </span><span class="na">out of order</span>
+<span class="na">location</span><span class="o">:</span><span class="w"> </span><span class="s">None</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<p>One of the most commonly made (especially when ChatGPT is asked) is to ignore the
+instructions and add a space as a string literal:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Incorrect: Space Literal</strong></p></th>
+<th class="head"><p><strong>Expected Output</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a_phrase</span> <span class="o">=</span> <span class="s2">&quot;order out of&quot;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">a_phrase</span><span class="p">[</span><span class="mi">6</span><span class="p">:]</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">a_phrase</span><span class="p">[:</span><span class="mi">5</span><span class="p">])</span>
+</pre></div>
+</div>
+</td>
+<td><div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[standard.final]</span>
+<span class="na">correct</span><span class="o">:</span><span class="w"> </span><span class="s">False</span>
+<span class="na">success</span><span class="o">:</span><span class="w"> </span><span class="s">False</span>
+<span class="na">score</span><span class="o">:</span><span class="w"> </span><span class="s">0</span>
+<span class="na">scores</span><span class="o">:</span><span class="w"> </span><span class="s">[]</span>
+<span class="na">category</span><span class="o">:</span><span class="w"> </span><span class="s">specification</span>
+<span class="na">label</span><span class="o">:</span><span class="w"> </span><span class="s">prevent_ast</span>
+<span class="na">title</span><span class="o">:</span><span class="w"> </span><span class="s">May Not Use Code</span>
+<span class="na">message</span><span class="o">:</span><span class="w"> </span><span class="s">You used a string literal on line 2.</span>
+<span class="w">    </span><span class="na">You may not use that more than 1 times,</span>
+<span class="w">    </span><span class="na">but you used it 2 times.</span>
+<span class="na">location</span><span class="o">:</span><span class="w"> </span><span class="s">&lt;Location(2, 21, None)&gt;</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Another common mistake is to add an extra space at the end (<code class="docutils literal notranslate"><span class="pre">&quot;out</span> <span class="pre">of</span> <span class="pre">order</span> <span class="pre">&quot;</span></code> instead of <code class="docutils literal notranslate"><span class="pre">&quot;out</span> <span class="pre">of</span> <span class="pre">order&quot;</span></code>),
+by incorrectly grabbing the last character of the string in the third subscript:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Incorrect: Extra Space</strong></p></th>
+<th class="head"><p><strong>Expected Output</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a_phrase</span> <span class="o">=</span> <span class="s2">&quot;order out of&quot;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">a_phrase</span><span class="p">[</span><span class="mi">6</span><span class="p">:]</span> <span class="o">+</span> <span class="n">a_phrase</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">+</span> <span class="n">a_phrase</span><span class="p">[:</span><span class="mi">6</span><span class="p">])</span>
+</pre></div>
+</div>
+</td>
+<td><div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[standard.final]</span>
+<span class="na">correct</span><span class="o">:</span><span class="w"> </span><span class="s">False</span>
+<span class="na">success</span><span class="o">:</span><span class="w"> </span><span class="s">False</span>
+<span class="na">score</span><span class="o">:</span><span class="w"> </span><span class="s">0</span>
+<span class="na">scores</span><span class="o">:</span><span class="w"> </span><span class="s">[]</span>
+<span class="na">category</span><span class="o">:</span><span class="w"> </span><span class="s">specification</span>
+<span class="na">label</span><span class="o">:</span><span class="w"> </span><span class="s">printing_extra_space</span>
+<span class="na">title</span><span class="o">:</span><span class="w"> </span><span class="s">Failed Instructor Test</span>
+<span class="na">message</span><span class="o">:</span><span class="w"> </span><span class="s">There&#39;s an extra space at the end!</span>
+<span class="na">location</span><span class="o">:</span><span class="w"> </span><span class="s">None</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Another common mistake is to try to print the answer directly, which is not allowed.
+Note that the student tries to be clever here, and includes an unused reference to the variable <code class="xref py py-obj docutils literal notranslate"><span class="pre">a_phrase</span></code>,
+so that the system does not complain about the unused variable:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Incorrect: Printing Answer</strong></p></th>
+<th class="head"><p><strong>Expected Output</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a_phrase</span> <span class="o">=</span> <span class="s2">&quot;order out of&quot;</span>
+<span class="n">a_phrase</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;out of order&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</td>
+<td><div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[standard.final]</span>
+<span class="na">correct</span><span class="o">:</span><span class="w"> </span><span class="s">False</span>
+<span class="na">success</span><span class="o">:</span><span class="w"> </span><span class="s">False</span>
+<span class="na">score</span><span class="o">:</span><span class="w"> </span><span class="s">0</span>
+<span class="na">scores</span><span class="o">:</span><span class="w"> </span><span class="s">[]</span>
+<span class="na">category</span><span class="o">:</span><span class="w"> </span><span class="s">specification</span>
+<span class="na">label</span><span class="o">:</span><span class="w"> </span><span class="s">prevent_ast</span>
+<span class="na">title</span><span class="o">:</span><span class="w"> </span><span class="s">May Not Use Code</span>
+<span class="na">message</span><span class="o">:</span><span class="w"> </span><span class="s">You used a string literal on line 3.</span>
+<span class="w">    </span><span class="na">You may not use that more than 1 times,</span>
+<span class="w">    </span><span class="na">but you used it 2 times.</span>
+<span class="na">location</span><span class="o">:</span><span class="w"> </span><span class="s">&lt;Location(3, 6, None)&gt;</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<p>If we had all of the output files generated, we could run the following command:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">pedal verify grade_assignment.py verify_examples/</span>
+</pre></div>
+</div>
+<p>And that would generate the following unittest output:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">.....</span>
+<span class="go">----------------------------------------------------------------------</span>
+<span class="go">Ran 5 tests in 0.001s</span>
+
+<span class="go">OK</span>
+</pre></div>
+</div>
+<p>This would show that all of the tests passed, and that the autograding script is working as expected.
+But what if we decided later to get rid of the custom message for the extra space mistake, without
+updating our output files? Then, the output would look like:</p>
+<div class="highlight-diff notranslate"><div class="highlight"><pre><span></span><span class="gh">======================================================================</span>
+FAIL: validate.py, using extra_space.py
+<span class="gd">----------------------------------------------------------------------</span>
+Traceback (most recent call last):
+<span class="w"> </span> File &quot;pedal\command_line\modes.py&quot;, line 450, in new_test
+<span class="w"> </span>   self.assertEqual(entire_expected, entire_actual,
+AssertionError: &quot;correct: False\nsuccess: False\nscore: 0[156 chars]ne\n&quot; != &#39;correct: False\nsuccess: False\nscore: 0[265 chars]ne\n&#39;
+<span class="w"> </span> correct: False
+<span class="w"> </span> success: False
+<span class="w"> </span> score: 0
+<span class="w"> </span> scores: []
+<span class="w"> </span> category: specification
+<span class="gd">- label: printing_extra_space</span>
+<span class="gi">+ label: assert_output</span>
+<span class="w"> </span> title: Failed Instructor Test
+<span class="gd">- message: There&#39;s an extra space at the end!</span>
+<span class="gi">+ message: Student code failed instructor test.</span>
+<span class="gi">+ I ran your code.</span>
+<span class="gi">+ The printed output was:</span>
+<span class="gi">+     out of order</span>
+<span class="gi">+ But I expected the output to be:</span>
+<span class="gi">+     out of order</span>
+<span class="w"> </span> location: None
+<span class="w"> </span>: Wrong value for &#39;label&#39;, &#39;message&#39; in extra_space.
+</pre></div>
+</div>
+<p>You can see the helpfulness of the custom feedback message, since the two strings look very similar.
+Most likely, you would want to keep the assertion with its custom message.
+But more importantly, the verification system is showing you the lines that are different between the actual
+and expected output.</p>
+</section>
+<section id="output-file-format">
+<h2>Output File Format<a class="headerlink" href="#output-file-format" title="Link to this heading"></a></h2>
+<p>The output files use a format similar to <code class="docutils literal notranslate"><span class="pre">ini</span></code> format, which is a simple key-value format.
+Sections are divided by square brackets, and each key-value pair is separated by a colon.
+A value can be a string, a number, or any other <code class="docutils literal notranslate"><span class="pre">repr</span></code>-able object.
+The results will be compared as strings, so be careful with floating point numbers!
+Indentation is used in the message field to allow for multi-line messages.</p>
+<p>Only the included fields found in the file are compared, so you can include as much or as little information
+as you want in the output files. If a field is not important, then you don’t need to include it
+in the output file. So if you wanted to confirm that a feedback was not <code class="docutils literal notranslate"><span class="pre">correct</span></code>, but didn’t
+care what the exact message was, you could have a file like this:</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[standard.final]</span>
+<span class="na">correct</span><span class="o">:</span><span class="w"> </span><span class="s">False</span>
+</pre></div>
+</div>
+<p>This would only check that the feedback was not correct, and would ignore the message, the location, and any other fields.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="cli.html" class="btn btn-neutral float-left" title="Command-Line Interface" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="integrations.html" class="btn btn-neutral float-right" title="Autograder Integrations" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, acbart, lukesg08.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

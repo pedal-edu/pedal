@@ -31,6 +31,7 @@ rather than an afterthought.
     teachers/examples
     teachers/reference
     teachers/cli
+    teachers/testing
     teachers/integrations
     developers/ffs
     developers/api
