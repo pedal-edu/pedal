@@ -1,0 +1,16 @@
+[standard.final]
+correct: False
+success: False
+score: 0
+scores: []
+category: specification
+label: assert_output
+title: Failed Instructor Test
+message:
+    Student code failed instructor test.
+    I ran your code.
+    The printed output was:
+        out oforder
+    But I expected the output to be:
+        out of order
+location: None

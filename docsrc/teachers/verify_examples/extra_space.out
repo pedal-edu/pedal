@@ -1,0 +1,10 @@
+[standard.final]
+correct: False
+success: False
+score: 0
+scores: []
+category: specification
+label: printing_extra_space
+title: Failed Instructor Test
+message: There's an extra space at the end!
+location: None

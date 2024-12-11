@@ -1,0 +1,12 @@
+[standard.final]
+correct: False
+success: False
+score: 0
+scores: []
+category: specification
+label: prevent_ast
+title: May Not Use Code
+message: You used a string literal on line 3.
+    You may not use that more than 1 times,
+    but you used it 2 times.
+location: <Location(3, 6, None)>
