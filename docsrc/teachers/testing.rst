@@ -84,8 +84,7 @@ This shows off a number of the features of Pedal:
 * `ensure_ast` and `prevent_ast` checks that the student has at least 2, but no more than 5, subscripts.
 * `prevent_ast` stops them from adding any string literals to their code, besides the one given.
 * `ensure_function_call` checks that they are using the `print` function.
-* `assert_not_output` checks that they are not printing "out of order " with an extra space at the end, with a custom
-    message and label.
+* `assert_not_output` checks that they are not printing "out of order " with an extra space at the end, with a custom message and label.
 * `assert_output` actually checks that they are printing "out of order" in the end.
 
 A correct solution to this problem is provided on the left, and the output file that would be generated
