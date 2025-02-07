@@ -383,7 +383,7 @@ class assert_length_equal(RuntimeAssertionFeedback):
     def __init__(self, sequence, length, **kwargs):
         super().__init__(SandboxedValue(sequence), SandboxedValue(length), **kwargs)
 
-    def condition(self, sequence, length):
+    def condition(self, sequence, length, **kwargs):
         """ Tests if the needle is not in the haystack """
         return len(sequence.value) != length.value
 
@@ -415,7 +415,7 @@ class assert_length_less(RuntimeAssertionFeedback):
     def __init__(self, sequence, length, **kwargs):
         super().__init__(SandboxedValue(sequence), SandboxedValue(length), **kwargs)
 
-    def condition(self, sequence, length):
+    def condition(self, sequence, length, **kwargs):
         """ Tests if the needle is not in the haystack """
         return len(sequence.value) >= length.value
 
