@@ -28,6 +28,8 @@ from pedal.utilities.ast_tools import AST_NODE_NAMES
 
 class EnsureAssertionFeedback(AssertionFeedback):
     """ Abstract base class for assertions preventing things. """
+    safe_field_names = ['name', 'at_least', 'capacity', 'name_message', 'root_message']
+
     def __init__(self, name, at_least=1, root=None, **kwargs):
         report = kwargs.get('report', MAIN_REPORT)
         root = root or parse_program(report=report)
@@ -52,6 +54,8 @@ class EnsureAssertionFeedback(AssertionFeedback):
 
 class PreventAssertionFeedback(AssertionFeedback):
     """ Abstract base class for assertions preventing things. """
+    safe_field_names = ['name', 'at_most', 'capacity', 'name_message', 'root_message']
+
     def __init__(self, name, at_most=0, root=None, **kwargs):
         report = kwargs.get('report', MAIN_REPORT)
         root = root or parse_program(report=report)
@@ -189,6 +193,7 @@ class prevent_literal(PreventAssertionFeedback):
     message_template = ("You used the literal value {literal_message:python_expression} on line "
                         "{location.line}. You may not use that value"
                         "{capacity}.")
+    safe_field_names = ['literal', 'at_most', 'capacity', 'literal_message']
 
     def __init__(self, literal, at_most=0, root=None, **kwargs):
         report = kwargs.get('report', MAIN_REPORT)
@@ -211,6 +216,7 @@ class ensure_literal(EnsureAssertionFeedback):
         code. """
     title = "Must Use Literal Value"
     message_template = "You must use the literal value {literal_message}{capacity}."
+    safe_field_names = ['literal', 'at_least', 'capacity', 'literal_message']
 
     def __init__(self, literal, at_least=1, root=None, **kwargs):
         report = kwargs.get('report', MAIN_REPORT)
@@ -234,6 +240,8 @@ class prevent_literal_type(PreventAssertionFeedback):
     message_template = ("You used the literal value type "
                         "{literal_type_message:python_expression} on line {location.line}."
                         " You may not use that type of value{capacity}.")
+    safe_field_names = ['literal_type', 'at_most', 'capacity', 'literal_type_message']
+    safe_field_converters = {'literal_type': repr}
 
     def __init__(self, literal_type, at_most=0, root=None, **kwargs):
         report = kwargs.get('report', MAIN_REPORT)
