@@ -1,59 +1,7 @@
 import os
 import sys
-from textwrap import indent, dedent
 
-
-def parse_out_file(path):
-    """
-    Parses an out file, which is based on ``ini`` files. They have pretty
-    basic syntax. The difference from what configparser is that indentation
-    is preserved in multiline values. We don't support comments and a number
-    of other features, but who needs 'em.
-
-    Args:
-        path (str): The path to the inifile that will be read.
-
-    Returns:
-        dict[str, dict[str, str]]: The constructed out sections=>{fields=>data}
-    """
-    sections = {'default': {}}
-    current_section = 'default'
-    current_key = None
-    multiline = False
-    with open(path) as outfile:
-        for line in outfile:
-            if line.startswith('['):
-                multiline = False
-                current_section = line.strip()[1:-1]
-                sections[current_section] = {}
-            elif line.startswith('    '):
-                sections[current_section][current_key] += line[4:]
-            elif line.strip():
-                multiline = False
-                parts = line.split(":", maxsplit=1)
-                current_key = parts[0].rstrip()
-                sections[current_section][current_key] = ""
-                if len(parts) == 1 or not parts[1].lstrip():
-                    multiline = True
-                else:
-                    sections[current_section][current_key] += parts[1].strip()
-            elif multiline:
-                sections[current_section][current_key] += "\n"
-    return sections
-
-
-def generate_out_file(outfile, sections):
-    for section_name, section in sections.items():
-        outfile.write(f"[{section_name}]\n")
-        for field, value in section.items():
-            outfile.write(f"{field}:")
-            value = str(value)
-            if '\n' in value:
-                outfile.write("\n")
-                for line in value.split("\n"):
-                    outfile.write(f"    {line}\n")
-            else:
-                outfile.write(f" {value}\n")
+from pedal.utilities.out_files import parse_out_file, generate_out_file
 
 
 def _make_final(environment):

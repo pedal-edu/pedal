@@ -51,6 +51,8 @@ Config settings
 """
 
 import argparse
+from dataclasses import asdict
+from pedal.core.config_job import JobConfig, make_job_config_parser
 from pedal.command_line.modes import MODES
 from pedal.environments import ALL_ENVIRONMENTS
 
@@ -160,11 +162,14 @@ def build_parser(reduced_mode=False):
 
 def parse_args(reduced_mode=False):
     """ Parse the arguments passed into the command line. """
-    parser = build_parser(reduced_mode)
-    args = parser.parse_args()
-    if args.instructor_name is None:
-        args.instructor_name = args.instructor
-    return args
+    job_config = make_job_config_parser()
+    return job_config
+
+    # parser = build_parser(reduced_mode)
+    # args = parser.parse_args()
+    # if args.instructor_name is None:
+    #     args.instructor_name = args.instructor
+    # return args
 
 
 if __name__ == '__main__':

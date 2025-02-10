@@ -86,8 +86,8 @@ class Bundle:
     """
     Represents the combination of an instructor control script and a submission that it is
     being run on. Also includes the environment that the script is being run in, and the
-    result of the execution (once the execution is finished). Finally, also includes the configuration
-    that was used to run the bundle.
+    result of the execution (once the execution is finished). Finally, also includes the
+    configuration that was used to run the bundle.
     """
     def __init__(self, config, script, submission):
         self.config = config

@@ -1,0 +1,3 @@
+instructor: ./examples/simple_test.py
+submissions: ./examples/submissions/correct.py
+mode: feedback
