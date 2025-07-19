@@ -39,7 +39,6 @@ Still to do:
  - [ ] Finish built-in constructor types
 
 """
-from typing import Set
 from pedal.utilities.text import join_list_with_and, add_indefinite_article
 
 
@@ -571,6 +570,11 @@ class ListType(ElementContainerType):
             if callee:
                 tifa.append_variable(callee.name, callee.type, location)
         return NoneType()
+
+    @staticmethod
+    def count(tifa, function, callee, arguments, named_arguments, location):
+        self_type = function.the_self
+        return IntType()
 
     # TODO: extend function!
 
@@ -1166,7 +1170,7 @@ class ModuleType(Type):
     parents = []
     submodules: dict
 
-    redefines: Set[str]
+    redefines: set #: set[str]
 
     def __init__(self, name, fields, submodules=None, redefines=None):
         super().__init__()
