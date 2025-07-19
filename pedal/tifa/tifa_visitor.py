@@ -636,7 +636,7 @@ class Tifa(TifaCore, ast.NodeVisitor):
         self.visit_statements(node.body)
         self.visit_statements(node.orelse)
 
-        #self._finish_loop()
+        # self._finish_loop()
 
     def visit_FunctionDef(self, node):
         """

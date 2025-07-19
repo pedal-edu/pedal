@@ -93,6 +93,9 @@ class TifaCore:
 
     line_offset: int
 
+    history: list
+    TRACK_HISTORY = False
+
     def __init__(self, report=MAIN_REPORT):
         self.report = report
         self.analysis = None
@@ -161,6 +164,9 @@ class TifaCore:
         self.final_node = None
         self.class_scopes = {}
         self.module_scopes = {}
+
+        if self.TRACK_HISTORY:
+            self.history = []
 
     def find_variable_scope(self, name):
         """
@@ -244,6 +250,11 @@ class TifaCore:
                 state = self.name_map[path_id][name]
                 if self._read_in_loop(path_id, name):
                     state.read = 'maybe'
+                    self._track_history(path_id, name, state.copy('looped', self.locate()))
+
+    def _track_history(self, current_path, full_name, state):
+        if self.TRACK_HISTORY:
+            self.history.append((current_path, full_name, state))
 
     def _read_in_loop(self, path_id, name):
         return name in self.loop_usages.get(path_id, [])
@@ -318,6 +329,7 @@ class TifaCore:
         """
         state = self.store_variable(name, new_type, position)
         state.read = 'yes'
+        self._track_history(self.path_chain[0], self._scope_chain_str(name), state.copy('store_read', position))
         return state
 
     def return_variable(self, return_type):
@@ -371,7 +383,6 @@ class TifaCore:
             # Create a new instance of the variable on the current path
             new_state = State(name, [], store_type, 'store', position,
                               read='no', set='yes', over='no')
-            self.name_map[current_path][full_name] = new_state
         else:
             new_state = self.trace_state(variable.state, "store", position)
             if not variable.in_scope and not self._in_module():
@@ -387,11 +398,12 @@ class TifaCore:
             else:
                 new_state.set = 'yes'
                 new_state.read = 'no'
-            self.name_map[current_path][full_name] = new_state
+        self.name_map[current_path][full_name] = new_state
         # If this is a class scope...
         current_scope = self.scope_chain[0]
         if current_scope in self.class_scopes:
             self.class_scopes[current_scope].add_attr(name, new_state.type)
+        self._track_history(current_path, full_name, new_state.perfect_copy())
         return new_state
 
     def load_variable(self, name, position=None):
@@ -426,7 +438,6 @@ class TifaCore:
                 self._issue(initialization_problem(self.locate(), name))
             new_state = State(name, [], AnyType(), 'load', position,
                               read='yes', set='no', over='no')
-            self.name_map[current_path][full_name] = new_state
         else:
             new_state = self.trace_state(variable.state, "load", position)
             if variable.state.set == 'no':
@@ -437,9 +448,9 @@ class TifaCore:
             new_state.read = 'yes'
             self.loop_usages.setdefault(current_path, []).append(full_name)
             if not variable.in_scope:
-                self.name_map[current_path][variable.scoped_name] = new_state
-            else:
-                self.name_map[current_path][full_name] = new_state
+                full_name = variable.scoped_name
+        self.name_map[current_path][full_name] = new_state
+        self._track_history(current_path, full_name, new_state.perfect_copy())
         return new_state
 
     def load_module(self, chain):
@@ -554,6 +565,10 @@ class TifaCore:
                 # right_state = self.name_map[parent_path_id].get(left_name)
             combined = self.combine_states(left_state, right_state)
             self.name_map[parent_path_id][left_name] = combined
+            self._track_history(parent_path_id, left_name,
+                {"left": left_state.perfect_copy() if left_state else None,
+                 "right": right_state.perfect_copy() if right_state else None,
+                 "out": combined.perfect_copy()})
         # Check for names that are on the ELSE path but not the IF path
         for right_name in self.name_map[right_path_id]:
             if right_name not in self.name_map[left_path_id]:
@@ -563,6 +578,10 @@ class TifaCore:
                 parent_state = self.search_parents(parent_path_id, right_name)
                 combined = self.combine_states(right_state, parent_state)
                 self.name_map[parent_path_id][right_name] = combined
+                self._track_history(parent_path_id, right_name,
+                                    {"left": right_state.perfect_copy() if right_state else None,
+                                     "right": parent_state.perfect_copy() if parent_state else None,
+                                     "out": combined.perfect_copy()})
 
     def search_parents(self, parent_id, seeking_name):
         possible = self.name_map[parent_id]

@@ -12,6 +12,7 @@ import pedal.types.new_types as defs
 import pedal.types.normalize as normalize
 from pedal import contextualize_report, Submission, evaluate
 from pedal.tifa import tifa_provide_module_type
+from pedal.tifa.state import print_history_diagram
 
 unit_tests = {
     'add_assign_inside_dataclass_function':
@@ -494,6 +495,10 @@ unit_tests = {
     'import_string_letters':
         ['import string\nstring.letters+""', ['incompatible_types'], []],
 
+    # Built-in functions
+    'reverse_list':
+        ['reversed(["A"])', [], []],
+
     # Nested function definitions
     'function_nested_inside_if':
         ['if False:\n  def x():\n    pass', [], ['nested_function_definition']],
@@ -546,7 +551,7 @@ class TestCode(unittest.TestCase):
     pass
 
 
-SILENCE_EXCEPT = None #'add_assign_inside_dataclass_function' # 'possibly_overwritten_in_elif_branch' # None  # 'read_not_out_of_scope'
+SILENCE_EXCEPT = None # "reverse_list" # None #'add_assign_inside_dataclass_function' # 'possibly_overwritten_in_elif_branch' # None  # 'read_not_out_of_scope'
 
 
 def make_tester(internal_name, code, nones, somes):
@@ -1376,7 +1381,7 @@ plt.show()
         self.assertIsNone(result.error)
         self.assertFalse(result.issues)
 
-    @unittest.skip("Currently broken, need to improve flow analysis")
+    # @unittest.skip("Currently broken, need to improve flow analysis")
     def test_unused_previous_variable(self):
         main_program = dedent("""
 previous = 0
@@ -1387,13 +1392,35 @@ for i in range(1, 10):
 
 print(values)""")
         tifa = pedal.tifa.Tifa()
+        tifa.TRACK_HISTORY = True
         result = tifa.process_code(main_program, filename="student.py")
+        pprint(tifa.history)
+        print_history_diagram(tifa.history)
         if result.error:
             raise result.error
         self.assertIsNone(result.error)
         self.assertFalse(result.issues)
 
-    @unittest.skip("Currently broken, need to improve flow analysis")
+    def test_unused_previous_variable_no_list(self):
+        main_program = dedent("""
+previous = 0
+total = 0
+for i in range(1, 10):
+    total = total + i + previous
+    previous = i
+
+print(total)""")
+        tifa = pedal.tifa.Tifa()
+        tifa.TRACK_HISTORY = True
+        result = tifa.process_code(main_program, filename="student.py")
+        pprint(tifa.history)
+        print_history_diagram(tifa.history)
+        if result.error:
+            raise result.error
+        self.assertIsNone(result.error)
+        self.assertFalse(result.issues)
+
+    # @unittest.skip("Currently broken, need to improve flow analysis")
     def test_nested_unused_previous_variable(self):
         main_program = dedent("""
 def a():
@@ -1414,7 +1441,7 @@ a()
         self.assertIsNone(result.error)
         self.assertFalse(result.issues)
 
-    @unittest.skip("Currently broken, need to improve flow analysis")
+    # @unittest.skip("Currently broken, need to improve flow analysis")
     def test_unused_loop_variable(self):
         main_program = dedent("""
 old = [1,2,3]

@@ -156,6 +156,14 @@ But I expected the result to be identical to:
 Student code failed instructor test.
     [1, 2, 3] did not have the length 4""")
 
+    def test_assert_length_equal_basic_fails_custom(self):
+        with Execution('5') as e:
+            assert_length_equal([1, 2, 3], 4,
+                                assertion_message="{left} was not {right}")
+        self.assertFeedback(e, """Failed Instructor Test
+Student code failed instructor test.
+    [1, 2, 3] did not have the length 4""")
+
     def test_assert_length_equal_call_left_fails(self):
         with Execution('def get(a, b): return [a,b]', run_tifa=False) as e:
             assert_length_equal(e.student.call('get', 1, 2), 3)

@@ -522,10 +522,37 @@ TODO: Finish these checks
 
 
 # TODO: Add in all other names from this module
-FEEDBACK_BY_NAME = {'type_change_append': type_change_append,
-                    'incorrect_arity': incorrect_arity,
-                    'parameter_type_mismatch': parameter_type_mismatch,
-                    'field_type_mismatch': field_type_mismatch}
+FEEDBACK_BY_NAME = {
+    'action_after_return': action_after_return,
+    'return_outside_function': return_outside_function,
+    'multiple_return_types': multiple_return_types,
+    'write_out_of_scope': write_out_of_scope,
+    'unconnected_blocks': unconnected_blocks,
+    'iteration_problem': iteration_problem,
+    'initialization_problem': initialization_problem,
+    'possible_initialization_problem': possible_initialization_problem,
+    'unused_variable': unused_variable,
+    'overwritten_variable': overwritten_variable,
+    'iterating_over_non_list': iterating_over_non_list,
+    'iterating_over_empty_list': iterating_over_empty_list,
+    'incompatible_types': incompatible_types,
+    'invalid_indexing': invalid_indexing,
+    'parameter_type_mismatch': parameter_type_mismatch,
+    'field_type_mismatch': field_type_mismatch,
+    'read_out_of_scope': read_out_of_scope,
+    'type_changes': type_changes,
+    'attribute_type_change': attribute_type_change,
+    'type_change_append': type_change_append,
+    'unnecessary_second_branch': unnecessary_second_branch,
+    'else_on_loop_body': else_on_loop_body,
+    'recursive_call': recursive_call,
+    'not_a_function': not_a_function,
+    'incorrect_arity': incorrect_arity,
+    'module_not_found': module_not_found,
+    'append_to_non_list': append_to_non_list,
+    'nested_function_definition': nested_function_definition,
+    'unused_returned_value': unused_returned_value,
+}
 
 
 def lookup_feedback(name):
