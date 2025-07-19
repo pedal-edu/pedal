@@ -122,6 +122,7 @@ class Bundle:
                                                      skip_run=skip_run,
                                                      threaded=self.config.threaded).fields)
         else:
+            # TODO: Check that this shouldn't be for global_data instead of MAIN_REPORT directly
             MAIN_REPORT.contextualize(self.submission)
         with redirect_stdout(captured_output):
             with patch.object(sys, 'argv', ics_args):
