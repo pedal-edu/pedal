@@ -212,6 +212,9 @@ class FinalFeedback:
             'location': self.data.get('location', None) if self.data else None
         }
 
+    def copy(self):
+        return FinalFeedback(**self.to_json())
+
     def to_file(self, path, format='json'):
         with open(path, 'w') as f:
             if format == 'json':

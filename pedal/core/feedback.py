@@ -61,6 +61,11 @@ class Feedback:
             into the template IF the ``condition`` is met.
         fields (Dict[str,Any]): The raw data that was used to interpolate the
             template to produce the message.
+        safe_field_names (List[str]): A list of field names that are safe to export to JSON.
+            If None, all fields are safe.
+        safe_field_converters (Dict[str,Callable]): A dictionary of field names to functions
+            that will convert the field to a JSON-serializable format. If None, all fields
+            will be passed through as-is.
         location (:py:attr:`~pedal.core.location.Location` or int): Information
             about specific locations relevant to this message.
 
@@ -125,6 +130,8 @@ class Feedback:
     constant_fields = None
     fields = None
     field_names = None
+    safe_field_names = None
+    safe_field_converters = None
     kind = None
     title = None
     message = None
@@ -160,7 +167,8 @@ class Feedback:
 
     def __init__(self, *args, label=None,
                  category=None, justification=None,
-                 fields=None, field_names=None,
+                 fields=None, field_names=None, safe_field_names=None,
+                 safe_field_converters=None,
                  kind=None, title=None,
                  message=None, message_template=None,
                  else_message=None, else_message_template=None,
@@ -202,6 +210,10 @@ class Feedback:
         if field_names is not None:
             self.field_names = field_names
             # TODO: Should this be taken from `fields` if nothing is provided?
+        if safe_field_names is not None:
+            self.safe_field_names = safe_field_names
+        if safe_field_converters is not None:
+            self.safe_field_converters = safe_field_converters
         if title is not None:
             self.title = title
         elif self.title is None:
@@ -445,6 +457,15 @@ class Feedback:
         self.fields['location'] = location
 
     def _fields_to_json(self):
+        if self.safe_field_names is not None:
+            result = {}
+            converters = self.safe_field_converters or {}
+            for key in self.safe_field_names:
+                if key in self.fields:
+                    value = self.fields[key]
+                    if key in converters:
+                        value = converters[key](value)
+                    result[key] = value
         return self.fields.copy()
 
     def to_json(self):
