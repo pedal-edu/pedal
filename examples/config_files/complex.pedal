@@ -1,0 +1,5 @@
+mode: stats
+instructor: ./examples/validate_print_literals.py
+submissions: ./examples/submissions/print_thrice.py
+environment: blockpy
+output: ./examples/submissions/print_thrice.json

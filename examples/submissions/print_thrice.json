@@ -1,0 +1,673 @@
+[
+  {
+    "script": "from pedal import *\n\nprevent_operation(\"/\", message=\"Don't use division in this problem, use the actual decimal value (`0.01`).\")\n\nensure_function_call('print', at_least=3)\nensure_literal_type(int)\nensure_literal_type(float,\n                    message=\"You need to have a decimal value (a `float`) in your code, in order to represent the value of a Penny. If a Penny is worth 1/100 of a dollar, how much is that as a decimal?\")\nensure_literal_type(str)\n\nensure_ast('Num', at_least=2)\nprevent_ast('Num', at_most=2)\nensure_ast('Str', at_least=1)\nprevent_ast('Str', at_most=1)\n\nif not get_output():\n    gently(\"You are not printing.\", label=\"not_printing\", title=\"Not Printing\")\n\nprevent_literal(.1, message=\"A penny is worth `.01` dollars, not `.1` dollars (that would be a dime).\")\nprevent_literal(1,\n                message=\"A penny is worth `.01` dollars, not `1` dollars (that would be in cents instead of in dollars).\")\n\nensure_literal(7, message=\"You need to have a literal value representing the number of days in a week.\")\n# ensure_literal(\"triangle\", message=\"You need to have a literal value representing a shape with three sides.\")\nensure_literal(.01, message=\"You need to have a literal value representing the value of a Penny (1 cent) in dollars.\")\n\nassert_output_contains(student, \"7\",\n                       message=\"You need to print out the literal value representing the number of days in a week.\")\nassert_output_contains(student, \"triangle\",\n                       message=\"You need to print out the literal value representing a shape with three sides.\")\nassert_output_contains(student, \".01\",\n                       message=\"You need to print out the literal value representing the value of a Penny (1 cent) in dollars.\")\n\nassert_not_output_contains(student, \"6\",\n                           message=\"Change the literal value `6` to instead represent the number of days in a week.\")\nassert_not_output_contains(student, \"square\",\n                           message=\"Change the literal value `square` to instead represent a shape with three sides.\")\nassert_not_output_contains(student, \".05\",\n                           message=\"Change the literal value `.05` to instead represent the value of a Penny (1 cent) in dollars.\")",
+    "submission": {
+      "user": null,
+      "assignment": null,
+      "course": null,
+      "execution": null,
+      "files": {
+        "./examples/submissions/print_thrice.py": "print(6)\nprint(\"square\")\nprint(.05)"
+      }
+    },
+    "environment": "blockpy",
+    "result": {
+      "output": "",
+      "error": null,
+      "considered": [
+        {
+          "correct": null,
+          "score": null,
+          "title": "Must Use Literal Value",
+          "message": "You need to have a literal value representing the number of days in a week.",
+          "label": "ensure_literal",
+          "active": true,
+          "muted": null,
+          "unscored": null,
+          "category": "specification",
+          "kind": "Constraint",
+          "valence": -1,
+          "version": "1.0.0",
+          "fields": {
+            "literal": 7,
+            "at_least": 1,
+            "capacity": "",
+            "root": "\nModule(body=[\n    Expr(value=Call(func=Name(id='print', ctx=Load()), args=[\n        Constant(value=6, kind=None),\n      ], keywords=[])),\n    Expr(value=Call(func=Name(id='print', ctx=Load()), args=[\n        Constant(value='square', kind=None),\n      ], keywords=[])),\n    Expr(value=Call(func=Name(id='print', ctx=Load()), args=[\n        Constant(value=0.05, kind=None),\n      ], keywords=[])),\n  ], type_ignores=[])",
+            "literal_message": "<code>7</code>",
+            "use_count": 0
+          },
+          "justification": "No justification provided",
+          "priority": null,
+          "location": null
+        },
+        {
+          "correct": null,
+          "score": null,
+          "title": "Must Use Literal Value",
+          "message": "You need to have a literal value representing the value of a Penny (1 cent) in dollars.",
+          "label": "ensure_literal",
+          "active": true,
+          "muted": null,
+          "unscored": null,
+          "category": "specification",
+          "kind": "Constraint",
+          "valence": -1,
+          "version": "1.0.0",
+          "fields": {
+            "literal": 0.01,
+            "at_least": 1,
+            "capacity": "",
+            "root": "\nModule(body=[\n    Expr(value=Call(func=Name(id='print', ctx=Load()), args=[\n        Constant(value=6, kind=None),\n      ], keywords=[])),\n    Expr(value=Call(func=Name(id='print', ctx=Load()), args=[\n        Constant(value='square', kind=None),\n      ], keywords=[])),\n    Expr(value=Call(func=Name(id='print', ctx=Load()), args=[\n        Constant(value=0.05, kind=None),\n      ], keywords=[])),\n  ], type_ignores=[])",
+            "literal_message": "<code>0.01</code>",
+            "use_count": 0
+          },
+          "justification": "No justification provided",
+          "priority": null,
+          "location": null
+        },
+        {
+          "correct": null,
+          "score": null,
+          "title": "Failed Instructor Test",
+          "message": "You need to print out the literal value representing the number of days in a week.",
+          "label": "assert_output_contains",
+          "active": true,
+          "muted": null,
+          "unscored": null,
+          "category": "specification",
+          "kind": "Constraint",
+          "valence": -1,
+          "version": "1.0.0",
+          "fields": {
+            "left": "<pedal.sandbox.sandbox.Sandbox object at 0x0000026E228F8F10>",
+            "right": "7",
+            "left_boxed": "<pedal.assertions.feedbacks.SandboxedValue object at 0x0000026E228F8890>",
+            "right_boxed": "<pedal.assertions.feedbacks.SandboxedValue object at 0x0000026E228FDE50>",
+            "contexts": [
+              [
+                "<SandboxContext 0>"
+              ]
+            ],
+            "expected_verb": "the output to contain",
+            "aggregate_verb": "Expected",
+            "inverse_operator": "does not contain the text",
+            "context_message": "I ran your code.\n",
+            "assertion_message": "The printed output was:\n<pre class='pedal-output'>6\nsquare\n0.05</pre>\nBut I expected the output to contain:\n<pre class='pedal-output'>7</pre>",
+            "explanation": "",
+            "exact_strings": false
+          },
+          "justification": "Did not contain the printed output",
+          "priority": null,
+          "location": null
+        },
+        {
+          "correct": null,
+          "score": null,
+          "title": "Failed Instructor Test",
+          "message": "You need to print out the literal value representing a shape with three sides.",
+          "label": "assert_output_contains",
+          "active": true,
+          "muted": null,
+          "unscored": null,
+          "category": "specification",
+          "kind": "Constraint",
+          "valence": -1,
+          "version": "1.0.0",
+          "fields": {
+            "left": "<pedal.sandbox.sandbox.Sandbox object at 0x0000026E228F8F10>",
+            "right": "triangle",
+            "left_boxed": "<pedal.assertions.feedbacks.SandboxedValue object at 0x0000026E228FDF50>",
+            "right_boxed": "<pedal.assertions.feedbacks.SandboxedValue object at 0x0000026E228FD910>",
+            "contexts": [
+              [
+                "<SandboxContext 0>"
+              ]
+            ],
+            "expected_verb": "the output to contain",
+            "aggregate_verb": "Expected",
+            "inverse_operator": "does not contain the text",
+            "context_message": "I ran your code.\n",
+            "assertion_message": "The printed output was:\n<pre class='pedal-output'>6\nsquare\n0.05</pre>\nBut I expected the output to contain:\n<pre class='pedal-output'>triangle</pre>",
+            "explanation": "",
+            "exact_strings": false
+          },
+          "justification": "Did not contain the printed output",
+          "priority": null,
+          "location": null
+        },
+        {
+          "correct": null,
+          "score": null,
+          "title": "Failed Instructor Test",
+          "message": "You need to print out the literal value representing the value of a Penny (1 cent) in dollars.",
+          "label": "assert_output_contains",
+          "active": true,
+          "muted": null,
+          "unscored": null,
+          "category": "specification",
+          "kind": "Constraint",
+          "valence": -1,
+          "version": "1.0.0",
+          "fields": {
+            "left": "<pedal.sandbox.sandbox.Sandbox object at 0x0000026E228F8F10>",
+            "right": ".01",
+            "left_boxed": "<pedal.assertions.feedbacks.SandboxedValue object at 0x0000026E228FDB10>",
+            "right_boxed": "<pedal.assertions.feedbacks.SandboxedValue object at 0x0000026E228FD850>",
+            "contexts": [
+              [
+                "<SandboxContext 0>"
+              ]
+            ],
+            "expected_verb": "the output to contain",
+            "aggregate_verb": "Expected",
+            "inverse_operator": "does not contain the text",
+            "context_message": "I ran your code.\n",
+            "assertion_message": "The printed output was:\n<pre class='pedal-output'>6\nsquare\n0.05</pre>\nBut I expected the output to contain:\n<pre class='pedal-output'>.01</pre>",
+            "explanation": "",
+            "exact_strings": false
+          },
+          "justification": "Did not contain the printed output",
+          "priority": null,
+          "location": null
+        },
+        {
+          "correct": null,
+          "score": null,
+          "title": "Failed Instructor Test",
+          "message": "Change the literal value `6` to instead represent the number of days in a week.",
+          "label": "assert_not_output_contains",
+          "active": true,
+          "muted": null,
+          "unscored": null,
+          "category": "specification",
+          "kind": "Constraint",
+          "valence": -1,
+          "version": "1.0.0",
+          "fields": {
+            "left": "<pedal.sandbox.sandbox.Sandbox object at 0x0000026E228F8F10>",
+            "right": "6",
+            "left_boxed": "<pedal.assertions.feedbacks.SandboxedValue object at 0x0000026E228FD810>",
+            "right_boxed": "<pedal.assertions.feedbacks.SandboxedValue object at 0x0000026E228FD890>",
+            "contexts": [
+              [
+                "<SandboxContext 0>"
+              ]
+            ],
+            "expected_verb": "the output to not contain",
+            "aggregate_verb": "Expected",
+            "inverse_operator": "contained the text",
+            "context_message": "I ran your code.\n",
+            "assertion_message": "The printed output was:\n<pre class='pedal-output'>6\nsquare\n0.05</pre>\nBut I expected the output to not contain:\n<pre class='pedal-output'>6</pre>",
+            "explanation": "",
+            "exact_strings": false
+          },
+          "justification": "Contained the printed output",
+          "priority": null,
+          "location": null
+        },
+        {
+          "correct": null,
+          "score": null,
+          "title": "Failed Instructor Test",
+          "message": "Change the literal value `square` to instead represent a shape with three sides.",
+          "label": "assert_not_output_contains",
+          "active": true,
+          "muted": null,
+          "unscored": null,
+          "category": "specification",
+          "kind": "Constraint",
+          "valence": -1,
+          "version": "1.0.0",
+          "fields": {
+            "left": "<pedal.sandbox.sandbox.Sandbox object at 0x0000026E228F8F10>",
+            "right": "square",
+            "left_boxed": "<pedal.assertions.feedbacks.SandboxedValue object at 0x0000026E228FD650>",
+            "right_boxed": "<pedal.assertions.feedbacks.SandboxedValue object at 0x0000026E228FD550>",
+            "contexts": [
+              [
+                "<SandboxContext 0>"
+              ]
+            ],
+            "expected_verb": "the output to not contain",
+            "aggregate_verb": "Expected",
+            "inverse_operator": "contained the text",
+            "context_message": "I ran your code.\n",
+            "assertion_message": "The printed output was:\n<pre class='pedal-output'>6\nsquare\n0.05</pre>\nBut I expected the output to not contain:\n<pre class='pedal-output'>square</pre>",
+            "explanation": "",
+            "exact_strings": false
+          },
+          "justification": "Contained the printed output",
+          "priority": null,
+          "location": null
+        },
+        {
+          "correct": null,
+          "score": null,
+          "title": "Failed Instructor Test",
+          "message": "Change the literal value `.05` to instead represent the value of a Penny (1 cent) in dollars.",
+          "label": "assert_not_output_contains",
+          "active": true,
+          "muted": null,
+          "unscored": null,
+          "category": "specification",
+          "kind": "Constraint",
+          "valence": -1,
+          "version": "1.0.0",
+          "fields": {
+            "left": "<pedal.sandbox.sandbox.Sandbox object at 0x0000026E228F8F10>",
+            "right": ".05",
+            "left_boxed": "<pedal.assertions.feedbacks.SandboxedValue object at 0x0000026E228FD590>",
+            "right_boxed": "<pedal.assertions.feedbacks.SandboxedValue object at 0x0000026E228FD410>",
+            "contexts": [
+              [
+                "<SandboxContext 0>"
+              ]
+            ],
+            "expected_verb": "the output to not contain",
+            "aggregate_verb": "Expected",
+            "inverse_operator": "contained the text",
+            "context_message": "I ran your code.\n",
+            "assertion_message": "The printed output was:\n<pre class='pedal-output'>6\nsquare\n0.05</pre>\nBut I expected the output to not contain:\n<pre class='pedal-output'>.05</pre>",
+            "explanation": "",
+            "exact_strings": false
+          },
+          "justification": "Contained the printed output",
+          "priority": null,
+          "location": null
+        },
+        {
+          "correct": null,
+          "score": null,
+          "title": "May Not Use Operator",
+          "message": null,
+          "label": "prevent_operation",
+          "active": false,
+          "muted": null,
+          "unscored": null,
+          "category": "specification",
+          "kind": "Constraint",
+          "valence": -1,
+          "version": "1.0.0",
+          "fields": {
+            "name": "/",
+            "at_most": 0,
+            "capacity": "",
+            "root": "\nModule(body=[\n    Expr(value=Call(func=Name(id='print', ctx=Load()), args=[\n        Constant(value=6, kind=None),\n      ], keywords=[])),\n    Expr(value=Call(func=Name(id='print', ctx=Load()), args=[\n        Constant(value='square', kind=None),\n      ], keywords=[])),\n    Expr(value=Call(func=Name(id='print', ctx=Load()), args=[\n        Constant(value=0.05, kind=None),\n      ], keywords=[])),\n  ], type_ignores=[])",
+            "name_message": "<code>/</code>",
+            "root_message": " (inside of some other code)",
+            "use_count": 0
+          },
+          "justification": "No justification provided",
+          "priority": null,
+          "location": null
+        },
+        {
+          "correct": null,
+          "score": null,
+          "title": "Must Use Function",
+          "message": null,
+          "label": "ensure_function_call",
+          "active": false,
+          "muted": null,
+          "unscored": null,
+          "category": "specification",
+          "kind": "Constraint",
+          "valence": -1,
+          "version": "1.0.0",
+          "fields": {
+            "name": "print",
+            "at_least": 3,
+            "capacity": "",
+            "root": "\nModule(body=[\n    Expr(value=Call(func=Name(id='print', ctx=Load()), args=[\n        Constant(value=6, kind=None),\n      ], keywords=[])),\n    Expr(value=Call(func=Name(id='print', ctx=Load()), args=[\n        Constant(value='square', kind=None),\n      ], keywords=[])),\n    Expr(value=Call(func=Name(id='print', ctx=Load()), args=[\n        Constant(value=0.05, kind=None),\n      ], keywords=[])),\n  ], type_ignores=[])",
+            "name_message": "<code class='pedal-name'>print</code>",
+            "root_message": " (inside of some other code)",
+            "call_count": 3
+          },
+          "justification": "No justification provided",
+          "priority": null,
+          "location": null
+        },
+        {
+          "correct": null,
+          "score": null,
+          "title": "Must Use Type of Literal Value",
+          "message": null,
+          "label": "ensure_literal_type",
+          "active": false,
+          "muted": null,
+          "unscored": null,
+          "category": "specification",
+          "kind": "Constraint",
+          "valence": -1,
+          "version": "1.0.0",
+          "fields": {
+            "literal_type": "<class 'int'>",
+            "at_least": 1,
+            "capacity": "",
+            "root": "\nModule(body=[\n    Expr(value=Call(func=Name(id='print', ctx=Load()), args=[\n        Constant(value=6, kind=None),\n      ], keywords=[])),\n    Expr(value=Call(func=Name(id='print', ctx=Load()), args=[\n        Constant(value='square', kind=None),\n      ], keywords=[])),\n    Expr(value=Call(func=Name(id='print', ctx=Load()), args=[\n        Constant(value=0.05, kind=None),\n      ], keywords=[])),\n  ], type_ignores=[])",
+            "literal_type_message": "int",
+            "location": {
+              "line": 1,
+              "col": null,
+              "end_line": null,
+              "end_col": null,
+              "filename": null
+            },
+            "use_count": 1
+          },
+          "justification": "No justification provided",
+          "priority": null,
+          "location": {
+            "line": 1,
+            "col": null,
+            "end_line": null,
+            "end_col": null,
+            "filename": null
+          }
+        },
+        {
+          "correct": null,
+          "score": null,
+          "title": "Must Use Type of Literal Value",
+          "message": null,
+          "label": "ensure_literal_type",
+          "active": false,
+          "muted": null,
+          "unscored": null,
+          "category": "specification",
+          "kind": "Constraint",
+          "valence": -1,
+          "version": "1.0.0",
+          "fields": {
+            "literal_type": "<class 'float'>",
+            "at_least": 1,
+            "capacity": "",
+            "root": "\nModule(body=[\n    Expr(value=Call(func=Name(id='print', ctx=Load()), args=[\n        Constant(value=6, kind=None),\n      ], keywords=[])),\n    Expr(value=Call(func=Name(id='print', ctx=Load()), args=[\n        Constant(value='square', kind=None),\n      ], keywords=[])),\n    Expr(value=Call(func=Name(id='print', ctx=Load()), args=[\n        Constant(value=0.05, kind=None),\n      ], keywords=[])),\n  ], type_ignores=[])",
+            "literal_type_message": "float",
+            "location": {
+              "line": 3,
+              "col": null,
+              "end_line": null,
+              "end_col": null,
+              "filename": null
+            },
+            "use_count": 1
+          },
+          "justification": "No justification provided",
+          "priority": null,
+          "location": {
+            "line": 3,
+            "col": null,
+            "end_line": null,
+            "end_col": null,
+            "filename": null
+          }
+        },
+        {
+          "correct": null,
+          "score": null,
+          "title": "Must Use Type of Literal Value",
+          "message": null,
+          "label": "ensure_literal_type",
+          "active": false,
+          "muted": null,
+          "unscored": null,
+          "category": "specification",
+          "kind": "Constraint",
+          "valence": -1,
+          "version": "1.0.0",
+          "fields": {
+            "literal_type": "<class 'str'>",
+            "at_least": 1,
+            "capacity": "",
+            "root": "\nModule(body=[\n    Expr(value=Call(func=Name(id='print', ctx=Load()), args=[\n        Constant(value=6, kind=None),\n      ], keywords=[])),\n    Expr(value=Call(func=Name(id='print', ctx=Load()), args=[\n        Constant(value='square', kind=None),\n      ], keywords=[])),\n    Expr(value=Call(func=Name(id='print', ctx=Load()), args=[\n        Constant(value=0.05, kind=None),\n      ], keywords=[])),\n  ], type_ignores=[])",
+            "literal_type_message": "str",
+            "location": {
+              "line": 2,
+              "col": null,
+              "end_line": null,
+              "end_col": null,
+              "filename": null
+            },
+            "use_count": 1
+          },
+          "justification": "No justification provided",
+          "priority": null,
+          "location": {
+            "line": 2,
+            "col": null,
+            "end_line": null,
+            "end_col": null,
+            "filename": null
+          }
+        },
+        {
+          "correct": null,
+          "score": null,
+          "title": "Must Use Code",
+          "message": null,
+          "label": "ensure_ast",
+          "active": false,
+          "muted": null,
+          "unscored": null,
+          "category": "specification",
+          "kind": "Constraint",
+          "valence": -1,
+          "version": "1.0.0",
+          "fields": {
+            "name": "Num",
+            "at_least": 2,
+            "capacity": "",
+            "root": "\nModule(body=[\n    Expr(value=Call(func=Name(id='print', ctx=Load()), args=[\n        Constant(value=6, kind=None),\n      ], keywords=[])),\n    Expr(value=Call(func=Name(id='print', ctx=Load()), args=[\n        Constant(value='square', kind=None),\n      ], keywords=[])),\n    Expr(value=Call(func=Name(id='print', ctx=Load()), args=[\n        Constant(value=0.05, kind=None),\n      ], keywords=[])),\n  ], type_ignores=[])",
+            "name_message": "a numeric literal",
+            "root_message": " (inside of some other code)",
+            "location": {
+              "line": 3,
+              "col": 6,
+              "end_line": null,
+              "end_col": null,
+              "filename": null
+            },
+            "use_count": 2
+          },
+          "justification": "Successfully found a a numeric literal (inside of some other code).",
+          "priority": null,
+          "location": {
+            "line": 3,
+            "col": 6,
+            "end_line": null,
+            "end_col": null,
+            "filename": null
+          }
+        },
+        {
+          "correct": null,
+          "score": null,
+          "title": "May Not Use Code",
+          "message": null,
+          "label": "prevent_ast",
+          "active": false,
+          "muted": null,
+          "unscored": null,
+          "category": "specification",
+          "kind": "Constraint",
+          "valence": -1,
+          "version": "1.0.0",
+          "fields": {
+            "name": "Num",
+            "at_most": 2,
+            "capacity": "",
+            "root": "\nModule(body=[\n    Expr(value=Call(func=Name(id='print', ctx=Load()), args=[\n        Constant(value=6, kind=None),\n      ], keywords=[])),\n    Expr(value=Call(func=Name(id='print', ctx=Load()), args=[\n        Constant(value='square', kind=None),\n      ], keywords=[])),\n    Expr(value=Call(func=Name(id='print', ctx=Load()), args=[\n        Constant(value=0.05, kind=None),\n      ], keywords=[])),\n  ], type_ignores=[])",
+            "name_message": "a numeric literal",
+            "root_message": " (inside of some other code)",
+            "location": {
+              "line": 3,
+              "col": 6,
+              "end_line": null,
+              "end_col": null,
+              "filename": null
+            },
+            "use_count": 2
+          },
+          "justification": "Correctly found a a numeric literal (inside of some other code).",
+          "priority": null,
+          "location": {
+            "line": 3,
+            "col": 6,
+            "end_line": null,
+            "end_col": null,
+            "filename": null
+          }
+        },
+        {
+          "correct": null,
+          "score": null,
+          "title": "Must Use Code",
+          "message": null,
+          "label": "ensure_ast",
+          "active": false,
+          "muted": null,
+          "unscored": null,
+          "category": "specification",
+          "kind": "Constraint",
+          "valence": -1,
+          "version": "1.0.0",
+          "fields": {
+            "name": "Str",
+            "at_least": 1,
+            "capacity": "",
+            "root": "\nModule(body=[\n    Expr(value=Call(func=Name(id='print', ctx=Load()), args=[\n        Constant(value=6, kind=None),\n      ], keywords=[])),\n    Expr(value=Call(func=Name(id='print', ctx=Load()), args=[\n        Constant(value='square', kind=None),\n      ], keywords=[])),\n    Expr(value=Call(func=Name(id='print', ctx=Load()), args=[\n        Constant(value=0.05, kind=None),\n      ], keywords=[])),\n  ], type_ignores=[])",
+            "name_message": "a string literal",
+            "root_message": " (inside of some other code)",
+            "location": {
+              "line": 2,
+              "col": 6,
+              "end_line": null,
+              "end_col": null,
+              "filename": null
+            },
+            "use_count": 1
+          },
+          "justification": "Successfully found a a string literal (inside of some other code).",
+          "priority": null,
+          "location": {
+            "line": 2,
+            "col": 6,
+            "end_line": null,
+            "end_col": null,
+            "filename": null
+          }
+        },
+        {
+          "correct": null,
+          "score": null,
+          "title": "May Not Use Code",
+          "message": null,
+          "label": "prevent_ast",
+          "active": false,
+          "muted": null,
+          "unscored": null,
+          "category": "specification",
+          "kind": "Constraint",
+          "valence": -1,
+          "version": "1.0.0",
+          "fields": {
+            "name": "Str",
+            "at_most": 1,
+            "capacity": "",
+            "root": "\nModule(body=[\n    Expr(value=Call(func=Name(id='print', ctx=Load()), args=[\n        Constant(value=6, kind=None),\n      ], keywords=[])),\n    Expr(value=Call(func=Name(id='print', ctx=Load()), args=[\n        Constant(value='square', kind=None),\n      ], keywords=[])),\n    Expr(value=Call(func=Name(id='print', ctx=Load()), args=[\n        Constant(value=0.05, kind=None),\n      ], keywords=[])),\n  ], type_ignores=[])",
+            "name_message": "a string literal",
+            "root_message": " (inside of some other code)",
+            "location": {
+              "line": 2,
+              "col": 6,
+              "end_line": null,
+              "end_col": null,
+              "filename": null
+            },
+            "use_count": 1
+          },
+          "justification": "Correctly found a a string literal (inside of some other code).",
+          "priority": null,
+          "location": {
+            "line": 2,
+            "col": 6,
+            "end_line": null,
+            "end_col": null,
+            "filename": null
+          }
+        },
+        {
+          "correct": null,
+          "score": null,
+          "title": "May Not Use Literal Value",
+          "message": null,
+          "label": "prevent_literal",
+          "active": false,
+          "muted": null,
+          "unscored": null,
+          "category": "specification",
+          "kind": "Constraint",
+          "valence": -1,
+          "version": "1.0.0",
+          "fields": {
+            "literal": 0.1,
+            "at_most": 0,
+            "capacity": "",
+            "root": "\nModule(body=[\n    Expr(value=Call(func=Name(id='print', ctx=Load()), args=[\n        Constant(value=6, kind=None),\n      ], keywords=[])),\n    Expr(value=Call(func=Name(id='print', ctx=Load()), args=[\n        Constant(value='square', kind=None),\n      ], keywords=[])),\n    Expr(value=Call(func=Name(id='print', ctx=Load()), args=[\n        Constant(value=0.05, kind=None),\n      ], keywords=[])),\n  ], type_ignores=[])",
+            "literal_message": "0.1",
+            "use_count": 0
+          },
+          "justification": "No justification provided",
+          "priority": null,
+          "location": null
+        },
+        {
+          "correct": null,
+          "score": null,
+          "title": "May Not Use Literal Value",
+          "message": null,
+          "label": "prevent_literal",
+          "active": false,
+          "muted": null,
+          "unscored": null,
+          "category": "specification",
+          "kind": "Constraint",
+          "valence": -1,
+          "version": "1.0.0",
+          "fields": {
+            "literal": 1,
+            "at_most": 0,
+            "capacity": "",
+            "root": "\nModule(body=[\n    Expr(value=Call(func=Name(id='print', ctx=Load()), args=[\n        Constant(value=6, kind=None),\n      ], keywords=[])),\n    Expr(value=Call(func=Name(id='print', ctx=Load()), args=[\n        Constant(value='square', kind=None),\n      ], keywords=[])),\n    Expr(value=Call(func=Name(id='print', ctx=Load()), args=[\n        Constant(value=0.05, kind=None),\n      ], keywords=[])),\n  ], type_ignores=[])",
+            "literal_message": "1",
+            "use_count": 0
+          },
+          "justification": "No justification provided",
+          "priority": null,
+          "location": null
+        }
+      ],
+      "final": {
+        "correct": false,
+        "success": false,
+        "score": 0,
+        "scores": [],
+        "category": "specification",
+        "label": "ensure_literal",
+        "title": "Must Use Literal Value",
+        "message": "You need to have a literal value representing the number of days in a week.",
+        "data": {
+          "literal": 7,
+          "at_least": 1,
+          "capacity": "",
+          "root": "\nModule(body=[\n    Expr(value=Call(func=Name(id='print', ctx=Load()), args=[\n        Constant(value=6, kind=None),\n      ], keywords=[])),\n    Expr(value=Call(func=Name(id='print', ctx=Load()), args=[\n        Constant(value='square', kind=None),\n      ], keywords=[])),\n    Expr(value=Call(func=Name(id='print', ctx=Load()), args=[\n        Constant(value=0.05, kind=None),\n      ], keywords=[])),\n  ], type_ignores=[])",
+          "literal_message": "<code>7</code>",
+          "use_count": 0
+        },
+        "hide_correctness": false,
+        "location": null
+      }
+    }
+  }
+]
