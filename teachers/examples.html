@@ -7,7 +7,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Teacher Examples &mdash; Pedal 1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/argparse.css?v=441cd8df" />
 
@@ -119,7 +119,7 @@ in your code. Let Python do the calculation for you.</p>
 <p>Instructor grading code:</p>
 <div class="literal-block-wrapper docutils container" id="id2">
 <div class="code-block-caption"><span class="caption-text">grade_assignment.py</span><a class="headerlink" href="#id2" title="Link to this code"></a></div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal</span> <span class="kn">import</span> <span class="o">*</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pedal</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
 
 <span class="c1"># Make sure they don&#39;t embed the answer</span>
 <span class="n">prevent_literal</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
@@ -160,7 +160,7 @@ round $9.50 to the nearest whole number.</p>
 <p>Instructor control script:</p>
 <div class="literal-block-wrapper docutils container" id="id4">
 <div class="code-block-caption"><span class="caption-text">grade_assignment.py</span><a class="headerlink" href="#id4" title="Link to this code"></a></div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal</span> <span class="kn">import</span> <span class="o">*</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pedal</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
 
 <span class="c1"># Common mistake is that students put a $ in their code</span>
 <span class="k">if</span> <span class="s2">&quot;$&quot;</span> <span class="ow">in</span> <span class="n">get_program</span><span class="p">():</span>
@@ -194,7 +194,7 @@ their sum. Make sure you unit test the function a suitable number of times!</p>
 <p>Student Answer:</p>
 <div class="literal-block-wrapper docutils container" id="id5">
 <div class="code-block-caption"><span class="caption-text">student.py</span><a class="headerlink" href="#id5" title="Link to this code"></a></div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">add_3</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">add_3</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">a</span><span class="o">+</span><span class="n">b</span><span class="o">+</span><span class="n">c</span>
 
 <span class="c1"># You might use a different unittest style!</span>
@@ -207,7 +207,7 @@ their sum. Make sure you unit test the function a suitable number of times!</p>
 <p>Instructor Control Script:</p>
 <div class="literal-block-wrapper docutils container" id="id6">
 <div class="code-block-caption"><span class="caption-text">grade_assignment.py</span><a class="headerlink" href="#id6" title="Link to this code"></a></div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal</span> <span class="kn">import</span> <span class="o">*</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pedal</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
 
 <span class="n">ensure_function</span><span class="p">(</span><span class="s1">&#39;add_3&#39;</span><span class="p">,</span> <span class="n">arity</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 <span class="c1"># Or if you teach them to annotate their parameters/returns</span>
@@ -287,9 +287,9 @@ was earlier. In order to do so, they had to complete a number of helper function
 
 <span class="n">__version__</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="kn">from</span> <span class="nn">pedal</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">curriculum_sneks</span> <span class="kn">import</span> <span class="n">ensure_functions_return</span><span class="p">,</span> <span class="n">prevent_printing_functions</span>
-<span class="kn">from</span> <span class="nn">curriculum_sneks.tests</span> <span class="kn">import</span> <span class="n">ensure_cisc108_tests</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">curriculum_sneks</span><span class="w"> </span><span class="kn">import</span> <span class="n">ensure_functions_return</span><span class="p">,</span> <span class="n">prevent_printing_functions</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">curriculum_sneks.tests</span><span class="w"> </span><span class="kn">import</span> <span class="n">ensure_cisc108_tests</span>
 
 
 <span class="n">prevent_import</span><span class="p">(</span><span class="s1">&#39;re&#39;</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Using Regular Expressions would be a good idea.&quot;</span>
@@ -443,23 +443,23 @@ This is Pedal version 2, however the version 3 code will look different.</p>
 <span class="sd">&#39;&#39;&#39;</span>
 <span class="n">__version__</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="kn">from</span> <span class="nn">pedal.resolvers.simple</span> <span class="kn">import</span> <span class="n">resolve</span>
-<span class="kn">from</span> <span class="nn">pedal</span> <span class="kn">import</span> <span class="p">(</span><span class="n">explain</span><span class="p">,</span> <span class="n">contextualize_report</span><span class="p">,</span> <span class="n">set_success</span><span class="p">,</span> <span class="n">give_partial</span><span class="p">,</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.resolvers.simple</span><span class="w"> </span><span class="kn">import</span> <span class="n">resolve</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span><span class="n">explain</span><span class="p">,</span> <span class="n">contextualize_report</span><span class="p">,</span> <span class="n">set_success</span><span class="p">,</span> <span class="n">give_partial</span><span class="p">,</span>
                    <span class="n">compliment</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">pedal.sandbox</span> <span class="kn">import</span> <span class="n">run</span>
-<span class="kn">from</span> <span class="nn">pedal.assertions.organizers</span> <span class="kn">import</span> <span class="n">phase</span><span class="p">,</span> <span class="n">postcondition</span><span class="p">,</span> <span class="n">precondition</span>
-<span class="kn">from</span> <span class="nn">pedal.assertions.setup</span> <span class="kn">import</span> <span class="n">resolve_all</span><span class="p">,</span> <span class="n">set_assertion_mode</span>
-<span class="kn">from</span> <span class="nn">pedal.assertions.assertions</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pedal.toolkit.imports</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pedal.toolkit.utilities</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pedal.toolkit.functions</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pedal.toolkit.signatures</span> <span class="kn">import</span> <span class="n">function_signature</span>
-<span class="kn">from</span> <span class="nn">pedal.sandbox.mocked</span> <span class="kn">import</span> <span class="n">disabled_builtin</span><span class="p">,</span> <span class="n">MockPedal</span><span class="p">,</span> <span class="n">BlockedModule</span>
-<span class="kn">from</span> <span class="nn">pedal.cait</span> <span class="kn">import</span> <span class="n">parse_program</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.sandbox</span><span class="w"> </span><span class="kn">import</span> <span class="n">run</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.assertions.organizers</span><span class="w"> </span><span class="kn">import</span> <span class="n">phase</span><span class="p">,</span> <span class="n">postcondition</span><span class="p">,</span> <span class="n">precondition</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.assertions.setup</span><span class="w"> </span><span class="kn">import</span> <span class="n">resolve_all</span><span class="p">,</span> <span class="n">set_assertion_mode</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.assertions.assertions</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.toolkit.imports</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.toolkit.utilities</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.toolkit.functions</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.toolkit.signatures</span><span class="w"> </span><span class="kn">import</span> <span class="n">function_signature</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.sandbox.mocked</span><span class="w"> </span><span class="kn">import</span> <span class="n">disabled_builtin</span><span class="p">,</span> <span class="n">MockPedal</span><span class="p">,</span> <span class="n">BlockedModule</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.cait</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_program</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 
-<span class="kn">from</span> <span class="nn">pedal.environments</span> <span class="kn">import</span> <span class="n">setup_pedal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.environments</span><span class="w"> </span><span class="kn">import</span> <span class="n">setup_pedal</span>
 
 <span class="n">set_assertion_mode</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 
@@ -489,7 +489,7 @@ This is Pedal version 2, however the version 3 code will look different.</p>
 <span class="n">FUNCTION_VALUE</span> <span class="o">=</span> <span class="mi">2</span>
 
 <span class="nd">@phase</span><span class="p">(</span><span class="s2">&quot;records&quot;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">grade_records</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">grade_records</span><span class="p">():</span>
     <span class="n">body</span> <span class="o">=</span> <span class="n">parse_program</span><span class="p">()</span><span class="o">.</span><span class="n">body</span>
     <span class="k">for</span> <span class="n">statement</span> <span class="ow">in</span> <span class="n">body</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">statement</span><span class="o">.</span><span class="n">ast_name</span> <span class="o">==</span> <span class="s2">&quot;Expr&quot;</span><span class="p">:</span>
@@ -503,7 +503,7 @@ This is Pedal version 2, however the version 3 code will look different.</p>
     <span class="k">return</span> <span class="kc">False</span>
 
 <span class="nd">@phase</span><span class="p">(</span><span class="s2">&quot;render_introduction&quot;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">grade_render_introduction</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">grade_render_introduction</span><span class="p">():</span>
     <span class="n">assertGenerally</span><span class="p">(</span><span class="n">match_signature</span><span class="p">(</span><span class="s1">&#39;render_introduction&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
     <span class="n">assertHasFunction</span><span class="p">(</span><span class="n">student</span><span class="p">,</span> <span class="s1">&#39;render_introduction&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[],</span> <span class="n">returns</span><span class="o">=</span><span class="s1">&#39;str&#39;</span><span class="p">)</span>
     <span class="n">introduction</span> <span class="o">=</span> <span class="n">student</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;render_introduction&#39;</span><span class="p">)</span>
@@ -511,20 +511,20 @@ This is Pedal version 2, however the version 3 code will look different.</p>
     <span class="n">give_partial</span><span class="p">(</span><span class="n">FUNCTION_VALUE</span><span class="p">)</span>
 
 <span class="nd">@phase</span><span class="p">(</span><span class="s2">&quot;create_world&quot;</span><span class="p">,</span> <span class="n">before</span><span class="o">=</span><span class="s1">&#39;create_world_components&#39;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">grade_create_world</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">grade_create_world</span><span class="p">():</span>
     <span class="n">assertGenerally</span><span class="p">(</span><span class="n">match_signature</span><span class="p">(</span><span class="s1">&#39;create_world&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
     <span class="n">assertHasFunction</span><span class="p">(</span><span class="n">student</span><span class="p">,</span> <span class="s1">&#39;create_world&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[],</span> <span class="n">returns</span><span class="o">=</span><span class="s1">&#39;World&#39;</span><span class="p">)</span>
     <span class="n">initial_world</span> <span class="o">=</span> <span class="n">student</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;create_world&#39;</span><span class="p">)</span>
     <span class="n">assertIsInstance</span><span class="p">(</span><span class="n">initial_world</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
 
 <span class="nd">@phase</span><span class="p">(</span><span class="s2">&quot;create_world_components&quot;</span><span class="p">,</span> <span class="n">after</span><span class="o">=</span><span class="s2">&quot;create_world&quot;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">grade_create_world_status</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">grade_create_world_status</span><span class="p">():</span>
     <span class="n">initial_world</span> <span class="o">=</span> <span class="n">student</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;create_world&#39;</span><span class="p">)</span>
     <span class="n">assertIn</span><span class="p">(</span><span class="s1">&#39;status&#39;</span><span class="p">,</span> <span class="n">initial_world</span><span class="p">)</span>
     <span class="n">assertEqual</span><span class="p">(</span><span class="n">initial_world</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">],</span> <span class="s1">&#39;playing&#39;</span><span class="p">)</span>
 
 <span class="nd">@phase</span><span class="p">(</span><span class="s2">&quot;create_world_components&quot;</span><span class="p">,</span> <span class="n">after</span><span class="o">=</span><span class="s2">&quot;create_world&quot;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">grade_create_world_map</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">grade_create_world_map</span><span class="p">():</span>
     <span class="n">initial_world</span> <span class="o">=</span> <span class="n">student</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;create_world&#39;</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s1">&#39;world&#39;</span><span class="p">)</span>
     <span class="c1"># Map</span>
     <span class="n">assertIn</span><span class="p">(</span><span class="s1">&#39;map&#39;</span><span class="p">,</span> <span class="n">initial_world</span><span class="p">)</span>
@@ -547,7 +547,7 @@ This is Pedal version 2, however the version 3 code will look different.</p>
         <span class="n">assertIsInstance</span><span class="p">(</span><span class="n">location</span><span class="p">[</span><span class="s1">&#39;stuff&#39;</span><span class="p">],</span> <span class="nb">list</span><span class="p">)</span>
 
 <span class="nd">@phase</span><span class="p">(</span><span class="s2">&quot;create_world_components&quot;</span><span class="p">,</span> <span class="n">after</span><span class="o">=</span><span class="s2">&quot;create_world&quot;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">grade_create_world_player</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">grade_create_world_player</span><span class="p">():</span>
     <span class="n">initial_world</span> <span class="o">=</span> <span class="n">student</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;create_world&#39;</span><span class="p">)</span>
     <span class="c1"># Player</span>
     <span class="n">assertIn</span><span class="p">(</span><span class="s1">&#39;player&#39;</span><span class="p">,</span> <span class="n">initial_world</span><span class="p">)</span>
@@ -560,11 +560,11 @@ This is Pedal version 2, however the version 3 code will look different.</p>
     <span class="n">assertIsInstance</span><span class="p">(</span><span class="n">initial_world</span><span class="p">[</span><span class="s1">&#39;player&#39;</span><span class="p">][</span><span class="s1">&#39;inventory&#39;</span><span class="p">],</span> <span class="nb">list</span><span class="p">)</span>
 
 <span class="nd">@phase</span><span class="p">(</span><span class="s2">&quot;create_world_done&quot;</span><span class="p">,</span> <span class="n">after</span><span class="o">=</span><span class="s1">&#39;create_world_components&#39;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">grade_create_world_finished</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">grade_create_world_finished</span><span class="p">():</span>
     <span class="n">give_partial</span><span class="p">(</span><span class="n">FUNCTION_VALUE</span><span class="p">)</span>
 
 <span class="nd">@phase</span><span class="p">(</span><span class="s2">&quot;render&quot;</span><span class="p">,</span> <span class="n">after</span><span class="o">=</span><span class="s1">&#39;create_world_done&#39;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">grade_render</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">grade_render</span><span class="p">():</span>
     <span class="n">assertGenerally</span><span class="p">(</span><span class="n">match_signature</span><span class="p">(</span><span class="s1">&#39;render&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
     <span class="n">assertHasFunction</span><span class="p">(</span><span class="n">student</span><span class="p">,</span> <span class="s1">&#39;render&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;World&#39;</span><span class="p">],</span> <span class="n">returns</span><span class="o">=</span><span class="s1">&#39;str&#39;</span><span class="p">)</span>
     <span class="n">initial_world</span> <span class="o">=</span> <span class="n">student</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;create_world&#39;</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s1">&#39;world&#39;</span><span class="p">)</span>
@@ -574,7 +574,7 @@ This is Pedal version 2, however the version 3 code will look different.</p>
     <span class="n">give_partial</span><span class="p">(</span><span class="n">FUNCTION_VALUE</span><span class="p">)</span>
 
 <span class="nd">@phase</span><span class="p">(</span><span class="s2">&quot;get_options&quot;</span><span class="p">,</span> <span class="n">after</span><span class="o">=</span><span class="s1">&#39;create_world_done&#39;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">grade_get_options</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">grade_get_options</span><span class="p">():</span>
     <span class="n">assertGenerally</span><span class="p">(</span><span class="n">match_signature</span><span class="p">(</span><span class="s1">&#39;get_options&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
     <span class="n">assertHasFunction</span><span class="p">(</span><span class="n">student</span><span class="p">,</span> <span class="s1">&#39;get_options&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;World&#39;</span><span class="p">],</span> <span class="n">returns</span><span class="o">=</span><span class="s1">&#39;list[str]&#39;</span><span class="p">)</span>
     <span class="n">initial_world</span> <span class="o">=</span> <span class="n">student</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;create_world&#39;</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s1">&#39;world&#39;</span><span class="p">)</span>
@@ -588,7 +588,7 @@ This is Pedal version 2, however the version 3 code will look different.</p>
     <span class="n">give_partial</span><span class="p">(</span><span class="n">FUNCTION_VALUE</span><span class="p">)</span>
 
 <span class="nd">@phase</span><span class="p">(</span><span class="s2">&quot;choose&quot;</span><span class="p">,</span> <span class="n">after</span><span class="o">=</span><span class="s1">&#39;get_options&#39;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">grade_choose</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">grade_choose</span><span class="p">():</span>
     <span class="n">assertGenerally</span><span class="p">(</span><span class="n">match_signature</span><span class="p">(</span><span class="s1">&#39;choose&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
     <span class="n">assertHasFunction</span><span class="p">(</span><span class="n">student</span><span class="p">,</span> <span class="s1">&#39;choose&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;list[str]&#39;</span><span class="p">],</span> <span class="n">returns</span><span class="o">=</span><span class="s1">&#39;str&#39;</span><span class="p">)</span>
     <span class="n">assertEqual</span><span class="p">(</span><span class="n">student</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;choose&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Quit&#39;</span><span class="p">,</span> <span class="s1">&#39;Run&#39;</span><span class="p">,</span> <span class="s1">&#39;Fight&#39;</span><span class="p">],</span>
@@ -603,7 +603,7 @@ This is Pedal version 2, however the version 3 code will look different.</p>
     <span class="n">give_partial</span><span class="p">(</span><span class="n">FUNCTION_VALUE</span><span class="p">)</span>
 
 <span class="nd">@phase</span><span class="p">(</span><span class="s2">&quot;update&quot;</span><span class="p">,</span> <span class="n">after</span><span class="o">=</span><span class="s1">&#39;get_options&#39;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">grade_update</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">grade_update</span><span class="p">():</span>
     <span class="n">assertGenerally</span><span class="p">(</span><span class="n">match_signature</span><span class="p">(</span><span class="s1">&#39;update&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
     <span class="n">assertHasFunction</span><span class="p">(</span><span class="n">student</span><span class="p">,</span> <span class="s1">&#39;update&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;World&#39;</span><span class="p">,</span> <span class="s1">&#39;str&#39;</span><span class="p">],</span> <span class="n">returns</span><span class="o">=</span><span class="s1">&#39;str&#39;</span><span class="p">)</span>
     <span class="n">initial_world</span> <span class="o">=</span> <span class="n">student</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;create_world&#39;</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s1">&#39;world&#39;</span><span class="p">)</span>
@@ -615,7 +615,7 @@ This is Pedal version 2, however the version 3 code will look different.</p>
     <span class="n">give_partial</span><span class="p">(</span><span class="n">FUNCTION_VALUE</span><span class="p">)</span>
 
 <span class="nd">@phase</span><span class="p">(</span><span class="s2">&quot;render_ending&quot;</span><span class="p">,</span> <span class="n">after</span><span class="o">=</span><span class="s1">&#39;update&#39;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">grade_render_ending</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">grade_render_ending</span><span class="p">():</span>
     <span class="n">assertGenerally</span><span class="p">(</span><span class="n">match_signature</span><span class="p">(</span><span class="s1">&#39;render_ending&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
     <span class="n">assertHasFunction</span><span class="p">(</span><span class="n">student</span><span class="p">,</span> <span class="s1">&#39;render_ending&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;World&#39;</span><span class="p">],</span> <span class="n">returns</span><span class="o">=</span><span class="s1">&#39;str&#39;</span><span class="p">)</span>
     <span class="n">initial_world</span> <span class="o">=</span> <span class="n">student</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;create_world&#39;</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s1">&#39;world&#39;</span><span class="p">)</span>
@@ -626,7 +626,7 @@ This is Pedal version 2, however the version 3 code will look different.</p>
     <span class="n">assertIsInstance</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
     <span class="n">give_partial</span><span class="p">(</span><span class="n">FUNCTION_VALUE</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">test_path</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">outcome</span><span class="p">,</span> <span class="n">path_name</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_path</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">outcome</span><span class="p">,</span> <span class="n">path_name</span><span class="p">):</span>
     <span class="n">world</span> <span class="o">=</span> <span class="n">student</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;create_world&#39;</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s1">&#39;world&#39;</span><span class="p">,</span> <span class="n">keep_context</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">command</span> <span class="ow">in</span> <span class="n">path</span><span class="p">:</span>
         <span class="n">assertIn</span><span class="p">(</span><span class="s1">&#39;status&#39;</span><span class="p">,</span> <span class="n">world</span><span class="p">)</span>
@@ -648,7 +648,7 @@ This is Pedal version 2, however the version 3 code will look different.</p>
 <span class="nd">@phase</span><span class="p">(</span><span class="s2">&quot;win_and_lose_paths&quot;</span><span class="p">,</span> <span class="n">after</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;create_world&#39;</span><span class="p">,</span> <span class="s1">&#39;get_options&#39;</span><span class="p">,</span>
                                     <span class="s1">&#39;render&#39;</span><span class="p">,</span> <span class="s1">&#39;choose&#39;</span><span class="p">,</span> <span class="s1">&#39;update&#39;</span><span class="p">,</span>
                                     <span class="s1">&#39;render_ending&#39;</span><span class="p">,</span> <span class="s1">&#39;render_introduction&#39;</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">grade_win_and_lose_paths</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">grade_win_and_lose_paths</span><span class="p">():</span>
     <span class="n">assertHas</span><span class="p">(</span><span class="n">student</span><span class="p">,</span> <span class="s2">&quot;WIN_PATH&quot;</span><span class="p">,</span> <span class="n">types</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
     <span class="n">assertHas</span><span class="p">(</span><span class="n">student</span><span class="p">,</span> <span class="s2">&quot;LOSE_PATH&quot;</span><span class="p">,</span> <span class="n">types</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
     <span class="n">student</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;render_introduction&#39;</span><span class="p">)</span>
@@ -662,7 +662,7 @@ This is Pedal version 2, however the version 3 code will look different.</p>
 
 
 <span class="nd">@phase</span><span class="p">(</span><span class="s1">&#39;conclusion&#39;</span><span class="p">,</span> <span class="n">after</span><span class="o">=</span><span class="s1">&#39;win_and_lose_paths&#39;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">finish_grading</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">finish_grading</span><span class="p">():</span>
     <span class="c1"># 2</span>
     <span class="n">assertGenerally</span><span class="p">(</span><span class="n">all_documented</span><span class="p">(),</span> <span class="n">score</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 

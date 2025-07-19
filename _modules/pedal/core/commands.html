@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pedal.core.commands &mdash; Pedal 1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/argparse.css?v=441cd8df" />
 
@@ -98,11 +98,11 @@
            <span class="s1">&#39;system_error&#39;</span><span class="p">,</span> <span class="s1">&#39;clear_report&#39;</span><span class="p">,</span> <span class="s1">&#39;get_all_feedback&#39;</span><span class="p">,</span> <span class="s1">&#39;guidance&#39;</span><span class="p">,</span>
            <span class="s1">&#39;contextualize_report&#39;</span><span class="p">,</span> <span class="s1">&#39;Feedback&#39;</span><span class="p">,</span> <span class="s1">&#39;get_submission&#39;</span><span class="p">,</span> <span class="s1">&#39;set_formatter&#39;</span><span class="p">]</span>
 
-<span class="kn">from</span> <span class="nn">pedal.core.feedback</span> <span class="kn">import</span> <span class="p">(</span><span class="n">Feedback</span><span class="p">,</span> <span class="n">FeedbackKind</span><span class="p">,</span> <span class="n">FeedbackCategory</span><span class="p">,</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.core.feedback</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span><span class="n">Feedback</span><span class="p">,</span> <span class="n">FeedbackKind</span><span class="p">,</span> <span class="n">FeedbackCategory</span><span class="p">,</span>
                                  <span class="n">FeedbackResponse</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">pedal.core.report</span> <span class="kn">import</span> <span class="n">MAIN_REPORT</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.core.report</span><span class="w"> </span><span class="kn">import</span> <span class="n">MAIN_REPORT</span>
 
-<span class="kn">from</span> <span class="nn">pedal.core.submission</span> <span class="kn">import</span> <span class="n">Submission</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.core.submission</span><span class="w"> </span><span class="kn">import</span> <span class="n">Submission</span>
 
 <span class="c1">#: Lowercase &quot;function&quot; version that works like other Core Feedback Functions.</span>
 <span class="n">feedback</span> <span class="o">=</span> <span class="n">Feedback</span>
@@ -112,7 +112,7 @@
 
 <div class="viewcode-block" id="set_correct">
 <a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.set_correct">[docs]</a>
-<span class="k">class</span> <span class="nc">set_correct</span><span class="p">(</span><span class="n">FeedbackResponse</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">set_correct</span><span class="p">(</span><span class="n">FeedbackResponse</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    **(Feedback Function)**</span>
 
@@ -134,7 +134,7 @@
 
 <div class="viewcode-block" id="compliment">
 <a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.compliment">[docs]</a>
-<span class="k">class</span> <span class="nc">compliment</span><span class="p">(</span><span class="n">FeedbackResponse</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">compliment</span><span class="p">(</span><span class="n">FeedbackResponse</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Create a positive feedback for the user, potentially on a specific line of</span>
 <span class="sd">    code.</span>
@@ -144,7 +144,7 @@
     <span class="n">valence</span> <span class="o">=</span> <span class="n">Feedback</span><span class="o">.</span><span class="n">POSITIVE_VALENCE</span>
     <span class="n">correct</span> <span class="o">=</span> <span class="kc">True</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">message_template</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">message_template</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">title</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">title</span> <span class="o">=</span> <span class="n">message</span>
         <span class="k">if</span> <span class="n">message</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">message_template</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -155,7 +155,7 @@
 
 <div class="viewcode-block" id="give_partial">
 <a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.give_partial">[docs]</a>
-<span class="k">class</span> <span class="nc">give_partial</span><span class="p">(</span><span class="n">FeedbackResponse</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">give_partial</span><span class="p">(</span><span class="n">FeedbackResponse</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Increases the user&#39;s current score by the `score`. &quot;&quot;&quot;</span>
     <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Partial Credit&quot;</span>
     <span class="n">message_template</span> <span class="o">=</span> <span class="s2">&quot;Partial credit&quot;</span>
@@ -165,14 +165,14 @@
     <span class="n">correct</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">muted</span> <span class="o">=</span> <span class="kc">True</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">score</span><span class="o">=</span><span class="n">value</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="explain">
 <a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.explain">[docs]</a>
-<span class="k">class</span> <span class="nc">explain</span><span class="p">(</span><span class="n">FeedbackResponse</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">explain</span><span class="p">(</span><span class="n">FeedbackResponse</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Give a high-priority piece of negative feedback to the student. &quot;&quot;&quot;</span>
     <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Instructor Feedback&quot;</span>
     <span class="n">muted</span> <span class="o">=</span> <span class="kc">False</span>
@@ -180,7 +180,7 @@
     <span class="n">kind</span> <span class="o">=</span> <span class="n">FeedbackKind</span><span class="o">.</span><span class="n">MISTAKE</span>
     <span class="n">valence</span> <span class="o">=</span> <span class="n">Feedback</span><span class="o">.</span><span class="n">NEGATIVE_VALENCE</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">message_template</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">message_template</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">message</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">message_template</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;explain requires at least either message or message_template&quot;</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">,</span> <span class="n">message_template</span><span class="o">=</span><span class="n">message_template</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
@@ -189,7 +189,7 @@
 
 <div class="viewcode-block" id="gently">
 <a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.gently">[docs]</a>
-<span class="k">class</span> <span class="nc">gently</span><span class="p">(</span><span class="n">FeedbackResponse</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">gently</span><span class="p">(</span><span class="n">FeedbackResponse</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Give a low-priority piece of negative feedback to the student.</span>
 
@@ -204,7 +204,7 @@
     <span class="n">kind</span> <span class="o">=</span> <span class="n">FeedbackKind</span><span class="o">.</span><span class="n">MISTAKE</span>
     <span class="n">valence</span> <span class="o">=</span> <span class="n">Feedback</span><span class="o">.</span><span class="n">NEGATIVE_VALENCE</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">message_template</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">message_template</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">message</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">message_template</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;gently requires at least either message or message_template&quot;</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">,</span> <span class="n">message_template</span><span class="o">=</span><span class="n">message_template</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
@@ -213,14 +213,14 @@
 
 <div class="viewcode-block" id="guidance">
 <a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.guidance">[docs]</a>
-<span class="k">class</span> <span class="nc">guidance</span><span class="p">(</span><span class="n">FeedbackResponse</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">guidance</span><span class="p">(</span><span class="n">FeedbackResponse</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Give instructions about a question. &quot;&quot;&quot;</span>
     <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Instructor Guidance&quot;</span>
     <span class="n">category</span> <span class="o">=</span> <span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">INSTRUCTIONS</span>
     <span class="n">kind</span> <span class="o">=</span> <span class="n">FeedbackKind</span><span class="o">.</span><span class="n">INSTRUCTIONAL</span>
     <span class="n">valence</span> <span class="o">=</span> <span class="n">Feedback</span><span class="o">.</span><span class="n">NEUTRAL_VALENCE</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">message_template</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">message_template</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">message</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">message_template</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;compliment requires at least either message or message_template&quot;</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">,</span> <span class="n">message_template</span><span class="o">=</span><span class="n">message_template</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
@@ -229,7 +229,7 @@
 
 <div class="viewcode-block" id="hide_correctness">
 <a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.hide_correctness">[docs]</a>
-<span class="k">def</span> <span class="nf">hide_correctness</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">hide_correctness</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Force the report to not indicate score/correctness.</span>
 
@@ -243,7 +243,7 @@
 
 <div class="viewcode-block" id="suppress">
 <a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.suppress">[docs]</a>
-<span class="k">def</span> <span class="nf">suppress</span><span class="p">(</span><span class="n">category</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">suppress</span><span class="p">(</span><span class="n">category</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Hides a given category or label within a category from being considered</span>
 <span class="sd">    by the resolver.</span>
@@ -265,7 +265,7 @@
 
 <div class="viewcode-block" id="log">
 <a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.log">[docs]</a>
-<span class="k">def</span> <span class="nf">log</span><span class="p">(</span><span class="o">*</span><span class="n">items</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">log</span><span class="p">(</span><span class="o">*</span><span class="n">items</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Attach logging information to the Report as a piece of feedback.</span>
 
@@ -288,7 +288,7 @@
 
 <div class="viewcode-block" id="debug">
 <a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.debug">[docs]</a>
-<span class="k">def</span> <span class="nf">debug</span><span class="p">(</span><span class="o">*</span><span class="n">items</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">debug</span><span class="p">(</span><span class="o">*</span><span class="n">items</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Attach logging information to the Report as a piece of feedback.</span>
 <span class="sd">    Works at a higher priority than :py:func:`~pedal.core.commands.log` and</span>
@@ -317,7 +317,7 @@
 
 <div class="viewcode-block" id="clear_report">
 <a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.clear_report">[docs]</a>
-<span class="k">def</span> <span class="nf">clear_report</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">clear_report</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Removes all existing data from the report, including any submissions,</span>
 <span class="sd">    suppressions, feedback, and Tool data.</span>
@@ -332,7 +332,7 @@
 
 <div class="viewcode-block" id="contextualize_report">
 <a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.contextualize_report">[docs]</a>
-<span class="k">def</span> <span class="nf">contextualize_report</span><span class="p">(</span><span class="n">submission</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;answer.py&#39;</span><span class="p">,</span> <span class="n">clear</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">contextualize_report</span><span class="p">(</span><span class="n">submission</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;answer.py&#39;</span><span class="p">,</span> <span class="n">clear</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                          <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Updates the report with the submission. By default, clears out any old</span>
@@ -360,7 +360,7 @@
 
 <div class="viewcode-block" id="get_submission">
 <a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.get_submission">[docs]</a>
-<span class="k">def</span> <span class="nf">get_submission</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Submission</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_submission</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Submission</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get the current submission from the given report, or the default MAIN_REPORT.</span>
 
@@ -377,7 +377,7 @@
 
 <div class="viewcode-block" id="get_all_feedback">
 <a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.get_all_feedback">[docs]</a>
-<span class="k">def</span> <span class="nf">get_all_feedback</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_all_feedback</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Gives access to the list of feedback from the report. Usually, you won&#39;t</span>
 <span class="sd">    need this; but if you want to build on the results of earlier tools, it</span>
@@ -400,7 +400,7 @@
 
 <div class="viewcode-block" id="system_error">
 <a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.system_error">[docs]</a>
-<span class="k">class</span> <span class="nc">system_error</span><span class="p">(</span><span class="n">FeedbackResponse</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">system_error</span><span class="p">(</span><span class="n">FeedbackResponse</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Call this function to indicate that something has gone wrong at the system</span>
 <span class="sd">    level with Pedal. Ideally, this doesn&#39;t happen, but sometimes errors</span>
@@ -419,7 +419,7 @@
 
 <div class="viewcode-block" id="set_formatter">
 <a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.set_formatter">[docs]</a>
-<span class="k">def</span> <span class="nf">set_formatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">set_formatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Set the formatter for the given report.</span>
 
@@ -434,7 +434,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">set_pools</span><span class="p">(</span><span class="n">pools</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">set_pools</span><span class="p">(</span><span class="n">pools</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Ability to have A/B testing on a per-feedback basis.</span>
 

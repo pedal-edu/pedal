@@ -7,7 +7,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Testing Your Tests &mdash; Pedal 1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/argparse.css?v=441cd8df" />
 
@@ -147,7 +147,7 @@ print the phrase <code class="docutils literal notranslate"><span class="pre">&q
 </pre></div>
 </div>
 <p>The autograding script might look like this:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal</span> <span class="kn">import</span> <span class="o">*</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pedal</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
 
 <span class="n">ensure_literal</span><span class="p">(</span><span class="s2">&quot;order out of&quot;</span><span class="p">)</span>
 <span class="n">prevent_ast</span><span class="p">(</span><span class="s2">&quot;Str&quot;</span><span class="p">,</span> <span class="n">at_most</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>

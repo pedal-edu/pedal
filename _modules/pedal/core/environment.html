@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pedal.core.environment &mdash; Pedal 1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/argparse.css?v=441cd8df" />
 
@@ -96,13 +96,13 @@
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Environment&#39;</span><span class="p">]</span>
 
-<span class="kn">from</span> <span class="nn">pedal.core.report</span> <span class="kn">import</span> <span class="n">MAIN_REPORT</span>
-<span class="kn">from</span> <span class="nn">pedal.core.submission</span> <span class="kn">import</span> <span class="n">Submission</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.core.report</span><span class="w"> </span><span class="kn">import</span> <span class="n">MAIN_REPORT</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.core.submission</span><span class="w"> </span><span class="kn">import</span> <span class="n">Submission</span>
 
 
 <div class="viewcode-block" id="Environment">
 <a class="viewcode-back" href="../../../developers/api.html#pedal.core.environment.Environment">[docs]</a>
-<span class="k">class</span> <span class="nc">Environment</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Environment</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Abstract Environment class, meant to be subclassed by the environment to</span>
 <span class="sd">    help simplify configuration. Technically doesn&#39;t need to do anything.</span>
@@ -114,7 +114,7 @@
 <span class="sd">        main_code (str): The actual code of the main file.</span>
 <span class="sd">        files (dict[str, str]): A list of filenames mapped to their contents.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">files</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">main_file</span><span class="o">=</span><span class="s1">&#39;answer.py&#39;</span><span class="p">,</span> <span class="n">main_code</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">files</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">main_file</span><span class="o">=</span><span class="s1">&#39;answer.py&#39;</span><span class="p">,</span> <span class="n">main_code</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">user</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">assignment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">course</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">execution</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">instructor_file</span><span class="o">=</span><span class="s1">&#39;instructor.py&#39;</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">report</span> <span class="o">=</span> <span class="n">report</span>
@@ -147,14 +147,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">contextualize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">submission</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fields</span> <span class="o">=</span> <span class="p">{}</span>
 
-    <span class="k">def</span> <span class="nf">load_main</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">main_file</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_main</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">main_file</span><span class="p">):</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">main_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">opened</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">opened</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>

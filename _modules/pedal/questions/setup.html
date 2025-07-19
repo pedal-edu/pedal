@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pedal.questions.setup &mdash; Pedal 1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/argparse.css?v=441cd8df" />
 
@@ -92,13 +92,13 @@
 <span class="sd">Initialize and setup the Questions tool.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">pedal.core.report</span> <span class="kn">import</span> <span class="n">MAIN_REPORT</span><span class="p">,</span> <span class="n">Report</span>
-<span class="kn">from</span> <span class="nn">pedal.questions.constants</span> <span class="kn">import</span> <span class="n">TOOL_NAME</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.core.report</span><span class="w"> </span><span class="kn">import</span> <span class="n">MAIN_REPORT</span><span class="p">,</span> <span class="n">Report</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.questions.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">TOOL_NAME</span>
 
-<span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">hashlib</span>
 
 
-<span class="k">def</span> <span class="nf">_name_hash</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_name_hash</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Turn a string name into a unique hashcode using MD5 &quot;&quot;&quot;</span>
     <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">digest</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
@@ -106,7 +106,7 @@
 
 <div class="viewcode-block" id="reset">
 <a class="viewcode-back" href="../../../developers/tools/questions.html#pedal.questions.setup.reset">[docs]</a>
-<span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Remove all settings for the Questions tool. Seed will be 0.</span>
 
@@ -128,7 +128,7 @@
 
 <div class="viewcode-block" id="set_seed">
 <a class="viewcode-back" href="../../../developers/tools/questions.html#pedal.questions.setup.set_seed">[docs]</a>
-<span class="k">def</span> <span class="nf">set_seed</span><span class="p">(</span><span class="n">seed_value</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">set_seed</span><span class="p">(</span><span class="n">seed_value</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Sets the seed that will be used in selecting questions.</span>
 

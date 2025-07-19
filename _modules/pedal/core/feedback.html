@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pedal.core.feedback &mdash; Pedal 1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/argparse.css?v=441cd8df" />
 
@@ -96,23 +96,23 @@
            <span class="s2">&quot;CompositeFeedbackFunction&quot;</span><span class="p">,</span>
            <span class="s2">&quot;FeedbackResponse&quot;</span><span class="p">]</span>
 
-<span class="kn">from</span> <span class="nn">pedal.core.formatting</span> <span class="kn">import</span> <span class="n">wrap_fields</span>
-<span class="kn">from</span> <span class="nn">pedal.core.location</span> <span class="kn">import</span> <span class="n">Location</span>
-<span class="kn">from</span> <span class="nn">pedal.core.report</span> <span class="kn">import</span> <span class="n">MAIN_REPORT</span>
-<span class="kn">from</span> <span class="nn">pedal.core.feedback_category</span> <span class="kn">import</span> <span class="n">FeedbackKind</span><span class="p">,</span> <span class="n">FeedbackCategory</span><span class="p">,</span> <span class="n">FeedbackStatus</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.core.formatting</span><span class="w"> </span><span class="kn">import</span> <span class="n">wrap_fields</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.core.location</span><span class="w"> </span><span class="kn">import</span> <span class="n">Location</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.core.report</span><span class="w"> </span><span class="kn">import</span> <span class="n">MAIN_REPORT</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.core.feedback_category</span><span class="w"> </span><span class="kn">import</span> <span class="n">FeedbackKind</span><span class="p">,</span> <span class="n">FeedbackCategory</span><span class="p">,</span> <span class="n">FeedbackStatus</span>
 
 <span class="n">PEDAL_DEVELOPERS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Austin Cory Bart &lt;acbart@udel.edu&gt;&quot;</span><span class="p">,</span>
                     <span class="s2">&quot;Luke Gusukuma &lt;lukesg08@vt.edu&gt;&quot;</span><span class="p">]</span>
 
 
-<span class="k">class</span> <span class="nc">FeedbackRegistry</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">FeedbackRegistry</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_registered_feedback</span> <span class="o">=</span> <span class="p">{}</span>
 
 
 <div class="viewcode-block" id="Feedback">
 <a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.Feedback">[docs]</a>
-<span class="k">class</span> <span class="nc">Feedback</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Feedback</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A class for storing raw feedback.</span>
 
@@ -153,6 +153,11 @@
 <span class="sd">            into the template IF the ``condition`` is met.</span>
 <span class="sd">        fields (Dict[str,Any]): The raw data that was used to interpolate the</span>
 <span class="sd">            template to produce the message.</span>
+<span class="sd">        safe_field_names (List[str]): A list of field names that are safe to export to JSON.</span>
+<span class="sd">            If None, all fields are safe.</span>
+<span class="sd">        safe_field_converters (Dict[str,Callable]): A dictionary of field names to functions</span>
+<span class="sd">            that will convert the field to a JSON-serializable format. If None, all fields</span>
+<span class="sd">            will be passed through as-is.</span>
 <span class="sd">        location (:py:attr:`~pedal.core.location.Location` or int): Information</span>
 <span class="sd">            about specific locations relevant to this message.</span>
 
@@ -217,6 +222,8 @@
     <span class="n">constant_fields</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">fields</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">field_names</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">safe_field_names</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">safe_field_converters</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">kind</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">title</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">message</span> <span class="o">=</span> <span class="kc">None</span>
@@ -250,9 +257,10 @@
 
     <span class="c1"># MAIN_REPORT</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">category</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">justification</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">fields</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">field_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">fields</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">field_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">safe_field_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">safe_field_converters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">kind</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">message</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">message_template</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">else_message</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">else_message_template</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -294,6 +302,10 @@
         <span class="k">if</span> <span class="n">field_names</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">field_names</span> <span class="o">=</span> <span class="n">field_names</span>
             <span class="c1"># TODO: Should this be taken from `fields` if nothing is provided?</span>
+        <span class="k">if</span> <span class="n">safe_field_names</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">safe_field_names</span> <span class="o">=</span> <span class="n">safe_field_names</span>
+        <span class="k">if</span> <span class="n">safe_field_converters</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">safe_field_converters</span> <span class="o">=</span> <span class="n">safe_field_converters</span>
         <span class="k">if</span> <span class="n">title</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="n">title</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -354,7 +366,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_handle_condition</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">_handle_condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_handle_condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Actually handle the condition check, updating message and report. &quot;&quot;&quot;</span>
         <span class="c1"># Self-attach to a given report?</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_exception</span> <span class="o">=</span> <span class="kc">None</span>
@@ -390,7 +402,7 @@
 
 <div class="viewcode-block" id="Feedback.condition">
 <a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.Feedback.condition">[docs]</a>
-    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Detect if this feedback is present in the code.</span>
 <span class="sd">        Defaults to true through the `activate` parameter.</span>
@@ -401,7 +413,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">activate</span></div>
 
 
-    <span class="k">def</span> <span class="nf">_get_message</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_message</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Determines the appropriate value for the message. It will attempt</span>
 <span class="sd">        to use this instance&#39;s message, but if it&#39;s not available then it will</span>
@@ -420,7 +432,7 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">message_template</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">fields</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEFAULT_FEEDBACK_MESSAGE</span>
 
-    <span class="k">def</span> <span class="nf">_get_else_message</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_else_message</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Determines the appropriate value for the else_message. It will attempt</span>
 <span class="sd">        to use this instance&#39;s else_message, but if it&#39;s not available then it will</span>
@@ -439,7 +451,7 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">else_message_template</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">fields</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEFAULT_ELSE_MESSAGE</span>
 
-    <span class="k">def</span> <span class="nf">_get_justification</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">met_condition</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_justification</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">met_condition</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Determines the appropriate value for the justification. It first checks</span>
 <span class="sd">        if there is a `justification` already present, but if it&#39;s not available</span>
@@ -470,7 +482,7 @@
             <span class="k">return</span> <span class="n">template</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">fields</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEFAULT_JUSTIFICATION_MESSAGE</span>
 
-    <span class="k">def</span> <span class="nf">_get_child_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feedback</span><span class="p">,</span> <span class="n">active</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_child_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feedback</span><span class="p">,</span> <span class="n">active</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Callback function that Reports will call when a new piece of</span>
 <span class="sd">        feedback is being considered. By default, does nothing. This is useful</span>
 <span class="sd">        for :py:class:`pedal.core.group.FeedbackGroup`, most other feedbacks</span>
@@ -479,7 +491,7 @@
 <span class="sd">        The ``active`` parameter controls whether the condition for the</span>
 <span class="sd">        feedback was met. &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__xor__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__xor__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Allows you to have two mutually exclusive conditions. Only one condition will be activated.</span>
 
@@ -498,13 +510,13 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">muted</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">bool</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">unscored</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">muted</span>
 
-    <span class="k">def</span> <span class="fm">__rxor__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__rxor__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__xor__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__bool__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__bool__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_met_condition</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a string representation of this piece of Feedback for quick, dev purposes.</span>
 <span class="sd">        Returns:</span>
@@ -512,7 +524,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="s2">&quot;&lt;Feedback (</span><span class="si">{}</span><span class="s2">,</span><span class="si">{}</span><span class="s2">)&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">category</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a string representation of this piece of Feedback that displays considerably more information.</span>
 <span class="sd">        Returns:</span>
@@ -533,7 +545,7 @@
 
 <div class="viewcode-block" id="Feedback.update_location">
 <a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.Feedback.update_location">[docs]</a>
-    <span class="k">def</span> <span class="nf">update_location</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_location</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Updates both the fields and location attribute.</span>
 <span class="sd">        TODO: Handle less information intelligently. &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
@@ -542,10 +554,19 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;location&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">location</span></div>
 
 
-    <span class="k">def</span> <span class="nf">_fields_to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_fields_to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">safe_field_names</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">converters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">safe_field_converters</span> <span class="ow">or</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">safe_field_names</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">:</span>
+                    <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">converters</span><span class="p">:</span>
+                        <span class="n">value</span> <span class="o">=</span> <span class="n">converters</span><span class="p">[</span><span class="n">key</span><span class="p">](</span><span class="n">value</span><span class="p">)</span>
+                    <span class="n">result</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">{</span>
             <span class="s1">&#39;correct&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">correct</span><span class="p">,</span>
             <span class="s1">&#39;score&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">score</span><span class="p">,</span>
@@ -566,7 +587,7 @@
         <span class="p">}</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">override</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">,</span> <span class="o">**</span><span class="n">fields</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">override</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">,</span> <span class="o">**</span><span class="n">fields</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_override_backups</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">cls</span><span class="o">.</span><span class="n">_override_backups</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">field</span><span class="p">,</span> <span class="n">new_value</span> <span class="ow">in</span> <span class="n">fields</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -576,14 +597,14 @@
         <span class="n">report</span><span class="o">.</span><span class="n">override_feedback</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_restore_overrides</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_restore_overrides</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">field</span><span class="p">,</span> <span class="n">old_value</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_override_backups</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="nb">setattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">old_value</span><span class="p">)</span>
         <span class="bp">cls</span><span class="o">.</span><span class="n">_override_backups</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
 
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">override_for_pool</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">pool</span><span class="p">,</span> <span class="o">**</span><span class="n">fields</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">override_for_pool</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">pool</span><span class="p">,</span> <span class="o">**</span><span class="n">fields</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pool</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="n">pool</span> <span class="o">=</span> <span class="p">[</span><span class="n">pool</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">each_pool</span> <span class="ow">in</span> <span class="n">pool</span><span class="p">:</span>
@@ -591,7 +612,7 @@
                 <span class="bp">cls</span><span class="o">.</span><span class="n">_pools</span><span class="p">[</span><span class="n">each_pool</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="bp">cls</span><span class="o">.</span><span class="n">_pools</span><span class="p">[</span><span class="n">each_pool</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_finalize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_finalize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># TODO: Move this to be earlier, when we create a feedback.</span>
         <span class="c1">#       Otherwise there might be fields that are not interpolated correctly!</span>
         <span class="n">possible_overrides</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pools</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">chosen_pool</span><span class="p">)</span>
@@ -603,7 +624,7 @@
 
 <div class="viewcode-block" id="FeedbackResponse">
 <a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.FeedbackResponse">[docs]</a>
-<span class="k">class</span> <span class="nc">FeedbackResponse</span><span class="p">(</span><span class="n">Feedback</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">FeedbackResponse</span><span class="p">(</span><span class="n">Feedback</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An extension of :py:class:`~pedal.core.feedback.Feedback` that is meant</span>
 <span class="sd">    to indicate that the class should not have any condition behind its</span>
@@ -614,7 +635,7 @@
 
 <div class="viewcode-block" id="CompositeFeedbackFunction">
 <a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.CompositeFeedbackFunction">[docs]</a>
-<span class="k">def</span> <span class="nf">CompositeFeedbackFunction</span><span class="p">(</span><span class="o">*</span><span class="n">functions</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">CompositeFeedbackFunction</span><span class="p">(</span><span class="o">*</span><span class="n">functions</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Decorator for functions that return multiple types of feedback functions.</span>
 
@@ -625,7 +646,7 @@
 <span class="sd">        callable: The decorated function.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">CompositeFeedbackFunction_with_attrs</span><span class="p">(</span><span class="n">function</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">CompositeFeedbackFunction_with_attrs</span><span class="p">(</span><span class="n">function</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">        Args:</span>
@@ -641,7 +662,7 @@
 
 
 
-<span class="k">class</span> <span class="nc">FeedbackGroup</span><span class="p">(</span><span class="n">Feedback</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">FeedbackGroup</span><span class="p">(</span><span class="n">Feedback</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An extension of :py:class:`~pedal.core.feedback.Feedback` that is meant</span>
 <span class="sd">    to indicate that this class will start a new Group context within the report</span>

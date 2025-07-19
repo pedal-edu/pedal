@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pedal.assertions.commands &mdash; Pedal 1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/argparse.css?v=441cd8df" />
 
@@ -92,23 +92,23 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Unifying collection of all the commands in ``pedal.assertions``.</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">pedal.core.commands</span> <span class="kn">import</span> <span class="n">gently</span>
-<span class="kn">from</span> <span class="nn">pedal.core.scoring</span> <span class="kn">import</span> <span class="n">Score</span><span class="p">,</span> <span class="n">combine_scores</span>
-<span class="kn">from</span> <span class="nn">pedal.sandbox.commands</span> <span class="kn">import</span> <span class="n">call</span><span class="p">,</span> <span class="n">clear_student_data</span><span class="p">,</span> <span class="n">run</span><span class="p">,</span> <span class="n">get_sandbox</span><span class="p">,</span> <span class="n">CommandBlock</span>
-<span class="kn">from</span> <span class="nn">pedal.assertions.static</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pedal.assertions.runtime</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pedal.assertions.runtime</span> <span class="kn">import</span> <span class="n">_FIELDS</span>
-<span class="kn">from</span> <span class="nn">pedal.assertions.positive</span> <span class="kn">import</span> <span class="n">close_output</span><span class="p">,</span> <span class="n">correct_output</span>
-<span class="kn">from</span> <span class="nn">pedal.types.new_types</span> <span class="kn">import</span> <span class="n">is_subtype</span>
-<span class="kn">from</span> <span class="nn">pedal.assertions.testing_libraries</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.core.commands</span><span class="w"> </span><span class="kn">import</span> <span class="n">gently</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.core.scoring</span><span class="w"> </span><span class="kn">import</span> <span class="n">Score</span><span class="p">,</span> <span class="n">combine_scores</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.sandbox.commands</span><span class="w"> </span><span class="kn">import</span> <span class="n">call</span><span class="p">,</span> <span class="n">clear_student_data</span><span class="p">,</span> <span class="n">run</span><span class="p">,</span> <span class="n">get_sandbox</span><span class="p">,</span> <span class="n">CommandBlock</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.assertions.static</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.assertions.runtime</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.assertions.runtime</span><span class="w"> </span><span class="kn">import</span> <span class="n">_FIELDS</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.assertions.positive</span><span class="w"> </span><span class="kn">import</span> <span class="n">close_output</span><span class="p">,</span> <span class="n">correct_output</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.types.new_types</span><span class="w"> </span><span class="kn">import</span> <span class="n">is_subtype</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.assertions.testing_libraries</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
 
 <span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">fields</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">fields</span>
 <span class="k">except</span><span class="p">:</span>
     <span class="n">fields</span> <span class="o">=</span> <span class="kc">None</span>
 
 
-<span class="k">class</span> <span class="nc">unit_test</span><span class="p">(</span><span class="n">assert_group</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">unit_test</span><span class="p">(</span><span class="n">assert_group</span><span class="p">):</span>
     <span class="n">justification_template</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;Some of the feedback in this group was triggered.&quot;</span><span class="p">,</span>
                               <span class="s2">&quot;None of the feedback in this group was triggered.&quot;</span><span class="p">)</span>
 
@@ -134,7 +134,7 @@
 
 <div class="viewcode-block" id="unit_test">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.commands.unit_test">[docs]</a>
-<span class="k">def</span> <span class="nf">unit_test</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="o">*</span><span class="n">tests</span><span class="p">,</span> <span class="n">else_message</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">else_message_template</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">unit_test</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="o">*</span><span class="n">tests</span><span class="p">,</span> <span class="n">else_message</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">else_message_template</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
               <span class="n">score</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">partial_credit</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
               <span class="n">assert_function</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -212,16 +212,16 @@
 
 <div class="viewcode-block" id="check_dataclass_error">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.commands.check_dataclass_error">[docs]</a>
-<span class="k">class</span> <span class="nc">check_dataclass_error</span><span class="p">(</span><span class="n">RuntimeAssertionFeedback</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">check_dataclass_error</span><span class="p">(</span><span class="n">RuntimeAssertionFeedback</span><span class="p">):</span>
     <span class="n">justification</span> <span class="o">=</span> <span class="s2">&quot;Value is not a dataclass&quot;</span>
     <span class="n">_expected_verb</span> <span class="o">=</span> <span class="s2">&quot;to be&quot;</span>
     <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">&quot;is not&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">SandboxedValue</span><span class="p">(</span><span class="n">value</span><span class="p">),</span> <span class="n">ExactValue</span><span class="p">(</span><span class="s2">&quot;a dataclass&quot;</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
-<span class="k">def</span> <span class="nf">check_dataclass_instance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">else_message</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">score</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">partial_credit</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">check_dataclass_instance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">else_message</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">score</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">partial_credit</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="n">report</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;report&#39;</span><span class="p">,</span> <span class="n">MAIN_REPORT</span><span class="p">)</span>
     <span class="n">name</span> <span class="o">=</span> <span class="n">dataclass</span><span class="o">.</span><span class="vm">__name__</span>
     <span class="c1"># Check that we weren&#39;t given an error</span>
@@ -278,7 +278,7 @@
 
 <div class="viewcode-block" id="wheat_chaff_game_class">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.commands.wheat_chaff_game_class">[docs]</a>
-<span class="k">class</span> <span class="nc">wheat_chaff_game_class</span><span class="p">(</span><span class="n">assert_group</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">wheat_chaff_game_class</span><span class="p">(</span><span class="n">assert_group</span><span class="p">):</span>
     <span class="n">message_template</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">I ran your test cases against some of my own implementations of {name:name}.</span>
 <span class="s2">I had </span><span class="si">{wheat_count}</span><span class="s2"> programs I expected to pass, and </span><span class="si">{chaff_count}</span><span class="s2"> programs I expected to fail.</span>
@@ -286,7 +286,7 @@
 <span class="si">{wheat_names}{chaff_names}</span>
 <span class="s2">&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">wheats</span><span class="p">,</span> <span class="n">chaffs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">wheats</span><span class="p">,</span> <span class="n">chaffs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">wheats</span> <span class="o">=</span> <span class="n">wheats</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">correct_wheats</span> <span class="o">=</span> <span class="p">[]</span>
@@ -298,13 +298,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;wheat_count&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">wheats</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;chaff_count&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">chaffs</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_value</span><span class="p">,</span> <span class="n">traceback</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_value</span><span class="p">,</span> <span class="n">traceback</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">stop_group</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">format_message</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_handle_condition</span><span class="p">()</span>
         <span class="k">return</span> <span class="kc">False</span>
 
-    <span class="k">def</span> <span class="nf">format_message</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">format_message</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">missing_wheats</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wheats</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">correct_wheats</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">missing_wheats</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;wheat_outcome&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Your tests did not pass </span><span class="si">{</span><span class="n">missing_wheats</span><span class="si">}</span><span class="s2"> of my genuine programs.</span><span class="se">\n</span><span class="s2">&quot;</span>
@@ -326,12 +326,12 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;chaff_outcome&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;At least one of your tests correctly failed for all of my impostor programs.</span><span class="se">\n</span><span class="s2">&quot;</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;chaff_names&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">wheat_outcome</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wheat</span><span class="p">,</span> <span class="n">success</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">wheat_outcome</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wheat</span><span class="p">,</span> <span class="n">success</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">success</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">points</span> <span class="o">+=</span> <span class="mi">1</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wheats</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">correct_wheats</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wheat</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">chaff_outcome</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">chaff</span><span class="p">,</span> <span class="n">failure</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">chaff_outcome</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">chaff</span><span class="p">,</span> <span class="n">failure</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">failure</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">points</span> <span class="o">+=</span> <span class="mi">1</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chaffs</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">correct_chaffs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chaff</span><span class="p">)</span>
@@ -340,7 +340,7 @@
 
 <div class="viewcode-block" id="wheat_chaff_game_class.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.commands.wheat_chaff_game_class.condition">[docs]</a>
-    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">correct</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">correct_wheats</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">correct_chaffs</span><span class="p">)</span>
         <span class="n">possible</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wheats</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chaffs</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">correct</span> <span class="o">&lt;</span> <span class="n">possible</span></div>
@@ -348,7 +348,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">partial_credit_logic</span><span class="p">(</span><span class="n">cases</span><span class="p">,</span> <span class="n">score</span><span class="p">,</span> <span class="n">partial_credit</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">partial_credit_logic</span><span class="p">(</span><span class="n">cases</span><span class="p">,</span> <span class="n">score</span><span class="p">,</span> <span class="n">partial_credit</span><span class="p">):</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">partial_credit</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">partial_credit</span><span class="p">:</span>
             <span class="c1"># Specify total score for all test cases, divide by # of cases passed | True, using `score`</span>
@@ -367,7 +367,7 @@
         <span class="k">return</span> <span class="n">partial_credit</span>
 
 
-<span class="k">def</span> <span class="nf">get_success_passed_failed_total_reason</span><span class="p">(</span><span class="n">student</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_success_passed_failed_total_reason</span><span class="p">(</span><span class="n">student</span><span class="p">):</span>
     <span class="n">student</span> <span class="o">=</span> <span class="n">get_student_data</span><span class="p">()</span>
     <span class="k">if</span> <span class="s1">&#39;assert_equal&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">student</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Failed to import `assert_equal`&quot;</span>
@@ -378,11 +378,11 @@
     <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="n">student_tests</span><span class="o">.</span><span class="n">successes</span><span class="p">,</span> <span class="n">student_tests</span><span class="o">.</span><span class="n">failures</span><span class="p">,</span> <span class="n">student_tests</span><span class="o">.</span><span class="n">tests</span><span class="p">,</span> <span class="s1">&#39;&#39;</span>
 
 
-<span class="k">def</span> <span class="nf">check_type_signature</span><span class="p">(</span><span class="n">function_name</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="n">type_signature</span><span class="p">,</span> <span class="n">type_failures</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">check_type_signature</span><span class="p">(</span><span class="n">function_name</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="n">type_signature</span><span class="p">,</span> <span class="n">type_failures</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">type_signature</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">function</span>
 
-    <span class="k">def</span> <span class="nf">check_types</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">check_types</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">type_signature</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
             <span class="n">type_failures</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">type_signature</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="s2"> arguments, but got </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">))</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">expected_type</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">type_signature</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])):</span>
@@ -400,7 +400,7 @@
     <span class="k">return</span> <span class="n">check_types</span>
 
 
-<span class="k">def</span> <span class="nf">wheat_chaff_game</span><span class="p">(</span><span class="n">function_name</span><span class="p">,</span> <span class="n">wheats</span><span class="p">,</span> <span class="n">chaffs</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">wheat_chaff_game</span><span class="p">(</span><span class="n">function_name</span><span class="p">,</span> <span class="n">wheats</span><span class="p">,</span> <span class="n">chaffs</span><span class="p">,</span>
                      <span class="n">else_message</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">score</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">partial_credit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">type_signature</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                      <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="n">report</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;report&#39;</span><span class="p">,</span> <span class="n">MAIN_REPORT</span><span class="p">)</span>

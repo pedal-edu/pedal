@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pedal.cait.find_node &mdash; Pedal 1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/argparse.css?v=441cd8df" />
 
@@ -92,15 +92,15 @@
 <span class="sd">Helper functions for traversing through the code structure.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">pedal.cait</span> <span class="kn">import</span> <span class="n">parse_program</span>
-<span class="kn">from</span> <span class="nn">pedal.core.report</span> <span class="kn">import</span> <span class="n">MAIN_REPORT</span>
-<span class="kn">from</span> <span class="nn">pedal.utilities.operators</span> <span class="kn">import</span> <span class="n">COMPARE_OP_NAMES</span><span class="p">,</span> <span class="n">BOOL_OP_NAMES</span><span class="p">,</span> <span class="n">BIN_OP_NAMES</span><span class="p">,</span> <span class="n">UNARY_OP_NAMES</span>
-<span class="kn">from</span> <span class="nn">pedal.utilities.system</span> <span class="kn">import</span> <span class="n">IS_AT_LEAST_PYTHON_38</span><span class="p">,</span> <span class="n">IS_SKULPT</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.cait</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_program</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.core.report</span><span class="w"> </span><span class="kn">import</span> <span class="n">MAIN_REPORT</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.utilities.operators</span><span class="w"> </span><span class="kn">import</span> <span class="n">COMPARE_OP_NAMES</span><span class="p">,</span> <span class="n">BOOL_OP_NAMES</span><span class="p">,</span> <span class="n">BIN_OP_NAMES</span><span class="p">,</span> <span class="n">UNARY_OP_NAMES</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.utilities.system</span><span class="w"> </span><span class="kn">import</span> <span class="n">IS_AT_LEAST_PYTHON_38</span><span class="p">,</span> <span class="n">IS_SKULPT</span>
 
 
 <div class="viewcode-block" id="is_top_level">
 <a class="viewcode-back" href="../../../developers/tools/cait.html#pedal.cait.find_node.is_top_level">[docs]</a>
-<span class="k">def</span> <span class="nf">is_top_level</span><span class="p">(</span><span class="n">ast_node</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_top_level</span><span class="p">(</span><span class="n">ast_node</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Determines if the `ast_node` is at the top-level of the program.</span>
 <span class="sd">    Correctly handles expression statements (so a print call on its own will be</span>
@@ -126,7 +126,7 @@
 
 <div class="viewcode-block" id="find_operation">
 <a class="viewcode-back" href="../../../developers/tools/cait.html#pedal.cait.find_node.find_operation">[docs]</a>
-<span class="k">def</span> <span class="nf">find_operation</span><span class="p">(</span><span class="n">op_name</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">find_operation</span><span class="p">(</span><span class="n">op_name</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns all the occurrences of the operator `op_name` in the source code.</span>
 <span class="sd">    You can specify the operator as a string like `&quot;+&quot;` or `&quot;&lt;&lt;&quot;`.</span>
@@ -161,7 +161,7 @@
 
 <div class="viewcode-block" id="find_function_calls">
 <a class="viewcode-back" href="../../../developers/tools/cait.html#pedal.cait.find_node.find_function_calls">[docs]</a>
-<span class="k">def</span> <span class="nf">find_function_calls</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">find_function_calls</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns a list of CaitNodes representing all of the function calls that</span>
 <span class="sd">    were found. This includes both methods and regular functions.</span>
@@ -190,7 +190,7 @@
 
 <div class="viewcode-block" id="function_is_called">
 <a class="viewcode-back" href="../../../developers/tools/cait.html#pedal.cait.find_node.function_is_called">[docs]</a>
-<span class="k">def</span> <span class="nf">function_is_called</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">function_is_called</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; DEPRECATED &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">find_function_calls</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">))</span></div>
 
@@ -198,7 +198,7 @@
 
 <div class="viewcode-block" id="find_prior_initializations">
 <a class="viewcode-back" href="../../../developers/tools/cait.html#pedal.cait.find_node.find_prior_initializations">[docs]</a>
-<span class="k">def</span> <span class="nf">find_prior_initializations</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">find_prior_initializations</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    DEPRECATED</span>
 
@@ -223,7 +223,7 @@
 
 <div class="viewcode-block" id="find_function_definition">
 <a class="viewcode-back" href="../../../developers/tools/cait.html#pedal.cait.find_node.find_function_definition">[docs]</a>
-<span class="k">def</span> <span class="nf">find_function_definition</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">find_function_definition</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Finds the given function definition based on the given ``name``.</span>
 
@@ -245,7 +245,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">get_slice_index_value</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_slice_index_value</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">IS_AT_LEAST_PYTHON_38</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">IS_SKULPT</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">node</span><span class="o">.</span><span class="n">slice</span>
     <span class="k">else</span><span class="p">:</span>

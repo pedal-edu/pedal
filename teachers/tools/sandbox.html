@@ -7,7 +7,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sandbox &mdash; Pedal 1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/argparse.css?v=441cd8df" />
 
@@ -152,7 +152,7 @@ code, most environments will provide a <code class="docutils literal notranslate
 <dd><p>A Sandbox is a container where students’ code can be executed.</p>
 </dd></dl>
 
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.sandbox</span> <span class="kn">import</span> <span class="n">run</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pedal.sandbox</span><span class="w"> </span><span class="kn">import</span> <span class="n">run</span>
 
 <span class="n">student</span> <span class="o">=</span> <span class="n">run</span><span class="p">()</span>
 </pre></div>
@@ -245,7 +245,7 @@ be converted to strings using <code class="docutils literal notranslate"><span c
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">set_input</span><span class="p">(</span><span class="s1">&#39;hello&#39;</span><span class="p">)</span>
 <span class="n">set_input</span><span class="p">([</span><span class="s1">&#39;hello&#39;</span><span class="p">,</span> <span class="s1">&#39;world&#39;</span><span class="p">])</span>
 
-<span class="k">def</span> <span class="nf">generate_numbers</span><span class="p">(</span><span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">generate_numbers</span><span class="p">(</span><span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
     <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
         <span class="k">yield</span> <span class="n">i</span>
@@ -322,7 +322,7 @@ students’ namespace for subsequent executions!</p>
 <span class="sig-name descname"><span class="pre">data:</span> <span class="pre">dict[str,</span> <span class="pre">Any]</span></span></dt>
 <dd><p>All of the students’ created variables and functions will be stored in
 a dictionary attached to the <code class="docutils literal notranslate"><span class="pre">data</span></code> field. You can access it like so:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.sandbox</span> <span class="kn">import</span> <span class="n">run</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pedal.sandbox</span><span class="w"> </span><span class="kn">import</span> <span class="n">run</span>
 <span class="n">student</span> <span class="o">=</span> <span class="n">run</span><span class="p">(</span><span class="s1">&#39;alpha = 7&#39;</span><span class="p">)</span>
 <span class="n">student</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;alpha&#39;</span><span class="p">]</span>
 </pre></div>
@@ -405,7 +405,7 @@ executed. The second value is the percentage of lines that were executed.</p>
 <span class="sig-name descname"><span class="pre">mock_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">function_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_version</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mock_function" title="Link to this definition"></a></dt>
 <dd><p>Mocks the given function name with the given new version. The new version
 can be a function.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">my_sum</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">my_sum</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
     <span class="k">return</span> <span class="mi">0</span>
 <span class="n">mock_function</span><span class="p">(</span><span class="s1">&#39;sum&#39;</span><span class="p">,</span> <span class="n">my_sum</span><span class="p">)</span>
 </pre></div>
@@ -464,7 +464,7 @@ can be a <code class="xref py py-class docutils literal notranslate"><span class
 dictionary is a mapping of fields to values.</p>
 <p>The optional <code class="docutils literal notranslate"><span class="pre">friendly_name</span></code> is an internal name to use to store the data
 for this module, accessible via Sandbox’s <code class="docutils literal notranslate"><span class="pre">modules</span></code> field.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">my_sum</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">my_sum</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
     <span class="k">return</span> <span class="mi">0</span>
 <span class="n">mock_module</span><span class="p">(</span><span class="s1">&#39;math&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;sum&#39;</span><span class="p">:</span> <span class="n">my_sum</span><span class="p">})</span>
 </pre></div>

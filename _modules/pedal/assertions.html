@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pedal.assertions &mdash; Pedal 1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/argparse.css?v=441cd8df" />
 
@@ -92,17 +92,17 @@
 <span class="sd">The assertions module contains classic unittest-style assert statements.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">pedal.assertions.setup</span> <span class="kn">import</span> <span class="n">_setup_assertions</span><span class="p">,</span> <span class="n">resolve_all</span>
-<span class="kn">from</span> <span class="nn">pedal.assertions.constants</span> <span class="kn">import</span> <span class="n">TOOL_NAME</span>
-<span class="kn">from</span> <span class="nn">pedal.core.report</span> <span class="kn">import</span> <span class="n">Report</span><span class="p">,</span> <span class="n">MAIN_REPORT</span>
-<span class="kn">from</span> <span class="nn">pedal.assertions.commands</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pedal.assertions.positive</span> <span class="kn">import</span> <span class="n">close_output</span><span class="p">,</span> <span class="n">correct_output</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.assertions.setup</span><span class="w"> </span><span class="kn">import</span> <span class="n">_setup_assertions</span><span class="p">,</span> <span class="n">resolve_all</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.assertions.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">TOOL_NAME</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.core.report</span><span class="w"> </span><span class="kn">import</span> <span class="n">Report</span><span class="p">,</span> <span class="n">MAIN_REPORT</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.assertions.commands</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.assertions.positive</span><span class="w"> </span><span class="kn">import</span> <span class="n">close_output</span><span class="p">,</span> <span class="n">correct_output</span>
 
 
 
 <div class="viewcode-block" id="reset">
 <a class="viewcode-back" href="../../developers/tools/assertions.html#pedal.assertions.reset">[docs]</a>
-<span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Resets (or initializes) the information about assertions.</span>
 

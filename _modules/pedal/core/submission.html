@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pedal.core.submission &mdash; Pedal 1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/argparse.css?v=441cd8df" />
 
@@ -101,21 +101,21 @@
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Submission&#39;</span><span class="p">]</span>
 
-<span class="kn">from</span> <span class="nn">pedal.utilities.files</span> <span class="kn">import</span> <span class="n">get_extension</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.utilities.files</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_extension</span>
 
 <span class="n">DEFAULT_EXTENSION</span> <span class="o">=</span> <span class="s2">&quot;py&quot;</span>
 
 
-<span class="k">def</span> <span class="nf">python_submission_parser</span><span class="p">(</span><span class="n">code</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">python_submission_parser</span><span class="p">(</span><span class="n">code</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">code</span><span class="p">,</span> <span class="n">filename</span>
 
 
-<span class="k">def</span> <span class="nf">create_ipynb_submission_parser</span><span class="p">(</span><span class="n">metadata_filter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">ipynb_submission_parser</span><span class="p">(</span><span class="n">code</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_ipynb_submission_parser</span><span class="p">(</span><span class="n">metadata_filter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ipynb_submission_parser</span><span class="p">(</span><span class="n">code</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="c1"># TODO: What happens if we have a syntax error in the file?</span>
         <span class="c1"># TODO: Consider making a fallback JSON parser, since the structure is known.</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="kn">import</span> <span class="nn">nbformat</span>
+            <span class="kn">import</span><span class="w"> </span><span class="nn">nbformat</span>
         <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s2">&quot;You have attempted to read an IPYNB file, but did not install `nbformat`. Is Jupyter installed?&quot;</span><span class="p">)</span>
         <span class="n">nb</span> <span class="o">=</span> <span class="n">nbformat</span><span class="o">.</span><span class="n">reads</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">as_version</span><span class="o">=</span><span class="n">nbformat</span><span class="o">.</span><span class="n">current_nbformat</span><span class="p">)</span>
@@ -133,7 +133,7 @@
 
 <div class="viewcode-block" id="Submission">
 <a class="viewcode-back" href="../../../developers/api.html#pedal.core.submission.Submission">[docs]</a>
-<span class="k">class</span> <span class="nc">Submission</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Submission</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Simple class for holding information about the student&#39;s submission.</span>
 
@@ -160,7 +160,7 @@
         <span class="s2">&quot;ipynb&quot;</span><span class="p">:</span> <span class="n">create_ipynb_submission_parser</span><span class="p">()</span>
     <span class="p">}</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">files</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">main_file</span><span class="o">=</span><span class="s1">&#39;answer.py&#39;</span><span class="p">,</span> <span class="n">main_code</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">files</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">main_file</span><span class="o">=</span><span class="s1">&#39;answer.py&#39;</span><span class="p">,</span> <span class="n">main_code</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">user</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">assignment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">course</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">execution</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">instructor_file</span><span class="o">=</span><span class="s1">&#39;instructor_tests.py&#39;</span><span class="p">,</span> <span class="n">load_error</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">files</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -189,7 +189,7 @@
 
 <div class="viewcode-block" id="Submission.get_lines">
 <a class="viewcode-back" href="../../../developers/api.html#pedal.core.submission.Submission.get_lines">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_lines</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_lines</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieves the lines of code from this submission.</span>
 
@@ -207,7 +207,7 @@
 
 <div class="viewcode-block" id="Submission.get_files_lines">
 <a class="viewcode-back" href="../../../developers/api.html#pedal.core.submission.Submission.get_files_lines">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_files_lines</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_files_lines</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Retrieves a dictionary of lists of strings representing the files&#39;</span>
 <span class="sd">        lines of code. &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">{</span><span class="n">filename</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_lines</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">}</span></div>
@@ -215,7 +215,7 @@
 
 <div class="viewcode-block" id="Submission.replace_main">
 <a class="viewcode-back" href="../../../developers/api.html#pedal.core.submission.Submission.replace_main">[docs]</a>
-    <span class="k">def</span> <span class="nf">replace_main</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">replace_main</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Substitutes the current main code and filename with the given arguments.</span>
 <span class="sd">        Args:</span>
@@ -229,7 +229,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">main_file</span><span class="p">]</span> <span class="o">=</span> <span class="n">code</span></div>
 
 
-    <span class="k">def</span> <span class="nf">_preprocess_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_preprocess_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Give the system a chance to potentially preprocess the given file, based on its extension.</span>
 <span class="sd">        For example, to turn an IPYNB file into more conventional python code.</span>
@@ -246,16 +246,16 @@
         <span class="k">return</span> <span class="n">parser</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">main_code</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">main_code</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_file</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
 
     <span class="nd">@main_code</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">main_code</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">main_code</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">main_file</span><span class="p">]</span> <span class="o">=</span> <span class="n">code</span>
 
 <div class="viewcode-block" id="Submission.set_line_offset">
 <a class="viewcode-back" href="../../../developers/api.html#pedal.core.submission.Submission.set_line_offset">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_line_offset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lineno</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_line_offset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lineno</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Sets the line offset for the given filename. Defaults to main</span>
 <span class="sd">        file.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">filename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -263,10 +263,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">line_offsets</span><span class="p">[</span><span class="n">filename</span><span class="p">]</span> <span class="o">=</span> <span class="n">lineno</span></div>
 
 
-    <span class="k">def</span> <span class="nf">clear_line_offsets</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">clear_line_offsets</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">line_offsets</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span>
             <span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">,</span>
             <span class="n">assignment</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">assignment</span><span class="p">,</span>

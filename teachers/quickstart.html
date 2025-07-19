@@ -7,7 +7,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Teacher Quick Start Guide &mdash; Pedal 1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/argparse.css?v=441cd8df" />
 
@@ -145,7 +145,7 @@ want to run the following at the minimum:</p>
 <div class="literal-block-wrapper docutils container" id="id1">
 <div class="code-block-caption"><span class="caption-text">grade_assignment.py</span><a class="headerlink" href="#id1" title="Link to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Always start by importing Pedal</span>
-<span class="kn">from</span> <span class="nn">pedal</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
 
 <span class="c1"># Load the students&#39; code</span>
 <span class="n">student_code</span> <span class="o">=</span> <span class="s2">&quot;print(&#39;Hello world!&#39;)&quot;</span>
@@ -159,7 +159,7 @@ want to run the following at the minimum:</p>
 <span class="c1"># ... More instructor logic can go here ...</span>
 
 <span class="c1"># Resolve output and print</span>
-<span class="kn">from</span> <span class="nn">pedal.resolvers</span> <span class="kn">import</span> <span class="n">print_resolve</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.resolvers</span><span class="w"> </span><span class="kn">import</span> <span class="n">print_resolve</span>
 <span class="n">print_resolve</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -180,7 +180,7 @@ BlockPy environment:</p>
 <div class="literal-block-wrapper docutils container" id="id2">
 <div class="code-block-caption"><span class="caption-text">grade_assignment.py</span><a class="headerlink" href="#id2" title="Link to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Always start by importing Pedal</span>
-<span class="kn">from</span> <span class="nn">pedal</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
 
 <span class="c1"># ... More instructor logic can go here ...</span>
 </pre></div>
@@ -316,7 +316,7 @@ which you can see in the Assertions.</p>
 unit testing framework.</p>
 <div class="literal-block-wrapper docutils container" id="id11">
 <div class="code-block-caption"><span class="caption-text">grade_assignment.py</span><a class="headerlink" href="#id11" title="Link to this code"></a></div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.assertions</span> <span class="kn">import</span> <span class="o">*</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pedal.assertions</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
 
 <span class="n">assert_equal</span><span class="p">(</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;add&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">),</span> <span class="mi">13</span><span class="p">)</span>
 </pre></div>
@@ -407,7 +407,7 @@ the resolver, so it is not necessary to call this yourself. However, the default
 environment does not, so you would need to use the following:</p>
 <div class="literal-block-wrapper docutils container" id="id16">
 <div class="code-block-caption"><span class="caption-text">grade_assignment.py</span><a class="headerlink" href="#id16" title="Link to this code"></a></div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.resolvers.simple</span> <span class="kn">import</span> <span class="n">resolve</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pedal.resolvers.simple</span><span class="w"> </span><span class="kn">import</span> <span class="n">resolve</span>
 <span class="n">resolve</span><span class="p">()</span>
 </pre></div>
 </div>

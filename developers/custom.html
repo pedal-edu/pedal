@@ -7,7 +7,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Customizing Pedal &mdash; Pedal 1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/argparse.css?v=441cd8df" />
 
@@ -102,12 +102,12 @@
 <p>Technically, all that you need to do to create a custom resolver is to create a function that takes in a <code class="docutils literal notranslate"><span class="pre">Report</span></code> and returns a <code class="docutils literal notranslate"><span class="pre">FinalFeedback</span></code> object.
 Then attach the <code class="docutils literal notranslate"><span class="pre">make_resolver</span></code> decorator to the function.
 It’s also a good idea to call the <code class="docutils literal notranslate"><span class="pre">report.finalize_feedbacks()</span></code> method to ensure that all the feedback objects have been created before you start working with them.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.resolvers.core</span> <span class="kn">import</span> <span class="n">make_resolver</span>
-<span class="kn">from</span> <span class="nn">pedal.core.report</span> <span class="kn">import</span> <span class="n">Report</span><span class="p">,</span> <span class="n">MAIN_REPORT</span>
-<span class="kn">from</span> <span class="nn">pedal.core.final_feedback</span> <span class="kn">import</span> <span class="n">FinalFeedback</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pedal.resolvers.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_resolver</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.core.report</span><span class="w"> </span><span class="kn">import</span> <span class="n">Report</span><span class="p">,</span> <span class="n">MAIN_REPORT</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.core.final_feedback</span><span class="w"> </span><span class="kn">import</span> <span class="n">FinalFeedback</span>
 
 <span class="nd">@make_resolver</span>
-<span class="k">def</span> <span class="nf">my_resolver</span><span class="p">(</span><span class="n">report</span><span class="p">:</span> <span class="n">Report</span> <span class="o">=</span> <span class="n">MAIN_REPORT</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FinalFeedback</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">my_resolver</span><span class="p">(</span><span class="n">report</span><span class="p">:</span> <span class="n">Report</span> <span class="o">=</span> <span class="n">MAIN_REPORT</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FinalFeedback</span><span class="p">:</span>
     <span class="n">report</span><span class="o">.</span><span class="n">finalize_feedbacks</span><span class="p">()</span>
     <span class="c1"># ...</span>
     <span class="k">return</span> <span class="n">FinalFeedback</span><span class="p">()</span>
@@ -117,7 +117,7 @@ It’s also a good idea to call the <code class="docutils literal notranslate"><
 You can use the <code class="docutils literal notranslate"><span class="pre">report</span></code> object to access the <code class="docutils literal notranslate"><span class="pre">Feedback</span></code> objects that have been created by the tools, and use that information to create your own feedback.</p>
 <p>Let’s take a look at what the <code class="docutils literal notranslate"><span class="pre">simple</span></code> resolver does, with some details simplified for explanatory purposes:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@make_resolver</span>
-<span class="k">def</span> <span class="nf">resolve</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">resolve</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
     <span class="c1"># Prepare feedbacks</span>
     <span class="n">report</span><span class="o">.</span><span class="n">finalize_feedbacks</span><span class="p">()</span>
     <span class="n">feedbacks</span> <span class="o">=</span> <span class="n">report</span><span class="o">.</span><span class="n">feedback</span> <span class="o">+</span> <span class="n">report</span><span class="o">.</span><span class="n">ignored_feedback</span>
@@ -157,7 +157,7 @@ This largely relies on the <code class="docutils literal notranslate"><span clas
 <span class="p">]</span>
 
 <span class="c1"># pedal/resolvers/simple.py</span>
-<span class="k">def</span> <span class="nf">by_priority</span><span class="p">(</span><span class="n">feedback</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">by_priority</span><span class="p">(</span><span class="n">feedback</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Converts a feedback into a numeric representation for sorting.</span>
 

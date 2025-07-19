@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pedal.assertions.static &mdash; Pedal 1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/argparse.css?v=441cd8df" />
 
@@ -93,33 +93,35 @@
 <span class="sd">Collection of feedback functions related to static checks of student code.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="k">try</span><span class="p">:</span>
-    <span class="kn">import</span> <span class="nn">dataclasses</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">dataclasses</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
     <span class="n">dataclasses</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="kn">import</span> <span class="nn">ast</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ast</span>
 
-<span class="kn">from</span> <span class="nn">pedal.assertions.classes</span> <span class="kn">import</span> <span class="p">(</span><span class="n">missing_dataclass</span><span class="p">,</span> <span class="n">dataclass_not_available</span><span class="p">,</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.assertions.classes</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span><span class="n">missing_dataclass</span><span class="p">,</span> <span class="n">dataclass_not_available</span><span class="p">,</span>
                                       <span class="n">missing_field_type</span><span class="p">,</span> <span class="n">too_few_fields</span><span class="p">,</span> <span class="n">too_many_fields</span><span class="p">,</span>
                                       <span class="n">duplicate_dataclass_definition</span><span class="p">,</span> <span class="n">invalid_field_type</span><span class="p">,</span>
                                       <span class="n">wrong_fields_type</span><span class="p">,</span> <span class="n">name_is_not_a_dataclass</span><span class="p">,</span> <span class="n">missing_dataclass_annotation</span><span class="p">,</span>
                                       <span class="n">unknown_field</span><span class="p">,</span> <span class="n">wrong_field_order</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">pedal.assertions.functions</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">pedal.cait.cait_api</span> <span class="kn">import</span> <span class="n">parse_program</span><span class="p">,</span> <span class="n">find_match</span><span class="p">,</span> <span class="n">find_matches</span>
-<span class="kn">from</span> <span class="nn">pedal.assertions.feedbacks</span> <span class="kn">import</span> <span class="n">AssertionFeedback</span>
-<span class="kn">from</span> <span class="nn">pedal.cait.find_node</span> <span class="kn">import</span> <span class="n">find_operation</span><span class="p">,</span> <span class="n">find_function_calls</span><span class="p">,</span> <span class="n">find_function_definition</span>
-<span class="kn">from</span> <span class="nn">pedal.core.feedback</span> <span class="kn">import</span> <span class="n">CompositeFeedbackFunction</span><span class="p">,</span> <span class="n">Feedback</span><span class="p">,</span> <span class="n">FeedbackResponse</span>
-<span class="kn">from</span> <span class="nn">pedal.core.location</span> <span class="kn">import</span> <span class="n">Location</span>
-<span class="kn">from</span> <span class="nn">pedal.core.report</span> <span class="kn">import</span> <span class="n">MAIN_REPORT</span>
-<span class="kn">from</span> <span class="nn">pedal.core.commands</span> <span class="kn">import</span> <span class="n">compliment</span> <span class="k">as</span> <span class="n">core_compliment</span><span class="p">,</span> <span class="n">give_partial</span><span class="p">,</span> <span class="n">explain</span><span class="p">,</span> <span class="n">gently</span>
-<span class="kn">from</span> <span class="nn">pedal.tifa.commands</span> <span class="kn">import</span> <span class="n">tifa_type_check</span>
-<span class="kn">from</span> <span class="nn">pedal.types.normalize</span> <span class="kn">import</span> <span class="n">normalize_type</span>
-<span class="kn">from</span> <span class="nn">pedal.types.new_types</span> <span class="kn">import</span> <span class="n">is_subtype</span>
-<span class="kn">from</span> <span class="nn">pedal.utilities.ast_tools</span> <span class="kn">import</span> <span class="n">AST_NODE_NAMES</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.assertions.functions</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.cait.cait_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_program</span><span class="p">,</span> <span class="n">find_match</span><span class="p">,</span> <span class="n">find_matches</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.assertions.feedbacks</span><span class="w"> </span><span class="kn">import</span> <span class="n">AssertionFeedback</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.cait.find_node</span><span class="w"> </span><span class="kn">import</span> <span class="n">find_operation</span><span class="p">,</span> <span class="n">find_function_calls</span><span class="p">,</span> <span class="n">find_function_definition</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.core.feedback</span><span class="w"> </span><span class="kn">import</span> <span class="n">CompositeFeedbackFunction</span><span class="p">,</span> <span class="n">Feedback</span><span class="p">,</span> <span class="n">FeedbackResponse</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.core.location</span><span class="w"> </span><span class="kn">import</span> <span class="n">Location</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.core.report</span><span class="w"> </span><span class="kn">import</span> <span class="n">MAIN_REPORT</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.core.commands</span><span class="w"> </span><span class="kn">import</span> <span class="n">compliment</span> <span class="k">as</span> <span class="n">core_compliment</span><span class="p">,</span> <span class="n">give_partial</span><span class="p">,</span> <span class="n">explain</span><span class="p">,</span> <span class="n">gently</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.tifa.commands</span><span class="w"> </span><span class="kn">import</span> <span class="n">tifa_type_check</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.types.normalize</span><span class="w"> </span><span class="kn">import</span> <span class="n">normalize_type</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.types.new_types</span><span class="w"> </span><span class="kn">import</span> <span class="n">is_subtype</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.utilities.ast_tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">AST_NODE_NAMES</span>
 
 
-<span class="k">class</span> <span class="nc">EnsureAssertionFeedback</span><span class="p">(</span><span class="n">AssertionFeedback</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">EnsureAssertionFeedback</span><span class="p">(</span><span class="n">AssertionFeedback</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Abstract base class for assertions preventing things. &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">at_least</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">safe_field_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;at_least&#39;</span><span class="p">,</span> <span class="s1">&#39;capacity&#39;</span><span class="p">,</span> <span class="s1">&#39;name_message&#39;</span><span class="p">,</span> <span class="s1">&#39;root_message&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">at_least</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">report</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;report&#39;</span><span class="p">,</span> <span class="n">MAIN_REPORT</span><span class="p">)</span>
         <span class="n">root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">parse_program</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span>
         <span class="n">root_message</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">root</span> <span class="k">else</span> <span class="s2">&quot; (inside of some other code)&quot;</span>
@@ -128,7 +130,7 @@
                   <span class="s1">&#39;root_message&#39;</span><span class="p">:</span> <span class="n">root_message</span><span class="p">}</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="n">fields</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_check_usage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field_name</span><span class="p">,</span> <span class="n">uses</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_check_usage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field_name</span><span class="p">,</span> <span class="n">uses</span><span class="p">):</span>
         <span class="n">at_least</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;at_least&#39;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="n">field_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">use_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">uses</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">at_least</span> <span class="o">&gt;</span> <span class="n">use_count</span><span class="p">:</span>
@@ -141,9 +143,11 @@
         <span class="k">return</span> <span class="kc">False</span>
 
 
-<span class="k">class</span> <span class="nc">PreventAssertionFeedback</span><span class="p">(</span><span class="n">AssertionFeedback</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PreventAssertionFeedback</span><span class="p">(</span><span class="n">AssertionFeedback</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Abstract base class for assertions preventing things. &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">at_most</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">safe_field_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;at_most&#39;</span><span class="p">,</span> <span class="s1">&#39;capacity&#39;</span><span class="p">,</span> <span class="s1">&#39;name_message&#39;</span><span class="p">,</span> <span class="s1">&#39;root_message&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">at_most</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">report</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;report&#39;</span><span class="p">,</span> <span class="n">MAIN_REPORT</span><span class="p">)</span>
         <span class="n">root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">parse_program</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span>
         <span class="n">root_message</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">root</span> <span class="k">else</span> <span class="s2">&quot; (inside of some other code)&quot;</span>
@@ -152,7 +156,7 @@
                   <span class="s1">&#39;root_message&#39;</span><span class="p">:</span> <span class="n">root_message</span><span class="p">}</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="n">fields</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_check_usage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field_name</span><span class="p">,</span> <span class="n">uses</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_check_usage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field_name</span><span class="p">,</span> <span class="n">uses</span><span class="p">):</span>
         <span class="n">at_most</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;at_most&#39;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="n">field_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">use_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">uses</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">use_count</span> <span class="ow">and</span> <span class="n">at_most</span> <span class="o">&lt;</span> <span class="n">use_count</span><span class="p">:</span>
@@ -167,7 +171,7 @@
 
 <div class="viewcode-block" id="prevent_function_call">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.prevent_function_call">[docs]</a>
-<span class="k">class</span> <span class="nc">prevent_function_call</span><span class="p">(</span><span class="n">PreventAssertionFeedback</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">prevent_function_call</span><span class="p">(</span><span class="n">PreventAssertionFeedback</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Determine if a function was ever called by statically checking</span>
 <span class="sd">    the students&#39; code.</span>
@@ -187,7 +191,7 @@
 
 <div class="viewcode-block" id="prevent_function_call.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.prevent_function_call.condition">[docs]</a>
-    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Use find_matches to check number of occurrences. &quot;&quot;&quot;</span>
         <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
         <span class="n">calls</span> <span class="o">=</span> <span class="n">find_function_calls</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;root&#39;</span><span class="p">])</span>
@@ -200,7 +204,7 @@
 
 <div class="viewcode-block" id="ensure_function_call">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.ensure_function_call">[docs]</a>
-<span class="k">class</span> <span class="nc">ensure_function_call</span><span class="p">(</span><span class="n">EnsureAssertionFeedback</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ensure_function_call</span><span class="p">(</span><span class="n">EnsureAssertionFeedback</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Determine that a function was definitely called by statically checking</span>
 <span class="sd">    the students&#39; code.</span>
@@ -221,7 +225,7 @@
 
 <div class="viewcode-block" id="ensure_function_call.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.ensure_function_call.condition">[docs]</a>
-    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Use find_matches to check number of occurrences. &quot;&quot;&quot;</span>
         <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
         <span class="n">calls</span> <span class="o">=</span> <span class="n">find_function_calls</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;root&#39;</span><span class="p">])</span>
@@ -232,7 +236,7 @@
 
 <div class="viewcode-block" id="prevent_operation">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.prevent_operation">[docs]</a>
-<span class="k">class</span> <span class="nc">prevent_operation</span><span class="p">(</span><span class="n">PreventAssertionFeedback</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">prevent_operation</span><span class="p">(</span><span class="n">PreventAssertionFeedback</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Determines if the given operator `op_name` is not used anywhere.</span>
 <span class="sd">    Otherwise, returns `None`. You can specify the</span>
@@ -251,7 +255,7 @@
 
 <div class="viewcode-block" id="prevent_operation.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.prevent_operation.condition">[docs]</a>
-    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Use find_matches to check number of occurrences. &quot;&quot;&quot;</span>
         <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;name_message&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">format</span><span class="o">.</span><span class="n">python_expression</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
@@ -265,7 +269,7 @@
 
 <div class="viewcode-block" id="ensure_operation">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.ensure_operation">[docs]</a>
-<span class="k">class</span> <span class="nc">ensure_operation</span><span class="p">(</span><span class="n">EnsureAssertionFeedback</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ensure_operation</span><span class="p">(</span><span class="n">EnsureAssertionFeedback</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Determines if the given operator `op_name` is used somewhere. You can</span>
 <span class="sd">    specify the operator as a string like `&quot;+&quot;` or `&quot;&lt;&lt;&quot;`. Supports all</span>
@@ -281,7 +285,7 @@
 
 <div class="viewcode-block" id="ensure_operation.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.ensure_operation.condition">[docs]</a>
-    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Use find_matches to check number of occurrences. &quot;&quot;&quot;</span>
         <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;name_message&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">format</span><span class="o">.</span><span class="n">python_expression</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
@@ -299,15 +303,16 @@
 
 <div class="viewcode-block" id="prevent_literal">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.prevent_literal">[docs]</a>
-<span class="k">class</span> <span class="nc">prevent_literal</span><span class="p">(</span><span class="n">PreventAssertionFeedback</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">prevent_literal</span><span class="p">(</span><span class="n">PreventAssertionFeedback</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Make sure that the given literal value does not appear in the student&#39;s</span>
 <span class="sd">    code. &quot;&quot;&quot;</span>
     <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;May Not Use Literal Value&quot;</span>
     <span class="n">message_template</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;You used the literal value {literal_message:python_expression} on line &quot;</span>
                         <span class="s2">&quot;</span><span class="si">{location.line}</span><span class="s2">. You may not use that value&quot;</span>
                         <span class="s2">&quot;</span><span class="si">{capacity}</span><span class="s2">.&quot;</span><span class="p">)</span>
+    <span class="n">safe_field_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;literal&#39;</span><span class="p">,</span> <span class="s1">&#39;at_most&#39;</span><span class="p">,</span> <span class="s1">&#39;capacity&#39;</span><span class="p">,</span> <span class="s1">&#39;literal_message&#39;</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">literal</span><span class="p">,</span> <span class="n">at_most</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">literal</span><span class="p">,</span> <span class="n">at_most</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">report</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;report&#39;</span><span class="p">,</span> <span class="n">MAIN_REPORT</span><span class="p">)</span>
         <span class="n">root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">parse_program</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span>
         <span class="n">fields</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;literal&#39;</span><span class="p">:</span> <span class="n">literal</span><span class="p">,</span> <span class="s1">&#39;at_most&#39;</span><span class="p">:</span> <span class="n">at_most</span><span class="p">,</span> <span class="s1">&#39;capacity&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
@@ -316,7 +321,7 @@
 
 <div class="viewcode-block" id="prevent_literal.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.prevent_literal.condition">[docs]</a>
-    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">literal</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;literal&#39;</span><span class="p">]</span>
         <span class="n">uses</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;root&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">find_matches</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">literal</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">uses</span><span class="p">:</span>
@@ -329,13 +334,14 @@
 <span class="c1"># TODO: ensure_literal does not recognize None?</span>
 <div class="viewcode-block" id="ensure_literal">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.ensure_literal">[docs]</a>
-<span class="k">class</span> <span class="nc">ensure_literal</span><span class="p">(</span><span class="n">EnsureAssertionFeedback</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ensure_literal</span><span class="p">(</span><span class="n">EnsureAssertionFeedback</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Make sure that the given literal value does appear in the student&#39;s</span>
 <span class="sd">        code. &quot;&quot;&quot;</span>
     <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Must Use Literal Value&quot;</span>
     <span class="n">message_template</span> <span class="o">=</span> <span class="s2">&quot;You must use the literal value </span><span class="si">{literal_message}{capacity}</span><span class="s2">.&quot;</span>
+    <span class="n">safe_field_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;literal&#39;</span><span class="p">,</span> <span class="s1">&#39;at_least&#39;</span><span class="p">,</span> <span class="s1">&#39;capacity&#39;</span><span class="p">,</span> <span class="s1">&#39;literal_message&#39;</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">literal</span><span class="p">,</span> <span class="n">at_least</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">literal</span><span class="p">,</span> <span class="n">at_least</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">report</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;report&#39;</span><span class="p">,</span> <span class="n">MAIN_REPORT</span><span class="p">)</span>
         <span class="n">root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">parse_program</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span>
         <span class="n">fields</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;literal&#39;</span><span class="p">:</span> <span class="n">literal</span><span class="p">,</span> <span class="s1">&#39;at_least&#39;</span><span class="p">:</span> <span class="n">at_least</span><span class="p">,</span> <span class="s1">&#39;capacity&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
@@ -344,7 +350,7 @@
 
 <div class="viewcode-block" id="ensure_literal.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.ensure_literal.condition">[docs]</a>
-    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">literal</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;literal&#39;</span><span class="p">]</span>
         <span class="n">uses</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;root&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">find_matches</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">literal</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">uses</span><span class="p">:</span>
@@ -356,15 +362,17 @@
 
 <div class="viewcode-block" id="prevent_literal_type">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.prevent_literal_type">[docs]</a>
-<span class="k">class</span> <span class="nc">prevent_literal_type</span><span class="p">(</span><span class="n">PreventAssertionFeedback</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">prevent_literal_type</span><span class="p">(</span><span class="n">PreventAssertionFeedback</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Make sure that the given literal value does not appear in the student&#39;s</span>
 <span class="sd">    code. &quot;&quot;&quot;</span>
     <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;May Not Use Type of Literal Value&quot;</span>
     <span class="n">message_template</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;You used the literal value type &quot;</span>
                         <span class="s2">&quot;{literal_type_message:python_expression} on line </span><span class="si">{location.line}</span><span class="s2">.&quot;</span>
                         <span class="s2">&quot; You may not use that type of value</span><span class="si">{capacity}</span><span class="s2">.&quot;</span><span class="p">)</span>
+    <span class="n">safe_field_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;literal_type&#39;</span><span class="p">,</span> <span class="s1">&#39;at_most&#39;</span><span class="p">,</span> <span class="s1">&#39;capacity&#39;</span><span class="p">,</span> <span class="s1">&#39;literal_type_message&#39;</span><span class="p">]</span>
+    <span class="n">safe_field_converters</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;literal_type&#39;</span><span class="p">:</span> <span class="nb">repr</span><span class="p">}</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">literal_type</span><span class="p">,</span> <span class="n">at_most</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">literal_type</span><span class="p">,</span> <span class="n">at_most</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">report</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;report&#39;</span><span class="p">,</span> <span class="n">MAIN_REPORT</span><span class="p">)</span>
         <span class="n">root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">parse_program</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span>
         <span class="n">fields</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;literal_type&#39;</span><span class="p">:</span> <span class="n">literal_type</span><span class="p">,</span> <span class="s1">&#39;at_most&#39;</span><span class="p">:</span> <span class="n">at_most</span><span class="p">,</span>
@@ -374,7 +382,7 @@
 
 <div class="viewcode-block" id="prevent_literal_type.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.prevent_literal_type.condition">[docs]</a>
-    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">literal_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;literal_type&#39;</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">literal_type</span> <span class="o">==</span> <span class="nb">bool</span><span class="p">:</span>
             <span class="n">uses</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;root&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">find_matches</span><span class="p">(</span><span class="s2">&quot;False&quot;</span><span class="p">)</span> <span class="o">+</span>
@@ -400,13 +408,13 @@
 
 <div class="viewcode-block" id="ensure_literal_type">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.ensure_literal_type">[docs]</a>
-<span class="k">class</span> <span class="nc">ensure_literal_type</span><span class="p">(</span><span class="n">EnsureAssertionFeedback</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ensure_literal_type</span><span class="p">(</span><span class="n">EnsureAssertionFeedback</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Make sure that the given type of literal value does appear in the</span>
 <span class="sd">    student&#39;s code. &quot;&quot;&quot;</span>
     <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Must Use Type of Literal Value&quot;</span>
     <span class="n">message_template</span> <span class="o">=</span> <span class="s2">&quot;You must use a literal value of type {literal_type_message:python_expression}</span><span class="si">{capacity}</span><span class="s2">.&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">literal_type</span><span class="p">,</span> <span class="n">at_least</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">literal_type</span><span class="p">,</span> <span class="n">at_least</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">report</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;report&#39;</span><span class="p">,</span> <span class="n">MAIN_REPORT</span><span class="p">)</span>
         <span class="n">root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">parse_program</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span>
         <span class="n">fields</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;literal_type&#39;</span><span class="p">:</span> <span class="n">literal_type</span><span class="p">,</span> <span class="s1">&#39;at_least&#39;</span><span class="p">:</span> <span class="n">at_least</span><span class="p">,</span>
@@ -416,7 +424,7 @@
 
 <div class="viewcode-block" id="ensure_literal_type.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.ensure_literal_type.condition">[docs]</a>
-    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">literal_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;literal_type&#39;</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">literal_type</span> <span class="o">==</span> <span class="nb">bool</span><span class="p">:</span>
             <span class="n">uses</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;root&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">find_matches</span><span class="p">(</span><span class="s2">&quot;False&quot;</span><span class="p">)</span><span class="o">+</span>
@@ -441,7 +449,7 @@
 
 <div class="viewcode-block" id="prevent_ast">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.prevent_ast">[docs]</a>
-<span class="k">class</span> <span class="nc">prevent_ast</span><span class="p">(</span><span class="n">PreventAssertionFeedback</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">prevent_ast</span><span class="p">(</span><span class="n">PreventAssertionFeedback</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Determines if the given ast `name` is not used anywhere, returning</span>
 <span class="sd">    the node of it if it is. You can refer to Green Tree Snakes documentation</span>
@@ -463,7 +471,7 @@
 
 <div class="viewcode-block" id="prevent_ast.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.prevent_ast.condition">[docs]</a>
-    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Use find_all to check number of occurrences. &quot;&quot;&quot;</span>
         <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;name_message&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">AST_NODE_NAMES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
@@ -477,7 +485,7 @@
 
 <div class="viewcode-block" id="ensure_ast">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.ensure_ast">[docs]</a>
-<span class="k">class</span> <span class="nc">ensure_ast</span><span class="p">(</span><span class="n">EnsureAssertionFeedback</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ensure_ast</span><span class="p">(</span><span class="n">EnsureAssertionFeedback</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Determines if the given ast `name` is used anywhere, returning</span>
 <span class="sd">    the node of it if it is. You can refer to Green Tree Snakes documentation</span>
@@ -497,7 +505,7 @@
 
 <div class="viewcode-block" id="ensure_ast.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.ensure_ast.condition">[docs]</a>
-    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Use find_all to check number of occurrences. &quot;&quot;&quot;</span>
         <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;name_message&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">AST_NODE_NAMES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
@@ -511,7 +519,7 @@
 
 <div class="viewcode-block" id="function_prints">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.function_prints">[docs]</a>
-<span class="k">def</span> <span class="nf">function_prints</span><span class="p">(</span><span class="n">function_name</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">function_prints</span><span class="p">(</span><span class="n">function_name</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Determine that the print function is called within this function, by</span>
 <span class="sd">    tracing its code statically. Does not actually verify that the function</span>
@@ -530,7 +538,7 @@
 
 <div class="viewcode-block" id="has_import">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.has_import">[docs]</a>
-<span class="k">def</span> <span class="nf">has_import</span><span class="p">(</span><span class="n">ast</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">has_import</span><span class="p">(</span><span class="n">ast</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Determine if the given module name is in the code.</span>
 
@@ -556,7 +564,7 @@
 
 <div class="viewcode-block" id="ensure_import">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.ensure_import">[docs]</a>
-<span class="k">class</span> <span class="nc">ensure_import</span><span class="p">(</span><span class="n">EnsureAssertionFeedback</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ensure_import</span><span class="p">(</span><span class="n">EnsureAssertionFeedback</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Verify that the given ``module`` has been imported, by statically</span>
 <span class="sd">    checking the import statements in the code. The ``at_least`` parameter</span>
@@ -567,7 +575,7 @@
 
 <div class="viewcode-block" id="ensure_import.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.ensure_import.condition">[docs]</a>
-    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Traverse the AST to find matches. &quot;&quot;&quot;</span>
         <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
         <span class="n">ast</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;root&#39;</span><span class="p">]</span>
@@ -578,7 +586,7 @@
 
 <div class="viewcode-block" id="prevent_import">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.prevent_import">[docs]</a>
-<span class="k">class</span> <span class="nc">prevent_import</span><span class="p">(</span><span class="n">PreventAssertionFeedback</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">prevent_import</span><span class="p">(</span><span class="n">PreventAssertionFeedback</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Verify that the given ``module`` has not been imported, by statically</span>
 <span class="sd">    checking the import statements in the code. The ``at_most`` parameter</span>
@@ -589,7 +597,7 @@
 
 <div class="viewcode-block" id="prevent_import.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.prevent_import.condition">[docs]</a>
-    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Traverse the AST to find matches. &quot;&quot;&quot;</span>
         <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
         <span class="n">ast</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;root&#39;</span><span class="p">]</span>
@@ -600,13 +608,13 @@
 
 <div class="viewcode-block" id="ensure_documented_functions">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.ensure_documented_functions">[docs]</a>
-<span class="k">class</span> <span class="nc">ensure_documented_functions</span><span class="p">(</span><span class="n">AssertionFeedback</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ensure_documented_functions</span><span class="p">(</span><span class="n">AssertionFeedback</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Checks that all of the functions in the source code are documented. &quot;&quot;&quot;</span>
     <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Must Document Functions&quot;</span>
     <span class="n">message_template</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;You must document the following function</span><span class="si">{plural}</span><span class="s2">:&quot;</span>
                         <span class="s2">&quot; </span><span class="si">{names_message}</span><span class="s2">.&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">report</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;report&#39;</span><span class="p">,</span> <span class="n">MAIN_REPORT</span><span class="p">)</span>
         <span class="n">root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">parse_program</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span>
         <span class="n">fields</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;root&#39;</span><span class="p">:</span> <span class="n">root</span><span class="p">}</span>
@@ -614,7 +622,7 @@
 
 <div class="viewcode-block" id="ensure_documented_functions.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.ensure_documented_functions.condition">[docs]</a>
-    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Traverse the AST to find matches. &quot;&quot;&quot;</span>
         <span class="n">defs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;root&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">&#39;FunctionDef&#39;</span><span class="p">)</span>
         <span class="n">names</span> <span class="o">=</span> <span class="p">[]</span>
@@ -665,7 +673,7 @@
                            <span class="n">missing_parameter_type</span><span class="p">,</span> <span class="n">invalid_parameter_type</span><span class="p">,</span>
                            <span class="n">wrong_parameter_type</span><span class="p">,</span> <span class="n">wrong_return_type</span><span class="p">,</span>
                            <span class="n">missing_return_type</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">ensure_function</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">arity</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">ensure_function</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">arity</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                     <span class="n">returns</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">compliment</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Checks that the function exists and has the right signature. &quot;&quot;&quot;</span>
     <span class="n">report</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;report&#39;</span><span class="p">,</span> <span class="n">MAIN_REPORT</span><span class="p">)</span>
@@ -744,7 +752,7 @@
                            <span class="n">unknown_field</span><span class="p">,</span>
                            <span class="n">missing_field_type</span><span class="p">,</span> <span class="n">wrong_fields_type</span><span class="p">,</span> <span class="n">name_is_not_a_dataclass</span><span class="p">,</span>
                            <span class="n">dataclass_not_available</span><span class="p">,</span> <span class="n">missing_dataclass_annotation</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">ensure_dataclass</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">compliment</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">ensure_dataclass</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">compliment</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Ensures that the actual definition for the given class exists.</span>
 <span class="sd">    You can provide either a string and fields, or an instructor-defined version</span>
@@ -834,7 +842,7 @@
 <div class="viewcode-block" id="ensure_prints_exactly">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.ensure_prints_exactly">[docs]</a>
 <span class="nd">@CompositeFeedbackFunction</span><span class="p">(</span><span class="n">prevent_function_call</span><span class="p">,</span> <span class="n">ensure_function_call</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">ensure_prints_exactly</span><span class="p">(</span><span class="n">count</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">ensure_prints_exactly</span><span class="p">(</span><span class="n">count</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    DEPRECATED.</span>
 
@@ -854,12 +862,12 @@
 
 <div class="viewcode-block" id="ensure_starting_code">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.ensure_starting_code">[docs]</a>
-<span class="k">class</span> <span class="nc">ensure_starting_code</span><span class="p">(</span><span class="n">AssertionFeedback</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ensure_starting_code</span><span class="p">(</span><span class="n">AssertionFeedback</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Detects if the given code is missing.&quot;&quot;&quot;</span>
     <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Don&#39;t Change Starting Code&quot;</span>
     <span class="n">message_template</span> <span class="o">=</span> <span class="s2">&quot;You have changed or removed the starting code. &quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">report</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;report&#39;</span><span class="p">,</span> <span class="n">MAIN_REPORT</span><span class="p">)</span>
         <span class="n">root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">parse_program</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span>
         <span class="n">fields</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;code&#39;</span><span class="p">:</span> <span class="n">code</span><span class="p">,</span> <span class="s1">&#39;root&#39;</span><span class="p">:</span> <span class="n">root</span><span class="p">}</span>
@@ -867,7 +875,7 @@
 
 <div class="viewcode-block" id="ensure_starting_code.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.ensure_starting_code.condition">[docs]</a>
-    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Traverse the AST to find matches. &quot;&quot;&quot;</span>
         <span class="n">code</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;code&#39;</span><span class="p">]</span>
         <span class="n">ast</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;root&#39;</span><span class="p">]</span>
@@ -878,13 +886,13 @@
 
 <div class="viewcode-block" id="prevent_embedded_answer">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.prevent_embedded_answer">[docs]</a>
-<span class="k">class</span> <span class="nc">prevent_embedded_answer</span><span class="p">(</span><span class="n">AssertionFeedback</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">prevent_embedded_answer</span><span class="p">(</span><span class="n">AssertionFeedback</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Detects if the given code is present. &quot;&quot;&quot;</span>
     <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Don&#39;t Write Answer Directly&quot;</span>
     <span class="n">message_template</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;You have embedded the answer directly in your code, &quot;</span>
                         <span class="s2">&quot;instead of writing code to compute the answer.&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">report</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;report&#39;</span><span class="p">,</span> <span class="n">MAIN_REPORT</span><span class="p">)</span>
         <span class="n">root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">parse_program</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span>
         <span class="n">fields</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;code&#39;</span><span class="p">:</span> <span class="n">code</span><span class="p">,</span> <span class="s1">&#39;root&#39;</span><span class="p">:</span> <span class="n">root</span><span class="p">}</span>
@@ -892,7 +900,7 @@
 
 <div class="viewcode-block" id="prevent_embedded_answer.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.prevent_embedded_answer.condition">[docs]</a>
-    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Traverse the AST to find matches. &quot;&quot;&quot;</span>
         <span class="n">code</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;code&#39;</span><span class="p">]</span>
         <span class="n">ast</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;root&#39;</span><span class="p">]</span>
@@ -903,7 +911,7 @@
 
 <div class="viewcode-block" id="prevent_printing_functions">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.prevent_printing_functions">[docs]</a>
-<span class="k">class</span> <span class="nc">prevent_printing_functions</span><span class="p">(</span><span class="n">AssertionFeedback</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">prevent_printing_functions</span><span class="p">(</span><span class="n">AssertionFeedback</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Detects if the user has defined a function with a print statement inside.</span>
 
@@ -914,7 +922,7 @@
     <span class="n">message_template</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;The function </span><span class="si">{name}</span><span class="s2"> is printing on line {location.line:line}.&quot;</span>
                         <span class="s2">&quot; However, that function is not supposed to print.&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exceptions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exceptions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">report</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;report&#39;</span><span class="p">,</span> <span class="n">MAIN_REPORT</span><span class="p">)</span>
         <span class="n">root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">parse_program</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span>
         <span class="n">fields</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;root&#39;</span><span class="p">:</span> <span class="n">root</span><span class="p">,</span> <span class="s1">&#39;exceptions&#39;</span><span class="p">:</span> <span class="n">exceptions</span><span class="p">}</span>
@@ -922,7 +930,7 @@
 
 <div class="viewcode-block" id="prevent_printing_functions.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.prevent_printing_functions.condition">[docs]</a>
-    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">exceptions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;exceptions&#39;</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">exceptions</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">exceptions</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
@@ -946,7 +954,7 @@
 
 <div class="viewcode-block" id="ensure_functions_return">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.ensure_functions_return">[docs]</a>
-<span class="k">class</span> <span class="nc">ensure_functions_return</span><span class="p">(</span><span class="n">AssertionFeedback</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ensure_functions_return</span><span class="p">(</span><span class="n">AssertionFeedback</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Detects if the user has defined a function with a print statement inside.</span>
 
@@ -957,7 +965,7 @@
     <span class="n">message_template</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;The function </span><span class="si">{name}</span><span class="s2"> is not returning.&quot;</span>
                         <span class="s2">&quot; However, that function is supposed to have a return statement.&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exceptions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exceptions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">report</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;report&#39;</span><span class="p">,</span> <span class="n">MAIN_REPORT</span><span class="p">)</span>
         <span class="n">root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">parse_program</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span>
         <span class="n">fields</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;root&#39;</span><span class="p">:</span> <span class="n">root</span><span class="p">,</span> <span class="s1">&#39;exceptions&#39;</span><span class="p">:</span> <span class="n">exceptions</span><span class="p">}</span>
@@ -965,7 +973,7 @@
 
 <div class="viewcode-block" id="ensure_functions_return.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.ensure_functions_return.condition">[docs]</a>
-    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">exceptions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;exceptions&#39;</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">exceptions</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">exceptions</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
@@ -987,7 +995,7 @@
 
 <div class="viewcode-block" id="only_printing_variables">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.only_printing_variables">[docs]</a>
-<span class="k">class</span> <span class="nc">only_printing_variables</span><span class="p">(</span><span class="n">AssertionFeedback</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">only_printing_variables</span><span class="p">(</span><span class="n">AssertionFeedback</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Determines whether the user is only printing variables, as opposed to</span>
 <span class="sd">    literal values.</span>
@@ -999,7 +1007,7 @@
                       <span class="s2">&quot; normally an issue, we want you to practice printing&quot;</span>
                       <span class="s2">&quot; variables in this problem.&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">fields</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;fields&#39;</span><span class="p">,</span> <span class="p">{})</span>
         <span class="n">report</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;report&#39;</span><span class="p">,</span> <span class="n">MAIN_REPORT</span><span class="p">)</span>
         <span class="n">fields</span><span class="p">[</span><span class="s1">&#39;root&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">parse_program</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span>
@@ -1007,7 +1015,7 @@
 
 <div class="viewcode-block" id="only_printing_variables.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.only_printing_variables.condition">[docs]</a>
-    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Uses find_all to detect matches, ignoring named values. &quot;&quot;&quot;</span>
         <span class="n">print_calls</span> <span class="o">=</span> <span class="n">find_function_calls</span><span class="p">(</span><span class="s1">&#39;print&#39;</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;root&#39;</span><span class="p">],</span>
                                           <span class="n">report</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="p">)</span>
@@ -1036,7 +1044,7 @@
 <div class="viewcode-block" id="prevent_advanced_iteration">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.prevent_advanced_iteration">[docs]</a>
 <span class="nd">@CompositeFeedbackFunction</span><span class="p">(</span><span class="n">prevent_ast</span><span class="p">,</span> <span class="n">prevent_function_call</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">prevent_advanced_iteration</span><span class="p">(</span><span class="n">allow_while</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_for</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">prevent_advanced_iteration</span><span class="p">(</span><span class="n">allow_while</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_for</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                                <span class="n">allow_function</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Prevents the student from using certain advanced iteration functions</span>
 <span class="sd">    and constructs. Does not currently support blocking recursion. &quot;&quot;&quot;</span>
@@ -1056,7 +1064,7 @@
 
 <div class="viewcode-block" id="open_without_arguments">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.open_without_arguments">[docs]</a>
-<span class="k">class</span> <span class="nc">open_without_arguments</span><span class="p">(</span><span class="n">FeedbackResponse</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">open_without_arguments</span><span class="p">(</span><span class="n">FeedbackResponse</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Detects if the user has called the `open` function without any arguments.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1071,7 +1079,7 @@
 <div class="viewcode-block" id="files_not_handled_correctly">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.static.files_not_handled_correctly">[docs]</a>
 <span class="nd">@CompositeFeedbackFunction</span><span class="p">(</span><span class="n">open_without_arguments</span><span class="p">,</span> <span class="n">ensure_literal</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">files_not_handled_correctly</span><span class="p">(</span><span class="o">*</span><span class="n">filenames</span><span class="p">,</span> <span class="n">muted</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">files_not_handled_correctly</span><span class="p">(</span><span class="o">*</span><span class="n">filenames</span><span class="p">,</span> <span class="n">muted</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Statically detect if files have been opened and closed correctly.</span>
 <span class="sd">    This is only useful in the case of very simplistic file handling.</span>

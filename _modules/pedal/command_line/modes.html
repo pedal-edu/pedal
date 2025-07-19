@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pedal.command_line.modes &mdash; Pedal 1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/argparse.css?v=441cd8df" />
 
@@ -91,32 +91,32 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Simple enumeration of the Modes available for Pedal&#39;s command line.</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">traceback</span>
-<span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">redirect_stdout</span>
-<span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span>
-<span class="kn">import</span> <span class="nn">unittest</span>
-<span class="kn">from</span> <span class="nn">textwrap</span> <span class="kn">import</span> <span class="n">indent</span>
-<span class="kn">from</span> <span class="nn">unittest.mock</span> <span class="kn">import</span> <span class="n">patch</span>
-<span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <span class="n">pprint</span>
-<span class="kn">import</span> <span class="nn">warnings</span>
-<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">traceback</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">contextlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">redirect_stdout</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">io</span><span class="w"> </span><span class="kn">import</span> <span class="n">StringIO</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">unittest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">textwrap</span><span class="w"> </span><span class="kn">import</span> <span class="n">indent</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">unittest.mock</span><span class="w"> </span><span class="kn">import</span> <span class="n">patch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pprint</span><span class="w"> </span><span class="kn">import</span> <span class="n">pprint</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
 
-<span class="kn">from</span> <span class="nn">pedal.command_line.report</span> <span class="kn">import</span> <span class="n">StatReport</span>
-<span class="kn">from</span> <span class="nn">pedal.command_line.verify</span> <span class="kn">import</span> <span class="n">generate_report_out</span><span class="p">,</span> <span class="n">ReportVerifier</span>
-<span class="kn">from</span> <span class="nn">pedal.core.report</span> <span class="kn">import</span> <span class="n">MAIN_REPORT</span>
-<span class="kn">from</span> <span class="nn">pedal.core.submission</span> <span class="kn">import</span> <span class="n">Submission</span>
-<span class="kn">from</span> <span class="nn">pedal.utilities.files</span> <span class="kn">import</span> <span class="n">normalize_path</span><span class="p">,</span> <span class="n">find_possible_filenames</span>
-<span class="kn">from</span> <span class="nn">pedal.utilities.progsnap</span> <span class="kn">import</span> <span class="n">SqlProgSnap2</span>
-<span class="kn">from</span> <span class="nn">pedal.utilities.text</span> <span class="kn">import</span> <span class="n">chomp</span>
-<span class="kn">from</span> <span class="nn">pedal.resolvers.export</span> <span class="kn">import</span> <span class="n">PedalJSONEncoder</span><span class="p">,</span> <span class="n">clean_json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.command_line.report</span><span class="w"> </span><span class="kn">import</span> <span class="n">StatReport</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.command_line.verify</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_report_out</span><span class="p">,</span> <span class="n">ReportVerifier</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.core.report</span><span class="w"> </span><span class="kn">import</span> <span class="n">MAIN_REPORT</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.core.submission</span><span class="w"> </span><span class="kn">import</span> <span class="n">Submission</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.utilities.files</span><span class="w"> </span><span class="kn">import</span> <span class="n">normalize_path</span><span class="p">,</span> <span class="n">find_possible_filenames</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.utilities.progsnap</span><span class="w"> </span><span class="kn">import</span> <span class="n">SqlProgSnap2</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.utilities.text</span><span class="w"> </span><span class="kn">import</span> <span class="n">chomp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.resolvers.export</span><span class="w"> </span><span class="kn">import</span> <span class="n">PedalJSONEncoder</span><span class="p">,</span> <span class="n">clean_json</span>
 
 <span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-    <span class="k">def</span> <span class="nf">tqdm</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">tqdm</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Trivial helper function to replace TQDM&#39;s behavior &quot;&quot;&quot;</span>
         <span class="k">yield from</span> <span class="n">values</span>
 
@@ -126,7 +126,7 @@
 <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">is_progsnap</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_progsnap</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Determines if this is a ProgSnap file or folder. &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
         <span class="n">name</span><span class="p">,</span> <span class="n">extension</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
@@ -136,7 +136,7 @@
         <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;MainTable.csv&#39;</span><span class="p">))</span>
 
 
-<span class="k">def</span> <span class="nf">get_python_files</span><span class="p">(</span><span class="n">paths</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_python_files</span><span class="p">(</span><span class="n">paths</span><span class="p">):</span>
     <span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
         <span class="n">name</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
@@ -148,19 +148,19 @@
     <span class="k">return</span> <span class="n">result</span>
 
 
-<span class="k">class</span> <span class="nc">BundleResult</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">BundleResult</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Represents the result of running an instructor control script on a submission.</span>
 <span class="sd">    This includes not only the output and error, but also the resolution of the feedback (aka</span>
 <span class="sd">    the final feedback). Also includes the data that was generated during the execution.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">error</span><span class="p">,</span> <span class="n">resolution</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">error</span><span class="p">,</span> <span class="n">resolution</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">output</span> <span class="o">=</span> <span class="n">output</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">error</span> <span class="o">=</span> <span class="n">error</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
 
-    <span class="k">def</span> <span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">resolution</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="k">else</span> <span class="p">{}</span>
         <span class="c1">#if &#39;considered&#39; in resolution:</span>
         <span class="c1">#    for c in resolution[&#39;considered&#39;]:</span>
@@ -172,21 +172,21 @@
             <span class="o">**</span><span class="n">resolution</span>
         <span class="p">)</span>
 
-<span class="k">class</span> <span class="nc">Bundle</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Bundle</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Represents the combination of an instructor control script and a submission that it is</span>
 <span class="sd">    being run on. Also includes the environment that the script is being run in, and the</span>
-<span class="sd">    result of the execution (once the execution is finished). Finally, also includes the configuration</span>
-<span class="sd">    that was used to run the bundle.</span>
+<span class="sd">    result of the execution (once the execution is finished). Finally, also includes the</span>
+<span class="sd">    configuration that was used to run the bundle.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">script</span><span class="p">,</span> <span class="n">submission</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">script</span><span class="p">,</span> <span class="n">submission</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">script</span> <span class="o">=</span> <span class="n">script</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">submission</span> <span class="o">=</span> <span class="n">submission</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">environment</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span>
             <span class="n">script</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">script</span><span class="p">,</span>
             <span class="n">submission</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">to_json</span><span class="p">(),</span>
@@ -194,7 +194,7 @@
             <span class="n">result</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">to_json</span><span class="p">()</span>
         <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">run_ics_bundle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolver</span><span class="o">=</span><span class="s1">&#39;resolve&#39;</span><span class="p">,</span> <span class="n">skip_tifa</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">skip_run</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_ics_bundle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolver</span><span class="o">=</span><span class="s1">&#39;resolve&#39;</span><span class="p">,</span> <span class="n">skip_tifa</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">skip_run</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Runs the given instructor control script on the given submission, with the</span>
 <span class="sd">        accompany contextualizations.</span>
@@ -212,6 +212,7 @@
                                                      <span class="n">skip_run</span><span class="o">=</span><span class="n">skip_run</span><span class="p">,</span>
                                                      <span class="n">threaded</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">threaded</span><span class="p">)</span><span class="o">.</span><span class="n">fields</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># TODO: Check that this shouldn&#39;t be for global_data instead of MAIN_REPORT directly</span>
             <span class="n">MAIN_REPORT</span><span class="o">.</span><span class="n">contextualize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">submission</span><span class="p">)</span>
         <span class="k">with</span> <span class="n">redirect_stdout</span><span class="p">(</span><span class="n">captured_output</span><span class="p">):</span>
             <span class="k">with</span> <span class="n">patch</span><span class="o">.</span><span class="n">object</span><span class="p">(</span><span class="n">sys</span><span class="p">,</span> <span class="s1">&#39;argv&#39;</span><span class="p">,</span> <span class="n">ics_args</span><span class="p">):</span>
@@ -235,14 +236,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="n">BundleResult</span><span class="p">(</span><span class="n">global_data</span><span class="p">,</span> <span class="n">actual_output</span><span class="p">,</span> <span class="n">error</span><span class="p">,</span> <span class="n">resolution</span><span class="p">)</span>
 
 
-<span class="k">class</span> <span class="nc">AbstractPipeline</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">AbstractPipeline</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Generic pipeline for handling all the phases of executing instructor</span>
 <span class="sd">    control scripts on submissions, and reformating the output.</span>
 <span class="sd">    Should be subclassed instead of used directly.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
             <span class="c1"># TODO: Include default argument automatically</span>
             <span class="n">config</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span><span class="p">(</span><span class="o">**</span><span class="n">config</span><span class="p">)</span>
@@ -250,13 +251,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">submissions</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">load_submissions</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setup_execution</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">run_control_scripts</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_output</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">load_file_submissions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scripts</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_file_submissions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scripts</span><span class="p">):</span>
         <span class="c1"># Get instructor control scripts</span>
         <span class="n">all_scripts</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">script</span> <span class="ow">in</span> <span class="n">scripts</span><span class="p">:</span>
@@ -326,7 +327,7 @@
         <span class="s1">&#39;last&#39;</span><span class="p">:</span> <span class="s1">&#39;File.Edit&#39;</span>
     <span class="p">}</span>
 
-    <span class="k">def</span> <span class="nf">load_progsnap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">instructor_code</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_progsnap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">instructor_code</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">script_file_name</span><span class="p">,</span> <span class="n">script_file_extension</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">script_file_extension</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;.db&#39;</span><span class="p">,):</span>
             <span class="k">with</span> <span class="n">SqlProgSnap2</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">cache</span><span class="p">)</span> <span class="k">as</span> <span class="n">progsnap</span><span class="p">:</span>
@@ -381,7 +382,7 @@
         <span class="k">elif</span> <span class="n">script_file_extension</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;.zip&#39;</span><span class="p">,):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;TODO: Zip files not yet supported&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">load_submissions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_submissions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">given_script</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">instructor</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">ics_direct</span><span class="p">:</span>
             <span class="c1"># TODO: Allow non-progsnap ics_direct</span>
@@ -399,20 +400,20 @@
                 <span class="n">load_error</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_file_submissions</span><span class="p">([</span><span class="n">filename</span><span class="p">])</span>
                 <span class="k">if</span> <span class="n">load_error</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="k">return</span>
-            <span class="kn">from</span> <span class="nn">pedal.source.feedbacks</span> <span class="kn">import</span> <span class="n">source_file_not_found</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">pedal.source.feedbacks</span><span class="w"> </span><span class="kn">import</span> <span class="n">source_file_not_found</span>
             <span class="n">source_file_not_found</span><span class="p">(</span><span class="n">potential_filenames</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="kc">False</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">setup_execution</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup_execution</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">bundle</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">submissions</span><span class="p">:</span>
             <span class="n">bundle</span><span class="o">.</span><span class="n">environment</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">environment</span>
 
-    <span class="k">def</span> <span class="nf">run_control_scripts</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_control_scripts</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">bundle</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">submissions</span><span class="p">:</span>
             <span class="n">bundle</span><span class="o">.</span><span class="n">run_ics_bundle</span><span class="p">(</span><span class="n">resolver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">resolver</span><span class="p">,</span>
                                   <span class="n">skip_tifa</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">skip_tifa</span><span class="p">,</span>
                                   <span class="n">skip_run</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">skip_run</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">process_output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">process_output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">bundle</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">submissions</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="n">bundle</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">instructor_file</span><span class="p">,</span>
                   <span class="n">bundle</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">main_file</span><span class="p">,</span>
@@ -421,13 +422,13 @@
 
 <div class="viewcode-block" id="FeedbackPipeline">
 <a class="viewcode-back" href="../../../teachers/cli.html#pedal.command_line.modes.FeedbackPipeline">[docs]</a>
-<span class="k">class</span> <span class="nc">FeedbackPipeline</span><span class="p">(</span><span class="n">AbstractPipeline</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">FeedbackPipeline</span><span class="p">(</span><span class="n">AbstractPipeline</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    ``feedback``: Pipeline for running the instructor control script on a submission and</span>
 <span class="sd">    then printing the resolver output to the console. Often the most useful</span>
 <span class="sd">    if you are trying to deliver the feedback without a grade.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">process_output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">process_output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">bundle</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">submissions</span><span class="p">:</span>
             <span class="c1">#print(bundle.submission.instructor_file,</span>
             <span class="c1">#      bundle.submission.main_file)</span>
@@ -445,14 +446,14 @@
 
 <div class="viewcode-block" id="RunPipeline">
 <a class="viewcode-back" href="../../../teachers/cli.html#pedal.command_line.modes.RunPipeline">[docs]</a>
-<span class="k">class</span> <span class="nc">RunPipeline</span><span class="p">(</span><span class="n">AbstractPipeline</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">RunPipeline</span><span class="p">(</span><span class="n">AbstractPipeline</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    ``run``: Pipeline for running the instructor control script on a submission and generating a report</span>
 <span class="sd">    file in the `ini` file format. This is a simple file format that has a lot of the interesting</span>
 <span class="sd">    fields. The file is not actually dumped to the filesystem, but instead printed directly.</span>
 <span class="sd">    So this is a good way to run students&#39; code in a sandbox and see what comes out.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">process_output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">process_output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">bundle</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">submissions</span><span class="p">:</span>
             <span class="c1">#print(bundle.submission.instructor_file,</span>
             <span class="c1">#      bundle.submission.main_file)</span>
@@ -468,18 +469,18 @@
 
 <div class="viewcode-block" id="StatsPipeline">
 <a class="viewcode-back" href="../../../teachers/cli.html#pedal.command_line.modes.StatsPipeline">[docs]</a>
-<span class="k">class</span> <span class="nc">StatsPipeline</span><span class="p">(</span><span class="n">AbstractPipeline</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">StatsPipeline</span><span class="p">(</span><span class="n">AbstractPipeline</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    ``stats``: Pipeline for running the instructor control script on a submission and then</span>
 <span class="sd">    dumping a JSON report with all the feedback objects. This is useful for</span>
 <span class="sd">    analyzing the feedback objects in a more programmatic way.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">run_control_scripts</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_control_scripts</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">bundle</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">submissions</span><span class="p">):</span>
             <span class="n">bundle</span><span class="o">.</span><span class="n">run_ics_bundle</span><span class="p">(</span><span class="n">resolver</span><span class="o">=</span><span class="s1">&#39;stats_resolve&#39;</span><span class="p">,</span> <span class="n">skip_tifa</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">skip_tifa</span><span class="p">,</span>
                                   <span class="n">skip_run</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">skip_run</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">process_output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">process_output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">errors</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">final</span> <span class="o">=</span> <span class="p">[]</span>
@@ -508,7 +509,7 @@
 
 <div class="viewcode-block" id="VerifyPipeline">
 <a class="viewcode-back" href="../../../teachers/cli.html#pedal.command_line.modes.VerifyPipeline">[docs]</a>
-<span class="k">class</span> <span class="nc">VerifyPipeline</span><span class="p">(</span><span class="n">AbstractPipeline</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">VerifyPipeline</span><span class="p">(</span><span class="n">AbstractPipeline</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    ``verify``: Pipeline for running the instructor control script on a submission and then</span>
 <span class="sd">    comparing the output to an expected output file. This is useful for verifying</span>
@@ -517,7 +518,7 @@
 <span class="sd">    You can also use this pipeline to generate the output files, to quickly create</span>
 <span class="sd">    regression &quot;tests&quot; of your feedback scripts.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">process_output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">process_output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">bundle</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">submissions</span><span class="p">:</span>
             <span class="n">bundle</span><span class="o">.</span><span class="n">run_ics_bundle</span><span class="p">(</span><span class="n">resolver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">resolver</span><span class="p">,</span> <span class="n">skip_tifa</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">skip_tifa</span><span class="p">,</span>
                                   <span class="n">skip_run</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">skip_run</span><span class="p">)</span>
@@ -538,25 +539,25 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">error_case</span><span class="p">(</span><span class="n">test_name</span><span class="p">,</span> <span class="n">bundle</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">run_cases</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
 
-        <span class="k">class</span> <span class="nc">TestReferenceSolutions</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+        <span class="k">class</span><span class="w"> </span><span class="nc">TestReferenceSolutions</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
             <span class="vm">__module__</span> <span class="o">=</span> <span class="s1">&#39;VerifyTestCase&#39;</span>
             <span class="vm">__qualname__</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">instructor_name</span>
             <span class="n">maxDiff</span> <span class="o">=</span> <span class="kc">None</span>
 
-            <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
                 <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">config</span><span class="o">.</span><span class="n">instructor</span><span class="si">}</span><span class="s2">, using </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_testMethodName</span><span class="p">[</span><span class="mi">5</span><span class="p">:]</span><span class="si">}</span><span class="s2">.py&quot;</span>
                 <span class="c1"># return f&quot;{self.id().__name__} (Test{config.instructor})&quot;</span>
 
-            <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
                 <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">TestReferenceSolutions</span> <span class="o">=</span> <span class="n">TestReferenceSolutions</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tests</span> <span class="o">=</span> <span class="p">[]</span>
 
-    <span class="k">def</span> <span class="nf">add_case</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bundle_result</span><span class="p">,</span> <span class="n">verifier</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_case</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bundle_result</span><span class="p">,</span> <span class="n">verifier</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Add this ``name`` as a new test. &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">bundle_result</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
             <span class="nb">print</span><span class="p">(</span><span class="n">bundle_result</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
@@ -570,7 +571,7 @@
         <span class="n">error</span> <span class="o">=</span> <span class="n">bundle_result</span><span class="o">.</span><span class="n">error</span>
         <span class="n">expected_fields</span> <span class="o">=</span> <span class="n">verifier</span><span class="o">.</span><span class="n">get_final</span><span class="p">()</span>
 
-        <span class="k">def</span> <span class="nf">new_test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">new_test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">error</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">error</span>
             <span class="n">entire_actual</span><span class="p">,</span> <span class="n">entire_expected</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span>
@@ -590,22 +591,22 @@
         <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">TestReferenceSolutions</span><span class="p">,</span> <span class="s2">&quot;test_&quot;</span> <span class="o">+</span> <span class="n">name</span><span class="p">,</span> <span class="n">new_test</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tests</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;test_&quot;</span> <span class="o">+</span> <span class="n">name</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">skip_case</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-        <span class="k">def</span> <span class="nf">new_test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">skip_case</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">new_test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">skipTest</span><span class="p">(</span><span class="s2">&quot;Output did not exist; created.&quot;</span><span class="p">)</span>
 
         <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">TestReferenceSolutions</span><span class="p">,</span> <span class="s2">&quot;test_&quot;</span> <span class="o">+</span> <span class="n">name</span><span class="p">,</span> <span class="n">new_test</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tests</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;test_&quot;</span> <span class="o">+</span> <span class="n">name</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">error_case</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bundle_result</span><span class="p">):</span>
-        <span class="k">def</span> <span class="nf">new_test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">error_case</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bundle_result</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">new_test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">fail</span><span class="p">(</span>
                 <span class="s2">&quot;Expected output file was not found next to the instructor file. Perhaps you meant to use --create_output?&quot;</span><span class="p">)</span>
 
         <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">TestReferenceSolutions</span><span class="p">,</span> <span class="s2">&quot;test_&quot;</span> <span class="o">+</span> <span class="n">name</span><span class="p">,</span> <span class="n">new_test</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tests</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;test_&quot;</span> <span class="o">+</span> <span class="n">name</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">run_cases</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_cases</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">suite</span> <span class="o">=</span> <span class="n">unittest</span><span class="o">.</span><span class="n">defaultTestLoader</span><span class="o">.</span><span class="n">loadTestsFromTestCase</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">TestReferenceSolutions</span><span class="p">)</span>
         <span class="n">runner</span> <span class="o">=</span> <span class="n">unittest</span><span class="o">.</span><span class="n">TextTestRunner</span><span class="p">()</span>
         <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">suite</span><span class="p">)</span></div>
@@ -614,7 +615,7 @@
 
 <div class="viewcode-block" id="GradePipeline">
 <a class="viewcode-back" href="../../../teachers/cli.html#pedal.command_line.modes.GradePipeline">[docs]</a>
-<span class="k">class</span> <span class="nc">GradePipeline</span><span class="p">(</span><span class="n">AbstractPipeline</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">GradePipeline</span><span class="p">(</span><span class="n">AbstractPipeline</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    ``grade``: Pipeline for running the instructor control script on a submission and then outputing</span>
 <span class="sd">    the grade to the console. This is useful for quickly grading a set of submissions.</span>
@@ -622,14 +623,14 @@
 
 <span class="sd">    instructor_file, student_file, student_email, assignment_name, score, correct</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">process_output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">process_output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">output</span> <span class="o">==</span> <span class="s1">&#39;stdout&#39;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">print_bundles</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">output_file</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">print_bundles</span><span class="p">(</span><span class="n">output_file</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">print_bundles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">print_bundles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
         <span class="c1">#print(len(self.submissions))</span>
         <span class="k">for</span> <span class="n">bundle</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">submissions</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="n">bundle</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">target</span><span class="p">)</span>
@@ -648,7 +649,7 @@
 
 <div class="viewcode-block" id="SandboxPipeline">
 <a class="viewcode-back" href="../../../teachers/cli.html#pedal.command_line.modes.SandboxPipeline">[docs]</a>
-<span class="k">class</span> <span class="nc">SandboxPipeline</span><span class="p">(</span><span class="n">AbstractPipeline</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SandboxPipeline</span><span class="p">(</span><span class="n">AbstractPipeline</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    ``sandbox``: Pipeline for running ONLY the student&#39;s code, and then outputing the results to the console.</span>
 <span class="sd">    There is no instructor control script logic, although the Source tool does check that the</span>
@@ -660,7 +661,7 @@
 <span class="s2">verify()</span>
 <span class="s2">run()&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">load_submissions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_submissions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Use first argument as student submissions</span>
         <span class="n">given_script</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">instructor</span>
         <span class="c1"># ... either a single file</span>
@@ -685,7 +686,7 @@
                 <span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">submissions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Bundle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ICS</span><span class="p">,</span> <span class="n">new_submission</span><span class="p">))</span>
 
-    <span class="k">def</span> <span class="nf">process_output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">process_output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Print output</span>
         <span class="c1"># Print runtime exceptions, if any</span>
         <span class="k">for</span> <span class="n">bundle</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">submissions</span><span class="p">:</span>
@@ -703,14 +704,14 @@
 
 <div class="viewcode-block" id="DebugPipeline">
 <a class="viewcode-back" href="../../../teachers/cli.html#pedal.command_line.modes.DebugPipeline">[docs]</a>
-<span class="k">class</span> <span class="nc">DebugPipeline</span><span class="p">(</span><span class="n">AbstractPipeline</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DebugPipeline</span><span class="p">(</span><span class="n">AbstractPipeline</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    ``debug``: Pipeline for running the instructor control script on a submission and then outputing</span>
 <span class="sd">    the full results to the console. This is useful for debugging the instructor control</span>
 <span class="sd">    script, as it will show the full output, error, all of the feedback objects considered,</span>
 <span class="sd">    and the final feedback.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">process_output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">process_output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">bundle</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">submissions</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="n">bundle</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">instructor_file</span><span class="p">,</span>
                   <span class="n">bundle</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">main_file</span><span class="p">)</span>
@@ -731,7 +732,7 @@
 
 
 
-<span class="k">class</span> <span class="nc">MODES</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MODES</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The possible modes that Pedal can be run in.</span>
 <span class="sd">    &quot;&quot;&quot;</span>

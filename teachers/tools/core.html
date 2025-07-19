@@ -7,7 +7,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Core Commands &mdash; Pedal 1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/argparse.css?v=441cd8df" />
 
@@ -121,7 +121,7 @@
   <section id="core-commands">
 <h1>Core Commands<a class="headerlink" href="#core-commands" title="Link to this heading"></a></h1>
 <p>Imported as:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal</span> <span class="kn">import</span> <span class="o">*</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pedal</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
 </pre></div>
 </div>
 <dl class="py function">
@@ -233,7 +233,7 @@ pedagogically.</p>
 <span class="sig-name descname"><span class="pre">suppress</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">category</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#suppress" title="Link to this definition"></a></dt>
 <dd><p>Override whether a particular <a class="reference internal" href="../../everyone/glossary.html#term-Feedback-Category"><span class="xref std std-term">Feedback Category</span></a> or an individual <a class="reference internal" href="../../everyone/glossary.html#term-Feedback-Label"><span class="xref std std-term">Feedback Label</span></a>
 should be displayed to the user. You can specify one or both, and it will refine the answer accordingly.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.core.feedback_category</span> <span class="kn">import</span> <span class="n">FeedbackCategory</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pedal.core.feedback_category</span><span class="w"> </span><span class="kn">import</span> <span class="n">FeedbackCategory</span>
 
 <span class="c1"># Suppress Type Errors</span>
 <span class="n">suppress</span><span class="p">(</span><span class="n">FeedbackCategory</span><span class="o">.</span><span class="n">RUNTIME</span><span class="p">,</span> <span class="s2">&quot;TypeError&quot;</span><span class="p">)</span>
@@ -293,7 +293,7 @@ additional meta information and specify additional files.</p>
 <span class="n">contextualize_report</span><span class="p">(</span><span class="s2">&quot;print(&#39;hello world&#39;)&quot;</span><span class="p">,</span> <span class="s2">&quot;answer.py&quot;</span><span class="p">)</span>
 
 <span class="c1"># More complex configuration using a Submission</span>
-<span class="kn">from</span> <span class="nn">pedal.core.submission</span> <span class="kn">import</span> <span class="n">Submission</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.core.submission</span><span class="w"> </span><span class="kn">import</span> <span class="n">Submission</span>
 <span class="n">files</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;answer.py&quot;</span><span class="p">:</span> <span class="s2">&quot;print(open(&#39;input.txt&#39;).read())&quot;</span><span class="p">,</span> <span class="s2">&quot;input.txt&quot;</span><span class="p">:</span> <span class="s2">&quot;1</span><span class="se">\n</span><span class="s2">31</span><span class="se">\n</span><span class="s2">44</span><span class="se">\n</span><span class="s2">2&quot;</span><span class="p">}</span>
 <span class="n">contextualize_report</span><span class="p">(</span><span class="n">Submission</span><span class="p">(</span><span class="n">files</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Ada Bart&quot;</span><span class="p">}))</span>
 </pre></div>

@@ -7,7 +7,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Developers: Feedback Functions &mdash; Pedal 1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/argparse.css?v=441cd8df" />
 
@@ -160,7 +160,7 @@ for all of its metadata and associated values. Simply calling the constructor wi
 instance of the Feedback Function AND automatically attaches it to a report. That means it will
 be considered as possible output for the resolver to show to the student. You don’t even have to
 save the instance to a variable. The constructor does all the work!</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.core.feedback</span> <span class="kn">import</span> <span class="n">Feedback</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pedal.core.feedback</span><span class="w"> </span><span class="kn">import</span> <span class="n">Feedback</span>
 
 <span class="c1"># Possible, but not recommended!</span>
 <span class="n">Feedback</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;addition_error&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Addition Error&quot;</span><span class="p">,</span>
@@ -172,10 +172,10 @@ save the instance to a variable. The constructor does all the work!</p>
 have all those arguments every time you wanted to create a new instance. You could put this into
 a function, but at that point you might as well have gone with the recommended approach and created
 a subclass of <code class="docutils literal notranslate"><span class="pre">Feedback</span></code> instead.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.core.feedback</span> <span class="kn">import</span> <span class="n">Feedback</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pedal.core.feedback</span><span class="w"> </span><span class="kn">import</span> <span class="n">Feedback</span>
 
 <span class="c1"># Recommended!</span>
-<span class="k">class</span> <span class="nc">addition_error</span><span class="p">(</span><span class="n">Feedback</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">addition_error</span><span class="p">(</span><span class="n">Feedback</span><span class="p">):</span>
     <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Addition Error&quot;</span>
     <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;You should not have added those two numbers!&quot;</span>
     <span class="n">category</span><span class="o">=</span><span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">SPECIFICATION</span>
@@ -206,14 +206,14 @@ runtime or syntax errors. If you want to show the feedback regardless of runtime
 error? Perhaps you are checking if the plus sign ever appears in their original source code of the
 submission. By implementing the <code class="docutils literal notranslate"><span class="pre">condition</span></code> method, you can have the FF check whether it should
 actually be activated.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.core.feedback</span> <span class="kn">import</span> <span class="n">Feedback</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pedal.core.feedback</span><span class="w"> </span><span class="kn">import</span> <span class="n">Feedback</span>
 
-<span class="k">class</span> <span class="nc">addition_error</span><span class="p">(</span><span class="n">Feedback</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">addition_error</span><span class="p">(</span><span class="n">Feedback</span><span class="p">):</span>
     <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Addition Error&quot;</span>
     <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;You should not have added those two numbers!&quot;</span>
     <span class="n">category</span><span class="o">=</span><span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">SPECIFICATION</span>
 
-    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">find_matches</span><span class="p">(</span><span class="s2">&quot;___ + ___&quot;</span><span class="p">)</span>
 
 <span class="c1"># Then, in your instructor control script, you can just call:</span>
@@ -223,14 +223,14 @@ actually be activated.</p>
 <p>What if we wanted to parameterize the check, so the instructor could specify the operator?
 If you don’t care about changing the message, this is easy. Any extra positional arguments or
 non-default keyword arguments will be passed to the <code class="docutils literal notranslate"><span class="pre">condition</span></code> method.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.core.feedback</span> <span class="kn">import</span> <span class="n">Feedback</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pedal.core.feedback</span><span class="w"> </span><span class="kn">import</span> <span class="n">Feedback</span>
 
-<span class="k">class</span> <span class="nc">addition_error</span><span class="p">(</span><span class="n">Feedback</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">addition_error</span><span class="p">(</span><span class="n">Feedback</span><span class="p">):</span>
     <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Addition Error&quot;</span>
     <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;You should not have added those two numbers!&quot;</span>
     <span class="n">category</span><span class="o">=</span><span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">SPECIFICATION</span>
 
-    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operator</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operator</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">find_matches</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;___</span><span class="si">{</span><span class="n">operator</span><span class="si">}</span><span class="s2">___&quot;</span><span class="p">)</span>
 
 <span class="c1"># Then, in your instructor control script, you can just call:</span>
@@ -243,20 +243,20 @@ various shortcut ways to do this, but let’s look at a more sophisticated way o
 overriding the constructor and updating the fields. One of the fields comes directly from the
 constructor, but the other is calculated based on that parameter. We allow the instructor to also
 pass in other fields, if they so choose.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.core.feedback</span> <span class="kn">import</span> <span class="n">Feedback</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pedal.core.feedback</span><span class="w"> </span><span class="kn">import</span> <span class="n">Feedback</span>
 
-<span class="k">class</span> <span class="nc">addition_error</span><span class="p">(</span><span class="n">Feedback</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">addition_error</span><span class="p">(</span><span class="n">Feedback</span><span class="p">):</span>
     <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Addition Error&quot;</span>
     <span class="n">message_template</span> <span class="o">=</span> <span class="s2">&quot;You used the </span><span class="si">{operator}</span><span class="s2"> operator. Do not </span><span class="si">{verb}</span><span class="s2">!&quot;</span>
     <span class="n">category</span> <span class="o">=</span> <span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">SPECIFICATION</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operator</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operator</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">fields</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;fields&#39;</span><span class="p">,</span> <span class="p">{})</span>
         <span class="n">fields</span><span class="p">[</span><span class="s1">&#39;operator&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">operator</span>
         <span class="n">fields</span><span class="p">[</span><span class="s1">&#39;verb&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;add&quot;</span> <span class="k">if</span> <span class="n">operator</span> <span class="o">==</span> <span class="s2">&quot;+&quot;</span> <span class="k">else</span> <span class="s2">&quot;subtract&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;operator&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">main_code</span>
 
 <span class="c1"># Then, in your instructor control script, you can call:</span>
@@ -454,7 +454,7 @@ In fact, you can override any of the attributes of existing Feedback Functions t
 as classes.
 The <code class="docutils literal notranslate"><span class="pre">override</span></code> class method takes in keyword parameters for any of the fields of the Feedback Function.
 The system backs up the original value of the fields, in case you ever want to restore them.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pedal.sandbox.feedbacks</span> <span class="kn">import</span> <span class="n">name_error</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pedal.sandbox.feedbacks</span><span class="w"> </span><span class="kn">import</span> <span class="n">name_error</span>
 
 <span class="n">name_error</span><span class="o">.</span><span class="n">override</span><span class="p">(</span><span class="n">constant_fields</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;suggestion&#39;</span><span class="p">:</span> <span class="s2">&quot;THAT NAME DOES NOT EXIST MY DUDE.&quot;</span><span class="p">})</span>
 </pre></div>
