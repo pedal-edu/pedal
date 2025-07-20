@@ -72,6 +72,8 @@ class BundleResult:
 
     def to_json(self):
         resolution = self.resolution.copy() if self.resolution else {}
+        if not isinstance(resolution, dict):
+            resolution = resolution.to_json()
         #if 'considered' in resolution:
         #    for c in resolution['considered']:
         #        if 'fields' in c:
@@ -292,11 +294,22 @@ class AbstractPipeline:
         elif script_file_extension in ('.zip',):
             raise ValueError("TODO: Zip files not yet supported")
 
+    def load_file_directly(self, config):
+        new_submission = Submission(
+            main_file="answer.py",
+            main_code=self.config.submissions,
+            instructor_file=self.config.instructor
+        )
+        self.submissions.append(Bundle(self.config, self.config.instructor, new_submission))
+
     def load_submissions(self):
         given_script = self.config.instructor
-        if self.config.ics_direct:
+        if self.config.instructor_direct:
             # TODO: Allow non-progsnap ics_direct
-            self.load_progsnap(self.config.submissions, instructor_code=given_script)
+            if self.config.submission_direct:
+                self.load_file_directly(self.config)
+            else:
+                self.load_progsnap(self.config.submissions, instructor_code=given_script)
         elif is_progsnap(given_script):
             self.load_progsnap(given_script)
         elif os.path.isfile(given_script):

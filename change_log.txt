@@ -1,3 +1,14 @@
+Version 2.9.0 (7/20/2025)
+-------------------------
+* Changed ics_direct parameter to instructor_direct, added submission_direct
+* Fixed Stats Final Feedback object to correctly copy the feedback
+
+Version 2.8.1 (7/19/2025)
+-------------------------
+* Bug fix for copying stats final feedback object
+* Optional history tracking for TIFA
+* A few fixes for some builtin types
+
 Version 2.8.0 (2/10/2025)
 -------------------------
 * Revised command line config to more flexibly handle new flags

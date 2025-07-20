@@ -33,7 +33,8 @@ class FinalFeedback:
 
     def __init__(self, correct=None, score=None, category=None, label=None, title=None,
                  message=None, data=None, hide_correctness=None,
-                 suppressions=None, suppressed_labels=None, success=None):
+                 suppressions=None, suppressed_labels=None, success=None,
+                 scores=None, scores_feedback=None, **kwargs):
         """
 
         Args:
@@ -52,8 +53,8 @@ class FinalFeedback:
         """
         self.success = self.correct = correct if correct is not None else success
         self.score = score
-        self._scores = []
-        self._scores_feedback = []
+        self._scores = [] if scores is None else scores
+        self._scores_feedback = [] if scores_feedback is None else scores_feedback
         self.category = category
         self.label = label
         self.title = title
@@ -67,6 +68,7 @@ class FinalFeedback:
         self.suppressed_labels = suppressed_labels
         self.considered = []
         self.used = []
+        self._unused_extra_kwargs = kwargs
 
     def merge(self, feedback):
         """

@@ -147,7 +147,14 @@ class JobConfig:
             help="Choose a different resolver to use (the name of a function defined in the instructor control script).",
         )
     )
-    ics_direct: bool = field(
+    submission_direct: bool = field(
+        default=False,
+        metadata=metadata(
+            help="Give the student code directly instead of loading from a file.",
+            action="store_true"
+        )
+    )
+    instructor_direct: bool = field(
         default=False,
         metadata=metadata(
             help="Give the instructor code directly instead of loading from a file.",
