@@ -305,3 +305,19 @@ def set_pools(pools, report=MAIN_REPORT):
             the pools are given the identifiers A/B/C/etc.
     """
     report.set_pools(pools)
+
+
+def set_max_points(max_points, report=MAIN_REPORT):
+    """
+    Set the maximum points for the report. Any calculated score will be capped at this value.
+    To have no cap, use 'none'.
+    Use 'calculate' to set the maximum points based on the graded total from the report.
+    Otherwise, assumed to be an integer value representing the maximum points.
+
+    Args:
+        max_points (int or str): The maximum points for the report.
+        report (:py:class:`~pedal.core.report.Report`): The report to attach
+            this feedback to (defaults to the
+            :py:data:`~pedal.core.report.MAIN_REPORT`).
+    """
+    report.set_max_points(max_points)

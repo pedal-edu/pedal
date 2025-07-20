@@ -11,9 +11,10 @@ def test_stats_pipeline():
     pipeline = StatsPipeline(JobConfig(
         mode=MODES.STATS,
         submissions = "def main():\n    return 'Hello, World!'",
-        instructor = "from pedal import *\nensure_function('main')",
+        instructor = "from pedal import *\nensure_function('main', score='+60%')",
         instructor_direct = True,
         submission_direct = True,
+        points= ".5",
     ))
     assert pipeline is not None, "StatsPipeline should be initialized"
 
@@ -24,4 +25,4 @@ def test_stats_pipeline():
         assert False, f"StatsPipeline run failed with exception: {e}"
 
     # Check if the report is generated
-    pipeline.result
+    assert pipeline.submissions[0].result.resolution.score == .5, "Expected score to be 1.5"

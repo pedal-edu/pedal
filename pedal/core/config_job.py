@@ -215,6 +215,13 @@ class JobConfig:
         )
     )
 
+    points: str = field(
+        default="1",
+        metadata=metadata(
+            help="The maximum number of points to give for a correct answer. Use the value 'calculate' to automatically calculate the points from the grading script.",
+        )
+    )
+
 def parse_nested_dict(items):
     """Convert ['sandbox.trace=true', 'tifa.allow_none_objects=true'] into a nested dict"""
     nested_dict = defaultdict(dict)

@@ -13,6 +13,7 @@ from unittest.mock import patch
 from pprint import pprint
 import warnings
 import argparse
+from collections import Counter
 
 from pedal.command_line.report import StatReport
 from pedal.command_line.verify import generate_report_out, ReportVerifier
@@ -126,6 +127,8 @@ class Bundle:
         else:
             # TODO: Check that this shouldn't be for global_data instead of MAIN_REPORT directly
             MAIN_REPORT.contextualize(self.submission)
+        if self.config.points:
+            MAIN_REPORT.set_max_points(self.config.points)
         with redirect_stdout(captured_output):
             with patch.object(sys, 'argv', ics_args):
                 try:
@@ -411,12 +414,29 @@ class StatsPipeline(AbstractPipeline):
             #print(final)
             print("Total Processed:", total)
             print("Errors:", errors)
-            pedal_json_encoder = PedalJSONEncoder(indent=2, skipkeys=True)
-            if self.config.output == 'stdout':
-                print(pedal_json_encoder.encode(final))
-            else:
-                with open(self.config.output, 'w') as output_file:
-                    print(pedal_json_encoder.encode(final), file=output_file)
+
+            feedback_by_label_category = Counter()
+            scored_feedback_by_label_category = Counter()
+            for bundle in self.submissions:
+                final = bundle.result.resolution
+                feedback_by_label_category[(final.category, final.label)] += 1
+                for feedback in final._scores_feedback:
+                    scored_feedback_by_label_category[(feedback.category, feedback.label)] += 1
+            print("Final Feedback by label/category:")
+            for (category, label), count in feedback_by_label_category.items():
+                print(f"  {category} - {label}: {count}")
+
+            print("Scored Feedback by label/category:")
+            for (category, label), count in scored_feedback_by_label_category.items():
+                print(f"  {category} - {label}: {count}")
+
+
+            # pedal_json_encoder = PedalJSONEncoder(indent=2, skipkeys=True)
+            # if self.config.output == 'stdout':
+            #     print(pedal_json_encoder.encode(final))
+            # else:
+            #     with open(self.config.output, 'w') as output_file:
+            #         print(pedal_json_encoder.encode(final), file=output_file)
         return StatReport(final)
 
 

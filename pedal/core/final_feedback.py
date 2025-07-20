@@ -126,6 +126,7 @@ class FinalFeedback:
             invert_logic = ((feedback.valence != feedback.NEGATIVE_VALENCE) == (not feedback))
             inversion = "!" if invert_logic else ""
             self._scores.append(f"{inversion}{partial}")
+            self._scores_feedback.append(feedback)
             feedback.resolved_score = Score.parse(f"{inversion}{partial}").to_percent_string()
         # If this is was not triggered but had an else message, then add it to the positives list
         if not feedback and feedback.else_message:
@@ -155,7 +156,7 @@ class FinalFeedback:
         # All done, return the feedback out of politeness
         return feedback
 
-    def finalize(self):
+    def finalize(self, max_points=None):
         """
         Finalize the feedback object, setting the title and message to
         defaults if they are not already set. Also, combine the scores
@@ -174,11 +175,15 @@ class FinalFeedback:
             # TODO: Promote to be its own atomic feedback function
             self.title = set_correct.title
             self.message = set_correct.message_template
-            self.score = 1
+            self.score = combine_scores(self._scores)
             self.success = self.correct = True
         else:
             # If they weren't correct, we need to combine the scores
             self.score = combine_scores(self._scores)
+        if max_points is None:
+            self.score = min(1.0, self.score)
+        elif max_points != 'calculate':
+            self.score = min(float(max_points), self.score)
         # Update the success/correct flags
         self.success = self.correct = bool(self.correct)
         return self
@@ -187,6 +192,9 @@ class FinalFeedback:
         return "FinalFeedback({label!r}, {title!r}, {message!r})".format(label=self.label,
                                                                          title=self.title,
                                                                          message=self.message[:50])
+
+    def __repr__(self) -> str:
+        return str(self)
 
     def for_console(self) -> str:
         return "{label}\n{score}\n{title}\n{message}".format(label=self.label,

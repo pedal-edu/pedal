@@ -84,6 +84,7 @@ class Report:
         self.pools = []
         self.chosen_pool = None
         self.overridden_feedbacks = set()
+        self.max_points = '1'
         log.debug("New Pedal Report created.")
 
     def clear(self):
@@ -105,6 +106,7 @@ class Report:
         self.hooks.clear()
         self.submission = None
         self.result = None
+        self.max_points = '1'
         self.resolves.clear()
         self.format = Formatter()
         self.clear_overridden_feedback()
@@ -145,6 +147,21 @@ class Report:
         """
         self.hiddens.add('correct')
         self.hiddens.add('score')
+
+    def set_max_points(self, points):
+        """
+        Set the maximum points that this report can be worth.
+        This is used to determine the score of the submission.
+        If the score is greater than the maximum points, it will be capped.
+        If the `points` is the string `calculate`, then there will be no capping.
+
+        Args:
+            points (int or str): The maximum points for this report.
+                If a string, it will be used as-is.
+        """
+        if isinstance(points, int):
+            points = str(points)
+        self.max_points = points
 
     def add_feedback(self, feedback):
         """

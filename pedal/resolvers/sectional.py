@@ -40,7 +40,7 @@ def resolve(report=MAIN_REPORT, priority_key=by_priority):
         for feedback in feedbacks:
             final.merge(feedback)
         # Override empty message
-        final.finalize()
+        final.finalize(report.max_points)
         finals[group] = final
     report.result = finals
     report.resolves.append(finals)

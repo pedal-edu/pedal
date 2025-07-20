@@ -55,7 +55,7 @@ def resolve(report=MAIN_REPORT, priority_key=by_priority):
         if partial is not None:
             used.append(partial)
     # Override empty message
-    final.finalize()
+    final.finalize(report.max_points)
     final.used = used
     report.result = final
     report.resolves.append(final)

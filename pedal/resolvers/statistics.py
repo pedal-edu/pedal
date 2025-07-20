@@ -27,7 +27,7 @@ def resolve(clean=False, report=MAIN_REPORT):
     for feedback in feedbacks:
         final.merge(feedback)
         result.append(feedback.to_json())
-    final.finalize()
+    final.finalize(report.max_points)
     report.result = result
     report.resolves.append(result)
     result = {

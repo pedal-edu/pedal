@@ -2,6 +2,7 @@ Version 2.9.0 (7/20/2025)
 -------------------------
 * Changed ics_direct parameter to instructor_direct, added submission_direct
 * Fixed Stats Final Feedback object to correctly copy the feedback
+* Added ``--points` flag to command line to set max points for the feedback
 
 Version 2.8.1 (7/19/2025)
 -------------------------
