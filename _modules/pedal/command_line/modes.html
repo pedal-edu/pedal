@@ -103,6 +103,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">pprint</span><span class="w"> </span><span class="kn">import</span> <span class="n">pprint</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">Counter</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pedal.command_line.report</span><span class="w"> </span><span class="kn">import</span> <span class="n">StatReport</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pedal.command_line.verify</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_report_out</span><span class="p">,</span> <span class="n">ReportVerifier</span>
@@ -162,6 +163,8 @@
 
     <span class="k">def</span><span class="w"> </span><span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">resolution</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="k">else</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span><span class="o">.</span><span class="n">to_json</span><span class="p">()</span>
         <span class="c1">#if &#39;considered&#39; in resolution:</span>
         <span class="c1">#    for c in resolution[&#39;considered&#39;]:</span>
         <span class="c1">#        if &#39;fields&#39; in c:</span>
@@ -214,6 +217,8 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># TODO: Check that this shouldn&#39;t be for global_data instead of MAIN_REPORT directly</span>
             <span class="n">MAIN_REPORT</span><span class="o">.</span><span class="n">contextualize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">submission</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">points</span><span class="p">:</span>
+            <span class="n">MAIN_REPORT</span><span class="o">.</span><span class="n">set_max_points</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">points</span><span class="p">)</span>
         <span class="k">with</span> <span class="n">redirect_stdout</span><span class="p">(</span><span class="n">captured_output</span><span class="p">):</span>
             <span class="k">with</span> <span class="n">patch</span><span class="o">.</span><span class="n">object</span><span class="p">(</span><span class="n">sys</span><span class="p">,</span> <span class="s1">&#39;argv&#39;</span><span class="p">,</span> <span class="n">ics_args</span><span class="p">):</span>
                 <span class="k">try</span><span class="p">:</span>
@@ -382,11 +387,22 @@
         <span class="k">elif</span> <span class="n">script_file_extension</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;.zip&#39;</span><span class="p">,):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;TODO: Zip files not yet supported&quot;</span><span class="p">)</span>
 
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_file_directly</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+        <span class="n">new_submission</span> <span class="o">=</span> <span class="n">Submission</span><span class="p">(</span>
+            <span class="n">main_file</span><span class="o">=</span><span class="s2">&quot;answer.py&quot;</span><span class="p">,</span>
+            <span class="n">main_code</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">submissions</span><span class="p">,</span>
+            <span class="n">instructor_file</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">instructor</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">submissions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Bundle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">instructor</span><span class="p">,</span> <span class="n">new_submission</span><span class="p">))</span>
+
     <span class="k">def</span><span class="w"> </span><span class="nf">load_submissions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">given_script</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">instructor</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">ics_direct</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">instructor_direct</span><span class="p">:</span>
             <span class="c1"># TODO: Allow non-progsnap ics_direct</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">load_progsnap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">submissions</span><span class="p">,</span> <span class="n">instructor_code</span><span class="o">=</span><span class="n">given_script</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">submission_direct</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">load_file_directly</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">load_progsnap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">submissions</span><span class="p">,</span> <span class="n">instructor_code</span><span class="o">=</span><span class="n">given_script</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">is_progsnap</span><span class="p">(</span><span class="n">given_script</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">load_progsnap</span><span class="p">(</span><span class="n">given_script</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">given_script</span><span class="p">):</span>
@@ -496,12 +512,29 @@
             <span class="c1">#print(final)</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Total Processed:&quot;</span><span class="p">,</span> <span class="n">total</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Errors:&quot;</span><span class="p">,</span> <span class="n">errors</span><span class="p">)</span>
-            <span class="n">pedal_json_encoder</span> <span class="o">=</span> <span class="n">PedalJSONEncoder</span><span class="p">(</span><span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">skipkeys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">output</span> <span class="o">==</span> <span class="s1">&#39;stdout&#39;</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="n">pedal_json_encoder</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">final</span><span class="p">))</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">output_file</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="n">pedal_json_encoder</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">final</span><span class="p">),</span> <span class="n">file</span><span class="o">=</span><span class="n">output_file</span><span class="p">)</span>
+
+            <span class="n">feedback_by_label_category</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">()</span>
+            <span class="n">scored_feedback_by_label_category</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">bundle</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">submissions</span><span class="p">:</span>
+                <span class="n">final</span> <span class="o">=</span> <span class="n">bundle</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">resolution</span>
+                <span class="n">feedback_by_label_category</span><span class="p">[(</span><span class="n">final</span><span class="o">.</span><span class="n">category</span><span class="p">,</span> <span class="n">final</span><span class="o">.</span><span class="n">label</span><span class="p">)]</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">for</span> <span class="n">feedback</span> <span class="ow">in</span> <span class="n">final</span><span class="o">.</span><span class="n">_scores_feedback</span><span class="p">:</span>
+                    <span class="n">scored_feedback_by_label_category</span><span class="p">[(</span><span class="n">feedback</span><span class="o">.</span><span class="n">category</span><span class="p">,</span> <span class="n">feedback</span><span class="o">.</span><span class="n">label</span><span class="p">)]</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Final Feedback by label/category:&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">category</span><span class="p">,</span> <span class="n">label</span><span class="p">),</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">feedback_by_label_category</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">category</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Scored Feedback by label/category:&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">category</span><span class="p">,</span> <span class="n">label</span><span class="p">),</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">scored_feedback_by_label_category</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">category</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+
+            <span class="c1"># pedal_json_encoder = PedalJSONEncoder(indent=2, skipkeys=True)</span>
+            <span class="c1"># if self.config.output == &#39;stdout&#39;:</span>
+            <span class="c1">#     print(pedal_json_encoder.encode(final))</span>
+            <span class="c1"># else:</span>
+            <span class="c1">#     with open(self.config.output, &#39;w&#39;) as output_file:</span>
+            <span class="c1">#         print(pedal_json_encoder.encode(final), file=output_file)</span>
         <span class="k">return</span> <span class="n">StatReport</span><span class="p">(</span><span class="n">final</span><span class="p">)</span></div>
 
 

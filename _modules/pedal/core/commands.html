@@ -443,6 +443,22 @@
 <span class="sd">            the pools are given the identifiers A/B/C/etc.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">report</span><span class="o">.</span><span class="n">set_pools</span><span class="p">(</span><span class="n">pools</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">set_max_points</span><span class="p">(</span><span class="n">max_points</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Set the maximum points for the report. Any calculated score will be capped at this value.</span>
+<span class="sd">    To have no cap, use &#39;none&#39;.</span>
+<span class="sd">    Use &#39;calculate&#39; to set the maximum points based on the graded total from the report.</span>
+<span class="sd">    Otherwise, assumed to be an integer value representing the maximum points.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        max_points (int or str): The maximum points for the report.</span>
+<span class="sd">        report (:py:class:`~pedal.core.report.Report`): The report to attach</span>
+<span class="sd">            this feedback to (defaults to the</span>
+<span class="sd">            :py:data:`~pedal.core.report.MAIN_REPORT`).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">report</span><span class="o">.</span><span class="n">set_max_points</span><span class="p">(</span><span class="n">max_points</span><span class="p">)</span>
 </pre></div>
 
            </div>

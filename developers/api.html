@@ -138,6 +138,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#pedal.core.report.Report.hide_correctness"><code class="docutils literal notranslate"><span class="pre">Report.hide_correctness()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pedal.core.report.Report.register_tool"><code class="docutils literal notranslate"><span class="pre">Report.register_tool()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pedal.core.report.Report.set_formatter"><code class="docutils literal notranslate"><span class="pre">Report.set_formatter()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pedal.core.report.Report.set_max_points"><code class="docutils literal notranslate"><span class="pre">Report.set_max_points()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pedal.core.report.Report.stop_group"><code class="docutils literal notranslate"><span class="pre">Report.stop_group()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pedal.core.report.Report.suppress"><code class="docutils literal notranslate"><span class="pre">Report.suppress()</span></code></a></li>
 </ul>
@@ -1287,6 +1288,21 @@ TODO: Make this just a regular command.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>formatter</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.core.formatting.Formatter</span></code>) – The new
 formatter to use.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pedal.core.report.Report.set_max_points">
+<span class="sig-name descname"><span class="pre">set_max_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pedal/core/report.html#Report.set_max_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.core.report.Report.set_max_points" title="Link to this definition"></a></dt>
+<dd><p>Set the maximum points that this report can be worth.
+This is used to determine the score of the submission.
+If the score is greater than the maximum points, it will be capped.
+If the <code class="xref py py-obj docutils literal notranslate"><span class="pre">points</span></code> is the string <code class="xref py py-obj docutils literal notranslate"><span class="pre">calculate</span></code>, then there will be no capping.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>points</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – The maximum points for this report.
+If a string, it will be used as-is.</p>
 </dd>
 </dl>
 </dd></dl>
