@@ -78,22 +78,40 @@ class StandardEnvironment(Environment):
         # TODO: Fix resolve_all
         result = simple.resolve(*args, **kwargs)
         # print("Feedback Label:", result.label)
-        print("Title:", result.title)
-        print("Label:", result.label)
-        print("Score:", result.score)
-        print("Message:", result.message)
-        if result.positives:
-            print("Compliments:")
-            for compliment in result.positives:
-                title = compliment.title or compliment.label
-                if title and compliment.message and compliment.message != title:
-                    print(f"  - {title}: {compliment.message}")
-                elif title:
-                    print(f"  - {title}")
-                elif compliment.message:
-                    print(f"  - {compliment.message}")
-                else:
-                    print("  - (empty)")
+        # Handle the new unified dictionary format
+        if isinstance(result, dict) and 'final' in result:
+            final = result['final']
+            if final:
+                print("Title:", final.get('title'))
+                print("Label:", final.get('label'))
+                print("Score:", final.get('score'))
+                print("Message:", final.get('message'))
+            else:
+                print("Title: None")
+                print("Label: None")
+                print("Score: None")
+                print("Message: None")
+                
+            # Handle positives (compliments) from considered feedback
+            if 'considered' in result:
+                positives = [feedback for feedback in result['considered'] 
+                           if feedback.get('kind') == 'Compliment' or feedback.get('valence') == 1]
+                if positives:
+                    print("Compliments:")
+                    for compliment in positives:
+                        title = compliment.get('title') or compliment.get('label')
+                        message = compliment.get('message')
+                        if title and message and message != title:
+                            print(f"  - {title}: {message}")
+                        elif title:
+                            print(f"  - {title}")
+                        elif message:
+                            print(f"  - {message}")
+                        else:
+                            print("  - (empty)")
+        else:
+            # Fallback for unexpected format
+            print("Result:", result)
         return result
 
     def get_fields(self):
