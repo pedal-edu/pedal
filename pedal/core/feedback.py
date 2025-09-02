@@ -534,6 +534,9 @@ class FeedbackResponse(Feedback):
 def CompositeFeedbackFunction(*functions):
     """
     Decorator for functions that return multiple types of feedback functions.
+    
+    The decorated function should handle composite-level parameters (like score, muted, etc.)
+    separately from parameters that should be passed to constituent functions.
 
     Args:
         functions (callable): A list of callable functions.
@@ -552,6 +555,47 @@ def CompositeFeedbackFunction(*functions):
 
         """
         CompositeFeedbackFunction_with_attrs.functions = functions
+        
+        def extract_composite_parameters(kwargs):
+            """
+            Extract parameters that should apply to the composite feedback as a whole
+            rather than being passed to individual constituent functions.
+            
+            Returns:
+                tuple: (composite_params, remaining_kwargs)
+            """
+            composite_param_names = ['score', 'correct', 'muted', 'unscored', 'priority', 'label']
+            composite_params = {}
+            remaining_kwargs = kwargs.copy()
+            
+            for param in composite_param_names:
+                if param in kwargs:
+                    composite_params[param] = remaining_kwargs.pop(param)
+            
+            return composite_params, remaining_kwargs
+        
+        def apply_composite_feedback(composite_params, was_triggered=True, default_label=None):
+            """
+            Apply composite-level feedback parameters if any constituent was triggered.
+            
+            Args:
+                composite_params: Dictionary of composite parameters
+                was_triggered: Whether any constituent feedback was triggered
+                default_label: Default label to use if none provided
+            """
+            if was_triggered and composite_params:
+                from pedal.core.commands import give_partial
+                
+                if 'score' in composite_params:
+                    label = composite_params.get('label', default_label or function.__name__)
+                    other_params = {k: v for k, v in composite_params.items() 
+                                  if k not in ['score', 'label']}
+                    give_partial(composite_params['score'], label=label, **other_params)
+        
+        # Attach helper functions to the decorated function
+        function.extract_composite_parameters = extract_composite_parameters
+        function.apply_composite_feedback = apply_composite_feedback
+        
         return function
 
     return CompositeFeedbackFunction_with_attrs
