@@ -601,6 +601,8 @@ class Sandbox:
         self.mock_module('designer', mocked.MockDesigner(), 'designer')
         self.mock_module('drafter', mocked.MockDrafter(), 'drafter')
         self.mock_module('microbit', mocked.MockMicrobit(), 'microbit')
+        self.mock_module('arcade', mocked.MockArcade(), 'arcade')
+        self.mock_module('pygame', mocked.MockPygame(), 'pygame')
 
     def mock_function(self, function_name, new_version):
         self._module_overrides['__builtins__'][function_name] = new_version
