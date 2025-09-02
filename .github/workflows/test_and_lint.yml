@@ -26,10 +26,17 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install flake8 pytest
+        # Install runtime dependencies first
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        # Install development dependencies (includes pytest and bakery)
         if [ -f requirements_dev.txt ]; then pip install -r requirements_dev.txt; fi
+        # Install additional tools if not in requirements_dev.txt
+        pip install flake8
+        # Install package in development mode
         pip install -e .
+        # Verify critical test dependencies are available
+        python -c "import pytest; print('pytest available')"
+        python -c "import bakery; print('bakery available')"
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
@@ -39,4 +46,10 @@ jobs:
         #flake8 pedal/ --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with unittest
       run: |
+        # Show some diagnostic info for debugging
+        echo "Python version: $(python --version)"
+        echo "Current directory: $(pwd)"
+        echo "Test directory contents:"
+        ls -la tests/ | head -10
+        # Run the tests
         python -m unittest discover -s tests/
