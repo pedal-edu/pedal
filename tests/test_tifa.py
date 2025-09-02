@@ -544,6 +544,18 @@ unit_tests = {
     # Next
     'next_function':
         ['x = iter([1,2,3])\ny = next(x)\ny = y + x[0]\nprint(y)', ['initialization_problem'], []],
+    
+    # Try/Except handling tests
+    'try_except_both_define':
+        ['try:\n    x = 1\nexcept:\n    x = 2\nprint(x)', ['initialization_problem'], []],
+    'try_except_only_try_defines':
+        ['try:\n    x = 1\nexcept:\n    pass\nprint(x)', [], ['possible_initialization_problem']],
+    'try_except_only_except_defines':
+        ['try:\n    pass\nexcept:\n    x = 1\nprint(x)', [], ['possible_initialization_problem']],
+    'try_except_finally_all_define':
+        ['try:\n    x = 1\nexcept:\n    x = 2\nfinally:\n    y = 3\nprint(x, y)', ['initialization_problem'], []],
+    'try_except_finally_only_finally_defines':
+        ['try:\n    pass\nexcept:\n    pass\nfinally:\n    x = 1\nprint(x)', ['initialization_problem'], []],
 }
 
 
