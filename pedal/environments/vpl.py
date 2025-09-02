@@ -53,6 +53,11 @@ class VPLEnvironment(Environment):
             if trace:
                 start_trace()
             student = run(report=report)
+        
+        # Store the set_correct parameter for use during resolution
+        self.set_correct = set_correct
+        report._vpl_environment = self
+        
         self.fields = {
             'student': student,
             'resolve': resolve,
@@ -104,6 +109,9 @@ class VPLFormatter(Formatter):
         return code
 
     def filename(self, filename):
+        # Strip tests/ prefix if present for cleaner error messages
+        if filename.startswith('tests/'):
+            return filename[6:]  # Remove 'tests/' prefix
         return filename
 
     def python_value(self, code):
@@ -160,6 +168,15 @@ def resolve(report=MAIN_REPORT, priority_key=by_priority):
         custom_success_message:
     """
     print("<|--")
+    # Check if we should auto-set success feedback
+    if hasattr(report, '_vpl_environment') and report._vpl_environment.set_correct:
+        # Only set success if no negative feedback exists
+        has_failures = any(f for f in report.feedback 
+                          if f.category.lower() in ['syntax', 'runtime', 'specification'])
+        if not has_failures:
+            from pedal.core.commands import set_correct as set_correct_feedback
+            set_correct_feedback(report=report)
+    
     final = simple_resolve(report, priority_key=priority_key)
     if final.positives:
         print("-Positive Notes")

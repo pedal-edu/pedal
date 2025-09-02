@@ -175,7 +175,12 @@ class FinalFeedback:
             # TODO: Promote to be its own atomic feedback function
             self.title = set_correct.title
             self.message = set_correct.message_template
-            self.score = combine_scores(self._scores)
+            combined_score = combine_scores(self._scores)
+            # If we don't have explicit scores but we have positive feedback, give full credit
+            if combined_score == 0 and self.correct:
+                self.score = 1.0
+            else:
+                self.score = combined_score
             self.success = self.correct = True
         else:
             # If they weren't correct, we need to combine the scores
