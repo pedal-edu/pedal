@@ -6,11 +6,18 @@ from pedal.core.feedback import Feedback
 @make_resolver
 def resolve(report=MAIN_REPORT):
     """
+    Silent resolver that returns empty results.
 
     Args:
-        report:
+        report: The report to resolve
 
     Returns:
-
+        dict: A dictionary with empty final feedback and no considered feedback
     """
-    return ""
+    result = {
+        'final': None,
+        'considered': []
+    }
+    report.result = result
+    report.resolves.append(result)
+    return result

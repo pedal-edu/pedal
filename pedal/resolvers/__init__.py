@@ -29,8 +29,20 @@ def print_resolve(*args, **kwargs):
     :py:func:`pedal.resolvers.simple.resolve`
     """
     result = simple_resolver.resolve(*args, **kwargs)
-    print("Title:", result.title)
-    print("Label:", result.label)
-    print("Score:", result.score)
-    print("Message:", result.message)
+    # Handle the new unified dictionary format
+    if isinstance(result, dict) and 'final' in result:
+        final = result['final']
+        if final:
+            print("Title:", final.get('title'))
+            print("Label:", final.get('label'))
+            print("Score:", final.get('score'))
+            print("Message:", final.get('message'))
+        else:
+            print("Title: None")
+            print("Label: None") 
+            print("Score: None")
+            print("Message: None")
+    else:
+        # Fallback for unexpected format
+        print("Result:", result)
     return result

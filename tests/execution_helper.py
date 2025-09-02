@@ -60,8 +60,18 @@ class Execution:
 
     def __exit__(self, *args):
         suppress("runtime", "FileNotFoundError", report=self.report)
-        self.final = simple.resolve()
+        result = simple.resolve()
+        # Handle the new unified dictionary format
+        if isinstance(result, dict) and 'final' in result:
+            # Create a simple object to maintain compatibility with tests
+            self.final = type('FinalResult', (), result['final'])()
+            final_data = result['final'] or {}
+        else:
+            # Fallback for unexpected format
+            self.final = result
+            final_data = result.to_json() if hasattr(result, 'to_json') else {}
+            
         self.feedback = """{title}\n{message}""".format(
-            title=self.final.title,
-            message=self.final.message
+            title=final_data.get('title', 'Unknown'),
+            message=final_data.get('message', 'No message')
         )

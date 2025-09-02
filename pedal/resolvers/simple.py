@@ -131,7 +131,7 @@ def resolve(report=MAIN_REPORT, priority_key=by_priority):
                          global MAIN_REPORT
 
     Returns
-        str: A string of HTML feedback to be delivered
+        dict: A dictionary containing the final feedback and all considered feedback
     """
     # Prepare feedbacks
     report.finalize_feedbacks()
@@ -144,7 +144,14 @@ def resolve(report=MAIN_REPORT, priority_key=by_priority):
         final.merge(feedback)
     # Override empty message
     final.finalize(report.max_points)
-    report.result = final
-    report.resolves.append(final)
-    return final
+    
+    # Create the unified result format
+    result = {
+        'final': final.to_json(),
+        'considered': [feedback.to_json() for feedback in feedbacks]
+    }
+    
+    report.result = result
+    report.resolves.append(result)
+    return result
 

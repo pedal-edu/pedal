@@ -57,15 +57,27 @@ class TerminalFormatter(Formatter):
 @make_resolver
 def resolve_on_terminal(report=MAIN_REPORT):
     # print("\033[47m", "-" * 35, "FEEDBACK", "-" * 35, "\033[0m", file=file)
-    feedback = resolve(report)
+    result = resolve(report)
+    # Handle unified resolver format
+    if isinstance(result, dict) and 'final' in result:
+        feedback = result['final']
+        if feedback is None:
+            # Handle silent resolver case
+            print("")
+            print(f"{REVERSE} FEEDBACK {RESET} No feedback available.\n")
+            return result
+    else:
+        # Fallback for unexpected format
+        feedback = result.to_json() if hasattr(result, 'to_json') else {}
+        
     print("")
     print(f"{REVERSE} FEEDBACK {RESET} Based on your code, here are some tips and recommendations:\n")
-    if feedback.correct:
+    if feedback.get('correct', False):
         print(f"{BOLD_GREEN}{CHECKMARK}{RESET}️  Your code ran successfully.\n")
-        print(f"{feedback.message}")
+        print(f"{feedback.get('message', 'No message available')}")
     else:
-        print(f"{BOLD_RED}{CROSSMARK}{RESET}  {feedback.title}\n")
-        print(f"{feedback.message}")
+        print(f"{BOLD_RED}{CROSSMARK}{RESET}  {feedback.get('title', 'Error')}\n")
+        print(f"{feedback.get('message', 'No message available')}")
     print("")
 
     # if feedback.category not in (FeedbackCategory.SYNTAX, FeedbackCategory.RUNTIME):
