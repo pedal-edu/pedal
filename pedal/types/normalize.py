@@ -35,12 +35,21 @@ except:
     fields = None
 
 
-def get_generic_type(type_expression, evaluate_name=None) -> Type:
+def get_generic_type(type_expression, evaluate_name=None, config=None) -> Type:
+    if config is None:
+        from pedal.types.config import get_default_type_system_config
+        config = get_default_type_system_config()
+        
     if not hasattr(type_expression, '__args__'):
         return TYPE_STRINGS[type_expression.__name__]()
+        
+    # Respect configuration for generic types
+    if not config.accept_generic_types:
+        return TYPE_STRINGS[type_expression.__name__]()
+        
     base_type = TYPE_STRINGS[type_expression.__name__]()
     arg_type = type_expression.__args__
-    arg_type = tuple((normalize_type(at, evaluate_name) for at in arg_type))
+    arg_type = tuple((normalize_type(at, evaluate_name, config) for at in arg_type))
     base_type.add_type_arguments(arg_type)
     return base_type
 
@@ -53,7 +62,7 @@ def unbox_sandbox_if_needed(value):
     return value
 
 
-def normalize_type(type_expression, evaluate_name=None) -> Type:
+def normalize_type(type_expression, evaluate_name=None, config=None) -> Type:
     """
     Converts the given ``type_expression`` into a normalized Pedal Type.
 
@@ -64,10 +73,16 @@ def normalize_type(type_expression, evaluate_name=None) -> Type:
         evaluate_name (function): A function that takes a string and returns
             a PedalType. This is used to evaluate strings into types, possibly via the current
             student runtime environment.
+        config (TypeSystemConfig): Configuration controlling type system behavior.
+            If None, uses the default configuration.
 
     Returns:
         :py:class:`pedal.types.new_types.Type`: A normalized Pedal Type.
     """
+    if config is None:
+        from pedal.types.config import get_default_type_system_config
+        config = get_default_type_system_config()
+        
     # Already a Pedal Type
     if isinstance(type_expression, str) and type_expression in PEDAL_TYPE_NAMES:
         return PEDAL_TYPE_NAMES[type_expression]()
@@ -76,59 +91,76 @@ def normalize_type(type_expression, evaluate_name=None) -> Type:
     # What if it's a builtin type function?
     if isinstance(type_expression, type) or (IS_AT_LEAST_PYTHON_39 and isinstance(type_expression, dynamic_python_types.GenericAlias)):
         if type_expression.__name__ in TYPE_STRINGS:
-            return get_generic_type(type_expression, evaluate_name)
+            return get_generic_type(type_expression, evaluate_name, config)
         if evaluate_name:
             type_object = unbox_sandbox_if_needed(evaluate_name(type_expression.__name__))
             if isinstance(type_object, type) or (IS_AT_LEAST_PYTHON_39 and isinstance(type_object, dynamic_python_types.GenericAlias)):
                 if fields and hasattr(type_object, '__dataclass_fields__'):
-                    return ClassType(type_object.__name__, {
-                        field.name: normalize_type(field.type, evaluate_name)
-                        for field in fields(type_object)
-                    })
+                    if config.struct_type_support.get('dataclasses', True):
+                        return ClassType(type_object.__name__, {
+                            field.name: normalize_type(field.type, evaluate_name, config)
+                            for field in fields(type_object)
+                        })
                 # TODO: Fix this ugly ugly hack!
                 try:
                     vars(type_object)
                     has_vars = True
                 except:
                     has_vars = False
-                if has_vars:
+                if has_vars and config.struct_type_support.get('class', True):
                     return ClassType(type_object.__name__, {
-                        f: normalize_type(v, evaluate_name)
+                        f: normalize_type(v, evaluate_name, config)
                         for f, v in vars(type_object).items()
                         if not f.startswith('___')
                     })
                 return ClassType(type_object.__name__, {})
             return type_object
-        return normalize_type(type_expression.__name__, evaluate_name=evaluate_name)
+        return normalize_type(type_expression.__name__, evaluate_name=evaluate_name, config=config)
     # Might be a string, can we evaluate?
     if isinstance(type_expression, str):
+        # Handle custom list annotations like [int] if supported
+        if config.support_list_annotations and type_expression.startswith('[') and type_expression.endswith(']'):
+            inner_type_str = type_expression[1:-1].strip()
+            if inner_type_str:
+                try:
+                    inner_type = normalize_type(inner_type_str, evaluate_name, config)
+                    return ListType(inner_type)
+                except:
+                    pass  # Fall through to normal parsing
+                    
         # return get_pedal_type_from_str(type_expression, evaluate_name)
         try:
             first_line = ast.parse(type_expression).body[0].value
         except SyntaxError as e:
+            if config.allow_any_fallback:
+                return AnyType()
             raise ValueError(f"Could not parse string {type_expression!r} into "
                              f"a Pedal type:\n {e}")
         except AttributeError as e:
+            if config.allow_any_fallback:
+                return AnyType()
             raise ValueError(f"Could not parse string {type_expression!r} into "
                              f"a Pedal type:\n This was not an expression.")
         try:
-            return normalize_type(first_line, evaluate_name=evaluate_name)
+            return normalize_type(first_line, evaluate_name=evaluate_name, config=config)
         except Exception as e:
+            if config.allow_any_fallback:
+                return AnyType()
             return ImpossibleType()
     # Might be a JSON-Encoded dictionary
     if isinstance(type_expression, dict):
         try:
-            return get_pedal_type_from_json(type_expression, evaluate_name)
+            return get_pedal_type_from_json(type_expression, evaluate_name, config)
         except KeyError:
-            return get_pedal_type_from_type_literal(type_expression, evaluate_name)
+            return get_pedal_type_from_type_literal(type_expression, evaluate_name, config)
     # Perhaps it is an AST node
     if isinstance(type_expression, ast.AST):
-        return get_pedal_type_from_ast(type_expression, evaluate_name)
+        return get_pedal_type_from_ast(type_expression, evaluate_name, config)
     if isinstance(type_expression, (set, list, tuple, frozenset)):
-        return get_pedal_type_from_type_literal(type_expression, evaluate_name)
+        return get_pedal_type_from_type_literal(type_expression, evaluate_name, config)
     if isinstance(type_expression, dynamic_python_types.ModuleType):
         return ModuleType(type_expression.__name__, {
-            field: normalize_type(getattr(type_expression, field), evaluate_name)
+            field: normalize_type(getattr(type_expression, field), evaluate_name, config)
             for field in dir(type_expression)
             if not field.startswith('__')
         })
@@ -136,19 +168,30 @@ def normalize_type(type_expression, evaluate_name=None) -> Type:
     # raise ValueError(f"Could not normalize {type_expression!r} into a Pedal type.")
 
 
-def get_pedal_type_from_json(val, evaluate_name=None):
+def get_pedal_type_from_json(val, evaluate_name=None, config=None):
+    if config is None:
+        from pedal.types.config import get_default_type_system_config
+        config = get_default_type_system_config()
+        
     if 'version' in val:
         if val['version'] == 2:
-            return get_pedal_type_from_json_v2(val, evaluate_name)
-    return get_pedal_type_from_json_v1(val, evaluate_name)
+            return get_pedal_type_from_json_v2(val, evaluate_name, config)
+    return get_pedal_type_from_json_v1(val, evaluate_name, config)
 
 
-def get_pedal_type_from_json_v2(val, evaluate_name=None):
+def get_pedal_type_from_json_v2(val, evaluate_name=None, config=None):
     """ TODO: Finish v2 to make this cleaner """
-    return get_pedal_type_from_json_v1(val, evaluate_name)
+    if config is None:
+        from pedal.types.config import get_default_type_system_config
+        config = get_default_type_system_config()
+    return get_pedal_type_from_json_v1(val, evaluate_name, config)
 
 
-def get_pedal_type_from_json_v1(val, evaluate_name=None):
+def get_pedal_type_from_json_v1(val, evaluate_name=None, config=None):
+    if config is None:
+        from pedal.types.config import get_default_type_system_config
+        config = get_default_type_system_config()
+        
     if val['type'] == 'LiteralStr':
         return LiteralStr(val['value'])
     elif val['type'] == 'LiteralNum':
@@ -159,19 +202,19 @@ def get_pedal_type_from_json_v1(val, evaluate_name=None):
     elif val['type'] == 'LiteralBool':
         return LiteralBool(val['value'])
     elif val['type'] == 'DictType':
-        values = [get_pedal_type_from_json_v1(v, evaluate_name)
+        values = [get_pedal_type_from_json_v1(v, evaluate_name, config)
                   for v in val['values']]
         if 'literals' in val:
-            keys = [get_pedal_type_from_json_v1(l, evaluate_name)
+            keys = [get_pedal_type_from_json_v1(l, evaluate_name, config)
                     for l in val['literals']]
         else:
-            keys = [get_pedal_type_from_json_v1(k, evaluate_name)
+            keys = [get_pedal_type_from_json_v1(k, evaluate_name, config)
                     for k in val['keys']]
         return DictType([(k, v) for k, v in zip(keys, values)])
     elif val['type'] == 'ListType':
         return ListType(val.get('empty', None),
                         get_pedal_type_from_json_v1(val.get('subtype', None),
-                                                    evaluate_name))
+                                                    evaluate_name, config))
     elif val['type'] == 'StrType':
         return StrType(val.get('empty', None))
     elif val['type'] == 'BoolType':
@@ -181,34 +224,40 @@ def get_pedal_type_from_json_v1(val, evaluate_name=None):
     elif val['type'] == 'NumType':
         return NumType()
     elif val['type'] == 'ModuleType':
-        submodules = {name: get_pedal_type_from_json_v1(m, evaluate_name)
+        submodules = {name: get_pedal_type_from_json_v1(m, evaluate_name, config)
                       for name, m in val.get('submodules', {}).items()}
-        fields = {name: get_pedal_type_from_json_v1(m, evaluate_name)
+        fields = {name: get_pedal_type_from_json_v1(m, evaluate_name, config)
                   for name, m in val.get('fields', {}).items()}
         return ModuleType(name=val.get('name'), submodules=submodules,
                           fields=fields)
     elif val['type'] == 'FunctionType':
         returns = get_pedal_type_from_json_v1(val.get('returns', {'type': 'NoneType'}),
-                                              evaluate_name)
+                                              evaluate_name, config)
         return FunctionType(name=val.get('name'), returns=lambda: returns)
 
 
-def get_pedal_type_from_str(value, evaluate_name=None):
+def get_pedal_type_from_str(value, evaluate_name=None, config=None):
     """
+    Convert string representation to Pedal type.
 
     Args:
-        value:
-        tifa_instance:
+        value: String representation of a type
+        evaluate_name: Function to evaluate names
+        config: Type system configuration
 
     Returns:
-
+        Type: A Pedal Type
     """
+    if config is None:
+        from pedal.types.config import get_default_type_system_config
+        config = get_default_type_system_config()
+        
     # if value in custom_types:
     #    return custom_types[value]
     if value.lower() in STANDARD_NAMES:
         return TYPE_STRINGS[value.lower()]()
     elif evaluate_name:
-        potential = normalize_type(evaluate_name(value), evaluate_name)
+        potential = normalize_type(evaluate_name(value), evaluate_name, config)
         if not isinstance(potential, ImpossibleType):
             return potential
     return ClassType(value)
@@ -265,6 +314,7 @@ def get_pedal_type_from_value(value, evaluate_name=None) -> Type:
             # Resort to just matching the types?
             return DictType([(k, v) for k, v in items])
     if evaluate_name:
+        # Note: Using default config since this is runtime value evaluation
         new_instance = InstanceType(normalize_type(evaluate_name(type(value).__name__), evaluate_name))
         if fields and hasattr(value, '__dataclass_fields__'):
             for field in fields(value):
@@ -273,46 +323,52 @@ def get_pedal_type_from_value(value, evaluate_name=None) -> Type:
     return AnyType()
 
 
-def get_pedal_type_from_ast(value: ast.AST, evaluate_name=None) -> Type:
+def get_pedal_type_from_ast(value: ast.AST, evaluate_name=None, config=None) -> Type:
     """
     Determines the Pedal Type from this ast node.
     Args:
         value (ast.AST): An AST node.
+        evaluate_name: Function to evaluate name strings
+        config: Type system configuration
 
     Returns:
         Type: A Pedal Type
     """
+    if config is None:
+        from pedal.types.config import get_default_type_system_config
+        config = get_default_type_system_config()
+        
     try:
         if isinstance(value, ast.Constant):
             return get_pedal_type_from_value(value.value, evaluate_name)
     except AttributeError as e:
         pass
     if isinstance(value, ast.Name):
-        return get_pedal_type_from_str(value.id, evaluate_name)
+        return get_pedal_type_from_str(value.id, evaluate_name, config)
     elif isinstance(value, ast.Str):
         return LiteralStr(value.s)
     elif isinstance(value, ast.List):
         return ListType(not bool(value.elts),
-                        (get_pedal_type_from_ast(value.elts[0], evaluate_name)
+                        (get_pedal_type_from_ast(value.elts[0], evaluate_name, config)
                          if value.elts else None))
     elif isinstance(value, ast.Set):
         return SetType(not bool(value.elts),
-                       (get_pedal_type_from_ast(value.elts[0], evaluate_name)
+                       (get_pedal_type_from_ast(value.elts[0], evaluate_name, config)
                         if value.elts else None))
     elif isinstance(value, ast.Tuple):
-        return TupleType([get_pedal_type_from_ast(e, evaluate_name)
+        return TupleType([get_pedal_type_from_ast(e, evaluate_name, config)
                            for e in value.elts])
     elif isinstance(value, ast.Dict):
         if not value.keys:
             return DictType([])
-        return DictType([(get_pedal_type_from_ast(k, evaluate_name),
-                          get_pedal_type_from_ast(v, evaluate_name))
+        return DictType([(get_pedal_type_from_ast(k, evaluate_name, config),
+                          get_pedal_type_from_ast(v, evaluate_name, config))
                          for k, v in zip(value.keys, value.values)])
     # Support new style subscripts (e.g., ``list[int]``)
 
     if isinstance(value, ast.Slice):
         return TupleType(
-            [get_pedal_type_from_ast(piece, evaluate_name)
+            [get_pedal_type_from_ast(piece, evaluate_name, config)
              for piece in [value.lower, value.upper, value.step]
              if piece is not None]
         )
@@ -321,37 +377,43 @@ def get_pedal_type_from_ast(value: ast.AST, evaluate_name=None) -> Type:
         # Need to handle new style subscripts starting in 3.9 and not Skulpt
         if IS_AT_LEAST_PYTHON_39 and not IS_SKULPT:
             if isinstance(value.slice, ast.Tuple):
-                slice_types = [get_pedal_type_from_ast(k, evaluate_name)
+                slice_types = [get_pedal_type_from_ast(k, evaluate_name, config)
                                 for k in value.slice.elts]
             else:
-                slice_types = get_pedal_type_from_ast(value.slice, evaluate_name)
-            value_type = get_pedal_type_from_ast(value.value, evaluate_name)
-            value_type.add_type_arguments(slice_types)
+                slice_types = get_pedal_type_from_ast(value.slice, evaluate_name, config)
+            value_type = get_pedal_type_from_ast(value.value, evaluate_name, config)
+            if config.accept_generic_types:
+                value_type.add_type_arguments(slice_types)
             return value_type
         # Need to handle old style subscripts in Skulpt and older versions
         else:
             if isinstance(value.slice, ast.Index):
-                slice_types = (get_pedal_type_from_ast(value.slice.value, evaluate_name),)
+                slice_types = (get_pedal_type_from_ast(value.slice.value, evaluate_name, config),)
             elif isinstance(value.slice, ast.Slice):
-                slice_types = get_pedal_type_from_ast(value.slice, evaluate_name)
+                slice_types = get_pedal_type_from_ast(value.slice, evaluate_name, config)
             else:
                 slice_types = [
-                    get_pedal_type_from_ast(slice, evaluate_name)
+                    get_pedal_type_from_ast(slice, evaluate_name, config)
                     for slice in value.slice.dims
                 ]
-            value_type = get_pedal_type_from_ast(value.value, evaluate_name)
-            value_type.add_type_arguments(slice_types)
+            value_type = get_pedal_type_from_ast(value.value, evaluate_name, config)
+            if config.accept_generic_types:
+                value_type.add_type_arguments(slice_types)
             return value_type
     # Top-level Module, parse it and get it back
     if isinstance(value, ast.Module) and value.body:
         if isinstance(value.body[0], ast.Expr):
-            return get_pedal_type_from_ast(value.body[0].value, evaluate_name)
+            return get_pedal_type_from_ast(value.body[0].value, evaluate_name, config)
     if isinstance(value, ast.Expr):
-        return get_pedal_type_from_ast(value.value, evaluate_name)
+        return get_pedal_type_from_ast(value.value, evaluate_name, config)
     return ImpossibleType()
 
 
-def get_pedal_type_from_type_literal(value, evaluate_name=None) -> Type:
+def get_pedal_type_from_type_literal(value, evaluate_name=None, config=None) -> Type:
+    if config is None:
+        from pedal.types.config import get_default_type_system_config
+        config = get_default_type_system_config()
+        
     if value == list:
         # Handle type annotations if available
         return ListType(False)
@@ -359,19 +421,19 @@ def get_pedal_type_from_type_literal(value, evaluate_name=None) -> Type:
         return DictType(False)
     elif isinstance(value, list):
         if value:
-            return ListType(False, normalize_type(value[0], evaluate_name))
+            return ListType(False, normalize_type(value[0], evaluate_name, config))
         else:
             return ListType(True)
     elif isinstance(value, (set, frozenset)):
-        return TypeUnion([normalize_type(v, evaluate_name) for v in value])
+        return TypeUnion([normalize_type(v, evaluate_name, config) for v in value])
     elif isinstance(value, tuple):
-        return TupleType([normalize_type(v, evaluate_name) for v in value])
+        return TupleType([normalize_type(v, evaluate_name, config) for v in value])
     elif isinstance(value, dict):
         if not value:
             return DictType(True)
         if all(isinstance(value, str) for k in value.keys()):
-            return DictType([(LiteralStr(s), normalize_type(vv, evaluate_name))
+            return DictType([(LiteralStr(s), normalize_type(vv, evaluate_name, config))
                             for s, vv in value.items()])
-        return DictType([(normalize_type(kk, evaluate_name),
-                          normalize_type(vv, evaluate_name))
+        return DictType([(normalize_type(kk, evaluate_name, config),
+                          normalize_type(vv, evaluate_name, config))
                          for kk, vv in value.items()])

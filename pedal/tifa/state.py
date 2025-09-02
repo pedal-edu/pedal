@@ -99,7 +99,9 @@ class State:
         trace.
         """
         from pedal.types.normalize import normalize_type
-        a_type = normalize_type(a_type).as_type()
+        from pedal.types.config import get_default_type_system_config
+        config = get_default_type_system_config()
+        a_type = normalize_type(a_type, config=config).as_type()
         past_types = check_trace(self)
         return any(is_subtype(past_type, a_type) for past_type in past_types)
 

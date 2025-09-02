@@ -136,8 +136,10 @@ def check_dataclass_instance(value, dataclass, else_message=None, score=None, pa
     # Get the students' instance as a Pedal Type
     value_pedal_type = get_pedal_type_from_value(unwrap_value(value), evaluate)
     # Convert the instructor's version to a Pedal type
+    from pedal.types.config import get_default_type_system_config
+    config = get_default_type_system_config()
     evaluated_expected_type = evaluate(dataclass) if isinstance(dataclass, str) else dataclass
-    expected_pedal_type = normalize_type(evaluated_expected_type, evaluate)
+    expected_pedal_type = normalize_type(evaluated_expected_type, evaluate, config)
     if not isinstance(expected_pedal_type, Exception):
         expected_pedal_type = expected_pedal_type.as_type()
         expected_pedal_type_name = expected_pedal_type.singular_name
@@ -168,9 +170,9 @@ def check_dataclass_instance(value, dataclass, else_message=None, score=None, pa
         if actual_field_name not in expected_fields:
             return unknown_field(name, actual_field_name, **kwargs)
         expected_field_type = expected_fields[actual_field_name]
-        expected_field_type = normalize_type(expected_field_type, evaluate).as_type()
+        expected_field_type = normalize_type(expected_field_type, evaluate, config).as_type()
         try:
-            actual_field_type = normalize_type(actual_field_type, evaluate).as_type()
+            actual_field_type = normalize_type(actual_field_type, evaluate, config).as_type()
         except ValueError as e:
             return invalid_field_type(name, actual_field_name, actual_field_type, expected_field_type, **kwargs)
         if not is_subtype(actual_field_type, expected_field_type):

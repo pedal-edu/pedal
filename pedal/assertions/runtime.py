@@ -508,9 +508,13 @@ class assert_not_is_instance(RuntimeAssertionFeedback):
         return isinstance(obj.value, value)
 
 
-def type_to_pedal_type(expected_type):
+def type_to_pedal_type(expected_type, config=None):
+    if config is None:
+        from pedal.types.config import get_default_type_system_config
+        config = get_default_type_system_config()
+        
     evaluated_expected_type = evaluate(expected_type) if isinstance(expected_type, str) else expected_type
-    expected_pedal_type = normalize_type(evaluated_expected_type, evaluate)
+    expected_pedal_type = normalize_type(evaluated_expected_type, evaluate, config)
     if not isinstance(expected_pedal_type, Exception):
         expected_pedal_type = expected_pedal_type.as_type()
         expected_pedal_type_name = expected_pedal_type.singular_name
@@ -532,19 +536,25 @@ class _compare_type(RuntimeAssertionFeedback):
     TODO: Failing for assert_type({"test":1}, dict)
     """
 
-    def __init__(self, value, expected_type, **kwargs):
+    def __init__(self, value, expected_type, config=None, **kwargs):
+        if config is None:
+            from pedal.types.config import get_default_type_system_config
+            config = get_default_type_system_config()
+            
         fields = kwargs.setdefault('fields', {})
         value_pedal_type = value_to_pedal_type(value)
         singular_name = share_sandbox_context(value_pedal_type if
                                               isinstance(value_pedal_type, str) else
                                               value_pedal_type.singular_name, value)
-        expected_pedal_type, expected_pedal_type_name = type_to_pedal_type(expected_type)
+        expected_pedal_type, expected_pedal_type_name = type_to_pedal_type(expected_type, config)
         fields['value_raw'] = value
         fields['value_type'] = value_pedal_type
         fields['value_type_name'] = singular_name
         fields['expected_type_raw'] = expected_type
         fields['expected_type'] = expected_pedal_type
         fields['expected_type_name'] = expected_pedal_type_name
+        # Store config for use in condition method
+        fields['config'] = config
         super().__init__(SandboxedValue(singular_name),
                          SandboxedValue(expected_pedal_type_name), **kwargs)
 
@@ -552,6 +562,13 @@ class _compare_type(RuntimeAssertionFeedback):
         """ Tests if the left and right are equal """
         value_type = self.fields['value_type']
         expected_type = self.fields['expected_type']
+        config = self.fields['config']
+        
+        # Use configuration for numeric type equality if enabled
+        if config.numeric_type_equality and hasattr(expected_type, 'is_numeric') and expected_type.is_numeric():
+            if hasattr(value_type, 'is_numeric') and value_type.is_numeric():
+                return False  # Consider numeric types equal
+                
         return not is_subtype(value_type, expected_type)
 
 
