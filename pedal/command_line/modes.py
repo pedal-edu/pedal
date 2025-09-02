@@ -74,12 +74,7 @@ class BundleResult:
 
     def to_json(self):
         resolution = self.resolution.copy() if self.resolution else {}
-        if not isinstance(resolution, dict):
-            resolution = resolution.to_json()
-        #if 'considered' in resolution:
-        #    for c in resolution['considered']:
-        #        if 'fields' in c:
-        #            del c['fields']
+        # All resolvers now consistently return dictionaries, no need for type checking
         return dict(
             output=self.output,
             error=self.error,
@@ -598,12 +593,22 @@ class GradePipeline(AbstractPipeline):
             if bundle.result.error:
                 raise bundle.result.error
             # This info is not sent to the output target, just to stdout
+            # Handle the unified resolver format
+            resolution = bundle.result.resolution
+            if isinstance(resolution, dict) and 'final' in resolution:
+                final_feedback = resolution['final']
+                correct = final_feedback.get('correct', False) if final_feedback else False
+                score = final_feedback.get('score', 0) if final_feedback else 0
+            else:
+                # Fallback for unexpected format
+                correct = getattr(resolution, 'correct', False)
+                score = getattr(resolution, 'score', 0)
+            
             print(bundle.submission.instructor_file,
                   bundle.submission.main_file,
                   bundle.submission.user.get('student_email') if bundle.submission.user else 'Unknown User',
                   bundle.submission.assignment.get('name') if bundle.submission.assignment else 'Unknown Assignment',
-                  1 if bundle.result.resolution.correct else
-                  bundle.result.resolution.score,
+                  1 if correct else score,
                   sep=", ", end="")
 
 

@@ -21,41 +21,55 @@ from tests.execution_helper import Execution, SUCCESS_TEXT, ExecutionTestCase, S
 
 class TestResolver(ExecutionTestCase):
 
+    def get_final_from_result(self, result):
+        """Helper to extract final feedback data from resolver result."""
+        if isinstance(result, dict) and 'final' in result:
+            return result['final']
+        elif hasattr(result, 'to_json'):
+            return result.to_json()
+        else:
+            return result
+
     def test_do_nothing(self):
         clear_report()
-        final = simple.resolve()
-        self.assertTrue(final.success)
-        self.assertEqual(final.message, SUCCESS_TEXT)
+        result = simple.resolve()
+        final = self.get_final_from_result(result)
+        self.assertTrue(final['correct'])
+        self.assertEqual(final['message'], SUCCESS_TEXT)
 
     def test_gently(self):
         clear_report()
         gently('You should always create unit tests.')
-        final = simple.resolve()
-        self.assertFalse(final.success)
-        self.assertEqual(final.message, 'You should always create unit tests.')
+        result = simple.resolve()
+        final = self.get_final_from_result(result)
+        self.assertFalse(final['correct'])
+        self.assertEqual(final['message'], 'You should always create unit tests.')
 
     def test_gently_order(self):
         clear_report()
         gently('A great and exciting message!')
         gently('A boring message that we should not show.')
-        final = simple.resolve()
-        self.assertFalse(final.success)
-        self.assertEqual(final.message, 'A great and exciting message!')
+        result = simple.resolve()
+        final = self.get_final_from_result(result)
+        self.assertFalse(final['correct'])
+        self.assertEqual(final['message'], 'A great and exciting message!')
 
     def test_set_success(self):
         clear_report()
         set_success()
-        final = simple.resolve()
-        self.assertTrue(final.success)
-        self.assertEqual(final.message, 'Great work!')
+        result = simple.resolve()
+        final = self.get_final_from_result(result)
+        self.assertTrue(final['correct'])
+        self.assertEqual(final['message'], 'Great work!')
 
     def test_gently_and_set_success(self):
         clear_report()
         gently("What have you done?")
         set_success()
-        final = simple.resolve()
-        self.assertFalse(final.success)
-        self.assertEqual(final.message, 'What have you done?')
+        result = simple.resolve()
+        final = self.get_final_from_result(result)
+        self.assertFalse(final['correct'])
+        self.assertEqual(final['message'], 'What have you done?')
 
     def test_explain(self):
         # Tifa < Explain
@@ -72,16 +86,18 @@ class TestResolver(ExecutionTestCase):
         contextualize_report('import pedal')
         verify()
         tifa_analysis()
-        final = simple.resolve()
-        self.assertNotEqual("No errors reported.", final.message)
+        result = simple.resolve()
+        final = self.get_final_from_result(result)
+        self.assertNotEqual("No errors reported.", final['message'])
 
     def test_unmessaged_tifa(self):
         clear_report()
         contextualize_report('import random\nrandom')
         verify()
         tifa_analysis()
-        final = simple.resolve()
-        self.assertEqual(SUCCESS_MESSAGE, final.title+"\n"+final.message)
+        result = simple.resolve()
+        final = self.get_final_from_result(result)
+        self.assertEqual(SUCCESS_MESSAGE, final['title']+"\n"+final['message'])
 
     def test_partials(self):
         with Execution('0') as e:
@@ -125,9 +141,10 @@ class TestResolver(ExecutionTestCase):
         tifa_analysis()
         commands.run()
         suppress("analyzer")
-        final = simple.resolve()
-        self.assertEqual("runtime", final.category)
-        self.assertEqual("Type Error", final.title)
+        result = simple.resolve()
+        final = self.get_final_from_result(result)
+        self.assertEqual("runtime", final['category'])
+        self.assertEqual("Type Error", final['title'])
 
     def test_runtime_suppression(self):
         clear_report()
@@ -136,9 +153,10 @@ class TestResolver(ExecutionTestCase):
         tifa_analysis()
         commands.run()
         suppress("Runtime")
-        final = simple.resolve()
-        self.assertEqual(Feedback.CATEGORIES.COMPLETE, final.category)
-        self.assertEqual(SUCCESS_TEXT, final.message)
+        result = simple.resolve()
+        final = self.get_final_from_result(result)
+        self.assertEqual(Feedback.CATEGORIES.COMPLETE, final['category'])
+        self.assertEqual(SUCCESS_TEXT, final['message'])
 
     def test_success(self):
         clear_report()
@@ -146,10 +164,11 @@ class TestResolver(ExecutionTestCase):
         verify()
         tifa_analysis()
         set_success()
-        final = simple.resolve()
-        self.assertEqual(Feedback.CATEGORIES.COMPLETE, final.category)
-        self.assertEqual("Complete", final.title)
-        self.assertEqual("Great work!", final.message)
+        result = simple.resolve()
+        final = self.get_final_from_result(result)
+        self.assertEqual(Feedback.CATEGORIES.COMPLETE, final['category'])
+        self.assertEqual("Complete", final['title'])
+        self.assertEqual("Great work!", final['message'])
 
     def test_success_suppression(self):
         clear_report()
@@ -158,9 +177,10 @@ class TestResolver(ExecutionTestCase):
         tifa_analysis()
         set_success()
         suppress(label='set_success')
-        final = simple.resolve()
-        self.assertEqual(Feedback.CATEGORIES.COMPLETE, final.category)
-        self.assertEqual(SUCCESS_MESSAGE, final.title+"\n"+final.message)
+        result = simple.resolve()
+        final = self.get_final_from_result(result)
+        self.assertEqual(Feedback.CATEGORIES.COMPLETE, final['category'])
+        self.assertEqual(SUCCESS_MESSAGE, final['title']+"\n"+final['message'])
 
     def test_empty(self):
         clear_report()
@@ -168,10 +188,11 @@ class TestResolver(ExecutionTestCase):
         verify()
         tifa_analysis()
         commands.run()
-        final = simple.resolve()
-        self.assertEqual(Feedback.CATEGORIES.SYNTAX, final.category)
-        self.assertEqual("No Source Code", final.title)
-        self.assertEqual("Source code file is blank.", final.message)
+        result = simple.resolve()
+        final = self.get_final_from_result(result)
+        self.assertEqual(Feedback.CATEGORIES.SYNTAX, final['category'])
+        self.assertEqual("No Source Code", final['title'])
+        self.assertEqual("Source code file is blank.", final['message'])
 
     def test_gently_vs_runtime(self):
         # Runtime > Gently
@@ -181,9 +202,10 @@ class TestResolver(ExecutionTestCase):
         tifa_analysis()
         commands.run()
         gently("I have a gentle opinion, but you don't want to hear it.")
-        final = simple.resolve()
-        print(final.label)
-        self.assertEqual(Feedback.CATEGORIES.RUNTIME, final.category)
+        result = simple.resolve()
+        final = self.get_final_from_result(result)
+        print(final['label'])
+        self.assertEqual(Feedback.CATEGORIES.RUNTIME, final['category'])
 
         # Runtime < Explain
         clear_report()
@@ -192,8 +214,9 @@ class TestResolver(ExecutionTestCase):
         tifa_analysis()
         commands.run()
         explain("LISTEN TO ME")
-        final = simple.resolve()
-        self.assertEqual(Feedback.CATEGORIES.INSTRUCTOR, final.category)
+        result = simple.resolve()
+        final = self.get_final_from_result(result)
+        self.assertEqual(Feedback.CATEGORIES.INSTRUCTOR, final['category'])
 
     def test_input(self):
         with Execution('input("Type something:")') as e:
@@ -299,8 +322,9 @@ Great work!""",
         # These are added
         feedback(activate=False, valence=-1, score="+7%", category='instructor')
         # Calculate final result
-        final = simple.resolve()
-        self.assertEqual(.11, final.score)
+        result = simple.resolve()
+        final = self.get_final_from_result(result)
+        self.assertEqual(.11, final['score'])
 
     def test_suppress_specific_function(self):
         with Execution("""

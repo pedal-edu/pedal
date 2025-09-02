@@ -33,14 +33,14 @@ def resolve_feedback(feedback):
 @make_resolver
 def resolve(report=MAIN_REPORT, priority_key=by_priority):
     """
-    This function is used to resolve the feedback objects in the report into a FinalFeedback object.
+    This function is used to resolve the feedback objects in the report into a unified result.
 
     Args:
         priority_key: The function used to sort the feedback objects.
         report: The report to resolve.
 
     Returns:
-        FinalFeedback: The resolved feedback.
+        dict: A dictionary containing the final feedback and all considered feedback
     """
 
     # Prepare feedbacks
@@ -57,6 +57,13 @@ def resolve(report=MAIN_REPORT, priority_key=by_priority):
     # Override empty message
     final.finalize(report.max_points)
     final.used = used
-    report.result = final
-    report.resolves.append(final)
-    return final
+    
+    # Create the unified result format
+    result = {
+        'final': final.to_json(),
+        'considered': [feedback.to_json() for feedback in feedbacks]
+    }
+    
+    report.result = result
+    report.resolves.append(result)
+    return result
