@@ -9,11 +9,11 @@ to customize type system behavior across all Pedal tools (TIFA, Assertions, etc.
 class TypeSystemConfig:
     """
     Centralized configuration for Pedal's type system.
-    
+
     This configuration class controls how types are interpreted, normalized,
     and compared across all Pedal tools. Teachers can modify these settings
     to achieve specific educational experiences.
-    
+
     Attributes:
         accept_generic_types (bool): Whether to accept generic type annotations
             like List[int] or just List. Default: True
@@ -36,7 +36,7 @@ class TypeSystemConfig:
         struct_type_support (dict): Controls which structural type patterns
             are supported (dataclasses, typed_dict, record_dict, class).
     """
-    
+
     def __init__(self, **kwargs):
         # Type System Core Settings
         self.accept_generic_types = kwargs.get('accept_generic_types', True)
@@ -45,12 +45,12 @@ class TypeSystemConfig:
         self.evaluate_string_literal_types = kwargs.get('evaluate_string_literal_types', False)
         self.allow_type_changes = kwargs.get('allow_type_changes', True)
         self.truthiness_returns_booleans = kwargs.get('truthiness_returns_booleans', True)
-        
+
         # Teacher Customization Settings
         self.allow_optional_by_default = kwargs.get('allow_optional_by_default', False)
         self.support_list_annotations = kwargs.get('support_list_annotations', True)
         self.allow_any_fallback = kwargs.get('allow_any_fallback', False)
-        
+
         # Structural Type Support
         self.struct_type_support = kwargs.get('struct_type_support', {
             'dataclasses': True,
@@ -58,28 +58,28 @@ class TypeSystemConfig:
             'record_dict': True,
             'class': True
         })
-        
+
         # Versioning for backward compatibility
         self.type_system_version = kwargs.get('type_system_version', 2)
-    
+
     def copy(self, **overrides):
         """
         Create a copy of this configuration with optional overrides.
-        
+
         Args:
             **overrides: Configuration values to override in the copy
-            
+
         Returns:
             TypeSystemConfig: New configuration instance
         """
         current_config = self.to_dict()
         current_config.update(overrides)
         return TypeSystemConfig(**current_config)
-    
+
     def to_dict(self):
         """
         Convert configuration to dictionary format.
-        
+
         Returns:
             dict: Configuration as dictionary
         """
@@ -96,15 +96,15 @@ class TypeSystemConfig:
             'struct_type_support': self.struct_type_support.copy(),
             'type_system_version': self.type_system_version
         }
-    
+
     @classmethod
     def from_tifa_settings(cls, tifa_settings):
         """
         Create TypeSystemConfig from TIFA settings dictionary for backward compatibility.
-        
+
         Args:
             tifa_settings (dict): TIFA settings dictionary
-            
+
         Returns:
             TypeSystemConfig: New configuration instance
         """
@@ -123,11 +123,11 @@ class TypeSystemConfig:
             }),
             type_system_version=tifa_settings.get('type_system_version', 2)
         )
-    
+
     def to_tifa_settings(self):
         """
         Convert to TIFA settings format for backward compatibility.
-        
+
         Returns:
             dict: TIFA-compatible settings dictionary
         """
@@ -146,32 +146,35 @@ class TypeSystemConfig:
 # Global default configuration instance
 _default_config = TypeSystemConfig()
 
+
 def get_default_type_system_config():
     """
     Get the default type system configuration.
-    
+
     Returns:
         TypeSystemConfig: Default configuration instance
     """
     return _default_config
 
+
 def set_default_type_system_config(config):
     """
     Set the global default type system configuration.
-    
+
     Args:
         config (TypeSystemConfig): New default configuration
     """
     global _default_config
     _default_config = config
 
+
 def configure_type_system(**kwargs):
     """
     Configure the global type system with the given settings.
-    
+
     Args:
         **kwargs: Configuration parameters
-        
+
     Returns:
         TypeSystemConfig: The updated configuration
     """
