@@ -125,6 +125,7 @@ actually be activated.
 .. code:: python
 
     from pedal.core.feedback import Feedback
+    from pedal.cait.cait_api import find_matches
 
     class addition_error(Feedback):
         title = "Addition Error"
@@ -145,6 +146,7 @@ non-default keyword arguments will be passed to the ``condition`` method.
 .. code:: python
 
     from pedal.core.feedback import Feedback
+    from pedal.cait.cait_api import find_matches
 
     class addition_error(Feedback):
         title = "Addition Error"

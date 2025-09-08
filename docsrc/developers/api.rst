@@ -80,6 +80,60 @@ Feedback
 .. automodule:: pedal.core.feedback
     :members:
 
+**Core Feedback Functions Examples:**
+
+The core feedback functions provide the foundation for creating educational feedback. Here are examples of the most commonly used core feedback functions:
+
+.. code-block:: python
+
+    from pedal import *
+    
+    # explain() - Basic feedback message
+    explain("Your function should return a value", 
+           title="Missing Return Statement")
+    
+    # set_success() - Positive feedback for correct solutions
+    set_success("Excellent work! Your solution is correct.")
+    
+    # give_partial() - Award partial credit with explanation  
+    give_partial(15, "Good attempt at the logic, minor calculation error")
+    
+    # score() - Direct score manipulation
+    score("+10", "Bonus for clean code style")
+    score("50%", "Partial credit for working function")
+    
+    # compliment() - Positive reinforcement
+    compliment("Your variable names are very descriptive!")
+    
+    # feedback() - Generic feedback with custom parameters
+    feedback("Consider using a more efficient algorithm",
+            title="Performance Suggestion", 
+            category="improvement",
+            priority="low")
+
+**Advanced Core Function Usage:**
+
+.. code-block:: python
+
+    # Conditional feedback based on student progress
+    if function_exists("calculate_area"):
+        result = call("calculate_area", 5)
+        if result == 25:
+            set_success("Perfect! Your area calculation is correct.")
+        else:
+            explain(f"Your function returned {result}, expected 25. "
+                   f"Remember: area = side × side")
+    else:
+        explain("You need to define a 'calculate_area' function")
+    
+    # Feedback with scoring and categorization
+    if "while True:" in get_program():
+        explain("Your code contains an infinite loop. Consider using a for loop instead.",
+               title="Infinite Loop Detected",
+               category="logic_error", 
+               score=-5,
+               priority="high")
+
 .. automodule:: pedal.core.feedback_category
     :members:
 

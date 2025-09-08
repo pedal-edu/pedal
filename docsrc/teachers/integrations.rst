@@ -265,7 +265,7 @@ You will need to create an instructor control script (e.g., `ics.py`), and uploa
     # Run the environment variable initializer to get access to its variables
     source ./vpl_environment.sh
     echo "#!/bin/bash" > vpl_execution
-    echo "python3.6 -m pedal grade ics.py $VPL_SUBFILE0 --environment vpl">> vpl_execution
+    echo "python3.6 -m pedal grade ics.py \$VPL_SUBFILE0 --environment vpl" >> vpl_execution
     chmod +x vpl_execution
 
 You should configure the assignment as follows:
