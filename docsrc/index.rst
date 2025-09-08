@@ -30,6 +30,8 @@ rather than an afterthought.
     teachers/quickstart
     teachers/examples
     teachers/reference
+    teachers/resolvers
+    teachers/practices
     teachers/cli
     teachers/testing
     teachers/integrations

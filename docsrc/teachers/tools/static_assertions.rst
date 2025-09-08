@@ -472,6 +472,52 @@ Static Assertions
     Surprisingly, does not block comprehensions of any kind. Unsurprisingly, does
     not block recursion.
 
+    **Note on Recursion Detection**: While this function doesn't detect recursion directly,
+    you can use CAIT to detect recursive patterns. For simple recursion detection, you can
+    check if a function calls itself:
+
+    .. code-block:: python
+    
+        from pedal import *
+        from pedal.cait.cait_api import find_matches
+        
+        # Detect if any function calls itself (basic recursion)
+        def detect_recursion():
+            # Look for function definitions
+            functions = find_matches("def _name_(___):\n    ___")
+            for func in functions:
+                func_name = func['_name_'].id
+                # Look for calls to the same function name within the function body
+                recursive_calls = find_matches(f"{func_name}(___)", root=func['___'])
+                if recursive_calls:
+                    explain(f"The function '{func_name}' appears to call itself recursively. "
+                           f"For this assignment, please use iteration instead.",
+                           label="recursion_detected")
+        
+        detect_recursion()
+        prevent_advanced_iteration()
+
+    For more sophisticated recursion detection, you can create custom patterns:
+
+    .. code-block:: python
+    
+        # Detect mutual recursion (functions calling each other)
+        def detect_mutual_recursion():
+            func_calls = find_matches("_func_name_(___)")
+            func_defs = find_matches("def _func_name_(___):\n    ___")
+            
+            # Build a map of which functions call which
+            call_graph = {}
+            for call in func_calls:
+                caller = get_containing_function(call)
+                if caller:
+                    if caller not in call_graph:
+                        call_graph[caller] = []
+                    call_graph[caller].append(call['_func_name_'].id)
+            
+            # Check for cycles in the call graph
+            # (Implementation would check for cycles)
+
     Technically, this is just a wrapper around :py:func:`prevent_function_call`
     and :py:func:`prevent_ast`.
 
