@@ -344,7 +344,7 @@ class TypeUnion(Type):
             return True
         if isinstance(other, TypeUnion):
             # All of our types must be subtypes of at least one of their types
-            return all(any(is_subtype(our_type, their_type)
+            return all(any(our_type.is_subtype(their_type, seen.copy(), indent+1)
                           for their_type in other.possible_types)
                       for our_type in self.possible_types)
         # All possible types must be subtypes of the target type
