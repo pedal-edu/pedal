@@ -22,6 +22,12 @@ register_builtin_module('dataclasses', lambda: ModuleType('dataclasses', fields=
 register_builtin_module('typing', lambda: ModuleType('typing', fields={
     'Union': UnionConstructor(),
     'Optional': OptionalConstructor(),
+    'List': ListConstructor(),
+    'Dict': DictConstructor(),
+    'Set': SetConstructor(),
+    'FrozenSet': FrozenSetConstructor(),
+    'Tuple': TupleConstructor(),
+    'Any': AnyType(),
 }))
 
 register_builtin_module('pprint', lambda: ModuleType('pprint', fields={

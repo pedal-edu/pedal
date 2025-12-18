@@ -15,6 +15,32 @@ from pedal.tifa import tifa_provide_module_type
 from pedal.tifa.state import print_history_diagram
 
 unit_tests = {
+    # typing module - List, Dict, Set, Tuple, FrozenSet, Any
+    'typing_list_int':
+        ['from typing import List\nx: List[int] = [1, 2, 3]', ['parameter_type_mismatch'], []],
+    'typing_list_str':
+        ['from typing import List\nx: List[str] = ["a", "b"]', ['parameter_type_mismatch'], []],
+    'typing_list_param':
+        ['from typing import List\ndef f(items: List[int]):\n    pass\nf([1, 2])', ['parameter_type_mismatch'], []],
+    'typing_dict_str_int':
+        ['from typing import Dict\nx: Dict[str, int] = {"a": 1}', ['parameter_type_mismatch'], []],
+    'typing_dict_param':
+        ['from typing import Dict\ndef f(data: Dict[str, int]):\n    pass\nf({"a": 1})', ['parameter_type_mismatch'], []],
+    'typing_set_int':
+        ['from typing import Set\nx: Set[int] = {1, 2, 3}', ['parameter_type_mismatch'], []],
+    'typing_tuple_int_str':
+        ['from typing import Tuple\nx: Tuple[int, str] = (1, "a")', ['parameter_type_mismatch'], []],
+    'typing_any':
+        ['from typing import Any\nx: Any = 5\ny: Any = "test"', ['parameter_type_mismatch'], []],
+    'typing_any_param':
+        ['from typing import Any\ndef f(x: Any):\n    pass\nf(5)\nf("hi")\nf([1])', ['parameter_type_mismatch'], []],
+    
+    # Combining typing module types with Union/Optional - simplified
+    'typing_union_with_any':
+        ['from typing import Union, Any\ndef f(x: Union[Any, str]):\n    pass\nf(5)\nf("hi")', ['parameter_type_mismatch'], []],
+    'typing_optional_any':
+        ['from typing import Optional, Any\ndef f(x: Optional[Any]):\n    pass\nf(5)\nf(None)', ['parameter_type_mismatch'], []],
+    
     # Type unions - comprehensive testing for bitwise OR and typing module
     # Bitwise OR - Correct usage
     'union_bitwise_or_int_str_int_arg':
