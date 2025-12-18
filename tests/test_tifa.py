@@ -544,6 +544,18 @@ unit_tests = {
     # Next
     'next_function':
         ['x = iter([1,2,3])\ny = next(x)\ny = y + x[0]\nprint(y)', ['initialization_problem'], []],
+
+    # Type unions with bitwise OR
+    'type_union_bitwise_or_correct':
+        ['def f(x: int | str):\n    return x\nf(5)\nf("hello")', ['parameter_type_mismatch'], []],
+    'type_union_bitwise_or_incorrect':
+        ['def f(x: int | str):\n    return x\nf([1,2])', [], ['parameter_type_mismatch']],
+
+    # Type unions with typing.Union
+    'type_union_typing_union_correct':
+        ['from typing import Union\ndef f(x: Union[int, str]):\n    return x\nf(5)\nf("hello")', ['parameter_type_mismatch'], []],
+    'type_union_typing_optional':
+        ['from typing import Optional\nx: Optional[int] = 5\ny: Optional[str] = None', ['parameter_type_mismatch'], []],
 }
 
 

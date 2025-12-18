@@ -793,7 +793,7 @@ class Tifa(TifaCore, ast.NodeVisitor):
                                  for k, v in zip(node.keys, node.values)])
             else:
                 return DictType([])
-        
+
         # Default: try to visit and convert to type
         evaluated = self.visit(node)
         return evaluated.as_type(self, self.locate(node))
