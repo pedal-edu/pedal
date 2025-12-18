@@ -1499,5 +1499,88 @@ print(foo(-5))
         self.assertIsNone(result.error)
         self.assertFalse(result.issues)
 
+    def test_bitwise_or_type_union(self):
+        """Test type union using bitwise OR syntax (int | str)"""
+        code = dedent("""
+x: int | str = 5
+y: int | str = "hello"
+""")
+        tifa = pedal.tifa.Tifa()
+        result = tifa.process_code(code)
+        if result.error:
+            raise result.error
+        self.assertTrue(result.success)
+        variables = result.top_level_variables
+        # Both variables should have TypeUnion type
+        self.assertIn('x', variables)
+        self.assertIn('y', variables)
+        self.assertEqual(str(type(variables['x'].type).__name__), 'TypeUnion')
+        self.assertEqual(str(type(variables['y'].type).__name__), 'TypeUnion')
+
+    def test_typing_union(self):
+        """Test type union using typing.Union"""
+        code = dedent("""
+from typing import Union
+x: Union[int, str] = 5
+y: Union[int, str] = "hello"
+""")
+        tifa = pedal.tifa.Tifa()
+        result = tifa.process_code(code)
+        if result.error:
+            raise result.error
+        self.assertTrue(result.success)
+        variables = result.top_level_variables
+        self.assertIn('x', variables)
+        self.assertIn('y', variables)
+        self.assertEqual(str(type(variables['x'].type).__name__), 'TypeUnion')
+        self.assertEqual(str(type(variables['y'].type).__name__), 'TypeUnion')
+
+    def test_typing_optional(self):
+        """Test typing.Optional which is Union[T, None]"""
+        code = dedent("""
+from typing import Optional
+x: Optional[int] = 5
+y: Optional[str] = None
+""")
+        tifa = pedal.tifa.Tifa()
+        result = tifa.process_code(code)
+        if result.error:
+            raise result.error
+        self.assertTrue(result.success)
+        variables = result.top_level_variables
+        self.assertIn('x', variables)
+        self.assertIn('y', variables)
+        self.assertEqual(str(type(variables['x'].type).__name__), 'TypeUnion')
+        self.assertEqual(str(type(variables['y'].type).__name__), 'TypeUnion')
+
+    def test_type_union_compatibility(self):
+        """Test that type unions work with type compatibility checking"""
+        code = dedent("""
+def process(value: int | str) -> str:
+    return str(value)
+
+result = process(42)
+result2 = process("hello")
+""")
+        tifa = pedal.tifa.Tifa()
+        result = tifa.process_code(code)
+        if result.error:
+            raise result.error
+        self.assertTrue(result.success)
+        # Should not report any type mismatch errors
+        self.assertNotIn('parameter_type_mismatch', result.issues)
+
+    def test_nested_type_unions(self):
+        """Test nested type unions get flattened"""
+        code = dedent("""
+from typing import Union
+x: Union[int, Union[str, float]] = 5
+""")
+        tifa = pedal.tifa.Tifa()
+        result = tifa.process_code(code)
+        if result.error:
+            raise result.error
+        self.assertTrue(result.success)
+
 if __name__ == '__main__':
     unittest.main(buffer=False)

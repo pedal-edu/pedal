@@ -180,6 +180,11 @@ class Type:
     def is_subtype(self, other, seen, indent=0):
         if isinstance(self, AnyType) or isinstance(other, AnyType):
             return True
+        # Handle when checking if a type is a subtype of a TypeUnion
+        if isinstance(other, TypeUnion):
+            # A type is a subtype of a union if it's a subtype of ANY union member
+            return any(self.is_subtype(union_member, seen, indent)
+                      for union_member in other.possible_types)
         if type(self) == type(other):
             return True
         if self in seen:
@@ -280,19 +285,74 @@ class NoneType(Type):
 
 class TypeUnion(Type):
     """
-    TODO: Decide if using!
-    A type that could be one of several possible types
+    A type that could be one of several possible types.
+    Used for type annotations like `int | str` or `Union[int, str]`.
     """
     name = "Type Union"
-    singular_name = "one of several possible types"
-    plural_name = "several possible types"
     immutable = False
     fields = {}
     parents = []
 
     def __init__(self, possible_types):
         super().__init__()
-        self.possible_types = set(possible_types)
+        # Flatten nested TypeUnions and remove duplicates
+        flattened = set()
+        for t in possible_types:
+            if isinstance(t, TypeUnion):
+                flattened.update(t.possible_types)
+            else:
+                flattened.add(t)
+        self.possible_types = flattened
+
+    @property
+    def singular_name(self):
+        """Generate a human-readable description of this union type."""
+        type_names = [t.singular_name for t in self.possible_types]
+        if len(type_names) == 1:
+            return type_names[0]
+        elif len(type_names) == 2:
+            return f"{type_names[0]} or {type_names[1]}"
+        else:
+            return ", ".join(type_names[:-1]) + f", or {type_names[-1]}"
+
+    @property
+    def plural_name(self):
+        """Generate a human-readable plural description of this union type."""
+        type_names = [t.plural_name for t in self.possible_types]
+        if len(type_names) == 1:
+            return type_names[0]
+        elif len(type_names) == 2:
+            return f"{type_names[0]} or {type_names[1]}"
+        else:
+            return ", ".join(type_names[:-1]) + f", or {type_names[-1]}"
+
+    def __str__(self):
+        """String representation of the union."""
+        type_strs = sorted([str(t) for t in self.possible_types])
+        return f"TypeUnion[{' | '.join(type_strs)}]"
+
+    def clone(self):
+        """Create a deep copy of this union type."""
+        return TypeUnion([t.clone() for t in self.possible_types])
+
+    def is_subtype(self, other, seen, indent=0):
+        """
+        A union type is a subtype of another if all of its possible types
+        are subtypes of the other type.
+        """
+        if isinstance(other, AnyType):
+            return True
+        if isinstance(other, TypeUnion):
+            # All of our types must be subtypes of at least one of their types
+            return all(any(is_subtype(our_type, their_type)
+                          for their_type in other.possible_types)
+                      for our_type in self.possible_types)
+        # All possible types must be subtypes of the target type
+        return all(t.is_subtype(other, seen, indent) for t in self.possible_types)
+
+    def as_type(self, tifa=None, location=None):
+        """Convert to a type that can be used in type checking."""
+        return self
 
 
 class FunctionType(Type):
@@ -1050,6 +1110,65 @@ class TupleConstructor(BuiltinConstructorType):
         if arguments:
             result_type = specify_subtype(result_type, arguments[0])
         return result_type
+
+
+class UnionConstructor(BuiltinConstructorType):
+    """Constructor for typing.Union[X, Y, ...]"""
+    name = 'Union'
+
+    def definition(self, tifa, function, callee, arguments, named_arguments, location):
+        # type_arguments should be a tuple of types
+        if self.type_arguments is None:
+            return AnyType()
+        
+        # Extract the types from type_arguments
+        if isinstance(self.type_arguments, TupleType):
+            types = list(self.type_arguments.element_types)
+        elif isinstance(self.type_arguments, (tuple, list)):
+            types = list(self.type_arguments)
+        else:
+            types = [self.type_arguments]
+        
+        # Convert any constructor types to actual types
+        resolved_types = []
+        for t in types:
+            if isinstance(t, BuiltinConstructorType):
+                resolved_types.append(t.definition(tifa, t, None, [], [], location))
+            else:
+                resolved_types.append(t)
+        
+        return TypeUnion(resolved_types)
+
+    def index(self, key):
+        """Handle Union[X, Y] subscript notation"""
+        # key could be a TupleType containing the union members
+        if isinstance(key, TupleType):
+            self.type_arguments = key
+        else:
+            # Single type argument
+            self.type_arguments = key
+        return self
+
+
+class OptionalConstructor(BuiltinConstructorType):
+    """Constructor for typing.Optional[X] which is Union[X, None]"""
+    name = 'Optional'
+
+    def definition(self, tifa, function, callee, arguments, named_arguments, location):
+        if self.type_arguments is None:
+            return TypeUnion([AnyType(), NoneType()])
+        
+        # Convert constructor to type if needed
+        inner_type = self.type_arguments
+        if isinstance(inner_type, BuiltinConstructorType):
+            inner_type = inner_type.definition(tifa, inner_type, None, [], [], location)
+        
+        return TypeUnion([inner_type, NoneType()])
+
+    def index(self, key):
+        """Handle Optional[X] subscript notation"""
+        self.type_arguments = key
+        return self
 
 
 TYPE_TYPE = BuiltinConstructorType("type")

@@ -12,10 +12,16 @@ from pedal.types.new_types import (make_dataclass, FunctionType, AnyType,
                                    bool_function, void_function, TYPE_TYPE, exception_function,
                                    IntConstructor, FloatConstructor, BoolConstructor,
                                    ListConstructor, StrConstructor, str_function, GeneratorType, SetConstructor,
-                                   FrozenSetConstructor, DictConstructor, TupleConstructor)
+                                   FrozenSetConstructor, DictConstructor, TupleConstructor,
+                                   UnionConstructor, OptionalConstructor)
 
 register_builtin_module('dataclasses', lambda: ModuleType('dataclasses', fields={
     'dataclass': FunctionType('dataclass', definition=make_dataclass)
+}))
+
+register_builtin_module('typing', lambda: ModuleType('typing', fields={
+    'Union': UnionConstructor(),
+    'Optional': OptionalConstructor(),
 }))
 
 register_builtin_module('pprint', lambda: ModuleType('pprint', fields={

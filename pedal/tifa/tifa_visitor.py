@@ -755,6 +755,29 @@ class Tifa(TifaCore, ast.NodeVisitor):
                 pass
             else:
                 return LiteralStr(string_literal)
+        elif isinstance(node, ast.BinOp) and isinstance(node.op, ast.BitOr):
+            # Handle type union syntax: int | str
+            left_type = self.evaluate_type(node.left)
+            right_type = self.evaluate_type(node.right)
+            return TypeUnion([left_type, right_type])
+        elif isinstance(node, ast.Subscript):
+            # Handle typing.Union[X, Y] and typing.Optional[X]
+            value_type = self.visit(node.value)
+            if isinstance(value_type, ModuleType):
+                # Might be a typing module type
+                pass
+            elif hasattr(value_type, 'name'):
+                if value_type.name == 'Union':
+                    # Handle Union[type1, type2, ...]
+                    if isinstance(node.slice, ast.Tuple):
+                        types = [self.evaluate_type(elt) for elt in node.slice.elts]
+                        return TypeUnion(types)
+                    else:
+                        return self.evaluate_type(node.slice)
+                elif value_type.name == 'Optional':
+                    # Handle Optional[type] which is Union[type, None]
+                    inner_type = self.evaluate_type(node.slice)
+                    return TypeUnion([inner_type, NoneType()])
         elif isinstance(node, ast.List):
             if node.elts:
                 return ListType(False, self.evaluate_type(node.elts[0]))
@@ -770,9 +793,10 @@ class Tifa(TifaCore, ast.NodeVisitor):
                                  for k, v in zip(node.keys, node.values)])
             else:
                 return DictType([])
-        else:
-            evaluated = self.visit(node)
-            return evaluated.as_type(self, self.locate(node))
+        
+        # Default: try to visit and convert to type
+        evaluated = self.visit(node)
+        return evaluated.as_type(self, self.locate(node))
 
     def visit_GeneratorExp(self, node):
         """
