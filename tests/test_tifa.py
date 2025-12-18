@@ -15,6 +15,20 @@ from pedal.tifa import tifa_provide_module_type
 from pedal.tifa.state import print_history_diagram
 
 unit_tests = {
+    # isinstance type guards
+    'isinstance_narrows_union_to_int':
+        ['from typing import Union\ndef f(x: Union[int, str]):\n    if isinstance(x, int):\n        y = x + 5', ['incompatible_types'], []],
+    'isinstance_narrows_union_to_str':
+        ['from typing import Union\ndef f(x: Union[int, str]):\n    if isinstance(x, str):\n        y = x + " test"', ['incompatible_types'], []],
+    'isinstance_with_int':
+        ['def f(x):\n    if isinstance(x, int):\n        y = x + 10', ['incompatible_types'], []],
+    'isinstance_with_str':
+        ['def f(x):\n    if isinstance(x, str):\n        y = x.upper()', ['incompatible_types'], []],
+    'isinstance_with_list':
+        ['def f(x):\n    if isinstance(x, list):\n        y = len(x)', ['incompatible_types'], []],
+    'isinstance_nested_if':
+        ['from typing import Union\ndef f(x: Union[int, str, list]):\n    if isinstance(x, int):\n        y = x + 5\n    elif isinstance(x, str):\n        y = x + " hi"', ['incompatible_types'], []],
+    
     # typing module - List, Dict, Set, Tuple, FrozenSet, Any
     'typing_list_int':
         ['from typing import List\nx: List[int] = [1, 2, 3]', ['parameter_type_mismatch'], []],
