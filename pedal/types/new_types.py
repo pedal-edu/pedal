@@ -183,7 +183,7 @@ class Type:
         # Handle when checking if a type is a subtype of a TypeUnion
         if isinstance(other, TypeUnion):
             # A type is a subtype of a union if it's a subtype of ANY union member
-            return any(self.is_subtype(union_member, seen, indent)
+            return any(self.is_subtype(union_member, seen.copy(), indent+1)
                       for union_member in other.possible_types)
         if type(self) == type(other):
             return True
