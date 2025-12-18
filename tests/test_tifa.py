@@ -15,6 +15,93 @@ from pedal.tifa import tifa_provide_module_type
 from pedal.tifa.state import print_history_diagram
 
 unit_tests = {
+    # Type unions - comprehensive testing for bitwise OR and typing module
+    # Bitwise OR - Correct usage
+    'union_bitwise_or_int_str_int_arg':
+        ['def f(x: int | str):\n    pass\nf(42)', ['parameter_type_mismatch'], []],
+    'union_bitwise_or_int_str_str_arg':
+        ['def f(x: int | str):\n    pass\nf("hello")', ['parameter_type_mismatch'], []],
+    'union_bitwise_or_three_types_all_valid':
+        ['def f(x: int | str | float):\n    pass\nf(1)\nf("a")\nf(1.5)', ['parameter_type_mismatch'], []],
+    'union_bitwise_or_var_annotation':
+        ['x: int | str = 5', ['parameter_type_mismatch'], []],
+    'union_bitwise_or_var_annotation_str':
+        ['x: int | str = "test"', ['parameter_type_mismatch'], []],
+    
+    # Bitwise OR - Incorrect usage (should detect mismatch)
+    'union_bitwise_or_list_arg':
+        ['def f(x: int | str):\n    pass\nf([1,2])', [], ['parameter_type_mismatch']],
+    'union_bitwise_or_dict_arg':
+        ['def f(x: int | str):\n    pass\nf({"k":1})', [], ['parameter_type_mismatch']],
+    'union_bitwise_or_bool_to_int_str':
+        ['def f(x: int | str):\n    pass\nf(True)', [], ['parameter_type_mismatch']],
+    'union_bitwise_or_float_to_int_str':
+        ['def f(x: int | str):\n    pass\nf(3.14)', [], ['parameter_type_mismatch']],
+    
+    # typing.Union - Correct usage
+    'union_typing_union_basic':
+        ['from typing import Union\ndef f(x: Union[int, str]):\n    pass\nf(5)', ['parameter_type_mismatch'], []],
+    'union_typing_union_three_types':
+        ['from typing import Union\ndef f(x: Union[int, str, bool]):\n    pass\nf(5)\nf("a")\nf(True)', ['parameter_type_mismatch'], []],
+    
+    # typing.Union - Incorrect usage
+    'union_typing_union_wrong_type':
+        ['from typing import Union\ndef f(x: Union[int, str]):\n    pass\nf([1,2])', [], ['parameter_type_mismatch']],
+    'union_typing_union_float_to_int_str':
+        ['from typing import Union\ndef f(x: Union[int, str]):\n    pass\nf(2.5)', [], ['parameter_type_mismatch']],
+    
+    # typing.Optional - Correct usage
+    'union_optional_none':
+        ['from typing import Optional\ndef f(x: Optional[int]):\n    pass\nf(None)', ['parameter_type_mismatch'], []],
+    'union_optional_value':
+        ['from typing import Optional\ndef f(x: Optional[int]):\n    pass\nf(5)', ['parameter_type_mismatch'], []],
+    'union_optional_both':
+        ['from typing import Optional\ndef f(x: Optional[str]):\n    pass\nf("hi")\nf(None)', ['parameter_type_mismatch'], []],
+    
+    # typing.Optional - Incorrect usage
+    'union_optional_wrong_type':
+        ['from typing import Optional\ndef f(x: Optional[str]):\n    pass\nf(123)', [], ['parameter_type_mismatch']],
+    'union_optional_list':
+        ['from typing import Optional\ndef f(x: Optional[int]):\n    pass\nf([1])', [], ['parameter_type_mismatch']],
+    
+    # Multiple parameters with unions
+    'union_multiple_params':
+        ['def f(x: int | str, y: float | bool):\n    pass\nf(1, 1.5)\nf("a", True)', ['parameter_type_mismatch'], []],
+    'union_multiple_params_one_wrong':
+        ['def f(x: int | str, y: float | bool):\n    pass\nf([1], True)', [], ['parameter_type_mismatch']],
+    
+    # Return type annotations with unions
+    'union_return_int':
+        ['def f() -> int | str:\n    return 5', ['parameter_type_mismatch'], []],
+    'union_return_str':
+        ['def f() -> int | str:\n    return "hi"', ['parameter_type_mismatch'], []],
+    
+    # Nested unions should flatten
+    'union_nested_simple':
+        ['from typing import Union\nx: Union[int, Union[str, float]] = 5', ['parameter_type_mismatch'], []],
+    
+    # Mixed syntax
+    'union_mixed_bitwise_and_typing':
+        ['from typing import Union\ndef f(x: Union[int, str]):\n    pass\ndef g(y: int | str):\n    pass\nf(5)\ng(5)', ['parameter_type_mismatch'], []],
+    
+    # Unions with None using bitwise OR
+    'union_none_bitwise':
+        ['def f(x: int | None):\n    pass\nf(5)\nf(None)', ['parameter_type_mismatch'], []],
+    'union_str_none':
+        ['def f(x: str | None):\n    pass\nf("test")\nf(None)', ['parameter_type_mismatch'], []],
+    
+    # Unions in different contexts
+    'union_in_list_comprehension':
+        ['def f(items: list) -> int | str:\n    return [x for x in items][0]\nf([1,2])', ['parameter_type_mismatch'], []],
+    'union_with_default_param':
+        ['def f(x: int | str = 5):\n    pass\nf()\nf(10)\nf("hi")', ['parameter_type_mismatch'], []],
+    
+    # Edge cases with numeric types
+    'union_int_float_int':
+        ['def f(x: int | float):\n    pass\nf(5)', ['parameter_type_mismatch'], []],
+    'union_int_float_float':
+        ['def f(x: int | float):\n    pass\nf(3.14)', ['parameter_type_mismatch'], []],
+
     'add_assign_inside_dataclass_function':
         ['from dataclasses import dataclass\n@dataclass\nclass X:\n    y: int = 0\ndef inc(z: X):\n    z.y += 1\ninc(X(0))',
             ['incompatible_types'], []],
@@ -544,18 +631,6 @@ unit_tests = {
     # Next
     'next_function':
         ['x = iter([1,2,3])\ny = next(x)\ny = y + x[0]\nprint(y)', ['initialization_problem'], []],
-
-    # Type unions with bitwise OR
-    'type_union_bitwise_or_correct':
-        ['def f(x: int | str):\n    return x\nf(5)\nf("hello")', ['parameter_type_mismatch'], []],
-    'type_union_bitwise_or_incorrect':
-        ['def f(x: int | str):\n    return x\nf([1,2])', [], ['parameter_type_mismatch']],
-
-    # Type unions with typing.Union
-    'type_union_typing_union_correct':
-        ['from typing import Union\ndef f(x: Union[int, str]):\n    return x\nf(5)\nf("hello")', ['parameter_type_mismatch'], []],
-    'type_union_typing_optional':
-        ['from typing import Optional\nx: Optional[int] = 5\ny: Optional[str] = None', ['parameter_type_mismatch'], []],
 }
 
 
