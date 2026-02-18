@@ -76,7 +76,7 @@ class assert_equal(RuntimeAssertionFeedback):
         super().__init__(SandboxedValue(left), SandboxedValue(right),
                          exact_strings=exact_strings, delta=delta, **kwargs)
 
-    def condition(self, left, right, exact_strings, delta):
+    def condition(self, left, right, exact_strings, delta, **kwargs):
         """ Tests if the left and right are equal """
         return errors(left, right) or not equality_test(left.value, right.value, exact_strings, delta)
 
@@ -103,7 +103,7 @@ class assert_not_equal(RuntimeAssertionFeedback):
         super().__init__(SandboxedValue(left), SandboxedValue(right),
                          exact_strings=exact_strings, delta=delta, **kwargs)
 
-    def condition(self, left, right, exact_strings, delta):
+    def condition(self, left, right, exact_strings, delta, **kwargs):
         """ Tests if the left and right are not equal """
         return equality_test(left.value, right.value, exact_strings, delta)
 
@@ -119,7 +119,7 @@ class assert_less(RuntimeAssertionFeedback):
     def __init__(self, left, right, **kwargs):
         super().__init__(SandboxedValue(left), SandboxedValue(right), **kwargs)
 
-    def condition(self, left, right):
+    def condition(self, left, right, **kwargs):
         """ Tests if the left is greater or equal """
         return left.value >= right.value
 
@@ -135,7 +135,7 @@ class assert_less_equal(RuntimeAssertionFeedback):
     def __init__(self, left, right, **kwargs):
         super().__init__(SandboxedValue(left), SandboxedValue(right), **kwargs)
 
-    def condition(self, left, right):
+    def condition(self, left, right, **kwargs):
         """ Tests if the left is greater than the right """
         return left.value > right.value
 
@@ -151,7 +151,7 @@ class assert_greater(RuntimeAssertionFeedback):
     def __init__(self, left, right, **kwargs):
         super().__init__(SandboxedValue(left), SandboxedValue(right), **kwargs)
 
-    def condition(self, left, right):
+    def condition(self, left, right, **kwargs):
         """ Tests if the left is less than or equal to the right """
         return left.value <= right.value
 
@@ -167,7 +167,7 @@ class assert_greater_equal(RuntimeAssertionFeedback):
     def __init__(self, left, right, **kwargs):
         super().__init__(SandboxedValue(left), SandboxedValue(right), **kwargs)
 
-    def condition(self, left, right):
+    def condition(self, left, right, **kwargs):
         """ Tests if the left is less than the right """
         return left.value < right.value
 
@@ -183,7 +183,7 @@ class assert_in(RuntimeAssertionFeedback):
     def __init__(self, needle, haystack, **kwargs):
         super().__init__(SandboxedValue(needle), SandboxedValue(haystack), **kwargs)
 
-    def condition(self, needle, haystack):
+    def condition(self, needle, haystack, **kwargs):
         """ Tests if the needle is not in the haystack """
         return needle.value not in haystack.value
 
@@ -199,7 +199,7 @@ class assert_not_in(RuntimeAssertionFeedback):
     def __init__(self, needle, haystack, **kwargs):
         super().__init__(SandboxedValue(needle), SandboxedValue(haystack), **kwargs)
 
-    def condition(self, needle, haystack):
+    def condition(self, needle, haystack, **kwargs):
         """ Tests if the needle is in the haystack """
         return needle.value in haystack.value
 
@@ -215,7 +215,7 @@ class assert_contains_subset(RuntimeAssertionFeedback):
     def __init__(self, needles, haystack, **kwargs):
         super().__init__(SandboxedValue(needles), SandboxedValue(haystack), **kwargs)
 
-    def condition(self, needles, haystack):
+    def condition(self, needles, haystack, **kwargs):
         """ Tests if the needle is not in the haystack """
         return not all(needle in haystack.value for needle in needles.value)
 
@@ -231,7 +231,7 @@ class assert_not_contains_subset(RuntimeAssertionFeedback):
     def __init__(self, needles, haystack, **kwargs):
         super().__init__(SandboxedValue(needles), SandboxedValue(haystack), **kwargs)
 
-    def condition(self, needles, haystack):
+    def condition(self, needles, haystack, **kwargs):
         """ Tests if the needle is not in the haystack """
         return all(needle in haystack.value for needle in needles.value)
 
@@ -247,7 +247,7 @@ class assert_is(RuntimeAssertionFeedback):
     def __init__(self, left, right, **kwargs):
         super().__init__(SandboxedValue(left), SandboxedValue(right), **kwargs)
 
-    def condition(self, left, right):
+    def condition(self, left, right, **kwargs):
         """ Tests if the left and right are equal """
         left = left.value._actual_value if left.is_sandboxed else left.value
         right = right.value._actual_value if right.is_sandboxed else right.value
@@ -265,7 +265,7 @@ class assert_is_not(RuntimeAssertionFeedback):
     def __init__(self, left, right, **kwargs):
         super().__init__(SandboxedValue(left), SandboxedValue(right), **kwargs)
 
-    def condition(self, left, right):
+    def condition(self, left, right, **kwargs):
         """ Tests if the left and right are equal """
         left = left.value._actual_value if left.is_sandboxed else left.value
         right = right.value._actual_value if right.is_sandboxed else right.value
@@ -283,7 +283,7 @@ class assert_is_none(RuntimeAssertionFeedback):
     def __init__(self, value, **kwargs):
         super().__init__(SandboxedValue(value), ExactValue("None"), **kwargs)
 
-    def condition(self, left, right):
+    def condition(self, left, right, **kwargs):
         """ Tests if the left and right are equal """
         if left.is_sandboxed:
             return left.value._actual_value is not None
@@ -301,7 +301,7 @@ class assert_is_not_none(RuntimeAssertionFeedback):
     def __init__(self, value, **kwargs):
         super().__init__(SandboxedValue(value), ExactValue("None"), **kwargs)
 
-    def condition(self, left, right):
+    def condition(self, left, right, **kwargs):
         """ Tests if the left and right are equal """
         if left.is_sandboxed:
             return left.value._actual_value is None
@@ -319,7 +319,7 @@ class assert_is_dataclass(RuntimeAssertionFeedback):
     def __init__(self, value, **kwargs):
         super().__init__(SandboxedValue(value), ExactValue("a dataclass"), **kwargs)
 
-    def condition(self, left, right):
+    def condition(self, left, right, **kwargs):
         """ Tests if the left evaluates to true """
         return not hasattr(left.value, _FIELDS)
 
@@ -335,7 +335,7 @@ class assert_is_not_dataclass(RuntimeAssertionFeedback):
     def __init__(self, value, **kwargs):
         super().__init__(SandboxedValue(value), ExactValue("a dataclass"), **kwargs)
 
-    def condition(self, left, right):
+    def condition(self, left, right, **kwargs):
         """ Tests if the left evaluates to true """
         return hasattr(left.value, _FIELDS)
 
@@ -351,7 +351,7 @@ class assert_true(RuntimeAssertionFeedback):
     def __init__(self, value, **kwargs):
         super().__init__(SandboxedValue(value), ExactValue("a true value"), **kwargs)
 
-    def condition(self, left, right):
+    def condition(self, left, right, **kwargs):
         """ Tests if the left evaluates to true """
         return not bool(left.value)
 
@@ -367,7 +367,7 @@ class assert_false(RuntimeAssertionFeedback):
     def __init__(self, value, **kwargs):
         super().__init__(SandboxedValue(value), ExactValue("a true value"), **kwargs)
 
-    def condition(self, left, right):
+    def condition(self, left, right, **kwargs):
         """ Tests if the left evaluates to true """
         return bool(left.value)
 
@@ -399,9 +399,9 @@ class assert_length_not_equal(RuntimeAssertionFeedback):
     def __init__(self, sequence, length, **kwargs):
         super().__init__(SandboxedValue(sequence), SandboxedValue(length), **kwargs)
 
-    def condition(self, sequence, length):
+    def condition(self, sequence, length, **kwargs):
         """ Tests if the needle is not in the haystack """
-        return len(sequence.value) == length.value
+        return len(sequence.value) != length.value
 
 
 class assert_length_less(RuntimeAssertionFeedback):
@@ -432,7 +432,7 @@ class assert_length_less_equal(RuntimeAssertionFeedback):
     def __init__(self, sequence, length, **kwargs):
         super().__init__(SandboxedValue(sequence), SandboxedValue(length), **kwargs)
 
-    def condition(self, sequence, length):
+    def condition(self, sequence, length, **kwargs):
         """ Tests if the needle is not in the haystack """
         return len(sequence.value) > length.value
 
@@ -448,7 +448,7 @@ class assert_length_greater(RuntimeAssertionFeedback):
     def __init__(self, sequence, length, **kwargs):
         super().__init__(SandboxedValue(sequence), SandboxedValue(length), **kwargs)
 
-    def condition(self, sequence, length):
+    def condition(self, sequence, length, **kwargs):
         """ Tests if the needle is not in the haystack """
         return len(sequence.value) <= length.value
 
@@ -465,7 +465,7 @@ class assert_length_greater_equal(RuntimeAssertionFeedback):
     def __init__(self, sequence, length, **kwargs):
         super().__init__(SandboxedValue(sequence), SandboxedValue(length), **kwargs)
 
-    def condition(self, sequence, length):
+    def condition(self, sequence, length, **kwargs):
         """ Tests if the needle is not in the haystack """
         return len(sequence.value) < length.value
 
@@ -481,7 +481,7 @@ class assert_is_instance(RuntimeAssertionFeedback):
     def __init__(self, obj, cls, **kwargs):
         super().__init__(SandboxedValue(obj), SandboxedValue(cls), **kwargs)
 
-    def condition(self, obj, cls):
+    def condition(self, obj, cls, **kwargs):
         """ Tests if the left and right are equal """
         value = cls.value
         if value == int or value == float:
@@ -500,7 +500,7 @@ class assert_not_is_instance(RuntimeAssertionFeedback):
     def __init__(self, obj, cls, **kwargs):
         super().__init__(SandboxedValue(obj), SandboxedValue(cls), **kwargs)
 
-    def condition(self, obj, cls):
+    def condition(self, obj, cls, **kwargs):
         """ Tests if the left and right are equal """
         value = cls.value
         if value == int or value == float:
@@ -548,7 +548,7 @@ class _compare_type(RuntimeAssertionFeedback):
         super().__init__(SandboxedValue(singular_name),
                          SandboxedValue(expected_pedal_type_name), **kwargs)
 
-    def condition(self, value, expected_type):
+    def condition(self, value, expected_type, **kwargs):
         """ Tests if the left and right are equal """
         value_type = self.fields['value_type']
         expected_type = self.fields['expected_type']
@@ -567,7 +567,7 @@ class assert_not_type(_compare_type):
     _expected_verb = ("to not be a value of type", "to not be the type of")
     _inverse_operator = "is not a value of type"
 
-    def condition(self, value, expected_type):
+    def condition(self, value, expected_type, **kwargs):
         return not super().condition(value, expected_type)
 
 
@@ -582,7 +582,7 @@ class assert_regex(RuntimeAssertionFeedback):
     def __init__(self, regex, text, **kwargs):
         super().__init__(SandboxedValue(regex), SandboxedValue(text), **kwargs)
 
-    def condition(self, regex, text):
+    def condition(self, regex, text, **kwargs):
         """ Tests if the regex matches the text """
         return re.search(regex.value, str(text.value)) is None
 
@@ -598,7 +598,7 @@ class assert_not_regex(RuntimeAssertionFeedback):
     def __init__(self, regex, text, **kwargs):
         super().__init__(SandboxedValue(regex), SandboxedValue(text), **kwargs)
 
-    def condition(self, regex, text):
+    def condition(self, regex, text, **kwargs):
         """ Tests if the regex does not match the text """
         return re.search(regex.value, str(text.value)) is not None
 
@@ -634,7 +634,7 @@ class assert_output(RuntimePrintingAssertionFeedback):
     _expected_verb = "the output to be"
     _inverse_operator = "does not have the text"
 
-    def condition(self, execution, text, exact_strings):
+    def condition(self, execution, text, exact_strings, **kwargs):
         """ Tests if the regex does not match the text """
         return errors(execution) or not equality_test(self.get_output(execution), str(text.value),
                                                       _exact_strings=exact_strings, _delta=None)
@@ -653,7 +653,7 @@ class assert_not_output(RuntimePrintingAssertionFeedback):
     _expected_verb = "the output to not be"
     _inverse_operator = "has the text"
 
-    def condition(self, execution, text, exact_strings):
+    def condition(self, execution, text, exact_strings, **kwargs):
         """ Tests if the regex does not match the text """
         return equality_test(self.get_output(execution), str(text.value),
                              _exact_strings=exact_strings, _delta=None)
@@ -671,7 +671,7 @@ class assert_output_contains(RuntimePrintingAssertionFeedback):
     _expected_verb = "the output to contain"
     _inverse_operator = "does not contain the text"
 
-    def condition(self, execution, text, exact_strings):
+    def condition(self, execution, text, exact_strings, **kwargs):
         """ Tests if the regex does not match the text """
         if not exact_strings:
             return str(text.value).lower() not in self.get_output(execution).lower()
@@ -686,7 +686,7 @@ class assert_not_output_contains(RuntimePrintingAssertionFeedback):
     _expected_verb = "the output to not contain"
     _inverse_operator = "contained the text"
 
-    def condition(self, execution, text, exact_strings):
+    def condition(self, execution, text, exact_strings, **kwargs):
         """ Tests if the regex does not match the text """
         if not exact_strings:
             return str(text.value).lower() in self.get_output(execution).lower()
@@ -705,7 +705,7 @@ class assert_output_regex(RuntimePrintingAssertionFeedback):
         super().__init__(execution, pattern,
                          exact_strings=exact_strings, **kwargs)
 
-    def condition(self, execution, text, exact_strings):
+    def condition(self, execution, text, exact_strings, **kwargs):
         """ Tests if the regex does not match the text """
         return errors(execution) or re.search(str(text.value), self.get_output(execution)) is None
 
@@ -723,7 +723,7 @@ class assert_not_output_regex(RuntimePrintingAssertionFeedback):
         super().__init__(execution, pattern,
                          exact_strings=exact_strings, **kwargs)
 
-    def condition(self, execution, text, exact_strings):
+    def condition(self, execution, text, exact_strings, **kwargs):
         """ Tests if the regex does not match the text """
         return re.search(str(text.value), self.get_output(execution)) is not None
 
@@ -736,7 +736,7 @@ class assert_has_attr(RuntimeAssertionFeedback):
     _expected_verb = "the object to contain"
     _inverse_operator = "did not contain"
 
-    def condition(self, obj, attr, exact_strings):
+    def condition(self, obj, attr, exact_strings, **kwargs):
         """ Tests if the regex does not match the text """
         return hasattr(obj.value, attr.value)
 
@@ -757,7 +757,7 @@ class assert_has_variable(RuntimeAssertionFeedback):
         return f"The variable {variable_name} was not created."
 
 
-    def condition(self, sandbox, variable_name):
+    def condition(self, sandbox, variable_name, **kwargs):
         sandbox = sandbox.value
         variable_name = variable_name.value
         if isinstance(sandbox, Sandbox):
@@ -786,7 +786,7 @@ class assert_has_function(RuntimeAssertionFeedback):
         else:
             return "The result does not contain the function."
 
-    def condition(self, sandbox, function_name):
+    def condition(self, sandbox, function_name, **kwargs):
         sandbox = sandbox.value
         function_name = function_name.value
         if isinstance(sandbox, Sandbox):
@@ -829,7 +829,7 @@ class ensure_coverage(AssertionFeedback):
         fields['coverage_message'] = str(int(round(100*coverage)))
         super().__init__(coverage, at_least, **kwargs)
 
-    def condition(self, coverage, at_least):
+    def condition(self, coverage, at_least, **kwargs):
         return coverage < at_least
 
 
@@ -881,7 +881,7 @@ class ensure_called_uniquely(AssertionFeedback):
         fields['unique_calls'] = unique_call_count
         super().__init__(unique_call_count, at_least, **kwargs)
 
-    def condition(self, unique_call_count, at_least):
+    def condition(self, unique_call_count, at_least, **kwargs):
         return unique_call_count < at_least
 
 

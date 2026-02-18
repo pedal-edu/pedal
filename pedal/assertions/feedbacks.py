@@ -131,6 +131,11 @@ class RuntimeAssertionFeedback(AssertionFeedback):
         self.report = kwargs.get('report', MAIN_REPORT)
         left.set_report(self.report)
         right.set_report(self.report)
+        
+        # Handle custom expected_verb and aggregate_verb parameters
+        expected_verb = kwargs.get('expected_verb', self._expected_verb)
+        aggregate_verb = kwargs.get('aggregate_verb', self._aggregate_verb)
+        
         # Get contexts
         contexts = self.get_sandbox_contexts([left, right])
         # Calculate the context_message
@@ -140,29 +145,64 @@ class RuntimeAssertionFeedback(AssertionFeedback):
             context_message = kwargs['context']
         else:
             context_message = format_contexts(contexts, self.report.format)
-        # Calculate the assertion_message
-        if kwargs.get('assertion') is False:
-            assertion_message = ""
-        elif kwargs.get('assertion') is not None:
-            assertion_message = kwargs['assertion'] + "\n"
-        else:
-            assertion_message = self.format_assertion(left, right, contexts)
-        # Calculate explanation
-        explanation = kwargs.get("explanation", "")
-        # Add in new fields
-        fields = kwargs.setdefault('fields', {})
+            
+        # Prepare fields for template interpolation (but don't put them in kwargs yet)
+        fields = {}
         fields['left'] = left.value
         fields['right'] = right.value
         fields['left_boxed'] = left
         fields['right_boxed'] = right
         fields['contexts'] = contexts
-        fields['expected_verb'] = self._expected_verb
-        fields['aggregate_verb'] = self._aggregate_verb
+        fields['expected_verb'] = expected_verb
+        fields['aggregate_verb'] = aggregate_verb
         fields['inverse_operator'] = self._inverse_operator
         fields['context_message'] = context_message
+        
+        # Calculate the assertion_message
+        assertion_param = kwargs.get('assertion') or kwargs.get('assertion_message')
+        if kwargs.get('assertion') is False or kwargs.get('assertion_message') is False:
+            assertion_message = ""
+        elif assertion_param is not None:
+            # Handle template interpolation for assertion
+            assertion_template = assertion_param
+            try:
+                # Create a copy of fields with properly formatted values for templates
+                template_fields = fields.copy()
+                template_fields['left'] = str(fields['left'])
+                template_fields['right'] = str(fields['right'])
+                assertion_message = assertion_template.format(**template_fields) + "\n"
+            except (KeyError, ValueError) as e:
+                # If template interpolation fails, use the template as-is
+                assertion_message = assertion_template + "\n"
+        else:
+            # Make fields available temporarily for format_assertion
+            self.fields = fields
+            assertion_message = self.format_assertion(left, right, contexts)
+            
+        # Calculate explanation with possible template interpolation
+        explanation_param = kwargs.get("explanation", "")
+        if explanation_param:
+            try:
+                explanation = explanation_param.format(**fields)
+            except (KeyError, ValueError):
+                # If template interpolation fails, use the explanation as-is
+                explanation = explanation_param
+        else:
+            explanation = ""
+
+        # Add final values to fields
         fields['assertion_message'] = assertion_message
         fields['explanation'] = explanation
-
+        
+        # Remove processed parameters from kwargs to prevent conflicts
+        kwargs.pop('assertion', None)
+        kwargs.pop('assertion_message', None)
+        kwargs.pop('explanation', None)
+        kwargs.pop('expected_verb', None)
+        kwargs.pop('aggregate_verb', None)
+        
+        # Now call super with fields in kwargs
+        kwargs['fields'] = fields
         try:
             super().__init__(left, right, *args, **kwargs)
         except Exception as e:
@@ -230,7 +270,7 @@ class RuntimeAssertionFeedback(AssertionFeedback):
             # If the expected_verb is a tuple, the right side's value is used
             #   to determine which of the two possible messages should be used.
             #   If the right side is a sandboxed value, uses the second; else the first.
-            _expected_verb = self._expected_verb
+            _expected_verb = self.fields.get('expected_verb', self._expected_verb)
             if isinstance(_expected_verb, tuple):
                 relevant_index = int(right.is_sandboxed)
                 _expected_verb = _expected_verb[relevant_index]
@@ -243,9 +283,10 @@ class RuntimeAssertionFeedback(AssertionFeedback):
         elif len(contexts) == 2:
             first_target = self._build_result_from_target(contexts, 0)
             second_target = self._build_result_from_target(contexts, 1)
+            _expected_verb = self.fields.get('expected_verb', self._expected_verb)
             assertion = (f"The value of {first_target} was{left}\n"
                          f"The value of {second_target} was{right}\n"
-                         f"But I expected {first_target} {self._expected_verb}{second_target}")
+                         f"But I expected {first_target} {_expected_verb}{second_target}")
         else:
             # Invalid state, why'd you have 3+ contexts?
             assertion = ""

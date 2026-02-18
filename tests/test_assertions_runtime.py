@@ -162,7 +162,8 @@ Student code failed instructor test.
                                 assertion_message="{left} was not {right}")
         self.assertFeedback(e, """Failed Instructor Test
 Student code failed instructor test.
-    [1, 2, 3] did not have the length 4""")
+[1, 2, 3] was not 4
+""")
 
     def test_assert_length_equal_call_left_fails(self):
         with Execution('def get(a, b): return [a,b]', run_tifa=False) as e:
