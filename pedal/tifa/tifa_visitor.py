@@ -626,17 +626,27 @@ class Tifa(TifaCore, ast.NodeVisitor):
         Args:
             node:
         """
-        self.loop_usages[self.path_chain[0]] = []
+        current_path_id = self.path_chain[0]
+        # Save any outer loop's tracked reads before resetting for this loop.
+        # This handles nested for loops: when an inner for loop clears loop_usages,
+        # it would otherwise lose the outer loop's tracked reads.
+        outer_loop_usages = self.loop_usages.get(current_path_id, [])
+        self.loop_usages[current_path_id] = []
+
         was_empty = self._visit_collection_loop(node)
         # Handle the bodies
-        # if not was_empty:
-        # this_path_id = self.path_chain[0]
-        # non_empty_path = NewPath(self, this_path_id, "f")
-        # with non_empty_path:
         self.visit_statements(node.body)
         self.visit_statements(node.orelse)
 
-        # self._finish_loop()
+        # Mark variables that were read inside this loop as 'maybe read'.
+        # This suppresses false "assigned but never used" warnings for carry variables
+        # (e.g., `previous` in `for i in ...: use(previous); previous = i`).
+        self._finish_loop()
+
+        # Restore outer loop's tracking, merging in this loop's reads so that
+        # outer loops also see variables that were read in inner loops.
+        inner_loop_usages = self.loop_usages.get(current_path_id, [])
+        self.loop_usages[current_path_id] = outer_loop_usages + inner_loop_usages
 
     def visit_FunctionDef(self, node):
         """
@@ -983,7 +993,18 @@ class Tifa(TifaCore, ast.NodeVisitor):
                 if not variable.exists and builtin:
                     return builtin
                 else:
-                    state = self.load_variable(name)
+                    # Don't count this as a meaningful loop read when the variable
+                    # is the object of a method call (e.g., `new` in `new.append(x)`).
+                    # In that case the method mutates the variable rather than reading
+                    # its value, so it should NOT suppress "unused variable" warnings
+                    # for the carry-variable pattern.
+                    is_method_call_object = (
+                        len(self.node_chain) >= 3 and
+                        isinstance(self.node_chain[-2], ast.Attribute) and
+                        isinstance(self.node_chain[-3], ast.Call) and
+                        self.node_chain[-3].func is self.node_chain[-2]
+                    )
+                    state = self.load_variable(name, track_in_loop=not is_method_call_object)
                     return state.type
         else:
             variable = self.find_variable_scope(name)

@@ -1455,8 +1455,8 @@ for x in old:
             raise result.error
         self.assertIsNone(result.error)
         self.assertTrue(result.issues)
-        self.assertEqual("Unused",
-                         result.issues['unused_variables'][0].message)
+        self.assertIn('unused_variable', result.issues)
+        self.assertEqual('new', result.issues['unused_variable'][0].fields['name'])
 
     def test_drafter_bakery_order_import(self):
         drafter_first = dedent("""

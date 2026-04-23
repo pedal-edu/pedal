@@ -406,7 +406,7 @@ class TifaCore:
         self._track_history(current_path, full_name, new_state.perfect_copy())
         return new_state
 
-    def load_variable(self, name, position=None):
+    def load_variable(self, name, position=None, track_in_loop=True):
         """
         Retrieve the variable with the given name.
 
@@ -416,14 +416,13 @@ class TifaCore:
                         not found in the current scope or an enclosing scope, all
                         other scopes will be searched to see if it was read out
                         of scope.
+            track_in_loop (bool): Whether to record this read in loop_usages.
+                        Set to False when loading a variable purely for method dispatch
+                        (e.g., ``obj`` in ``obj.method(args)``), since in that case the
+                        variable is being mutated rather than read for its value.
         Returns:
             State: The current state of the variable.
         """
-        # TODO: Handle the looping case of a previous variable
-        # If we are currently in a loop, mark that this loop (and therefore any children loop)
-        # may subsequently need to know that this variable has been READ within the loop.
-        # So the finalization can check whether a variable has been read within a loop,
-        # if the regular check doesn't seem to indicate that it's been read.
         full_name = self._scope_chain_str(name)
         current_path = self.path_chain[0]
         variable = self.find_variable_scope(name)
@@ -446,7 +445,8 @@ class TifaCore:
                 if name != '*return':
                     self._issue(possible_initialization_problem(self.locate(), name))
             new_state.read = 'yes'
-            self.loop_usages.setdefault(current_path, []).append(full_name)
+            if track_in_loop:
+                self.loop_usages.setdefault(current_path, []).append(full_name)
             if not variable.in_scope:
                 full_name = variable.scoped_name
         self.name_map[current_path][full_name] = new_state
