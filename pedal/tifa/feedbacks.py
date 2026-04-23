@@ -24,6 +24,7 @@ class action_after_return(TifaFeedback):
                      "*return variable was definitely set in this scope.")
 
     def __init__(self, location, **kwargs):
+        self.specifier = str(location) if location is not None else ""
         super().__init__(location=location, **kwargs)
 
 
@@ -36,6 +37,7 @@ class return_outside_function(TifaFeedback):
     justification = "TIFA visited a return node at the top level."
 
     def __init__(self, location, **kwargs):
+        self.specifier = str(location) if location is not None else ""
         super().__init__(location=location, **kwargs)
 
 
@@ -49,6 +51,7 @@ class multiple_return_types(TifaFeedback):
                      "that unequal types.")
 
     def __init__(self, location, expected, actual, **kwargs):
+        self.specifier = str(location) if location is not None else ""
         super().__init__(location=location, expected=expected,
                          actual=actual, **kwargs)
 
@@ -64,6 +67,7 @@ class write_out_of_scope(TifaFeedback):
 
     def __init__(self, location, name, **kwargs):
         report = kwargs.get("report", MAIN_REPORT)
+        self.specifier = name
         super().__init__(location=location, name=name,
                          name_message=report.format.name(name), **kwargs)
 
@@ -78,6 +82,7 @@ class unconnected_blocks(TifaFeedback):
     justification = "TIFA found a name equal to ___"
 
     def __init__(self, location, **kwargs):
+        self.specifier = str(location) if location is not None else ""
         super().__init__(location=location, **kwargs)
 
 
@@ -94,6 +99,7 @@ class iteration_problem(TifaFeedback):
 
     def __init__(self, location, name, **kwargs):
         report = kwargs.get("report", MAIN_REPORT)
+        self.specifier = name
         super().__init__(location=location, name=name,
                          name_message=report.format.name(name), **kwargs)
 
@@ -109,6 +115,7 @@ class initialization_problem(TifaFeedback):
 
     def __init__(self, location, name, **kwargs):
         report = kwargs.get("report", MAIN_REPORT)
+        self.specifier = name
         super().__init__(location=location, name=name,
                          name_message=report.format.name(name), **kwargs)
 
@@ -126,6 +133,7 @@ class possible_initialization_problem(TifaFeedback):
 
     def __init__(self, location, name, **kwargs):
         report = kwargs.get("report", MAIN_REPORT)
+        self.specifier = name
         super().__init__(location=location, name=name,
                          name_message=report.format.name(name), **kwargs)
 
@@ -154,6 +162,7 @@ class unused_variable(TifaFeedback):
                   'kind': kind, 'initialization': initialization}
         if 'fields' in kwargs:
             fields.update(kwargs.pop('fields'))
+        self.specifier = name
         super().__init__(location=location, fields=fields, **kwargs)
 
 
@@ -170,6 +179,7 @@ class overwritten_variable(TifaFeedback):
 
     def __init__(self, location, name, **kwargs):
         report = kwargs.get("report", MAIN_REPORT)
+        self.specifier = name
         super().__init__(location=location, name=name,
                          name_message=report.format.name(name), **kwargs)
 
@@ -193,6 +203,7 @@ class iterating_over_non_list(TifaFeedback):
         fields = {'location': location, 'name': iter_name, 'iter': iter_list}
         if 'fields' in kwargs:
             fields.update(kwargs.pop('fields'))
+        self.specifier = iter_name if iter_name is not None else str(location)
         super().__init__(location=location, fields=fields, **kwargs)
 
 
@@ -212,6 +223,7 @@ class iterating_over_empty_list(TifaFeedback):
         else:
             iter_list = "variable " + report.format.name(iter_name)
         fields = {'location': location, 'name': iter_name, 'iter': iter_list}
+        self.specifier = iter_name if iter_name is not None else str(location)
         super().__init__(location=location, fields=fields, **kwargs)
 
 
@@ -233,6 +245,7 @@ class incompatible_types(TifaFeedback):
                   'operation': operation, 'op_name': op_name,
                   'left': left, 'right': right,
                   'left_name': left_name, 'right_name': right_name}
+        self.specifier = op_name
         super().__init__(location=location, fields=fields, **kwargs)
 
 
@@ -253,6 +266,7 @@ class invalid_indexing(TifaFeedback):
         fields = {'location': location,
                   'left': left, 'right': right,
                   'left_name': left_name, 'right_name': right_name}
+        self.specifier = str(location) if location is not None else ""
         super().__init__(location=location, fields=fields, **kwargs)
 
 
@@ -278,6 +292,7 @@ class parameter_type_mismatch(TifaFeedback):
                   'argument_type': argument,
                   'parameter_type_name': parameter_type_name,
                   'argument_type_name': argument_type_name}
+        self.specifier = parameter_name
         super().__init__(location=location, fields=fields, **kwargs)
 
 
@@ -304,6 +319,7 @@ class field_type_mismatch(TifaFeedback):
                   'field_type_name': field_type_name,
                   'argument_type': argument,
                   'argument_type_name': argument_type_name}
+        self.specifier = field_name
         super().__init__(location=location, fields=fields, **kwargs)
 
 class read_out_of_scope(TifaFeedback):
@@ -318,6 +334,7 @@ class read_out_of_scope(TifaFeedback):
 
     def __init__(self, location, name, **kwargs):
         report = kwargs.get("report", MAIN_REPORT)
+        self.specifier = name
         super().__init__(location=location, name=name,
                          name_message=report.format.name(name), **kwargs)
 
@@ -336,6 +353,7 @@ class type_changes(TifaFeedback):
         fields = {'location': location, 'name': name,
                   'name_message': report.format.name(name),
                   'old': old, 'new': new}
+        self.specifier = name
         super().__init__(location=location, fields=fields, **kwargs)
 
 
@@ -352,6 +370,7 @@ class attribute_type_change(TifaFeedback):
         fields = {'location': location, 'attr': attr,
                   'attr_message': report.format.name(attr),
                   'old': old, 'new': new}
+        self.specifier = attr
         super().__init__(location=location, fields=fields, **kwargs)
 
 class type_change_append(TifaFeedback):
@@ -364,6 +383,7 @@ class type_change_append(TifaFeedback):
 
     def __init__(self, location, old, new, **kwargs):
         fields = {'location': location, 'old': old, 'new': new}
+        self.specifier = str(location) if location is not None else ""
         super().__init__(location=location, fields=fields, **kwargs)
 
 
@@ -376,6 +396,7 @@ class unnecessary_second_branch(TifaFeedback):
     justification = "There is an else or if statement who's body is just pass."
 
     def __init__(self, location, **kwargs):
+        self.specifier = str(location) if location is not None else ""
         super().__init__(location=location, **kwargs)
 
 
@@ -386,6 +407,7 @@ class else_on_loop_body(TifaFeedback):
     justification = ""
 
     def __init__(self, location, **kwargs):
+        self.specifier = str(location) if location is not None else ""
         super().__init__(location=location, **kwargs)
 
 
@@ -397,6 +419,8 @@ class recursive_call(TifaFeedback):
     muted = True
 
     def __init__(self, location, name, **kwargs):
+        # name may be a State object with a .name attribute, or a plain string
+        self.specifier = name.name if hasattr(name, 'name') else name
         super().__init__(location=location, name=name, **kwargs)
 
 
@@ -416,6 +440,7 @@ class not_a_function(TifaFeedback):
         fields = {'location': location, 'name': name,
                   'called_type': called_type,
                   'singular_name': singular_name}
+        self.specifier = name
         super().__init__(fields=fields, **kwargs)
 
 
@@ -430,6 +455,7 @@ class incorrect_arity(TifaFeedback):
     def __init__(self, location, function_name, expected_count, actual_count, is_constructor=False, **kwargs):
         report = kwargs.get("report", MAIN_REPORT)
         function_type = 'constructor function' if is_constructor else 'function'
+        self.specifier = function_name
         super().__init__(location=location, function_name=function_name,
                          expected_count=expected_count, actual_count=actual_count,
                          function_name_message=report.format.name(function_name),
@@ -447,6 +473,7 @@ class module_not_found(TifaFeedback):
     def __init__(self, location, name, is_dynamic=False, error=None, **kwargs):
         fields = {"location": location, "name": name,
                   "is_dynamic": is_dynamic, "error": error}
+        self.specifier = name
         super().__init__(location=location, fields=fields, **kwargs)
 
 
@@ -460,6 +487,7 @@ class append_to_non_list(TifaFeedback):
     def __init__(self, location, name, actual_type, **kwargs):
         fields = {'location': location, "name": name,
                   "actual_type": actual_type}
+        self.specifier = name
         super().__init__(location=location, fields=fields, **kwargs)
 
 
@@ -477,6 +505,7 @@ class nested_function_definition(TifaFeedback):
 
     def __init__(self, location, name, **kwargs):
         report = kwargs.get("report", MAIN_REPORT)
+        self.specifier = name
         super().__init__(location=location, name=name,
                          name_message=report.format.name(name), **kwargs)
 
@@ -497,6 +526,7 @@ class unused_returned_value(TifaFeedback):
         fields = {'location': location, 'name': name, 'call_type': call_type,
                   'result_type': result_type,
                   'name_message': report.format.name(name)}
+        self.specifier = name
         super().__init__(fields=fields, location=location, **kwargs)
 
 

@@ -23,6 +23,7 @@ class RequireAssertionFeedback(AssertionFeedback):
         report = kwargs.get('report', MAIN_REPORT)
         fields = {'code': code, 'at_least': at_least, 'capacity': '',
                   'root': root, 'code_message': report.format.python_expression(code)}
+        self.specifier = code
         super().__init__(fields=fields, **kwargs)
 
     def _check_usage(self, field_name, uses):
@@ -47,6 +48,7 @@ class RejectAssertionFeedback(AssertionFeedback):
         report = kwargs.get('report', MAIN_REPORT)
         fields = {'code': code, 'at_most': at_most, 'capacity': '',
                   'root': root, 'code_message': report.format.python_expression(code)}
+        self.specifier = code
         super().__init__(fields=fields, **kwargs)
 
     def _check_usage(self, field_name, uses):
@@ -138,6 +140,7 @@ class reject_code_regex(RejectAssertionFeedback):
     def __init__(self, pattern, at_most=0, flags=0, **kwargs):
         fields = {'pattern': pattern, 'at_most': at_most, 'capacity': '',
                   'pattern_message': repr(pattern), 'flags': flags}
+        self.specifier = pattern
         super(AssertionFeedback, self).__init__(fields=fields, **kwargs)
 
     def condition(self):
@@ -192,6 +195,7 @@ class require_code_regex(RequireAssertionFeedback):
     def __init__(self, pattern, at_least=1, flags=0, **kwargs):
         fields = {'pattern': pattern, 'at_least': at_least, 'capacity': '',
                   'pattern_message': repr(pattern), 'flags': flags}
+        self.specifier = pattern
         super(AssertionFeedback, self).__init__(fields=fields, **kwargs)
 
     def condition(self):
