@@ -630,6 +630,7 @@ class Tifa(TifaCore, ast.NodeVisitor):
         # Save any outer loop's tracked reads before resetting for this loop.
         # This handles nested for loops: when an inner for loop clears loop_usages,
         # it would otherwise lose the outer loop's tracked reads.
+        # `.get()` is used because there may be no prior entry for this path.
         outer_loop_usages = self.loop_usages.get(current_path_id, [])
         self.loop_usages[current_path_id] = []
 
@@ -647,6 +648,41 @@ class Tifa(TifaCore, ast.NodeVisitor):
         # outer loops also see variables that were read in inner loops.
         inner_loop_usages = self.loop_usages.get(current_path_id, [])
         self.loop_usages[current_path_id] = outer_loop_usages + inner_loop_usages
+
+    def _is_method_call_target(self, node):
+        """
+        Determine whether *node* is the object of a direct method call, i.e.
+        whether it appears as the receiver in an expression of the form
+        ``node.method(args)``.
+
+        The AST structure for ``obj.method(args)`` is::
+
+            Call(func=Attribute(value=Name('obj'), attr='method'), args=[...])
+
+        When visiting ``Name('obj')``, the node chain contains (innermost last):
+        ``[..., Call, Attribute, Name]``.  We check that the parent
+        (``node_chain[-2]``) is an Attribute whose value is this Name, *and*
+        that the grandparent (``node_chain[-3]``) is a Call whose ``func`` is
+        that Attribute.
+
+        This is used to avoid counting a mutating method call as a meaningful
+        "value read" for the purposes of loop-usage tracking.  For example,
+        in ``new.append(x)`` the variable ``new`` is not being read for its
+        data — it is being mutated — so it should not suppress an "unused
+        variable" warning.
+
+        Args:
+            node (ast.Name): The Name node currently being visited.
+
+        Returns:
+            bool: True if the node is the object of a direct method call.
+        """
+        return (
+            len(self.node_chain) >= 3 and
+            isinstance(self.node_chain[-2], ast.Attribute) and
+            isinstance(self.node_chain[-3], ast.Call) and
+            self.node_chain[-3].func is self.node_chain[-2]
+        )
 
     def visit_FunctionDef(self, node):
         """
@@ -998,13 +1034,7 @@ class Tifa(TifaCore, ast.NodeVisitor):
                     # In that case the method mutates the variable rather than reading
                     # its value, so it should NOT suppress "unused variable" warnings
                     # for the carry-variable pattern.
-                    is_method_call_object = (
-                        len(self.node_chain) >= 3 and
-                        isinstance(self.node_chain[-2], ast.Attribute) and
-                        isinstance(self.node_chain[-3], ast.Call) and
-                        self.node_chain[-3].func is self.node_chain[-2]
-                    )
-                    state = self.load_variable(name, track_in_loop=not is_method_call_object)
+                    state = self.load_variable(name, track_in_loop=not self._is_method_call_target(node))
                     return state.type
         else:
             variable = self.find_variable_scope(name)
