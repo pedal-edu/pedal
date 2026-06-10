@@ -110,6 +110,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">pedal.command_line.verify</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_report_out</span><span class="p">,</span> <span class="n">ReportVerifier</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pedal.core.report</span><span class="w"> </span><span class="kn">import</span> <span class="n">MAIN_REPORT</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pedal.core.submission</span><span class="w"> </span><span class="kn">import</span> <span class="n">Submission</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pedal.command_line.instructor_mock</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_instructor_data</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pedal.utilities.files</span><span class="w"> </span><span class="kn">import</span> <span class="n">normalize_path</span><span class="p">,</span> <span class="n">find_possible_filenames</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pedal.utilities.progsnap</span><span class="w"> </span><span class="kn">import</span> <span class="n">SqlProgSnap2</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pedal.utilities.text</span><span class="w"> </span><span class="kn">import</span> <span class="n">chomp</span>
@@ -251,7 +252,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ics_args</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">submission</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="p">]</span>
         <span class="n">captured_output</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
-        <span class="n">global_data</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">global_data</span> <span class="o">=</span> <span class="n">make_instructor_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">extra_instructor_files</span><span class="p">)</span>
         <span class="n">error</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">resolution</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="p">:</span>
@@ -437,11 +438,15 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;TODO: Zip files not yet supported&quot;</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">load_file_directly</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+        <span class="n">extra_parameters</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">extra_files</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">extra_parameters</span><span class="p">[</span><span class="s1">&#39;files&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">extra_files</span>
         <span class="n">new_submission</span> <span class="o">=</span> <span class="n">Submission</span><span class="p">(</span>
             <span class="n">main_file</span><span class="o">=</span><span class="s2">&quot;answer.py&quot;</span><span class="p">,</span>
             <span class="n">main_code</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">submissions</span><span class="p">,</span>
             <span class="n">instructor_file</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">instructor</span><span class="p">,</span>
-            <span class="n">execution</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">execution</span>
+            <span class="n">execution</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">execution</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">extra_parameters</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">submissions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Bundle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">instructor</span><span class="p">,</span> <span class="n">new_submission</span><span class="p">))</span>
 
