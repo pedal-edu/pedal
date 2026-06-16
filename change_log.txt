@@ -1,3 +1,7 @@
+Version 3.0.2 (6/15/2026)
+-------------------------
+* Fix critical bug in `timeout` not actually returning the result (thanks @frankm24)
+
 Version 3.0.1 (6/10/2026)
 -------------------------
 * New parameters for instructor and submission files specification in JobConfig
