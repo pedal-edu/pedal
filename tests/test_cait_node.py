@@ -95,6 +95,12 @@ class CaitNodeTest(unittest.TestCase):
                         "Expected ast.cmpop, got {} instead".format(type(binops_funcs[0])))
         self.assertTrue(type(binops_names[0]) == str, "Expected ast.cmpop")
 
+    def test___getattr___missing_astnode(self):
+        program = CaitNode(ast.parse("x = 0"))
+        del program.astNode
+        with self.assertRaises(AttributeError):
+            _ = program.ast_name
+
     @unittest.skip("Not implemented yet")
     def test_numeric_logic_check(self):
         program = CaitNode(ast.parse("if 24 < x < 35:\n"

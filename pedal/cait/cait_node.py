@@ -346,7 +346,13 @@ class CaitNode:
         """
         Non-ast node attributes based on ast_node attributes
         """
-        node_name = CaitNode.get_ast_name(self.astNode)
+        if item == "astNode":
+            raise AttributeError("astNode")
+        try:
+            ast_node = object.__getattribute__(self, "astNode")
+        except AttributeError:
+            raise AttributeError(item)
+        node_name = CaitNode.get_ast_name(ast_node)
         if node_name == "Assign" and key == "target":
             key = "targets"
         if item in AST_SINGLE_FUNCTIONS:
@@ -362,14 +368,14 @@ class CaitNode:
         if key == 'ast_name':
             return node_name
         elif key == '_name':
-            return self.astNode.name
+            return ast_node.name
         elif key == 'ast_node':
-            return self.astNode
+            return ast_node
         else:  # ast node attributes or derivative attributes
-            if hasattr(self.astNode, key):
+            if hasattr(ast_node, key):
                 # noinspection PyBroadException
                 try:
-                    field = self.astNode.__getattribute__(key)
+                    field = ast_node.__getattribute__(key)
                 except Exception:
                     field = None
                 if node_name == "Assign" and item != key:
