@@ -346,12 +346,10 @@ class CaitNode:
         """
         Non-ast node attributes based on ast_node attributes
         """
-        if item == "astNode":
-            raise AttributeError("astNode")
         try:
             ast_node = object.__getattribute__(self, "astNode")
         except AttributeError:
-            raise AttributeError(item)
+            raise AttributeError(f"{type(self).__name__} has no attribute {item!r}")
         node_name = CaitNode.get_ast_name(ast_node)
         if node_name == "Assign" and key == "target":
             key = "targets"
