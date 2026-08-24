@@ -755,6 +755,29 @@ class Tifa(TifaCore, ast.NodeVisitor):
                 pass
             else:
                 return LiteralStr(string_literal)
+        elif isinstance(node, ast.BinOp) and isinstance(node.op, ast.BitOr):
+            # Handle type union syntax: int | str
+            left_type = self.evaluate_type(node.left)
+            right_type = self.evaluate_type(node.right)
+            return TypeUnion([left_type, right_type])
+        elif isinstance(node, ast.Subscript):
+            # Handle typing.Union[X, Y] and typing.Optional[X]
+            value_type = self.visit(node.value)
+            if isinstance(value_type, ModuleType):
+                # Might be a typing module type
+                pass
+            elif hasattr(value_type, 'name'):
+                if value_type.name == 'Union':
+                    # Handle Union[type1, type2, ...]
+                    if isinstance(node.slice, ast.Tuple):
+                        types = [self.evaluate_type(elt) for elt in node.slice.elts]
+                        return TypeUnion(types)
+                    else:
+                        return self.evaluate_type(node.slice)
+                elif value_type.name == 'Optional':
+                    # Handle Optional[type] which is Union[type, None]
+                    inner_type = self.evaluate_type(node.slice)
+                    return TypeUnion([inner_type, NoneType()])
         elif isinstance(node, ast.List):
             if node.elts:
                 return ListType(False, self.evaluate_type(node.elts[0]))
@@ -770,9 +793,10 @@ class Tifa(TifaCore, ast.NodeVisitor):
                                  for k, v in zip(node.keys, node.values)])
             else:
                 return DictType([])
-        else:
-            evaluated = self.visit(node)
-            return evaluated.as_type(self, self.locate(node))
+
+        # Default: try to visit and convert to type
+        evaluated = self.visit(node)
+        return evaluated.as_type(self, self.locate(node))
 
     def visit_GeneratorExp(self, node):
         """
@@ -803,10 +827,20 @@ class Tifa(TifaCore, ast.NodeVisitor):
             if node.orelse:
                 self._issue(unnecessary_second_branch(self.locate()))
 
+        # Check for isinstance type guard
+        type_guard_info = self._extract_isinstance_type_guard(node.test)
+
         # Visit the bodies
         this_path_id = self.path_chain[0]
         if_path = NewPath(self, this_path_id, "i")
         with if_path:
+            # Apply type narrowing if isinstance was used
+            if type_guard_info:
+                var_name, narrowed_type = type_guard_info
+                # Store the narrowed type in the if branch
+                variable_state = self.find_variable_scope(var_name)
+                if variable_state.exists:
+                    self.store_variable(var_name, narrowed_type, self.locate())
             for statement in node.body:
                 self.visit(statement)
         else_path = NewPath(self, this_path_id, "e")
@@ -819,6 +853,37 @@ class Tifa(TifaCore, ast.NodeVisitor):
         # Combine two paths into one
         # Check for any names that are on the IF path
         self.merge_paths(this_path_id, if_path.id, else_path.id)
+
+    def _extract_isinstance_type_guard(self, test_node):
+        """
+        Extract type guard information from isinstance() calls.
+        
+        Args:
+            test_node: The test condition AST node
+            
+        Returns:
+            tuple: (variable_name, narrowed_type) if isinstance is found, None otherwise
+        """
+        # Check if it's a Call node with isinstance
+        if isinstance(test_node, ast.Call):
+            # Check if the function is 'isinstance'
+            if isinstance(test_node.func, ast.Name) and test_node.func.id == 'isinstance':
+                # isinstance(var, type) - need at least 2 arguments
+                if len(test_node.args) >= 2:
+                    var_arg = test_node.args[0]
+                    type_arg = test_node.args[1]
+                    
+                    # Extract variable name
+                    if isinstance(var_arg, ast.Name):
+                        var_name = var_arg.id
+                        
+                        # Evaluate the type argument
+                        narrowed_type = self.evaluate_type(type_arg)
+                        
+                        return (var_name, narrowed_type)
+        
+        return None
+
 
     def visit_IfExp(self, node):
         """
