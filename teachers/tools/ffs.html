@@ -154,13 +154,13 @@ and Environment, may support HTML or Markdown. Will override the <a class="refer
 Any field names wrapped in curly braces will be interpolated when the Feedback Function meets its condition.
 These fields can be further manipulated by incorporating the <a class="reference internal" href="formatter.html#teacher-formatter"><span class="std std-ref">Formatter</span></a>’s supported conversion flags:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># A message_template can have fields and conversion flags:</span>
-<span class="s2">&quot;Your code returned {student_answer!python_value}&quot;</span>
+<span class="s2">"Your code returned {student_answer!python_value}"</span>
 
 <span class="c1"># Which will generate the HTML output:</span>
-<span class="s2">&quot;Your code returned &lt;code&gt;5&lt;/code&gt;&quot;</span>
+<span class="s2">"Your code returned &lt;code&gt;5&lt;/code&gt;"</span>
 
 <span class="c1"># Or the plain-text output:</span>
-<span class="s2">&quot;Your code returned 5&quot;</span>
+<span class="s2">"Your code returned 5"</span>
 </pre></div>
 </div>
 <p>Usually, you will override the <a class="reference internal" href="#message" title="message"><code class="xref py py-attr docutils literal notranslate"><span class="pre">message</span></code></a> instead of the template, to set a specific message instead.</p>

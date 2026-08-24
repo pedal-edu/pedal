@@ -134,13 +134,13 @@ environments, or just regular text for consoles.</p>
 for the <code class="docutils literal notranslate"><span class="pre">message_template</span></code>. As long as the Feedback author is careful, fields can be interpolated with the appropriate
 formatting.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># A message_template can have fields and conversion flags:</span>
-<span class="s2">&quot;Your code returned {student_answer!python_value}&quot;</span>
+<span class="s2">"Your code returned {student_answer!python_value}"</span>
 
 <span class="c1"># Which will generate the HTML output:</span>
-<span class="s2">&quot;Your code returned &lt;code&gt;5&lt;/code&gt;&quot;</span>
+<span class="s2">"Your code returned &lt;code&gt;5&lt;/code&gt;"</span>
 
 <span class="c1"># Or the plain-text output:</span>
-<span class="s2">&quot;Your code returned 5&quot;</span>
+<span class="s2">"Your code returned 5"</span>
 </pre></div>
 </div>
 <p>The following</p>
@@ -268,7 +268,7 @@ formatter, rather than as a conversion flag.</p>
 <dd><p>A function provided by the formatter to create a table of data. Must provide both
 the columns and rows. Has to be called by using the report’s formatter, rather than as a conversion
 flag.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">formatter</span><span class="o">.</span><span class="n">table</span><span class="p">([</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span> <span class="p">],</span> <span class="p">[</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">,</span> <span class="s2">&quot;Z&quot;</span><span class="p">])</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">formatter</span><span class="o">.</span><span class="n">table</span><span class="p">([</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span> <span class="p">],</span> <span class="p">[</span><span class="s2">"X"</span><span class="p">,</span> <span class="s2">"Y"</span><span class="p">,</span> <span class="s2">"Z"</span><span class="p">])</span>
 </pre></div>
 </div>
 <p>Results in something like this by default:</p>

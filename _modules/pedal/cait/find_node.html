@@ -88,9 +88,9 @@
            <div itemprop="articleBody">
              
   <h1>Source code for pedal.cait.find_node</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""</span>
 <span class="sd">Helper functions for traversing through the code structure.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pedal.cait</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_program</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pedal.core.report</span><span class="w"> </span><span class="kn">import</span> <span class="n">MAIN_REPORT</span>
@@ -101,7 +101,7 @@
 <div class="viewcode-block" id="is_top_level">
 <a class="viewcode-back" href="../../../developers/tools/cait.html#pedal.cait.find_node.is_top_level">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">is_top_level</span><span class="p">(</span><span class="n">ast_node</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Determines if the `ast_node` is at the top-level of the program.</span>
 <span class="sd">    Correctly handles expression statements (so a print call on its own will be</span>
 <span class="sd">    considered a statement, even though its technically an expression).</span>
@@ -112,10 +112,10 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        bool: Whether the node is from the top level</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">ast</span> <span class="o">=</span> <span class="n">parse_program</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">ast</span><span class="o">.</span><span class="n">body</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">element</span><span class="o">.</span><span class="n">ast_name</span> <span class="o">==</span> <span class="s2">&quot;Expr&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">element</span><span class="o">.</span><span class="n">ast_name</span> <span class="o">==</span> <span class="s2">"Expr"</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">element</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="n">ast_node</span><span class="p">:</span>
                 <span class="k">return</span> <span class="kc">True</span>
         <span class="k">elif</span> <span class="n">element</span> <span class="o">==</span> <span class="n">ast_node</span><span class="p">:</span>
@@ -127,31 +127,31 @@
 <div class="viewcode-block" id="find_operation">
 <a class="viewcode-back" href="../../../developers/tools/cait.html#pedal.cait.find_node.find_operation">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">find_operation</span><span class="p">(</span><span class="n">op_name</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Returns all the occurrences of the operator `op_name` in the source code.</span>
-<span class="sd">    You can specify the operator as a string like `&quot;+&quot;` or `&quot;&lt;&lt;&quot;`.</span>
+<span class="sd">    You can specify the operator as a string like `"+"` or `"&lt;&lt;"`.</span>
 <span class="sd">    Supports all comparison, boolean, binary, and unary operators.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">parse_program</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span>
     <span class="n">found</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">if</span> <span class="n">op_name</span> <span class="ow">in</span> <span class="n">COMPARE_OP_NAMES</span><span class="p">:</span>
-        <span class="n">compares</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;Compare&quot;</span><span class="p">)</span>
+        <span class="n">compares</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">"Compare"</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">compare</span> <span class="ow">in</span> <span class="n">compares</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="n">compare</span><span class="o">.</span><span class="n">ops</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">op</span><span class="o">.</span><span class="n">ast_name</span> <span class="o">==</span> <span class="n">COMPARE_OP_NAMES</span><span class="p">[</span><span class="n">op_name</span><span class="p">]:</span>
                     <span class="n">found</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">compare</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">op_name</span> <span class="ow">in</span> <span class="n">BOOL_OP_NAMES</span><span class="p">:</span>
-        <span class="n">boolops</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;BoolOp&quot;</span><span class="p">)</span>
+        <span class="n">boolops</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">"BoolOp"</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">boolop</span> <span class="ow">in</span> <span class="n">boolops</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">boolop</span><span class="o">.</span><span class="n">op_name</span> <span class="o">==</span> <span class="n">BOOL_OP_NAMES</span><span class="p">[</span><span class="n">op_name</span><span class="p">]:</span>
                 <span class="n">found</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">boolop</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">op_name</span> <span class="ow">in</span> <span class="n">BIN_OP_NAMES</span><span class="p">:</span>
-        <span class="n">binops</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;BinOp&quot;</span><span class="p">)</span>
+        <span class="n">binops</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">"BinOp"</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">binop</span> <span class="ow">in</span> <span class="n">binops</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">binop</span><span class="o">.</span><span class="n">op_name</span> <span class="o">==</span> <span class="n">BIN_OP_NAMES</span><span class="p">[</span><span class="n">op_name</span><span class="p">]:</span>
                 <span class="n">found</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">binop</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">op_name</span> <span class="ow">in</span> <span class="n">UNARY_OP_NAMES</span><span class="p">:</span>
-        <span class="n">unaryops</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;UnaryOp&quot;</span><span class="p">)</span>
+        <span class="n">unaryops</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">"UnaryOp"</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">unaryop</span> <span class="ow">in</span> <span class="n">unaryops</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">unaryop</span><span class="o">.</span><span class="n">op_name</span> <span class="o">==</span> <span class="n">UNARY_OP_NAMES</span><span class="p">[</span><span class="n">op_name</span><span class="p">]:</span>
                 <span class="n">found</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">unaryop</span><span class="p">)</span>
@@ -162,7 +162,7 @@
 <div class="viewcode-block" id="find_function_calls">
 <a class="viewcode-back" href="../../../developers/tools/cait.html#pedal.cait.find_node.find_function_calls">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">find_function_calls</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Returns a list of CaitNodes representing all of the function calls that</span>
 <span class="sd">    were found. This includes both methods and regular functions.</span>
 
@@ -173,15 +173,15 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        List[CaitNode]: Relevant call nodes.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">parse_program</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span>
-    <span class="n">all_calls</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;Call&quot;</span><span class="p">)</span>
+    <span class="n">all_calls</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">"Call"</span><span class="p">)</span>
     <span class="n">calls</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">a_call</span> <span class="ow">in</span> <span class="n">all_calls</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">ast_name</span> <span class="o">==</span> <span class="s2">&quot;Attribute&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">ast_name</span> <span class="o">==</span> <span class="s2">"Attribute"</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">attr</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
                 <span class="n">calls</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a_call</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">ast_name</span> <span class="o">==</span> <span class="s2">&quot;Name&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">ast_name</span> <span class="o">==</span> <span class="s2">"Name"</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">a_call</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
                 <span class="n">calls</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a_call</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">calls</span></div>
@@ -191,7 +191,7 @@
 <div class="viewcode-block" id="function_is_called">
 <a class="viewcode-back" href="../../../developers/tools/cait.html#pedal.cait.find_node.function_is_called">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">function_is_called</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; DEPRECATED &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">""" DEPRECATED """</span>
     <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">find_function_calls</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">))</span></div>
 
 
@@ -199,18 +199,18 @@
 <div class="viewcode-block" id="find_prior_initializations">
 <a class="viewcode-back" href="../../../developers/tools/cait.html#pedal.cait.find_node.find_prior_initializations">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">find_prior_initializations</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    DEPRECATED</span>
 
 <span class="sd">    Given a Name node, returns a list of all the assignment</span>
 <span class="sd">    statements that incorporate that Name node prior to that line. Returns</span>
 <span class="sd">    None if no Name is given.</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">ast_name</span> <span class="o">!=</span> <span class="s2">&quot;Name&quot;</span><span class="p">:</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">ast_name</span> <span class="o">!=</span> <span class="s2">"Name"</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
     <span class="n">ast</span> <span class="o">=</span> <span class="n">parse_program</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span>
-    <span class="n">assignments</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;Assign&quot;</span><span class="p">)</span>
+    <span class="n">assignments</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">"Assign"</span><span class="p">)</span>
     <span class="n">cur_line_no</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">lineno</span>
     <span class="n">all_assignments</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">assignment</span> <span class="ow">in</span> <span class="n">assignments</span><span class="p">:</span>
@@ -224,7 +224,7 @@
 <div class="viewcode-block" id="find_function_definition">
 <a class="viewcode-back" href="../../../developers/tools/cait.html#pedal.cait.find_node.find_function_definition">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">find_function_definition</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Finds the given function definition based on the given ``name``.</span>
 
 <span class="sd">    Args:</span>
@@ -235,9 +235,9 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        :py:class:`pedal.cait.cait_node.CaitNode`: The first occurrence of a</span>
 <span class="sd">            function with the given name.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">parse_program</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span>
-    <span class="n">defs</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">&#39;FunctionDef&#39;</span><span class="p">)</span>
+    <span class="n">defs</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">'FunctionDef'</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">a_def</span> <span class="ow">in</span> <span class="n">defs</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">a_def</span><span class="o">.</span><span class="n">_name</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">a_def</span>

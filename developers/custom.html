@@ -140,7 +140,7 @@ You can use the <code class="docutils literal notranslate"><span class="pre">rep
 This largely relies on the <code class="docutils literal notranslate"><span class="pre">DEFAULT_CATEGORY_PRIORITY</span></code> dictionary that is defined in the <code class="docutils literal notranslate"><span class="pre">pedal.core.feedback</span></code> module.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># pedal/core/feedback.py</span>
 <span class="n">DEFAULT_CATEGORY_PRIORITY</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;highest&quot;</span><span class="p">,</span>
+    <span class="s2">"highest"</span><span class="p">,</span>
     <span class="c1"># Static</span>
     <span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">SYNTAX</span><span class="p">,</span>
     <span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">MISTAKES</span><span class="p">,</span>
@@ -153,23 +153,23 @@ This largely relies on the <code class="docutils literal notranslate"><span clas
     <span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">POSITIVE</span><span class="p">,</span>
     <span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">INSTRUCTIONS</span><span class="p">,</span>
     <span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">UNKNOWN</span><span class="p">,</span>
-    <span class="s2">&quot;lowest&quot;</span>
+    <span class="s2">"lowest"</span>
 <span class="p">]</span>
 
 <span class="c1"># pedal/resolvers/simple.py</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">by_priority</span><span class="p">(</span><span class="n">feedback</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Converts a feedback into a numeric representation for sorting.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        feedback (Feedback): The feedback object to convert</span>
 <span class="sd">    Returns:</span>
-<span class="sd">        float: A decimal number representing the feedback&#39;s relative priority.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">        float: A decimal number representing the feedback's relative priority.</span>
+<span class="sd">    """</span>
     <span class="n">category</span> <span class="o">=</span> <span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">UNKNOWN</span>
     <span class="k">if</span> <span class="n">feedback</span><span class="o">.</span><span class="n">category</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">category</span> <span class="o">=</span> <span class="n">feedback</span><span class="o">.</span><span class="n">category</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-    <span class="n">priority</span> <span class="o">=</span> <span class="s1">&#39;medium&#39;</span>
+    <span class="n">priority</span> <span class="o">=</span> <span class="s1">'medium'</span>
     <span class="k">if</span> <span class="n">feedback</span><span class="o">.</span><span class="n">priority</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">priority</span> <span class="o">=</span> <span class="n">feedback</span><span class="o">.</span><span class="n">priority</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
         <span class="n">priority</span> <span class="o">=</span> <span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">ALIASES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">priority</span><span class="p">,</span> <span class="n">priority</span><span class="p">)</span>
@@ -179,7 +179,7 @@ This largely relies on the <code class="docutils literal notranslate"><span clas
         <span class="n">value</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">DEFAULT_CATEGORY_PRIORITY</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">priority</span> <span class="ow">in</span> <span class="n">DEFAULT_CATEGORY_PRIORITY</span><span class="p">:</span>
         <span class="n">value</span> <span class="o">=</span> <span class="n">DEFAULT_CATEGORY_PRIORITY</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">priority</span><span class="p">)</span>
-        <span class="n">priority</span> <span class="o">=</span> <span class="s1">&#39;medium&#39;</span>
+        <span class="n">priority</span> <span class="o">=</span> <span class="s1">'medium'</span>
     <span class="n">offset</span> <span class="o">=</span> <span class="n">priority_offset</span><span class="p">(</span><span class="n">priority</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">value</span> <span class="o">+</span> <span class="n">offset</span>
 </pre></div>

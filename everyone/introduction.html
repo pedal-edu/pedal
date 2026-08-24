@@ -150,20 +150,20 @@ liveness checking, and several custom instructor checks.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pedal</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
 
 <span class="c1"># Partial credit for good progress</span>
-<span class="k">if</span> <span class="n">find_asts</span><span class="p">(</span><span class="s2">&quot;For&quot;</span><span class="p">):</span>
-    <span class="n">compliment</span><span class="p">(</span><span class="s2">&quot;Good, you have a `for` loop!&quot;</span><span class="p">,</span> <span class="n">score</span><span class="o">=</span><span class="s2">&quot;+10%&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">find_asts</span><span class="p">(</span><span class="s2">"For"</span><span class="p">):</span>
+    <span class="n">compliment</span><span class="p">(</span><span class="s2">"Good, you have a `for` loop!"</span><span class="p">,</span> <span class="n">score</span><span class="o">=</span><span class="s2">"+10%"</span><span class="p">)</span>
 
 <span class="c1"># Give feedback by finding a common problem-specific mistake</span>
-<span class="n">matches</span> <span class="o">=</span> <span class="n">find_matches</span><span class="p">(</span><span class="s2">&quot;for _expr_ in _list_:</span><span class="se">\n</span><span class="s2">&quot;</span>
-                       <span class="s2">&quot;    ___ = ____ + _list_&quot;</span><span class="p">)</span>
+<span class="n">matches</span> <span class="o">=</span> <span class="n">find_matches</span><span class="p">(</span><span class="s2">"for _expr_ in _list_:</span><span class="se">\n</span><span class="s2">"</span>
+                       <span class="s2">"    ___ = ____ + _list_"</span><span class="p">)</span>
 <span class="k">if</span> <span class="n">matches</span><span class="p">:</span>
-    <span class="n">explain</span><span class="p">(</span><span class="s2">&quot;You shouldn&#39;t use the list inside the for loop.&quot;</span><span class="p">,</span>
-            <span class="n">label</span><span class="o">=</span><span class="s2">&quot;list_inside_loop&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;List Inside Loop&quot;</span><span class="p">)</span>
+    <span class="n">explain</span><span class="p">(</span><span class="s2">"You shouldn't use the list inside the for loop."</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="s2">"list_inside_loop"</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">"List Inside Loop"</span><span class="p">)</span>
 
 <span class="c1"># Check they defined the function with the right type</span>
-<span class="n">ensure_function</span><span class="p">(</span><span class="n">student</span><span class="p">,</span> <span class="s1">&#39;add_prices&#39;</span><span class="p">,</span> <span class="n">arity</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">returns</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+<span class="n">ensure_function</span><span class="p">(</span><span class="n">student</span><span class="p">,</span> <span class="s1">'add_prices'</span><span class="p">,</span> <span class="n">arity</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">returns</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
 <span class="c1"># Unit test their function</span>
-<span class="n">assert_equal</span><span class="p">(</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;add_prices&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span> <span class="mi">6</span><span class="p">)</span>
+<span class="n">assert_equal</span><span class="p">(</span><span class="n">call</span><span class="p">(</span><span class="s1">'add_prices'</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span> <span class="mi">6</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -180,22 +180,22 @@ look a little more complex, but you can see clearly all the phases of checking t
 <span class="n">tifa_analysis</span><span class="p">()</span>
 
 <span class="c1"># Partial credit for good progress</span>
-<span class="k">if</span> <span class="n">find_asts</span><span class="p">(</span><span class="s2">&quot;For&quot;</span><span class="p">):</span>
-    <span class="n">compliment</span><span class="p">(</span><span class="s2">&quot;Good, you have a `for` loop!&quot;</span><span class="p">,</span> <span class="n">score</span><span class="o">=</span><span class="s2">&quot;+10%&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">find_asts</span><span class="p">(</span><span class="s2">"For"</span><span class="p">):</span>
+    <span class="n">compliment</span><span class="p">(</span><span class="s2">"Good, you have a `for` loop!"</span><span class="p">,</span> <span class="n">score</span><span class="o">=</span><span class="s2">"+10%"</span><span class="p">)</span>
 
 <span class="c1"># Give feedback by finding a common problem-specific mistake</span>
-<span class="n">matches</span> <span class="o">=</span> <span class="n">find_matches</span><span class="p">(</span><span class="s2">&quot;for _expr_ in _list_:</span><span class="se">\n</span><span class="s2">&quot;</span>
-                       <span class="s2">&quot;    ___ = ____ + _list_&quot;</span><span class="p">)</span>
+<span class="n">matches</span> <span class="o">=</span> <span class="n">find_matches</span><span class="p">(</span><span class="s2">"for _expr_ in _list_:</span><span class="se">\n</span><span class="s2">"</span>
+                       <span class="s2">"    ___ = ____ + _list_"</span><span class="p">)</span>
 <span class="k">if</span> <span class="n">matches</span><span class="p">:</span>
-    <span class="n">explain</span><span class="p">(</span><span class="s2">&quot;You shouldn&#39;t use the list inside the for loop.&quot;</span><span class="p">,</span>
-            <span class="n">label</span><span class="o">=</span><span class="s2">&quot;list_inside_loop&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;List Inside Loop&quot;</span><span class="p">)</span>
+    <span class="n">explain</span><span class="p">(</span><span class="s2">"You shouldn't use the list inside the for loop."</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="s2">"list_inside_loop"</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">"List Inside Loop"</span><span class="p">)</span>
 
-<span class="c1"># Run students&#39; code in a sandbox</span>
+<span class="c1"># Run students' code in a sandbox</span>
 <span class="n">student</span> <span class="o">=</span> <span class="n">run</span><span class="p">()</span>
 <span class="c1"># Check they defined the function with the right type</span>
-<span class="n">ensure_function</span><span class="p">(</span><span class="n">student</span><span class="p">,</span> <span class="s1">&#39;add_prices&#39;</span><span class="p">,</span> <span class="n">arity</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">returns</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+<span class="n">ensure_function</span><span class="p">(</span><span class="n">student</span><span class="p">,</span> <span class="s1">'add_prices'</span><span class="p">,</span> <span class="n">arity</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">returns</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
 <span class="c1"># Unit test their function</span>
-<span class="n">assert_equal</span><span class="p">(</span><span class="n">call</span><span class="p">(</span><span class="s1">&#39;add_prices&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span> <span class="mi">6</span><span class="p">)</span>
+<span class="n">assert_equal</span><span class="p">(</span><span class="n">call</span><span class="p">(</span><span class="s1">'add_prices'</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span> <span class="mi">6</span><span class="p">)</span>
 
 <span class="c1"># Have the resolver choose some feedback</span>
 <span class="n">resolve</span><span class="p">()</span>

@@ -88,21 +88,21 @@
            <div itemprop="articleBody">
              
   <h1>Source code for pedal.core.feedback</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""</span>
 <span class="sd">Simple data classes for storing feedback to present to learners.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Feedback&#39;</span><span class="p">,</span> <span class="s1">&#39;FeedbackKind&#39;</span><span class="p">,</span> <span class="s1">&#39;FeedbackCategory&#39;</span><span class="p">,</span>
-           <span class="s2">&quot;CompositeFeedbackFunction&quot;</span><span class="p">,</span>
-           <span class="s2">&quot;FeedbackResponse&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'Feedback'</span><span class="p">,</span> <span class="s1">'FeedbackKind'</span><span class="p">,</span> <span class="s1">'FeedbackCategory'</span><span class="p">,</span>
+           <span class="s2">"CompositeFeedbackFunction"</span><span class="p">,</span>
+           <span class="s2">"FeedbackResponse"</span><span class="p">]</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pedal.core.formatting</span><span class="w"> </span><span class="kn">import</span> <span class="n">wrap_fields</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pedal.core.location</span><span class="w"> </span><span class="kn">import</span> <span class="n">Location</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pedal.core.report</span><span class="w"> </span><span class="kn">import</span> <span class="n">MAIN_REPORT</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pedal.core.feedback_category</span><span class="w"> </span><span class="kn">import</span> <span class="n">FeedbackKind</span><span class="p">,</span> <span class="n">FeedbackCategory</span><span class="p">,</span> <span class="n">FeedbackStatus</span>
 
-<span class="n">PEDAL_DEVELOPERS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Austin Cory Bart &lt;acbart@udel.edu&gt;&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;Luke Gusukuma &lt;lukesg08@vt.edu&gt;&quot;</span><span class="p">]</span>
+<span class="n">PEDAL_DEVELOPERS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"Austin Cory Bart &lt;acbart@udel.edu&gt;"</span><span class="p">,</span>
+                    <span class="s2">"Luke Gusukuma &lt;lukesg08@vt.edu&gt;"</span><span class="p">]</span>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">FeedbackRegistry</span><span class="p">:</span>
@@ -113,7 +113,7 @@
 <div class="viewcode-block" id="Feedback">
 <a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.Feedback">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Feedback</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A class for storing raw feedback.</span>
 
 <span class="sd">    Attributes:</span>
@@ -126,27 +126,27 @@
 <span class="sd">            this feedback. Should be taken directly from the Tool itself. If `None`, then</span>
 <span class="sd">            this was not created by a tool but directly by the control script.</span>
 <span class="sd">        category (str): A human-presentable name showable to the learner, indicating what</span>
-<span class="sd">            sort of feedback this falls into (e.g., &quot;runtime&quot;, &quot;syntax&quot;, &quot;algorithm&quot;).</span>
+<span class="sd">            sort of feedback this falls into (e.g., "runtime", "syntax", "algorithm").</span>
 <span class="sd">            More than one feedback will be in a category, but a feedback cannot be in</span>
 <span class="sd">            more than one category.</span>
 <span class="sd">        specifier (str): A label that will uniquely identify the conditions of this FF</span>
 <span class="sd">            within a given category and label. The exact nature of this specifier will vary</span>
-<span class="sd">            depending on the type of systems involved; for unit tests, it&#39;ll probably be the</span>
+<span class="sd">            depending on the type of systems involved; for unit tests, it'll probably be the</span>
 <span class="sd">            function name and a `repr` of its arguments. For liveness checks, it might be a</span>
 <span class="sd">            variable name with a scope modifier. However, the implication is that if two</span>
 <span class="sd">            FFs have the same label, category, and specifier, then they should be treated</span>
 <span class="sd">            as conceptually equivalent (even across students, though less so across problems).</span>
-<span class="sd">        kind (str): The pedagogical role of this feedback, e.g., &quot;misconception&quot;, &quot;mistake&quot;,</span>
-<span class="sd">            &quot;hint&quot;, &quot;constraint&quot;. Usually, a piece of Feedback is pointing out a mistake,</span>
+<span class="sd">        kind (str): The pedagogical role of this feedback, e.g., "misconception", "mistake",</span>
+<span class="sd">            "hint", "constraint". Usually, a piece of Feedback is pointing out a mistake,</span>
 <span class="sd">            but feedback can also be used for various other purposes.</span>
 <span class="sd">        justification (str): An instructor-facing string briefly describing why this</span>
-<span class="sd">            feedback was selected. Serves as a &quot;TL;DR&quot; for this feedback category, useful</span>
+<span class="sd">            feedback was selected. Serves as a "TL;DR" for this feedback category, useful</span>
 <span class="sd">            for debugging why a piece of feedback appeared.</span>
 <span class="sd">        justification_template (str): A markdown-formatted message template that will</span>
 <span class="sd">            be used if a ``justification`` is None. Any ``fields`` will be injected</span>
 <span class="sd">            into the template IF the ``condition`` is met.</span>
 <span class="sd">        priority (str): An indication of how important this feedback is relative to other types</span>
-<span class="sd">            of feedback in the same category. Might be &quot;high/medium/low&quot;. Exactly how this</span>
+<span class="sd">            of feedback in the same category. Might be "high/medium/low". Exactly how this</span>
 <span class="sd">            gets used is up to the resolver, but typically it helps break ties.</span>
 <span class="sd">        valence (int): Indicates whether this is negative, positive, or neutral feedback.</span>
 <span class="sd">            Either 1, -1, or 0.</span>
@@ -168,7 +168,7 @@
 <span class="sd">        location (:py:attr:`~pedal.core.location.Location` or int): Information</span>
 <span class="sd">            about specific locations relevant to this message.</span>
 
-<span class="sd">        score (int): A numeric score to modify the students&#39; total score, indicating their overall performance.</span>
+<span class="sd">        score (int): A numeric score to modify the students' total score, indicating their overall performance.</span>
 <span class="sd">            It is ultimately up to the Resolver to decide how to combine all the different scores; a typical</span>
 <span class="sd">            strategy would be to add all the scores together for any non-muted feedback.</span>
 <span class="sd">        correct (bool): Indicates that the entire submission should be considered correct (success) and that the</span>
@@ -192,8 +192,8 @@
 <span class="sd">            Functions will not respect this parameter.</span>
 
 <span class="sd">        author (List[str]): A list of names/emails that indicate who created this piece of feedback. They can be</span>
-<span class="sd">            either names, emails, or combinations in the style of `&quot;Cory Bart &lt;acbart@udel.edu&gt;&quot;`.</span>
-<span class="sd">        version (str): A version string in the style of Semantic Version (semvar) such as `&quot;0.0.1&quot;`. The last (third)</span>
+<span class="sd">            either names, emails, or combinations in the style of `"Cory Bart &lt;acbart@udel.edu&gt;"`.</span>
+<span class="sd">        version (str): A version string in the style of Semantic Version (semvar) such as `"0.0.1"`. The last (third)</span>
 <span class="sd">            digit should be incremented for small bug fixes/changes. The middle (second) digit should be used for more</span>
 <span class="sd">            serious and intense changes. The first digit should be incremented when changes are made on exposure to</span>
 <span class="sd">            learners or some other evidence-based motivation.</span>
@@ -210,7 +210,7 @@
 <span class="sd">            attach this feedback to. Defaults to MAIN_REPORT. Unspecified fields</span>
 <span class="sd">            will be filled in by inspecting the current Feedback Function</span>
 <span class="sd">            context.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">POSITIVE_VALENCE</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">NEUTRAL_VALENCE</span> <span class="o">=</span> <span class="mi">0</span>
@@ -218,8 +218,8 @@
     <span class="n">CATEGORIES</span> <span class="o">=</span> <span class="n">FeedbackCategory</span>
     <span class="n">KINDS</span> <span class="o">=</span> <span class="n">FeedbackKind</span>
 
-    <span class="n">DEFAULT_FEEDBACK_MESSAGE</span> <span class="o">=</span> <span class="s2">&quot;No feedback message provided&quot;</span>
-    <span class="n">DEFAULT_JUSTIFICATION_MESSAGE</span> <span class="o">=</span> <span class="s2">&quot;No justification provided&quot;</span>
+    <span class="n">DEFAULT_FEEDBACK_MESSAGE</span> <span class="o">=</span> <span class="s2">"No feedback message provided"</span>
+    <span class="n">DEFAULT_JUSTIFICATION_MESSAGE</span> <span class="o">=</span> <span class="s2">"No justification provided"</span>
     <span class="n">DEFAULT_ELSE_MESSAGE</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="n">label</span> <span class="o">=</span> <span class="kc">None</span>
@@ -246,7 +246,7 @@
     <span class="n">muted</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">unscored</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">tool</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">version</span> <span class="o">=</span> <span class="s1">&#39;1.0.0&#39;</span>
+    <span class="n">version</span> <span class="o">=</span> <span class="s1">'1.0.0'</span>
     <span class="n">author</span> <span class="o">=</span> <span class="n">PEDAL_DEVELOPERS</span>
     <span class="n">tags</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">parent</span> <span class="o">=</span> <span class="kc">None</span>
@@ -359,15 +359,15 @@
         <span class="k">if</span> <span class="n">parent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="c1"># Might inherit from Report&#39;s current group</span>
+            <span class="c1"># Might inherit from Report's current group</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">get_current_group</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">field_names</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">field_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">field_names</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="n">field_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">field_name</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
-        <span class="k">if</span> <span class="s1">&#39;location&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;location&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span>
+        <span class="k">if</span> <span class="s1">'location'</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">'location'</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span>
         <span class="c1"># Potentially delay the condition check</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_stored_args</span> <span class="o">=</span> <span class="n">args</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_stored_kwargs</span> <span class="o">=</span> <span class="n">kwargs</span>
@@ -378,7 +378,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_handle_condition</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_handle_condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Actually handle the condition check, updating message and report. &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">""" Actually handle the condition check, updating message and report. """</span>
         <span class="c1"># Self-attach to a given report?</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_exception</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">try</span><span class="p">:</span>
@@ -394,7 +394,7 @@
                 <span class="k">try</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">unused_message</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_message</span><span class="p">()</span>
                 <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">unused_message</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">unused_message</span> <span class="o">=</span> <span class="s2">""</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_status</span> <span class="o">=</span> <span class="n">FeedbackStatus</span><span class="o">.</span><span class="n">INACTIVE</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_met_condition</span> <span class="o">=</span> <span class="kc">False</span>
@@ -414,20 +414,20 @@
 <div class="viewcode-block" id="Feedback.condition">
 <a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.Feedback.condition">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Detect if this feedback is present in the code.</span>
 <span class="sd">        Defaults to true through the `activate` parameter.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            bool: Whether this feedback&#39;s condition was detected.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">            bool: Whether this feedback's condition was detected.</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">activate</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_message</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Determines the appropriate value for the message. It will attempt</span>
-<span class="sd">        to use this instance&#39;s message, but if it&#39;s not available then it will</span>
+<span class="sd">        to use this instance's message, but if it's not available then it will</span>
 <span class="sd">        try to generate one from the message_template. Then, it returns a</span>
 <span class="sd">        generic message.</span>
 
@@ -435,7 +435,7 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            str: The message for this feedback.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">message</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">message_template</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -444,17 +444,17 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEFAULT_FEEDBACK_MESSAGE</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_else_message</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Determines the appropriate value for the else_message. It will attempt</span>
-<span class="sd">        to use this instance&#39;s else_message, but if it&#39;s not available then it will</span>
+<span class="sd">        to use this instance's else_message, but if it's not available then it will</span>
 <span class="sd">        try to generate one from the else_message_template. Then, it returns ``None``</span>
-<span class="sd">        instead (since usually we don&#39;t provide positive feedback).</span>
+<span class="sd">        instead (since usually we don't provide positive feedback).</span>
 
 <span class="sd">        You can override this to create a truly dynamic else_message, if you want.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            str: The else_message for this feedback.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">else_message</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">else_message</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">else_message_template</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -463,9 +463,9 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEFAULT_ELSE_MESSAGE</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_justification</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">met_condition</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Determines the appropriate value for the justification. It first checks</span>
-<span class="sd">        if there is a `justification` already present, but if it&#39;s not available</span>
+<span class="sd">        if there is a `justification` already present, but if it's not available</span>
 <span class="sd">        then it will attempt to generate one from the `justification_template`. Then,</span>
 <span class="sd">        it returns a generic message.</span>
 
@@ -473,19 +473,19 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            str: The justification for this feedback.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">justification</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">justification</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">met_condition</span><span class="p">:</span>
                     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">justification</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="k">return</span> <span class="s2">&quot;The following condition was not met: &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">justification</span>
+                    <span class="k">return</span> <span class="s2">"The following condition was not met: "</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">justification</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">met</span><span class="p">,</span> <span class="n">unmet</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">justification</span>
                 <span class="k">return</span> <span class="n">met</span> <span class="k">if</span> <span class="n">met_condition</span> <span class="k">else</span> <span class="n">unmet</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">justification_template</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">justification_template</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-                <span class="n">template</span> <span class="o">=</span> <span class="s2">&quot;The following condition was not met: &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">justification_template</span>
+                <span class="n">template</span> <span class="o">=</span> <span class="s2">"The following condition was not met: "</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">justification_template</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">met</span><span class="p">,</span> <span class="n">unmet</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">justification_template</span>
                 <span class="n">template</span> <span class="o">=</span> <span class="n">met</span> <span class="k">if</span> <span class="n">met_condition</span> <span class="k">else</span> <span class="n">unmet</span>
@@ -494,16 +494,16 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEFAULT_JUSTIFICATION_MESSAGE</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_child_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feedback</span><span class="p">,</span> <span class="n">active</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Callback function that Reports will call when a new piece of</span>
+<span class="w">        </span><span class="sd">""" Callback function that Reports will call when a new piece of</span>
 <span class="sd">        feedback is being considered. By default, does nothing. This is useful</span>
 <span class="sd">        for :py:class:`pedal.core.group.FeedbackGroup`, most other feedbacks</span>
 <span class="sd">        will just not care.</span>
 
 <span class="sd">        The ``active`` parameter controls whether the condition for the</span>
-<span class="sd">        feedback was met. &quot;&quot;&quot;</span>
+<span class="sd">        feedback was met. """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__xor__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Allows you to have two mutually exclusive conditions. Only one condition will be activated.</span>
 
 <span class="sd">        Args:</span>
@@ -511,7 +511,7 @@
 
 <span class="sd">        Returns:</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Feedback</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">muted</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">bool</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">unscored</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">muted</span>
@@ -528,43 +528,43 @@
         <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_met_condition</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create a string representation of this piece of Feedback for quick, dev purposes.</span>
 <span class="sd">        Returns:</span>
 <span class="sd">            str: String representation</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="s2">&quot;&lt;Feedback (</span><span class="si">{}</span><span class="s2">,</span><span class="si">{}</span><span class="s2">, </span><span class="si">{}</span><span class="s2">)&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">category</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">specifier</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="s2">"&lt;Feedback (</span><span class="si">{}</span><span class="s2">,</span><span class="si">{}</span><span class="s2">, </span><span class="si">{}</span><span class="s2">)&gt;"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">category</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">specifier</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create a string representation of this piece of Feedback that displays considerably more information.</span>
 <span class="sd">        Returns:</span>
 <span class="sd">            str: String representation with more data</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">metadata</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+<span class="sd">        """</span>
+        <span class="n">metadata</span> <span class="o">=</span> <span class="s2">""</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tool</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">metadata</span> <span class="o">+=</span> <span class="s2">&quot;, tool=&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">tool</span>
+            <span class="n">metadata</span> <span class="o">+=</span> <span class="s2">", tool="</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">tool</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">category</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">metadata</span> <span class="o">+=</span> <span class="s2">&quot;, category=&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">category</span>
+            <span class="n">metadata</span> <span class="o">+=</span> <span class="s2">", category="</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">category</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">specifier</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">metadata</span> <span class="o">+=</span> <span class="s2">&quot;, specifier=&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">specifier</span>
+            <span class="n">metadata</span> <span class="o">+=</span> <span class="s2">", specifier="</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">specifier</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">priority</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">metadata</span> <span class="o">+=</span> <span class="s2">&quot;, priority=&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">priority</span>
+            <span class="n">metadata</span> <span class="o">+=</span> <span class="s2">", priority="</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">priority</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">metadata</span> <span class="o">+=</span> <span class="s2">&quot;, parent=&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
+            <span class="n">metadata</span> <span class="o">+=</span> <span class="s2">", parent="</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">metadata</span> <span class="o">+=</span> <span class="s2">&quot;, &quot;</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">value</span><span class="si">!r}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">field</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
-        <span class="k">return</span> <span class="s2">&quot;Feedback(</span><span class="si">{}{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span>
+            <span class="n">metadata</span> <span class="o">+=</span> <span class="s2">", "</span> <span class="o">+</span> <span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">value</span><span class="si">!r}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">field</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+        <span class="k">return</span> <span class="s2">"Feedback(</span><span class="si">{}{}</span><span class="s2">)"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Feedback.update_location">
 <a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.Feedback.update_location">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_location</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Updates both the fields and location attribute.</span>
-<span class="sd">        TODO: Handle less information intelligently. &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">""" Updates both the fields and location attribute.</span>
+<span class="sd">        TODO: Handle less information intelligently. """</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
             <span class="n">location</span> <span class="o">=</span> <span class="n">Location</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">location</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;location&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">location</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">'location'</span><span class="p">]</span> <span class="o">=</span> <span class="n">location</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_fields_to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -581,23 +581,23 @@
 
     <span class="k">def</span><span class="w"> </span><span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">{</span>
-            <span class="s1">&#39;correct&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">correct</span><span class="p">,</span>
-            <span class="s1">&#39;score&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">score</span><span class="p">,</span>
-            <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">title</span><span class="p">,</span>
-            <span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">message</span><span class="p">,</span>
-            <span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">,</span>
-            <span class="s1">&#39;active&#39;</span><span class="p">:</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span>
-            <span class="s1">&#39;muted&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">muted</span><span class="p">,</span>
-            <span class="s1">&#39;unscored&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">unscored</span><span class="p">,</span>
-            <span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">category</span><span class="p">,</span>
-            <span class="s1">&#39;specifier&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">specifier</span><span class="p">,</span>
-            <span class="s1">&#39;kind&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">kind</span><span class="p">,</span>
-            <span class="s1">&#39;valence&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">valence</span><span class="p">,</span>
-            <span class="s1">&#39;version&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">version</span><span class="p">,</span>
-            <span class="s1">&#39;fields&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fields_to_json</span><span class="p">(),</span>
-            <span class="s1">&#39;justification&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">justification</span><span class="p">,</span>
-            <span class="s1">&#39;priority&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">priority</span><span class="p">,</span>
-            <span class="s1">&#39;location&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">to_json</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="s1">'correct'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">correct</span><span class="p">,</span>
+            <span class="s1">'score'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">score</span><span class="p">,</span>
+            <span class="s1">'title'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">title</span><span class="p">,</span>
+            <span class="s1">'message'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">message</span><span class="p">,</span>
+            <span class="s1">'label'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">,</span>
+            <span class="s1">'active'</span><span class="p">:</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span>
+            <span class="s1">'muted'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">muted</span><span class="p">,</span>
+            <span class="s1">'unscored'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">unscored</span><span class="p">,</span>
+            <span class="s1">'category'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">category</span><span class="p">,</span>
+            <span class="s1">'specifier'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">specifier</span><span class="p">,</span>
+            <span class="s1">'kind'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">kind</span><span class="p">,</span>
+            <span class="s1">'valence'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">valence</span><span class="p">,</span>
+            <span class="s1">'version'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">version</span><span class="p">,</span>
+            <span class="s1">'fields'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fields_to_json</span><span class="p">(),</span>
+            <span class="s1">'justification'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">justification</span><span class="p">,</span>
+            <span class="s1">'priority'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">priority</span><span class="p">,</span>
+            <span class="s1">'location'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">to_json</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
         <span class="p">}</span>
 
     <span class="nd">@classmethod</span>
@@ -639,18 +639,18 @@
 <div class="viewcode-block" id="FeedbackResponse">
 <a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.FeedbackResponse">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">FeedbackResponse</span><span class="p">(</span><span class="n">Feedback</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    An extension of :py:class:`~pedal.core.feedback.Feedback` that is meant</span>
 <span class="sd">    to indicate that the class should not have any condition behind its</span>
 <span class="sd">    response.</span>
-<span class="sd">    &quot;&quot;&quot;</span></div>
+<span class="sd">    """</span></div>
 
 
 
 <div class="viewcode-block" id="CompositeFeedbackFunction">
 <a class="viewcode-back" href="../../../developers/api.html#pedal.core.commands.CompositeFeedbackFunction">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">CompositeFeedbackFunction</span><span class="p">(</span><span class="o">*</span><span class="n">functions</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Decorator for functions that return multiple types of feedback functions.</span>
 
 <span class="sd">    Args:</span>
@@ -658,17 +658,17 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        callable: The decorated function.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">CompositeFeedbackFunction_with_attrs</span><span class="p">(</span><span class="n">function</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            function:</span>
 
 <span class="sd">        Returns:</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">CompositeFeedbackFunction_with_attrs</span><span class="o">.</span><span class="n">functions</span> <span class="o">=</span> <span class="n">functions</span>
         <span class="k">return</span> <span class="n">function</span>
 
@@ -677,15 +677,15 @@
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">FeedbackGroup</span><span class="p">(</span><span class="n">Feedback</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    An extension of :py:class:`~pedal.core.feedback.Feedback` that is meant</span>
 <span class="sd">    to indicate that this class will start a new Group context within the report</span>
 <span class="sd">    and do something interesting with any children it gets.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 
 <span class="n">DEFAULT_CATEGORY_PRIORITY</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;highest&quot;</span><span class="p">,</span>
+    <span class="s2">"highest"</span><span class="p">,</span>
     <span class="c1"># Static</span>
     <span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">SYNTAX</span><span class="p">,</span>
     <span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">MISTAKES</span><span class="p">,</span>
@@ -698,7 +698,7 @@
     <span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">POSITIVE</span><span class="p">,</span>
     <span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">INSTRUCTIONS</span><span class="p">,</span>
     <span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">UNKNOWN</span><span class="p">,</span>
-    <span class="s2">&quot;lowest&quot;</span>
+    <span class="s2">"lowest"</span>
 <span class="p">]</span>
 </pre></div>
 

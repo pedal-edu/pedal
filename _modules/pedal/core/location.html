@@ -88,19 +88,19 @@
            <div itemprop="articleBody">
              
   <h1>Source code for pedal.core.location</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""</span>
 <span class="sd">Simple data class for storing information about a location within source code.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Location&#39;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'Location'</span><span class="p">]</span>
 
 
 <div class="viewcode-block" id="Location">
 <a class="viewcode-back" href="../../../developers/api.html#pedal.core.location.Location">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Location</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A class for storing information about a location in source code.</span>
 
 <span class="sd">    Attributes:</span>
@@ -112,8 +112,8 @@
 <span class="sd">        end_col (int, optional): The ending column of the source code region.</span>
 <span class="sd">            Requires :py:attr:`col`.</span>
 <span class="sd">        filename (str, optional): The filename that this location refers to.</span>
-<span class="sd">            If missing, then defaults to the student&#39;s submission&#39;s main file.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">            If missing, then defaults to the student's submission's main file.</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">end_line</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">end_col</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -124,7 +124,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">filename</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;Location(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">line</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">col</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="si">!r}</span><span class="s2">)&gt;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"&lt;Location(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">line</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">col</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="si">!r}</span><span class="s2">)&gt;"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
@@ -133,7 +133,7 @@
 <a class="viewcode-back" href="../../../developers/api.html#pedal.core.location.Location.from_ast">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">from_ast</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Creates a new Location object from the AST node. Should work</span>
 <span class="sd">        for both built-in AST nodes and CaitNodes.</span>
 
@@ -142,25 +142,25 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Location</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="n">Location</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">lineno</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="n">node</span><span class="o">.</span><span class="n">col_offset</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Location.to_json">
 <a class="viewcode-back" href="../../../developers/api.html#pedal.core.location.Location.to_json">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Creates a JSON version of this object, with all the fields.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Dict[str,Any]: The JSON version of this location information.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="p">{</span>
-            <span class="s2">&quot;line&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">line</span><span class="p">,</span>
-            <span class="s2">&quot;col&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">col</span><span class="p">,</span>
-            <span class="s2">&quot;end_line&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_line</span><span class="p">,</span>
-            <span class="s2">&quot;end_col&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_col</span><span class="p">,</span>
-            <span class="s2">&quot;filename&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename</span>
+            <span class="s2">"line"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">line</span><span class="p">,</span>
+            <span class="s2">"col"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">col</span><span class="p">,</span>
+            <span class="s2">"end_line"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_line</span><span class="p">,</span>
+            <span class="s2">"end_col"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_col</span><span class="p">,</span>
+            <span class="s2">"filename"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename</span>
         <span class="p">}</span></div>
 </div>
 

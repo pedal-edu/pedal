@@ -88,14 +88,14 @@
            <div itemprop="articleBody">
              
   <h1>Source code for pedal.core.tool</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""</span>
 <span class="sd">Tools are effectively submodules within Pedal - notable exceptions are</span>
 <span class="sd">:py:mod:`pedal.core`, :py:mod:`pedal.environments`,</span>
 <span class="sd">:py:mod:`pedal.utilities`, and :py:mod:`pedal.resolvers`.</span>
 
 <span class="sd">All Tools with any kind of state are expected to have a `reset` function.</span>
 <span class="sd">Although this can take parameters, we recommend avoiding that. The `reset`</span>
-<span class="sd">should be for putting things back into a &quot;null&quot; state, and then you could have</span>
+<span class="sd">should be for putting things back into a "null" state, and then you could have</span>
 <span class="sd">followup functions that also give initial state.</span>
 
 <span class="sd">Tools should avoid removing their references (i.e., clear out data from lists</span>
@@ -103,7 +103,7 @@
 
 <span class="sd">Tools should define a ``constants.py`` file with any useful constants. One of</span>
 <span class="sd">these should be ``TOOL_NAME``, a string value indicating their desired namespace</span>
-<span class="sd">(e.g., ``TOOL_NAME = &quot;source&quot;``).</span>
+<span class="sd">(e.g., ``TOOL_NAME = "source"``).</span>
 
 <span class="sd">Tools should define a ``feedbacks.py`` module that centralizes</span>
 <span class="sd">:term:`Feedback Functions&lt;Feedback Function&gt;` for that tool.</span>
@@ -120,31 +120,31 @@
 
 <span class="sd">.. code-block:: python</span>
 
-<span class="sd">    report[TOOL_NAME][&#39;my field&#39;] = False</span>
+<span class="sd">    report[TOOL_NAME]['my field'] = False</span>
 
 <span class="sd">The ``__init__.py`` file for a Tool should use  ``__all__`` to expose any</span>
 <span class="sd">interesting teacher-level functions, classes, and data. That way, teachers can</span>
 <span class="sd">just consistently use ``from pedal.tool import *`` to instantly gain access to</span>
 <span class="sd">the interesting set of members.</span>
 
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ToolRegistration&#39;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'ToolRegistration'</span><span class="p">]</span>
 
 
 <div class="viewcode-block" id="ToolRegistration">
 <a class="viewcode-back" href="../../../developers/api.html#pedal.core.tool.ToolRegistration">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ToolRegistration</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    ToolRegistration is a data class for holding general, system-wide</span>
-<span class="sd">    information about a Tool. Note that it doesn&#39;t hold the tool&#39;s data, just</span>
+<span class="sd">    information about a Tool. Note that it doesn't hold the tool's data, just</span>
 <span class="sd">    the static information about the tool like its reset function.</span>
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        name (str): The formal name of this tool.</span>
 <span class="sd">        reset (callable): A function defined for initializing and</span>
-<span class="sd">            re-initializing the tool&#39;s data.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">            re-initializing the tool's data.</span>
+<span class="sd">    """</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">reset</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reset</span> <span class="o">=</span> <span class="n">reset</span></div>

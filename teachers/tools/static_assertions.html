@@ -142,12 +142,12 @@ code. It does not check if the function is actually called at runtime, or
 if that code is reachable!</p>
 <p>If <code class="docutils literal notranslate"><span class="pre">at_most</span></code> is provided, allows them to call the function at most that many times.
 If a <code class="docutils literal notranslate"><span class="pre">root</span></code> is provided, allows you to start the search from a specific node.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Student will not be able to call the function &quot;hello_world&quot;</span>
-<span class="n">prevent_function_call</span><span class="p">(</span><span class="s2">&quot;hello_world&quot;</span><span class="p">)</span>
-<span class="c1"># Students can&#39;t call &quot;hello_world&quot; more than twice</span>
-<span class="n">prevent_function_call</span><span class="p">(</span><span class="s2">&quot;hello_world&quot;</span><span class="p">,</span> <span class="n">at_most</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="c1"># Students can&#39;t call the function &quot;add&quot;</span>
-<span class="n">prevent_function_call</span><span class="p">(</span><span class="s2">&quot;add&quot;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Student will not be able to call the function "hello_world"</span>
+<span class="n">prevent_function_call</span><span class="p">(</span><span class="s2">"hello_world"</span><span class="p">)</span>
+<span class="c1"># Students can't call "hello_world" more than twice</span>
+<span class="n">prevent_function_call</span><span class="p">(</span><span class="s2">"hello_world"</span><span class="p">,</span> <span class="n">at_most</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="c1"># Students can't call the function "add"</span>
+<span class="n">prevent_function_call</span><span class="p">(</span><span class="s2">"add"</span><span class="p">)</span>
 </pre></div>
 </div>
 <span class="sig-prename descclassname">Feedback Function: May Not Use Function</span><dd><ul>
@@ -165,12 +165,12 @@ code. It does not check if the function is actually called at runtime, or
 if that code is reachable!</p>
 <p>If <code class="docutils literal notranslate"><span class="pre">at_least</span></code> is provided, requires they call the function at least that many times.
 If a <code class="docutils literal notranslate"><span class="pre">root</span></code> is provided, allows you to start the search from a specific node.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Student must call the function &quot;hello_world&quot;</span>
-<span class="n">ensure_function_call</span><span class="p">(</span><span class="s2">&quot;hello_world&quot;</span><span class="p">)</span>
-<span class="c1"># Students must call &quot;hello_world&quot; at least twice</span>
-<span class="n">ensure_function_call</span><span class="p">(</span><span class="s2">&quot;hello_world&quot;</span><span class="p">,</span> <span class="n">at_least</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="c1"># Students must call the function &quot;add&quot;</span>
-<span class="n">ensure_function_call</span><span class="p">(</span><span class="s2">&quot;add&quot;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Student must call the function "hello_world"</span>
+<span class="n">ensure_function_call</span><span class="p">(</span><span class="s2">"hello_world"</span><span class="p">)</span>
+<span class="c1"># Students must call "hello_world" at least twice</span>
+<span class="n">ensure_function_call</span><span class="p">(</span><span class="s2">"hello_world"</span><span class="p">,</span> <span class="n">at_least</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="c1"># Students must call the function "add"</span>
+<span class="n">ensure_function_call</span><span class="p">(</span><span class="s2">"add"</span><span class="p">)</span>
 </pre></div>
 </div>
 <span class="sig-prename descclassname">Feedback Function: Must Use Function</span><dd><ul>
@@ -193,11 +193,11 @@ comparison, boolean, binary, and unary operations are supported.</p>
 <p>If <code class="docutils literal notranslate"><span class="pre">at_most</span></code> is provided, allows them to use the operation at most that many times.
 If a <code class="docutils literal notranslate"><span class="pre">root</span></code> is provided, allows you to start the search from a specific node.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Student will not be able to use the addition operator</span>
-<span class="n">prevent_operation</span><span class="p">(</span><span class="s2">&quot;+&quot;</span><span class="p">)</span>
-<span class="c1"># Students can&#39;t use multiplication more than twice</span>
-<span class="n">prevent_operation</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="n">at_most</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="c1"># Students can&#39;t use the bitwise invert operator</span>
-<span class="n">prevent_operation</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">)</span>
+<span class="n">prevent_operation</span><span class="p">(</span><span class="s2">"+"</span><span class="p">)</span>
+<span class="c1"># Students can't use multiplication more than twice</span>
+<span class="n">prevent_operation</span><span class="p">(</span><span class="s2">"*"</span><span class="p">,</span> <span class="n">at_most</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="c1"># Students can't use the bitwise invert operator</span>
+<span class="n">prevent_operation</span><span class="p">(</span><span class="s2">"~"</span><span class="p">)</span>
 </pre></div>
 </div>
 <span class="sig-prename descclassname">Feedback Function: May Not Use Operator</span><dd><ul>
@@ -220,11 +220,11 @@ comparison, boolean, binary, and unary operations are supported.</p>
 <p>If <code class="docutils literal notranslate"><span class="pre">at_least</span></code> is provided, requires they use the operation at least that many times.
 If a <code class="docutils literal notranslate"><span class="pre">root</span></code> is provided, allows you to start the search from a specific node.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Student must use the addition operator</span>
-<span class="n">ensure_operation</span><span class="p">(</span><span class="s2">&quot;+&quot;</span><span class="p">)</span>
+<span class="n">ensure_operation</span><span class="p">(</span><span class="s2">"+"</span><span class="p">)</span>
 <span class="c1"># Students must use multiplication at least twice</span>
-<span class="n">ensure_operation</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="n">at_least</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">ensure_operation</span><span class="p">(</span><span class="s2">"*"</span><span class="p">,</span> <span class="n">at_least</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="c1"># Students must use the bitwise invert operator</span>
-<span class="n">ensure_operation</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">)</span>
+<span class="n">ensure_operation</span><span class="p">(</span><span class="s2">"~"</span><span class="p">)</span>
 </pre></div>
 </div>
 <span class="sig-prename descclassname">Feedback Function: Must Use Operator</span><dd><ul>
@@ -243,10 +243,10 @@ lists, sets, tuples, dictionaries, and None.</p>
 If a <code class="docutils literal notranslate"><span class="pre">root</span></code> is provided, allows you to start the search from a specific node.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Student will not be able to embed the literal 5</span>
 <span class="n">prevent_literal</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
-<span class="c1"># Students can&#39;t use 5 more than twice</span>
+<span class="c1"># Students can't use 5 more than twice</span>
 <span class="n">prevent_literal</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">at_most</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="c1"># Students can&#39;t use the string &quot;hello&quot;</span>
-<span class="n">prevent_literal</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">)</span>
+<span class="c1"># Students can't use the string "hello"</span>
+<span class="n">prevent_literal</span><span class="p">(</span><span class="s2">"hello"</span><span class="p">)</span>
 </pre></div>
 </div>
 <span class="sig-prename descclassname">Feedback Function: May Not Use Literal Value</span><dd><ul>
@@ -267,8 +267,8 @@ If a <code class="docutils literal notranslate"><span class="pre">root</span></c
 <span class="n">ensure_literal</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
 <span class="c1"># Students must use 5 at least twice</span>
 <span class="n">ensure_literal</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">at_least</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="c1"># Students must use the string &quot;hello&quot;</span>
-<span class="n">ensure_literal</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">)</span>
+<span class="c1"># Students must use the string "hello"</span>
+<span class="n">ensure_literal</span><span class="p">(</span><span class="s2">"hello"</span><span class="p">)</span>
 </pre></div>
 </div>
 <span class="sig-prename descclassname">Feedback Function: Must Use Literal Value</span><dd><ul>
@@ -288,9 +288,9 @@ Note that generics are not currently recognized!</p>
 If a <code class="docutils literal notranslate"><span class="pre">root</span></code> is provided, allows you to start the search from a specific node.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Student will not be able to write any integer literals</span>
 <span class="n">prevent_literal_type</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
-<span class="c1"># Students can&#39;t use integers more than twice</span>
+<span class="c1"># Students can't use integers more than twice</span>
 <span class="n">prevent_literal_type</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">at_most</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="c1"># Students can&#39;t use any strings</span>
+<span class="c1"># Students can't use any strings</span>
 <span class="n">prevent_literal_type</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -333,13 +333,13 @@ Refer to the AST documentation for more information, or to
 <p>If <code class="docutils literal notranslate"><span class="pre">at_most</span></code> is provided, allows them to use the literal at most that many times.
 If a <code class="docutils literal notranslate"><span class="pre">root</span></code> is provided, allows you to start the search from a specific node.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Student will not be able to write any integer literals</span>
-<span class="n">prevent_ast</span><span class="p">(</span><span class="s2">&quot;Num&quot;</span><span class="p">)</span>
-<span class="c1"># Students can&#39;t for loops more than twice</span>
-<span class="n">prevent_ast</span><span class="p">(</span><span class="s2">&quot;For&quot;</span><span class="p">,</span> <span class="n">at_most</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="c1"># Students can&#39;t use any function calls</span>
-<span class="n">prevent_ast</span><span class="p">(</span><span class="s2">&quot;Call&quot;</span><span class="p">)</span>
-<span class="c1"># Students can&#39;t use subscripts</span>
-<span class="n">prevent_ast</span><span class="p">(</span><span class="s2">&quot;Subscript&quot;</span><span class="p">)</span>
+<span class="n">prevent_ast</span><span class="p">(</span><span class="s2">"Num"</span><span class="p">)</span>
+<span class="c1"># Students can't for loops more than twice</span>
+<span class="n">prevent_ast</span><span class="p">(</span><span class="s2">"For"</span><span class="p">,</span> <span class="n">at_most</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="c1"># Students can't use any function calls</span>
+<span class="n">prevent_ast</span><span class="p">(</span><span class="s2">"Call"</span><span class="p">)</span>
+<span class="c1"># Students can't use subscripts</span>
+<span class="n">prevent_ast</span><span class="p">(</span><span class="s2">"Subscript"</span><span class="p">)</span>
 </pre></div>
 </div>
 <span class="sig-prename descclassname">Feedback Function: May Not Use Code</span><dd><ul>
@@ -358,13 +358,13 @@ Refer to the AST documentation for more information, or to
 <p>If <code class="docutils literal notranslate"><span class="pre">at_least</span></code> is provided, requires they use the literal at least that many times.
 If a <code class="docutils literal notranslate"><span class="pre">root</span></code> is provided, allows you to start the search from a specific node.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Student must use at least one integer literal</span>
-<span class="n">ensure_ast</span><span class="p">(</span><span class="s2">&quot;Num&quot;</span><span class="p">)</span>
+<span class="n">ensure_ast</span><span class="p">(</span><span class="s2">"Num"</span><span class="p">)</span>
 <span class="c1"># Students must use for loops at least twice</span>
-<span class="n">ensure_ast</span><span class="p">(</span><span class="s2">&quot;For&quot;</span><span class="p">,</span> <span class="n">at_least</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">ensure_ast</span><span class="p">(</span><span class="s2">"For"</span><span class="p">,</span> <span class="n">at_least</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="c1"># Students must use at least one function call</span>
-<span class="n">ensure_ast</span><span class="p">(</span><span class="s2">&quot;Call&quot;</span><span class="p">)</span>
+<span class="n">ensure_ast</span><span class="p">(</span><span class="s2">"Call"</span><span class="p">)</span>
 <span class="c1"># Students must use subscripts</span>
-<span class="n">ensure_ast</span><span class="p">(</span><span class="s2">&quot;Subscript&quot;</span><span class="p">)</span>
+<span class="n">ensure_ast</span><span class="p">(</span><span class="s2">"Subscript"</span><span class="p">)</span>
 </pre></div>
 </div>
 <span class="sig-prename descclassname">Feedback Function: Must Use Code</span><dd><ul>
@@ -381,8 +381,8 @@ This is a very simple check, simply looking for any <code class="docutils litera
 function. It does not check if the function is actually called at runtime, or
 if that code is reachable!</p>
 <p>This is just a wrapper around <a class="reference internal" href="#ensure_function_call" title="ensure_function_call"><code class="xref py py-func docutils literal notranslate"><span class="pre">ensure_function_call()</span></code></a>.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Student must have a function named &quot;hello_world&quot; with a print statement.</span>
-<span class="n">function_prints</span><span class="p">(</span><span class="s2">&quot;hello_world&quot;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Student must have a function named "hello_world" with a print statement.</span>
+<span class="n">function_prints</span><span class="p">(</span><span class="s2">"hello_world"</span><span class="p">)</span>
 </pre></div>
 </div>
 <span class="sig-prename descclassname">Feedback Function: Must Use Function</span><dd><ul>
@@ -399,8 +399,8 @@ This is a very simple check, simply looking for any <code class="docutils litera
 statements inside the code. It does not check if the module is actually used
 at runtime, or if that code is reachable! There is no <code class="docutils literal notranslate"><span class="pre">at_least</span></code> parameter
 because it is assumed that the student will need to import the module at least once.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Student must import the &quot;math&quot; module</span>
-<span class="n">ensure_import</span><span class="p">(</span><span class="s2">&quot;math&quot;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Student must import the "math" module</span>
+<span class="n">ensure_import</span><span class="p">(</span><span class="s2">"math"</span><span class="p">)</span>
 </pre></div>
 </div>
 <span class="sig-prename descclassname">Feedback Function: Must Import Module</span><dd><ul>
@@ -417,8 +417,8 @@ This is a very simple check, simply looking for any <code class="docutils litera
 statements inside the code. It does not check if the module is actually used
 at runtime, or if that code is reachable!</p>
 <p>If a <code class="docutils literal notranslate"><span class="pre">root</span></code> is provided, allows you to start the search from a specific node.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Student must not import the &quot;math&quot; module</span>
-<span class="n">prevent_import</span><span class="p">(</span><span class="s2">&quot;math&quot;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Student must not import the "math" module</span>
+<span class="n">prevent_import</span><span class="p">(</span><span class="s2">"math"</span><span class="p">)</span>
 </pre></div>
 </div>
 <span class="sig-prename descclassname">Feedback Function: May Not Import Module</span><dd><ul>
@@ -463,10 +463,10 @@ feedback if the function is found. If <code class="docutils literal notranslate"
 generate a default compliment.</p>
 <p>If <code class="docutils literal notranslate"><span class="pre">score</span></code> is provided, then it will use <a class="reference internal" href="core.html#give_partial" title="give_partial"><code class="xref py py-func docutils literal notranslate"><span class="pre">give_partial()</span></code></a> to give partial
 credit.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ensure_function</span><span class="p">(</span><span class="s1">&#39;add&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">returns</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
-<span class="n">ensure_function</span><span class="p">(</span><span class="s1">&#39;double&#39;</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span>
-<span class="n">ensure_function</span><span class="p">(</span><span class="s1">&#39;clean_data&#39;</span><span class="p">,</span> <span class="n">compliment</span><span class="o">=</span><span class="s2">&quot;You defined the clean_data function!&quot;</span><span class="p">)</span>
-<span class="n">ensure_function</span><span class="p">(</span><span class="s1">&#39;move_forward&#39;</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Sprite&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">returns</span><span class="o">=</span><span class="s1">&#39;Sprite&#39;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ensure_function</span><span class="p">(</span><span class="s1">'add'</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">returns</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+<span class="n">ensure_function</span><span class="p">(</span><span class="s1">'double'</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span>
+<span class="n">ensure_function</span><span class="p">(</span><span class="s1">'clean_data'</span><span class="p">,</span> <span class="n">compliment</span><span class="o">=</span><span class="s2">"You defined the clean_data function!"</span><span class="p">)</span>
+<span class="n">ensure_function</span><span class="p">(</span><span class="s1">'move_forward'</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="p">[</span><span class="s1">'Sprite'</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">returns</span><span class="o">=</span><span class="s1">'Sprite'</span><span class="p">)</span>
 </pre></div>
 </div>
 <ul>
@@ -537,8 +537,8 @@ feedback if the dataclass is found. If <code class="docutils literal notranslate
 generate a default compliment.</p>
 <p>If <code class="docutils literal notranslate"><span class="pre">score</span></code> is provided, then it will use <a class="reference internal" href="core.html#give_partial" title="give_partial"><code class="xref py py-func docutils literal notranslate"><span class="pre">give_partial()</span></code></a> to give partial
 credit.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ensure_dataclass</span><span class="p">(</span><span class="s1">&#39;Person&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">})</span>
-<span class="n">ensure_dataclass</span><span class="p">(</span><span class="s1">&#39;Sprite&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">},</span> <span class="n">compliment</span><span class="o">=</span><span class="s2">&quot;You defined the Sprite dataclass!&quot;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ensure_dataclass</span><span class="p">(</span><span class="s1">'Person'</span><span class="p">,</span> <span class="p">{</span><span class="s1">'name'</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="s1">'age'</span><span class="p">:</span> <span class="nb">int</span><span class="p">})</span>
+<span class="n">ensure_dataclass</span><span class="p">(</span><span class="s1">'Sprite'</span><span class="p">,</span> <span class="p">{</span><span class="s1">'x'</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="s1">'y'</span><span class="p">:</span> <span class="nb">int</span><span class="p">},</span> <span class="n">compliment</span><span class="o">=</span><span class="s2">"You defined the Sprite dataclass!"</span><span class="p">)</span>
 
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Person</span><span class="p">:</span>
@@ -625,8 +625,8 @@ mess with.</p>
 <p>The given string of code will be parsed and checked with CAIT, so you can be a little flexible.
 It will not be a problem if the student introduces whitespace or comments, but changing
 variable names or something else will be detected.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ensure_starting_code</span><span class="p">(</span><span class="s2">&quot;import math&quot;</span><span class="p">)</span>
-<span class="n">ensure_starting_code</span><span class="p">(</span><span class="s2">&quot;def hello():</span><span class="se">\n</span><span class="s2">    print(&#39;hello&#39;)&quot;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ensure_starting_code</span><span class="p">(</span><span class="s2">"import math"</span><span class="p">)</span>
+<span class="n">ensure_starting_code</span><span class="p">(</span><span class="s2">"def hello():</span><span class="se">\n</span><span class="s2">    print('hello')"</span><span class="p">)</span>
 </pre></div>
 </div>
 <span class="sig-prename descclassname">Feedback Function: Don't Change Starting Code</span><dd><ul>
@@ -643,8 +643,8 @@ This is most useful for checking to make sure that the student did not embed som
 <p>The given string of code will be parsed and checked with CAIT, so you can be a little flexible.
 It will not be a problem if the student introduces whitespace or comments, but changing
 variable names or something else will be sufficient to beat this check.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">prevent_embedded_answer</span><span class="p">(</span><span class="s2">&quot;print(3)&quot;</span><span class="p">)</span>
-<span class="n">prevent_embedded_answer</span><span class="p">(</span><span class="s2">&quot;def hello():</span><span class="se">\n</span><span class="s2">    print(&#39;hello&#39;)&quot;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">prevent_embedded_answer</span><span class="p">(</span><span class="s2">"print(3)"</span><span class="p">)</span>
+<span class="n">prevent_embedded_answer</span><span class="p">(</span><span class="s2">"def hello():</span><span class="se">\n</span><span class="s2">    print('hello')"</span><span class="p">)</span>
 </pre></div>
 </div>
 <span class="sig-prename descclassname">Feedback Function: Don't Write Answer Directly</span><dd><ul>
@@ -667,8 +667,8 @@ that are allowed to print (e.g., <code class="docutils literal notranslate"><spa
 uses of print (e.g., print-statement-debugging). It can also be defeated
 by things like <code class="docutils literal notranslate"><span class="pre">sys.stdout.write</span></code>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">prevent_printing_functions</span><span class="p">()</span>
-<span class="n">prevent_printing_functions</span><span class="p">(</span><span class="s1">&#39;main&#39;</span><span class="p">)</span>
-<span class="n">prevent_printing_functions</span><span class="p">([</span><span class="s1">&#39;main&#39;</span><span class="p">,</span> <span class="s1">&#39;log&#39;</span><span class="p">])</span>
+<span class="n">prevent_printing_functions</span><span class="p">(</span><span class="s1">'main'</span><span class="p">)</span>
+<span class="n">prevent_printing_functions</span><span class="p">([</span><span class="s1">'main'</span><span class="p">,</span> <span class="s1">'log'</span><span class="p">])</span>
 </pre></div>
 </div>
 <span class="sig-prename descclassname">Feedback Function: Do Not Print in Function</span><dd><ul>
@@ -690,8 +690,8 @@ that do not have to return (e.g., <code class="docutils literal notranslate"><sp
 <p>This does not actually check that the function returns at runtime along every
 branch, and that the <code class="docutils literal notranslate"><span class="pre">return</span></code> statement is even reachable.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ensure_functions_return</span><span class="p">()</span>
-<span class="n">ensure_functions_return</span><span class="p">(</span><span class="s1">&#39;main&#39;</span><span class="p">)</span>
-<span class="n">ensure_functions_return</span><span class="p">([</span><span class="s1">&#39;main&#39;</span><span class="p">,</span> <span class="s1">&#39;save_to_file&#39;</span><span class="p">])</span>
+<span class="n">ensure_functions_return</span><span class="p">(</span><span class="s1">'main'</span><span class="p">)</span>
+<span class="n">ensure_functions_return</span><span class="p">([</span><span class="s1">'main'</span><span class="p">,</span> <span class="s1">'save_to_file'</span><span class="p">])</span>
 </pre></div>
 </div>
 <span class="sig-prename descclassname">Feedback Function: Must Return in Function</span><dd><ul>
@@ -733,8 +733,8 @@ and <a class="reference internal" href="#prevent_ast" title="prevent_ast"><code 
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">prevent_advanced_iteration</span><span class="p">()</span>
 <span class="n">prevent_advanced_iteration</span><span class="p">(</span><span class="n">allow_while</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">prevent_advanced_iteration</span><span class="p">(</span><span class="n">allow_for</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">prevent_advanced_iteration</span><span class="p">(</span><span class="n">allow_function</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;len&#39;</span><span class="p">,</span> <span class="s1">&#39;sum&#39;</span><span class="p">])</span>
-<span class="n">prevent_advanced_iteration</span><span class="p">(</span><span class="n">allow_function</span><span class="o">=</span><span class="s1">&#39;sorted&#39;</span><span class="p">)</span>
+<span class="n">prevent_advanced_iteration</span><span class="p">(</span><span class="n">allow_function</span><span class="o">=</span><span class="p">[</span><span class="s1">'len'</span><span class="p">,</span> <span class="s1">'sum'</span><span class="p">])</span>
+<span class="n">prevent_advanced_iteration</span><span class="p">(</span><span class="n">allow_function</span><span class="o">=</span><span class="s1">'sorted'</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -757,8 +757,8 @@ or <code class="docutils literal notranslate"><span class="pre">open</span></cod
 <span class="n">files_not_handled_correctly</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 <span class="c1"># Student must open and close exactly two files</span>
 <span class="n">files_not_handled_correctly</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-<span class="c1"># Student must open and close the files &quot;data.txt&quot; and &quot;output.txt&quot;</span>
-<span class="n">files_not_handled_correctly</span><span class="p">(</span><span class="s2">&quot;data.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;output.txt&quot;</span><span class="p">)</span>
+<span class="c1"># Student must open and close the files "data.txt" and "output.txt"</span>
+<span class="n">files_not_handled_correctly</span><span class="p">(</span><span class="s2">"data.txt"</span><span class="p">,</span> <span class="s2">"output.txt"</span><span class="p">)</span>
 </pre></div>
 </div>
 <span class="sig-prename descclassname">Feedback Function: Opened Without Arguments</span><dd><ul>

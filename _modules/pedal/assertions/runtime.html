@@ -89,7 +89,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for pedal.assertions.runtime</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""</span>
 <span class="sd">Runtime assertions.</span>
 
 <span class="sd">TODO: assert_has_class</span>
@@ -115,13 +115,13 @@
 <span class="sd">assert_true</span>
 <span class="sd">assert_false</span>
 <span class="sd">assert_length_equal</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">_FIELDS</span>
 <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-    <span class="n">_FIELDS</span> <span class="o">=</span> <span class="s1">&#39;__dataclass_fields__&#39;</span>
+    <span class="n">_FIELDS</span> <span class="o">=</span> <span class="s1">'__dataclass_fields__'</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pedal.assertions.feedbacks</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span><span class="n">RuntimeAssertionFeedback</span><span class="p">,</span>
                                         <span class="n">SandboxedValue</span><span class="p">,</span> <span class="n">ExactValue</span><span class="p">,</span>
@@ -147,7 +147,7 @@
 <div class="viewcode-block" id="assert_equal">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_equal">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">assert_equal</span><span class="p">(</span><span class="n">RuntimeAssertionFeedback</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Determine if the ``left`` and ``right`` values are equal.</span>
 
 <span class="sd">    Args:</span>
@@ -157,13 +157,13 @@
 <span class="sd">            removed, lines are flattened, and all characters are sorted).</span>
 <span class="sd">        delta (float): When comparing floats, how close the values must be.</span>
 <span class="sd">            If delta is None, then the default Delta will be used (.001).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">DELTA</span> <span class="o">=</span> <span class="mf">.001</span>
-    <span class="n">justification_template</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;Left (</span><span class="si">{left}</span><span class="s2">) and right (</span><span class="si">{right}</span><span class="s2">) were not equal&quot;</span><span class="p">,</span>
-                              <span class="s2">&quot;Left (</span><span class="si">{left}</span><span class="s2">) and right (</span><span class="si">{right}</span><span class="s2">) were equal&quot;</span><span class="p">)</span>
-    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="s2">&quot;to be equal to&quot;</span>
-    <span class="n">_aggregate_verb</span> <span class="o">=</span> <span class="s2">&quot;Expected&quot;</span>
-    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">&quot;!=&quot;</span>
+    <span class="n">justification_template</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"Left (</span><span class="si">{left}</span><span class="s2">) and right (</span><span class="si">{right}</span><span class="s2">) were not equal"</span><span class="p">,</span>
+                              <span class="s2">"Left (</span><span class="si">{left}</span><span class="s2">) and right (</span><span class="si">{right}</span><span class="s2">) were equal"</span><span class="p">)</span>
+    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="s2">"to be equal to"</span>
+    <span class="n">_aggregate_verb</span> <span class="o">=</span> <span class="s2">"Expected"</span>
+    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">"!="</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">exact_strings</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">delta</span><span class="o">=</span><span class="n">DELTA</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">SandboxedValue</span><span class="p">(</span><span class="n">left</span><span class="p">),</span> <span class="n">SandboxedValue</span><span class="p">(</span><span class="n">right</span><span class="p">),</span>
@@ -172,7 +172,7 @@
 <div class="viewcode-block" id="assert_equal.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_equal.condition">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">exact_strings</span><span class="p">,</span> <span class="n">delta</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Tests if the left and right are equal &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">""" Tests if the left and right are equal """</span>
         <span class="k">return</span> <span class="n">errors</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">equality_test</span><span class="p">(</span><span class="n">left</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">right</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">exact_strings</span><span class="p">,</span> <span class="n">delta</span><span class="p">)</span></div>
 </div>
 
@@ -181,7 +181,7 @@
 <div class="viewcode-block" id="assert_not_equal">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_not_equal">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">assert_not_equal</span><span class="p">(</span><span class="n">RuntimeAssertionFeedback</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Determine if the ``left`` and ``right`` values are not equal.</span>
 
 <span class="sd">    Args:</span>
@@ -191,12 +191,12 @@
 <span class="sd">            removed, lines are flattened, and all characters are sorted).</span>
 <span class="sd">        delta (float): When comparing floats, how close the values must be.</span>
 <span class="sd">            If delta is None, then the default Delta will be used (.001).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">DELTA</span> <span class="o">=</span> <span class="mf">.001</span>
-    <span class="n">justification</span> <span class="o">=</span> <span class="s2">&quot;Left and right were equal&quot;</span>
-    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="s2">&quot;to not be equal to&quot;</span>
-    <span class="n">_aggregate_verb</span> <span class="o">=</span> <span class="s2">&quot;Expected Anything But&quot;</span>
-    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">&quot;==&quot;</span>
+    <span class="n">justification</span> <span class="o">=</span> <span class="s2">"Left and right were equal"</span>
+    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="s2">"to not be equal to"</span>
+    <span class="n">_aggregate_verb</span> <span class="o">=</span> <span class="s2">"Expected Anything But"</span>
+    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">"=="</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">exact_strings</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">delta</span><span class="o">=</span><span class="n">DELTA</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">SandboxedValue</span><span class="p">(</span><span class="n">left</span><span class="p">),</span> <span class="n">SandboxedValue</span><span class="p">(</span><span class="n">right</span><span class="p">),</span>
@@ -205,7 +205,7 @@
 <div class="viewcode-block" id="assert_not_equal.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_not_equal.condition">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">exact_strings</span><span class="p">,</span> <span class="n">delta</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Tests if the left and right are not equal &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">""" Tests if the left and right are not equal """</span>
         <span class="k">return</span> <span class="n">equality_test</span><span class="p">(</span><span class="n">left</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">right</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">exact_strings</span><span class="p">,</span> <span class="n">delta</span><span class="p">)</span></div>
 </div>
 
@@ -214,12 +214,12 @@
 <div class="viewcode-block" id="assert_less">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_less">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">assert_less</span><span class="p">(</span><span class="n">RuntimeAssertionFeedback</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Determine if the ``left`` is less than the ``right``.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">justification</span> <span class="o">=</span> <span class="s2">&quot;Left is not less than right&quot;</span>
-    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="s2">&quot;to be less than&quot;</span>
-    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">&quot;&gt;=&quot;</span>
+<span class="sd">    """</span>
+    <span class="n">justification</span> <span class="o">=</span> <span class="s2">"Left is not less than right"</span>
+    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="s2">"to be less than"</span>
+    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">"&gt;="</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">SandboxedValue</span><span class="p">(</span><span class="n">left</span><span class="p">),</span> <span class="n">SandboxedValue</span><span class="p">(</span><span class="n">right</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -227,7 +227,7 @@
 <div class="viewcode-block" id="assert_less.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_less.condition">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Tests if the left is greater or equal &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">""" Tests if the left is greater or equal """</span>
         <span class="k">return</span> <span class="n">left</span><span class="o">.</span><span class="n">value</span> <span class="o">&gt;=</span> <span class="n">right</span><span class="o">.</span><span class="n">value</span></div>
 </div>
 
@@ -236,12 +236,12 @@
 <div class="viewcode-block" id="assert_less_equal">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_less_equal">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">assert_less_equal</span><span class="p">(</span><span class="n">RuntimeAssertionFeedback</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Determine if the ``left`` is less than or equal to the ``right``.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">justification</span> <span class="o">=</span> <span class="s2">&quot;Left is not less than or equal to the right&quot;</span>
-    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="s2">&quot;to be less than or equal to&quot;</span>
-    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">&quot;&gt;&quot;</span>
+<span class="sd">    """</span>
+    <span class="n">justification</span> <span class="o">=</span> <span class="s2">"Left is not less than or equal to the right"</span>
+    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="s2">"to be less than or equal to"</span>
+    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">"&gt;"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">SandboxedValue</span><span class="p">(</span><span class="n">left</span><span class="p">),</span> <span class="n">SandboxedValue</span><span class="p">(</span><span class="n">right</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -249,7 +249,7 @@
 <div class="viewcode-block" id="assert_less_equal.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_less_equal.condition">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Tests if the left is greater than the right &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">""" Tests if the left is greater than the right """</span>
         <span class="k">return</span> <span class="n">left</span><span class="o">.</span><span class="n">value</span> <span class="o">&gt;</span> <span class="n">right</span><span class="o">.</span><span class="n">value</span></div>
 </div>
 
@@ -258,12 +258,12 @@
 <div class="viewcode-block" id="assert_greater">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_greater">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">assert_greater</span><span class="p">(</span><span class="n">RuntimeAssertionFeedback</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Determine if the ``left`` is greater than the ``right``.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">justification</span> <span class="o">=</span> <span class="s2">&quot;Left is not greater than right&quot;</span>
-    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="s2">&quot;to be greater than&quot;</span>
-    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">&quot;&lt;=&quot;</span>
+<span class="sd">    """</span>
+    <span class="n">justification</span> <span class="o">=</span> <span class="s2">"Left is not greater than right"</span>
+    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="s2">"to be greater than"</span>
+    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">"&lt;="</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">SandboxedValue</span><span class="p">(</span><span class="n">left</span><span class="p">),</span> <span class="n">SandboxedValue</span><span class="p">(</span><span class="n">right</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -271,7 +271,7 @@
 <div class="viewcode-block" id="assert_greater.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_greater.condition">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Tests if the left is less than or equal to the right &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">""" Tests if the left is less than or equal to the right """</span>
         <span class="k">return</span> <span class="n">left</span><span class="o">.</span><span class="n">value</span> <span class="o">&lt;=</span> <span class="n">right</span><span class="o">.</span><span class="n">value</span></div>
 </div>
 
@@ -280,12 +280,12 @@
 <div class="viewcode-block" id="assert_greater_equal">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_greater_equal">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">assert_greater_equal</span><span class="p">(</span><span class="n">RuntimeAssertionFeedback</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Determine if the ``left`` is greater than or equal to the ``right``.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">justification</span> <span class="o">=</span> <span class="s2">&quot;Left is not greater than or equal to the right&quot;</span>
-    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="s2">&quot;to be greater than or equal to&quot;</span>
-    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">&quot;&lt;&quot;</span>
+<span class="sd">    """</span>
+    <span class="n">justification</span> <span class="o">=</span> <span class="s2">"Left is not greater than or equal to the right"</span>
+    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="s2">"to be greater than or equal to"</span>
+    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">"&lt;"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">SandboxedValue</span><span class="p">(</span><span class="n">left</span><span class="p">),</span> <span class="n">SandboxedValue</span><span class="p">(</span><span class="n">right</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -293,7 +293,7 @@
 <div class="viewcode-block" id="assert_greater_equal.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_greater_equal.condition">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Tests if the left is less than the right &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">""" Tests if the left is less than the right """</span>
         <span class="k">return</span> <span class="n">left</span><span class="o">.</span><span class="n">value</span> <span class="o">&lt;</span> <span class="n">right</span><span class="o">.</span><span class="n">value</span></div>
 </div>
 
@@ -302,12 +302,12 @@
 <div class="viewcode-block" id="assert_in">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_in">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">assert_in</span><span class="p">(</span><span class="n">RuntimeAssertionFeedback</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Determine if the ``needle`` is in the ``haystack``.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">justification</span> <span class="o">=</span> <span class="s2">&quot;Needle not in haystack&quot;</span>
-    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;to be in&quot;</span><span class="p">,</span> <span class="s2">&quot;to contain&quot;</span><span class="p">)</span>
-    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">&quot;not in&quot;</span>
+<span class="sd">    """</span>
+    <span class="n">justification</span> <span class="o">=</span> <span class="s2">"Needle not in haystack"</span>
+    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"to be in"</span><span class="p">,</span> <span class="s2">"to contain"</span><span class="p">)</span>
+    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">"not in"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">needle</span><span class="p">,</span> <span class="n">haystack</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">SandboxedValue</span><span class="p">(</span><span class="n">needle</span><span class="p">),</span> <span class="n">SandboxedValue</span><span class="p">(</span><span class="n">haystack</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -315,7 +315,7 @@
 <div class="viewcode-block" id="assert_in.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_in.condition">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">needle</span><span class="p">,</span> <span class="n">haystack</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Tests if the needle is not in the haystack &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">""" Tests if the needle is not in the haystack """</span>
         <span class="k">return</span> <span class="n">needle</span><span class="o">.</span><span class="n">value</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">haystack</span><span class="o">.</span><span class="n">value</span></div>
 </div>
 
@@ -324,12 +324,12 @@
 <div class="viewcode-block" id="assert_not_in">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_not_in">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">assert_not_in</span><span class="p">(</span><span class="n">RuntimeAssertionFeedback</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Determine if the ``needle`` is in the ``haystack``.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">justification</span> <span class="o">=</span> <span class="s2">&quot;Needle is in haystack&quot;</span>
-    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;to not be in&quot;</span><span class="p">,</span> <span class="s2">&quot;to not contain&quot;</span><span class="p">)</span>
-    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">&quot;in&quot;</span>
+<span class="sd">    """</span>
+    <span class="n">justification</span> <span class="o">=</span> <span class="s2">"Needle is in haystack"</span>
+    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"to not be in"</span><span class="p">,</span> <span class="s2">"to not contain"</span><span class="p">)</span>
+    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">"in"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">needle</span><span class="p">,</span> <span class="n">haystack</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">SandboxedValue</span><span class="p">(</span><span class="n">needle</span><span class="p">),</span> <span class="n">SandboxedValue</span><span class="p">(</span><span class="n">haystack</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -337,7 +337,7 @@
 <div class="viewcode-block" id="assert_not_in.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_not_in.condition">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">needle</span><span class="p">,</span> <span class="n">haystack</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Tests if the needle is in the haystack &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">""" Tests if the needle is in the haystack """</span>
         <span class="k">return</span> <span class="n">needle</span><span class="o">.</span><span class="n">value</span> <span class="ow">in</span> <span class="n">haystack</span><span class="o">.</span><span class="n">value</span></div>
 </div>
 
@@ -346,12 +346,12 @@
 <div class="viewcode-block" id="assert_contains_subset">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_contains_subset">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">assert_contains_subset</span><span class="p">(</span><span class="n">RuntimeAssertionFeedback</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Determine if the ``needles`` are in the ``haystack``.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">justification</span> <span class="o">=</span> <span class="s2">&quot;Needles not in haystack&quot;</span>
-    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;to be in&quot;</span><span class="p">,</span> <span class="s2">&quot;to contain&quot;</span><span class="p">)</span>
-    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">&quot;not in&quot;</span>
+<span class="sd">    """</span>
+    <span class="n">justification</span> <span class="o">=</span> <span class="s2">"Needles not in haystack"</span>
+    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"to be in"</span><span class="p">,</span> <span class="s2">"to contain"</span><span class="p">)</span>
+    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">"not in"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">needles</span><span class="p">,</span> <span class="n">haystack</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">SandboxedValue</span><span class="p">(</span><span class="n">needles</span><span class="p">),</span> <span class="n">SandboxedValue</span><span class="p">(</span><span class="n">haystack</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -359,7 +359,7 @@
 <div class="viewcode-block" id="assert_contains_subset.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_contains_subset.condition">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">needles</span><span class="p">,</span> <span class="n">haystack</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Tests if the needle is not in the haystack &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">""" Tests if the needle is not in the haystack """</span>
         <span class="k">return</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">needle</span> <span class="ow">in</span> <span class="n">haystack</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">needle</span> <span class="ow">in</span> <span class="n">needles</span><span class="o">.</span><span class="n">value</span><span class="p">)</span></div>
 </div>
 
@@ -368,12 +368,12 @@
 <div class="viewcode-block" id="assert_not_contains_subset">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_not_contains_subset">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">assert_not_contains_subset</span><span class="p">(</span><span class="n">RuntimeAssertionFeedback</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Determine if the ``needles`` are not in the ``haystack``.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">justification</span> <span class="o">=</span> <span class="s2">&quot;Needles in haystack&quot;</span>
-    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;to not be in&quot;</span><span class="p">,</span> <span class="s2">&quot;to not contain&quot;</span><span class="p">)</span>
-    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">&quot;in&quot;</span>
+<span class="sd">    """</span>
+    <span class="n">justification</span> <span class="o">=</span> <span class="s2">"Needles in haystack"</span>
+    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"to not be in"</span><span class="p">,</span> <span class="s2">"to not contain"</span><span class="p">)</span>
+    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">"in"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">needles</span><span class="p">,</span> <span class="n">haystack</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">SandboxedValue</span><span class="p">(</span><span class="n">needles</span><span class="p">),</span> <span class="n">SandboxedValue</span><span class="p">(</span><span class="n">haystack</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -381,7 +381,7 @@
 <div class="viewcode-block" id="assert_not_contains_subset.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_not_contains_subset.condition">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">needles</span><span class="p">,</span> <span class="n">haystack</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Tests if the needle is not in the haystack &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">""" Tests if the needle is not in the haystack """</span>
         <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="n">needle</span> <span class="ow">in</span> <span class="n">haystack</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">needle</span> <span class="ow">in</span> <span class="n">needles</span><span class="o">.</span><span class="n">value</span><span class="p">)</span></div>
 </div>
 
@@ -390,12 +390,12 @@
 <div class="viewcode-block" id="assert_is">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_is">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">assert_is</span><span class="p">(</span><span class="n">RuntimeAssertionFeedback</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Determine if the ``left`` and ``right`` values are identical.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">justification</span> <span class="o">=</span> <span class="s2">&quot;Left is not identical to right&quot;</span>
-    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="s2">&quot;to be identical to&quot;</span>
-    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">&quot;is not&quot;</span>
+<span class="sd">    """</span>
+    <span class="n">justification</span> <span class="o">=</span> <span class="s2">"Left is not identical to right"</span>
+    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="s2">"to be identical to"</span>
+    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">"is not"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">SandboxedValue</span><span class="p">(</span><span class="n">left</span><span class="p">),</span> <span class="n">SandboxedValue</span><span class="p">(</span><span class="n">right</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -403,7 +403,7 @@
 <div class="viewcode-block" id="assert_is.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_is.condition">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Tests if the left and right are equal &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">""" Tests if the left and right are equal """</span>
         <span class="n">left</span> <span class="o">=</span> <span class="n">left</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">_actual_value</span> <span class="k">if</span> <span class="n">left</span><span class="o">.</span><span class="n">is_sandboxed</span> <span class="k">else</span> <span class="n">left</span><span class="o">.</span><span class="n">value</span>
         <span class="n">right</span> <span class="o">=</span> <span class="n">right</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">_actual_value</span> <span class="k">if</span> <span class="n">right</span><span class="o">.</span><span class="n">is_sandboxed</span> <span class="k">else</span> <span class="n">right</span><span class="o">.</span><span class="n">value</span>
         <span class="k">return</span> <span class="n">left</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">right</span></div>
@@ -414,12 +414,12 @@
 <div class="viewcode-block" id="assert_is_not">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_is_not">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">assert_is_not</span><span class="p">(</span><span class="n">RuntimeAssertionFeedback</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Determine if the ``left`` and ``right`` values are not identical.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">justification</span> <span class="o">=</span> <span class="s2">&quot;Left is identical to right&quot;</span>
-    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="s2">&quot;to not be identical to&quot;</span>
-    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">&quot;is&quot;</span>
+<span class="sd">    """</span>
+    <span class="n">justification</span> <span class="o">=</span> <span class="s2">"Left is identical to right"</span>
+    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="s2">"to not be identical to"</span>
+    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">"is"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">SandboxedValue</span><span class="p">(</span><span class="n">left</span><span class="p">),</span> <span class="n">SandboxedValue</span><span class="p">(</span><span class="n">right</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -427,7 +427,7 @@
 <div class="viewcode-block" id="assert_is_not.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_is_not.condition">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Tests if the left and right are equal &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">""" Tests if the left and right are equal """</span>
         <span class="n">left</span> <span class="o">=</span> <span class="n">left</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">_actual_value</span> <span class="k">if</span> <span class="n">left</span><span class="o">.</span><span class="n">is_sandboxed</span> <span class="k">else</span> <span class="n">left</span><span class="o">.</span><span class="n">value</span>
         <span class="n">right</span> <span class="o">=</span> <span class="n">right</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">_actual_value</span> <span class="k">if</span> <span class="n">right</span><span class="o">.</span><span class="n">is_sandboxed</span> <span class="k">else</span> <span class="n">right</span><span class="o">.</span><span class="n">value</span>
         <span class="k">return</span> <span class="n">left</span> <span class="ow">is</span> <span class="n">right</span></div>
@@ -438,20 +438,20 @@
 <div class="viewcode-block" id="assert_is_none">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_is_none">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">assert_is_none</span><span class="p">(</span><span class="n">RuntimeAssertionFeedback</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Determine if the ``value`` is ``None``.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">justification</span> <span class="o">=</span> <span class="s2">&quot;Value is not None&quot;</span>
-    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="s2">&quot;to be&quot;</span>
-    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">&quot;is not&quot;</span>
+<span class="sd">    """</span>
+    <span class="n">justification</span> <span class="o">=</span> <span class="s2">"Value is not None"</span>
+    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="s2">"to be"</span>
+    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">"is not"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">SandboxedValue</span><span class="p">(</span><span class="n">value</span><span class="p">),</span> <span class="n">ExactValue</span><span class="p">(</span><span class="s2">&quot;None&quot;</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">SandboxedValue</span><span class="p">(</span><span class="n">value</span><span class="p">),</span> <span class="n">ExactValue</span><span class="p">(</span><span class="s2">"None"</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 <div class="viewcode-block" id="assert_is_none.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_is_none.condition">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Tests if the left and right are equal &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">""" Tests if the left and right are equal """</span>
         <span class="k">if</span> <span class="n">left</span><span class="o">.</span><span class="n">is_sandboxed</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">left</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">_actual_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="n">left</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></div>
@@ -462,20 +462,20 @@
 <div class="viewcode-block" id="assert_is_not_none">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_is_not_none">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">assert_is_not_none</span><span class="p">(</span><span class="n">RuntimeAssertionFeedback</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Determine if the ``value`` is not ``None``.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">justification</span> <span class="o">=</span> <span class="s2">&quot;Value is None&quot;</span>
-    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="s2">&quot;to not be&quot;</span>
-    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">&quot;is&quot;</span>
+<span class="sd">    """</span>
+    <span class="n">justification</span> <span class="o">=</span> <span class="s2">"Value is None"</span>
+    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="s2">"to not be"</span>
+    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">"is"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">SandboxedValue</span><span class="p">(</span><span class="n">value</span><span class="p">),</span> <span class="n">ExactValue</span><span class="p">(</span><span class="s2">&quot;None&quot;</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">SandboxedValue</span><span class="p">(</span><span class="n">value</span><span class="p">),</span> <span class="n">ExactValue</span><span class="p">(</span><span class="s2">"None"</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 <div class="viewcode-block" id="assert_is_not_none.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_is_not_none.condition">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Tests if the left and right are equal &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">""" Tests if the left and right are equal """</span>
         <span class="k">if</span> <span class="n">left</span><span class="o">.</span><span class="n">is_sandboxed</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">left</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">_actual_value</span> <span class="ow">is</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="n">left</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span></div>
@@ -486,20 +486,20 @@
 <div class="viewcode-block" id="assert_is_dataclass">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_is_dataclass">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">assert_is_dataclass</span><span class="p">(</span><span class="n">RuntimeAssertionFeedback</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Determine if the ``value`` is a dataclass.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">justification</span> <span class="o">=</span> <span class="s2">&quot;Value does not evaluate to a dataclass&quot;</span>
-    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="s2">&quot;to evaluate to&quot;</span>
-    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">&quot;to not evaluate to&quot;</span>
+<span class="sd">    """</span>
+    <span class="n">justification</span> <span class="o">=</span> <span class="s2">"Value does not evaluate to a dataclass"</span>
+    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="s2">"to evaluate to"</span>
+    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">"to not evaluate to"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">SandboxedValue</span><span class="p">(</span><span class="n">value</span><span class="p">),</span> <span class="n">ExactValue</span><span class="p">(</span><span class="s2">&quot;a dataclass&quot;</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">SandboxedValue</span><span class="p">(</span><span class="n">value</span><span class="p">),</span> <span class="n">ExactValue</span><span class="p">(</span><span class="s2">"a dataclass"</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 <div class="viewcode-block" id="assert_is_dataclass.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_is_dataclass.condition">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Tests if the left evaluates to true &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">""" Tests if the left evaluates to true """</span>
         <span class="k">return</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">left</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">_FIELDS</span><span class="p">)</span></div>
 </div>
 
@@ -508,20 +508,20 @@
 <div class="viewcode-block" id="assert_is_not_dataclass">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_is_not_dataclass">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">assert_is_not_dataclass</span><span class="p">(</span><span class="n">RuntimeAssertionFeedback</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Determine if the ``value`` is not a dataclass.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">justification</span> <span class="o">=</span> <span class="s2">&quot;Value does not evaluate to a dataclass&quot;</span>
-    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="s2">&quot;to not evaluate to&quot;</span>
-    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">&quot;to evaluate to&quot;</span>
+<span class="sd">    """</span>
+    <span class="n">justification</span> <span class="o">=</span> <span class="s2">"Value does not evaluate to a dataclass"</span>
+    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="s2">"to not evaluate to"</span>
+    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">"to evaluate to"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">SandboxedValue</span><span class="p">(</span><span class="n">value</span><span class="p">),</span> <span class="n">ExactValue</span><span class="p">(</span><span class="s2">&quot;a dataclass&quot;</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">SandboxedValue</span><span class="p">(</span><span class="n">value</span><span class="p">),</span> <span class="n">ExactValue</span><span class="p">(</span><span class="s2">"a dataclass"</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 <div class="viewcode-block" id="assert_is_not_dataclass.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_is_not_dataclass.condition">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Tests if the left evaluates to true &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">""" Tests if the left evaluates to true """</span>
         <span class="k">return</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">left</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">_FIELDS</span><span class="p">)</span></div>
 </div>
 
@@ -530,20 +530,20 @@
 <div class="viewcode-block" id="assert_true">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_true">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">assert_true</span><span class="p">(</span><span class="n">RuntimeAssertionFeedback</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Determine if the ``value`` is true.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">justification</span> <span class="o">=</span> <span class="s2">&quot;Value does not evaluate to true&quot;</span>
-    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="s2">&quot;evaluates to&quot;</span>
-    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">&quot;does not evaluate to&quot;</span>
+<span class="sd">    """</span>
+    <span class="n">justification</span> <span class="o">=</span> <span class="s2">"Value does not evaluate to true"</span>
+    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="s2">"evaluates to"</span>
+    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">"does not evaluate to"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">SandboxedValue</span><span class="p">(</span><span class="n">value</span><span class="p">),</span> <span class="n">ExactValue</span><span class="p">(</span><span class="s2">&quot;a true value&quot;</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">SandboxedValue</span><span class="p">(</span><span class="n">value</span><span class="p">),</span> <span class="n">ExactValue</span><span class="p">(</span><span class="s2">"a true value"</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 <div class="viewcode-block" id="assert_true.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_true.condition">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Tests if the left evaluates to true &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">""" Tests if the left evaluates to true """</span>
         <span class="k">return</span> <span class="ow">not</span> <span class="nb">bool</span><span class="p">(</span><span class="n">left</span><span class="o">.</span><span class="n">value</span><span class="p">)</span></div>
 </div>
 
@@ -552,20 +552,20 @@
 <div class="viewcode-block" id="assert_false">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_false">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">assert_false</span><span class="p">(</span><span class="n">RuntimeAssertionFeedback</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Determine if the ``value`` is false.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">justification</span> <span class="o">=</span> <span class="s2">&quot;Value does not evaluate to false&quot;</span>
-    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="s2">&quot;evaluates to&quot;</span>
-    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">&quot;does not evaluate to&quot;</span>
+<span class="sd">    """</span>
+    <span class="n">justification</span> <span class="o">=</span> <span class="s2">"Value does not evaluate to false"</span>
+    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="s2">"evaluates to"</span>
+    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">"does not evaluate to"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">SandboxedValue</span><span class="p">(</span><span class="n">value</span><span class="p">),</span> <span class="n">ExactValue</span><span class="p">(</span><span class="s2">&quot;a true value&quot;</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">SandboxedValue</span><span class="p">(</span><span class="n">value</span><span class="p">),</span> <span class="n">ExactValue</span><span class="p">(</span><span class="s2">"a true value"</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 <div class="viewcode-block" id="assert_false.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_false.condition">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Tests if the left evaluates to true &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">""" Tests if the left evaluates to true """</span>
         <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">left</span><span class="o">.</span><span class="n">value</span><span class="p">)</span></div>
 </div>
 
@@ -574,12 +574,12 @@
 <div class="viewcode-block" id="assert_length_equal">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_length_equal">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">assert_length_equal</span><span class="p">(</span><span class="n">RuntimeAssertionFeedback</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Determine if the ``sequence`` has the ``length``.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">justification</span> <span class="o">=</span> <span class="s2">&quot;Sequence does not have length&quot;</span>
-    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;to have the length&quot;</span><span class="p">,</span> <span class="s2">&quot;to be the length of&quot;</span><span class="p">)</span>
-    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">&quot;did not have the length&quot;</span>
+<span class="sd">    """</span>
+    <span class="n">justification</span> <span class="o">=</span> <span class="s2">"Sequence does not have length"</span>
+    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"to have the length"</span><span class="p">,</span> <span class="s2">"to be the length of"</span><span class="p">)</span>
+    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">"did not have the length"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sequence</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">SandboxedValue</span><span class="p">(</span><span class="n">sequence</span><span class="p">),</span> <span class="n">SandboxedValue</span><span class="p">(</span><span class="n">length</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -587,7 +587,7 @@
 <div class="viewcode-block" id="assert_length_equal.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_length_equal.condition">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sequence</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Tests if the needle is not in the haystack &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">""" Tests if the needle is not in the haystack """</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">sequence</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">!=</span> <span class="n">length</span><span class="o">.</span><span class="n">value</span></div>
 </div>
 
@@ -596,12 +596,12 @@
 <div class="viewcode-block" id="assert_length_not_equal">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_length_not_equal">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">assert_length_not_equal</span><span class="p">(</span><span class="n">RuntimeAssertionFeedback</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Determine if the ``sequence`` does not have the ``length``.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">justification</span> <span class="o">=</span> <span class="s2">&quot;Sequence has length&quot;</span>
-    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;to not have the length&quot;</span><span class="p">,</span> <span class="s2">&quot;to not be the length of&quot;</span><span class="p">)</span>
-    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">&quot;had the length&quot;</span>
+<span class="sd">    """</span>
+    <span class="n">justification</span> <span class="o">=</span> <span class="s2">"Sequence has length"</span>
+    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"to not have the length"</span><span class="p">,</span> <span class="s2">"to not be the length of"</span><span class="p">)</span>
+    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">"had the length"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sequence</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">SandboxedValue</span><span class="p">(</span><span class="n">sequence</span><span class="p">),</span> <span class="n">SandboxedValue</span><span class="p">(</span><span class="n">length</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -609,7 +609,7 @@
 <div class="viewcode-block" id="assert_length_not_equal.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_length_not_equal.condition">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sequence</span><span class="p">,</span> <span class="n">length</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Tests if the needle is not in the haystack &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">""" Tests if the needle is not in the haystack """</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">sequence</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="n">length</span><span class="o">.</span><span class="n">value</span></div>
 </div>
 
@@ -618,12 +618,12 @@
 <div class="viewcode-block" id="assert_length_less">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_length_less">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">assert_length_less</span><span class="p">(</span><span class="n">RuntimeAssertionFeedback</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Determine if the ``sequence`` has less than the ``length``.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">justification</span> <span class="o">=</span> <span class="s2">&quot;Sequence length is less than&quot;</span>
-    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;to have length less than&quot;</span><span class="p">,</span> <span class="s2">&quot;to be less than the length of&quot;</span><span class="p">)</span>
-    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">&quot;did not have less than the length&quot;</span>
+<span class="sd">    """</span>
+    <span class="n">justification</span> <span class="o">=</span> <span class="s2">"Sequence length is less than"</span>
+    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"to have length less than"</span><span class="p">,</span> <span class="s2">"to be less than the length of"</span><span class="p">)</span>
+    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">"did not have less than the length"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sequence</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">SandboxedValue</span><span class="p">(</span><span class="n">sequence</span><span class="p">),</span> <span class="n">SandboxedValue</span><span class="p">(</span><span class="n">length</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -631,7 +631,7 @@
 <div class="viewcode-block" id="assert_length_less.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_length_less.condition">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sequence</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Tests if the needle is not in the haystack &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">""" Tests if the needle is not in the haystack """</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">sequence</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">length</span><span class="o">.</span><span class="n">value</span></div>
 </div>
 
@@ -640,13 +640,13 @@
 <div class="viewcode-block" id="assert_length_less_equal">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_length_less_equal">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">assert_length_less_equal</span><span class="p">(</span><span class="n">RuntimeAssertionFeedback</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Determine if the ``sequence`` has less or equal than the ``length``.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">justification</span> <span class="o">=</span> <span class="s2">&quot;Sequence length is less than or equal to&quot;</span>
-    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;to have length less than or equal to&quot;</span><span class="p">,</span>
-                      <span class="s2">&quot;to be less than or equal to the length of&quot;</span><span class="p">)</span>
-    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">&quot;did not have less than or equal to the length&quot;</span>
+<span class="sd">    """</span>
+    <span class="n">justification</span> <span class="o">=</span> <span class="s2">"Sequence length is less than or equal to"</span>
+    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"to have length less than or equal to"</span><span class="p">,</span>
+                      <span class="s2">"to be less than or equal to the length of"</span><span class="p">)</span>
+    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">"did not have less than or equal to the length"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sequence</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">SandboxedValue</span><span class="p">(</span><span class="n">sequence</span><span class="p">),</span> <span class="n">SandboxedValue</span><span class="p">(</span><span class="n">length</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -654,7 +654,7 @@
 <div class="viewcode-block" id="assert_length_less_equal.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_length_less_equal.condition">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sequence</span><span class="p">,</span> <span class="n">length</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Tests if the needle is not in the haystack &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">""" Tests if the needle is not in the haystack """</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">sequence</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">length</span><span class="o">.</span><span class="n">value</span></div>
 </div>
 
@@ -663,12 +663,12 @@
 <div class="viewcode-block" id="assert_length_greater">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_length_greater">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">assert_length_greater</span><span class="p">(</span><span class="n">RuntimeAssertionFeedback</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Determine if the ``sequence`` has greater than the ``length``.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">justification</span> <span class="o">=</span> <span class="s2">&quot;Sequence length is greater than&quot;</span>
-    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;to have length greater than&quot;</span><span class="p">,</span> <span class="s2">&quot;to be greater than the length of&quot;</span><span class="p">)</span>
-    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">&quot;did not have greater than the length&quot;</span>
+<span class="sd">    """</span>
+    <span class="n">justification</span> <span class="o">=</span> <span class="s2">"Sequence length is greater than"</span>
+    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"to have length greater than"</span><span class="p">,</span> <span class="s2">"to be greater than the length of"</span><span class="p">)</span>
+    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">"did not have greater than the length"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sequence</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">SandboxedValue</span><span class="p">(</span><span class="n">sequence</span><span class="p">),</span> <span class="n">SandboxedValue</span><span class="p">(</span><span class="n">length</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -676,7 +676,7 @@
 <div class="viewcode-block" id="assert_length_greater.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_length_greater.condition">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sequence</span><span class="p">,</span> <span class="n">length</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Tests if the needle is not in the haystack &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">""" Tests if the needle is not in the haystack """</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">sequence</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">length</span><span class="o">.</span><span class="n">value</span></div>
 </div>
 
@@ -685,13 +685,13 @@
 <div class="viewcode-block" id="assert_length_greater_equal">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_length_greater_equal">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">assert_length_greater_equal</span><span class="p">(</span><span class="n">RuntimeAssertionFeedback</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Determine if the ``sequence`` has greater than or equal to the ``length``.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">justification</span> <span class="o">=</span> <span class="s2">&quot;Sequence length is greater than or equal to&quot;</span>
-    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;to have length greater than or equal to&quot;</span><span class="p">,</span>
-                      <span class="s2">&quot;to be greater than or equal to the length of&quot;</span><span class="p">)</span>
-    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">&quot;did not have greater than or equal to the length&quot;</span>
+<span class="sd">    """</span>
+    <span class="n">justification</span> <span class="o">=</span> <span class="s2">"Sequence length is greater than or equal to"</span>
+    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"to have length greater than or equal to"</span><span class="p">,</span>
+                      <span class="s2">"to be greater than or equal to the length of"</span><span class="p">)</span>
+    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">"did not have greater than or equal to the length"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sequence</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">SandboxedValue</span><span class="p">(</span><span class="n">sequence</span><span class="p">),</span> <span class="n">SandboxedValue</span><span class="p">(</span><span class="n">length</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -699,7 +699,7 @@
 <div class="viewcode-block" id="assert_length_greater_equal.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_length_greater_equal.condition">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sequence</span><span class="p">,</span> <span class="n">length</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Tests if the needle is not in the haystack &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">""" Tests if the needle is not in the haystack """</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">sequence</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">length</span><span class="o">.</span><span class="n">value</span></div>
 </div>
 
@@ -708,12 +708,12 @@
 <div class="viewcode-block" id="assert_is_instance">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_is_instance">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">assert_is_instance</span><span class="p">(</span><span class="n">RuntimeAssertionFeedback</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Determine if the ``obj`` is an instance of ``cls``</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">justification</span> <span class="o">=</span> <span class="s2">&quot;Object is not an instance of class&quot;</span>
-    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;to be an instance of&quot;</span><span class="p">,</span> <span class="s2">&quot;to be the type of&quot;</span><span class="p">)</span>
-    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">&quot;is not an instance of&quot;</span>
+<span class="sd">    """</span>
+    <span class="n">justification</span> <span class="o">=</span> <span class="s2">"Object is not an instance of class"</span>
+    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"to be an instance of"</span><span class="p">,</span> <span class="s2">"to be the type of"</span><span class="p">)</span>
+    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">"is not an instance of"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">SandboxedValue</span><span class="p">(</span><span class="n">obj</span><span class="p">),</span> <span class="n">SandboxedValue</span><span class="p">(</span><span class="bp">cls</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -721,7 +721,7 @@
 <div class="viewcode-block" id="assert_is_instance.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_is_instance.condition">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="bp">cls</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Tests if the left and right are equal &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">""" Tests if the left and right are equal """</span>
         <span class="n">value</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">value</span>
         <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="nb">int</span> <span class="ow">or</span> <span class="n">value</span> <span class="o">==</span> <span class="nb">float</span><span class="p">:</span>
             <span class="n">value</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
@@ -733,12 +733,12 @@
 <div class="viewcode-block" id="assert_not_is_instance">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_not_is_instance">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">assert_not_is_instance</span><span class="p">(</span><span class="n">RuntimeAssertionFeedback</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Determine if the ``obj`` is an instance of ``cls``</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">justification</span> <span class="o">=</span> <span class="s2">&quot;Object is an instance of class&quot;</span>
-    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;to not be an instance of&quot;</span><span class="p">,</span> <span class="s2">&quot;to not be the type of&quot;</span><span class="p">)</span>
-    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">&quot;is an instance of&quot;</span>
+<span class="sd">    """</span>
+    <span class="n">justification</span> <span class="o">=</span> <span class="s2">"Object is an instance of class"</span>
+    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"to not be an instance of"</span><span class="p">,</span> <span class="s2">"to not be the type of"</span><span class="p">)</span>
+    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">"is an instance of"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">SandboxedValue</span><span class="p">(</span><span class="n">obj</span><span class="p">),</span> <span class="n">SandboxedValue</span><span class="p">(</span><span class="bp">cls</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -746,7 +746,7 @@
 <div class="viewcode-block" id="assert_not_is_instance.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_not_is_instance.condition">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="bp">cls</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Tests if the left and right are equal &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">""" Tests if the left and right are equal """</span>
         <span class="n">value</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">value</span>
         <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="nb">int</span> <span class="ow">or</span> <span class="n">value</span> <span class="o">==</span> <span class="nb">float</span><span class="p">:</span>
             <span class="n">value</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
@@ -762,62 +762,62 @@
         <span class="n">expected_pedal_type</span> <span class="o">=</span> <span class="n">expected_pedal_type</span><span class="o">.</span><span class="n">as_type</span><span class="p">()</span>
         <span class="n">expected_pedal_type_name</span> <span class="o">=</span> <span class="n">expected_pedal_type</span><span class="o">.</span><span class="n">singular_name</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">expected_pedal_type_name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">expected_pedal_type_name</span> <span class="o">=</span> <span class="s2">""</span>
     <span class="k">return</span> <span class="n">expected_pedal_type</span><span class="p">,</span> <span class="n">expected_pedal_type_name</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">value_to_pedal_type</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">unwrap_value</span><span class="p">(</span><span class="n">value</span><span class="p">),</span> <span class="ne">Exception</span><span class="p">):</span>
-        <span class="n">value_pedal_type</span> <span class="o">=</span> <span class="s2">&quot;An error&quot;</span>
+        <span class="n">value_pedal_type</span> <span class="o">=</span> <span class="s2">"An error"</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">value_pedal_type</span> <span class="o">=</span> <span class="n">get_pedal_type_from_value</span><span class="p">(</span><span class="n">unwrap_value</span><span class="p">(</span><span class="n">value</span><span class="p">),</span> <span class="n">evaluate</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">value_pedal_type</span>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">_compare_type</span><span class="p">(</span><span class="n">RuntimeAssertionFeedback</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    TODO: Failing for assert_type({&quot;test&quot;:1}, dict)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    TODO: Failing for assert_type({"test":1}, dict)</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">expected_type</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="n">fields</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;fields&#39;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">'fields'</span><span class="p">,</span> <span class="p">{})</span>
         <span class="n">value_pedal_type</span> <span class="o">=</span> <span class="n">value_to_pedal_type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
         <span class="n">singular_name</span> <span class="o">=</span> <span class="n">share_sandbox_context</span><span class="p">(</span><span class="n">value_pedal_type</span> <span class="k">if</span>
                                               <span class="nb">isinstance</span><span class="p">(</span><span class="n">value_pedal_type</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span>
                                               <span class="n">value_pedal_type</span><span class="o">.</span><span class="n">singular_name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
         <span class="n">expected_pedal_type</span><span class="p">,</span> <span class="n">expected_pedal_type_name</span> <span class="o">=</span> <span class="n">type_to_pedal_type</span><span class="p">(</span><span class="n">expected_type</span><span class="p">)</span>
-        <span class="n">fields</span><span class="p">[</span><span class="s1">&#39;value_raw&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
-        <span class="n">fields</span><span class="p">[</span><span class="s1">&#39;value_type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">value_pedal_type</span>
-        <span class="n">fields</span><span class="p">[</span><span class="s1">&#39;value_type_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">singular_name</span>
-        <span class="n">fields</span><span class="p">[</span><span class="s1">&#39;expected_type_raw&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">expected_type</span>
-        <span class="n">fields</span><span class="p">[</span><span class="s1">&#39;expected_type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">expected_pedal_type</span>
-        <span class="n">fields</span><span class="p">[</span><span class="s1">&#39;expected_type_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">expected_pedal_type_name</span>
+        <span class="n">fields</span><span class="p">[</span><span class="s1">'value_raw'</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="n">fields</span><span class="p">[</span><span class="s1">'value_type'</span><span class="p">]</span> <span class="o">=</span> <span class="n">value_pedal_type</span>
+        <span class="n">fields</span><span class="p">[</span><span class="s1">'value_type_name'</span><span class="p">]</span> <span class="o">=</span> <span class="n">singular_name</span>
+        <span class="n">fields</span><span class="p">[</span><span class="s1">'expected_type_raw'</span><span class="p">]</span> <span class="o">=</span> <span class="n">expected_type</span>
+        <span class="n">fields</span><span class="p">[</span><span class="s1">'expected_type'</span><span class="p">]</span> <span class="o">=</span> <span class="n">expected_pedal_type</span>
+        <span class="n">fields</span><span class="p">[</span><span class="s1">'expected_type_name'</span><span class="p">]</span> <span class="o">=</span> <span class="n">expected_pedal_type_name</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">SandboxedValue</span><span class="p">(</span><span class="n">singular_name</span><span class="p">),</span>
                          <span class="n">SandboxedValue</span><span class="p">(</span><span class="n">expected_pedal_type_name</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">expected_type</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Tests if the left and right are equal &quot;&quot;&quot;</span>
-        <span class="n">value_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;value_type&#39;</span><span class="p">]</span>
-        <span class="n">expected_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;expected_type&#39;</span><span class="p">]</span>
+<span class="w">        </span><span class="sd">""" Tests if the left and right are equal """</span>
+        <span class="n">value_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">'value_type'</span><span class="p">]</span>
+        <span class="n">expected_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">'expected_type'</span><span class="p">]</span>
         <span class="k">return</span> <span class="ow">not</span> <span class="n">is_subtype</span><span class="p">(</span><span class="n">value_type</span><span class="p">,</span> <span class="n">expected_type</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="assert_type">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_type">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">assert_type</span><span class="p">(</span><span class="n">_compare_type</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Same as assert_is_instance, but has a slightly different wording. &quot;&quot;&quot;</span>
-    <span class="n">justification</span> <span class="o">=</span> <span class="s2">&quot;Value is not of type&quot;</span>
-    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;to be a value of type&quot;</span><span class="p">,</span> <span class="s2">&quot;to be the type of&quot;</span><span class="p">)</span>
-    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">&quot;is a value of type&quot;</span></div>
+<span class="w">    </span><span class="sd">""" Same as assert_is_instance, but has a slightly different wording. """</span>
+    <span class="n">justification</span> <span class="o">=</span> <span class="s2">"Value is not of type"</span>
+    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"to be a value of type"</span><span class="p">,</span> <span class="s2">"to be the type of"</span><span class="p">)</span>
+    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">"is a value of type"</span></div>
 
 
 
 <div class="viewcode-block" id="assert_not_type">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_not_type">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">assert_not_type</span><span class="p">(</span><span class="n">_compare_type</span><span class="p">):</span>
-    <span class="n">justification</span> <span class="o">=</span> <span class="s2">&quot;Value is of type&quot;</span>
-    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;to not be a value of type&quot;</span><span class="p">,</span> <span class="s2">&quot;to not be the type of&quot;</span><span class="p">)</span>
-    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">&quot;is not a value of type&quot;</span>
+    <span class="n">justification</span> <span class="o">=</span> <span class="s2">"Value is of type"</span>
+    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"to not be a value of type"</span><span class="p">,</span> <span class="s2">"to not be the type of"</span><span class="p">)</span>
+    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">"is not a value of type"</span>
 
 <div class="viewcode-block" id="assert_not_type.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_not_type.condition">[docs]</a>
@@ -830,12 +830,12 @@
 <div class="viewcode-block" id="assert_regex">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_regex">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">assert_regex</span><span class="p">(</span><span class="n">RuntimeAssertionFeedback</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Determine if the ``regex`` matches ``text``.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">justification</span> <span class="o">=</span> <span class="s2">&quot;Regex does not match text&quot;</span>
-    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;to be matched by the regex&quot;</span><span class="p">,</span> <span class="s2">&quot;to match the text&quot;</span><span class="p">)</span>
-    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">&quot;does not match the text&quot;</span>
+<span class="sd">    """</span>
+    <span class="n">justification</span> <span class="o">=</span> <span class="s2">"Regex does not match text"</span>
+    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"to be matched by the regex"</span><span class="p">,</span> <span class="s2">"to match the text"</span><span class="p">)</span>
+    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">"does not match the text"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">regex</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">SandboxedValue</span><span class="p">(</span><span class="n">regex</span><span class="p">),</span> <span class="n">SandboxedValue</span><span class="p">(</span><span class="n">text</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -843,7 +843,7 @@
 <div class="viewcode-block" id="assert_regex.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_regex.condition">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">regex</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Tests if the regex matches the text &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">""" Tests if the regex matches the text """</span>
         <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">regex</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">value</span><span class="p">))</span> <span class="ow">is</span> <span class="kc">None</span></div>
 </div>
 
@@ -852,12 +852,12 @@
 <div class="viewcode-block" id="assert_not_regex">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_not_regex">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">assert_not_regex</span><span class="p">(</span><span class="n">RuntimeAssertionFeedback</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Determine if the ``regex`` does not match ``text``.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">justification</span> <span class="o">=</span> <span class="s2">&quot;Regex matches text&quot;</span>
-    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;to not match the regex&quot;</span><span class="p">,</span> <span class="s2">&quot;to not match the text&quot;</span><span class="p">)</span>
-    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">&quot;matches the text&quot;</span>
+<span class="sd">    """</span>
+    <span class="n">justification</span> <span class="o">=</span> <span class="s2">"Regex matches text"</span>
+    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"to not match the regex"</span><span class="p">,</span> <span class="s2">"to not match the text"</span><span class="p">)</span>
+    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">"matches the text"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">regex</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">SandboxedValue</span><span class="p">(</span><span class="n">regex</span><span class="p">),</span> <span class="n">SandboxedValue</span><span class="p">(</span><span class="n">text</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -865,7 +865,7 @@
 <div class="viewcode-block" id="assert_not_regex.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_not_regex.condition">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">regex</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Tests if the regex does not match the text &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">""" Tests if the regex does not match the text """</span>
         <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">regex</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">value</span><span class="p">))</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></div>
 </div>
 
@@ -874,22 +874,22 @@
 <div class="viewcode-block" id="assert_almost_equal">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_almost_equal">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">assert_almost_equal</span><span class="p">(</span><span class="n">assert_equal</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Test if the two values are almost equal; equivalent to assert_equal. &quot;&quot;&quot;</span></div>
+<span class="w">    </span><span class="sd">""" Test if the two values are almost equal; equivalent to assert_equal. """</span></div>
 
 
 
 <div class="viewcode-block" id="assert_not_almost_equal">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_not_almost_equal">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">assert_not_almost_equal</span><span class="p">(</span><span class="n">assert_not_equal</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Test if the two values are not almost equal; equivalent to</span>
-<span class="sd">    assert_not_equal. &quot;&quot;&quot;</span></div>
+<span class="w">    </span><span class="sd">""" Test if the two values are not almost equal; equivalent to</span>
+<span class="sd">    assert_not_equal. """</span></div>
 
 
 
 <div class="viewcode-block" id="assert_output">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_output">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">assert_output</span><span class="p">(</span><span class="n">RuntimePrintingAssertionFeedback</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Determine if the ``execution`` outputs ``text``. Uses the `==` operator to do the final comparison.</span>
 <span class="sd">    In this case, you can think of the output as a single string with newlines, as opposed to a list</span>
 <span class="sd">    of strings (i.e., it is retrieved with `raw_output`).</span>
@@ -905,15 +905,15 @@
 
 <span class="sd">    So the default check will be fairly generous about checking output; as long as all the lines are</span>
 <span class="sd">    there (in whatever order), ignoring punctuation and case, the text will be found.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">justification</span> <span class="o">=</span> <span class="s2">&quot;Did not print the output&quot;</span>
-    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="s2">&quot;the output to be&quot;</span>
-    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">&quot;does not have the text&quot;</span>
+<span class="sd">    """</span>
+    <span class="n">justification</span> <span class="o">=</span> <span class="s2">"Did not print the output"</span>
+    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="s2">"the output to be"</span>
+    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">"does not have the text"</span>
 
 <div class="viewcode-block" id="assert_output.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_output.condition">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">execution</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">exact_strings</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Tests if the regex does not match the text &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">""" Tests if the regex does not match the text """</span>
         <span class="k">return</span> <span class="n">errors</span><span class="p">(</span><span class="n">execution</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">equality_test</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_output</span><span class="p">(</span><span class="n">execution</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">value</span><span class="p">),</span>
                                                       <span class="n">_exact_strings</span><span class="o">=</span><span class="n">exact_strings</span><span class="p">,</span> <span class="n">_delta</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></div>
 </div>
@@ -923,25 +923,25 @@
 <div class="viewcode-block" id="assert_prints">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_prints">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">assert_prints</span><span class="p">(</span><span class="n">assert_output</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Deprecated version of assert_output &quot;&quot;&quot;</span></div>
+<span class="w">    </span><span class="sd">""" Deprecated version of assert_output """</span></div>
 
 
 
 <div class="viewcode-block" id="assert_not_output">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_not_output">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">assert_not_output</span><span class="p">(</span><span class="n">RuntimePrintingAssertionFeedback</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Determine if the ``execution`` does not output ``text``. Simply the inverse of</span>
 <span class="sd">    :py:func:`pedal.assertions.runtime.assert_output` so check the rules there for more information.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">justification</span> <span class="o">=</span> <span class="s2">&quot;Printed the output&quot;</span>
-    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="s2">&quot;the output to not be&quot;</span>
-    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">&quot;has the text&quot;</span>
+<span class="sd">    """</span>
+    <span class="n">justification</span> <span class="o">=</span> <span class="s2">"Printed the output"</span>
+    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="s2">"the output to not be"</span>
+    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">"has the text"</span>
 
 <div class="viewcode-block" id="assert_not_output.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_not_output.condition">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">execution</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">exact_strings</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Tests if the regex does not match the text &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">""" Tests if the regex does not match the text """</span>
         <span class="k">return</span> <span class="n">equality_test</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_output</span><span class="p">(</span><span class="n">execution</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">value</span><span class="p">),</span>
                              <span class="n">_exact_strings</span><span class="o">=</span><span class="n">exact_strings</span><span class="p">,</span> <span class="n">_delta</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></div>
 </div>
@@ -951,21 +951,21 @@
 <div class="viewcode-block" id="assert_output_contains">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_output_contains">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">assert_output_contains</span><span class="p">(</span><span class="n">RuntimePrintingAssertionFeedback</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Determine if the ``execution`` outputs ``text`` anywhere. Unlike :py:func:`pedal.assertions.runtime.assert_output`,</span>
 <span class="sd">    this function uses the `in` operator. If the `exact_strings` parameter is `False`, then both strings are only</span>
 <span class="sd">    lowercased first (but the other normalization rules from `assert_output` are not applied). Can be a more flexible</span>
 <span class="sd">    check since it just looks for whether the run of characters is ANYWHERE in the output. Remember that newlines are</span>
 <span class="sd">    part of the output, though, so the check will not work across lines unless the `text` includes those newlines.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">justification</span> <span class="o">=</span> <span class="s2">&quot;Did not contain the printed output&quot;</span>
-    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="s2">&quot;the output to contain&quot;</span>
-    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">&quot;does not contain the text&quot;</span>
+<span class="sd">    """</span>
+    <span class="n">justification</span> <span class="o">=</span> <span class="s2">"Did not contain the printed output"</span>
+    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="s2">"the output to contain"</span>
+    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">"does not contain the text"</span>
 
 <div class="viewcode-block" id="assert_output_contains.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_output_contains.condition">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">execution</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">exact_strings</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Tests if the regex does not match the text &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">""" Tests if the regex does not match the text """</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">exact_strings</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_output</span><span class="p">(</span><span class="n">execution</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
         <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_output</span><span class="p">(</span><span class="n">execution</span><span class="p">)</span></div>
@@ -976,17 +976,17 @@
 <div class="viewcode-block" id="assert_not_output_contains">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_not_output_contains">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">assert_not_output_contains</span><span class="p">(</span><span class="n">RuntimePrintingAssertionFeedback</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Determine if the ``execution`` outputs ``text``</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">justification</span> <span class="o">=</span> <span class="s2">&quot;Contained the printed output&quot;</span>
-    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="s2">&quot;the output to not contain&quot;</span>
-    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">&quot;contained the text&quot;</span>
+<span class="sd">    """</span>
+    <span class="n">justification</span> <span class="o">=</span> <span class="s2">"Contained the printed output"</span>
+    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="s2">"the output to not contain"</span>
+    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">"contained the text"</span>
 
 <div class="viewcode-block" id="assert_not_output_contains.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_not_output_contains.condition">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">execution</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">exact_strings</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Tests if the regex does not match the text &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">""" Tests if the regex does not match the text """</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">exact_strings</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_output</span><span class="p">(</span><span class="n">execution</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
         <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_output</span><span class="p">(</span><span class="n">execution</span><span class="p">)</span></div>
@@ -997,12 +997,12 @@
 <div class="viewcode-block" id="assert_output_regex">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_output_regex">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">assert_output_regex</span><span class="p">(</span><span class="n">RuntimePrintingAssertionFeedback</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Determine if the ``execution`` output matches the given regex, similar to assert_output and assert_regex.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">justification</span> <span class="o">=</span> <span class="s2">&quot;Did not print the output matching the regex&quot;</span>
-    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="s2">&quot;the output to match the regex&quot;</span>
-    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">&quot;does not match the text&quot;</span>
+<span class="sd">    """</span>
+    <span class="n">justification</span> <span class="o">=</span> <span class="s2">"Did not print the output matching the regex"</span>
+    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="s2">"the output to match the regex"</span>
+    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">"does not match the text"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">execution</span><span class="p">,</span> <span class="n">exact_strings</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">execution</span><span class="p">,</span> <span class="n">pattern</span><span class="p">,</span>
@@ -1011,7 +1011,7 @@
 <div class="viewcode-block" id="assert_output_regex.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_output_regex.condition">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">execution</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">exact_strings</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Tests if the regex does not match the text &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">""" Tests if the regex does not match the text """</span>
         <span class="k">return</span> <span class="n">errors</span><span class="p">(</span><span class="n">execution</span><span class="p">)</span> <span class="ow">or</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">value</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_output</span><span class="p">(</span><span class="n">execution</span><span class="p">))</span> <span class="ow">is</span> <span class="kc">None</span></div>
 </div>
 
@@ -1020,13 +1020,13 @@
 <div class="viewcode-block" id="assert_not_output_regex">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_not_output_regex">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">assert_not_output_regex</span><span class="p">(</span><span class="n">RuntimePrintingAssertionFeedback</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Determine if the ``execution`` does not output ``text``. Simply the inverse of</span>
 <span class="sd">    :py:func:`pedal.assertions.runtime.assert_output` so check the rules there for more information.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">justification</span> <span class="o">=</span> <span class="s2">&quot;Printed the output matching the regex&quot;</span>
-    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="s2">&quot;the output to not match the regex&quot;</span>
-    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">&quot;matches the text&quot;</span>
+<span class="sd">    """</span>
+    <span class="n">justification</span> <span class="o">=</span> <span class="s2">"Printed the output matching the regex"</span>
+    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="s2">"the output to not match the regex"</span>
+    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">"matches the text"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">execution</span><span class="p">,</span> <span class="n">exact_strings</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">execution</span><span class="p">,</span> <span class="n">pattern</span><span class="p">,</span>
@@ -1035,7 +1035,7 @@
 <div class="viewcode-block" id="assert_not_output_regex.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_not_output_regex.condition">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">execution</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">exact_strings</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Tests if the regex does not match the text &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">""" Tests if the regex does not match the text """</span>
         <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">value</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_output</span><span class="p">(</span><span class="n">execution</span><span class="p">))</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></div>
 </div>
 
@@ -1044,17 +1044,17 @@
 <div class="viewcode-block" id="assert_has_attr">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_has_attr">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">assert_has_attr</span><span class="p">(</span><span class="n">RuntimeAssertionFeedback</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Determine if the ``object`` has the ``name``</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">justification</span> <span class="o">=</span> <span class="s2">&quot;Contained the attribute&quot;</span>
-    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="s2">&quot;the object to contain&quot;</span>
-    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">&quot;did not contain&quot;</span>
+<span class="sd">    """</span>
+    <span class="n">justification</span> <span class="o">=</span> <span class="s2">"Contained the attribute"</span>
+    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="s2">"the object to contain"</span>
+    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">"did not contain"</span>
 
 <div class="viewcode-block" id="assert_has_attr.condition">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_has_attr.condition">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">exact_strings</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Tests if the regex does not match the text &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">""" Tests if the regex does not match the text """</span>
         <span class="k">return</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">attr</span><span class="o">.</span><span class="n">value</span><span class="p">)</span></div>
 </div>
 
@@ -1063,11 +1063,11 @@
 <div class="viewcode-block" id="assert_has_variable">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_has_variable">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">assert_has_variable</span><span class="p">(</span><span class="n">RuntimeAssertionFeedback</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Determine if the student&#39;s data has the name.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="s2">&quot;to contain the variable&quot;</span>
-    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">&quot;does not contain the variable&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Determine if the student's data has the name.</span>
+<span class="sd">    """</span>
+    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="s2">"to contain the variable"</span>
+    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">"does not contain the variable"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sandbox</span><span class="p">,</span> <span class="n">variable_name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">SandboxedValue</span><span class="p">(</span><span class="n">sandbox</span><span class="p">),</span>
@@ -1077,7 +1077,7 @@
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_has_variable.format_assertion">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">format_assertion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sandbox</span><span class="p">,</span> <span class="n">variable_name</span><span class="p">,</span> <span class="n">contexts</span><span class="p">):</span>
         <span class="n">variable_name</span> <span class="o">=</span> <span class="n">variable_name</span><span class="o">.</span><span class="n">value</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;The variable </span><span class="si">{</span><span class="n">variable_name</span><span class="si">}</span><span class="s2"> was not created.&quot;</span></div>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"The variable </span><span class="si">{</span><span class="n">variable_name</span><span class="si">}</span><span class="s2"> was not created."</span></div>
 
 
 
@@ -1099,11 +1099,11 @@
 <div class="viewcode-block" id="assert_has_function">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.assert_has_function">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">assert_has_function</span><span class="p">(</span><span class="n">RuntimeAssertionFeedback</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Determine if the student&#39;s code has the function.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="s2">&quot;to contain the function&quot;</span>
-    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">&quot;does not contain the function&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Determine if the student's code has the function.</span>
+<span class="sd">    """</span>
+    <span class="n">_expected_verb</span> <span class="o">=</span> <span class="s2">"to contain the function"</span>
+    <span class="n">_inverse_operator</span> <span class="o">=</span> <span class="s2">"does not contain the function"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sandbox</span><span class="p">,</span> <span class="n">function_name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">SandboxedValue</span><span class="p">(</span><span class="n">sandbox</span><span class="p">),</span>
@@ -1114,9 +1114,9 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">format_assertion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sandbox</span><span class="p">,</span> <span class="n">function_name</span><span class="p">,</span> <span class="n">contexts</span><span class="p">):</span>
         <span class="n">sandbox</span> <span class="o">=</span> <span class="n">sandbox</span><span class="o">.</span><span class="n">value</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sandbox</span><span class="p">,</span> <span class="n">Sandbox</span><span class="p">):</span>
-            <span class="k">return</span> <span class="s2">&quot;Sandbox does not contain the function.&quot;</span>
+            <span class="k">return</span> <span class="s2">"Sandbox does not contain the function."</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s2">&quot;The result does not contain the function.&quot;</span></div>
+            <span class="k">return</span> <span class="s2">"The result does not contain the function."</span></div>
 
 
 <div class="viewcode-block" id="assert_has_function.condition">
@@ -1136,13 +1136,13 @@
 </div>
 
 
-<span class="c1"># TODO: This one is at Runtime, but is not an assertion... Should these be &quot;tests&quot;?</span>
+<span class="c1"># TODO: This one is at Runtime, but is not an assertion... Should these be "tests"?</span>
 
 
 <div class="viewcode-block" id="ensure_coverage">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.ensure_coverage">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ensure_coverage</span><span class="p">(</span><span class="n">AssertionFeedback</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Verifies that the most recent executed and traced student code has</span>
 <span class="sd">    ``at_least`` the given ratio of covered (executed) lines.</span>
 
@@ -1150,22 +1150,22 @@
 <span class="sd">        at_least (float): The ratio of covered lines. A value of 1.0 is all</span>
 <span class="sd">            lines covered, 0.0 is no lines covered, and .5 is half the lines</span>
 <span class="sd">            covered.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;You Must Test Your Code&quot;</span>
-    <span class="n">message_template</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;Your code coverage is not adequate. You must cover at &quot;</span>
-                        <span class="s2">&quot;least </span><span class="si">{at_least_message}% o</span><span class="s2">f your code to receive &quot;</span>
-                        <span class="s2">&quot;feedback. So far, you have only covered &quot;</span>
-                        <span class="s2">&quot;</span><span class="si">{coverage_message}</span><span class="s2">%.&quot;</span><span class="p">)</span>
+<span class="sd">    """</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="s2">"You Must Test Your Code"</span>
+    <span class="n">message_template</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"Your code coverage is not adequate. You must cover at "</span>
+                        <span class="s2">"least </span><span class="si">{at_least_message}% o</span><span class="s2">f your code to receive "</span>
+                        <span class="s2">"feedback. So far, you have only covered "</span>
+                        <span class="s2">"</span><span class="si">{coverage_message}</span><span class="s2">%."</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">at_least</span><span class="o">=</span><span class="mf">.5</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="n">report</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;report&quot;</span><span class="p">,</span> <span class="n">MAIN_REPORT</span><span class="p">)</span>
-        <span class="n">fields</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;fields&#39;</span><span class="p">,</span> <span class="p">{})</span>
-        <span class="n">fields</span><span class="p">[</span><span class="s1">&#39;at_least&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">at_least</span>
-        <span class="n">fields</span><span class="p">[</span><span class="s1">&#39;at_least_message&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="mi">100</span><span class="o">*</span><span class="n">at_least</span><span class="p">)))</span>
+        <span class="n">report</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"report"</span><span class="p">,</span> <span class="n">MAIN_REPORT</span><span class="p">)</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">'fields'</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="n">fields</span><span class="p">[</span><span class="s1">'at_least'</span><span class="p">]</span> <span class="o">=</span> <span class="n">at_least</span>
+        <span class="n">fields</span><span class="p">[</span><span class="s1">'at_least_message'</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="mi">100</span><span class="o">*</span><span class="n">at_least</span><span class="p">)))</span>
         <span class="n">unexecuted_lines</span><span class="p">,</span> <span class="n">coverage</span> <span class="o">=</span> <span class="n">check_coverage</span><span class="p">(</span><span class="n">report</span><span class="p">)</span>
-        <span class="n">fields</span><span class="p">[</span><span class="s1">&#39;unexecuted_lines&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">unexecuted_lines</span>
-        <span class="n">fields</span><span class="p">[</span><span class="s1">&#39;coverage&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">coverage</span>
-        <span class="n">fields</span><span class="p">[</span><span class="s1">&#39;coverage_message&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="mi">100</span><span class="o">*</span><span class="n">coverage</span><span class="p">)))</span>
+        <span class="n">fields</span><span class="p">[</span><span class="s1">'unexecuted_lines'</span><span class="p">]</span> <span class="o">=</span> <span class="n">unexecuted_lines</span>
+        <span class="n">fields</span><span class="p">[</span><span class="s1">'coverage'</span><span class="p">]</span> <span class="o">=</span> <span class="n">coverage</span>
+        <span class="n">fields</span><span class="p">[</span><span class="s1">'coverage_message'</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="mi">100</span><span class="o">*</span><span class="n">coverage</span><span class="p">)))</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">coverage</span><span class="p">,</span> <span class="n">at_least</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 <div class="viewcode-block" id="ensure_coverage.condition">
@@ -1179,7 +1179,7 @@
 <div class="viewcode-block" id="ensure_called_uniquely">
 <a class="viewcode-back" href="../../../developers/tools/assertions.html#pedal.assertions.runtime.ensure_called_uniquely">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ensure_called_uniquely</span><span class="p">(</span><span class="n">AssertionFeedback</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Verifies that the most recent executed and traced student code has</span>
 <span class="sd">    ``at_least`` called the given function uniquely that number of times.</span>
 <span class="sd">    In other words, it prevents students from calling the same function repeatedly</span>
@@ -1195,35 +1195,35 @@
 <span class="sd">        ignore (set[tuple]): A sequence of argument sets to ignore.</span>
 <span class="sd">        why_ignored (str): If you want to explain why you are ignoring some of</span>
 <span class="sd">            the tests, you can provide some text here. For example,</span>
-<span class="sd">            `&quot; because they overlap with examples you were given&quot;`.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;You Must Test Your Code&quot;</span>
-    <span class="n">message_template</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;You have not tested the function </span><span class="si">{function_name}</span><span class="s2"> enough. &quot;</span>
-                        <span class="s2">&quot;You should test it at least </span><span class="si">{at_least}</span><span class="s2"> times. Each time you&quot;</span>
-                        <span class="s2">&quot; test it, you should be using a new set of arguments.&quot;</span>
-                        <span class="s2">&quot; So far, you have called it </span><span class="si">{total_calls}</span><span class="s2"> times in total and&quot;</span>
-                        <span class="s2">&quot; </span><span class="si">{unique_calls}</span><span class="s2"> times distinctively</span><span class="si">{instructor_ignore_message}</span><span class="s2">.&quot;</span><span class="p">)</span>
+<span class="sd">            `" because they overlap with examples you were given"`.</span>
+<span class="sd">    """</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="s2">"You Must Test Your Code"</span>
+    <span class="n">message_template</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"You have not tested the function </span><span class="si">{function_name}</span><span class="s2"> enough. "</span>
+                        <span class="s2">"You should test it at least </span><span class="si">{at_least}</span><span class="s2"> times. Each time you"</span>
+                        <span class="s2">" test it, you should be using a new set of arguments."</span>
+                        <span class="s2">" So far, you have called it </span><span class="si">{total_calls}</span><span class="s2"> times in total and"</span>
+                        <span class="s2">" </span><span class="si">{unique_calls}</span><span class="s2"> times distinctively</span><span class="si">{instructor_ignore_message}</span><span class="s2">."</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">function_name</span><span class="p">,</span> <span class="n">at_least</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ignore</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">why_ignored</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="n">report</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;report&quot;</span><span class="p">,</span> <span class="n">MAIN_REPORT</span><span class="p">)</span>
-        <span class="n">fields</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;fields&#39;</span><span class="p">,</span> <span class="p">{})</span>
-        <span class="n">fields</span><span class="p">[</span><span class="s1">&#39;function_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">function_name</span>
-        <span class="n">fields</span><span class="p">[</span><span class="s1">&#39;at_least&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">at_least</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">function_name</span><span class="p">,</span> <span class="n">at_least</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ignore</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">why_ignored</span><span class="o">=</span><span class="s2">""</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">report</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"report"</span><span class="p">,</span> <span class="n">MAIN_REPORT</span><span class="p">)</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">'fields'</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="n">fields</span><span class="p">[</span><span class="s1">'function_name'</span><span class="p">]</span> <span class="o">=</span> <span class="n">function_name</span>
+        <span class="n">fields</span><span class="p">[</span><span class="s1">'at_least'</span><span class="p">]</span> <span class="o">=</span> <span class="n">at_least</span>
         <span class="k">if</span> <span class="n">ignore</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">ignore</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">ignore</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">ignore</span><span class="p">)</span>
-        <span class="n">fields</span><span class="p">[</span><span class="s1">&#39;ignore&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ignore</span>
+        <span class="n">fields</span><span class="p">[</span><span class="s1">'ignore'</span><span class="p">]</span> <span class="o">=</span> <span class="n">ignore</span>
         <span class="n">calls</span> <span class="o">=</span> <span class="n">get_call_arguments</span><span class="p">(</span><span class="n">function_name</span><span class="p">,</span> <span class="n">report</span><span class="p">)</span>
         <span class="n">unique_calls</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="nb">tuple</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">repr</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span> <span class="k">for</span> <span class="n">args</span> <span class="ow">in</span> <span class="n">calls</span><span class="p">])</span>
-        <span class="n">fields</span><span class="p">[</span><span class="s1">&#39;instructor_ignored&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">instructor_ignored</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">unique_calls</span> <span class="o">&amp;</span> <span class="n">ignore</span><span class="p">)</span>
+        <span class="n">fields</span><span class="p">[</span><span class="s1">'instructor_ignored'</span><span class="p">]</span> <span class="o">=</span> <span class="n">instructor_ignored</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">unique_calls</span> <span class="o">&amp;</span> <span class="n">ignore</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">instructor_ignored</span><span class="p">:</span>
-            <span class="n">fields</span><span class="p">[</span><span class="s1">&#39;instructor_ignore_message&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot; (but your instructor did not count </span><span class="si">{</span><span class="n">instructor_ignored</span><span class="si">}</span><span class="s2"> of the tests</span><span class="si">{</span><span class="n">why_ignored</span><span class="si">}</span><span class="s2">)&quot;</span>
+            <span class="n">fields</span><span class="p">[</span><span class="s1">'instructor_ignore_message'</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">" (but your instructor did not count </span><span class="si">{</span><span class="n">instructor_ignored</span><span class="si">}</span><span class="s2"> of the tests</span><span class="si">{</span><span class="n">why_ignored</span><span class="si">}</span><span class="s2">)"</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">fields</span><span class="p">[</span><span class="s1">&#39;instructor_ignore_message&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-        <span class="n">fields</span><span class="p">[</span><span class="s1">&#39;total_calls&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">calls</span><span class="p">)</span>
+            <span class="n">fields</span><span class="p">[</span><span class="s1">'instructor_ignore_message'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">""</span>
+        <span class="n">fields</span><span class="p">[</span><span class="s1">'total_calls'</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">calls</span><span class="p">)</span>
         <span class="n">unique_call_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">unique_calls</span> <span class="o">-</span> <span class="n">ignore</span><span class="p">)</span>
-        <span class="n">fields</span><span class="p">[</span><span class="s1">&#39;unique_calls&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">unique_call_count</span>
+        <span class="n">fields</span><span class="p">[</span><span class="s1">'unique_calls'</span><span class="p">]</span> <span class="o">=</span> <span class="n">unique_call_count</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">unique_call_count</span><span class="p">,</span> <span class="n">at_least</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 <div class="viewcode-block" id="ensure_called_uniquely.condition">
@@ -1236,7 +1236,7 @@
 
 <span class="nd">@CompositeFeedbackFunction</span><span class="p">(</span><span class="n">function_not_available</span><span class="p">,</span> <span class="n">name_is_not_a_function</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">ensure_function_callable</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="n">report</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;report&quot;</span><span class="p">,</span> <span class="n">MAIN_REPORT</span><span class="p">)</span>
+    <span class="n">report</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"report"</span><span class="p">,</span> <span class="n">MAIN_REPORT</span><span class="p">)</span>
     <span class="n">values</span> <span class="o">=</span> <span class="n">get_student_data</span><span class="p">(</span><span class="n">report</span><span class="p">)</span>
     <span class="c1"># 2.1. Does the name exist in the values?</span>
     <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>

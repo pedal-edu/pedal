@@ -88,9 +88,9 @@
            <div itemprop="articleBody">
              
   <h1>Source code for pedal.command_line.modes</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Simple enumeration of the Modes available for Pedal&#39;s command line.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""</span>
+<span class="sd">Simple enumeration of the Modes available for Pedal's command line.</span>
+<span class="sd">"""</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
@@ -120,43 +120,43 @@
     <span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">tqdm</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Trivial helper function to replace TQDM&#39;s behavior &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">""" Trivial helper function to replace TQDM's behavior """</span>
         <span class="k">yield from</span> <span class="n">values</span>
 
 
 <span class="c1"># Disable all warnings from student files</span>
 <span class="c1"># TODO: Move this strictly into ICS and Submission execution</span>
-<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">"ignore"</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">is_progsnap</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Determines if this is a ProgSnap file or folder. &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">""" Determines if this is a ProgSnap file or folder. """</span>
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
         <span class="n">name</span><span class="p">,</span> <span class="n">extension</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">extension</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;.zip&#39;</span><span class="p">,</span> <span class="s1">&#39;.db&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">extension</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'.zip'</span><span class="p">,</span> <span class="s1">'.db'</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="c1"># Does it have all the necessary components?</span>
-        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;MainTable.csv&#39;</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">'MainTable.csv'</span><span class="p">))</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">get_python_files</span><span class="p">(</span><span class="n">paths</span><span class="p">):</span>
     <span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
         <span class="n">name</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">ext</span> <span class="o">!=</span> <span class="s2">&quot;.py&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">ext</span> <span class="o">!=</span> <span class="s2">".py"</span><span class="p">:</span>
             <span class="k">continue</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">submission_file</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span> <span class="k">as</span> <span class="n">submission_file</span><span class="p">:</span>
             <span class="n">contents</span> <span class="o">=</span> <span class="n">submission_file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
         <span class="n">result</span><span class="p">[</span><span class="n">path</span><span class="p">]</span> <span class="o">=</span> <span class="n">contents</span>
     <span class="k">return</span> <span class="n">result</span>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">BundleResult</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Represents the result of running an instructor control script on a submission.</span>
 <span class="sd">    This includes not only the output and error, but also the resolution of the feedback (aka</span>
 <span class="sd">    the final feedback). Also includes the data that was generated during the execution.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">error</span><span class="p">,</span> <span class="n">resolution</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">output</span> <span class="o">=</span> <span class="n">output</span>
@@ -167,69 +167,69 @@
         <span class="n">resolution</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="k">else</span> <span class="p">{}</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
             <span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span><span class="o">.</span><span class="n">to_json</span><span class="p">()</span>
-        <span class="c1">#if &#39;considered&#39; in resolution:</span>
-        <span class="c1">#    for c in resolution[&#39;considered&#39;]:</span>
-        <span class="c1">#        if &#39;fields&#39; in c:</span>
-        <span class="c1">#            del c[&#39;fields&#39;]</span>
+        <span class="c1">#if 'considered' in resolution:</span>
+        <span class="c1">#    for c in resolution['considered']:</span>
+        <span class="c1">#        if 'fields' in c:</span>
+        <span class="c1">#            del c['fields']</span>
         <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span>
             <span class="n">output</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">,</span>
             <span class="n">error</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">error</span><span class="p">,</span>
             <span class="o">**</span><span class="n">resolution</span>
         <span class="p">)</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">extract_instructor_pool</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">script</span><span class="p">,</span> <span class="n">submission</span><span class="p">,</span> <span class="n">pool_mode</span><span class="o">=</span><span class="s1">&#39;comment&#39;</span><span class="p">):</span>
-    <span class="n">parts</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;#{4,} (.+) #{4,}&quot;</span><span class="p">,</span> <span class="n">script</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">M</span><span class="p">)</span>
-    <span class="n">unnamed_parts</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;#{4,} .+ #{4,}&quot;</span><span class="p">,</span> <span class="n">script</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">M</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">extract_instructor_pool</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">script</span><span class="p">,</span> <span class="n">submission</span><span class="p">,</span> <span class="n">pool_mode</span><span class="o">=</span><span class="s1">'comment'</span><span class="p">):</span>
+    <span class="n">parts</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">r</span><span class="s2">"#{4,} (.+) #{4,}"</span><span class="p">,</span> <span class="n">script</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">M</span><span class="p">)</span>
+    <span class="n">unnamed_parts</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">r</span><span class="s2">"#{4,} .+ #{4,}"</span><span class="p">,</span> <span class="n">script</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">M</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">2</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="s2">&quot;Pools not found in instructor control script. Please specify a pool in the instructor control script by writing `#### &lt;pool_name&gt; ####` at the top of the file. Note the hash signs and spaces are necessary, but you do not need the angle brackets.&quot;</span>
+            <span class="s2">"Pools not found in instructor control script. Please specify a pool in the instructor control script by writing `#### &lt;pool_name&gt; ####` at the top of the file. Note the hash signs and spaces are necessary, but you do not need the angle brackets."</span>
         <span class="p">)</span>
     <span class="n">header</span><span class="p">,</span> <span class="n">footer</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">parts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
-    <span class="k">if</span> <span class="n">pool_mode</span> <span class="o">==</span> <span class="s1">&#39;comment&#39;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">pool_mode</span> <span class="o">==</span> <span class="s1">'comment'</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">submission</span><span class="o">.</span><span class="n">main_code</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
-            <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;# pool: &quot;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"# pool: "</span><span class="p">):</span>
                 <span class="n">pool_name</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">8</span><span class="p">:]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
                 <span class="k">break</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;No pool found in submission. Please specify a pool in the submission file by writing `# pool: &lt;pool_name&gt;` at the top of the file.&quot;</span>
+                <span class="s2">"No pool found in submission. Please specify a pool in the submission file by writing `# pool: &lt;pool_name&gt;` at the top of the file."</span>
             <span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">pool_name</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;No pool found in submission. Please specify a pool in the submission file by writing `# pool: &lt;pool_name&gt;` at the top of the file.&quot;</span>
+                <span class="s2">"No pool found in submission. Please specify a pool in the submission file by writing `# pool: &lt;pool_name&gt;` at the top of the file."</span>
             <span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">parts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">pool_name</span><span class="p">:</span>
                 <span class="n">body</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
                 <span class="k">break</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">found_pools</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">])</span>
+            <span class="n">found_pools</span> <span class="o">=</span> <span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">])</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Pool &#39;</span><span class="si">{</span><span class="n">pool_name</span><span class="si">}</span><span class="s2">&#39; not found in instructor control script. Please specify a pool in the instructor control script by writing `#### </span><span class="si">{</span><span class="n">pool_name</span><span class="si">}</span><span class="s2"> ####` at the top of the file. Note the hash signs and spaces are necessary, but you do not need the angle brackets. Found pools: </span><span class="si">{</span><span class="n">found_pools</span><span class="si">}</span><span class="s2">.&quot;</span>
+                <span class="sa">f</span><span class="s2">"Pool '</span><span class="si">{</span><span class="n">pool_name</span><span class="si">}</span><span class="s2">' not found in instructor control script. Please specify a pool in the instructor control script by writing `#### </span><span class="si">{</span><span class="n">pool_name</span><span class="si">}</span><span class="s2"> ####` at the top of the file. Note the hash signs and spaces are necessary, but you do not need the angle brackets. Found pools: </span><span class="si">{</span><span class="n">found_pools</span><span class="si">}</span><span class="s2">."</span>
             <span class="p">)</span>
-    <span class="k">elif</span> <span class="n">pool_mode</span> <span class="o">==</span> <span class="s1">&#39;submission_id&#39;</span><span class="p">:</span>
-        <span class="n">pool_id</span> <span class="o">=</span> <span class="n">submission</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;submission_id&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">submission</span><span class="o">.</span><span class="n">execution</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="k">elif</span> <span class="n">pool_mode</span> <span class="o">==</span> <span class="s1">'submission_id'</span><span class="p">:</span>
+        <span class="n">pool_id</span> <span class="o">=</span> <span class="n">submission</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'submission_id'</span><span class="p">)</span> <span class="k">if</span> <span class="n">submission</span><span class="o">.</span><span class="n">execution</span> <span class="k">else</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">pool_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;No pool id found in submission. Please ensure the submission has a submission_id for the execution.&quot;</span>
+                <span class="s2">"No pool id found in submission. Please ensure the submission has a submission_id for the execution."</span>
             <span class="p">)</span>
         <span class="n">pool_index</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="n">pool_id</span> <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">unnamed_parts</span><span class="p">)</span><span class="o">-</span><span class="mi">2</span><span class="p">))</span>
         <span class="n">body</span> <span class="o">=</span> <span class="n">unnamed_parts</span><span class="p">[</span><span class="n">pool_index</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown pool mode: </span><span class="si">{</span><span class="n">pool_mode</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown pool mode: </span><span class="si">{</span><span class="n">pool_mode</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="c1"># print(header, body, footer)</span>
-    <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span> <span class="n">header</span><span class="p">,</span> <span class="n">body</span><span class="p">,</span> <span class="n">footer</span> <span class="p">])</span>
+    <span class="k">return</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">([</span> <span class="n">header</span><span class="p">,</span> <span class="n">body</span><span class="p">,</span> <span class="n">footer</span> <span class="p">])</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">Bundle</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Represents the combination of an instructor control script and a submission that it is</span>
 <span class="sd">    being run on. Also includes the environment that the script is being run in, and the</span>
 <span class="sd">    result of the execution (once the execution is finished). Finally, also includes the</span>
 <span class="sd">    configuration that was used to run the bundle.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">script</span><span class="p">,</span> <span class="n">submission</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">pool</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;comment&#39;</span><span class="p">,</span> <span class="s1">&#39;submission_id&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">pool</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'comment'</span><span class="p">,</span> <span class="s1">'submission_id'</span><span class="p">):</span>
             <span class="n">script</span> <span class="o">=</span> <span class="n">extract_instructor_pool</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">script</span><span class="p">,</span> <span class="n">submission</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">pool</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">script</span> <span class="o">=</span> <span class="n">script</span>
@@ -245,44 +245,44 @@
             <span class="n">result</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">to_json</span><span class="p">()</span>
         <span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">run_ics_bundle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolver</span><span class="o">=</span><span class="s1">&#39;resolve&#39;</span><span class="p">,</span> <span class="n">skip_tifa</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">skip_run</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_ics_bundle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolver</span><span class="o">=</span><span class="s1">'resolve'</span><span class="p">,</span> <span class="n">skip_tifa</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">skip_run</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Runs the given instructor control script on the given submission, with the</span>
 <span class="sd">        accompany contextualizations.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">ics_args</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">submission</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="p">]</span>
         <span class="n">captured_output</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
         <span class="n">global_data</span> <span class="o">=</span> <span class="n">make_instructor_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">extra_instructor_files</span><span class="p">)</span>
         <span class="n">error</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">resolution</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="p">:</span>
-            <span class="n">env</span> <span class="o">=</span> <span class="nb">__import__</span><span class="p">(</span><span class="s1">&#39;pedal.environments.&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="p">,</span>
-                             <span class="n">fromlist</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">])</span>
+            <span class="n">env</span> <span class="o">=</span> <span class="nb">__import__</span><span class="p">(</span><span class="s1">'pedal.environments.'</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="p">,</span>
+                             <span class="n">fromlist</span><span class="o">=</span><span class="p">[</span><span class="s1">''</span><span class="p">])</span>
             <span class="n">global_data</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">setup_environment</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">submission</span><span class="p">,</span>
                                                      <span class="n">skip_tifa</span><span class="o">=</span><span class="n">skip_tifa</span><span class="p">,</span>
                                                      <span class="n">skip_run</span><span class="o">=</span><span class="n">skip_run</span><span class="p">,</span>
                                                      <span class="n">threaded</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">threaded</span><span class="p">)</span><span class="o">.</span><span class="n">fields</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># TODO: Check that this shouldn&#39;t be for global_data instead of MAIN_REPORT directly</span>
+            <span class="c1"># TODO: Check that this shouldn't be for global_data instead of MAIN_REPORT directly</span>
             <span class="n">MAIN_REPORT</span><span class="o">.</span><span class="n">contextualize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">submission</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">points</span><span class="p">:</span>
             <span class="n">MAIN_REPORT</span><span class="o">.</span><span class="n">set_max_points</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">points</span><span class="p">)</span>
         <span class="k">with</span> <span class="n">redirect_stdout</span><span class="p">(</span><span class="n">captured_output</span><span class="p">):</span>
-            <span class="k">with</span> <span class="n">patch</span><span class="o">.</span><span class="n">object</span><span class="p">(</span><span class="n">sys</span><span class="p">,</span> <span class="s1">&#39;argv&#39;</span><span class="p">,</span> <span class="n">ics_args</span><span class="p">):</span>
+            <span class="k">with</span> <span class="n">patch</span><span class="o">.</span><span class="n">object</span><span class="p">(</span><span class="n">sys</span><span class="p">,</span> <span class="s1">'argv'</span><span class="p">,</span> <span class="n">ics_args</span><span class="p">):</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">grader_exec</span> <span class="o">=</span> <span class="nb">compile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">script</span><span class="p">,</span>
-                                          <span class="bp">self</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">instructor_file</span><span class="p">,</span> <span class="s1">&#39;exec&#39;</span><span class="p">)</span>
+                                          <span class="bp">self</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">instructor_file</span><span class="p">,</span> <span class="s1">'exec'</span><span class="p">)</span>
                     <span class="n">exec</span><span class="p">(</span><span class="n">grader_exec</span><span class="p">,</span> <span class="n">global_data</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="s1">&#39;MAIN_REPORT&#39;</span> <span class="ow">in</span> <span class="n">global_data</span><span class="p">:</span>
-                        <span class="k">if</span> <span class="ow">not</span> <span class="n">global_data</span><span class="p">[</span><span class="s1">&#39;MAIN_REPORT&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">resolves</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="s1">'MAIN_REPORT'</span> <span class="ow">in</span> <span class="n">global_data</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="n">global_data</span><span class="p">[</span><span class="s1">'MAIN_REPORT'</span><span class="p">]</span><span class="o">.</span><span class="n">resolves</span><span class="p">:</span>
                             <span class="k">if</span> <span class="n">resolver</span> <span class="ow">in</span> <span class="n">global_data</span><span class="p">:</span>
                                 <span class="n">resolution</span> <span class="o">=</span> <span class="n">global_data</span><span class="p">[</span><span class="n">resolver</span><span class="p">]()</span>
                             <span class="c1"># TODO: Need more elegance/configurability here</span>
-                            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">resolver</span> <span class="o">==</span> <span class="s1">&#39;resolve&#39;</span><span class="p">:</span>
-                                <span class="n">exec</span><span class="p">(</span><span class="s2">&quot;from pedal.resolvers import print_resolve&quot;</span><span class="p">,</span> <span class="n">global_data</span><span class="p">)</span>
-                                <span class="n">resolution</span> <span class="o">=</span> <span class="n">global_data</span><span class="p">[</span><span class="s2">&quot;print_resolve&quot;</span><span class="p">]()</span>
+                            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">resolver</span> <span class="o">==</span> <span class="s1">'resolve'</span><span class="p">:</span>
+                                <span class="n">exec</span><span class="p">(</span><span class="s2">"from pedal.resolvers import print_resolve"</span><span class="p">,</span> <span class="n">global_data</span><span class="p">)</span>
+                                <span class="n">resolution</span> <span class="o">=</span> <span class="n">global_data</span><span class="p">[</span><span class="s2">"print_resolve"</span><span class="p">]()</span>
                         <span class="k">else</span><span class="p">:</span>
-                            <span class="n">resolution</span> <span class="o">=</span> <span class="n">global_data</span><span class="p">[</span><span class="s1">&#39;MAIN_REPORT&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">resolves</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                            <span class="n">resolution</span> <span class="o">=</span> <span class="n">global_data</span><span class="p">[</span><span class="s1">'MAIN_REPORT'</span><span class="p">]</span><span class="o">.</span><span class="n">resolves</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
                 <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                     <span class="n">error</span> <span class="o">=</span> <span class="n">e</span>
         <span class="n">actual_output</span> <span class="o">=</span> <span class="n">captured_output</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span>
@@ -290,11 +290,11 @@
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">AbstractPipeline</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Generic pipeline for handling all the phases of executing instructor</span>
 <span class="sd">    control scripts on submissions, and reformating the output.</span>
 <span class="sd">    Should be subclassed instead of used directly.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
@@ -316,8 +316,8 @@
         <span class="k">for</span> <span class="n">script</span> <span class="ow">in</span> <span class="n">scripts</span><span class="p">:</span>
             <span class="n">script_file_name</span><span class="p">,</span> <span class="n">script_file_extension</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">script</span><span class="p">)</span>
             <span class="c1"># Single Python file</span>
-            <span class="k">if</span> <span class="n">script_file_extension</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;.py&#39;</span><span class="p">,):</span>
-                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">script</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">scripts_file</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">script_file_extension</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'.py'</span><span class="p">,):</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">script</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span> <span class="k">as</span> <span class="n">scripts_file</span><span class="p">:</span>
                     <span class="n">scripts_contents</span> <span class="o">=</span> <span class="n">scripts_file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
                 <span class="n">all_scripts</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">script</span><span class="p">,</span> <span class="n">scripts_contents</span><span class="p">))</span>
         <span class="n">given_submissions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">submissions</span>
@@ -339,8 +339,8 @@
                     <span class="p">)</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">submissions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Bundle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="n">scripts_contents</span><span class="p">,</span> <span class="n">new_submission</span><span class="p">))</span>
         <span class="c1"># Otherwise, if the submission is a single file:</span>
-        <span class="c1"># Maybe it&#39;s a Progsnap DB file?</span>
-        <span class="k">elif</span> <span class="n">given_submissions</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.db&#39;</span><span class="p">):</span>
+        <span class="c1"># Maybe it's a Progsnap DB file?</span>
+        <span class="k">elif</span> <span class="n">given_submissions</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">'.db'</span><span class="p">):</span>
             <span class="k">for</span> <span class="n">script</span><span class="p">,</span> <span class="n">scripts_contents</span> <span class="ow">in</span> <span class="n">all_scripts</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">load_progsnap</span><span class="p">(</span><span class="n">given_submissions</span><span class="p">,</span> <span class="n">instructor_code</span><span class="o">=</span><span class="n">scripts_contents</span><span class="p">)</span>
         <span class="c1"># Otherwise, must just be a single python file.</span>
@@ -348,13 +348,13 @@
             <span class="n">main_file</span> <span class="o">=</span> <span class="n">given_submissions</span>
             <span class="n">load_error</span><span class="p">,</span> <span class="n">possible_load_error</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
             <span class="n">alternatives</span> <span class="o">=</span> <span class="p">[</span><span class="n">given_submissions</span><span class="p">]</span>
-            <span class="c1"># if alternative filenames given, we&#39;ll queue them up</span>
+            <span class="c1"># if alternative filenames given, we'll queue them up</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">alternate_filenames</span><span class="p">:</span>
                 <span class="n">alternatives</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">find_possible_filenames</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">alternate_filenames</span><span class="p">))</span>
             <span class="c1"># Run through all possible filenames</span>
             <span class="k">for</span> <span class="n">possible</span> <span class="ow">in</span> <span class="n">alternatives</span><span class="p">:</span>
                 <span class="k">try</span><span class="p">:</span>
-                    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">possible</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">single_submission_file</span><span class="p">:</span>
+                    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">possible</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span> <span class="k">as</span> <span class="n">single_submission_file</span><span class="p">:</span>
                         <span class="n">main_code</span> <span class="o">=</span> <span class="n">single_submission_file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
                         <span class="n">main_file</span> <span class="o">=</span> <span class="n">possible</span>
                     <span class="k">break</span>
@@ -376,73 +376,73 @@
             <span class="k">return</span> <span class="n">load_error</span>
 
     <span class="n">progsnap_events_map</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">&#39;run&#39;</span><span class="p">:</span> <span class="s1">&#39;Run.Program&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;compile&#39;</span><span class="p">:</span> <span class="s1">&#39;Compile&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;edit&#39;</span><span class="p">:</span> <span class="s1">&#39;File.Edit&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;last&#39;</span><span class="p">:</span> <span class="s1">&#39;File.Edit&#39;</span>
+        <span class="s1">'run'</span><span class="p">:</span> <span class="s1">'Run.Program'</span><span class="p">,</span>
+        <span class="s1">'compile'</span><span class="p">:</span> <span class="s1">'Compile'</span><span class="p">,</span>
+        <span class="s1">'edit'</span><span class="p">:</span> <span class="s1">'File.Edit'</span><span class="p">,</span>
+        <span class="s1">'last'</span><span class="p">:</span> <span class="s1">'File.Edit'</span>
     <span class="p">}</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">load_progsnap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">instructor_code</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">script_file_name</span><span class="p">,</span> <span class="n">script_file_extension</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">script_file_extension</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;.db&#39;</span><span class="p">,):</span>
+        <span class="k">if</span> <span class="n">script_file_extension</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'.db'</span><span class="p">,):</span>
             <span class="k">with</span> <span class="n">SqlProgSnap2</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">cache</span><span class="p">)</span> <span class="k">as</span> <span class="n">progsnap</span><span class="p">:</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">progsnap_profile</span><span class="p">:</span>
                     <span class="n">progsnap</span><span class="o">.</span><span class="n">set_profile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">progsnap_profile</span><span class="p">)</span>
                 <span class="n">link_filters</span> <span class="o">=</span> <span class="p">{}</span>
                 <span class="n">include_scripts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">include_scripts</span>
                 <span class="k">if</span> <span class="n">include_scripts</span><span class="p">:</span>
-                    <span class="n">link_filters</span><span class="p">[</span><span class="s1">&#39;Assignment&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-                    <span class="k">if</span> <span class="n">include_scripts</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;name=&#39;</span><span class="p">):</span>
-                        <span class="n">link_filters</span><span class="p">[</span><span class="s1">&#39;Assignment&#39;</span><span class="p">][</span><span class="s1">&#39;X-Name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">include_scripts</span><span class="p">[</span><span class="mi">5</span><span class="p">:]</span>
-                    <span class="k">elif</span> <span class="n">include_scripts</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;id=&#39;</span><span class="p">):</span>
-                        <span class="n">link_filters</span><span class="p">[</span><span class="s1">&#39;Assignment&#39;</span><span class="p">][</span><span class="s1">&#39;AssignmentId&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">include_scripts</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span>
-                    <span class="k">elif</span> <span class="n">include_scripts</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;url=&#39;</span><span class="p">):</span>
-                        <span class="n">link_filters</span><span class="p">[</span><span class="s1">&#39;Assignment&#39;</span><span class="p">][</span><span class="s1">&#39;X-URL&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">include_scripts</span><span class="p">[</span><span class="mi">4</span><span class="p">:]</span>
+                    <span class="n">link_filters</span><span class="p">[</span><span class="s1">'Assignment'</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+                    <span class="k">if</span> <span class="n">include_scripts</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'name='</span><span class="p">):</span>
+                        <span class="n">link_filters</span><span class="p">[</span><span class="s1">'Assignment'</span><span class="p">][</span><span class="s1">'X-Name'</span><span class="p">]</span> <span class="o">=</span> <span class="n">include_scripts</span><span class="p">[</span><span class="mi">5</span><span class="p">:]</span>
+                    <span class="k">elif</span> <span class="n">include_scripts</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'id='</span><span class="p">):</span>
+                        <span class="n">link_filters</span><span class="p">[</span><span class="s1">'Assignment'</span><span class="p">][</span><span class="s1">'AssignmentId'</span><span class="p">]</span> <span class="o">=</span> <span class="n">include_scripts</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span>
+                    <span class="k">elif</span> <span class="n">include_scripts</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'url='</span><span class="p">):</span>
+                        <span class="n">link_filters</span><span class="p">[</span><span class="s1">'Assignment'</span><span class="p">][</span><span class="s1">'X-URL'</span><span class="p">]</span> <span class="o">=</span> <span class="n">include_scripts</span><span class="p">[</span><span class="mi">4</span><span class="p">:]</span>
                     <span class="k">else</span><span class="p">:</span>
-                        <span class="n">link_filters</span><span class="p">[</span><span class="s1">&#39;Assignment&#39;</span><span class="p">][</span><span class="s1">&#39;X-URL&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">include_scripts</span>
+                        <span class="n">link_filters</span><span class="p">[</span><span class="s1">'Assignment'</span><span class="p">][</span><span class="s1">'X-URL'</span><span class="p">]</span> <span class="o">=</span> <span class="n">include_scripts</span>
                 <span class="n">event_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">progsnap_events_map</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">progsnap_events</span><span class="p">]</span>
-                <span class="n">events</span> <span class="o">=</span> <span class="n">progsnap</span><span class="o">.</span><span class="n">get_events</span><span class="p">(</span><span class="n">event_filter</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;EventType&#39;</span><span class="p">:</span> <span class="n">event_type</span><span class="p">},</span>
+                <span class="n">events</span> <span class="o">=</span> <span class="n">progsnap</span><span class="o">.</span><span class="n">get_events</span><span class="p">(</span><span class="n">event_filter</span><span class="o">=</span><span class="p">{</span><span class="s1">'EventType'</span><span class="p">:</span> <span class="n">event_type</span><span class="p">},</span>
                                              <span class="n">link_filters</span><span class="o">=</span><span class="n">link_filters</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">limit</span><span class="p">)</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">progsnap_events</span> <span class="o">==</span> <span class="s1">&#39;last&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">progsnap_events</span> <span class="o">==</span> <span class="s1">'last'</span><span class="p">:</span>
                 <span class="n">runs_by_user_assign</span> <span class="o">=</span> <span class="p">{}</span>
-                <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">events</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">e</span><span class="p">:</span> <span class="n">e</span><span class="p">[</span><span class="s1">&#39;event_id&#39;</span><span class="p">]):</span>
-                    <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="n">progsnap</span><span class="o">.</span><span class="n">PROFILES</span><span class="p">[</span><span class="n">progsnap</span><span class="o">.</span><span class="n">profile</span><span class="p">][</span><span class="s1">&#39;link_primary&#39;</span><span class="p">][</span><span class="s1">&#39;user&#39;</span><span class="p">]],</span> <span class="n">event</span><span class="p">[</span><span class="s1">&#39;assignment_name&#39;</span><span class="p">])</span>
+                <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">events</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">e</span><span class="p">:</span> <span class="n">e</span><span class="p">[</span><span class="s1">'event_id'</span><span class="p">]):</span>
+                    <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="n">progsnap</span><span class="o">.</span><span class="n">PROFILES</span><span class="p">[</span><span class="n">progsnap</span><span class="o">.</span><span class="n">profile</span><span class="p">][</span><span class="s1">'link_primary'</span><span class="p">][</span><span class="s1">'user'</span><span class="p">]],</span> <span class="n">event</span><span class="p">[</span><span class="s1">'assignment_name'</span><span class="p">])</span>
                     <span class="n">runs_by_user_assign</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">event</span>
                 <span class="n">events</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">runs_by_user_assign</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
             <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">instructor_code</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">instructor_code_for_this_run</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="s1">&#39;on_run&#39;</span><span class="p">]</span>
+                    <span class="n">instructor_code_for_this_run</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="s1">'on_run'</span><span class="p">]</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">instructor_code_for_this_run</span> <span class="o">=</span> <span class="n">instructor_code</span>
-                <span class="n">link_selections</span> <span class="o">=</span> <span class="n">progsnap</span><span class="o">.</span><span class="n">_merge</span><span class="p">(</span><span class="s1">&#39;link_selections&#39;</span><span class="p">,</span> <span class="p">{})</span>
+                <span class="n">link_selections</span> <span class="o">=</span> <span class="n">progsnap</span><span class="o">.</span><span class="n">_merge</span><span class="p">(</span><span class="s1">'link_selections'</span><span class="p">,</span> <span class="p">{})</span>
                 <span class="n">new_submission</span> <span class="o">=</span> <span class="n">Submission</span><span class="p">(</span>
-                    <span class="n">main_file</span><span class="o">=</span><span class="s1">&#39;answer.py&#39;</span><span class="p">,</span>
-                    <span class="n">main_code</span><span class="o">=</span><span class="n">event</span><span class="p">[</span><span class="s1">&#39;submission_code&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="s1">&#39;submission_code&#39;</span><span class="p">],</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span>
-                        <span class="n">event</span><span class="p">[</span><span class="s1">&#39;submission_code&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">),</span>
-                    <span class="n">instructor_file</span><span class="o">=</span><span class="s1">&#39;instructor.py&#39;</span><span class="p">,</span>
-                    <span class="c1">#files={&#39;cisc106.py&#39;: &#39;from bakery import *&#39;},</span>
-                    <span class="n">execution</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">client_timestamp</span><span class="o">=</span><span class="n">event</span><span class="p">[</span><span class="s1">&#39;client_timestamp&#39;</span><span class="p">],</span>
-                                   <span class="n">event_id</span><span class="o">=</span><span class="n">event</span><span class="p">[</span><span class="s1">&#39;event_id&#39;</span><span class="p">]),</span>
-                    <span class="c1">#user=dict(email=event[&#39;student_email&#39;],</span>
-                    <span class="c1">#          first=event[&#39;student_first&#39;],</span>
-                    <span class="c1">#          last=event[&#39;student_last&#39;]),</span>
-                    <span class="n">user</span><span class="o">=</span><span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">event</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">link_selections</span><span class="p">[</span><span class="s1">&#39;Subject&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()}</span>
-                    <span class="k">if</span> <span class="s1">&#39;Subject&#39;</span> <span class="ow">in</span> <span class="n">link_selections</span> <span class="k">else</span> <span class="p">{</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="n">event</span><span class="p">[</span><span class="s1">&#39;subject_id&#39;</span><span class="p">]},</span>
-                    <span class="n">assignment</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">event</span><span class="p">[</span><span class="s1">&#39;assignment_name&#39;</span><span class="p">],</span>
-                                    <span class="n">url</span><span class="o">=</span><span class="n">event</span><span class="p">[</span><span class="s1">&#39;assignment_url&#39;</span><span class="p">]),</span>
+                    <span class="n">main_file</span><span class="o">=</span><span class="s1">'answer.py'</span><span class="p">,</span>
+                    <span class="n">main_code</span><span class="o">=</span><span class="n">event</span><span class="p">[</span><span class="s1">'submission_code'</span><span class="p">]</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="s1">'submission_code'</span><span class="p">],</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span>
+                        <span class="n">event</span><span class="p">[</span><span class="s1">'submission_code'</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">'utf-8'</span><span class="p">),</span>
+                    <span class="n">instructor_file</span><span class="o">=</span><span class="s1">'instructor.py'</span><span class="p">,</span>
+                    <span class="c1">#files={'cisc106.py': 'from bakery import *'},</span>
+                    <span class="n">execution</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">client_timestamp</span><span class="o">=</span><span class="n">event</span><span class="p">[</span><span class="s1">'client_timestamp'</span><span class="p">],</span>
+                                   <span class="n">event_id</span><span class="o">=</span><span class="n">event</span><span class="p">[</span><span class="s1">'event_id'</span><span class="p">]),</span>
+                    <span class="c1">#user=dict(email=event['student_email'],</span>
+                    <span class="c1">#          first=event['student_first'],</span>
+                    <span class="c1">#          last=event['student_last']),</span>
+                    <span class="n">user</span><span class="o">=</span><span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">event</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">link_selections</span><span class="p">[</span><span class="s1">'Subject'</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()}</span>
+                    <span class="k">if</span> <span class="s1">'Subject'</span> <span class="ow">in</span> <span class="n">link_selections</span> <span class="k">else</span> <span class="p">{</span><span class="s1">'id'</span><span class="p">:</span> <span class="n">event</span><span class="p">[</span><span class="s1">'subject_id'</span><span class="p">]},</span>
+                    <span class="n">assignment</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">event</span><span class="p">[</span><span class="s1">'assignment_name'</span><span class="p">],</span>
+                                    <span class="n">url</span><span class="o">=</span><span class="n">event</span><span class="p">[</span><span class="s1">'assignment_url'</span><span class="p">]),</span>
                 <span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">submissions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Bundle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="n">instructor_code_for_this_run</span><span class="p">,</span> <span class="n">new_submission</span><span class="p">))</span>
-            <span class="c1"># raise ValueError(&quot;TODO: ProgSnap DB files not yet supported&quot;)</span>
+            <span class="c1"># raise ValueError("TODO: ProgSnap DB files not yet supported")</span>
             <span class="c1"># Progsnap Zip</span>
-        <span class="k">elif</span> <span class="n">script_file_extension</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;.zip&#39;</span><span class="p">,):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;TODO: Zip files not yet supported&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">script_file_extension</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'.zip'</span><span class="p">,):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"TODO: Zip files not yet supported"</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">load_file_directly</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
         <span class="n">extra_parameters</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">extra_files</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">extra_parameters</span><span class="p">[</span><span class="s1">&#39;files&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">extra_files</span>
+            <span class="n">extra_parameters</span><span class="p">[</span><span class="s1">'files'</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">extra_files</span>
         <span class="n">new_submission</span> <span class="o">=</span> <span class="n">Submission</span><span class="p">(</span>
-            <span class="n">main_file</span><span class="o">=</span><span class="s2">&quot;answer.py&quot;</span><span class="p">,</span>
+            <span class="n">main_file</span><span class="o">=</span><span class="s2">"answer.py"</span><span class="p">,</span>
             <span class="n">main_code</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">submissions</span><span class="p">,</span>
             <span class="n">instructor_file</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">instructor</span><span class="p">,</span>
             <span class="n">execution</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">execution</span><span class="p">,</span>
@@ -494,11 +494,11 @@
 <div class="viewcode-block" id="FeedbackPipeline">
 <a class="viewcode-back" href="../../../teachers/cli.html#pedal.command_line.modes.FeedbackPipeline">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">FeedbackPipeline</span><span class="p">(</span><span class="n">AbstractPipeline</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    ``feedback``: Pipeline for running the instructor control script on a submission and</span>
 <span class="sd">    then printing the resolver output to the console. Often the most useful</span>
 <span class="sd">    if you are trying to deliver the feedback without a grade.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">process_output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">bundle</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">submissions</span><span class="p">:</span>
             <span class="c1">#print(bundle.submission.instructor_file,</span>
@@ -506,24 +506,24 @@
             <span class="k">if</span> <span class="n">bundle</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">error</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="n">bundle</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">error</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">bundle</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">resolution</span><span class="p">:</span>
-                <span class="c1"># report = bundle.result.data[&#39;MAIN_REPORT&#39;]</span>
+                <span class="c1"># report = bundle.result.data['MAIN_REPORT']</span>
                 <span class="c1">#print(bundle.result.resolution.title)</span>
                 <span class="c1">#print(bundle.result.resolution.message)</span>
                 <span class="nb">print</span><span class="p">(</span><span class="n">bundle</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error: No feedback determined.&quot;</span><span class="p">)</span></div>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">"Error: No feedback determined."</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="RunPipeline">
 <a class="viewcode-back" href="../../../teachers/cli.html#pedal.command_line.modes.RunPipeline">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">RunPipeline</span><span class="p">(</span><span class="n">AbstractPipeline</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    ``run``: Pipeline for running the instructor control script on a submission and generating a report</span>
 <span class="sd">    file in the `ini` file format. This is a simple file format that has a lot of the interesting</span>
 <span class="sd">    fields. The file is not actually dumped to the filesystem, but instead printed directly.</span>
-<span class="sd">    So this is a good way to run students&#39; code in a sandbox and see what comes out.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    So this is a good way to run students' code in a sandbox and see what comes out.</span>
+<span class="sd">    """</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">process_output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">bundle</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">submissions</span><span class="p">:</span>
             <span class="c1">#print(bundle.submission.instructor_file,</span>
@@ -531,24 +531,24 @@
             <span class="k">if</span> <span class="n">bundle</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">error</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="n">bundle</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">error</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">bundle</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">resolution</span><span class="p">:</span>
-                <span class="n">report</span> <span class="o">=</span> <span class="n">bundle</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;MAIN_REPORT&#39;</span><span class="p">]</span>
+                <span class="n">report</span> <span class="o">=</span> <span class="n">bundle</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">'MAIN_REPORT'</span><span class="p">]</span>
                 <span class="n">generate_report_out</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">environment</span><span class="p">,</span> <span class="n">report</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No feedback determined.&quot;</span><span class="p">)</span></div>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">"No feedback determined."</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="StatsPipeline">
 <a class="viewcode-back" href="../../../teachers/cli.html#pedal.command_line.modes.StatsPipeline">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">StatsPipeline</span><span class="p">(</span><span class="n">AbstractPipeline</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    ``stats``: Pipeline for running the instructor control script on a submission and then</span>
 <span class="sd">    dumping a JSON report with all the feedback objects. This is useful for</span>
 <span class="sd">    analyzing the feedback objects in a more programmatic way.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">run_control_scripts</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">bundle</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">submissions</span><span class="p">):</span>
-            <span class="n">bundle</span><span class="o">.</span><span class="n">run_ics_bundle</span><span class="p">(</span><span class="n">resolver</span><span class="o">=</span><span class="s1">&#39;stats_resolve&#39;</span><span class="p">,</span> <span class="n">skip_tifa</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">skip_tifa</span><span class="p">,</span>
+            <span class="n">bundle</span><span class="o">.</span><span class="n">run_ics_bundle</span><span class="p">(</span><span class="n">resolver</span><span class="o">=</span><span class="s1">'stats_resolve'</span><span class="p">,</span> <span class="n">skip_tifa</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">skip_tifa</span><span class="p">,</span>
                                   <span class="n">skip_run</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">skip_run</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">process_output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -565,8 +565,8 @@
         <span class="n">final</span> <span class="o">=</span> <span class="n">clean_json</span><span class="p">(</span><span class="n">final</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">output</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1">#print(final)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Total Processed:&quot;</span><span class="p">,</span> <span class="n">total</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Errors:&quot;</span><span class="p">,</span> <span class="n">errors</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"Total Processed:"</span><span class="p">,</span> <span class="n">total</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"Errors:"</span><span class="p">,</span> <span class="n">errors</span><span class="p">)</span>
 
             <span class="n">feedback_by_label_category</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">()</span>
             <span class="n">scored_feedback_by_label_category</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">()</span>
@@ -575,20 +575,20 @@
                 <span class="n">feedback_by_label_category</span><span class="p">[(</span><span class="n">final</span><span class="o">.</span><span class="n">category</span><span class="p">,</span> <span class="n">final</span><span class="o">.</span><span class="n">label</span><span class="p">)]</span> <span class="o">+=</span> <span class="mi">1</span>
                 <span class="k">for</span> <span class="n">feedback</span> <span class="ow">in</span> <span class="n">final</span><span class="o">.</span><span class="n">_scores_feedback</span><span class="p">:</span>
                     <span class="n">scored_feedback_by_label_category</span><span class="p">[(</span><span class="n">feedback</span><span class="o">.</span><span class="n">category</span><span class="p">,</span> <span class="n">feedback</span><span class="o">.</span><span class="n">label</span><span class="p">)]</span> <span class="o">+=</span> <span class="mi">1</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Final Feedback by label/category:&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"Final Feedback by label/category:"</span><span class="p">)</span>
             <span class="k">for</span> <span class="p">(</span><span class="n">category</span><span class="p">,</span> <span class="n">label</span><span class="p">),</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">feedback_by_label_category</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">category</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  </span><span class="si">{</span><span class="n">category</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Scored Feedback by label/category:&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"Scored Feedback by label/category:"</span><span class="p">)</span>
             <span class="k">for</span> <span class="p">(</span><span class="n">category</span><span class="p">,</span> <span class="n">label</span><span class="p">),</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">scored_feedback_by_label_category</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">category</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  </span><span class="si">{</span><span class="n">category</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
 
             <span class="c1"># pedal_json_encoder = PedalJSONEncoder(indent=2, skipkeys=True)</span>
-            <span class="c1"># if self.config.output == &#39;stdout&#39;:</span>
+            <span class="c1"># if self.config.output == 'stdout':</span>
             <span class="c1">#     print(pedal_json_encoder.encode(final))</span>
             <span class="c1"># else:</span>
-            <span class="c1">#     with open(self.config.output, &#39;w&#39;) as output_file:</span>
+            <span class="c1">#     with open(self.config.output, 'w') as output_file:</span>
             <span class="c1">#         print(pedal_json_encoder.encode(final), file=output_file)</span>
         <span class="k">return</span> <span class="n">StatReport</span><span class="p">(</span><span class="n">final</span><span class="p">)</span></div>
 
@@ -598,14 +598,14 @@
 <div class="viewcode-block" id="VerifyPipeline">
 <a class="viewcode-back" href="../../../teachers/cli.html#pedal.command_line.modes.VerifyPipeline">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">VerifyPipeline</span><span class="p">(</span><span class="n">AbstractPipeline</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    ``verify``: Pipeline for running the instructor control script on a submission and then</span>
 <span class="sd">    comparing the output to an expected output file. This is useful for verifying</span>
 <span class="sd">    that the feedback is correct (at least, as correct as the expected output).</span>
 
 <span class="sd">    You can also use this pipeline to generate the output files, to quickly create</span>
-<span class="sd">    regression &quot;tests&quot; of your feedback scripts.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    regression "tests" of your feedback scripts.</span>
+<span class="sd">    """</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">process_output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">bundle</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">submissions</span><span class="p">:</span>
             <span class="n">bundle</span><span class="o">.</span><span class="n">run_ics_bundle</span><span class="p">(</span><span class="n">resolver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">resolver</span><span class="p">,</span> <span class="n">skip_tifa</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">skip_tifa</span><span class="p">,</span>
@@ -615,13 +615,13 @@
             <span class="c1"># Now get the expected output</span>
             <span class="n">base</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">bundle</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">main_file</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">test_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">base</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">base</span> <span class="o">+</span> <span class="s2">&quot;.out&quot;</span><span class="p">):</span>
-                <span class="n">verifier</span> <span class="o">=</span> <span class="n">ReportVerifier</span><span class="p">(</span><span class="n">base</span> <span class="o">+</span> <span class="s2">&quot;.out&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">environment</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">base</span> <span class="o">+</span> <span class="s2">".out"</span><span class="p">):</span>
+                <span class="n">verifier</span> <span class="o">=</span> <span class="n">ReportVerifier</span><span class="p">(</span><span class="n">base</span> <span class="o">+</span> <span class="s2">".out"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">environment</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_case</span><span class="p">(</span><span class="n">test_name</span><span class="p">,</span> <span class="n">bundle</span><span class="o">.</span><span class="n">result</span><span class="p">,</span> <span class="n">verifier</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">create_output</span><span class="p">:</span>
-                    <span class="n">report</span> <span class="o">=</span> <span class="n">bundle</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;MAIN_REPORT&#39;</span><span class="p">]</span>
-                    <span class="n">generate_report_out</span><span class="p">(</span><span class="n">base</span> <span class="o">+</span> <span class="s2">&quot;.out&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">environment</span><span class="p">,</span> <span class="n">report</span><span class="p">)</span>
+                    <span class="n">report</span> <span class="o">=</span> <span class="n">bundle</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">'MAIN_REPORT'</span><span class="p">]</span>
+                    <span class="n">generate_report_out</span><span class="p">(</span><span class="n">base</span> <span class="o">+</span> <span class="s2">".out"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">environment</span><span class="p">,</span> <span class="n">report</span><span class="p">)</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">skip_case</span><span class="p">(</span><span class="n">test_name</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">error_case</span><span class="p">(</span><span class="n">test_name</span><span class="p">,</span> <span class="n">bundle</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
@@ -631,13 +631,13 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
 
         <span class="k">class</span><span class="w"> </span><span class="nc">TestReferenceSolutions</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
-            <span class="vm">__module__</span> <span class="o">=</span> <span class="s1">&#39;VerifyTestCase&#39;</span>
+            <span class="vm">__module__</span> <span class="o">=</span> <span class="s1">'VerifyTestCase'</span>
             <span class="vm">__qualname__</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">instructor_name</span>
             <span class="n">maxDiff</span> <span class="o">=</span> <span class="kc">None</span>
 
             <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-                <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">config</span><span class="o">.</span><span class="n">instructor</span><span class="si">}</span><span class="s2">, using </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_testMethodName</span><span class="p">[</span><span class="mi">5</span><span class="p">:]</span><span class="si">}</span><span class="s2">.py&quot;</span>
-                <span class="c1"># return f&quot;{self.id().__name__} (Test{config.instructor})&quot;</span>
+                <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">config</span><span class="o">.</span><span class="n">instructor</span><span class="si">}</span><span class="s2">, using </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_testMethodName</span><span class="p">[</span><span class="mi">5</span><span class="p">:]</span><span class="si">}</span><span class="s2">.py"</span>
+                <span class="c1"># return f"{self.id().__name__} (Test{config.instructor})"</span>
 
             <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
                 <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
@@ -646,53 +646,53 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">tests</span> <span class="o">=</span> <span class="p">[]</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">add_case</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bundle_result</span><span class="p">,</span> <span class="n">verifier</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Add this ``name`` as a new test. &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">""" Add this ``name`` as a new test. """</span>
         <span class="k">if</span> <span class="n">bundle_result</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
             <span class="nb">print</span><span class="p">(</span><span class="n">bundle_result</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
         <span class="n">error</span> <span class="o">=</span> <span class="n">bundle_result</span><span class="o">.</span><span class="n">error</span> <span class="k">if</span> <span class="n">bundle_result</span><span class="o">.</span><span class="n">error</span> <span class="k">else</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">error</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
-        <span class="k">if</span> <span class="s1">&#39;MAIN_REPORT&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">bundle_result</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s1">'MAIN_REPORT'</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">bundle_result</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
             <span class="c1"># TODO: Better error message here</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;No MAIN_REPORT found; did you import Pedal?&quot;</span><span class="p">)</span>
-        <span class="n">actual</span> <span class="o">=</span> <span class="n">bundle_result</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;MAIN_REPORT&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">to_json</span><span class="p">()</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">"No MAIN_REPORT found; did you import Pedal?"</span><span class="p">)</span>
+        <span class="n">actual</span> <span class="o">=</span> <span class="n">bundle_result</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">'MAIN_REPORT'</span><span class="p">]</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">to_json</span><span class="p">()</span>
         <span class="n">error</span> <span class="o">=</span> <span class="n">bundle_result</span><span class="o">.</span><span class="n">error</span>
         <span class="n">expected_fields</span> <span class="o">=</span> <span class="n">verifier</span><span class="o">.</span><span class="n">get_final</span><span class="p">()</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">new_test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">error</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">error</span>
-            <span class="n">entire_actual</span><span class="p">,</span> <span class="n">entire_expected</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span>
+            <span class="n">entire_actual</span><span class="p">,</span> <span class="n">entire_expected</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span> <span class="s2">""</span>
             <span class="n">differing_fields</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">field</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">expected_fields</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">actual</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="s2">&quot;Field was not in feedback.&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">actual</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="s2">"Field was not in feedback."</span><span class="p">)</span>
                 <span class="n">actual_value</span> <span class="o">=</span> <span class="n">chomp</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">actual</span><span class="p">[</span><span class="n">field</span><span class="p">])</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
                 <span class="n">expected_value</span> <span class="o">=</span> <span class="n">chomp</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
-                <span class="n">entire_actual</span> <span class="o">+=</span> <span class="n">field</span> <span class="o">+</span> <span class="s2">&quot;: &quot;</span> <span class="o">+</span> <span class="n">actual_value</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
-                <span class="n">entire_expected</span> <span class="o">+=</span> <span class="n">field</span> <span class="o">+</span> <span class="s2">&quot;: &quot;</span> <span class="o">+</span> <span class="n">expected_value</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="n">entire_actual</span> <span class="o">+=</span> <span class="n">field</span> <span class="o">+</span> <span class="s2">": "</span> <span class="o">+</span> <span class="n">actual_value</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span>
+                <span class="n">entire_expected</span> <span class="o">+=</span> <span class="n">field</span> <span class="o">+</span> <span class="s2">": "</span> <span class="o">+</span> <span class="n">expected_value</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span>
                 <span class="k">if</span> <span class="n">expected_value</span> <span class="o">!=</span> <span class="n">actual_value</span><span class="p">:</span>
                     <span class="n">differing_fields</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
-            <span class="n">differing_fields</span> <span class="o">=</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2">&#39;&quot;</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">differing_fields</span><span class="p">)</span>
+            <span class="n">differing_fields</span> <span class="o">=</span> <span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">"'</span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2">'"</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">differing_fields</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">entire_expected</span><span class="p">,</span> <span class="n">entire_actual</span><span class="p">,</span>
-                             <span class="n">msg</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Wrong value for </span><span class="si">{</span><span class="n">differing_fields</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+                             <span class="n">msg</span><span class="o">=</span><span class="sa">f</span><span class="s2">"Wrong value for </span><span class="si">{</span><span class="n">differing_fields</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
 
-        <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">TestReferenceSolutions</span><span class="p">,</span> <span class="s2">&quot;test_&quot;</span> <span class="o">+</span> <span class="n">name</span><span class="p">,</span> <span class="n">new_test</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tests</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;test_&quot;</span> <span class="o">+</span> <span class="n">name</span><span class="p">)</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">TestReferenceSolutions</span><span class="p">,</span> <span class="s2">"test_"</span> <span class="o">+</span> <span class="n">name</span><span class="p">,</span> <span class="n">new_test</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tests</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"test_"</span> <span class="o">+</span> <span class="n">name</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">skip_case</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="k">def</span><span class="w"> </span><span class="nf">new_test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">skipTest</span><span class="p">(</span><span class="s2">&quot;Output did not exist; created.&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">skipTest</span><span class="p">(</span><span class="s2">"Output did not exist; created."</span><span class="p">)</span>
 
-        <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">TestReferenceSolutions</span><span class="p">,</span> <span class="s2">&quot;test_&quot;</span> <span class="o">+</span> <span class="n">name</span><span class="p">,</span> <span class="n">new_test</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tests</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;test_&quot;</span> <span class="o">+</span> <span class="n">name</span><span class="p">)</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">TestReferenceSolutions</span><span class="p">,</span> <span class="s2">"test_"</span> <span class="o">+</span> <span class="n">name</span><span class="p">,</span> <span class="n">new_test</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tests</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"test_"</span> <span class="o">+</span> <span class="n">name</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">error_case</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bundle_result</span><span class="p">):</span>
         <span class="k">def</span><span class="w"> </span><span class="nf">new_test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">fail</span><span class="p">(</span>
-                <span class="s2">&quot;Expected output file was not found next to the instructor file. Perhaps you meant to use --create_output?&quot;</span><span class="p">)</span>
+                <span class="s2">"Expected output file was not found next to the instructor file. Perhaps you meant to use --create_output?"</span><span class="p">)</span>
 
-        <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">TestReferenceSolutions</span><span class="p">,</span> <span class="s2">&quot;test_&quot;</span> <span class="o">+</span> <span class="n">name</span><span class="p">,</span> <span class="n">new_test</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tests</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;test_&quot;</span> <span class="o">+</span> <span class="n">name</span><span class="p">)</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">TestReferenceSolutions</span><span class="p">,</span> <span class="s2">"test_"</span> <span class="o">+</span> <span class="n">name</span><span class="p">,</span> <span class="n">new_test</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tests</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"test_"</span> <span class="o">+</span> <span class="n">name</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">run_cases</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">suite</span> <span class="o">=</span> <span class="n">unittest</span><span class="o">.</span><span class="n">defaultTestLoader</span><span class="o">.</span><span class="n">loadTestsFromTestCase</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">TestReferenceSolutions</span><span class="p">)</span>
@@ -704,18 +704,18 @@
 <div class="viewcode-block" id="GradePipeline">
 <a class="viewcode-back" href="../../../teachers/cli.html#pedal.command_line.modes.GradePipeline">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">GradePipeline</span><span class="p">(</span><span class="n">AbstractPipeline</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    ``grade``: Pipeline for running the instructor control script on a submission and then outputing</span>
 <span class="sd">    the grade to the console. This is useful for quickly grading a set of submissions.</span>
 <span class="sd">    The instructor file, student data, and assignment are also all printed out in the following CSV format:</span>
 
 <span class="sd">    instructor_file, student_file, student_email, assignment_name, score, correct</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">process_output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">output</span> <span class="o">==</span> <span class="s1">&#39;stdout&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">output</span> <span class="o">==</span> <span class="s1">'stdout'</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">print_bundles</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">output_file</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">)</span> <span class="k">as</span> <span class="n">output_file</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">print_bundles</span><span class="p">(</span><span class="n">output_file</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">print_bundles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
@@ -727,27 +727,27 @@
             <span class="c1"># This info is not sent to the output target, just to stdout</span>
             <span class="nb">print</span><span class="p">(</span><span class="n">bundle</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">instructor_file</span><span class="p">,</span>
                   <span class="n">bundle</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">main_file</span><span class="p">,</span>
-                  <span class="n">bundle</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;student_email&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">bundle</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">user</span> <span class="k">else</span> <span class="s1">&#39;Unknown User&#39;</span><span class="p">,</span>
-                  <span class="n">bundle</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">assignment</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">bundle</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">assignment</span> <span class="k">else</span> <span class="s1">&#39;Unknown Assignment&#39;</span><span class="p">,</span>
+                  <span class="n">bundle</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'student_email'</span><span class="p">)</span> <span class="k">if</span> <span class="n">bundle</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">user</span> <span class="k">else</span> <span class="s1">'Unknown User'</span><span class="p">,</span>
+                  <span class="n">bundle</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">assignment</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'name'</span><span class="p">)</span> <span class="k">if</span> <span class="n">bundle</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">assignment</span> <span class="k">else</span> <span class="s1">'Unknown Assignment'</span><span class="p">,</span>
                   <span class="mi">1</span> <span class="k">if</span> <span class="n">bundle</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">resolution</span><span class="o">.</span><span class="n">correct</span> <span class="k">else</span>
                   <span class="n">bundle</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">resolution</span><span class="o">.</span><span class="n">score</span><span class="p">,</span>
-                  <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;, &quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
+                  <span class="n">sep</span><span class="o">=</span><span class="s2">", "</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="SandboxPipeline">
 <a class="viewcode-back" href="../../../teachers/cli.html#pedal.command_line.modes.SandboxPipeline">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SandboxPipeline</span><span class="p">(</span><span class="n">AbstractPipeline</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    ``sandbox``: Pipeline for running ONLY the student&#39;s code, and then outputing the results to the console.</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    ``sandbox``: Pipeline for running ONLY the student's code, and then outputing the results to the console.</span>
 <span class="sd">    There is no instructor control script logic, although the Source tool does check that the</span>
-<span class="sd">    student&#39;s code is syntactically correct. Otherwise, the students&#39; code is run in a Sandbox mode.</span>
+<span class="sd">    student's code is syntactically correct. Otherwise, the students' code is run in a Sandbox mode.</span>
 <span class="sd">    This is useful if you just want to safely execute student code and observe their output.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
-    <span class="n">ICS</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;from pedal import *</span>
+    <span class="n">ICS</span> <span class="o">=</span> <span class="s2">"""from pedal import *</span>
 <span class="s2">verify()</span>
-<span class="s2">run()&quot;&quot;&quot;</span>
+<span class="s2">run()"""</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">load_submissions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Use first argument as student submissions</span>
@@ -761,15 +761,15 @@
         <span class="c1"># Then create submission to run</span>
         <span class="k">for</span> <span class="n">script</span> <span class="ow">in</span> <span class="n">scripts</span><span class="p">:</span>
             <span class="n">script_file_name</span><span class="p">,</span> <span class="n">script_file_extension</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">script</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">script_file_extension</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;.py&#39;</span><span class="p">,):</span>
+            <span class="k">if</span> <span class="n">script_file_extension</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'.py'</span><span class="p">,):</span>
                 <span class="n">load_error</span> <span class="o">=</span> <span class="kc">None</span>
                 <span class="k">try</span><span class="p">:</span>
-                    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">script</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">scripts_file</span><span class="p">:</span>
+                    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">script</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span> <span class="k">as</span> <span class="n">scripts_file</span><span class="p">:</span>
                         <span class="n">scripts_contents</span> <span class="o">=</span> <span class="n">scripts_file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
                 <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                     <span class="n">load_error</span> <span class="o">=</span> <span class="n">e</span>
                 <span class="n">new_submission</span> <span class="o">=</span> <span class="n">Submission</span><span class="p">(</span>
-                    <span class="n">main_file</span><span class="o">=</span><span class="s2">&quot;answer.py&quot;</span><span class="p">,</span> <span class="n">main_code</span><span class="o">=</span><span class="n">scripts_contents</span><span class="p">,</span>
+                    <span class="n">main_file</span><span class="o">=</span><span class="s2">"answer.py"</span><span class="p">,</span> <span class="n">main_code</span><span class="o">=</span><span class="n">scripts_contents</span><span class="p">,</span>
                     <span class="n">instructor_file</span><span class="o">=</span><span class="n">script</span><span class="p">,</span> <span class="n">load_error</span><span class="o">=</span><span class="n">load_error</span>
                 <span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">submissions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Bundle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ICS</span><span class="p">,</span> <span class="n">new_submission</span><span class="p">))</span>
@@ -782,62 +782,62 @@
                 <span class="n">traceback</span><span class="o">.</span><span class="n">print_tb</span><span class="p">(</span><span class="n">bundle</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">error</span><span class="o">.</span><span class="n">__traceback__</span><span class="p">)</span>
                 <span class="nb">print</span><span class="p">(</span><span class="n">bundle</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">error</span><span class="p">)</span>
                 <span class="k">continue</span>
-            <span class="n">sandbox</span> <span class="o">=</span> <span class="n">bundle</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;MAIN_REPORT&#39;</span><span class="p">][</span><span class="s1">&#39;sandbox&#39;</span><span class="p">][</span><span class="s1">&#39;sandbox&#39;</span><span class="p">]</span>
+            <span class="n">sandbox</span> <span class="o">=</span> <span class="n">bundle</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">'MAIN_REPORT'</span><span class="p">][</span><span class="s1">'sandbox'</span><span class="p">][</span><span class="s1">'sandbox'</span><span class="p">]</span>
             <span class="n">output</span> <span class="o">=</span> <span class="p">[</span><span class="n">sandbox</span><span class="o">.</span><span class="n">raw_output</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">sandbox</span><span class="o">.</span><span class="n">feedback</span><span class="p">:</span>
                 <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sandbox</span><span class="o">.</span><span class="n">feedback</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output</span><span class="p">))</span></div>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output</span><span class="p">))</span></div>
 
 
 
 <div class="viewcode-block" id="DebugPipeline">
 <a class="viewcode-back" href="../../../teachers/cli.html#pedal.command_line.modes.DebugPipeline">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">DebugPipeline</span><span class="p">(</span><span class="n">AbstractPipeline</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    ``debug``: Pipeline for running the instructor control script on a submission and then outputing</span>
 <span class="sd">    the full results to the console. This is useful for debugging the instructor control</span>
 <span class="sd">    script, as it will show the full output, error, all of the feedback objects considered,</span>
 <span class="sd">    and the final feedback.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">process_output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">bundle</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">submissions</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="n">bundle</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">instructor_file</span><span class="p">,</span>
                   <span class="n">bundle</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">main_file</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;****** Student Code:&quot;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">indent</span><span class="p">(</span><span class="n">bundle</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">main_code</span><span class="p">,</span> <span class="s2">&quot;    &quot;</span><span class="p">))</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;****** Results&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"****** Student Code:"</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">indent</span><span class="p">(</span><span class="n">bundle</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">main_code</span><span class="p">,</span> <span class="s2">"    "</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"****** Results"</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">bundle</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">error</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="n">bundle</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">error</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Output:&quot;</span><span class="p">)</span>
-                <span class="nb">print</span><span class="p">(</span><span class="n">indent</span><span class="p">(</span><span class="n">bundle</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="s2">&quot; &quot;</span> <span class="o">*</span> <span class="mi">4</span><span class="p">))</span>
-                <span class="n">report</span> <span class="o">=</span> <span class="n">bundle</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;MAIN_REPORT&#39;</span><span class="p">]</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Feedback:&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">"Output:"</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">indent</span><span class="p">(</span><span class="n">bundle</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="s2">" "</span> <span class="o">*</span> <span class="mi">4</span><span class="p">))</span>
+                <span class="n">report</span> <span class="o">=</span> <span class="n">bundle</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">'MAIN_REPORT'</span><span class="p">]</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">"Feedback:"</span><span class="p">)</span>
                 <span class="k">for</span> <span class="n">feedback</span> <span class="ow">in</span> <span class="n">report</span><span class="o">.</span><span class="n">feedback</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">feedback</span><span class="p">,</span> <span class="nb">repr</span><span class="p">(</span><span class="n">feedback</span><span class="o">.</span><span class="n">fields</span><span class="p">))</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Final Feedback&quot;</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\t</span><span class="s2">"</span><span class="p">,</span> <span class="n">feedback</span><span class="p">,</span> <span class="nb">repr</span><span class="p">(</span><span class="n">feedback</span><span class="o">.</span><span class="n">fields</span><span class="p">))</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">"Final Feedback"</span><span class="p">)</span>
                 <span class="n">pprint</span><span class="p">(</span><span class="n">report</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">to_json</span><span class="p">())</span></div>
 
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">MODES</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    The possible modes that Pedal can be run in.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Runs the instructor control script and outputs all feedback</span>
-    <span class="n">RUN</span> <span class="o">=</span> <span class="s1">&#39;run&#39;</span>
+    <span class="n">RUN</span> <span class="o">=</span> <span class="s1">'run'</span>
     <span class="c1"># Get just the feedback for submissions</span>
-    <span class="n">FEEDBACK</span> <span class="o">=</span> <span class="s1">&#39;feedback&#39;</span>
+    <span class="n">FEEDBACK</span> <span class="o">=</span> <span class="s1">'feedback'</span>
     <span class="c1"># Get just the score/correctness</span>
-    <span class="n">GRADE</span> <span class="o">=</span> <span class="s1">&#39;grade&#39;</span>
+    <span class="n">GRADE</span> <span class="o">=</span> <span class="s1">'grade'</span>
     <span class="c1"># Check against expected output</span>
-    <span class="n">VERIFY</span> <span class="o">=</span> <span class="s1">&#39;verify&#39;</span>
+    <span class="n">VERIFY</span> <span class="o">=</span> <span class="s1">'verify'</span>
     <span class="c1"># Output all the feedback objects</span>
-    <span class="n">STATS</span> <span class="o">=</span> <span class="s1">&#39;stats&#39;</span>
+    <span class="n">STATS</span> <span class="o">=</span> <span class="s1">'stats'</span>
     <span class="c1"># Run the file as student code using the sandbox</span>
-    <span class="n">SANDBOX</span> <span class="o">=</span> <span class="s1">&#39;sandbox&#39;</span>
+    <span class="n">SANDBOX</span> <span class="o">=</span> <span class="s1">'sandbox'</span>
     <span class="c1"># Output as much information as possible</span>
-    <span class="n">DEBUG</span> <span class="o">=</span> <span class="s1">&#39;debug&#39;</span>
+    <span class="n">DEBUG</span> <span class="o">=</span> <span class="s1">'debug'</span>
 
     <span class="n">PIPELINES</span> <span class="o">=</span> <span class="p">{</span>
         <span class="n">RUN</span><span class="p">:</span> <span class="n">RunPipeline</span><span class="p">,</span>

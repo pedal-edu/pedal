@@ -88,9 +88,9 @@
            <div itemprop="articleBody">
              
   <h1>Source code for pedal.questions.setup</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""</span>
 <span class="sd">Initialize and setup the Questions tool.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pedal.core.report</span><span class="w"> </span><span class="kn">import</span> <span class="n">MAIN_REPORT</span><span class="p">,</span> <span class="n">Report</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pedal.questions.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">TOOL_NAME</span>
@@ -99,25 +99,25 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_name_hash</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Turn a string name into a unique hashcode using MD5 &quot;&quot;&quot;</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">digest</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">""" Turn a string name into a unique hashcode using MD5 """</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">","</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s1">'utf-8'</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">'utf8'</span><span class="p">))</span><span class="o">.</span><span class="n">digest</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
 
 
 <div class="viewcode-block" id="reset">
 <a class="viewcode-back" href="../../../developers/tools/questions.html#pedal.questions.setup.reset">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Remove all settings for the Questions tool. Seed will be 0.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        report: The report object</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        This tool&#39;s data</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">        This tool's data</span>
+<span class="sd">    """</span>
     <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">&#39;seed&#39;</span><span class="p">:</span> <span class="mi">0</span>
+        <span class="s1">'seed'</span><span class="p">:</span> <span class="mi">0</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">]</span></div>
 
@@ -129,7 +129,7 @@
 <div class="viewcode-block" id="set_seed">
 <a class="viewcode-back" href="../../../developers/tools/questions.html#pedal.questions.setup.set_seed">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">set_seed</span><span class="p">(</span><span class="n">seed_value</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Sets the seed that will be used in selecting questions.</span>
 
 <span class="sd">    Args:</span>
@@ -137,15 +137,15 @@
 <span class="sd">            selecting questions, deterministically. If int, the same index</span>
 <span class="sd">            will be used for all questions. If an iterable of ints, each</span>
 <span class="sd">            one will serve as the index for the corresponding problem (throws</span>
-<span class="sd">            an exception if the iterable isn&#39;t long enough). If a string,</span>
+<span class="sd">            an exception if the iterable isn't long enough). If a string,</span>
 <span class="sd">            it will be hashed to a value (the hash is deterministic across</span>
-<span class="sd">            platforms) that will be modulo&#39;d to be in the right range for the</span>
+<span class="sd">            platforms) that will be modulo'd to be in the right range for the</span>
 <span class="sd">            pool. Presently, hashing generates values from [0, 256) so you</span>
 <span class="sd">            need to limit your questions to 256.</span>
 <span class="sd">        report (Report): The report object to store data and feedback in. If</span>
 <span class="sd">            left None, defaults to the global MAIN_REPORT.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">report</span><span class="p">[</span><span class="s1">&#39;questions&#39;</span><span class="p">][</span><span class="s1">&#39;seed&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">seed_value</span></div>
+<span class="sd">    """</span>
+    <span class="n">report</span><span class="p">[</span><span class="s1">'questions'</span><span class="p">][</span><span class="s1">'seed'</span><span class="p">]</span> <span class="o">=</span> <span class="n">seed_value</span></div>
 
 </pre></div>
 

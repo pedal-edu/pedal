@@ -88,13 +88,13 @@
            <div itemprop="articleBody">
              
   <h1>Source code for pedal.extensions.plotting</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""</span>
 <span class="sd">Extensions related to MatPlotLib.</span>
 
 <span class="sd">Mock module for Sandbox.</span>
 
 <span class="sd">Assertions.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pedal</span><span class="w"> </span><span class="kn">import</span> <span class="n">Feedback</span><span class="p">,</span> <span class="n">CompositeFeedbackFunction</span><span class="p">,</span> <span class="n">is_sandbox_result</span><span class="p">,</span> <span class="n">Sandbox</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pedal.assertions</span><span class="w"> </span><span class="kn">import</span> <span class="n">ensure_function_call</span><span class="p">,</span> <span class="n">prevent_function_call</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pedal.core.feedback</span><span class="w"> </span><span class="kn">import</span> <span class="n">FeedbackResponse</span>
@@ -106,31 +106,31 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">pedal.cait.cait_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_program</span><span class="p">,</span> <span class="n">def_use_error</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pedal.sandbox.commands</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_sandbox</span>
 
-<span class="n">PLOT_LABEL</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;plot&#39;</span><span class="p">:</span> <span class="s1">&#39;line plot&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;hist&#39;</span><span class="p">:</span> <span class="s1">&#39;histogram&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;scatter&#39;</span><span class="p">:</span> <span class="s1">&#39;scatter plot&#39;</span><span class="p">}</span>
+<span class="n">PLOT_LABEL</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'plot'</span><span class="p">:</span> <span class="s1">'line plot'</span><span class="p">,</span>
+              <span class="s1">'hist'</span><span class="p">:</span> <span class="s1">'histogram'</span><span class="p">,</span>
+              <span class="s1">'scatter'</span><span class="p">:</span> <span class="s1">'scatter plot'</span><span class="p">}</span>
 
 
 <div class="viewcode-block" id="plt_rename_err">
 <a class="viewcode-back" href="../../../developers/tools/extensions.html#pedal.extensions.plotting.plt_rename_err">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">plt_rename_err</span><span class="p">(</span><span class="n">Feedback</span><span class="p">):</span>
-    <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Wrong MatPlotLib Import&quot;</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="s2">"Wrong MatPlotLib Import"</span>
     <span class="n">priority</span> <span class="o">=</span> <span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">SYNTAX</span>
     <span class="n">category</span> <span class="o">=</span> <span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">INSTRUCTOR</span>
-    <span class="n">justification</span> <span class="o">=</span> <span class="s2">&quot;The name &#39;plt&#39; appeared in the code with a def-use error.&quot;</span>
-    <span class="n">constant_fields</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;suggestion&#39;</span><span class="p">:</span> <span class="s1">&#39;import matplotlib.pyplot as plt&#39;</span><span class="p">,</span>
-                       <span class="s1">&#39;actual&#39;</span><span class="p">:</span> <span class="s1">&#39;matplotlib.pyplot&#39;</span><span class="p">,</span>
-                       <span class="s1">&#39;expected&#39;</span><span class="p">:</span> <span class="s1">&#39;plt&#39;</span><span class="p">}</span>
-    <span class="n">message_template</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;You have imported the &quot;</span>
-                        <span class="s2">&quot;{expected:name} module, &quot;</span>
-                        <span class="s2">&quot;but you did not rename it to {actual:name} &quot;</span>
-                        <span class="s2">&quot;using {suggestion:python_expression}.&quot;</span><span class="p">)</span>
+    <span class="n">justification</span> <span class="o">=</span> <span class="s2">"The name 'plt' appeared in the code with a def-use error."</span>
+    <span class="n">constant_fields</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'suggestion'</span><span class="p">:</span> <span class="s1">'import matplotlib.pyplot as plt'</span><span class="p">,</span>
+                       <span class="s1">'actual'</span><span class="p">:</span> <span class="s1">'matplotlib.pyplot'</span><span class="p">,</span>
+                       <span class="s1">'expected'</span><span class="p">:</span> <span class="s1">'plt'</span><span class="p">}</span>
+    <span class="n">message_template</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"You have imported the "</span>
+                        <span class="s2">"{expected:name} module, "</span>
+                        <span class="s2">"but you did not rename it to {actual:name} "</span>
+                        <span class="s2">"using {suggestion:python_expression}."</span><span class="p">)</span>
 
 <div class="viewcode-block" id="plt_rename_err.condition">
 <a class="viewcode-back" href="../../../developers/tools/extensions.html#pedal.extensions.plotting.plt_rename_err.condition">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">ast</span> <span class="o">=</span> <span class="n">parse_program</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="p">)</span>
-        <span class="n">plts</span> <span class="o">=</span> <span class="p">[</span><span class="n">n</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;Name&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">n</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="s1">&#39;plt&#39;</span><span class="p">]</span>
+        <span class="n">plts</span> <span class="o">=</span> <span class="p">[</span><span class="n">n</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">"Name"</span><span class="p">)</span> <span class="k">if</span> <span class="n">n</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="s1">'plt'</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">plts</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span><span class="n">def_use_error</span><span class="p">(</span><span class="n">plt</span><span class="p">)</span> <span class="k">for</span> <span class="n">plt</span> <span class="ow">in</span> <span class="n">plts</span><span class="p">):</span>
             <span class="k">return</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="kc">False</span></div>
@@ -141,31 +141,31 @@
 <div class="viewcode-block" id="plt_wrong_import">
 <a class="viewcode-back" href="../../../developers/tools/extensions.html#pedal.extensions.plotting.plt_wrong_import">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">plt_wrong_import</span><span class="p">(</span><span class="n">Feedback</span><span class="p">):</span>
-    <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Missing MatPlotLib Import&quot;</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="s2">"Missing MatPlotLib Import"</span>
     <span class="n">priority</span> <span class="o">=</span> <span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">SYNTAX</span>
     <span class="n">category</span> <span class="o">=</span> <span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">INSTRUCTOR</span>
-    <span class="n">justification</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;A matplotlib name (e.g., &#39;plot&#39; or &#39;hist&#39;) was used with&quot;</span>
-                     <span class="s2">&quot; a def-use error.&quot;</span><span class="p">)</span>
-    <span class="n">constant_fields</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;suggestion&#39;</span><span class="p">:</span> <span class="s1">&#39;import matplotlib.pyplot as plt&#39;</span><span class="p">}</span>
-    <span class="n">message_template</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;You have attempted to use the MatPlotLib &quot;</span>
-                        <span class="s2">&quot;function named {expected:name}. However, you &quot;</span>
-                        <span class="s2">&quot;imported MatPlotLib in a way that does not &quot;</span>
-                        <span class="s2">&quot;allow you to use the function directly. I &quot;</span>
-                        <span class="s2">&quot;recommend you use {actual:python_expression} instead, &quot;</span>
-                        <span class="s2">&quot;after you use {suggestion:python_expression}.&quot;</span><span class="p">)</span>
+    <span class="n">justification</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"A matplotlib name (e.g., 'plot' or 'hist') was used with"</span>
+                     <span class="s2">" a def-use error."</span><span class="p">)</span>
+    <span class="n">constant_fields</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'suggestion'</span><span class="p">:</span> <span class="s1">'import matplotlib.pyplot as plt'</span><span class="p">}</span>
+    <span class="n">message_template</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"You have attempted to use the MatPlotLib "</span>
+                        <span class="s2">"function named {expected:name}. However, you "</span>
+                        <span class="s2">"imported MatPlotLib in a way that does not "</span>
+                        <span class="s2">"allow you to use the function directly. I "</span>
+                        <span class="s2">"recommend you use {actual:python_expression} instead, "</span>
+                        <span class="s2">"after you use {suggestion:python_expression}."</span><span class="p">)</span>
 
 <div class="viewcode-block" id="plt_wrong_import.condition">
 <a class="viewcode-back" href="../../../developers/tools/extensions.html#pedal.extensions.plotting.plt_wrong_import.condition">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">ast</span> <span class="o">=</span> <span class="n">parse_program</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="p">)</span>
-        <span class="n">matplotlib_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;hist&#39;</span><span class="p">,</span> <span class="s1">&#39;scatter&#39;</span><span class="p">,</span>
-                            <span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="s1">&#39;xlabel&#39;</span><span class="p">,</span> <span class="s1">&#39;ylabel&#39;</span><span class="p">,</span> <span class="s1">&#39;show&#39;</span><span class="p">]</span>
+        <span class="n">matplotlib_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'plot'</span><span class="p">,</span> <span class="s1">'hist'</span><span class="p">,</span> <span class="s1">'scatter'</span><span class="p">,</span>
+                            <span class="s1">'title'</span><span class="p">,</span> <span class="s1">'xlabel'</span><span class="p">,</span> <span class="s1">'ylabel'</span><span class="p">,</span> <span class="s1">'show'</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">matplotlib_names</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;Name&quot;</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">ast</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">"Name"</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">n</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
                     <span class="k">if</span> <span class="n">def_use_error</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;actual&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">name</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;expected&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;plt.&quot;</span> <span class="o">+</span> <span class="n">name</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">'actual'</span><span class="p">]</span> <span class="o">=</span> <span class="n">name</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">'expected'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"plt."</span> <span class="o">+</span> <span class="n">name</span>
                         <span class="k">return</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="kc">False</span></div>
 </div>
@@ -176,7 +176,7 @@
 <a class="viewcode-back" href="../../../developers/tools/extensions.html#pedal.extensions.plotting.prevent_incorrect_plt">[docs]</a>
 <span class="nd">@CompositeFeedbackFunction</span><span class="p">(</span><span class="n">plt_rename_err</span><span class="p">,</span> <span class="n">plt_wrong_import</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">prevent_incorrect_plt</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Confirms that matplotlib.pyplot is being imported correctly. &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">""" Confirms that matplotlib.pyplot is being imported correctly. """</span>
     <span class="k">return</span> <span class="n">plt_rename_err</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="ow">or</span> <span class="n">plt_wrong_import</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
@@ -185,33 +185,33 @@
 <a class="viewcode-back" href="../../../developers/tools/extensions.html#pedal.extensions.plotting.ensure_correct_plot">[docs]</a>
 <span class="nd">@CompositeFeedbackFunction</span><span class="p">(</span><span class="n">prevent_function_call</span><span class="p">,</span> <span class="n">ensure_function_call</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">ensure_correct_plot</span><span class="p">(</span><span class="n">function_name</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Checks that the given plot type was correctly called. &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">""" Checks that the given plot type was correctly called. """</span>
     <span class="n">ensure_function_call</span><span class="p">(</span><span class="n">function_name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="n">as_code</span> <span class="o">=</span> <span class="n">report</span><span class="o">.</span><span class="n">format</span><span class="o">.</span><span class="n">python_expression</span>
     <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">description</span> <span class="ow">in</span> <span class="n">PLOT_LABEL</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="n">function_name</span><span class="p">:</span>
             <span class="k">continue</span>
         <span class="n">prevent_function_call</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
-                              <span class="n">message</span><span class="o">=</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;You have called the </span><span class="si">{</span><span class="n">as_code</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="si">}</span><span class="s2"> &quot;</span>
-                                       <span class="sa">f</span><span class="s2">&quot;function, which makes a </span><span class="si">{</span><span class="n">description</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">))</span></div>
+                              <span class="n">message</span><span class="o">=</span><span class="p">(</span><span class="sa">f</span><span class="s2">"You have called the </span><span class="si">{</span><span class="n">as_code</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="si">}</span><span class="s2"> "</span>
+                                       <span class="sa">f</span><span class="s2">"function, which makes a </span><span class="si">{</span><span class="n">description</span><span class="si">}</span><span class="s2">."</span><span class="p">))</span></div>
 
 
 
 <div class="viewcode-block" id="ensure_show">
 <a class="viewcode-back" href="../../../developers/tools/extensions.html#pedal.extensions.plotting.ensure_show">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ensure_show</span><span class="p">(</span><span class="n">Feedback</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Verifies that the `plt.show` function was called. &quot;&quot;&quot;</span>
-    <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Missing Show Function&quot;</span>
+<span class="w">    </span><span class="sd">""" Verifies that the `plt.show` function was called. """</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="s2">"Missing Show Function"</span>
     <span class="n">category</span> <span class="o">=</span> <span class="n">Feedback</span><span class="o">.</span><span class="n">CATEGORIES</span><span class="o">.</span><span class="n">INSTRUCTOR</span>
-    <span class="n">constant_fields</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;missing&#39;</span><span class="p">:</span> <span class="s1">&#39;plt.show&#39;</span><span class="p">}</span>
-    <span class="n">message_template</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;You have not called the {missing:python_expression} &quot;</span>
-                        <span class="s2">&quot;function, which actually creates the graph.&quot;</span><span class="p">)</span>
-    <span class="n">justification</span> <span class="o">=</span> <span class="s2">&quot;The show function was not found as a function call.&quot;</span>
+    <span class="n">constant_fields</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'missing'</span><span class="p">:</span> <span class="s1">'plt.show'</span><span class="p">}</span>
+    <span class="n">message_template</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"You have not called the {missing:python_expression} "</span>
+                        <span class="s2">"function, which actually creates the graph."</span><span class="p">)</span>
+    <span class="n">justification</span> <span class="o">=</span> <span class="s2">"The show function was not found as a function call."</span>
 
 <div class="viewcode-block" id="ensure_show.condition">
 <a class="viewcode-back" href="../../../developers/tools/extensions.html#pedal.extensions.plotting.ensure_show.condition">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="ow">not</span> <span class="n">function_is_called</span><span class="p">(</span><span class="s2">&quot;show&quot;</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="ow">not</span> <span class="n">function_is_called</span><span class="p">(</span><span class="s2">"show"</span><span class="p">)</span></div>
 </div>
 
 
@@ -219,7 +219,7 @@
 <div class="viewcode-block" id="compare_data">
 <a class="viewcode-back" href="../../../developers/tools/extensions.html#pedal.extensions.plotting.compare_data">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">compare_data</span><span class="p">(</span><span class="n">plt_type</span><span class="p">,</span> <span class="n">correct</span><span class="p">,</span> <span class="n">given</span><span class="p">,</span> <span class="n">special_comparison</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Determines whether the given data matches any of the data found in the</span>
 <span class="sd">    correct data. This handles plots of different types: if a histogram</span>
 <span class="sd">    was plotted with the expected data for a line plot, it will return True.</span>
@@ -232,13 +232,13 @@
 <span class="sd">            between the data. If None, then will use the ``==`` operator.</span>
 <span class="sd">    Returns:</span>
 <span class="sd">        bool: Whether the correct data was found in the given plot.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">special_comparison</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">def</span><span class="w"> </span><span class="nf">special_comparison</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">left</span> <span class="o">==</span> <span class="n">right</span>
 
     <span class="c1"># Infer arguments</span>
-    <span class="k">if</span> <span class="n">plt_type</span> <span class="o">==</span> <span class="s1">&#39;hist&#39;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">plt_type</span> <span class="o">==</span> <span class="s1">'hist'</span><span class="p">:</span>
         <span class="n">correct_xs</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">correct_ys</span> <span class="o">=</span> <span class="n">correct</span>
     <span class="k">elif</span> <span class="ow">not</span> <span class="n">correct</span><span class="p">:</span>
@@ -252,44 +252,44 @@
         <span class="n">correct_xs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">correct</span><span class="p">)))</span>
         <span class="n">correct_ys</span> <span class="o">=</span> <span class="n">correct</span>
 
-    <span class="k">if</span> <span class="n">given</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;hist&#39;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">special_comparison</span><span class="p">(</span><span class="n">correct_ys</span><span class="p">,</span> <span class="n">given</span><span class="p">[</span><span class="s1">&#39;values&#39;</span><span class="p">])</span>
-    <span class="k">elif</span> <span class="n">plt_type</span> <span class="o">==</span> <span class="s1">&#39;hist&#39;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">special_comparison</span><span class="p">(</span><span class="n">correct_ys</span><span class="p">,</span> <span class="n">given</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">given</span><span class="p">[</span><span class="s1">'type'</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'hist'</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">special_comparison</span><span class="p">(</span><span class="n">correct_ys</span><span class="p">,</span> <span class="n">given</span><span class="p">[</span><span class="s1">'values'</span><span class="p">])</span>
+    <span class="k">elif</span> <span class="n">plt_type</span> <span class="o">==</span> <span class="s1">'hist'</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">special_comparison</span><span class="p">(</span><span class="n">correct_ys</span><span class="p">,</span> <span class="n">given</span><span class="p">[</span><span class="s1">'y'</span><span class="p">])</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">(</span><span class="n">special_comparison</span><span class="p">(</span><span class="n">correct_xs</span><span class="p">,</span> <span class="n">given</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">])</span> <span class="ow">and</span>
-                <span class="n">special_comparison</span><span class="p">(</span><span class="n">correct_ys</span><span class="p">,</span> <span class="n">given</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]))</span></div>
+        <span class="k">return</span> <span class="p">(</span><span class="n">special_comparison</span><span class="p">(</span><span class="n">correct_xs</span><span class="p">,</span> <span class="n">given</span><span class="p">[</span><span class="s1">'x'</span><span class="p">])</span> <span class="ow">and</span>
+                <span class="n">special_comparison</span><span class="p">(</span><span class="n">correct_ys</span><span class="p">,</span> <span class="n">given</span><span class="p">[</span><span class="s1">'y'</span><span class="p">]))</span></div>
 
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">describe_data</span><span class="p">(</span><span class="n">given</span><span class="p">,</span> <span class="n">with_x</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">given</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;hist&#39;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">given</span><span class="p">[</span><span class="s1">&#39;values&#39;</span><span class="p">]</span>
-    <span class="k">elif</span> <span class="n">given</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;line&#39;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">with_x</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">given</span><span class="p">[</span><span class="s1">'type'</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'hist'</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">given</span><span class="p">[</span><span class="s1">'values'</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">given</span><span class="p">[</span><span class="s1">'type'</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'line'</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">with_x</span><span class="p">:</span>
         <span class="c1"># TODO: Might need to know if we describe the x-axis too..?</span>
-        <span class="k">return</span> <span class="n">given</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">given</span><span class="p">[</span><span class="s1">'y'</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">[</span><span class="n">given</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">],</span> <span class="n">given</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]]</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">given</span><span class="p">[</span><span class="s1">'x'</span><span class="p">],</span> <span class="n">given</span><span class="p">[</span><span class="s1">'y'</span><span class="p">]]</span>
 
 
-<span class="n">GRAPH_TYPES</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;line&#39;</span><span class="p">:</span> <span class="s1">&#39;line plot&#39;</span><span class="p">,</span>
-               <span class="s1">&#39;hist&#39;</span><span class="p">:</span> <span class="s1">&#39;histogram&#39;</span><span class="p">,</span>
-               <span class="s1">&#39;scatter&#39;</span><span class="p">:</span> <span class="s1">&#39;scatter plot&#39;</span><span class="p">}</span>
+<span class="n">GRAPH_TYPES</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'line'</span><span class="p">:</span> <span class="s1">'line plot'</span><span class="p">,</span>
+               <span class="s1">'hist'</span><span class="p">:</span> <span class="s1">'histogram'</span><span class="p">,</span>
+               <span class="s1">'scatter'</span><span class="p">:</span> <span class="s1">'scatter plot'</span><span class="p">}</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">get_diff</span><span class="p">(</span><span class="n">expected</span><span class="p">,</span> <span class="n">actual</span><span class="p">,</span> <span class="nb">format</span><span class="p">):</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">actual</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">I expected the data to be:</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span>
+        <span class="k">return</span> <span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">I expected the data to be:</span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span>
                 <span class="nb">format</span><span class="o">.</span><span class="n">python_value</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">expected</span><span class="p">)))</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">actual</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">I expected the data to be:</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span>
+        <span class="k">return</span> <span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">I expected the data to be:</span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span>
                 <span class="nb">format</span><span class="o">.</span><span class="n">python_value</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">expected</span><span class="p">))</span> <span class="o">+</span>
-                <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">But instead, the data was:</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span>
+                <span class="s2">"</span><span class="se">\n</span><span class="s2">But instead, the data was:</span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span>
                 <span class="nb">format</span><span class="o">.</span><span class="n">python_value</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">actual</span><span class="p">[</span><span class="mi">0</span><span class="p">])))</span>
-    <span class="k">return</span> <span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">I expected the data to be:</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span>
+    <span class="k">return</span> <span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">I expected the data to be:</span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span>
             <span class="nb">format</span><span class="o">.</span><span class="n">python_value</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">expected</span><span class="p">))</span> <span class="o">+</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">But instead, I found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">actual</span><span class="p">)</span><span class="si">}</span><span class="s2"> plots, with this data:</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span>
-            <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">format</span><span class="o">.</span><span class="n">python_value</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">a</span><span class="p">))</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">actual</span><span class="p">))</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">But instead, I found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">actual</span><span class="p">)</span><span class="si">}</span><span class="s2"> plots, with this data:</span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span>
+            <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">format</span><span class="o">.</span><span class="n">python_value</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">a</span><span class="p">))</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">actual</span><span class="p">))</span>
 
 
 <div class="viewcode-block" id="BadGraphFeedback">
@@ -300,19 +300,19 @@
     <span class="n">kind</span> <span class="o">=</span> <span class="n">Feedback</span><span class="o">.</span><span class="n">KINDS</span><span class="o">.</span><span class="n">CONSTRAINT</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plt_type</span><span class="p">,</span> <span class="n">expected</span><span class="p">,</span> <span class="n">actual</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="n">fields</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;fields&#39;</span><span class="p">,</span> <span class="p">{})</span>
-        <span class="n">fields</span><span class="p">[</span><span class="s1">&#39;plt_type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">plt_type</span>
-        <span class="n">fields</span><span class="p">[</span><span class="s1">&#39;expected&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">expected</span>
-        <span class="n">fields</span><span class="p">[</span><span class="s1">&#39;actual&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">actual</span>
-        <span class="n">fields</span><span class="p">[</span><span class="s1">&#39;diff_message&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_diff</span><span class="p">(</span><span class="n">expected</span><span class="p">,</span> <span class="n">actual</span><span class="p">,</span> <span class="n">report</span><span class="o">.</span><span class="n">format</span><span class="p">)</span>
-        <span class="n">fields</span><span class="p">[</span><span class="s1">&#39;context&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">context</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">'fields'</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="n">fields</span><span class="p">[</span><span class="s1">'plt_type'</span><span class="p">]</span> <span class="o">=</span> <span class="n">plt_type</span>
+        <span class="n">fields</span><span class="p">[</span><span class="s1">'expected'</span><span class="p">]</span> <span class="o">=</span> <span class="n">expected</span>
+        <span class="n">fields</span><span class="p">[</span><span class="s1">'actual'</span><span class="p">]</span> <span class="o">=</span> <span class="n">actual</span>
+        <span class="n">fields</span><span class="p">[</span><span class="s1">'diff_message'</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_diff</span><span class="p">(</span><span class="n">expected</span><span class="p">,</span> <span class="n">actual</span><span class="p">,</span> <span class="n">report</span><span class="o">.</span><span class="n">format</span><span class="p">)</span>
+        <span class="n">fields</span><span class="p">[</span><span class="s1">'context'</span><span class="p">]</span> <span class="o">=</span> <span class="n">context</span>
         <span class="k">if</span> <span class="n">is_sandbox_result</span><span class="p">(</span><span class="n">context</span><span class="p">):</span>
             <span class="n">context_id</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">_actual_context_id</span>
             <span class="n">sandbox</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">_actual_sandbox</span>
             <span class="n">actual_context</span> <span class="o">=</span> <span class="n">sandbox</span><span class="o">.</span><span class="n">get_context</span><span class="p">(</span><span class="n">context_id</span><span class="p">)</span>
-            <span class="n">fields</span><span class="p">[</span><span class="s1">&#39;context_message&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> &quot;</span><span class="o">+</span><span class="n">format_contexts</span><span class="p">([</span><span class="n">actual_context</span><span class="p">],</span> <span class="n">report</span><span class="o">.</span><span class="n">format</span><span class="p">)</span>
+            <span class="n">fields</span><span class="p">[</span><span class="s1">'context_message'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"</span><span class="se">\n</span><span class="s2"> "</span><span class="o">+</span><span class="n">format_contexts</span><span class="p">([</span><span class="n">actual_context</span><span class="p">],</span> <span class="n">report</span><span class="o">.</span><span class="n">format</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">fields</span><span class="p">[</span><span class="s1">&#39;context_message&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="n">fields</span><span class="p">[</span><span class="s1">'context_message'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">""</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">plt_type</span><span class="p">,</span> <span class="n">expected</span><span class="p">,</span> <span class="n">actual</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
@@ -320,36 +320,36 @@
 <div class="viewcode-block" id="other_plt">
 <a class="viewcode-back" href="../../../developers/tools/extensions.html#pedal.extensions.plotting.other_plt">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">other_plt</span><span class="p">(</span><span class="n">BadGraphFeedback</span><span class="p">):</span>
-    <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Plotting Another Graph&quot;</span>
-    <span class="n">message_template</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;You have created a </span><span class="si">{plt_type}</span><span class="s2">, but it does not &quot;</span>
-                        <span class="s2">&quot;have the right data. That data appears to have been &quot;</span>
-                        <span class="s2">&quot;plotted in another graph.</span><span class="si">{context_message}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+    <span class="n">title</span> <span class="o">=</span> <span class="s2">"Plotting Another Graph"</span>
+    <span class="n">message_template</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"You have created a </span><span class="si">{plt_type}</span><span class="s2">, but it does not "</span>
+                        <span class="s2">"have the right data. That data appears to have been "</span>
+                        <span class="s2">"plotted in another graph.</span><span class="si">{context_message}</span><span class="s2">"</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="wrong_plt_data">
 <a class="viewcode-back" href="../../../developers/tools/extensions.html#pedal.extensions.plotting.wrong_plt_data">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">wrong_plt_data</span><span class="p">(</span><span class="n">BadGraphFeedback</span><span class="p">):</span>
-    <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Plot Data Incorrect&quot;</span>
-    <span class="n">message_template</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;You have created a </span><span class="si">{plt_type}</span><span class="s2">, but it does not have &quot;</span>
-                        <span class="s2">&quot;the right data.</span><span class="si">{context_message}{diff_message}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+    <span class="n">title</span> <span class="o">=</span> <span class="s2">"Plot Data Incorrect"</span>
+    <span class="n">message_template</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"You have created a </span><span class="si">{plt_type}</span><span class="s2">, but it does not have "</span>
+                        <span class="s2">"the right data.</span><span class="si">{context_message}{diff_message}</span><span class="s2">"</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="wrong_plt_type">
 <a class="viewcode-back" href="../../../developers/tools/extensions.html#pedal.extensions.plotting.wrong_plt_type">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">wrong_plt_type</span><span class="p">(</span><span class="n">BadGraphFeedback</span><span class="p">):</span>
-    <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Wrong Plot Type&quot;</span>
-    <span class="n">message_template</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;You have plotted the right data, but you appear to &quot;</span>
-                        <span class="s2">&quot;have not plotted it as a </span><span class="si">{plt_type}</span><span class="s2">.</span><span class="si">{context_message}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+    <span class="n">title</span> <span class="o">=</span> <span class="s2">"Wrong Plot Type"</span>
+    <span class="n">message_template</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"You have plotted the right data, but you appear to "</span>
+                        <span class="s2">"have not plotted it as a </span><span class="si">{plt_type}</span><span class="s2">.</span><span class="si">{context_message}</span><span class="s2">"</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="no_plt">
 <a class="viewcode-back" href="../../../developers/tools/extensions.html#pedal.extensions.plotting.no_plt">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">no_plt</span><span class="p">(</span><span class="n">BadGraphFeedback</span><span class="p">):</span>
-    <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Missing Plot&quot;</span>
-    <span class="n">message_template</span> <span class="o">=</span> <span class="s2">&quot;You have not created a </span><span class="si">{plt_type}</span><span class="s2"> with the proper data.</span><span class="si">{context_message}</span><span class="s2">&quot;</span></div>
+    <span class="n">title</span> <span class="o">=</span> <span class="s2">"Missing Plot"</span>
+    <span class="n">message_template</span> <span class="o">=</span> <span class="s2">"You have not created a </span><span class="si">{plt_type}</span><span class="s2"> with the proper data.</span><span class="si">{context_message}</span><span class="s2">"</span></div>
 
 
 
@@ -357,33 +357,33 @@
 <a class="viewcode-back" href="../../../developers/tools/extensions.html#pedal.extensions.plotting.assert_plot">[docs]</a>
 <span class="nd">@CompositeFeedbackFunction</span><span class="p">(</span><span class="n">other_plt</span><span class="p">,</span> <span class="n">wrong_plt_data</span><span class="p">,</span> <span class="n">wrong_plt_type</span><span class="p">,</span> <span class="n">no_plt</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">assert_plot</span><span class="p">(</span><span class="n">plt_type</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">special_comparison</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Check whether a plot with the given ``plt_type`` and ``data`` exists.</span>
 <span class="sd">    If the plot was found successfully, returns False.</span>
 <span class="sd">    Otherwise, returns the feedback that was detected.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        plt_type (str): Either &#39;line&#39;, &#39;hist&#39;, or &#39;scatter&#39;</span>
+<span class="sd">        plt_type (str): Either 'line', 'hist', or 'scatter'</span>
 <span class="sd">        data (list): The expected data to check in the plots. Could be a single</span>
 <span class="sd">            list of numbers, or a pair of two lists (for scatter/line plots).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">report</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;report&quot;</span><span class="p">,</span> <span class="n">MAIN_REPORT</span><span class="p">)</span>
-    <span class="c1"># Allow instructor to use &quot;plot&quot; instead of &quot;line&quot; as type</span>
-    <span class="k">if</span> <span class="n">plt_type</span> <span class="o">==</span> <span class="s1">&#39;plot&#39;</span><span class="p">:</span>
-        <span class="n">plt_type</span> <span class="o">=</span> <span class="s1">&#39;line&#39;</span>
+<span class="sd">    """</span>
+    <span class="n">report</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"report"</span><span class="p">,</span> <span class="n">MAIN_REPORT</span><span class="p">)</span>
+    <span class="c1"># Allow instructor to use "plot" instead of "line" as type</span>
+    <span class="k">if</span> <span class="n">plt_type</span> <span class="o">==</span> <span class="s1">'plot'</span><span class="p">:</span>
+        <span class="n">plt_type</span> <span class="o">=</span> <span class="s1">'line'</span>
     <span class="c1"># Check the plots to see if there is a plot with the data</span>
     <span class="n">type_found</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="n">data_found</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="n">plots</span> <span class="o">=</span> <span class="n">get_sandbox</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">plots</span>
     <span class="n">appropriate_plots</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">graph</span> <span class="ow">in</span> <span class="n">plots</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">a_plot</span> <span class="ow">in</span> <span class="n">graph</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">a_plot</span> <span class="ow">in</span> <span class="n">graph</span><span class="p">[</span><span class="s1">'data'</span><span class="p">]:</span>
             <span class="n">data_found_here</span> <span class="o">=</span> <span class="n">compare_data</span><span class="p">(</span><span class="n">plt_type</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">a_plot</span><span class="p">,</span> <span class="n">special_comparison</span><span class="o">=</span><span class="n">special_comparison</span><span class="p">)</span>
             <span class="n">expected_two_lists</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">))</span>
-            <span class="n">had_x_values</span> <span class="o">=</span> <span class="s1">&#39;x&#39;</span> <span class="ow">in</span> <span class="n">a_plot</span>
-            <span class="k">if</span> <span class="n">a_plot</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">plt_type</span> <span class="ow">and</span> <span class="n">data_found_here</span><span class="p">:</span>
+            <span class="n">had_x_values</span> <span class="o">=</span> <span class="s1">'x'</span> <span class="ow">in</span> <span class="n">a_plot</span>
+            <span class="k">if</span> <span class="n">a_plot</span><span class="p">[</span><span class="s1">'type'</span><span class="p">]</span> <span class="o">==</span> <span class="n">plt_type</span> <span class="ow">and</span> <span class="n">data_found_here</span><span class="p">:</span>
                 <span class="k">return</span> <span class="kc">False</span>
-            <span class="k">if</span> <span class="n">a_plot</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">plt_type</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">a_plot</span><span class="p">[</span><span class="s1">'type'</span><span class="p">]</span> <span class="o">==</span> <span class="n">plt_type</span><span class="p">:</span>
                 <span class="n">type_found</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="n">appropriate_plots</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">describe_data</span><span class="p">(</span><span class="n">a_plot</span><span class="p">,</span> <span class="ow">not</span> <span class="n">expected_two_lists</span><span class="p">))</span>
                 <span class="n">incompatible_plot_amounts</span> <span class="o">=</span> <span class="n">had_x_values</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">expected_two_lists</span>
@@ -393,7 +393,7 @@
     <span class="n">plt_type</span> <span class="o">=</span> <span class="n">GRAPH_TYPES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">plt_type</span><span class="p">,</span> <span class="n">plt_type</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">type_found</span> <span class="ow">and</span> <span class="n">data_found</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">other_plt</span><span class="p">(</span><span class="n">plt_type</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">data_found</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">plt_type</span> <span class="o">==</span> <span class="s1">&#39;line&#39;</span> <span class="ow">and</span> <span class="n">type_found</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">data_found</span> <span class="ow">and</span> <span class="n">incompatible_plot_amounts</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">plt_type</span> <span class="o">==</span> <span class="s1">'line'</span> <span class="ow">and</span> <span class="n">type_found</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">data_found</span> <span class="ow">and</span> <span class="n">incompatible_plot_amounts</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">wrong_plt_data</span><span class="p">(</span><span class="n">plt_type</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">appropriate_plots</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="n">context</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">type_found</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">wrong_plt_data</span><span class="p">(</span><span class="n">plt_type</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">appropriate_plots</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="n">context</span><span class="p">)</span>
@@ -407,30 +407,30 @@
 <div class="viewcode-block" id="get_plots">
 <a class="viewcode-back" href="../../../developers/tools/extensions.html#pedal.extensions.plotting.get_plots">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_plots</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Retrieves any plots made by the user. The general structure is as follows:</span>
 
 <span class="sd">    .. code-block::python</span>
 
 <span class="sd">        plots = [</span>
 <span class="sd">        {</span>
-<span class="sd">            &#39;title&#39;: str,</span>
-<span class="sd">            &#39;xlabel&#39;: str,</span>
-<span class="sd">            &#39;ylabel&#39;: str,</span>
-<span class="sd">            &#39;legend&#39;: bool</span>
-<span class="sd">            &#39;data&#39;: {</span>
-<span class="sd">                &#39;type&#39;: str # either &#39;line&#39; or &#39;scatter&#39; or &#39;hist&#39;</span>
-<span class="sd">                &#39;label&#39;: str</span>
-<span class="sd">                # If &#39;hist&#39; type</span>
-<span class="sd">                &#39;values&#39;: list[float]</span>
-<span class="sd">                # If &#39;scatter&#39; or &#39;line&#39; type</span>
-<span class="sd">                &#39;x&#39;: list[float],</span>
-<span class="sd">                &#39;y&#39;: list[float]</span>
+<span class="sd">            'title': str,</span>
+<span class="sd">            'xlabel': str,</span>
+<span class="sd">            'ylabel': str,</span>
+<span class="sd">            'legend': bool</span>
+<span class="sd">            'data': {</span>
+<span class="sd">                'type': str # either 'line' or 'scatter' or 'hist'</span>
+<span class="sd">                'label': str</span>
+<span class="sd">                # If 'hist' type</span>
+<span class="sd">                'values': list[float]</span>
+<span class="sd">                # If 'scatter' or 'line' type</span>
+<span class="sd">                'x': list[float],</span>
+<span class="sd">                'y': list[float]</span>
 <span class="sd">            }</span>
 <span class="sd">        }</span>
 <span class="sd">        # ...</span>
 <span class="sd">        ]</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">return</span> <span class="n">get_sandbox</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">plots</span></div>
 
 

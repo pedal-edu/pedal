@@ -123,9 +123,9 @@ for the desired autograding platform. If you want to see a new platform, then pl
 <span class="nv">files</span><span class="o">=(</span><span class="w"> </span>/autograder/submission/*.py<span class="w"> </span><span class="o">)</span>
 pedal<span class="w"> </span>grade<span class="w"> </span><span class="se">\</span>
 <span class="w">        </span>/autograder/source/ics.py<span class="w"> </span><span class="se">\</span>
-<span class="w">        </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">files</span><span class="p">[0]</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">        </span><span class="s2">"</span><span class="si">${</span><span class="nv">files</span><span class="p">[0]</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
 <span class="w">        </span>--environment<span class="w"> </span>gradescope<span class="w"> </span><span class="se">\</span>
-<span class="w">        </span>--output<span class="w"> </span><span class="s2">&quot;/autograder/results/results.json&quot;</span>
+<span class="w">        </span>--output<span class="w"> </span><span class="s2">"/autograder/results/results.json"</span>
 </pre></div>
 </div>
 </div>
@@ -157,10 +157,10 @@ one of its alternative resolvers (e.g., <code class="docutils literal notranslat
 <span class="nv">files</span><span class="o">=(</span><span class="w"> </span>/autograder/submission/*.py<span class="w"> </span><span class="o">)</span>
 pedal<span class="w"> </span>grade<span class="w"> </span><span class="se">\</span>
 <span class="w">        </span>/autograder/source/ics.py<span class="w"> </span><span class="se">\</span>
-<span class="w">        </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">files</span><span class="p">[0]</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">        </span><span class="s2">"</span><span class="si">${</span><span class="nv">files</span><span class="p">[0]</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
 <span class="w">        </span>--environment<span class="w"> </span>gradescope<span class="w"> </span><span class="se">\</span>
 <span class="w">        </span>--resolver<span class="w"> </span>single<span class="w"> </span><span class="se">\</span>
-<span class="w">        </span>--output<span class="w"> </span><span class="s2">&quot;/autograder/results/results.json&quot;</span>
+<span class="w">        </span>--output<span class="w"> </span><span class="s2">"/autograder/results/results.json"</span>
 </pre></div>
 </div>
 </div>
@@ -177,8 +177,8 @@ pedal<span class="w"> </span>grade<span class="w"> </span><span class="se">\</sp
 <div class="code-block-caption"><span class="caption-text">vpl_evaluate.sh</span><a class="headerlink" href="#id5" title="Link to this code"></a></div>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span>Run<span class="w"> </span>the<span class="w"> </span>environment<span class="w"> </span>variable<span class="w"> </span>initializer<span class="w"> </span>to<span class="w"> </span>get<span class="w"> </span>access<span class="w"> </span>to<span class="w"> </span>its<span class="w"> </span>variables
 <span class="go">source ./vpl_environment.sh</span>
-<span class="go">echo &quot;#!/bin/bash&quot; &gt; vpl_execution</span>
-<span class="go">echo &quot;python3.6 -m pedal grade ics.py $VPL_SUBFILE0 --environment vpl&quot;&gt;&gt; vpl_execution</span>
+<span class="go">echo "#!/bin/bash" &gt; vpl_execution</span>
+<span class="go">echo "python3.6 -m pedal grade ics.py $VPL_SUBFILE0 --environment vpl"&gt;&gt; vpl_execution</span>
 <span class="go">chmod +x vpl_execution</span>
 </pre></div>
 </div>

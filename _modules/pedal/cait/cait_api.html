@@ -88,18 +88,18 @@
            <div itemprop="articleBody">
              
   <h1>Source code for pedal.cait.cait_api</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""</span>
 
 <span class="sd">.. csv-table:: Cait Report Data</span>
-<span class="sd">    :header: &quot;Field&quot;, &quot;Type&quot;, &quot;Initial&quot;, &quot;Description&quot;</span>
+<span class="sd">    :header: "Field", "Type", "Initial", "Description"</span>
 <span class="sd">    :widths: 20, 20, 20, 40</span>
 
-<span class="sd">    &quot;ast&quot;, &quot;CaitNode&quot;, &quot;None&quot;, &quot;The CaitNode tree that was most recently parsed out.&quot;</span>
-<span class="sd">    &quot;cache&quot;, &quot;{str: CaitNode}&quot;, &quot;{}&quot;, &quot;A dictionary mapping previously parsed code to CaitNode trees.&quot;</span>
-<span class="sd">    &quot;success&quot;, &quot;bool&quot;, &quot;True&quot;, &quot;Whether the most recent parsing was successful.&quot;</span>
-<span class="sd">    &quot;error&quot;, &quot;Exception&quot;, &quot;None&quot;, &quot;The most recent exception, or None.&quot;</span>
+<span class="sd">    "ast", "CaitNode", "None", "The CaitNode tree that was most recently parsed out."</span>
+<span class="sd">    "cache", "{str: CaitNode}", "{}", "A dictionary mapping previously parsed code to CaitNode trees."</span>
+<span class="sd">    "success", "bool", "True", "Whether the most recent parsing was successful."</span>
+<span class="sd">    "error", "Exception", "None", "The most recent exception, or None."</span>
 
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pedal.cait.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">TOOL_NAME</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pedal.core.commands</span><span class="w"> </span><span class="kn">import</span> <span class="n">system_error</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pedal.core.report</span><span class="w"> </span><span class="kn">import</span> <span class="n">Report</span><span class="p">,</span> <span class="n">MAIN_REPORT</span>
@@ -108,8 +108,8 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">ast</span>
 
 <span class="c1"># TODO: Decide if we want the imports; seems like overkill?</span>
-<span class="n">SOURCE_TOOL_NAME</span> <span class="o">=</span> <span class="s1">&#39;source&#39;</span>
-<span class="n">TIFA_TOOL_NAME</span> <span class="o">=</span> <span class="s1">&#39;tifa&#39;</span>
+<span class="n">SOURCE_TOOL_NAME</span> <span class="o">=</span> <span class="s1">'source'</span>
+<span class="n">TIFA_TOOL_NAME</span> <span class="o">=</span> <span class="s1">'tifa'</span>
 
 
 <div class="viewcode-block" id="CaitException">
@@ -120,7 +120,7 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_parse_source</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Parses the given code and returns its Cait representation. If the parse was</span>
 <span class="sd">    unsuccessful, it attaches the error to the report.</span>
 
@@ -129,54 +129,54 @@
 <span class="sd">        report (Report): A Report to store information in.</span>
 <span class="sd">    Returns:</span>
 <span class="sd">        AstNode: The parsed AST reprensetation, or None</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">parsed</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
-        <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;success&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">'success'</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">'error'</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">except</span> <span class="ne">SyntaxError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="n">system_error</span><span class="p">(</span><span class="n">TOOL_NAME</span><span class="p">,</span> <span class="s2">&quot;Could not parse code:&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span> <span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span>
-        <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;success&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">e</span>
-        <span class="k">return</span> <span class="n">ast</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="n">system_error</span><span class="p">(</span><span class="n">TOOL_NAME</span><span class="p">,</span> <span class="s2">"Could not parse code:"</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span> <span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span>
+        <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">'success'</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">][</span><span class="s1">'error'</span><span class="p">]</span> <span class="o">=</span> <span class="n">e</span>
+        <span class="k">return</span> <span class="n">ast</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">parsed</span>
 
 
 <div class="viewcode-block" id="reparse_if_needed">
 <a class="viewcode-back" href="../../../developers/tools/cait.html#pedal.cait.cait_api.reparse_if_needed">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">reparse_if_needed</span><span class="p">(</span><span class="n">student_code</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Retrieves the current report for CAIT. If there is no CAIT report, it will</span>
 <span class="sd">    generate one. If source code is given, that will be used instead of the</span>
-<span class="sd">    report&#39;s submission.</span>
+<span class="sd">    report's submission.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        student_code (str): The code to parse into the a CaitNode tree. If</span>
-<span class="sd">            None, then it will use the code in the report&#39;s submission.</span>
+<span class="sd">            None, then it will use the code in the report's submission.</span>
 <span class="sd">        report (Report): The report to attach data to.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        dict: Returns the Cait Report</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">cait</span> <span class="o">=</span> <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">student_code</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">student_code</span> <span class="ow">in</span> <span class="n">cait</span><span class="p">[</span><span class="s1">&#39;cache&#39;</span><span class="p">]:</span>
-            <span class="n">cait</span><span class="p">[</span><span class="s1">&#39;ast&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cait</span><span class="p">[</span><span class="s1">&#39;cache&#39;</span><span class="p">][</span><span class="n">student_code</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">student_code</span> <span class="ow">in</span> <span class="n">cait</span><span class="p">[</span><span class="s1">'cache'</span><span class="p">]:</span>
+            <span class="n">cait</span><span class="p">[</span><span class="s1">'ast'</span><span class="p">]</span> <span class="o">=</span> <span class="n">cait</span><span class="p">[</span><span class="s1">'cache'</span><span class="p">][</span><span class="n">student_code</span><span class="p">]</span>
             <span class="k">return</span> <span class="n">cait</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">student_ast</span> <span class="o">=</span> <span class="n">_parse_source</span><span class="p">(</span><span class="n">student_code</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">student_code</span> <span class="o">=</span> <span class="n">report</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">main_code</span>
         <span class="c1"># Have we already parsed this code?</span>
-        <span class="k">if</span> <span class="n">student_code</span> <span class="ow">in</span> <span class="n">cait</span><span class="p">[</span><span class="s1">&#39;cache&#39;</span><span class="p">]:</span>
-            <span class="n">cait</span><span class="p">[</span><span class="s1">&#39;ast&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cait</span><span class="p">[</span><span class="s1">&#39;cache&#39;</span><span class="p">][</span><span class="n">student_code</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">student_code</span> <span class="ow">in</span> <span class="n">cait</span><span class="p">[</span><span class="s1">'cache'</span><span class="p">]:</span>
+            <span class="n">cait</span><span class="p">[</span><span class="s1">'ast'</span><span class="p">]</span> <span class="o">=</span> <span class="n">cait</span><span class="p">[</span><span class="s1">'cache'</span><span class="p">][</span><span class="n">student_code</span><span class="p">]</span>
             <span class="k">return</span> <span class="n">cait</span>
         <span class="c1"># Try to steal parse from Source module, if available</span>
-        <span class="k">if</span> <span class="n">report</span><span class="p">[</span><span class="n">SOURCE_TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;success&#39;</span><span class="p">]:</span>
-            <span class="n">student_ast</span> <span class="o">=</span> <span class="n">report</span><span class="p">[</span><span class="n">SOURCE_TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;ast&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">report</span><span class="p">[</span><span class="n">SOURCE_TOOL_NAME</span><span class="p">][</span><span class="s1">'success'</span><span class="p">]:</span>
+            <span class="n">student_ast</span> <span class="o">=</span> <span class="n">report</span><span class="p">[</span><span class="n">SOURCE_TOOL_NAME</span><span class="p">][</span><span class="s1">'ast'</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">student_ast</span> <span class="o">=</span> <span class="n">_parse_source</span><span class="p">(</span><span class="n">student_code</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span>
-    <span class="n">cait</span><span class="p">[</span><span class="s1">&#39;ast&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cait</span><span class="p">[</span><span class="s1">&#39;cache&#39;</span><span class="p">][</span><span class="n">student_code</span><span class="p">]</span> <span class="o">=</span> <span class="n">CaitNode</span><span class="p">(</span><span class="n">student_ast</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span>
+    <span class="n">cait</span><span class="p">[</span><span class="s1">'ast'</span><span class="p">]</span> <span class="o">=</span> <span class="n">cait</span><span class="p">[</span><span class="s1">'cache'</span><span class="p">][</span><span class="n">student_code</span><span class="p">]</span> <span class="o">=</span> <span class="n">CaitNode</span><span class="p">(</span><span class="n">student_ast</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">cait</span></div>
 
 
@@ -184,15 +184,15 @@
 <div class="viewcode-block" id="require_tifa">
 <a class="viewcode-back" href="../../../developers/tools/cait.html#pedal.cait.cait_api.require_tifa">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">require_tifa</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Confirms that TIFA was run successfully, otherwise raises a</span>
 <span class="sd">    CaitException.</span>
 
 <span class="sd">    TODO: Is this deprecated?</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="p">[</span><span class="n">TIFA_TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;success&#39;</span><span class="p">]:</span>
-        <span class="n">system_error</span><span class="p">(</span><span class="n">TOOL_NAME</span><span class="p">,</span> <span class="s2">&quot;TIFA was not successfully run prior to CAIT.&quot;</span><span class="p">)</span>
-        <span class="k">raise</span> <span class="n">CaitException</span><span class="p">(</span><span class="s2">&quot;TIFA was not run prior to CAIT.&quot;</span><span class="p">)</span></div>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="p">[</span><span class="n">TIFA_TOOL_NAME</span><span class="p">][</span><span class="s1">'success'</span><span class="p">]:</span>
+        <span class="n">system_error</span><span class="p">(</span><span class="n">TOOL_NAME</span><span class="p">,</span> <span class="s2">"TIFA was not successfully run prior to CAIT."</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">CaitException</span><span class="p">(</span><span class="s2">"TIFA was not run prior to CAIT."</span><span class="p">)</span></div>
 
 
 
@@ -200,7 +200,7 @@
 <div class="viewcode-block" id="parse_program">
 <a class="viewcode-back" href="../../../developers/tools/cait.html#pedal.cait.cait_api.parse_program">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">parse_program</span><span class="p">(</span><span class="n">student_code</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Parses student code and produces a CAIT representation.</span>
 
 <span class="sd">    Args:</span>
@@ -210,30 +210,30 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        CaitNode: A CAIT-enhanced representation of the root Node.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">cait_report</span> <span class="o">=</span> <span class="n">reparse_if_needed</span><span class="p">(</span><span class="n">student_code</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">cait_report</span><span class="p">[</span><span class="s1">&#39;ast&#39;</span><span class="p">]</span></div>
+    <span class="k">return</span> <span class="n">cait_report</span><span class="p">[</span><span class="s1">'ast'</span><span class="p">]</span></div>
 
 
 
 <div class="viewcode-block" id="expire_cait_cache">
 <a class="viewcode-back" href="../../../developers/tools/cait.html#pedal.cait.cait_api.expire_cait_cache">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">expire_cait_cache</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Deletes the most recent CAIT run and any cached CAIT parses.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        report (Report): The report to attach data to. Defaults to MAIN_REPORT.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">report</span><span class="p">[</span><span class="s1">&#39;cait&#39;</span><span class="p">][</span><span class="s1">&#39;ast&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">report</span><span class="p">[</span><span class="s1">&#39;cait&#39;</span><span class="p">][</span><span class="s1">&#39;cache&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span></div>
+<span class="sd">    """</span>
+    <span class="n">report</span><span class="p">[</span><span class="s1">'cait'</span><span class="p">][</span><span class="s1">'ast'</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">report</span><span class="p">[</span><span class="s1">'cait'</span><span class="p">][</span><span class="s1">'cache'</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span></div>
 
 
 
 <div class="viewcode-block" id="def_use_error">
 <a class="viewcode-back" href="../../../developers/tools/cait.html#pedal.cait.cait_api.def_use_error">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">def_use_error</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Checks if node is a name and has a def_use_error</span>
 
 <span class="sd">    Args:</span>
@@ -241,8 +241,8 @@
 <span class="sd">        report (Report): The report to attach data to. Defaults to MAIN_REPORT.</span>
 <span class="sd">    Returns:</span>
 <span class="sd">        True if the given name has a def_use_error</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">node</span><span class="o">.</span><span class="n">ast_name</span> <span class="o">!=</span> <span class="s2">&quot;Name&quot;</span><span class="p">:</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">node</span><span class="o">.</span><span class="n">ast_name</span> <span class="o">!=</span> <span class="s2">"Name"</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">TypeError</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">pedal.tifa.commands</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_issues</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">pedal.tifa.feedbacks</span><span class="w"> </span><span class="kn">import</span> <span class="n">initialization_problem</span>
@@ -253,7 +253,7 @@
         <span class="n">node_id</span> <span class="o">=</span> <span class="n">node</span>
     <span class="n">has_error</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="k">for</span> <span class="n">issue</span> <span class="ow">in</span> <span class="n">def_use_issues</span><span class="p">:</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="n">issue</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">issue</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">'name'</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="n">node_id</span><span class="p">:</span>
             <span class="n">has_error</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="k">break</span>
@@ -265,23 +265,23 @@
 <div class="viewcode-block" id="data_state">
 <a class="viewcode-back" href="../../../developers/tools/cait.html#pedal.cait.cait_api.data_state">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">data_state</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Determines the Tifa State of the given node.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        node (str or AstNode or CaitNode): The Name node to look up in TIFA.</span>
 <span class="sd">        report (Report): The report to attach data to. Defaults to MAIN_REPORT.</span>
 <span class="sd">    Returns:</span>
-<span class="sd">        The State of the object (Tifa State) or None if it doesn&#39;t exist</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">node</span><span class="o">.</span><span class="n">ast_name</span> <span class="o">!=</span> <span class="s2">&quot;Name&quot;</span><span class="p">:</span>
+<span class="sd">        The State of the object (Tifa State) or None if it doesn't exist</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">node</span><span class="o">.</span><span class="n">ast_name</span> <span class="o">!=</span> <span class="s2">"Name"</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">TypeError</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">node_id</span> <span class="o">=</span> <span class="n">node</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">node_id</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">id</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">report</span><span class="p">[</span><span class="n">TIFA_TOOL_NAME</span><span class="p">][</span><span class="s2">&quot;latest&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">top_level_variables</span><span class="p">[</span><span class="n">node_id</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">report</span><span class="p">[</span><span class="n">TIFA_TOOL_NAME</span><span class="p">][</span><span class="s2">"latest"</span><span class="p">]</span><span class="o">.</span><span class="n">top_level_variables</span><span class="p">[</span><span class="n">node_id</span><span class="p">]</span>
     <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
@@ -290,15 +290,15 @@
 <div class="viewcode-block" id="data_type">
 <a class="viewcode-back" href="../../../developers/tools/cait.html#pedal.cait.cait_api.data_type">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">data_type</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Looks up the type of the node using Tifa&#39;s analysis.</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Looks up the type of the node using Tifa's analysis.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        node (str or AstNode or CaitNode): The Name node to look up in TIFA.</span>
 <span class="sd">        report (Report): The report to attach data to. Defaults to MAIN_REPORT.</span>
 <span class="sd">    Returns:</span>
-<span class="sd">        The type of the object (Tifa type) or None if a type doesn&#39;t exist</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">        The type of the object (Tifa type) or None if a type doesn't exist</span>
+<span class="sd">    """</span>
     <span class="n">state</span> <span class="o">=</span> <span class="n">data_state</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">state</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">state</span><span class="o">.</span><span class="n">type</span>
@@ -309,7 +309,7 @@
 <div class="viewcode-block" id="find_match">
 <a class="viewcode-back" href="../../../developers/tools/cait.html#pedal.cait.cait_api.find_match">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">find_match</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">student_code</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">,</span> <span class="n">cut</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_previous</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Apply Tree Inclusion and return the first match of the `pattern` in the</span>
 <span class="sd">    `student_code`.</span>
 
@@ -323,7 +323,7 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        CaitNode or None: The first matching node for the given pattern, or</span>
 <span class="sd">            None if nothing was found.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">matches</span> <span class="o">=</span> <span class="n">find_matches</span><span class="p">(</span><span class="n">pattern</span><span class="o">=</span><span class="n">pattern</span><span class="p">,</span> <span class="n">student_code</span><span class="o">=</span><span class="n">student_code</span><span class="p">,</span>
                            <span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">,</span> <span class="n">cut</span><span class="o">=</span><span class="n">cut</span><span class="p">,</span> <span class="n">use_previous</span><span class="o">=</span><span class="n">use_previous</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">matches</span><span class="p">:</span>
@@ -336,7 +336,7 @@
 <div class="viewcode-block" id="find_matches">
 <a class="viewcode-back" href="../../../developers/tools/cait.html#pedal.cait.cait_api.find_matches">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">find_matches</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">student_code</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cut</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">,</span> <span class="n">use_previous</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Apply Tree Inclusion and return all matches of the `pattern` in the</span>
 <span class="sd">    `student_code`.</span>
 
@@ -348,11 +348,11 @@
 <span class="sd">        use_previous (AstMap): If user wants to continue off of a previously found match</span>
 <span class="sd">    Returns:</span>
 <span class="sd">        list[pedal.cait.ast_map.AstMap]: All matching nodes for the given pattern.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">cait_report</span> <span class="o">=</span> <span class="n">reparse_if_needed</span><span class="p">(</span><span class="n">student_code</span><span class="p">,</span> <span class="n">report</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">cait_report</span><span class="p">[</span><span class="s1">&#39;success&#39;</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">cait_report</span><span class="p">[</span><span class="s1">'success'</span><span class="p">]:</span>
         <span class="k">return</span> <span class="p">[]</span>
-    <span class="n">student_ast</span> <span class="o">=</span> <span class="n">cait_report</span><span class="p">[</span><span class="s1">&#39;ast&#39;</span><span class="p">]</span>
+    <span class="n">student_ast</span> <span class="o">=</span> <span class="n">cait_report</span><span class="p">[</span><span class="s1">'ast'</span><span class="p">]</span>
     <span class="n">matcher</span> <span class="o">=</span> <span class="n">StretchyTreeMatcher</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">matcher</span><span class="o">.</span><span class="n">find_matches</span><span class="p">(</span><span class="n">student_ast</span><span class="p">,</span> <span class="n">use_previous</span><span class="o">=</span><span class="n">use_previous</span><span class="p">)</span></div>
 
@@ -361,9 +361,9 @@
 <div class="viewcode-block" id="find_submatches">
 <a class="viewcode-back" href="../../../developers/tools/cait.html#pedal.cait.cait_api.find_submatches">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">find_submatches</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">student_code</span><span class="p">,</span> <span class="n">is_mod</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Incomplete.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">return</span> <span class="n">find_expr_sub_matches</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">student_code</span><span class="p">,</span> <span class="n">is_mod</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span></div>
 
 
@@ -371,7 +371,7 @@
 <div class="viewcode-block" id="find_expr_sub_matches">
 <a class="viewcode-back" href="../../../developers/tools/cait.html#pedal.cait.cait_api.find_expr_sub_matches">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">find_expr_sub_matches</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">student_code</span><span class="p">,</span> <span class="n">is_mod</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Finds pattern in student_code</span>
 <span class="sd">    # TODO: Add code to make pattern accept CaitNodes</span>
 <span class="sd">    # TODO: Make this function without so much meta knowledge</span>
@@ -382,13 +382,13 @@
 <span class="sd">        report: defaults to MAIN_REPORT unless another one exists</span>
 <span class="sd">    Returns:</span>
 <span class="sd">        a list of matches or False if no matches found</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">is_node</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">CaitNode</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_node</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;pattern expected str or CaitNode, found </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">pattern</span><span class="p">)))</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"pattern expected str or CaitNode, found </span><span class="si">{0}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">pattern</span><span class="p">)))</span>
     <span class="n">matcher</span> <span class="o">=</span> <span class="n">StretchyTreeMatcher</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span>
     <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">is_node</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_mod</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">matcher</span><span class="o">.</span><span class="n">root_node</span><span class="o">.</span><span class="n">children</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;pattern does not evaluate to a singular statement&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"pattern does not evaluate to a singular statement"</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">matcher</span><span class="o">.</span><span class="n">find_matches</span><span class="p">(</span><span class="n">student_code</span><span class="p">,</span> <span class="n">check_meta</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
 
 
@@ -396,12 +396,12 @@
 <div class="viewcode-block" id="find_asts">
 <a class="viewcode-back" href="../../../developers/tools/cait.html#pedal.cait.cait_api.find_asts">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">find_asts</span><span class="p">(</span><span class="n">node_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">student_code</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Find all occurrences of the given AST node, based on the name of the AST</span>
-<span class="sd">    node (e.g., `&quot;For&quot;` or `&quot;FunctionDef&quot;`).</span>
+<span class="sd">    node (e.g., `"For"` or `"FunctionDef"`).</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        node_name: the string representing the &quot;type&quot; of node to look for</span>
+<span class="sd">        node_name: the string representing the "type" of node to look for</span>
 <span class="sd">        student_code (str): Optionally, different code to parse and search.</span>
 <span class="sd">        report: defaults to MAIN_REPORT unless another one is given.</span>
 
@@ -411,11 +411,11 @@
 
 <span class="sd">    Returns:</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">cait_report</span> <span class="o">=</span> <span class="n">reparse_if_needed</span><span class="p">(</span><span class="n">student_code</span><span class="p">,</span> <span class="n">report</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">cait_report</span><span class="p">[</span><span class="s1">&#39;success&#39;</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">cait_report</span><span class="p">[</span><span class="s1">'success'</span><span class="p">]:</span>
         <span class="k">return</span> <span class="p">[]</span>
-    <span class="n">student_ast</span> <span class="o">=</span> <span class="n">cait_report</span><span class="p">[</span><span class="s1">&#39;ast&#39;</span><span class="p">]</span>
+    <span class="n">student_ast</span> <span class="o">=</span> <span class="n">cait_report</span><span class="p">[</span><span class="s1">'ast'</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">student_ast</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">node_name</span><span class="p">)</span></div>
 
 
@@ -423,19 +423,19 @@
 <div class="viewcode-block" id="reset">
 <a class="viewcode-back" href="../../../developers/tools/cait.html#pedal.cait.cait_api.reset">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        report:</span>
 
 <span class="sd">    Returns:</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">&#39;success&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="s1">&#39;ast&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="s1">&#39;cache&#39;</span><span class="p">:</span> <span class="p">{}</span>
+        <span class="s1">'success'</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s1">'error'</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s1">'ast'</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s1">'cache'</span><span class="p">:</span> <span class="p">{}</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="n">report</span><span class="p">[</span><span class="n">TOOL_NAME</span><span class="p">]</span></div>
 

@@ -88,9 +88,9 @@
            <div itemprop="articleBody">
              
   <h1>Source code for pedal.tifa.commands</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""</span>
 <span class="sd">Commands related to navigating TIFA data.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">ast</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pedal.core.report</span><span class="w"> </span><span class="kn">import</span> <span class="n">MAIN_REPORT</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pedal.tifa.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">TOOL_NAME</span> <span class="k">as</span> <span class="n">TIFA_TOOL_NAME</span>
@@ -100,37 +100,37 @@
 <div class="viewcode-block" id="tifa_analysis">
 <a class="viewcode-back" href="../../../developers/tools/tifa.html#pedal.tifa.tifa_analysis">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">tifa_analysis</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Perform the TIFA analysis and attach the results to the Report.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        code (str or None): The code to evaluate with TIFA. If ``code`` is not</span>
-<span class="sd">            given, then it will default to the student&#39;s main file.</span>
+<span class="sd">            given, then it will default to the student's main file.</span>
 <span class="sd">        report (:class:`pedal.core.report.Report`): The Report object to</span>
 <span class="sd">            attach results to.</span>
 <span class="sd">    Returns:</span>
 <span class="sd">        :py:class:`pedal.tifa.tifa_core.TifaAnalysis`: A TifaAnalysis data</span>
 <span class="sd">            bundle containing all the information that TIFA learned.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">code</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">code</span> <span class="o">=</span> <span class="n">report</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">main_code</span>
-    <span class="k">if</span> <span class="n">code</span> <span class="ow">in</span> <span class="n">report</span><span class="p">[</span><span class="n">TIFA_TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;analyses&#39;</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="n">report</span><span class="p">[</span><span class="n">TIFA_TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;analyses&#39;</span><span class="p">][</span><span class="n">code</span><span class="p">]</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">report</span><span class="p">[</span><span class="n">TIFA_TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;instance&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">process_code</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
-    <span class="n">report</span><span class="p">[</span><span class="n">TIFA_TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;analyses&#39;</span><span class="p">][</span><span class="n">code</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span>
-    <span class="n">report</span><span class="p">[</span><span class="n">TIFA_TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;latest&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span>
+    <span class="k">if</span> <span class="n">code</span> <span class="ow">in</span> <span class="n">report</span><span class="p">[</span><span class="n">TIFA_TOOL_NAME</span><span class="p">][</span><span class="s1">'analyses'</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="n">report</span><span class="p">[</span><span class="n">TIFA_TOOL_NAME</span><span class="p">][</span><span class="s1">'analyses'</span><span class="p">][</span><span class="n">code</span><span class="p">]</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">report</span><span class="p">[</span><span class="n">TIFA_TOOL_NAME</span><span class="p">][</span><span class="s1">'instance'</span><span class="p">]</span><span class="o">.</span><span class="n">process_code</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+    <span class="n">report</span><span class="p">[</span><span class="n">TIFA_TOOL_NAME</span><span class="p">][</span><span class="s1">'analyses'</span><span class="p">][</span><span class="n">code</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span>
+    <span class="n">report</span><span class="p">[</span><span class="n">TIFA_TOOL_NAME</span><span class="p">][</span><span class="s1">'latest'</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span>
     <span class="k">return</span> <span class="n">result</span></div>
 
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">tifa_type_check</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
-    <span class="n">tifa_instance</span> <span class="o">=</span> <span class="n">report</span><span class="p">[</span><span class="n">TIFA_TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;instance&#39;</span><span class="p">]</span>
+    <span class="n">tifa_instance</span> <span class="o">=</span> <span class="n">report</span><span class="p">[</span><span class="n">TIFA_TOOL_NAME</span><span class="p">][</span><span class="s1">'instance'</span><span class="p">]</span>
     <span class="n">variable</span> <span class="o">=</span> <span class="n">tifa_instance</span><span class="o">.</span><span class="n">find_variable_scope</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">variable</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">type</span> <span class="k">if</span> <span class="n">variable</span><span class="o">.</span><span class="n">exists</span> <span class="k">else</span> <span class="n">ImpossibleType</span><span class="p">()</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">get_issues</span><span class="p">(</span><span class="n">category</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        category (str or Feedback): The category of Issues to retrieve.</span>
@@ -138,17 +138,17 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        list[Feedback]: The feedback functions triggered for this issue.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">category</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">category</span> <span class="o">=</span> <span class="n">category</span><span class="o">.</span><span class="vm">__name__</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">report</span><span class="p">[</span><span class="n">TIFA_TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;latest&#39;</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">report</span><span class="p">[</span><span class="n">TIFA_TOOL_NAME</span><span class="p">][</span><span class="s1">'latest'</span><span class="p">]:</span>
         <span class="n">tifa_analysis</span><span class="p">(</span><span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span>
-    <span class="n">latest</span> <span class="o">=</span> <span class="n">report</span><span class="p">[</span><span class="n">TIFA_TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;latest&#39;</span><span class="p">]</span>
+    <span class="n">latest</span> <span class="o">=</span> <span class="n">report</span><span class="p">[</span><span class="n">TIFA_TOOL_NAME</span><span class="p">][</span><span class="s1">'latest'</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">latest</span><span class="o">.</span><span class="n">issues</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">category</span><span class="p">,</span> <span class="p">[])</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">tifa_provide_module_type</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">MAIN_REPORT</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Gives TIFA the type definition for a module.</span>
 
 <span class="sd">    Args:</span>
@@ -158,10 +158,10 @@
 
 <span class="sd">    Returns:</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fields</span><span class="p">,</span> <span class="n">ModuleType</span><span class="p">):</span>
         <span class="n">fields</span> <span class="o">=</span> <span class="n">ModuleType</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">fields</span><span class="p">)</span>
-    <span class="n">report</span><span class="p">[</span><span class="n">TIFA_TOOL_NAME</span><span class="p">][</span><span class="s1">&#39;types&#39;</span><span class="p">][</span><span class="s1">&#39;modules&#39;</span><span class="p">][</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">fields</span>
+    <span class="n">report</span><span class="p">[</span><span class="n">TIFA_TOOL_NAME</span><span class="p">][</span><span class="s1">'types'</span><span class="p">][</span><span class="s1">'modules'</span><span class="p">][</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">fields</span>
 
 </pre></div>
 

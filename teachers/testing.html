@@ -142,23 +142,23 @@ that the students were assigned the following prompt:</p>
 print the phrase <code class="docutils literal notranslate"><span class="pre">&quot;out</span> <span class="pre">of</span> <span class="pre">order&quot;</span></code>.</p>
 </div></blockquote>
 <p>And they had the following starting code:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">a_phrase</span> <span class="o">=</span> <span class="s2">&quot;order out of&quot;</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">a_phrase</span> <span class="o">=</span> <span class="s2">"order out of"</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">a_phrase</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The autograding script might look like this:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pedal</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
 
-<span class="n">ensure_literal</span><span class="p">(</span><span class="s2">&quot;order out of&quot;</span><span class="p">)</span>
-<span class="n">prevent_ast</span><span class="p">(</span><span class="s2">&quot;Str&quot;</span><span class="p">,</span> <span class="n">at_most</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">ensure_ast</span><span class="p">(</span><span class="s2">&quot;Subscript&quot;</span><span class="p">,</span> <span class="n">at_least</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">prevent_ast</span><span class="p">(</span><span class="s2">&quot;Subscript&quot;</span><span class="p">,</span> <span class="n">at_most</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-<span class="n">ensure_function_call</span><span class="p">(</span><span class="s2">&quot;print&quot;</span><span class="p">)</span>
+<span class="n">ensure_literal</span><span class="p">(</span><span class="s2">"order out of"</span><span class="p">)</span>
+<span class="n">prevent_ast</span><span class="p">(</span><span class="s2">"Str"</span><span class="p">,</span> <span class="n">at_most</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">ensure_ast</span><span class="p">(</span><span class="s2">"Subscript"</span><span class="p">,</span> <span class="n">at_least</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">prevent_ast</span><span class="p">(</span><span class="s2">"Subscript"</span><span class="p">,</span> <span class="n">at_most</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">ensure_function_call</span><span class="p">(</span><span class="s2">"print"</span><span class="p">)</span>
 
-<span class="n">assert_not_output</span><span class="p">(</span><span class="n">student</span><span class="p">,</span> <span class="s2">&quot;out of order &quot;</span><span class="p">,</span> <span class="n">exact_strings</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                    <span class="n">message</span><span class="o">=</span><span class="s2">&quot;There&#39;s an extra space at the end!&quot;</span><span class="p">,</span>
-                    <span class="n">label</span><span class="o">=</span><span class="s2">&quot;printing_extra_space&quot;</span><span class="p">)</span>
-<span class="n">assert_output</span><span class="p">(</span><span class="n">student</span><span class="p">,</span> <span class="s2">&quot;out of order&quot;</span><span class="p">,</span> <span class="n">exact_strings</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">assert_not_output</span><span class="p">(</span><span class="n">student</span><span class="p">,</span> <span class="s2">"out of order "</span><span class="p">,</span> <span class="n">exact_strings</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">message</span><span class="o">=</span><span class="s2">"There's an extra space at the end!"</span><span class="p">,</span>
+                    <span class="n">label</span><span class="o">=</span><span class="s2">"printing_extra_space"</span><span class="p">)</span>
+<span class="n">assert_output</span><span class="p">(</span><span class="n">student</span><span class="p">,</span> <span class="s2">"out of order"</span><span class="p">,</span> <span class="n">exact_strings</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>This shows off a number of the features of Pedal:</p>
@@ -180,7 +180,7 @@ the file lists the fields and their values of the <code class="xref py py-obj do
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a_phrase</span>   <span class="o">=</span>  <span class="s2">&quot;order out of&quot;</span>
+<tr class="row-even"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a_phrase</span>   <span class="o">=</span>  <span class="s2">"order out of"</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">a_phrase</span><span class="p">[</span><span class="mi">6</span><span class="p">:]</span> <span class="o">+</span> <span class="n">a_phrase</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">+</span> <span class="n">a_phrase</span><span class="p">[:</span><span class="mi">5</span><span class="p">])</span>
 </pre></div>
 </div>
@@ -210,7 +210,7 @@ For example, they could forget to add the space in the middle of the phrase:</p>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a_phrase</span> <span class="o">=</span> <span class="s2">&quot;order out of&quot;</span>
+<tr class="row-even"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a_phrase</span> <span class="o">=</span> <span class="s2">"order out of"</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">a_phrase</span><span class="p">[</span><span class="mi">6</span><span class="p">:]</span> <span class="o">+</span> <span class="n">a_phrase</span><span class="p">[:</span><span class="mi">5</span><span class="p">])</span>
 </pre></div>
 </div>
@@ -246,8 +246,8 @@ instructions and add a space as a string literal:</p>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a_phrase</span> <span class="o">=</span> <span class="s2">&quot;order out of&quot;</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">a_phrase</span><span class="p">[</span><span class="mi">6</span><span class="p">:]</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">a_phrase</span><span class="p">[:</span><span class="mi">5</span><span class="p">])</span>
+<tr class="row-even"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a_phrase</span> <span class="o">=</span> <span class="s2">"order out of"</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">a_phrase</span><span class="p">[</span><span class="mi">6</span><span class="p">:]</span> <span class="o">+</span> <span class="s2">" "</span> <span class="o">+</span> <span class="n">a_phrase</span><span class="p">[:</span><span class="mi">5</span><span class="p">])</span>
 </pre></div>
 </div>
 </td>
@@ -278,7 +278,7 @@ by incorrectly grabbing the last character of the string in the third subscript:
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a_phrase</span> <span class="o">=</span> <span class="s2">&quot;order out of&quot;</span>
+<tr class="row-even"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a_phrase</span> <span class="o">=</span> <span class="s2">"order out of"</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">a_phrase</span><span class="p">[</span><span class="mi">6</span><span class="p">:]</span> <span class="o">+</span> <span class="n">a_phrase</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">+</span> <span class="n">a_phrase</span><span class="p">[:</span><span class="mi">6</span><span class="p">])</span>
 </pre></div>
 </div>
@@ -291,7 +291,7 @@ by incorrectly grabbing the last character of the string in the third subscript:
 <span class="na">category</span><span class="o">:</span><span class="w"> </span><span class="s">specification</span>
 <span class="na">label</span><span class="o">:</span><span class="w"> </span><span class="s">printing_extra_space</span>
 <span class="na">title</span><span class="o">:</span><span class="w"> </span><span class="s">Failed Instructor Test</span>
-<span class="na">message</span><span class="o">:</span><span class="w"> </span><span class="s">There&#39;s an extra space at the end!</span>
+<span class="na">message</span><span class="o">:</span><span class="w"> </span><span class="s">There's an extra space at the end!</span>
 <span class="na">location</span><span class="o">:</span><span class="w"> </span><span class="s">None</span>
 </pre></div>
 </div>
@@ -309,9 +309,9 @@ so that the system does not complain about the unused variable:</p>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a_phrase</span> <span class="o">=</span> <span class="s2">&quot;order out of&quot;</span>
+<tr class="row-even"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a_phrase</span> <span class="o">=</span> <span class="s2">"order out of"</span>
 <span class="n">a_phrase</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;out of order&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"out of order"</span><span class="p">)</span>
 </pre></div>
 </div>
 </td>
@@ -352,9 +352,9 @@ updating our output files? Then, the output would look like:</p>
 FAIL: validate.py, using extra_space.py
 <span class="gd">----------------------------------------------------------------------</span>
 Traceback (most recent call last):
-<span class="w"> </span> File &quot;pedal\command_line\modes.py&quot;, line 450, in new_test
+<span class="w"> </span> File "pedal\command_line\modes.py", line 450, in new_test
 <span class="w"> </span>   self.assertEqual(entire_expected, entire_actual,
-AssertionError: &quot;correct: False\nsuccess: False\nscore: 0[156 chars]ne\n&quot; != &#39;correct: False\nsuccess: False\nscore: 0[265 chars]ne\n&#39;
+AssertionError: "correct: False\nsuccess: False\nscore: 0[156 chars]ne\n" != 'correct: False\nsuccess: False\nscore: 0[265 chars]ne\n'
 <span class="w"> </span> correct: False
 <span class="w"> </span> success: False
 <span class="w"> </span> score: 0
@@ -363,7 +363,7 @@ AssertionError: &quot;correct: False\nsuccess: False\nscore: 0[156 chars]ne\n&qu
 <span class="gd">- label: printing_extra_space</span>
 <span class="gi">+ label: assert_output</span>
 <span class="w"> </span> title: Failed Instructor Test
-<span class="gd">- message: There&#39;s an extra space at the end!</span>
+<span class="gd">- message: There's an extra space at the end!</span>
 <span class="gi">+ message: Student code failed instructor test.</span>
 <span class="gi">+ I ran your code.</span>
 <span class="gi">+ The printed output was:</span>
@@ -371,7 +371,7 @@ AssertionError: &quot;correct: False\nsuccess: False\nscore: 0[156 chars]ne\n&qu
 <span class="gi">+ But I expected the output to be:</span>
 <span class="gi">+     out of order</span>
 <span class="w"> </span> location: None
-<span class="w"> </span>: Wrong value for &#39;label&#39;, &#39;message&#39; in extra_space.
+<span class="w"> </span>: Wrong value for 'label', 'message' in extra_space.
 </pre></div>
 </div>
 <p>You can see the helpfulness of the custom feedback message, since the two strings look very similar.

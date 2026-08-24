@@ -143,13 +143,13 @@ an (internal) <code class="docutils literal notranslate"><span class="pre">justi
 <dd><p>Provides a <code class="docutils literal notranslate"><span class="pre">message</span></code> to the student complimenting them on something they did correctly.
 You can also specify a numeric <code class="docutils literal notranslate"><span class="pre">value</span></code> that will be added as partial credit.
 Finally, you can optionally set an internal <code class="docutils literal notranslate"><span class="pre">justification</span></code> message for why this was triggered.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">compliment</span><span class="p">(</span><span class="s2">&quot;Your `for` loop looks correct!&quot;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">compliment</span><span class="p">(</span><span class="s2">"Your `for` loop looks correct!"</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>If you provide a <code class="docutils literal notranslate"><span class="pre">message_template</span></code> keyword parameter instead of a <code class="docutils literal notranslate"><span class="pre">message</span></code>, you can have fields
 with proper formatting. Fields can either be provided explicitly as a dictionary, or as additional keyword
 arguments (assuming they do not overlap with any Feedback Function parameters).</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">compliment</span><span class="p">(</span><span class="n">message_template</span><span class="o">=</span><span class="s2">&quot;Hello {name:python_code}!&quot;</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Ada&quot;</span><span class="p">})</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">compliment</span><span class="p">(</span><span class="n">message_template</span><span class="o">=</span><span class="s2">"Hello {name:python_code}!"</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Ada"</span><span class="p">})</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -174,9 +174,9 @@ learner. The <a class="reference internal" href="ffs.html#label" title="label"><
 always including a <a class="reference internal" href="../../everyone/glossary.html#term-Feedback-Label"><span class="xref std std-term">Feedback Label</span></a> when you can! You can also provide the internal <a class="reference internal" href="ffs.html#justification" title="justification"><code class="xref py py-obj docutils literal notranslate"><span class="pre">justification</span></code></a>
 text to give some debug information about the justification for this feedback. By default,
 this feedback’s priority tends to override almost any other kind besides syntax errors.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">explain</span><span class="p">(</span><span class="s2">&quot;You need to use a For loop for this problem!&quot;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">explain</span><span class="p">(</span><span class="s2">"You need to use a For loop for this problem!"</span><span class="p">)</span>
 
-<span class="n">explain</span><span class="p">(</span><span class="s2">&quot;You need to use a For loop for this problem!&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;do_not_use_for_loop&quot;</span><span class="p">)</span>
+<span class="n">explain</span><span class="p">(</span><span class="s2">"You need to use a For loop for this problem!"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"do_not_use_for_loop"</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -192,10 +192,10 @@ override runtime or <a class="reference internal" href="../../developers/tools/t
 The <a class="reference internal" href="ffs.html#label" title="label"><code class="xref py py-obj docutils literal notranslate"><span class="pre">label</span></code></a> can be given to help track this piece of feedback; we strongly recommend
 always including a <a class="reference internal" href="../../everyone/glossary.html#term-Feedback-Label"><span class="xref std std-term">Feedback Label</span></a> when you can! You can also provide the internal <a class="reference internal" href="ffs.html#justification" title="justification"><code class="xref py py-obj docutils literal notranslate"><span class="pre">justification</span></code></a>
 text to give some debug information about the justification for this feedback.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gently</span><span class="p">(</span><span class="s2">&quot;Your solution looks close, but you haven&#39;t incorporated any multiplication.&quot;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gently</span><span class="p">(</span><span class="s2">"Your solution looks close, but you haven't incorporated any multiplication."</span><span class="p">)</span>
 
-<span class="n">gently</span><span class="p">(</span><span class="s2">&quot;Your solution looks close, but you haven&#39;t incorporated any multiplication.&quot;</span><span class="p">,</span>
-       <span class="n">label</span><span class="o">=</span><span class="s2">&quot;need_multiplication&quot;</span><span class="p">)</span>
+<span class="n">gently</span><span class="p">(</span><span class="s2">"Your solution looks close, but you haven't incorporated any multiplication."</span><span class="p">,</span>
+       <span class="n">label</span><span class="o">=</span><span class="s2">"need_multiplication"</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -208,10 +208,10 @@ text to give some debug information about the justification for this feedback.</
 <dd><p>Used to display guiding feedback such as a hint or revised instructions via the <a class="reference internal" href="ffs.html#message" title="message"><code class="xref py py-obj docutils literal notranslate"><span class="pre">message</span></code></a> to the learner.
 You are recommended to include a <a class="reference internal" href="../../everyone/glossary.html#term-Feedback-Label"><span class="xref std std-term">Feedback Label</span></a>, but not obligated. You can also optionally
 include a justification.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">guidance</span><span class="p">(</span><span class="s2">&quot;Great work so far - now try incorporating a variable!&quot;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">guidance</span><span class="p">(</span><span class="s2">"Great work so far - now try incorporating a variable!"</span><span class="p">)</span>
 
-<span class="n">guidance</span><span class="p">(</span><span class="s2">&quot;Great work so far - now try incorporating a variable!&quot;</span><span class="p">,</span>
-         <span class="n">label</span><span class="o">=</span><span class="s2">&quot;incorporate_variable&quot;</span><span class="p">)</span>
+<span class="n">guidance</span><span class="p">(</span><span class="s2">"Great work so far - now try incorporating a variable!"</span><span class="p">,</span>
+         <span class="n">label</span><span class="o">=</span><span class="s2">"incorporate_variable"</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -236,11 +236,11 @@ should be displayed to the user. You can specify one or both, and it will refine
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pedal.core.feedback_category</span><span class="w"> </span><span class="kn">import</span> <span class="n">FeedbackCategory</span>
 
 <span class="c1"># Suppress Type Errors</span>
-<span class="n">suppress</span><span class="p">(</span><span class="n">FeedbackCategory</span><span class="o">.</span><span class="n">RUNTIME</span><span class="p">,</span> <span class="s2">&quot;TypeError&quot;</span><span class="p">)</span>
+<span class="n">suppress</span><span class="p">(</span><span class="n">FeedbackCategory</span><span class="o">.</span><span class="n">RUNTIME</span><span class="p">,</span> <span class="s2">"TypeError"</span><span class="p">)</span>
 <span class="c1"># Suppress all TIFA feedback</span>
 <span class="n">suppress</span><span class="p">(</span><span class="n">FeedbackCategory</span><span class="o">.</span><span class="n">ALGORITHMIC</span><span class="p">)</span>
 <span class="c1"># Suppress any occurrences of this custom feedback label</span>
-<span class="n">suppress</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;wrong_output&quot;</span><span class="p">)</span>
+<span class="n">suppress</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">"wrong_output"</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -251,7 +251,7 @@ should be displayed to the user. You can specify one or both, and it will refine
 <dd><p>A muted feedback type meant for internal system usage, will not be shown to the student. You can use
 this to log data that will be viewable as an instructor, since printing is often not available when
 writing grading scripts.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;This line of code was reached!&quot;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">log</span><span class="p">(</span><span class="s2">"This line of code was reached!"</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -261,7 +261,7 @@ writing grading scripts.</p>
 <span class="sig-name descname"><span class="pre">debug</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#debug" title="Link to this definition"></a></dt>
 <dd><p>Similar to <a class="reference internal" href="#log" title="log"><code class="xref py py-func docutils literal notranslate"><span class="pre">log()</span></code></a>, a muted feedback type meant for internal system usage. However, this one
 should be used to indicate that something went wrong.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;The conditional should be false, but was true instead.&quot;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">debug</span><span class="p">(</span><span class="s2">"The conditional should be false, but was true instead."</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -290,12 +290,12 @@ can use the <a class="reference internal" href="../../developers/tools/source.ht
 handle follow-up evaluations). Using a full Submission object is more powerful, since you can attach
 additional meta information and specify additional files.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simple two-argument version</span>
-<span class="n">contextualize_report</span><span class="p">(</span><span class="s2">&quot;print(&#39;hello world&#39;)&quot;</span><span class="p">,</span> <span class="s2">&quot;answer.py&quot;</span><span class="p">)</span>
+<span class="n">contextualize_report</span><span class="p">(</span><span class="s2">"print('hello world')"</span><span class="p">,</span> <span class="s2">"answer.py"</span><span class="p">)</span>
 
 <span class="c1"># More complex configuration using a Submission</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pedal.core.submission</span><span class="w"> </span><span class="kn">import</span> <span class="n">Submission</span>
-<span class="n">files</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;answer.py&quot;</span><span class="p">:</span> <span class="s2">&quot;print(open(&#39;input.txt&#39;).read())&quot;</span><span class="p">,</span> <span class="s2">&quot;input.txt&quot;</span><span class="p">:</span> <span class="s2">&quot;1</span><span class="se">\n</span><span class="s2">31</span><span class="se">\n</span><span class="s2">44</span><span class="se">\n</span><span class="s2">2&quot;</span><span class="p">}</span>
-<span class="n">contextualize_report</span><span class="p">(</span><span class="n">Submission</span><span class="p">(</span><span class="n">files</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Ada Bart&quot;</span><span class="p">}))</span>
+<span class="n">files</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"answer.py"</span><span class="p">:</span> <span class="s2">"print(open('input.txt').read())"</span><span class="p">,</span> <span class="s2">"input.txt"</span><span class="p">:</span> <span class="s2">"1</span><span class="se">\n</span><span class="s2">31</span><span class="se">\n</span><span class="s2">44</span><span class="se">\n</span><span class="s2">2"</span><span class="p">}</span>
+<span class="n">contextualize_report</span><span class="p">(</span><span class="n">Submission</span><span class="p">(</span><span class="n">files</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Ada Bart"</span><span class="p">}))</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -307,8 +307,8 @@ additional meta information and specify additional files.</p>
 which you could inspect in order to reuse conditions or even perhaps modify responses.
 Not very convenient currently, but we will improve the interface if there is demand.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="n">feedback</span><span class="o">.</span><span class="n">label</span> <span class="k">for</span> <span class="n">feedback</span> <span class="ow">in</span> <span class="n">get_all_feedback</span><span class="p">()]</span>
-<span class="k">if</span> <span class="s2">&quot;wrong_output&quot;</span> <span class="ow">in</span> <span class="n">labels</span> <span class="ow">and</span> <span class="s2">&quot;not_printing&quot;</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">:</span>
-    <span class="n">gently</span><span class="p">(</span><span class="s2">&quot;Looks like you are not printing and you have the wrong output!&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="s2">"wrong_output"</span> <span class="ow">in</span> <span class="n">labels</span> <span class="ow">and</span> <span class="s2">"not_printing"</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">:</span>
+    <span class="n">gently</span><span class="p">(</span><span class="s2">"Looks like you are not printing and you have the wrong output!"</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>

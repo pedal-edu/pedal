@@ -89,11 +89,11 @@
              
   <h1>Source code for pedal.tifa.tifa_visitor</h1><div class="highlight"><pre>
 <span></span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="sd">Main TIFA visitor-based algorithm here.</span>
 
 <span class="sd">TODO: JoinedStr</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">ast</span>
 <span class="c1"># TODO: FileType, DayType, TimeType,</span>
@@ -131,30 +131,30 @@
 <div class="viewcode-block" id="Tifa">
 <a class="viewcode-back" href="../../../developers/tools/tifa.html#pedal.tifa.Tifa">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Tifa</span><span class="p">(</span><span class="n">TifaCore</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">NodeVisitor</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    TIFA subclass for traversing an AST and finding common issues.</span>
 <span class="sd">    You can instantiate this class, manipulate settings, and then process</span>
 <span class="sd">    some code or AST.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="Tifa.process_code">
 <a class="viewcode-back" href="../../../developers/tools/tifa.html#pedal.tifa.Tifa.process_code">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">process_code</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">reset</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Processes the AST of the given source code to generate a report.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            code (str): The Python source code</span>
 <span class="sd">            filename (str): The filename of the source code (defaults to</span>
-<span class="sd">                the submissions&#39; main file).</span>
+<span class="sd">                the submissions' main file).</span>
 <span class="sd">            reset (bool): Whether or not to reset the results from the</span>
 <span class="sd">                previous analysis before running this one.</span>
 <span class="sd">        Returns:</span>
 <span class="sd">            Report: The successful or successful report object</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">reset</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">analysis</span> <span class="o">=</span> <span class="n">TifaAnalysis</span><span class="p">()</span>
-        <span class="n">filename</span> <span class="o">=</span> <span class="n">filename</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">main_file</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">submission</span> <span class="k">else</span> <span class="s1">&#39;student.py&#39;</span><span class="p">)</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">filename</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">main_file</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">submission</span> <span class="k">else</span> <span class="s1">'student.py'</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">line_offset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">submission</span><span class="o">.</span><span class="n">line_offsets</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="o">.</span><span class="n">submission</span> <span class="k">else</span> <span class="mi">0</span>
 
         <span class="c1"># Attempt parsing - might fail!</span>
@@ -162,7 +162,7 @@
             <span class="n">ast_tree</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">analysis</span><span class="o">.</span><span class="n">fail</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
-            <span class="n">system_error</span><span class="p">(</span><span class="n">TOOL_NAME</span><span class="p">,</span> <span class="s2">&quot;Could not parse code: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="p">),</span>
+            <span class="n">system_error</span><span class="p">(</span><span class="n">TOOL_NAME</span><span class="p">,</span> <span class="s2">"Could not parse code: "</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="p">),</span>
                          <span class="n">report</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="p">)</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis</span>
         <span class="c1"># Attempt processing code - might fail!</span>
@@ -170,8 +170,8 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">process_ast</span><span class="p">(</span><span class="n">ast_tree</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">analysis</span><span class="o">.</span><span class="n">fail</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
-            <span class="n">system_error</span><span class="p">(</span><span class="n">TOOL_NAME</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Successfully parsed but could not &quot;</span>
-                                    <span class="s2">&quot;process AST: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="p">),</span>
+            <span class="n">system_error</span><span class="p">(</span><span class="n">TOOL_NAME</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">"Successfully parsed but could not "</span>
+                                    <span class="s2">"process AST: "</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="p">),</span>
                          <span class="n">report</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="p">)</span>
         <span class="c1"># Return whatever we got</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis</span></div>
@@ -180,13 +180,13 @@
 <div class="viewcode-block" id="Tifa.process_ast">
 <a class="viewcode-back" href="../../../developers/tools/tifa.html#pedal.tifa.Tifa.process_ast">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">process_ast</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ast_tree</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Given an AST, actually performs the type and flow analyses to return a</span>
 <span class="sd">        report.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            ast_tree (AST): The AST object</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
         <span class="c1"># Traverse every node</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">ast_tree</span><span class="p">)</span>
@@ -204,27 +204,27 @@
 <div class="viewcode-block" id="Tifa.visit">
 <a class="viewcode-back" href="../../../developers/tools/tifa.html#pedal.tifa.Tifa.visit">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">visit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Process this node by calling its appropriate visit_*</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            node (AST): The node to visit</span>
 <span class="sd">        Returns:</span>
 <span class="sd">            Type: The type calculated during the visit.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Start processing the node</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">node_chain</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ast_id</span> <span class="o">+=</span> <span class="mi">1</span>
 
         <span class="c1"># Actions after return?</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scope_chain</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">return_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_variable_scope</span><span class="p">(</span><span class="s2">&quot;*return&quot;</span><span class="p">)</span>
+            <span class="n">return_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_variable_scope</span><span class="p">(</span><span class="s2">"*return"</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">return_state</span><span class="o">.</span><span class="n">exists</span> <span class="ow">and</span> <span class="n">return_state</span><span class="o">.</span><span class="n">in_scope</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">return_state</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">set</span> <span class="o">==</span> <span class="s2">&quot;yes&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">return_state</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">set</span> <span class="o">==</span> <span class="s2">"yes"</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_issue</span><span class="p">(</span><span class="n">action_after_return</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">locate</span><span class="p">(),</span>
                                                     <span class="n">report</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="p">))</span>
 
-        <span class="c1"># No? All good, let&#39;s enter the node</span>
+        <span class="c1"># No? All good, let's enter the node</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">final_node</span> <span class="o">=</span> <span class="n">node</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">NodeVisitor</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span>
         <span class="c1"># If a node failed to return something, return the UNKNOWN TYPE</span>
@@ -240,13 +240,13 @@
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_visit_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodes</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Visit all the nodes in the given list.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            nodes (list): A list of values, of which any AST nodes will be</span>
 <span class="sd">                          visited.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">AST</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
@@ -258,7 +258,7 @@
         <span class="n">iter_list_name</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">iter_list</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Name</span><span class="p">):</span>
             <span class="n">iter_list_name</span> <span class="o">=</span> <span class="n">iter_list</span><span class="o">.</span><span class="n">id</span>
-            <span class="k">if</span> <span class="n">iter_list_name</span> <span class="o">==</span> <span class="s2">&quot;___&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">iter_list_name</span> <span class="o">==</span> <span class="s2">"___"</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_issue</span><span class="p">(</span><span class="n">unconnected_blocks</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">locate</span><span class="p">(</span><span class="n">iter_list</span><span class="p">),</span> <span class="n">report</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="p">))</span>
             <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">iterate_variable</span><span class="p">(</span><span class="n">iter_list_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">locate</span><span class="p">(</span><span class="n">iter_list</span><span class="p">))</span>
             <span class="n">iter_type</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">type</span>
@@ -305,7 +305,7 @@
 <div class="viewcode-block" id="Tifa.assign_target">
 <a class="viewcode-back" href="../../../developers/tools/tifa.html#pedal.tifa.Tifa.assign_target">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">assign_target</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">target_type</span><span class="p">,</span> <span class="n">operation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">store_with_read</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Assign the type to the target, handling all kinds of assignment</span>
 <span class="sd">        statements, including Names, Tuples/Lists, Subscripts, and</span>
 <span class="sd">        Attributes.</span>
@@ -318,7 +318,7 @@
 
 <span class="sd">        Returns:</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Name</span><span class="p">):</span>
             <span class="n">original_value_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">operation</span><span class="p">:</span>
@@ -338,12 +338,12 @@
             <span class="k">for</span> <span class="n">elt</span><span class="p">,</span> <span class="n">elt_type</span><span class="p">,</span> <span class="n">old_type</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">leading</span><span class="p">,</span> <span class="n">tt</span><span class="p">,</span> <span class="n">ot</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">assign_target</span><span class="p">(</span><span class="n">elt</span><span class="p">,</span> <span class="n">elt_type</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">starred</span><span class="p">:</span>
-                <span class="c1"># TODO: Handle starred node&#39;s type changes</span>
+                <span class="c1"># TODO: Handle starred node's type changes</span>
                 <span class="c1"># if not is_subtype(target_type, old_type):</span>
-                    <span class="c1"># self._issue(type_changes(self.locate(), &#39;an element of NODE&#39;, old_type.singular_name, elt_type.singular_name))</span>
+                    <span class="c1"># self._issue(type_changes(self.locate(), 'an element of NODE', old_type.singular_name, elt_type.singular_name))</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">assign_target</span><span class="p">(</span><span class="n">starred</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">target_type</span><span class="p">)</span>
                 <span class="k">for</span> <span class="n">elt</span><span class="p">,</span> <span class="n">elt_type</span><span class="p">,</span> <span class="n">old_type</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">trailing</span><span class="p">,</span> <span class="n">tt</span><span class="p">,</span> <span class="n">ot</span><span class="p">):</span>
-                    <span class="c1"># BUG: Any trailing elements will be incorrectly offset, so won&#39;t work with finite length stuff</span>
+                    <span class="c1"># BUG: Any trailing elements will be incorrectly offset, so won't work with finite length stuff</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">assign_target</span><span class="p">(</span><span class="n">elt</span><span class="p">,</span> <span class="n">elt_type</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Subscript</span><span class="p">):</span>
             <span class="n">original_value_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
@@ -382,14 +382,14 @@
 <div class="viewcode-block" id="Tifa.visit_AnnAssign">
 <a class="viewcode-back" href="../../../developers/tools/tifa.html#pedal.tifa.Tifa.visit_AnnAssign">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">visit_AnnAssign</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            node (ast.AnnAssign):</span>
 
 <span class="sd">        Returns:</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Name, Attribute, or SubScript</span>
         <span class="n">target</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">target</span>
         <span class="c1"># Type</span>
@@ -401,7 +401,7 @@
         <span class="c1"># 0 or 1, with 1 indicating pure names (not expressions)</span>
         <span class="n">simple</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">simple</span>
 
-        <span class="c1"># If it&#39;s a class attribute, then build up the type!</span>
+        <span class="c1"># If it's a class attribute, then build up the type!</span>
         <span class="k">if</span> <span class="n">simple</span><span class="p">:</span>
             <span class="n">current_scope</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scope_chain</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">current_scope</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">class_scopes</span><span class="p">:</span>
@@ -418,7 +418,7 @@
 <div class="viewcode-block" id="Tifa.visit_Assign">
 <a class="viewcode-back" href="../../../developers/tools/tifa.html#pedal.tifa.Tifa.visit_Assign">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">visit_Assign</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Simple assignment statement:</span>
 <span class="sd">        __targets__ = __value__</span>
 
@@ -426,7 +426,7 @@
 <span class="sd">            node (ast.Assign): An Assign node</span>
 <span class="sd">        Returns:</span>
 <span class="sd">            None</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Handle value</span>
         <span class="n">value_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
         <span class="c1"># Apply value to all targets</span>
@@ -437,14 +437,14 @@
 <div class="viewcode-block" id="Tifa.visit_AugAssign">
 <a class="viewcode-back" href="../../../developers/tools/tifa.html#pedal.tifa.Tifa.visit_AugAssign">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">visit_AugAssign</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            node (ast.AugAssign):</span>
 
 <span class="sd">        Returns:</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Handle value</span>
         <span class="n">right</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">target</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Name</span><span class="p">):</span>
@@ -455,20 +455,20 @@
 <div class="viewcode-block" id="Tifa.visit_Attribute">
 <a class="viewcode-back" href="../../../developers/tools/tifa.html#pedal.tifa.Tifa.visit_Attribute">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">visit_Attribute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            node:</span>
 
 <span class="sd">        Returns:</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Handle value</span>
         <span class="n">value_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">check_common_bad_lookups</span><span class="p">(</span><span class="n">value_type</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">attr</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
         <span class="c1"># Handle attr</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">value_type</span><span class="o">.</span><span class="n">get_attr</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">attr</span><span class="p">)</span>
-        <span class="c1"># Set up self if this was a function (because now it&#39;s a method!)</span>
+        <span class="c1"># Set up self if this was a function (because now it's a method!)</span>
         <span class="c1"># TODO: Handle static/class functions differently I guess?</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">FunctionType</span><span class="p">):</span>
             <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">as_method</span><span class="p">(</span><span class="n">value_type</span><span class="p">)</span>
@@ -478,14 +478,14 @@
 <div class="viewcode-block" id="Tifa.visit_BinOp">
 <a class="viewcode-back" href="../../../developers/tools/tifa.html#pedal.tifa.Tifa.visit_BinOp">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">visit_BinOp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            node:</span>
 
 <span class="sd">        Returns:</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Handle left and right</span>
         <span class="n">left</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">left</span><span class="p">)</span>
         <span class="n">right</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
@@ -500,7 +500,7 @@
 <div class="viewcode-block" id="Tifa.visit_Bool">
 <a class="viewcode-back" href="../../../developers/tools/tifa.html#pedal.tifa.Tifa.visit_Bool">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">visit_Bool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Visit a constant boolean value.</span>
 
 <span class="sd">        Args:</span>
@@ -508,27 +508,27 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Type: A Bool type.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="n">BoolType</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="Tifa.visit_BoolOp">
 <a class="viewcode-back" href="../../../developers/tools/tifa.html#pedal.tifa.Tifa.visit_BoolOp">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">visit_BoolOp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            node:</span>
 
 <span class="sd">        Returns:</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Handle left and right</span>
         <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">values</span><span class="p">]</span>
         <span class="c1"># Handle operation</span>
         <span class="c1"># Actually, the operations are always the same behavior!</span>
         <span class="c1"># Handle truthiness</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_setting</span><span class="p">(</span><span class="s1">&#39;truthiness_returns_booleans&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_setting</span><span class="p">(</span><span class="s1">'truthiness_returns_booleans'</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">BoolType</span><span class="p">()</span>
         <span class="k">elif</span> <span class="ow">not</span> <span class="n">values</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">ImpossibleType</span><span class="p">()</span>
@@ -581,8 +581,8 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">definition_chain</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">constructor</span><span class="p">)</span>
             <span class="n">new_instance</span> <span class="o">=</span> <span class="n">constructor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">constructor</span><span class="p">,</span> <span class="n">original_callee</span><span class="p">,</span> <span class="n">arguments</span><span class="p">,</span> <span class="n">keywords</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">locate</span><span class="p">())</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">definition_chain</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
-            <span class="k">if</span> <span class="s1">&#39;__init__&#39;</span> <span class="ow">in</span> <span class="n">function_type</span><span class="o">.</span><span class="n">fields</span><span class="p">:</span>
-                <span class="n">initializer</span> <span class="o">=</span> <span class="n">function_type</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;__init__&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">as_method</span><span class="p">(</span><span class="n">new_instance</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s1">'__init__'</span> <span class="ow">in</span> <span class="n">function_type</span><span class="o">.</span><span class="n">fields</span><span class="p">:</span>
+                <span class="n">initializer</span> <span class="o">=</span> <span class="n">function_type</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">'__init__'</span><span class="p">]</span><span class="o">.</span><span class="n">as_method</span><span class="p">(</span><span class="n">new_instance</span><span class="p">)</span>
                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">initializer</span><span class="p">,</span> <span class="n">FunctionType</span><span class="p">):</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">definition_chain</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">initializer</span><span class="p">)</span>
                     <span class="n">initializer</span><span class="o">.</span><span class="n">definition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initializer</span><span class="p">,</span> <span class="n">new_instance</span><span class="p">,</span> <span class="p">[</span><span class="n">new_instance</span><span class="p">]</span> <span class="o">+</span> <span class="n">arguments</span><span class="p">,</span> <span class="n">keywords</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">locate</span><span class="p">())</span>
@@ -592,7 +592,7 @@
                                         <span class="n">DictType</span><span class="p">,</span> <span class="n">SetType</span><span class="p">,</span> <span class="n">TupleType</span><span class="p">,</span> <span class="n">InstanceType</span><span class="p">,</span>
                                         <span class="n">StrType</span><span class="p">,</span> <span class="n">BoolType</span><span class="p">,</span> <span class="n">NoneType</span><span class="p">,</span> <span class="n">LiteralValue</span><span class="p">)):</span>
             <span class="k">if</span> <span class="n">original_callee</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_issue</span><span class="p">(</span><span class="n">not_a_function</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">locate</span><span class="p">(),</span> <span class="s2">&quot;a value&quot;</span><span class="p">,</span> <span class="n">function_type</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_issue</span><span class="p">(</span><span class="n">not_a_function</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">locate</span><span class="p">(),</span> <span class="s2">"a value"</span><span class="p">,</span> <span class="n">function_type</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_issue</span><span class="p">(</span><span class="n">not_a_function</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">locate</span><span class="p">(),</span> <span class="n">original_callee</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">function_type</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="p">))</span>
             <span class="k">return</span> <span class="n">ImpossibleType</span><span class="p">()</span>
@@ -601,11 +601,11 @@
 <div class="viewcode-block" id="Tifa.visit_ClassDef">
 <a class="viewcode-back" href="../../../developers/tools/tifa.html#pedal.tifa.Tifa.visit_ClassDef">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">visit_ClassDef</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            node:</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">class_name</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span>
         <span class="n">parents</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">base</span><span class="p">)</span> <span class="k">for</span> <span class="n">base</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">bases</span><span class="p">]</span>
         <span class="n">new_class_type</span> <span class="o">=</span> <span class="n">ClassType</span><span class="p">(</span><span class="n">class_name</span><span class="p">,</span> <span class="p">{},</span> <span class="n">parents</span><span class="p">)</span>
@@ -633,14 +633,14 @@
 <div class="viewcode-block" id="Tifa.visit_Compare">
 <a class="viewcode-back" href="../../../developers/tools/tifa.html#pedal.tifa.Tifa.visit_Compare">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">visit_Compare</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            node:</span>
 
 <span class="sd">        Returns:</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Handle left and right</span>
         <span class="n">left</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">left</span><span class="p">)</span>
         <span class="n">comparators</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">compare</span><span class="p">)</span> <span class="k">for</span> <span class="n">compare</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">comparators</span><span class="p">]</span>
@@ -662,14 +662,14 @@
 <div class="viewcode-block" id="Tifa.visit_comprehension">
 <a class="viewcode-back" href="../../../developers/tools/tifa.html#pedal.tifa.Tifa.visit_comprehension">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">visit_comprehension</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            node:</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fill_in_location</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_chain</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_visit_collection_loop</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
-        <span class="c1"># Handle ifs, unless they&#39;re blank (None in Skulpt :)</span>
+        <span class="c1"># Handle ifs, unless they're blank (None in Skulpt :)</span>
         <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">ifs</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">visit_statements</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">ifs</span><span class="p">)</span></div>
 
@@ -687,13 +687,13 @@
 <div class="viewcode-block" id="Tifa.visit_Dict">
 <a class="viewcode-back" href="../../../developers/tools/tifa.html#pedal.tifa.Tifa.visit_Dict">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">visit_Dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Three types of dictionaries</span>
 <span class="sd">        - empty</span>
 <span class="sd">        - uniform type</span>
 <span class="sd">        - record</span>
 <span class="sd">        TODO: Handle records appropriately</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">items</span> <span class="o">=</span> <span class="p">[(</span><span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">key</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
                  <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">keys</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">values</span><span class="p">)</span> <span class="k">if</span> <span class="n">key</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
         <span class="c1"># Unpack starred dictionaries</span>
@@ -723,14 +723,14 @@
 <div class="viewcode-block" id="Tifa.visit_DictComp">
 <a class="viewcode-back" href="../../../developers/tools/tifa.html#pedal.tifa.Tifa.visit_DictComp">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">visit_DictComp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            node:</span>
 
 <span class="sd">        Returns:</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">generator_scope</span> <span class="o">=</span> <span class="n">NewScope</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scope_chain</span><span class="p">[:])</span>
         <span class="k">with</span> <span class="n">generator_scope</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_visit_nodes</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">generators</span><span class="p">)</span>
@@ -742,7 +742,7 @@
 <div class="viewcode-block" id="Tifa.visit_Expr">
 <a class="viewcode-back" href="../../../developers/tools/tifa.html#pedal.tifa.Tifa.visit_Expr">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">visit_Expr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Any expression being used as a statement.</span>
 
 <span class="sd">        Args:</span>
@@ -750,14 +750,14 @@
 
 <span class="sd">        Returns:</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Call</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">NoneType</span><span class="p">):</span>
-            <span class="c1"># TODO: Helper function to get name with title (&quot;append method&quot;)</span>
+            <span class="c1"># TODO: Helper function to get name with title ("append method")</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">func</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Name</span><span class="p">):</span>
-                <span class="n">call_type</span> <span class="o">=</span> <span class="s1">&#39;function&#39;</span>
+                <span class="n">call_type</span> <span class="o">=</span> <span class="s1">'function'</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">call_type</span> <span class="o">=</span> <span class="s1">&#39;method&#39;</span>
+                <span class="n">call_type</span> <span class="o">=</span> <span class="s1">'method'</span>
             <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">identify_caller</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_issue</span><span class="p">(</span><span class="n">unused_returned_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">locate</span><span class="p">(),</span> <span class="n">name</span><span class="p">,</span>
                                               <span class="n">call_type</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span></div>
@@ -766,17 +766,17 @@
 <div class="viewcode-block" id="Tifa.visit_For">
 <a class="viewcode-back" href="../../../developers/tools/tifa.html#pedal.tifa.Tifa.visit_For">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">visit_For</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            node:</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">loop_usages</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">path_chain</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">was_empty</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_visit_collection_loop</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
         <span class="c1"># Handle the bodies</span>
         <span class="c1"># if not was_empty:</span>
         <span class="c1"># this_path_id = self.path_chain[0]</span>
-        <span class="c1"># non_empty_path = NewPath(self, this_path_id, &quot;f&quot;)</span>
+        <span class="c1"># non_empty_path = NewPath(self, this_path_id, "f")</span>
         <span class="c1"># with non_empty_path:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">visit_statements</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">visit_statements</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">orelse</span><span class="p">)</span></div>
@@ -787,14 +787,14 @@
 <div class="viewcode-block" id="Tifa.visit_FunctionDef">
 <a class="viewcode-back" href="../../../developers/tools/tifa.html#pedal.tifa.Tifa.visit_FunctionDef">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">visit_FunctionDef</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            node:</span>
 
 <span class="sd">        Returns:</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">function_name</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span>
         <span class="n">position</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">locate</span><span class="p">()</span>
         <span class="n">definitions_scope</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scope_chain</span><span class="p">[:]</span>
@@ -874,16 +874,16 @@
                     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">)</span>
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">visit_statements</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">)</span>
-                <span class="n">return_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_variable_scope</span><span class="p">(</span><span class="s2">&quot;*return&quot;</span><span class="p">)</span>
+                <span class="n">return_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_variable_scope</span><span class="p">(</span><span class="s2">"*return"</span><span class="p">)</span>
                 <span class="n">return_value</span> <span class="o">=</span> <span class="n">NoneType</span><span class="p">()</span>
                 <span class="c1"># TODO: Figure out if we are not returning something when we should</span>
                 <span class="c1"># If the pseudo variable exists, we load it and get its type</span>
                 <span class="k">if</span> <span class="n">return_state</span><span class="o">.</span><span class="n">exists</span> <span class="ow">and</span> <span class="n">return_state</span><span class="o">.</span><span class="n">in_scope</span><span class="p">:</span>
-                    <span class="n">return_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_variable</span><span class="p">(</span><span class="s2">&quot;*return&quot;</span><span class="p">,</span> <span class="n">call_position</span><span class="p">)</span>
+                    <span class="n">return_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_variable</span><span class="p">(</span><span class="s2">"*return"</span><span class="p">,</span> <span class="n">call_position</span><span class="p">)</span>
                     <span class="n">return_value</span> <span class="o">=</span> <span class="n">return_state</span><span class="o">.</span><span class="n">type</span>
                     <span class="k">if</span> <span class="n">expected_returns</span><span class="p">:</span>
                         <span class="c1"># TODO: Check that the maybe status is not present, unless</span>
-                        <span class="c1"># the expected return type is None, in which case it&#39;s fine.</span>
+                        <span class="c1"># the expected return type is None, in which case it's fine.</span>
                         <span class="k">if</span> <span class="ow">not</span> <span class="n">is_subtype</span><span class="p">(</span><span class="n">return_value</span><span class="p">,</span> <span class="n">expected_returns</span><span class="p">):</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">_issue</span><span class="p">(</span><span class="n">multiple_return_types</span><span class="p">(</span><span class="n">return_state</span><span class="o">.</span><span class="n">position</span><span class="p">,</span>
                                                               <span class="n">expected_returns</span><span class="o">.</span><span class="n">singular_name</span><span class="p">,</span>
@@ -899,7 +899,7 @@
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Constant</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="n">string_literal</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">value</span>
         <span class="k">if</span> <span class="n">string_literal</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">False</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_setting</span><span class="p">(</span><span class="s1">&#39;evaluate_string_literal_types&#39;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_setting</span><span class="p">(</span><span class="s1">'evaluate_string_literal_types'</span><span class="p">):</span>
                 <span class="c1"># TODO: Handle string literal types properly!</span>
                 <span class="k">pass</span>
             <span class="k">else</span><span class="p">:</span>
@@ -926,14 +926,14 @@
 <div class="viewcode-block" id="Tifa.visit_GeneratorExp">
 <a class="viewcode-back" href="../../../developers/tools/tifa.html#pedal.tifa.Tifa.visit_GeneratorExp">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">visit_GeneratorExp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            node:</span>
 
 <span class="sd">        Returns:</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">generator_scope</span> <span class="o">=</span> <span class="n">NewScope</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scope_chain</span><span class="p">[:])</span>
         <span class="k">with</span> <span class="n">generator_scope</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_visit_nodes</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">generators</span><span class="p">)</span>
@@ -943,11 +943,11 @@
 <div class="viewcode-block" id="Tifa.visit_If">
 <a class="viewcode-back" href="../../../developers/tools/tifa.html#pedal.tifa.Tifa.visit_If">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">visit_If</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            node:</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Visit the conditional</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">test</span><span class="p">)</span>
 
@@ -959,11 +959,11 @@
 
         <span class="c1"># Visit the bodies</span>
         <span class="n">this_path_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_chain</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">if_path</span> <span class="o">=</span> <span class="n">NewPath</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">this_path_id</span><span class="p">,</span> <span class="s2">&quot;i&quot;</span><span class="p">)</span>
+        <span class="n">if_path</span> <span class="o">=</span> <span class="n">NewPath</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">this_path_id</span><span class="p">,</span> <span class="s2">"i"</span><span class="p">)</span>
         <span class="k">with</span> <span class="n">if_path</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">statement</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">statement</span><span class="p">)</span>
-        <span class="n">else_path</span> <span class="o">=</span> <span class="n">NewPath</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">this_path_id</span><span class="p">,</span> <span class="s2">&quot;e&quot;</span><span class="p">)</span>
+        <span class="n">else_path</span> <span class="o">=</span> <span class="n">NewPath</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">this_path_id</span><span class="p">,</span> <span class="s2">"e"</span><span class="p">)</span>
         <span class="k">with</span> <span class="n">else_path</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">statement</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">orelse</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">statement</span><span class="p">)</span>
@@ -978,14 +978,14 @@
 <div class="viewcode-block" id="Tifa.visit_IfExp">
 <a class="viewcode-back" href="../../../developers/tools/tifa.html#pedal.tifa.Tifa.visit_IfExp">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">visit_IfExp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            node:</span>
 
 <span class="sd">        Returns:</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Visit the conditional</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">test</span><span class="p">)</span>
 
@@ -1005,11 +1005,11 @@
 <div class="viewcode-block" id="Tifa.visit_Import">
 <a class="viewcode-back" href="../../../developers/tools/tifa.html#pedal.tifa.Tifa.visit_Import">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">visit_Import</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            node:</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Handle names</span>
         <span class="k">for</span> <span class="n">alias</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">names</span><span class="p">:</span>
             <span class="n">asname</span> <span class="o">=</span> <span class="n">alias</span><span class="o">.</span><span class="n">asname</span> <span class="ow">or</span> <span class="n">alias</span><span class="o">.</span><span class="n">name</span>
@@ -1020,14 +1020,14 @@
 <div class="viewcode-block" id="Tifa.visit_ImportFrom">
 <a class="viewcode-back" href="../../../developers/tools/tifa.html#pedal.tifa.Tifa.visit_ImportFrom">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">visit_ImportFrom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            node:</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Handle names</span>
         <span class="k">for</span> <span class="n">alias</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">names</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">alias</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;*&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">alias</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">'*'</span><span class="p">:</span>
                 <span class="n">module_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_module</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">module</span><span class="p">)</span>
                 <span class="k">for</span> <span class="n">field</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">module_type</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">module_type</span><span class="p">,</span> <span class="n">ModuleType</span><span class="p">):</span>
@@ -1037,7 +1037,7 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">store_read_variable</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">module</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">module_name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+                    <span class="n">module_name</span> <span class="o">=</span> <span class="s2">""</span>
                     <span class="n">asname</span> <span class="o">=</span> <span class="n">alias</span><span class="o">.</span><span class="n">asname</span> <span class="ow">or</span> <span class="n">alias</span><span class="o">.</span><span class="n">name</span>
                     <span class="n">module_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_module</span><span class="p">(</span><span class="n">alias</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
@@ -1050,7 +1050,7 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="c1"># Is it an importable submodule?</span>
                     <span class="c1"># TODO: This should throw a more specialized error message!</span>
-                    <span class="n">full_name</span> <span class="o">=</span> <span class="n">module_name</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="n">alias</span><span class="o">.</span><span class="n">name</span> <span class="k">if</span> <span class="n">module_name</span> <span class="k">else</span> <span class="n">alias</span><span class="o">.</span><span class="n">name</span>
+                    <span class="n">full_name</span> <span class="o">=</span> <span class="n">module_name</span> <span class="o">+</span> <span class="s1">'.'</span> <span class="o">+</span> <span class="n">alias</span><span class="o">.</span><span class="n">name</span> <span class="k">if</span> <span class="n">module_name</span> <span class="k">else</span> <span class="n">alias</span><span class="o">.</span><span class="n">name</span>
                     <span class="n">name_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_module</span><span class="p">(</span><span class="n">full_name</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">store_variable</span><span class="p">(</span><span class="n">asname</span><span class="p">,</span> <span class="n">name_type</span><span class="p">)</span></div>
 
@@ -1058,31 +1058,31 @@
 <div class="viewcode-block" id="Tifa.visit_Lambda">
 <a class="viewcode-back" href="../../../developers/tools/tifa.html#pedal.tifa.Tifa.visit_Lambda">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">visit_Lambda</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            node:</span>
 
 <span class="sd">        Returns:</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">position</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">locate</span><span class="p">()</span>
         <span class="n">definitions_scope</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scope_chain</span><span class="p">[:]</span>
         <span class="n">definition</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_function</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">definitions_scope</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">FunctionType</span><span class="p">(</span><span class="s2">&quot;*lambda&quot;</span><span class="p">,</span> <span class="n">definition</span><span class="o">=</span><span class="n">definition</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">FunctionType</span><span class="p">(</span><span class="s2">"*lambda"</span><span class="p">,</span> <span class="n">definition</span><span class="o">=</span><span class="n">definition</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Tifa.visit_List">
 <a class="viewcode-back" href="../../../developers/tools/tifa.html#pedal.tifa.Tifa.visit_List">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">visit_List</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            node:</span>
 
 <span class="sd">        Returns:</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">node</span><span class="o">.</span><span class="n">elts</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">ListType</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 
@@ -1103,14 +1103,14 @@
 <div class="viewcode-block" id="Tifa.visit_ListComp">
 <a class="viewcode-back" href="../../../developers/tools/tifa.html#pedal.tifa.Tifa.visit_ListComp">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">visit_ListComp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            node:</span>
 
 <span class="sd">        Returns:</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># TODO: Handle comprehension scope</span>
         <span class="n">generator_scope</span> <span class="o">=</span> <span class="n">NewScope</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scope_chain</span><span class="p">[:])</span>
         <span class="k">with</span> <span class="n">generator_scope</span><span class="p">:</span>
@@ -1121,14 +1121,14 @@
 <div class="viewcode-block" id="Tifa.visit_NameConstant">
 <a class="viewcode-back" href="../../../developers/tools/tifa.html#pedal.tifa.Tifa.visit_NameConstant">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">visit_NameConstant</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            node:</span>
 
 <span class="sd">        Returns:</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">value</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">value</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">LiteralBool</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
@@ -1139,21 +1139,21 @@
 <div class="viewcode-block" id="Tifa.visit_Name">
 <a class="viewcode-back" href="../../../developers/tools/tifa.html#pedal.tifa.Tifa.visit_Name">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">visit_Name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            node:</span>
 
 <span class="sd">        Returns:</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">name</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">id</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;___&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"___"</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_issue</span><span class="p">(</span><span class="n">unconnected_blocks</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">locate</span><span class="p">()))</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">ctx</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Load</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;True&quot;</span> <span class="ow">or</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;False&quot;</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">LiteralBool</span><span class="p">(</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;True&quot;</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;None&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"True"</span> <span class="ow">or</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"False"</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">LiteralBool</span><span class="p">(</span><span class="n">name</span> <span class="o">==</span> <span class="s2">"True"</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"None"</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">NoneType</span><span class="p">()</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">variable</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_variable_scope</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
@@ -1174,32 +1174,32 @@
 <div class="viewcode-block" id="Tifa.visit_Num">
 <a class="viewcode-back" href="../../../developers/tools/tifa.html#pedal.tifa.Tifa.visit_Num">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">visit_Num</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            node:</span>
 
 <span class="sd">        Returns:</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="n">LiteralInt</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">n</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">n</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="k">else</span> <span class="n">LiteralFloat</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">n</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Tifa.visit_Constant">
 <a class="viewcode-back" href="../../../developers/tools/tifa.html#pedal.tifa.Tifa.visit_Constant">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">visit_Constant</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Type</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Handle new 3.8&#39;s Constant node &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">""" Handle new 3.8's Constant node """</span>
         <span class="k">return</span> <span class="n">get_pedal_type_from_value</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluate_type</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Tifa.visit_Return">
 <a class="viewcode-back" href="../../../developers/tools/tifa.html#pedal.tifa.Tifa.visit_Return">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">visit_Return</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            node:</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scope_chain</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_issue</span><span class="p">(</span><span class="n">return_outside_function</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">locate</span><span class="p">(),</span> <span class="n">report</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="p">))</span>
         <span class="c1"># TODO: Unconditional return inside loop</span>
@@ -1210,7 +1210,7 @@
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">visit_Set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-        <span class="c1"># Fun fact, it&#39;s impossible to make a literal empty set</span>
+        <span class="c1"># Fun fact, it's impossible to make a literal empty set</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">node</span><span class="o">.</span><span class="n">elts</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">SetType</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 
@@ -1230,14 +1230,14 @@
 <div class="viewcode-block" id="Tifa.visit_SetComp">
 <a class="viewcode-back" href="../../../developers/tools/tifa.html#pedal.tifa.Tifa.visit_SetComp">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">visit_SetComp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            node:</span>
 
 <span class="sd">        Returns:</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># TODO: Handle comprehension scope</span>
         <span class="n">generator_scope</span> <span class="o">=</span> <span class="n">NewScope</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scope_chain</span><span class="p">[:])</span>
         <span class="k">with</span> <span class="n">generator_scope</span><span class="p">:</span>
@@ -1248,14 +1248,14 @@
 <div class="viewcode-block" id="Tifa.visit_statements">
 <a class="viewcode-back" href="../../../developers/tools/tifa.html#pedal.tifa.Tifa.visit_statements">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">visit_statements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodes</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            nodes:</span>
 
 <span class="sd">        Returns:</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># TODO: Check for pass in the middle of a series of statement</span>
         <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Pass</span><span class="p">)</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">):</span>
             <span class="k">pass</span>
@@ -1265,14 +1265,14 @@
 <div class="viewcode-block" id="Tifa.visit_Str">
 <a class="viewcode-back" href="../../../developers/tools/tifa.html#pedal.tifa.Tifa.visit_Str">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">visit_Str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            node:</span>
 
 <span class="sd">        Returns:</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="n">LiteralStr</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">s</span><span class="p">)</span></div>
 
 
@@ -1292,14 +1292,14 @@
 <div class="viewcode-block" id="Tifa.visit_Subscript">
 <a class="viewcode-back" href="../../../developers/tools/tifa.html#pedal.tifa.Tifa.visit_Subscript">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">visit_Subscript</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            node:</span>
 
 <span class="sd">        Returns:</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Handle value</span>
         <span class="n">value_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
         <span class="n">slice_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">slice</span><span class="p">)</span>
@@ -1315,9 +1315,9 @@
 <div class="viewcode-block" id="Tifa.visit_Slice">
 <a class="viewcode-back" href="../../../developers/tools/tifa.html#pedal.tifa.Tifa.visit_Slice">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">visit_Slice</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Handles a slice by visiting its components; cannot return a value</span>
+<span class="w">        </span><span class="sd">""" Handles a slice by visiting its components; cannot return a value</span>
 <span class="sd">        because the slice is always the same type as its value, which is</span>
-<span class="sd">        not available on the Slice node itself. &quot;&quot;&quot;</span>
+<span class="sd">        not available on the Slice node itself. """</span>
         <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">lower</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">lower</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">upper</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -1336,7 +1336,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">break_apart</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">visit_Tuple</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TupleType</span><span class="p">:</span>
-        <span class="c1"># Fun fact, it&#39;s impossible to make a literal empty set</span>
+        <span class="c1"># Fun fact, it's impossible to make a literal empty set</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">node</span><span class="o">.</span><span class="n">elts</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">TupleType</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 
@@ -1346,14 +1346,14 @@
 <div class="viewcode-block" id="Tifa.visit_UnaryOp">
 <a class="viewcode-back" href="../../../developers/tools/tifa.html#pedal.tifa.Tifa.visit_UnaryOp">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">visit_UnaryOp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            node:</span>
 
 <span class="sd">        Returns:</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Handle operand</span>
         <span class="n">operand_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">operand</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">apply_unary_operation</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">op</span><span class="p">,</span> <span class="n">operand_type</span><span class="p">)</span></div>
@@ -1362,11 +1362,11 @@
 <div class="viewcode-block" id="Tifa.visit_While">
 <a class="viewcode-back" href="../../../developers/tools/tifa.html#pedal.tifa.Tifa.visit_While">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">visit_While</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            node:</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Visit conditional</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">test</span><span class="p">)</span>
 
@@ -1377,17 +1377,17 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">loop_usages</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">path_chain</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="c1"># One path is that we never enter the body</span>
-        <span class="n">empty_path</span> <span class="o">=</span> <span class="n">NewPath</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">this_path_id</span><span class="p">,</span> <span class="s2">&quot;e&quot;</span><span class="p">)</span>
+        <span class="n">empty_path</span> <span class="o">=</span> <span class="n">NewPath</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">this_path_id</span><span class="p">,</span> <span class="s2">"e"</span><span class="p">)</span>
         <span class="k">with</span> <span class="n">empty_path</span><span class="p">:</span>
             <span class="k">pass</span>
         <span class="c1"># Another path is that we loop through the body and check the test again</span>
-        <span class="n">body_path</span> <span class="o">=</span> <span class="n">NewPath</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">this_path_id</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+        <span class="n">body_path</span> <span class="o">=</span> <span class="n">NewPath</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">this_path_id</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span>
         <span class="k">with</span> <span class="n">body_path</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">statement</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">statement</span><span class="p">)</span>
             <span class="c1"># Revisit conditional</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">test</span><span class="p">)</span>
-        <span class="c1"># If there&#39;s else bodies (WEIRD) then we should check them afterwards</span>
+        <span class="c1"># If there's else bodies (WEIRD) then we should check them afterwards</span>
         <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">orelse</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_issue</span><span class="p">(</span><span class="n">else_on_loop_body</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">locate</span><span class="p">()))</span>
             <span class="k">for</span> <span class="n">statement</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">orelse</span><span class="p">:</span>
@@ -1403,11 +1403,11 @@
 <div class="viewcode-block" id="Tifa.visit_With">
 <a class="viewcode-back" href="../../../developers/tools/tifa.html#pedal.tifa.Tifa.visit_With">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">visit_With</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            node:</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">items</span><span class="p">:</span>
             <span class="n">type_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">context_expr</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">optional_vars</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
