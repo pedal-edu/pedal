@@ -34,6 +34,11 @@ try:
 except:
     fields = None
 
+try:
+    ast.Str
+except Exception as e:
+    ast.Str = None
+
 
 def get_generic_type(type_expression, evaluate_name=None) -> Type:
     if not hasattr(type_expression, '__args__'):
