@@ -1,3 +1,8 @@
+Version 3.0.3 (8/24/2026)
+-------------------------
+* Fix issue with ast.Str missing in newer versions
+* Fix issue with infinite recursion in cait_node in 3.13 due to singleton copying
+
 Version 3.0.2 (6/15/2026)
 -------------------------
 * Fix critical bug in `timeout` not actually returning the result (thanks @frankm24)
