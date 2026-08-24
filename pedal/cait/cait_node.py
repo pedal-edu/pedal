@@ -49,7 +49,12 @@ class CaitNode:
             self.linear_tree = lin_tree
 
         # reference to the easy node wrapping the ast_node
-        setattr(ast_node, 'cait_node', self)
+        # Skip expression-context nodes (Load/Store/Del): since CPython 3.13
+        # the parser reuses a single shared instance of each across every
+        # parsed tree, so tagging them would leak CaitNodes into unrelated
+        # ASTs (and break copy.deepcopy of those ASTs).
+        if not isinstance(ast_node, ast.expr_context):
+            setattr(ast_node, 'cait_node', self)
 
         tid_count = tid
 
@@ -342,6 +347,11 @@ class CaitNode:
             return self.get_value()
 
     def __getattr__(self, item):
+        # Guard against infinite recursion: during copy/pickle reconstruction
+        # (and before __init__ finishes) ``astNode`` is not yet in __dict__,
+        # so reading ``self.astNode`` below would re-enter __getattr__.
+        if item == 'astNode' or item.startswith('__'):
+            raise AttributeError(item)
         key = item
         """
         Non-ast node attributes based on ast_node attributes
@@ -389,6 +399,13 @@ class CaitNode:
                     for op in field:
                         str_ops_list.append(type(op).__name__)
                         return str_ops_list
+                elif isinstance(field, ast.expr_context):
+                    # ctx singletons are never tagged (see __init__), so look
+                    # up the child CaitNode for this field directly.
+                    for child in self.children:
+                        if child.field == key:
+                            return child
+                    return field
                 elif isinstance(field, ast.AST):
                     return field.cait_node
                 elif isinstance(field, list):
@@ -472,7 +489,9 @@ class CaitNode:
             Returns:
 
             """
-            self.items.append(node.cait_node)
+            cait_node = getattr(node, 'cait_node', None)
+            if cait_node is not None:
+                self.items.append(cait_node)
             return self.generic_visit(node)
 
         if type(node_type) is not list:
