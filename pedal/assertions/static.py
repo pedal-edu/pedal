@@ -674,8 +674,19 @@ def ensure_prints_exactly(count, **kwargs):
     Returns:
         bool: Whether or not both the maximum and minimum was met.
     """
-    return (ensure_function_call('print', at_least=count, **kwargs) and
-            prevent_function_call('print', at_most=count, **kwargs))
+    # Extract composite-level parameters
+    composite_params, constituent_kwargs = ensure_prints_exactly.extract_composite_parameters(kwargs)
+    
+    # Call constituent functions
+    result1 = ensure_function_call('print', at_least=count, **constituent_kwargs)
+    result2 = prevent_function_call('print', at_most=count, **constituent_kwargs)
+    
+    both_triggered = result1 and result2
+    
+    # Apply composite feedback if both conditions were met
+    ensure_prints_exactly.apply_composite_feedback(composite_params, both_triggered, 'ensure_prints_exactly')
+    
+    return both_triggered
 
 
 class ensure_starting_code(AssertionFeedback):
@@ -834,17 +845,36 @@ def prevent_advanced_iteration(allow_while=False, allow_for=False,
                                allow_function=None, **kwargs):
     """ Prevents the student from using certain advanced iteration functions
     and constructs. Does not currently support blocking recursion. """
+    
+    # Extract composite-level parameters using the decorator's helper
+    composite_params, constituent_kwargs = prevent_advanced_iteration.extract_composite_parameters(kwargs)
+    
     if isinstance(allow_function, str):
         allow_function = {allow_function}
     elif allow_function is None:
         allow_function = set()
+    
+    # Track if any constituent function was triggered
+    any_triggered = False
+    
     if not allow_while:
-        prevent_ast("While")
+        result = prevent_ast("While", **constituent_kwargs)
+        if result:
+            any_triggered = True
     if not allow_for:
-        prevent_ast("For")
+        result = prevent_ast("For", **constituent_kwargs)
+        if result:
+            any_triggered = True
     for function_name in ADVANCED_ITERATION_FUNCTIONS:
         if function_name not in allow_function:
-            prevent_function_call(function_name, **kwargs)
+            result = prevent_function_call(function_name, **constituent_kwargs)
+            if result:
+                any_triggered = True
+    
+    # Apply composite-level feedback if any constituent was triggered
+    prevent_advanced_iteration.apply_composite_feedback(composite_params, any_triggered, 'prevent_advanced_iteration')
+    
+    return any_triggered
 
 
 class open_without_arguments(FeedbackResponse):
