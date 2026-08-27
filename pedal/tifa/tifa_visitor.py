@@ -1191,6 +1191,74 @@ class Tifa(TifaCore, ast.NodeVisitor):
 
         self._finish_loop()
 
+    def visit_Try(self, node):
+        """
+        Handle try/except/else/finally constructs.
+
+        Try statements have multiple execution paths that need to be tracked:
+        1. Try body executes successfully (may go to else if present)
+        2. Exception is raised in try body and caught by one of the except handlers
+        3. Finally body always executes (if present)
+
+        Args:
+            node: The Try AST node
+        """
+        this_path_id = self.path_chain[0]
+
+        # Track all possible execution paths
+        try_path = NewPath(self, this_path_id, "t")
+        with try_path:
+            # Visit the try body
+            self.visit_statements(node.body)
+
+            # If there's an else clause, it only executes if no exception is raised
+            if node.orelse:
+                self.visit_statements(node.orelse)
+
+        # Create paths for each exception handler
+        except_paths = []
+        for i, handler in enumerate(node.handlers):
+            except_path = NewPath(self, this_path_id, f"x{i}")
+            with except_path:
+                self.visit_except_handler(handler)
+            except_paths.append(except_path)
+
+        # Merge all the try/except paths since execution can follow any of them
+        all_paths = [try_path.id] + [path.id for path in except_paths]
+
+        # If there are no except handlers, just merge the try path back
+        if except_paths:
+            for i in range(1, len(all_paths)):
+                self.merge_paths(this_path_id, all_paths[0], all_paths[i])
+                all_paths[0] = this_path_id
+        else:
+            self.merge_paths(this_path_id, try_path.id, this_path_id)
+
+        # Finally block always executes, regardless of what happened above
+        if node.finalbody:
+            self.visit_statements(node.finalbody)
+
+    def visit_except_handler(self, node):
+        """
+        Handle an individual exception handler (except clause).
+
+        Args:
+            node: The ExceptHandler AST node
+        """
+        # If there's an exception type, visit it (but we don't need to track it for variables)
+        if node.type:
+            self.visit(node.type)
+
+        # If the exception is bound to a name, track that variable
+        if node.name:
+            # The exception object is available in the except block
+            # We'll give it a generic type since we don't have specific exception type info
+            exception_type = AnyType()
+            self.assign_target(ast.Name(id=node.name, ctx=ast.Store()), exception_type)
+
+        # Visit the body of the except handler
+        self.visit_statements(node.body)
+
     def visit_With(self, node):
         """
 
