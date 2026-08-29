@@ -33,6 +33,13 @@ logger.debug("CAIT Tool import finished")
 from pedal.assertions.commands import *
 logger.debug("Assertions Tool import finished")
 
+# Type System Configuration
+from pedal.types.config import (
+    configure_type_system, TypeSystemConfig,
+    get_default_type_system_config, set_default_type_system_config
+)
+logger.debug("Type System Configuration import finished")
+
 from pedal.resolvers import *
 logger.debug("Resolvers Tool import finished")
 
