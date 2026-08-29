@@ -7,6 +7,104 @@ Typically, your environment will handle running the Sandbox for you. Sometimes, 
 the students' code using Pedal in favor of its own execution environment. However, they evaluate the students'
 code, most environments will provide a ``student`` variable that holds information about the executed code.
 
+Working with Multiple Files
+---------------------------
+
+When working with student submissions that contain multiple Python files, Pedal can handle various scenarios:
+
+**Loading Additional Files:**
+
+.. code-block:: python
+
+    from pedal import *
+    
+    # Load additional files into the sandbox
+    # This makes functions and classes from helper.py available
+    run_file("helper.py")
+    
+    # Now run the main student code
+    student = run()
+    
+    # You can access variables from both files
+    helper_function = student.data['helper_function']
+
+**Testing Modules and Packages:**
+
+.. code-block:: python
+
+    from pedal import *
+    
+    # When students submit a package structure:
+    # my_package/
+    #   __init__.py
+    #   main.py
+    #   utils.py
+    
+    # Load the entire package
+    student = run("import my_package")
+    
+    # Test specific module functions
+    result = call("my_package.main.process_data", [1, 2, 3])
+
+Command Line Arguments and System Arguments
+------------------------------------------
+
+**Important Note:** Pedal's sandbox cannot directly handle ``sys.argv`` modifications or 
+command-line arguments passed to student scripts. This is a security limitation of the 
+sandboxed execution environment.
+
+**Alternative Approaches:**
+
+.. code-block:: python
+
+    from pedal import *
+    
+    # Instead of testing sys.argv directly, test the functions that would process arguments
+    def test_argument_processing():
+        # Test the function that normally processes command line args
+        result = call("process_arguments", ["--input", "data.txt", "--output", "result.txt"])
+        assert_equal(result.input_file, "data.txt")
+        assert_equal(result.output_file, "result.txt")
+    
+    # Or mock the argument processing
+    student = run('''
+import sys
+sys.argv = ['program.py', '--input', 'test.txt']
+# Then run student's main logic
+''')
+
+**Testing Scripts that Use sys.argv:**
+
+.. code-block:: python
+
+    from pedal import *
+    
+    # Wrap student code to provide controlled sys.argv
+    mock_args = "import sys; sys.argv = ['script.py', 'arg1', 'arg2']\n"
+    student_code = get_program()
+    
+    # Run with mocked arguments
+    student = run(mock_args + student_code)
+
+**Testing Input/Output with Arguments:**
+
+.. code-block:: python
+
+    from pedal import *
+    
+    # For programs that read from files specified in arguments
+    # Create test files and mock the file reading
+    test_content = "test data"
+    
+    # Mock file operations instead of command line args
+    student = run(f'''
+with open('test_input.txt', 'w') as f:
+    f.write('{test_content}')
+
+# Run student code that reads from files
+{get_program()}
+''')
+
 .. class:: Sandbox
 
     A Sandbox is a container where students' code can be executed.
@@ -41,6 +139,7 @@ code, most environments will provide a ``student`` variable that holds informati
 
 .. function:: run(code: str, inputs: list[str] = None) -> student
               run(code: str, filename: str = None) -> student
+              run(filename: str = None) -> student
 
     Runs the given arbitrary code, as you might expect from calling ``exec``.
     However, handles a lot of common sandboxing issues. For example, the
@@ -49,6 +148,31 @@ code, most environments will provide a ``student`` variable that holds informati
     explicitly allow them). Code with errors will have their errors adjusted
     to better provide the context of what went wrong and ensure that students
     understand why their code is wrong and not the instructors.
+    
+    **Parameters:**
+    
+    * ``code``: The Python code to execute. If not provided, uses the current student submission.
+    * ``inputs``: A list of strings to be used as responses to ``input()`` calls. 
+      This is equivalent to calling ``set_input(inputs)`` before execution.
+    * ``filename``: Optional filename for error reporting purposes.
+    
+    **Using the inputs parameter:**
+    
+    .. code-block:: python
+    
+        # Test code that uses input() function
+        student = run('''
+name = input("What's your name? ")
+age = int(input("What's your age? "))
+print(f"Hello {name}, you are {age} years old")
+''', inputs=["Alice", "25"])
+        
+        # Verify the output
+        assert_output(student, "Hello Alice, you are 25 years old")
+    
+    **Note about sys.argv:** The sandbox cannot modify ``sys.argv`` for security reasons. 
+    Instead, test functions that process arguments directly, or mock ``sys.argv`` within 
+    the student's code as shown in the examples above.
 
 .. function:: evaluate(code) -> Result
               evaluate(code, target="_") -> Result

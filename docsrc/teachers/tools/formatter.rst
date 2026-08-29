@@ -3,6 +3,26 @@
 Formatter
 =========
 
+.. _teacher_formatter:
+
+Formatter
+=========
+
+**Overview**
+
+Formatters in Pedal are responsible for converting feedback messages into the appropriate format for different environments. This is primarily used by autograding environments and platforms to ensure feedback appears correctly in their interfaces.
+
+**When Do You Need to Know About Formatters?**
+
+As an instructor writing grading scripts, you typically don't need to work directly with formatters. However, understanding them is useful when:
+
+- You want to include rich formatting (code snippets, HTML, Markdown) in your feedback messages
+- You're integrating Pedal with a custom environment
+- You need to customize how feedback appears in different platforms
+- You're debugging formatting issues in your feedback
+
+**How Formatters Work**
+
 Pedal uses Formatters to adapt Feedback Function :attr:`message_template` fields to different
 environments. For example, it can be used to generate HTML or Markdown in web-based
 environments, or just regular text for consoles.
@@ -10,6 +30,23 @@ environments, or just regular text for consoles.
 The power of the Formatter is that it provides `conversion flags <https://docs.python.org/3/library/string.html#formatstrings>`_
 for the ``message_template``. As long as the Feedback author is careful, fields can be interpolated with the appropriate
 formatting.
+
+**Basic Usage Example:**
+
+.. code-block:: python
+
+    from pedal import *
+    
+    # Simple message - works the same in all environments
+    assert_equal(call("add", 1, 2), 3, message="Addition function failed")
+    
+    # Rich message with code formatting
+    student_result = call("calculate", 5)
+    assert_equal(student_result, 25, 
+                message="Your function returned {actual!python_value}, expected {expected!python_value}",
+                actual=student_result, expected=25)
+
+**Conversion Flags:**
 
 .. code-block::
 
@@ -22,7 +59,72 @@ formatting.
     # Or the plain-text output:
     "Your code returned 5"
 
-The following
+**Environment-Specific Behavior:**
+
+Different environments use different formatters:
+
+- **Terminal/Console**: Plain text formatting
+- **Web-based (Gradescope, BlockPy)**: HTML formatting with syntax highlighting  
+- **Jupyter**: Rich HTML with enhanced styling
+- **Markdown environments**: Markdown-formatted output
+
+**Advanced Formatting Examples:**
+
+.. code-block:: python
+
+    from pedal import *
+    
+    # Format code blocks
+    expected_code = "def hello():\n    print('Hello world')"
+    explain("You should define a function like this:\n{code!python_code}",
+           code=expected_code)
+    
+    # Format expressions and values
+    student_expr = "2 + 2"
+    result = eval(student_expr)
+    explain("The expression {expr!python_expression} evaluates to {value!python_value}",
+           expr=student_expr, value=result)
+    
+    # Custom field formatting
+    explain("Test case failed: {func_name}({args}) returned {actual!python_value}, expected {expected!python_value}",
+           func_name="calculate_area",
+           args="5, 3", 
+           actual=8,
+           expected=15)
+
+**Common Formatting Use Cases:**
+
+.. code-block:: python
+
+    from pedal import *
+    
+    def show_rich_feedback_examples():
+        # 1. Code comparison
+        student_code = get_program()
+        if "while True:" in student_code:
+            explain("""
+Your code contains an infinite loop:
+{problematic_code!python_code}
+
+Consider using a different approach:
+{suggested_code!python_code}
+""", 
+                   problematic_code="while True:\n    # This runs forever!",
+                   suggested_code="for i in range(10):\n    # This runs 10 times")
+        
+        # 2. Variable value inspection
+        student = run()
+        if 'total' in student.data:
+            value = student.data['total']
+            explain("Your variable {var_name!python_expression} has value {var_value!python_value}",
+                   var_name="total", var_value=value)
+        
+        # 3. Function call results
+        result = call("process_list", [1, 2, 3])
+        explain("Calling {func_call!python_expression} returned {result!python_value}",
+                func_call="process_list([1, 2, 3])", result=result)
+
+The following formatter classes are available:
 
 .. class:: Formatter
 

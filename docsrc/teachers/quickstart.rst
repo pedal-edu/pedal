@@ -139,6 +139,42 @@ settings.
 In this example, we have also included some partial credit using the optional `score`
 parameter.
 
+**Score Usage Examples:**
+
+Pedal supports various score formats for flexible grading:
+
+.. code-block:: python
+
+    # Percentage-based scoring
+    compliment("Good use of a for loop!", score="+10%")
+    explain("Missing function definition", score="-5%")
+    
+    # Point-based scoring  
+    score("+15", "Correct algorithm implementation")
+    score("25/30", "Mostly correct with minor issues")
+    
+    # Direct score setting
+    set_score(85)  # Set final score to 85
+    set_maximum_score(100)  # Define total possible points
+    
+    # Additive scoring
+    give_partial(20, "Function exists and runs")
+    give_partial(15, "Correct logic for simple cases")
+    give_partial(10, "Good variable naming")
+    
+    # Conditional scoring based on quality
+    if line_count() < 20:
+        score("+5", "Bonus for concise code")
+    if comment_count() > 3:
+        score("+3", "Good commenting")
+
+**Score Format Options:**
+
+- **Percentage**: `"+10%"`, `"-5%"` - Relative to maximum score
+- **Points**: `"+15"`, `"20"`, `"25/30"` - Absolute point values  
+- **Fractions**: `"3/4"`, `"7/10"` - Partial credit ratios
+- **Decimals**: `"8.5"`, `"+2.5"` - Precise point values
+
 
 There are many other core commands, and many other optional parameters to enhance them.
 Check out the :doc:`reference` for more.

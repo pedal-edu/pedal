@@ -70,11 +70,12 @@ Instructor control script:
     :caption: grade_assignment.py
 
     from pedal import *
+    from pedal.cait.cait_api import find_matches
 
     # Common mistake is that students put a $ in their code
     if "$" in get_program():
         explain("You should not use the dollar sign ($) anywhere in your code!",
-                title="Do Not Use Dollar Sign"
+                title="Do Not Use Dollar Sign",
                 priority='syntax', label="used_dollar_sign")
 
     # They must call the round function
@@ -83,12 +84,125 @@ Instructor control script:
     ensure_function_call('print')
     # They must have the float value 9.5 in their code
     ensure_literal(9.5)
-    # They can only have one number in their code
-    prevent_ast("Num", at_most=1)
-    # They cannot have any strings embedded in their code.
-    prevent_ast("Str")
+    
+    # Modern CAIT approach: Check for exactly one number using pattern matching
+    numbers = find_matches("___")  # Find all number literals
+    number_nodes = [n for n in numbers if hasattr(n, 'n') and isinstance(n.n, (int, float))]
+    if len(number_nodes) != 1:
+        explain("You should have exactly one number literal in your code",
+               label="wrong_number_count")
+    
+    # Modern CAIT approach: Check for no string literals
+    strings = find_matches("'___'")  # Find string literals with single quotes
+    strings += find_matches('"___"')  # Find string literals with double quotes
+    if strings:
+        explain("You should not have any string literals in your code",
+               label="unexpected_strings")
+    
     # Check that the output is correct
     assert_output(student, "10")
+
+Advanced Pattern Matching Example
+---------------------------------
+
+Here's a more sophisticated example showing how to use CAIT for complex pattern detection:
+
+Instructions:
+    Create a function that processes a list using a for loop, but don't use
+    any built-in functions like sum(), max(), or min().
+
+.. code-block:: python
+    :caption: grade_assignment.py
+
+    from pedal import *
+    from pedal.cait.cait_api import find_matches
+
+    # Ensure they defined the required function
+    ensure_function_definition("process_list")
+    
+    # Use CAIT to ensure they used a for loop  
+    for_loops = find_matches("for _item_ in _list_:\n    ___")
+    if not for_loops:
+        explain("You must use a for loop to process the list",
+               label="missing_for_loop")
+    else:
+        # Check if the for loop is inside the required function
+        function_defs = find_matches("def process_list(_params_):\n    ___")
+        if function_defs:
+            func_body = function_defs[0]['___']
+            for_in_func = find_matches("for _item_ in _list_:\n    ___", root=func_body)
+            if not for_in_func:
+                explain("The for loop should be inside the process_list function",
+                       label="for_loop_wrong_location")
+    
+    # Prevent use of specific built-in functions
+    prohibited_functions = ["sum", "max", "min", "sorted"]
+    for func_name in prohibited_functions:
+        func_calls = find_matches(f"{func_name}(___)")
+        if func_calls:
+            explain(f"Don't use the built-in {func_name}() function for this assignment",
+                   label=f"prohibited_{func_name}")
+    
+    # Test the function works correctly
+    result = call("process_list", [1, 2, 3, 4, 5])
+    assert_equal(result, 15, message="process_list should return the sum of the list")
+
+Multiple File Example
+---------------------
+
+Here's an example of handling assignments with multiple files:
+
+Instructions:
+    Create a main.py file that imports and uses functions from helpers.py.
+    The helpers.py file should contain utility functions.
+
+.. code-block:: python
+    :caption: grade_assignment.py
+
+    from pedal import *
+    import os
+
+    # Check that both required files exist
+    required_files = ["main.py", "helpers.py"]
+    missing_files = []
+    
+    for filename in required_files:
+        if not os.path.exists(filename):
+            missing_files.append(filename)
+    
+    if missing_files:
+        explain(f"Missing required files: {', '.join(missing_files)}",
+               label="missing_files", score=0)
+    else:
+        # Verify syntax of both files
+        for filename in required_files:
+            with open(filename, 'r') as f:
+                code = f.read()
+            verify(code, filename=filename)
+        
+        # Load helper file first
+        run_file("helpers.py")
+        
+        # Then check main file
+        with open("main.py", 'r') as f:
+            main_code = f.read()
+        
+        # Ensure main.py imports from helpers
+        if "import helpers" not in main_code and "from helpers" not in main_code:
+            explain("main.py should import functions from helpers.py",
+                   label="missing_import")
+        
+        # Run the main file and test its functionality
+        student = run_file("main.py")
+        
+        # Test that main functionality works
+        assert_equal(call("main_function"), "expected_result",
+                    message="The main function should produce the correct result")
+        
+        # Verify helper functions are used
+        if "helper_function" not in main_code:
+            explain("You should use the helper_function from helpers.py in your main code",
+                   label="helper_not_used")
 
 Student Defined Function
 ------------------------

@@ -7,10 +7,41 @@ Imported as::
 
 
 .. function:: verify()
+              verify(code: str, filename: str = None)
 
     Parses the current main code of the submission and reports any syntax errors as feedback.
     You can actually pass in explicit code and filename as strings, but by default uses the
     current submission.
+    
+    **Parameters:**
+    
+    * ``code``: Optional. Specific code string to verify instead of the current submission.
+    * ``filename``: Optional. Filename to use for error reporting (defaults to current submission filename).
+    
+    **Examples:**
+    
+    .. code-block:: python
+    
+        from pedal import *
+        
+        # Verify the current student submission
+        verify()
+        
+        # Verify specific code
+        verify("print('Hello world')")
+        
+        # Verify code from a different file
+        with open('student_helper.py', 'r') as f:
+            helper_code = f.read()
+        verify(helper_code, filename='student_helper.py')
+        
+        # Verify multiple files in a loop
+        import os
+        for filename in os.listdir('student_files/'):
+            if filename.endswith('.py'):
+                with open(f'student_files/{filename}', 'r') as f:
+                    code = f.read()
+                verify(code, filename=filename)
 
 .. function:: get_program() -> str
 
