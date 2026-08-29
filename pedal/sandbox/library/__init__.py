@@ -3,3 +3,5 @@ from pedal.sandbox.library.designer import MockDesigner
 from pedal.sandbox.library.turtles import MockTurtle
 from pedal.sandbox.library.microbit import MockMicrobit
 from pedal.sandbox.library.drafter_library import MockDrafter
+from pedal.sandbox.library.arcade import MockArcade
+from pedal.sandbox.library.pygame import MockPygame
