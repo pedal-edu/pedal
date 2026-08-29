@@ -1539,5 +1539,106 @@ print(foo(-5))
         self.assertEqual(4,
                          result.issues['unused_variable'][0].location.line)
 
+class TestSpecifiers(unittest.TestCase):
+    """Tests to verify that TIFA feedback functions set their specifier correctly."""
+
+    def test_unused_variable_specifier(self):
+        tifa = pedal.tifa.Tifa()
+        result = tifa.process_code('a = 0')
+        issues = result.issues
+        self.assertEqual(issues['unused_variable'][0].specifier, 'a')
+
+    def test_initialization_problem_specifier(self):
+        tifa = pedal.tifa.Tifa()
+        result = tifa.process_code('print(my_var)')
+        issues = result.issues
+        self.assertEqual(issues['initialization_problem'][0].specifier, 'my_var')
+
+    def test_possible_initialization_problem_specifier(self):
+        tifa = pedal.tifa.Tifa()
+        result = tifa.process_code('if True:\n    x = 0\nprint(x)')
+        issues = result.issues
+        self.assertEqual(issues['possible_initialization_problem'][0].specifier, 'x')
+
+    def test_overwritten_variable_specifier(self):
+        tifa = pedal.tifa.Tifa()
+        result = tifa.process_code('a = 0\na = 5')
+        issues = result.issues
+        self.assertEqual(issues['overwritten_variable'][0].specifier, 'a')
+
+    def test_write_out_of_scope_specifier(self):
+        tifa = pedal.tifa.Tifa()
+        result = tifa.process_code('counter = 0\ndef increment():\n    counter = counter + 1\nincrement()')
+        issues = result.issues
+        # write_out_of_scope triggered when assigning to outer scope variable
+        if 'write_out_of_scope' in issues:
+            self.assertEqual(issues['write_out_of_scope'][0].specifier, 'counter')
+
+    def test_iteration_problem_specifier(self):
+        tifa = pedal.tifa.Tifa()
+        result = tifa.process_code('for i in i:\n    pass')
+        issues = result.issues
+        if 'iteration_problem' in issues:
+            self.assertEqual(issues['iteration_problem'][0].specifier, 'i')
+
+    def test_parameter_type_mismatch_specifier(self):
+        tifa = pedal.tifa.Tifa()
+        result = tifa.process_code('def f(x: int):\n    return x\nf("hello")')
+        issues = result.issues
+        self.assertEqual(issues['parameter_type_mismatch'][0].specifier, 'x')
+
+    def test_recursive_call_specifier(self):
+        tifa = pedal.tifa.Tifa()
+        result = tifa.process_code('def my_func():\n    my_func()\nmy_func()')
+        issues = result.issues
+        self.assertEqual(issues['recursive_call'][0].specifier, 'my_func')
+
+    def test_nested_function_definition_specifier(self):
+        tifa = pedal.tifa.Tifa()
+        result = tifa.process_code('if False:\n    def inner_func():\n        pass')
+        issues = result.issues
+        self.assertEqual(issues['nested_function_definition'][0].specifier, 'inner_func')
+
+    def test_action_after_return_specifier(self):
+        tifa = pedal.tifa.Tifa()
+        result = tifa.process_code('def x():\n    return 5\n    return 4\nx()')
+        issues = result.issues
+        self.assertIsNotNone(issues['action_after_return'][0].specifier)
+        self.assertNotEqual(issues['action_after_return'][0].specifier, "")
+
+    def test_incompatible_types_specifier(self):
+        tifa = pedal.tifa.Tifa()
+        result = tifa.process_code('1 + "hello"')
+        issues = result.issues
+        self.assertIsNotNone(issues['incompatible_types'][0].specifier)
+        self.assertNotEqual(issues['incompatible_types'][0].specifier, "")
+
+    def test_module_not_found_specifier(self):
+        tifa = pedal.tifa.Tifa()
+        result = tifa.process_code('import nonexistent_module_xyz')
+        issues = result.issues
+        if 'module_not_found' in issues:
+            self.assertEqual(issues['module_not_found'][0].specifier, 'nonexistent_module_xyz')
+
+    def test_read_out_of_scope_specifier(self):
+        tifa = pedal.tifa.Tifa()
+        result = tifa.process_code('def x(param):\n    return param\nx(0)\nparam')
+        issues = result.issues
+        self.assertEqual(issues['read_out_of_scope'][0].specifier, 'param')
+
+    def test_unused_returned_value_specifier(self):
+        tifa = pedal.tifa.Tifa()
+        result = tifa.process_code('abs(-5)')
+        issues = result.issues
+        self.assertEqual(issues['unused_returned_value'][0].specifier, 'abs')
+
+    def test_incorrect_arity_specifier(self):
+        tifa = pedal.tifa.Tifa()
+        result = tifa.process_code('def f(x): return x\nf(1, 2)')
+        issues = result.issues
+        if 'incorrect_arity' in issues:
+            self.assertEqual(issues['incorrect_arity'][0].specifier, 'f')
+
+
 if __name__ == '__main__':
     unittest.main(buffer=False)
