@@ -121,6 +121,7 @@ class RuntimeAssertionFeedback(AssertionFeedback):
     message_template = ("Student code failed instructor test.\n"
                         "{context_message}"
                         "{assertion_message}"
+                        "{source_context}"
                         "{explanation}")
     # TODO: The explanation field is broken, because it's not a keyword parameter
     _expected_verb: str
@@ -150,6 +151,8 @@ class RuntimeAssertionFeedback(AssertionFeedback):
             assertion_message = self.format_assertion(left, right, contexts)
         # Calculate explanation
         explanation = kwargs.get("explanation", "")
+        # Calculate source context
+        source_context = self._get_source_context(contexts)
         # Add in new fields
         fields = kwargs.setdefault('fields', {})
         fields['left'] = left.value
@@ -162,6 +165,7 @@ class RuntimeAssertionFeedback(AssertionFeedback):
         fields['inverse_operator'] = self._inverse_operator
         fields['context_message'] = context_message
         fields['assertion_message'] = assertion_message
+        fields['source_context'] = source_context
         fields['explanation'] = explanation
 
         try:
@@ -274,6 +278,38 @@ class RuntimeAssertionFeedback(AssertionFeedback):
     def suppress_runtime_error(self, exception):
         if hasattr(exception, "feedback") and exception.feedback is not None:
             exception.feedback.parent = self
+
+    def _get_source_context(self, contexts):
+        """
+        Generate source code context for function calls in assertion failures.
+        
+        Args:
+            contexts (list): List of sandbox contexts from assertion
+            
+        Returns:
+            str: Formatted source context or empty string
+        """
+        from pedal.utilities.source_context import format_source_context_for_function
+        
+        if not contexts:
+            return ""
+        
+        # Look for function calls in the contexts
+        for context_list in contexts:
+            if isinstance(context_list, list):
+                for context in context_list:
+                    if hasattr(context, 'called') and context.called:
+                        function_context = format_source_context_for_function(context.called, self.report)
+                        if function_context:
+                            return "\n" + function_context + "\n"
+            else:
+                # Handle case where context is not a list
+                if hasattr(context_list, 'called') and context_list.called:
+                    function_context = format_source_context_for_function(context_list.called, self.report)
+                    if function_context:
+                        return "\n" + function_context + "\n"
+        
+        return ""
 
 
 class RuntimePrintingAssertionFeedback(RuntimeAssertionFeedback):
