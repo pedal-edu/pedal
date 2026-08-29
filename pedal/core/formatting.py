@@ -100,6 +100,9 @@ class Formatter:
         return str(code)
 
     def filename(self, filename):
+        # Strip tests/ prefix if present for cleaner error messages
+        if filename and filename.startswith('tests/'):
+            return filename[6:]  # Remove 'tests/' prefix
         return filename
 
     def python_value(self, code):

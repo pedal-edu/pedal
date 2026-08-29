@@ -178,15 +178,25 @@ class FinalFeedback:
             # TODO: Promote to be its own atomic feedback function
             self.title = set_correct.title
             self.message = set_correct.message_template
-            self.score = combine_scores(self._scores)
+            combined_score = combine_scores(self._scores)
+            # If we don't have explicit scores but we have positive feedback, give full credit
+            if combined_score == 0 and self.correct:
+                self.score = 1
+            else:
+                self.score = combined_score
             self.success = self.correct = True
         else:
             # If they weren't correct, we need to combine the scores
             self.score = combine_scores(self._scores)
         if max_points is None:
-            self.score = min(1.0, self.score)
+            self.score = min(1, self.score)
         elif max_points != 'calculate':
-            self.score = min(float(max_points), self.score)
+            # Convert max_points to the same type as self.score if possible
+            if isinstance(self.score, int) and str(max_points).isdigit():
+                max_points = int(max_points)
+            elif isinstance(self.score, (int, float)):
+                max_points = float(max_points)
+            self.score = min(max_points, self.score)
         # Update the success/correct flags
         self.success = self.correct = bool(self.correct)
         return self

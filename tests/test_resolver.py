@@ -10,6 +10,8 @@ from pedal.utilities.system import IS_AT_LEAST_PYTHON_311
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
+here = "" if os.path.basename(os.getcwd()) == "tests" else "tests/"
+
 from pedal.core.commands import (clear_report, set_success, gently, explain, give_partial, suppress,
                                  contextualize_report, get_all_feedback, feedback)
 from pedal.source import set_source, next_section, verify_section, verify, separate_into_sections
@@ -366,7 +368,7 @@ The variable p was given a value on line 6, but was never used after that.""")
         # Calculate final result
         final = statistics.resolve(clean=True)
         # Get expected
-        with open('output_files/stats_feedback_test_1.json') as f:
+        with open(here+'output_files/stats_feedback_test_1.json') as f:
             expected = f.read()
         final = re.sub(r"\s*\^\^+\\n", '', final)
         self.assertEqual(final, expected)
