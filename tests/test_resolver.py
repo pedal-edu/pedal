@@ -11,7 +11,7 @@ from pedal.utilities.system import IS_AT_LEAST_PYTHON_311
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from pedal.core.commands import (clear_report, set_success, gently, explain, give_partial, suppress,
-                                 contextualize_report, get_all_feedback, feedback)
+                                 contextualize_report, get_all_feedback, feedback, set_max_points)
 from pedal.source import set_source, next_section, verify_section, verify, separate_into_sections
 from pedal.tifa import tifa_analysis
 from pedal.resolvers import simple, sectional, statistics
@@ -100,13 +100,55 @@ class TestResolver(ExecutionTestCase):
         self.assertEqual(e.final.score, .2)
         self.assertFalse(e.final.success)
 
+        # By default, the score is capped at the maximum points (1.0)
         with Execution('0') as e:
+            give_partial(.1, message="You had a zero in your code.")
+            give_partial(.1, message="You looped correctly.")
+            set_success()
+        self.assertEqual(e.final.message, "Great work!")
+        self.assertEqual(e.final.score, 1.0)
+        self.assertTrue(e.final.success)
+
+        # Removing the maximum lets partial credit accumulate past full marks
+        with Execution('0') as e:
+            set_max_points('none')
             give_partial(.1, message="You had a zero in your code.")
             give_partial(.1, message="You looped correctly.")
             set_success()
         self.assertEqual(e.final.message, "Great work!")
         self.assertEqual(e.final.score, 1.2)
         self.assertTrue(e.final.success)
+
+        # A larger maximum caps at that value instead
+        with Execution('0') as e:
+            set_max_points(2)
+            give_partial(.1, message="You had a zero in your code.")
+            give_partial(.1, message="You looped correctly.")
+            set_success()
+        self.assertEqual(e.final.score, 1.2)
+        with Execution('0') as e:
+            set_max_points(1.1)
+            give_partial(.1, message="You had a zero in your code.")
+            give_partial(.1, message="You looped correctly.")
+            set_success()
+        self.assertEqual(e.final.score, 1.1)
+
+    def test_correct_without_scores_is_full_credit(self):
+        # No feedback at all: correct, and worth full credit
+        with Execution('1 + 2') as e:
+            pass
+        self.assertTrue(e.final.success)
+        self.assertEqual(e.final.score, 1)
+        # Correct with an explicit partial: the partial decides the score
+        with Execution('1 + 2') as e:
+            give_partial(.4, message="You added.")
+        self.assertTrue(e.final.success)
+        self.assertEqual(e.final.score, .4)
+        # Incorrect without any scores stays at zero
+        with Execution('1 + 2') as e:
+            gently("Nope.")
+        self.assertFalse(e.final.success)
+        self.assertEqual(e.final.score, 0)
 
     @unittest.skip("This test is not currently working.")
     def test_gently_subtracts_points(self):

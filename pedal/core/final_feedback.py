@@ -178,15 +178,23 @@ class FinalFeedback:
             # TODO: Promote to be its own atomic feedback function
             self.title = set_correct.title
             self.message = set_correct.message_template
-            self.score = combine_scores(self._scores)
+            # A correct submission without any scored feedback is worth full
+            # credit; otherwise the partial scores determine the total.
+            self.score = combine_scores(self._scores) if self._scores else 1
             self.success = self.correct = True
         else:
             # If they weren't correct, we need to combine the scores
             self.score = combine_scores(self._scores)
+        # Cap the score at the maximum points (1.0 by default), unless the
+        # maximum was explicitly turned off with 'none' or 'calculate'.
         if max_points is None:
-            self.score = min(1.0, self.score)
-        elif max_points != 'calculate':
-            self.score = min(float(max_points), self.score)
+            maximum = 1.0
+        elif str(max_points).lower() in ('calculate', 'none'):
+            maximum = None
+        else:
+            maximum = float(max_points)
+        if maximum is not None and self.score > maximum:
+            self.score = maximum
         # Update the success/correct flags
         self.success = self.correct = bool(self.correct)
         return self
