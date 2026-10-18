@@ -1,3 +1,15 @@
+Version 3.0.4 (10/18/2026)
+--------------------------
+* Fix `ensure_ast('Index')` and `prevent_ast('Index')` finding nothing on Python 3.9+, where the `Index` node no longer exists; `Index` and `ExtSlice` now find the matching `Subscript` nodes
+* Fix `prevent_literal(True)` also catching `1` (and `1` catching `1.0`); literals must now have the same type to match
+* Fix `prevent_literal(None)` and `ensure_literal(None)` matching every literal
+* Handle `ast.Constant` directly instead of the removed `ast.Str`/`ast.Num` nodes, which crashed `ensure_function` type checks on Python 3.14
+* Fix traceback formatting on Python 3.13+ (crash on syntax errors, lost indentation)
+* Fix correct submissions without any scored feedback resolving to a score of 0 instead of 1
+* `set_max_points('none')` now removes the score cap, as documented
+* Custom `assertion` messages for runtime assertions are formatted with fields like `{left}` and `{right}`; `assertion_message` is accepted as an alias
+* Mark the long-standing TIFA flow analysis test failures as expected failures
+
 Version 3.0.3 (8/24/2026)
 -------------------------
 * Fix issue with ast.Str missing in newer versions
