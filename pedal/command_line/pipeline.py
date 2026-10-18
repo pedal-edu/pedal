@@ -1,3 +1,4 @@
+from __future__ import annotations
 from pedal.command_line.modes import AbstractPipeline, Bundle
 from pedal.core.config_job import JobConfig
 

@@ -9,6 +9,7 @@ Version 3.0.4 (10/18/2026)
 * `set_max_points('none')` now removes the score cap, as documented
 * Custom `assertion` messages for runtime assertions are formatted with fields like `{left}` and `{right}`; `assertion_message` is accepted as an alias
 * Mark the long-standing TIFA flow analysis test failures as expected failures
+* Fix import error on Python 3.8 from `dict[str, str]` annotations in the command line pipeline
 
 Version 3.0.3 (8/24/2026)
 -------------------------

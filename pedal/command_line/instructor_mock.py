@@ -5,6 +5,7 @@ behavior in Pedal's instructor control scripts.
 Similar behavior is provided in the student namespace through pedal.sandbox.mocked
 but on a more dramatic scale.
 """
+from __future__ import annotations
 import sys
 from typing import Optional
 import io

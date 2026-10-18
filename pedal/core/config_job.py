@@ -21,6 +21,7 @@ An EnvironmentConfig determines how a Bundle is executed.
 The Job sets up the EnvironmentConfig, to dispatch to the setup_environment.
 """
 
+from __future__ import annotations
 import argparse
 from collections import defaultdict
 from typing import Optional, List, Dict, Any, Type, TypeVar
