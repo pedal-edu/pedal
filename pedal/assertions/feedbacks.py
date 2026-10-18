@@ -46,6 +46,7 @@ from pedal.sandbox.exceptions import SandboxException
 from pedal.sandbox.result import is_sandbox_result, unwrap_value
 from pedal.assertions.constants import TOOL_NAME
 from pedal.utilities.text import chomp
+from pedal.core.formatting import wrap_fields
 
 
 class InterpolatedValue:
@@ -141,13 +142,6 @@ class RuntimeAssertionFeedback(AssertionFeedback):
         else:
             context_message = format_contexts(contexts, self.report.format)
         self.specifier = specifier_from_context(contexts)
-        # Calculate the assertion_message
-        if kwargs.get('assertion') is False:
-            assertion_message = ""
-        elif kwargs.get('assertion') is not None:
-            assertion_message = kwargs['assertion'] + "\n"
-        else:
-            assertion_message = self.format_assertion(left, right, contexts)
         # Calculate explanation
         explanation = kwargs.get("explanation", "")
         # Add in new fields
@@ -161,8 +155,23 @@ class RuntimeAssertionFeedback(AssertionFeedback):
         fields['aggregate_verb'] = self._aggregate_verb
         fields['inverse_operator'] = self._inverse_operator
         fields['context_message'] = context_message
-        fields['assertion_message'] = assertion_message
         fields['explanation'] = explanation
+        # Calculate the assertion_message. The keyword is `assertion`, but we
+        # also accept `assertion_message` (the name of the field it fills in);
+        # otherwise the base class would copy it in raw, without formatting.
+        if 'assertion_message' in kwargs:
+            kwargs['assertion'] = kwargs.pop('assertion_message')
+        assertion = kwargs.get('assertion')
+        if assertion is False:
+            assertion_message = ""
+        elif assertion is not None:
+            assertion_message = self.format_custom_assertion(assertion, fields)
+            # Keep any explanation on its own line
+            if explanation:
+                assertion_message += "\n"
+        else:
+            assertion_message = self.format_assertion(left, right, contexts)
+        fields['assertion_message'] = assertion_message
 
         try:
             super().__init__(left, right, *args, **kwargs)
@@ -201,6 +210,25 @@ class RuntimeAssertionFeedback(AssertionFeedback):
             else:
                 return "the second result"
         return self.report.format.name(target)
+
+    def format_custom_assertion(self, assertion, fields):
+        """
+        Formats an instructor-provided assertion message. Placeholders such as
+        ``{left}`` and ``{right}`` are filled in from the assertion's fields,
+        with the same converters that message templates support (e.g.,
+        ``{left:python_value}``). Text that is not a valid template (for
+        example, because it contains literal braces) is used verbatim.
+
+        Args:
+            assertion (str): The instructor's message, possibly with placeholders.
+            fields (dict): The fields of this feedback (``left``, ``right``, ...).
+        Returns:
+            str: The formatted message.
+        """
+        try:
+            return assertion.format(**wrap_fields(self.report.format, fields))
+        except (KeyError, IndexError, ValueError, AttributeError):
+            return assertion
 
     def format_assertion(self, left, right, contexts):
         """

@@ -163,7 +163,43 @@ Student code failed instructor test.
                                 assertion_message="{left} was not {right}")
         self.assertFeedback(e, """Failed Instructor Test
 Student code failed instructor test.
-    [1, 2, 3] did not have the length 4""")
+[1, 2, 3] was not 4""")
+
+    def test_assert_length_equal_basic_fails_custom_assertion_keyword(self):
+        # `assertion` is the documented keyword
+        with Execution('5') as e:
+            assert_length_equal([1, 2, 3], 4,
+                                assertion="Expected {right} items, but got {left}.")
+        self.assertFeedback(e, """Failed Instructor Test
+Student code failed instructor test.
+Expected 4 items, but got [1, 2, 3].""")
+
+    def test_assert_length_equal_basic_fails_custom_with_explanation(self):
+        with Execution('5') as e:
+            assert_length_equal([1, 2, 3], 4,
+                                assertion="Wrong length: {left}",
+                                explanation="Count the elements again.")
+        self.assertFeedback(e, """Failed Instructor Test
+Student code failed instructor test.
+Wrong length: [1, 2, 3]
+Count the elements again.""")
+
+    def test_assert_length_equal_basic_fails_custom_literal_braces(self):
+        # Text that is not a valid template is passed through untouched
+        with Execution('5') as e:
+            assert_length_equal([1, 2, 3], 4,
+                                assertion="Return the set {1, 2, 3, 4} instead.")
+        self.assertFeedback(e, """Failed Instructor Test
+Student code failed instructor test.
+Return the set {1, 2, 3, 4} instead.""")
+
+    def test_assert_length_equal_basic_fails_no_assertion_message(self):
+        with Execution('5') as e:
+            assert_length_equal([1, 2, 3], 4, assertion=False,
+                                explanation="Your list is too short.")
+        self.assertFeedback(e, """Failed Instructor Test
+Student code failed instructor test.
+Your list is too short.""")
 
     def test_assert_length_equal_call_left_fails(self):
         with Execution('def get(a, b): return [a,b]', run_tifa=False) as e:
