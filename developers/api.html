@@ -385,7 +385,7 @@ unique, but labels should be as unique as possible (especially
 within a category).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -394,11 +394,11 @@ within a category).</p>
 <dt class="sig sig-object py" id="pedal.core.commands.Feedback.tool">
 <span class="sig-name descname"><span class="pre">tool</span></span><a class="headerlink" href="#pedal.core.commands.Feedback.tool" title="Link to this definition"></a></dt>
 <dd><p>An internal name for indicating the tool that created
-this feedback. Should be taken directly from the Tool itself. If <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>, then
+this feedback. Should be taken directly from the Tool itself. If <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>, then
 this was not created by a tool but directly by the control script.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>, optional</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>, optional</p>
 </dd>
 </dl>
 </dd></dl>
@@ -412,7 +412,7 @@ More than one feedback will be in a category, but a feedback cannot be in
 more than one category.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -423,13 +423,13 @@ more than one category.</p>
 <dd><p>A label that will uniquely identify the conditions of this FF
 within a given category and label. The exact nature of this specifier will vary
 depending on the type of systems involved; for unit tests, it’ll probably be the
-function name and a <a class="reference external" href="https://docs.python.org/3/library/functions.html#repr" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">repr</span></code></a> of its arguments. For liveness checks, it might be a
+function name and a <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#repr" title="(in Python v3.15)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">repr</span></code></a> of its arguments. For liveness checks, it might be a
 variable name with a scope modifier. However, the implication is that if two
 FFs have the same label, category, and specifier, then they should be treated
 as conceptually equivalent (even across students, though less so across problems).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -442,7 +442,7 @@ as conceptually equivalent (even across students, though less so across problems
 but feedback can also be used for various other purposes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -455,7 +455,7 @@ feedback was selected. Serves as a “TL;DR” for this feedback category, usefu
 for debugging why a piece of feedback appeared.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -468,7 +468,7 @@ be used if a <code class="docutils literal notranslate"><span class="pre">justif
 into the template IF the <code class="docutils literal notranslate"><span class="pre">condition</span></code> is met.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -481,7 +481,7 @@ of feedback in the same category. Might be “high/medium/low”. Exactly how th
 gets used is up to the resolver, but typically it helps break ties.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -493,7 +493,7 @@ gets used is up to the resolver, but typically it helps break ties.</p>
 Either 1, -1, or 0.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -505,7 +505,7 @@ Either 1, -1, or 0.</p>
 that the <a class="reference internal" href="#pedal.core.feedback.Feedback.label" title="pedal.core.feedback.Feedback.label"><code class="xref py py-attr docutils literal notranslate"><span class="pre">label</span></code></a> should be used instead.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>, optional</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>, optional</p>
 </dd>
 </dl>
 </dd></dl>
@@ -517,7 +517,7 @@ that the <a class="reference internal" href="#pedal.core.feedback.Feedback.label
 to the user.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -530,7 +530,7 @@ be used if a <code class="docutils literal notranslate"><span class="pre">messag
 into the template IF the <code class="docutils literal notranslate"><span class="pre">condition</span></code> is met.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -542,7 +542,7 @@ into the template IF the <code class="docutils literal notranslate"><span class=
 template to produce the message.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>Dict</em>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>,<em>Any</em>]</p>
+<dd class="field-odd"><p><em>Dict</em>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>,<em>Any</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -554,7 +554,7 @@ template to produce the message.</p>
 If None, all fields are safe.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>List</em>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>]</p>
+<dd class="field-odd"><p><em>List</em>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -567,7 +567,7 @@ that will convert the field to a JSON-serializable format. If None, all fields
 will be passed through as-is.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>Dict</em>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>,<em>Callable</em>]</p>
+<dd class="field-odd"><p><em>Dict</em>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>,<em>Callable</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -592,7 +592,7 @@ It is ultimately up to the Resolver to decide how to combine all the different s
 strategy would be to add all the scores together for any non-muted feedback.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -604,7 +604,7 @@ strategy would be to add all the scores together for any non-muted feedback.</p>
 task is now finished.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -619,7 +619,7 @@ helpful to give to the student. They will still contribute to overall score, but
 of the submission.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -630,7 +630,7 @@ of the submission.</p>
 <dd><p>Whether this piece of feedback contributes to the score/correctness.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -643,7 +643,7 @@ NEGATIVE valence feedback is NOT triggered, or a POSITIVE valence
 feedback IS triggered.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -654,7 +654,7 @@ feedback IS triggered.</p>
 <dd><p>Similar to the <code class="docutils literal notranslate"><span class="pre">message_template</span></code>, but for the <code class="docutils literal notranslate"><span class="pre">else_message</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -669,7 +669,7 @@ object will be deactivated. Note that most inheriting Feedback
 Functions will not respect this parameter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -681,7 +681,7 @@ Functions will not respect this parameter.</p>
 either names, emails, or combinations in the style of <code class="xref py py-obj docutils literal notranslate"><span class="pre">&quot;Cory</span> <span class="pre">Bart</span> <span class="pre">&lt;acbart&#64;udel.edu&gt;&quot;</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>List</em>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>]</p>
+<dd class="field-odd"><p><em>List</em>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -695,7 +695,7 @@ serious and intense changes. The first digit should be incremented when changes 
 learners or some other evidence-based motivation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -764,7 +764,7 @@ Defaults to true through the <a class="reference internal" href="../teachers/too
 <dd class="field-odd"><p>Whether this feedback’s condition was detected.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -808,11 +808,11 @@ the code of the submission.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>submission</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><a class="reference internal" href="#pedal.core.submission.Submission" title="pedal.core.submission.Submission"><em>Submission</em></a>)</p></li>
-<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><em>None</em>) – If the <code class="xref py py-obj docutils literal notranslate"><span class="pre">submission</span></code> was not a
+<li><p><strong>submission</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em> or </em><a class="reference internal" href="#pedal.core.submission.Submission" title="pedal.core.submission.Submission"><em>Submission</em></a>)</p></li>
+<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em> or </em><em>None</em>) – If the <code class="xref py py-obj docutils literal notranslate"><span class="pre">submission</span></code> was not a
 <a class="reference internal" href="#pedal.core.submission.Submission" title="pedal.core.submission.Submission"><code class="xref py py-class docutils literal notranslate"><span class="pre">Submission</span></code></a>, then this will be
 used as the filename for the code given in <code class="docutils literal notranslate"><span class="pre">submission</span></code>.</p></li>
-<li><p><strong>clear</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Whether or not to clear the report before attaching
+<li><p><strong>clear</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a>) – Whether or not to clear the report before attaching
 the submission.</p></li>
 <li><p><strong>report</strong> – The report to attach this feedback to (defaults to the
 <a class="reference internal" href="#pedal.core.report.MAIN_REPORT" title="pedal.core.report.MAIN_REPORT"><code class="xref py py-data docutils literal notranslate"><span class="pre">MAIN_REPORT</span></code></a>).</p></li>
@@ -831,7 +831,7 @@ does not attempt to convert to strings.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>items</strong> (<em>Any</em>) – Any set of values to log information about. Will be
-converted to strings using <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a> if not already strings.</p>
+converted to strings using <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a> if not already strings.</p>
 </dd>
 </dl>
 <p>Returns:</p>
@@ -855,7 +855,7 @@ converted to strings using <a class="reference external" href="https://docs.pyth
 <dd><p>Give a low-priority piece of negative feedback to the student.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The feedback message to show to the student.</p>
+<dd class="field-odd"><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – The feedback message to show to the student.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -937,7 +937,7 @@ hide correctness on.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>sep</strong> – The separator to use between items (defaults to space).</p></li>
 <li><p><strong>items</strong> (<em>Any</em>) – Any set of values to log information about. Will be
-converted to strings using <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a> if not already strings.</p></li>
+converted to strings using <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a> if not already strings.</p></li>
 </ul>
 </dd>
 </dl>
@@ -983,12 +983,12 @@ by the resolver.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>category</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The general feedback category to suppress within.
+<li><p><strong>category</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – The general feedback category to suppress within.
 Should be a member of
 <a class="reference internal" href="#pedal.core.feedback_category.FeedbackCategory" title="pedal.core.feedback_category.FeedbackCategory"><code class="xref py py-class docutils literal notranslate"><span class="pre">pedal.core.feedback_category.FeedbackCategory</span></code></a>.</p></li>
-<li><p><strong>label</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – The specific feedback label to suppress, or
+<li><p><strong>label</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a>) – The specific feedback label to suppress, or
 True if all the labels within this category should be suppressed.</p></li>
-<li><p><strong>fields</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – The fields that will be exactly matched to suppress a
+<li><p><strong>fields</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><em>dict</em></a>) – The fields that will be exactly matched to suppress a
 given feedback. The keys should be strings.</p></li>
 <li><p><strong>report</strong> (<a class="reference internal" href="#pedal.core.report.Report" title="pedal.core.report.Report"><code class="xref py py-class docutils literal notranslate"><span class="pre">Report</span></code></a>) – The report object to
 suppress information within.</p></li>
@@ -1058,7 +1058,7 @@ feedback generated for this Report so far.</p>
 have been suppressed so far.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>]]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><em>list</em></a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)"><em>tuple</em></a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>, <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>]]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1070,7 +1070,7 @@ have been suppressed so far.</p>
 hidden. This can globally hide the ‘correct’, ‘score’, etc.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.14)"><em>set</em></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#set" title="(in Python v3.15)"><em>set</em></a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1085,7 +1085,7 @@ by sections and the <a class="reference internal" href="tools/assertions.html#pe
 function to combine results.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a> or <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1098,7 +1098,7 @@ group. When a group needs to be rendered out to the user, this
 will override whatever label was going to be presented instead.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>[group, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><em>dict</em></a>[group, <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1113,7 +1113,7 @@ tool. For example, the Assertions tool has hooks on the Source tool
 to trigger assertion resolutions before advancing to next sections.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>[callable]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><em>dict</em></a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>, <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><em>list</em></a>[callable]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1127,7 +1127,7 @@ store whatever they want, but will
 probably be in a dictionary itself.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>, <em>Any</em>]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><em>dict</em></a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>, <em>Any</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1140,7 +1140,7 @@ resolver. This allows you to check if a report has previously
 been resolved, or do something with that data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>[<em>Any</em>]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><em>list</em></a>[<em>Any</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1165,7 +1165,7 @@ not yet resolved.</p>
 tools registered for this report, available via their names.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><em>dict</em></a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>, <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><em>dict</em></a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1203,7 +1203,7 @@ triggered.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>event</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – An event name. Multiple functions can be triggered for
+<li><p><strong>event</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – An event name. Multiple functions can be triggered for
 the same <code class="xref py py-obj docutils literal notranslate"><span class="pre">event</span></code>. The format is as follows: <code class="xref py py-obj docutils literal notranslate"><span class="pre">&quot;namespace.function.extra&quot;</span></code>
 The <code class="xref py py-obj docutils literal notranslate"><span class="pre">&quot;.extra&quot;</span></code> component is optional to add further nuance, but
 the general idea is that you are referring to functions that,
@@ -1267,10 +1267,10 @@ Hooks will be called with this report as a keyword <code class="xref py py-obj d
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tool</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The name of the tool, to namespace events by.</p></li>
-<li><p><strong>event_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The event name (separate words with periods).</p></li>
-<li><p><strong>arguments</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a><em>[</em><em>any</em><em>]</em>) – The arguments to be passed to the callback function.</p></li>
-<li><p><strong>keyword_arguments</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>any</em><em>]</em>) – The keyword arguments to be passed to the callback funciton.</p></li>
+<li><p><strong>tool</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – The name of the tool, to namespace events by.</p></li>
+<li><p><strong>event_name</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – The event name (separate words with periods).</p></li>
+<li><p><strong>arguments</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)"><em>tuple</em></a><em>[</em><em>any</em><em>]</em>) – The arguments to be passed to the callback function.</p></li>
+<li><p><strong>keyword_arguments</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em>, </em><em>any</em><em>]</em>) – The keyword arguments to be passed to the callback funciton.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1292,7 +1292,7 @@ TODO: Make this just a regular command.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pedal.core.report.Report.register_tool">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">register_tool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tool_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">reset_function</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pedal/core/report.html#Report.register_tool"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.core.report.Report.register_tool" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">register_tool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tool_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">reset_function</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pedal/core/report.html#Report.register_tool"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.core.report.Report.register_tool" title="Link to this definition"></a></dt>
 <dd><p>Identifies that the given Tool should be made available.
 :param tool_name: A unique string identifying this tool.
 :param reset_function: The function to call to reset the Tool.</p>
@@ -1320,7 +1320,7 @@ If the score is greater than the maximum points, it will be capped.
 If the <code class="xref py py-obj docutils literal notranslate"><span class="pre">points</span></code> is the string <code class="xref py py-obj docutils literal notranslate"><span class="pre">calculate</span></code>, then there will be no capping.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>points</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The maximum points for this report.
+<dd class="field-odd"><p><strong>points</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – The maximum points for this report.
 If a string, it will be used as-is.</p>
 </dd>
 </dl>
@@ -1344,9 +1344,9 @@ TODO: Currently, only global suppression is supported.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>category</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The category of feedback to suppress.</p></li>
-<li><p><strong>label</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – A specific label to match against and suppress.</p></li>
-<li><p><strong>fields</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em> of </em><em>key/values</em>) – The fields that will be matched exactly to
+<li><p><strong>category</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – The category of feedback to suppress.</p></li>
+<li><p><strong>label</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – A specific label to match against and suppress.</p></li>
+<li><p><strong>fields</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><em>dict</em></a><em> of </em><em>key/values</em>) – The fields that will be matched exactly to
 suppress.</p></li>
 </ul>
 </dd>
@@ -1369,7 +1369,7 @@ suppress.</p></li>
 <dd><p>A line of source code.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1381,7 +1381,7 @@ suppress.</p></li>
 If missing, then defaults to the entire line.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>, optional</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a>, optional</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1393,7 +1393,7 @@ If missing, then defaults to the entire line.</p>
 Requires <a class="reference internal" href="#pedal.core.location.Location.line" title="pedal.core.location.Location.line"><code class="xref py py-attr docutils literal notranslate"><span class="pre">line</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>, optional</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a>, optional</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1405,7 +1405,7 @@ Requires <a class="reference internal" href="#pedal.core.location.Location.line"
 Requires <a class="reference internal" href="#pedal.core.location.Location.col" title="pedal.core.location.Location.col"><code class="xref py py-attr docutils literal notranslate"><span class="pre">col</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>, optional</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a>, optional</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1417,7 +1417,7 @@ Requires <a class="reference internal" href="#pedal.core.location.Location.col" 
 If missing, then defaults to the student’s submission’s main file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>, optional</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>, optional</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1446,7 +1446,7 @@ for both built-in AST nodes and CaitNodes.</p>
 <dd class="field-odd"><p>The JSON version of this location information.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>Dict</em>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>,<em>Any</em>]</p>
+<dd class="field-even"><p><em>Dict</em>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>,<em>Any</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1488,7 +1488,7 @@ unique, but labels should be as unique as possible (especially
 within a category).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1497,11 +1497,11 @@ within a category).</p>
 <dt class="sig sig-object py" id="pedal.core.feedback.Feedback.tool">
 <span class="sig-name descname"><span class="pre">tool</span></span><a class="headerlink" href="#pedal.core.feedback.Feedback.tool" title="Link to this definition"></a></dt>
 <dd><p>An internal name for indicating the tool that created
-this feedback. Should be taken directly from the Tool itself. If <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>, then
+this feedback. Should be taken directly from the Tool itself. If <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>, then
 this was not created by a tool but directly by the control script.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>, optional</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>, optional</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1515,7 +1515,7 @@ More than one feedback will be in a category, but a feedback cannot be in
 more than one category.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1526,13 +1526,13 @@ more than one category.</p>
 <dd><p>A label that will uniquely identify the conditions of this FF
 within a given category and label. The exact nature of this specifier will vary
 depending on the type of systems involved; for unit tests, it’ll probably be the
-function name and a <a class="reference external" href="https://docs.python.org/3/library/functions.html#repr" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">repr</span></code></a> of its arguments. For liveness checks, it might be a
+function name and a <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#repr" title="(in Python v3.15)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">repr</span></code></a> of its arguments. For liveness checks, it might be a
 variable name with a scope modifier. However, the implication is that if two
 FFs have the same label, category, and specifier, then they should be treated
 as conceptually equivalent (even across students, though less so across problems).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1545,7 +1545,7 @@ as conceptually equivalent (even across students, though less so across problems
 but feedback can also be used for various other purposes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1558,7 +1558,7 @@ feedback was selected. Serves as a “TL;DR” for this feedback category, usefu
 for debugging why a piece of feedback appeared.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1571,7 +1571,7 @@ be used if a <code class="docutils literal notranslate"><span class="pre">justif
 into the template IF the <code class="docutils literal notranslate"><span class="pre">condition</span></code> is met.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1584,7 +1584,7 @@ of feedback in the same category. Might be “high/medium/low”. Exactly how th
 gets used is up to the resolver, but typically it helps break ties.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1596,7 +1596,7 @@ gets used is up to the resolver, but typically it helps break ties.</p>
 Either 1, -1, or 0.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1608,7 +1608,7 @@ Either 1, -1, or 0.</p>
 that the <a class="reference internal" href="#pedal.core.feedback.Feedback.label" title="pedal.core.feedback.Feedback.label"><code class="xref py py-attr docutils literal notranslate"><span class="pre">label</span></code></a> should be used instead.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>, optional</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>, optional</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1620,7 +1620,7 @@ that the <a class="reference internal" href="#pedal.core.feedback.Feedback.label
 to the user.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1633,7 +1633,7 @@ be used if a <code class="docutils literal notranslate"><span class="pre">messag
 into the template IF the <code class="docutils literal notranslate"><span class="pre">condition</span></code> is met.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1645,7 +1645,7 @@ into the template IF the <code class="docutils literal notranslate"><span class=
 template to produce the message.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>Dict</em>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>,<em>Any</em>]</p>
+<dd class="field-odd"><p><em>Dict</em>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>,<em>Any</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1657,7 +1657,7 @@ template to produce the message.</p>
 If None, all fields are safe.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>List</em>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>]</p>
+<dd class="field-odd"><p><em>List</em>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1670,7 +1670,7 @@ that will convert the field to a JSON-serializable format. If None, all fields
 will be passed through as-is.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>Dict</em>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>,<em>Callable</em>]</p>
+<dd class="field-odd"><p><em>Dict</em>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>,<em>Callable</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1695,7 +1695,7 @@ It is ultimately up to the Resolver to decide how to combine all the different s
 strategy would be to add all the scores together for any non-muted feedback.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1707,7 +1707,7 @@ strategy would be to add all the scores together for any non-muted feedback.</p>
 task is now finished.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1722,7 +1722,7 @@ helpful to give to the student. They will still contribute to overall score, but
 of the submission.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1733,7 +1733,7 @@ of the submission.</p>
 <dd><p>Whether this piece of feedback contributes to the score/correctness.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1746,7 +1746,7 @@ NEGATIVE valence feedback is NOT triggered, or a POSITIVE valence
 feedback IS triggered.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1757,7 +1757,7 @@ feedback IS triggered.</p>
 <dd><p>Similar to the <code class="docutils literal notranslate"><span class="pre">message_template</span></code>, but for the <code class="docutils literal notranslate"><span class="pre">else_message</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1772,7 +1772,7 @@ object will be deactivated. Note that most inheriting Feedback
 Functions will not respect this parameter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1784,7 +1784,7 @@ Functions will not respect this parameter.</p>
 either names, emails, or combinations in the style of <code class="xref py py-obj docutils literal notranslate"><span class="pre">&quot;Cory</span> <span class="pre">Bart</span> <span class="pre">&lt;acbart&#64;udel.edu&gt;&quot;</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>List</em>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>]</p>
+<dd class="field-odd"><p><em>List</em>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1798,7 +1798,7 @@ serious and intense changes. The first digit should be incremented when changes 
 learners or some other evidence-based motivation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1867,7 +1867,7 @@ Defaults to true through the <a class="reference internal" href="../teachers/too
 <dd class="field-odd"><p>Whether this feedback’s condition was detected.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1986,7 +1986,7 @@ is believed to be in the student’s mind, or perhaps the relevant concept from 
 material that should be associated with this. (“Variables must be initialized before they are used”).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1998,7 +1998,7 @@ material that should be associated with this. (“Variables must be initialized 
 has not been defined”).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2009,7 +2009,7 @@ has not been defined”).</p>
 <dd><p>A suggestion for what the student can do (“Initialize the sum variable on line 2”).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2021,7 +2021,7 @@ has not been defined”).</p>
 (“You used a for loop, but this question expected you to use recursion.”).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2033,7 +2033,7 @@ has not been defined”).</p>
 hours, perhaps it is time to take a break?”).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2155,7 +2155,7 @@ is believed to be in the student’s mind, or perhaps the relevant concept from 
 material that should be associated with this. (“Variables must be initialized before they are used”).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2167,7 +2167,7 @@ material that should be associated with this. (“Variables must be initialized 
 has not been defined”).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2178,7 +2178,7 @@ has not been defined”).</p>
 <dd><p>A suggestion for what the student can do (“Initialize the sum variable on line 2”).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2190,7 +2190,7 @@ has not been defined”).</p>
 (“You used a for loop, but this question expected you to use recursion.”).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2202,7 +2202,7 @@ has not been defined”).</p>
 hours, perhaps it is time to take a break?”).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2235,9 +2235,9 @@ existing contents of the report.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>main_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The filename of the main file.</p></li>
-<li><p><strong>main_code</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The actual code of the main file.</p></li>
-<li><p><strong>files</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>]</em>) – A list of filenames mapped to their contents.</p></li>
+<li><p><strong>main_file</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – The filename of the main file.</p></li>
+<li><p><strong>main_code</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – The actual code of the main file.</p></li>
+<li><p><strong>files</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em>]</em>) – A list of filenames mapped to their contents.</p></li>
 </ul>
 </dd>
 </dl>
@@ -2267,7 +2267,7 @@ get_evaluation()</p>
 a file system.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dict</span></code></a> mapping <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a> to <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dict</span></code></a> mapping <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a> to <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2278,7 +2278,7 @@ a file system.</p>
 <dd><p>The entry point file that will be considered the main file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2291,7 +2291,7 @@ Useful for tools that want to change the currently active code (e.g., Source’s
 run additional commands (e.g., Sandboxes’ call).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2302,7 +2302,7 @@ run additional commands (e.g., Sandboxes’ call).</p>
 <dd><p>Additional information about the user.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><em>dict</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2313,7 +2313,7 @@ run additional commands (e.g., Sandboxes’ call).</p>
 <dd><p>Additional information about the assignment.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><em>dict</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2324,7 +2324,7 @@ run additional commands (e.g., Sandboxes’ call).</p>
 <dd><p>Additional information about the course.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><em>dict</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2335,7 +2335,7 @@ run additional commands (e.g., Sandboxes’ call).</p>
 <dd><p>Additional information about the results of executing the students’ code.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><em>dict</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2356,14 +2356,14 @@ lines of code.</p>
 <dd class="field-odd"><p>The lines of code for this submission.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>]</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><em>list</em></a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>]</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pedal.core.submission.Submission.replace_main">
-<span class="sig-name descname"><span class="pre">replace_main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pedal/core/submission.html#Submission.replace_main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.core.submission.Submission.replace_main" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">replace_main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pedal/core/submission.html#Submission.replace_main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pedal.core.submission.Submission.replace_main" title="Link to this definition"></a></dt>
 <dd><p>Substitutes the current main code and filename with the given arguments.
 :param code: The new code to substitute in.
 :type code: str
@@ -2424,7 +2424,7 @@ the static information about the tool like its reset function.</p>
 <dd><p>The formal name of this tool.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a></p>
 </dd>
 </dl>
 </dd></dl>
