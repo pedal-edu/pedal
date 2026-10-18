@@ -100,6 +100,16 @@ class FakeFrame:
     def line(self):
         return self._line
 
+    # Python 3.13 renamed FrameSummary._line to _lines. Expose both names so
+    # that fake frames can be treated exactly like real ones.
+    @property
+    def _lines(self):
+        return self._line
+
+    @_lines.setter
+    def _lines(self, value):
+        self._line = value
+
     def __eq__(self, other):
         try:
             return self.filename == other.filename and self.lineno == other.lineno
@@ -174,32 +184,49 @@ class ExpandedTraceback:
                 frames.append(fake_frame)
         return frames
 
+    @staticmethod
+    def _set_frame_line(frame, text):
+        """ Overwrite the source line that the frame will display. """
+        if IS_AT_LEAST_PYTHON_313:
+            # Renamed _line to _lines in 3.13
+            # https://github.com/python/cpython/commit/939fc6d6eab9b7ea8c244d513610dbdd556503a7
+            frame._lines = text
+        else:
+            frame._line = text
+
+    @staticmethod
+    def _get_frame_line(frame):
+        """
+        The frame's source line with its indentation intact. ``FrameSummary.line``
+        strips the whitespace (since 3.10) and may consult the linecache, so read
+        the private field that :py:meth:`_set_frame_line` writes instead.
+        https://github.com/python/cpython/commit/5644c7b3ffd49bed58dc095be6e6148e0bb4431e
+        """
+        if IS_AT_LEAST_PYTHON_313:
+            line = getattr(frame, '_lines', None)
+        elif IS_AT_LEAST_PYTHON_310:
+            line = getattr(frame, '_line', None)
+        else:
+            line = frame.line
+        return line if line is not None else ''
+
     def _fix_frame_line(self, frame):
         if frame.filename in self.line_offsets:
             original_lineno = frame.lineno
             frame.lineno += self.line_offsets[frame.filename]
             if original_lineno - 1 < len(self.original_code_lines):
-                if IS_AT_LEAST_PYTHON_313:
-                    frame._lines = self.original_code_lines[original_lineno - 1]
-                else:
-                    frame._line = self.original_code_lines[original_lineno - 1]
+                self._set_frame_line(frame, self.original_code_lines[original_lineno - 1])
             else:
-                if IS_AT_LEAST_PYTHON_313:
-                    frame._lines = "# *line missing*"
-                else:
-                    frame._line = "# *line missing*"
+                self._set_frame_line(frame, "# *line missing*")
         else:
             # print(frame.filename, self.student_files, frame.lineno)
             if frame.filename in self.student_files:
                 if frame.lineno - 1 < len(self.original_code_lines):
-                    if IS_AT_LEAST_PYTHON_313:
-                        frame._lines = self.student_files[frame.filename][frame.lineno - 1]
-                    else:
-                        frame._line = self.student_files[frame.filename][frame.lineno - 1]
+                    self._set_frame_line(frame, self.student_files[frame.filename][frame.lineno - 1])
                 else:
                     # Not actually possible in CPython, but Skulpt gives weird
                     #   SyntaxErrors that are technically the "next" line.
-                    frame._line = ""
+                    self._set_frame_line(frame, "")
 
     def _count_relevant_tb_levels(self, tb):
         length = 0
@@ -275,17 +302,9 @@ class ExpandedTraceback:
         return formatter.traceback(traceback_message)
 
     def format_line(self, formatter, frame):
-        if IS_AT_LEAST_PYTHON_313:
-            # Renamed _line to _lines in 3.13
-            # https://github.com/python/cpython/commit/939fc6d6eab9b7ea8c244d513610dbdd556503a7
-            end_offset = frame.end_colno+1 if frame.lineno == frame.end_lineno else len(frame.line)
-            return formatter.python_code(frame.line, focus=Location(0, frame.colno + 1, 0, end_offset))
-        elif IS_AT_LEAST_PYTHON_311:
-            end_offset = frame.end_colno+1 if frame.lineno == frame.end_lineno else len(frame._line)
-            # Note: Need to use _line because in 3.10 and above, the line gets stripped.
-            # https://github.com/python/cpython/commit/5644c7b3ffd49bed58dc095be6e6148e0bb4431e
-            line = frame._line if frame._line is not None else ''
-            return formatter.python_code(line, focus=Location(0, frame.colno+1, 0, end_offset))
-        elif IS_AT_LEAST_PYTHON_310:
-            return formatter.python_code(frame._line if frame._line is not None else '')
-        return formatter.python_code(frame.line if frame.line is not None else '')
+        line = self._get_frame_line(frame)
+        # 3.11+ frames carry column information, so we can highlight the "good bit".
+        if IS_AT_LEAST_PYTHON_311 and frame.colno is not None:
+            end_offset = frame.end_colno + 1 if frame.lineno == frame.end_lineno else len(line)
+            return formatter.python_code(line, focus=Location(0, frame.colno + 1, 0, end_offset))
+        return formatter.python_code(line)
