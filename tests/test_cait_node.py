@@ -51,6 +51,58 @@ class CaitNodeTest(unittest.TestCase):
         if_set_if0 = if0_node.find_all("If")
         self.assertTrue(len(if_set_if0) == 1, "Found {} ifs, when 1 should be found".format(len(if_set_if0)))
 
+    def test_find_all_index(self):
+        # Python 3.9+ removed the Index and ExtSlice nodes, but find_all should still
+        # support them by returning the Subscript nodes that perform those operations.
+        program = CaitNode(ast.parse("a[0]\nb[1:2]\nc['key']\nd[1, 2]\ne[1:2, 3]\nf[::2]"))
+        index_set = program.find_all("Index")
+        self.assertEqual(len(index_set), 3, "Found {} indexes, when 3 should be found".format(len(index_set)))
+        for node in index_set:
+            self.assertEqual(node.ast_name, "Subscript")
+            self.assertTrue(node.is_ast("Index"))
+            self.assertFalse(node.is_ast("ExtSlice"))
+        self.assertEqual([node.value.id for node in index_set], ['a', 'c', 'd'])
+
+        extslice_set = program.find_all("ExtSlice")
+        self.assertEqual(len(extslice_set), 1, "Found {} extslices, when 1 should be found".format(len(extslice_set)))
+        self.assertEqual(extslice_set[0].value.id, 'e')
+        self.assertTrue(extslice_set[0].is_ast("ExtSlice"))
+        self.assertFalse(extslice_set[0].is_ast("Index"))
+
+        slice_set = program.find_all("Slice")
+        self.assertEqual(len(slice_set), 3, "Found {} slices, when 3 should be found".format(len(slice_set)))
+
+        subscript_set = program.find_all("Subscript")
+        self.assertEqual(len(subscript_set), 6, "Found {} subscripts, when 6 should be found".format(len(subscript_set)))
+        self.assertFalse(subscript_set[1].is_ast("Index"))
+        self.assertTrue(subscript_set[1].is_ast("Subscript"))
+
+        # Nested indexes are all found
+        nested = CaitNode(ast.parse("matrix[0][1]"))
+        self.assertEqual(len(nested.find_all("Index")), 2)
+        # Index can be combined with other node types in a single search
+        self.assertEqual(len(program.find_all(["Index", "Slice"])), 6)
+
+    def test_has_is_type_aware(self):
+        program = CaitNode(ast.parse("x = 1\ny = True\nz = 1.0\nw = 'a'"))
+        self.assertTrue(program.has(1))
+        self.assertTrue(program.has(True))
+        self.assertTrue(program.has(1.0))
+        self.assertTrue(program.has('a'))
+        self.assertFalse(program.has(2))
+        self.assertFalse(program.has(False))
+        self.assertFalse(program.has(2.0))
+        self.assertFalse(program.has('b'))
+        # Equal values of different types are not the same literal
+        only_bool = CaitNode(ast.parse("x = True"))
+        self.assertTrue(only_bool.has(True))
+        self.assertFalse(only_bool.has(1))
+        self.assertFalse(only_bool.has(1.0))
+        only_int = CaitNode(ast.parse("x = 1"))
+        self.assertTrue(only_int.has(1))
+        self.assertFalse(only_int.has(True))
+        self.assertFalse(only_int.has(1.0))
+
     def test_has(self):
         program = ast.parse("x\n"
                             "y\n"

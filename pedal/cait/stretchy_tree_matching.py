@@ -5,6 +5,7 @@ import ast
 import re
 from pedal.cait.ast_map import AstMap
 from pedal.cait.cait_node import CaitNode
+from pedal.utilities.ast_tools import is_constant_node
 from pedal.cait.ast_map import SymTables
 
 # "Enums" for _name_regex
@@ -25,6 +26,21 @@ def is_primitive(item):
         bool: Whether the item is a primitive value.
     """
     return isinstance(item, (int, float, str, bool)) or item is None
+
+
+def primitives_match(ins_value, std_value):
+    """
+    Determines if two primitive values (from AST node fields) are the same.
+    Unlike plain ``==``, values of different types never match, so that
+    ``True`` does not match ``1`` and ``1`` does not match ``1.0``.
+
+    Args:
+        ins_value (any): The primitive from the instructor's pattern.
+        std_value (any): The value from the student's node.
+    Returns:
+        bool: Whether the two values match.
+    """
+    return type(ins_value) is type(std_value) and ins_value == std_value
 
 
 def _name_regex(name_id):
@@ -748,7 +764,11 @@ class StretchyTreeMatcher:
             std_field = stdTup[0]
             std_value = stdTup[1]
 
+            # A None field in the pattern is treated as "don't care", except for
+            # the value of a literal None constant, which must actually match.
             if ins_value is None:
+                if is_constant_node(ins) and ins_field == 'value':
+                    is_match = is_constant_node(std) and std_value is None
                 continue
 
             ignore_field = ins_field in ignores
@@ -771,7 +791,7 @@ class StretchyTreeMatcher:
                         break
                     # TODO: make this a smarter comparison, maybe handle dictionaries, f-strings, tuples, etc.
                     if is_primitive(inssub_value):
-                        is_match = inssub_value == stdsub_value
+                        is_match = primitives_match(inssub_value, stdsub_value)
         if is_match:
             mapping = AstMap()  # return MAPPING
             mapping.add_node_pairing(ins_node, std_node)

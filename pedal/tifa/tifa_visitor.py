@@ -18,6 +18,7 @@ from pedal.types.new_types import (Type, AnyType, ImpossibleType, FunctionType, 
 from pedal.types.new_types import is_subtype, specify_subtype
 from pedal.types.normalize import get_pedal_type_from_value
 from pedal.types.builtin import get_builtin_name
+from pedal.utilities.ast_tools import is_constant_node, get_constant_value
 from pedal.types.operations import (VALID_UNARYOP_TYPES, apply_binary_operation, apply_unary_operation)
 from pedal.tifa.constants import TOOL_NAME
 from pedal.tifa.contexts import NewPath, NewScope
@@ -745,10 +746,8 @@ class Tifa(TifaCore, ast.NodeVisitor):
 
     def evaluate_type(self, node):
         string_literal = False
-        if isinstance(node, ast.Str):
-            string_literal = node.s
-        elif isinstance(node, ast.Constant) and isinstance(node.value, str):
-            string_literal = node.value
+        if is_constant_node(node) and isinstance(get_constant_value(node), str):
+            string_literal = get_constant_value(node)
         if string_literal is not False:
             if self.get_setting('evaluate_string_literal_types'):
                 # TODO: Handle string literal types properly!

@@ -8,6 +8,8 @@ from types import MethodType
 from pedal.core.location import Location
 from pedal.core.report import MAIN_REPORT
 from pedal.utilities.system import IS_AT_LEAST_PYTHON_38, IS_SKULPT
+from pedal.utilities.ast_tools import (is_constant_node, get_constant_value,
+                                       is_index_subscript, is_extslice_subscript)
 
 
 class CaitNode:
@@ -468,6 +470,14 @@ class CaitNode:
     def find_all(self, node_type):
         """Finds all nodes defined by string node_type
 
+        Some node names are translated so that they keep working across Python
+        versions. ``"Num"``, ``"Str"``, and ``"Bool"`` find the matching
+        ``Constant`` nodes on 3.8+. ``"Index"`` and ``"ExtSlice"`` (removed from
+        the AST in 3.9) find the ``Subscript`` nodes that perform a plain index
+        (e.g., ``a[0]``) or a multi-dimensional slice (e.g., ``a[1:2, 3]``)
+        respectively. The ``Subscript`` node itself is returned on every Python
+        version, since the old ``Index``/``ExtSlice`` nodes carried no location.
+
         Args:
             node_type: the string representing the "type" of node to look for
 
@@ -503,6 +513,9 @@ class CaitNode:
             if (IS_AT_LEAST_PYTHON_38 and not IS_SKULPT) and node_t in ('Num', 'Str', 'Bool'):
                 func_name = 'visit_Constant'
                 func_ref = self._handle_visit_constant(node_t, main_visit)
+            elif node_t in ('Index', 'ExtSlice'):
+                func_name = 'visit_Subscript'
+                func_ref = self._handle_visit_subscript(node_t, main_visit)
             else:
                 func_name = 'visit_' + node_t
                 func_ref = main_visit
@@ -523,6 +536,16 @@ class CaitNode:
             return self.generic_visit(node)
         return visit_Constant
 
+    def _handle_visit_subscript(self, actual_node, visitor_function):
+        """ Python 3.9+ has no Index/ExtSlice nodes, so inspect the Subscripts instead. """
+        def visit_Subscript(self, node):
+            if actual_node == 'Index' and is_index_subscript(node):
+                return visitor_function(self, node)
+            elif actual_node == 'ExtSlice' and is_extslice_subscript(node):
+                return visitor_function(self, node)
+            return self.generic_visit(node)
+        return visit_Subscript
+
     def has(self, node):
         """
         Determine if this node has the given `node`. Specifically, it checks if the ast has a given Constant or variable
@@ -534,26 +557,12 @@ class CaitNode:
 
         """
         if isinstance(node, (int, float, str)):
-            visitor = ast.NodeVisitor()
-            has_constant = []
-
-            def visit_Constant(self, potential):
-                has_constant.append(node == potential.value)
-                return self.generic_visit(potential)
-
-            def visit_Num(self, potential):
-                has_constant.append(node == potential.n)
-                return self.generic_visit(potential)
-
-            def visit_Str(self, potential):
-                has_constant.append(node == potential.s)
-                return self.generic_visit(potential)
-
-            visitor.visit_Num = MethodType(visit_Num, visitor)
-            visitor.visit_Constant = MethodType(visit_Constant, visitor)
-            visitor.visit_Str = MethodType(visit_Str, visitor)
-            visitor.visit(self.astNode)
-            return any(has_constant)
+            def matches(potential):
+                value = get_constant_value(potential)
+                # Exact type match, so that True is not confused with 1, nor 1 with 1.0
+                return type(value) is type(node) and value == node
+            return any(matches(potential) for potential in ast.walk(self.astNode)
+                       if is_constant_node(potential))
         elif node.ast_name != "Name":
             return False
         visitor = ast.NodeVisitor()
@@ -611,6 +620,12 @@ class CaitNode:
             elif other_name == "str" and type(self.s) is str:
                 evaluation = True
             elif other_name == "bytes" and type(self.s) is bytes:
+                evaluation = True
+        elif self_name == "subscript" and other_name in ["index", "extslice"]:
+            # Python 3.9+ removed these nodes; see find_all
+            if other_name == "index" and is_index_subscript(self.astNode):
+                evaluation = True
+            elif other_name == "extslice" and is_extslice_subscript(self.astNode):
                 evaluation = True
         return evaluation
 

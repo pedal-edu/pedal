@@ -15,6 +15,7 @@ from pedal.types.new_types import (is_subtype, Type, AnyType, ImpossibleType, No
                                    LiteralStr, LiteralInt, LiteralFloat, LiteralBool)
 from pedal.tifa.constants import TOOL_NAME
 from pedal.tifa.identifier import Identifier
+from pedal.utilities.ast_tools import is_constant_node, get_constant_value
 from pedal.tifa.state import State
 from pedal.tifa.feedbacks import (action_after_return, return_outside_function,
                                   write_out_of_scope, unconnected_blocks,
@@ -653,10 +654,19 @@ class TifaCore:
         Returns:
 
         """
-        if isinstance(node, ast.Num):
-            return LiteralInt(node.n) if isinstance(node.n, int) else LiteralFloat(node.n)
-        elif isinstance(node, ast.Str):
-            return LiteralStr(node.s)
+        if is_constant_node(node):
+            value = get_constant_value(node)
+            if isinstance(value, bool):
+                return LiteralBool(value)
+            elif isinstance(value, int):
+                return LiteralInt(value)
+            elif isinstance(value, float):
+                return LiteralFloat(value)
+            elif isinstance(value, str):
+                return LiteralStr(value)
+            elif value is None:
+                return NoneType()
+            return None
         elif isinstance(node, ast.Tuple):
             values = []
             for elt in node.elts:

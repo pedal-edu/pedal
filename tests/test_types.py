@@ -6,6 +6,7 @@ import unittest
 import pedal.types.new_types as types
 from pedal.types.new_types import is_subtype
 from pedal.types.normalize import normalize_type, get_pedal_type_from_value
+from pedal.utilities.system import IS_AT_LEAST_PYTHON_39
 
 
 class TestNormalizeType(unittest.TestCase):
@@ -45,6 +46,27 @@ class TestNormalizeType(unittest.TestCase):
         self.assertIsInstance(normalize_type(dict), types.DictConstructor)
         self.assertIsInstance(normalize_type(type(None)), types.NoneType)
 
+    def test_ast_constants(self):
+        # Constants of every kind should be handled through ast.Constant, not the
+        # legacy Num/Str/NameConstant nodes (which no longer exist in Python 3.14)
+        self.assertIsInstance(normalize_type(ast.parse('5')), types.LiteralInt)
+        self.assertIsInstance(normalize_type(ast.parse('5.5')), types.LiteralFloat)
+        self.assertIsInstance(normalize_type(ast.parse('"hello"')), types.LiteralStr)
+        self.assertIsInstance(normalize_type(ast.parse('True')), types.LiteralBool)
+        self.assertIsInstance(normalize_type(ast.parse('None')), types.NoneType)
+        self.assertIsInstance(normalize_type(ast.parse('5j')), types.NumType)
+        self.assertEqual(normalize_type(ast.parse('5')).value, 5)
+        self.assertEqual(normalize_type(ast.parse('"hello"')).value, "hello")
+        # Constants nested inside container literals
+        list_of_strs = normalize_type(ast.parse('["a", "b"]'))
+        self.assertIsInstance(list_of_strs, types.ListType)
+        self.assertIsInstance(list_of_strs.element_type, types.LiteralStr)
+        dict_of_consts = normalize_type(ast.parse('{"a": 1}'))
+        self.assertIsInstance(dict_of_consts, types.DictType)
+        tuple_of_consts = normalize_type(ast.parse('(1, "a", None)'))
+        self.assertIsInstance(tuple_of_consts, types.TupleType)
+        self.assertIsInstance(tuple_of_consts.element_types[2], types.NoneType)
+
     def test_complex_annotation(self):
         list_generic = normalize_type('list')
         self.assertIsInstance(list_generic, types.ListConstructor)
@@ -64,6 +86,20 @@ class TestNormalizeType(unittest.TestCase):
         self.assert_is_subtype(get_pedal_type_from_value({1: 2}), dict_generic)
         self.assert_is_subtype(get_pedal_type_from_value({1: "hello"}), dict_generic)
         self.assert_is_not_subtype(get_pedal_type_from_value([1, 2]), dict_generic)
+
+        # Nested subscripts work whether given as a string, an AST, or a real type
+        nested_forms = ['dict[str, list[int]]', ast.parse('dict[str, list[int]]')]
+        if IS_AT_LEAST_PYTHON_39:
+            nested_forms.append(dict[str, list[int]])
+        for nested in nested_forms:
+            dict_str_list = normalize_type(nested)
+            self.assertIsInstance(dict_str_list, types.DictConstructor)
+            self.assertIsInstance(dict_str_list.type_arguments.index(0), types.StrType)
+            inner = dict_str_list.type_arguments.index(1)
+            self.assertIsInstance(inner, types.ListConstructor)
+            self.assertIsInstance(inner.type_arguments, types.IntType)
+            self.assert_is_subtype(get_pedal_type_from_value({"a": [1]}), dict_str_list)
+            self.assert_is_not_subtype(get_pedal_type_from_value({"a": ["b"]}), dict_str_list)
 
         bad_dict = normalize_type(ast.parse('dict[int]'))
         self.assertIsInstance(bad_dict, types.DictConstructor)

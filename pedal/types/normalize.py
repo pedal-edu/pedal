@@ -26,6 +26,7 @@ from pedal.types.new_types import (Type, AnyType, ImpossibleType, NumType, BoolT
                                    LiteralStr, LiteralInt, LiteralFloat, LiteralBool, ClassType, InstanceType,
                                    widest_type, LiteralValue, TypeUnion, PEDAL_TYPE_NAMES, specify_subtype)
 from pedal.utilities.system import IS_AT_LEAST_PYTHON_39, IS_SKULPT
+from pedal.utilities.ast_tools import is_constant_node, get_constant_value
 
 import types as dynamic_python_types
 
@@ -33,11 +34,6 @@ try:
     from dataclasses import fields
 except:
     fields = None
-
-try:
-    ast.Str
-except Exception as e:
-    ast.Str = None
 
 
 def get_generic_type(type_expression, evaluate_name=None) -> Type:
@@ -287,15 +283,11 @@ def get_pedal_type_from_ast(value: ast.AST, evaluate_name=None) -> Type:
     Returns:
         Type: A Pedal Type
     """
-    try:
-        if isinstance(value, ast.Constant):
-            return get_pedal_type_from_value(value.value, evaluate_name)
-    except AttributeError as e:
-        pass
+    # Literal values: ast.Constant on 3.8+, or the legacy Num/Str/etc. nodes
+    if is_constant_node(value):
+        return get_pedal_type_from_value(get_constant_value(value), evaluate_name)
     if isinstance(value, ast.Name):
         return get_pedal_type_from_str(value.id, evaluate_name)
-    elif isinstance(value, ast.Str):
-        return LiteralStr(value.s)
     elif isinstance(value, ast.List):
         return ListType(not bool(value.elts),
                         (get_pedal_type_from_ast(value.elts[0], evaluate_name)

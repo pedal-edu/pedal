@@ -742,6 +742,24 @@ class CaitTests(unittest.TestCase):
         my_match2 = find_matches("_var_.___[__str__]")
         self.assertTrue(len(my_match2) == 1, "couldn't wild card attribute access")
 
+    def test_constant_matching_is_type_aware(self):
+        # True == 1 and 1 == 1.0 in Python, but they are different literals in code
+        for pattern, matching, non_matching in [
+            ("True", ["x = True", "if True: pass"], ["x = 1", "x = 1.0", "x = 'True'"]),
+            ("1", ["x = 1", "print(1)"], ["x = True", "x = 1.0", "x = '1'"]),
+            ("1.0", ["x = 1.0"], ["x = 1", "x = True"]),
+            ("0", ["x = 0"], ["x = False", "x = None", "x = 0.0"]),
+            ("None", ["x = None", "return None"], ["x = 0", "x = False", "x = ''", "x = 'None'"]),
+            ("''", ["x = ''"], ["x = None", "x = 0"]),
+        ]:
+            matcher = StretchyTreeMatcher(pattern, report=MAIN_REPORT)
+            for code in matching:
+                self.assertTrue(matcher.find_matches(code),
+                                "Pattern {!r} should match {!r}".format(pattern, code))
+            for code in non_matching:
+                self.assertFalse(matcher.find_matches(code),
+                                 "Pattern {!r} should not match {!r}".format(pattern, code))
+
     def test_broken_traversal(self):
         contextualize_report("user entered gobblydegook")
         verify()

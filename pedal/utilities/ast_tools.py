@@ -3,7 +3,118 @@ Utilities for working with Abstract Syntax Trees.
 """
 import ast
 
-__all__ = ['is_literal', 'FindExecutableLines']
+from pedal.utilities.system import IS_AT_LEAST_PYTHON_38, IS_AT_LEAST_PYTHON_39, IS_SKULPT
+
+__all__ = ['is_literal', 'FindExecutableLines',
+           'is_constant_node', 'get_constant_value',
+           'is_index_subscript', 'is_extslice_subscript', 'is_slice_subscript']
+
+# Python 3.8 folded ``Num``, ``Str``, ``Bytes``, ``NameConstant`` and ``Ellipsis``
+# into ``ast.Constant``; Python 3.14 removed the old classes outright (and 3.12/3.13
+# warn whenever they are touched). We therefore only look the legacy classes up on
+# interpreters that actually still produce them (pre-3.8 CPython and Skulpt).
+USES_LEGACY_CONSTANT_NODES = not IS_AT_LEAST_PYTHON_38 or IS_SKULPT
+
+
+def _legacy_nodes(*names):
+    """ Collect whichever of the deprecated AST classes still exist, or nothing on modern Pythons. """
+    if not USES_LEGACY_CONSTANT_NODES:
+        return ()
+    return tuple(getattr(ast, name) for name in names if hasattr(ast, name))
+
+
+LEGACY_NUM_NODES = _legacy_nodes('Num')
+LEGACY_STR_NODES = _legacy_nodes('Str', 'Bytes')
+LEGACY_NAME_CONSTANT_NODES = _legacy_nodes('NameConstant')
+LEGACY_ELLIPSIS_NODES = _legacy_nodes('Ellipsis')
+LEGACY_CONSTANT_NODES = (LEGACY_NUM_NODES + LEGACY_STR_NODES +
+                         LEGACY_NAME_CONSTANT_NODES + LEGACY_ELLIPSIS_NODES)
+# ``ast.Constant`` has existed since 3.6, but Skulpt may not provide it.
+_CONSTANT_NODE = getattr(ast, 'Constant', None)
+CONSTANT_NODES = ((_CONSTANT_NODE,) if _CONSTANT_NODE is not None else ()) + LEGACY_CONSTANT_NODES
+
+# Python 3.9 removed the ``Index`` and ``ExtSlice`` wrapper nodes: a Subscript's
+# ``slice`` field now holds the index expression (or a Slice/Tuple) directly.
+USES_LEGACY_SUBSCRIPTS = not IS_AT_LEAST_PYTHON_39 or IS_SKULPT
+
+
+def is_constant_node(node) -> bool:
+    """
+    Determines whether the node is a literal constant (number, string, bytes,
+    boolean, None, or Ellipsis), regardless of the Python version's AST layout.
+
+    Args:
+        node (ast.AST): The AST node to check.
+
+    Returns:
+        bool: Whether this node is a constant.
+    """
+    return isinstance(node, CONSTANT_NODES)
+
+
+def get_constant_value(node):
+    """
+    Retrieves the Python value held by a constant node, regardless of the
+    Python version's AST layout (``ast.Constant`` vs the legacy
+    ``Num``/``Str``/``Bytes``/``NameConstant``/``Ellipsis`` classes).
+
+    Args:
+        node (ast.AST): A constant AST node (see :func:`is_constant_node`).
+
+    Returns:
+        Any: The literal Python value.
+
+    Raises:
+        TypeError: If the node is not a constant node.
+    """
+    if _CONSTANT_NODE is not None and isinstance(node, _CONSTANT_NODE):
+        return node.value
+    if isinstance(node, LEGACY_NUM_NODES):
+        return node.n
+    if isinstance(node, LEGACY_STR_NODES):
+        return node.s
+    if isinstance(node, LEGACY_NAME_CONSTANT_NODES):
+        return node.value
+    if isinstance(node, LEGACY_ELLIPSIS_NODES):
+        return Ellipsis
+    raise TypeError(f"Expected a constant AST node, but got {type(node).__name__}")
+
+
+def _is_extslice_expression(slice_node) -> bool:
+    """ A tuple of dimensions where at least one dimension is a slice (``a[1:2, 3]``). """
+    return (isinstance(slice_node, ast.Tuple) and
+            any(isinstance(dim, ast.Slice) for dim in slice_node.elts))
+
+
+def is_slice_subscript(node) -> bool:
+    """ Whether the node is a Subscript performing a simple slice (``a[1:2]``). """
+    return isinstance(node, ast.Subscript) and isinstance(node.slice, ast.Slice)
+
+
+def is_extslice_subscript(node) -> bool:
+    """
+    Whether the node is a Subscript performing a multi-dimensional slice
+    (``a[1:2, 3]``), which older Pythons represented with an ``ExtSlice`` node.
+    """
+    if not isinstance(node, ast.Subscript):
+        return False
+    if USES_LEGACY_SUBSCRIPTS:
+        return isinstance(node.slice, ast.ExtSlice)
+    return _is_extslice_expression(node.slice)
+
+
+def is_index_subscript(node) -> bool:
+    """
+    Whether the node is a Subscript performing a plain index (``a[0]``,
+    ``d["key"]``, ``a[1, 2]``) rather than a slice. Older Pythons represented
+    this with an ``Index`` node wrapping the expression; 3.9+ stores the
+    expression directly in the Subscript's ``slice`` field.
+    """
+    if not isinstance(node, ast.Subscript):
+        return False
+    if USES_LEGACY_SUBSCRIPTS:
+        return isinstance(node.slice, ast.Index)
+    return not (isinstance(node.slice, ast.Slice) or _is_extslice_expression(node.slice))
 
 AST_NODE_NAMES = {
     "Add": "an addition operator",
@@ -117,16 +228,9 @@ def is_literal(node: ast.AST) -> bool:
     Returns:
         bool: Whether or not this is an AST Node
     """
-    # Simple primitive constant?
-    if isinstance(node, (ast.Num, ast.Str, ast.Bytes, ast.Ellipsis,
-                         ast.NameConstant)):
+    # Simple primitive constant (ast.Constant, or the legacy Num/Str/etc. nodes)?
+    if is_constant_node(node):
         return True
-    # V3.8 Constant?
-    try:
-        if isinstance(node, ast.Constant):
-            return True
-    except AttributeError:
-        pass
     # V3.6 FormattedValue?
     try:
         if isinstance(node, ast.FormattedValue):
