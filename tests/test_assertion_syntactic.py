@@ -1,5 +1,8 @@
 from textwrap import dedent
 import unittest
+import os
+import sys
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from pedal.assertions.syntactic import *
 from pedal.utilities.system import IS_AT_LEAST_PYTHON_39
 from tests.execution_helper import Execution, ExecutionTestCase, SUCCESS_MESSAGE
@@ -142,12 +145,12 @@ class TestAssertionsSyntactic(ExecutionTestCase):
     def test_require_finds_partial_function_header(self):
         with Execution('from bakery import assert_equal\n\ndef target_function(x: int)\n    pass\ntarget_function()', run_verify=False, run_student=False) as e:
             self.assertFalse(require_code('def target_function('))
-            self.assertFalse(require_code_regex('def target_function\([^:]+?:[^:]+?\)'))
+            self.assertFalse(require_code_regex(r'def target_function\([^:]+?:[^:]+?\)'))
         self.assertFeedback(e, SUCCESS_MESSAGE)
 
     def test_require_ignores_bad_partial_function_header(self):
         with Execution('from bakery import assert_equal\n\ndef target_function(x: int, y: int)\n    pass\ntarget_function()', run_verify=False, run_student=False) as e:
-            self.assertTrue(require_code_regex('def target_function\([^:]+?:[^:]+?\)'))
+            self.assertTrue(require_code_regex(r'def target_function\([^:]+?:[^:]+?\)'))
         self.assertFeedback(e, ('Must Use Pattern\n'
  'You must use the pattern def target_function\\([^:]+?:[^:]+?\\).'))
 
@@ -155,5 +158,5 @@ class TestAssertionsSyntactic(ExecutionTestCase):
         with Execution(
                 'from bakery import assert_equal\n\ndef target_function(x: int)\n    pass\ntarget_function()',
                 run_verify=False, run_student=False) as e:
-            self.assertFalse(require_code_regex('def target_function\([^:]+?:[^:]+?\)', else_message="You at least had part of the code there!"))
+            self.assertFalse(require_code_regex(r'def target_function\([^:]+?:[^:]+?\)', else_message="You at least had part of the code there!"))
         self.assertEqual(e.final.positives[0].message, "You at least had part of the code there!")

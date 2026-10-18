@@ -1,6 +1,9 @@
 """ Tests for some AST operations stuffed into CAIT """
 import unittest
 
+import os
+import sys
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from tests.execution_helper import Execution, SUCCESS_TEXT
 from pedal.cait import *
 from pedal.cait.find_node import (is_top_level, find_function_calls, function_is_called, find_prior_initializations,

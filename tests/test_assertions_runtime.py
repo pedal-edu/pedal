@@ -1,6 +1,9 @@
 """
 Tests for checking that runtime assertions are working as expected.
 """
+import os
+import sys
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from pedal.assertions.feedbacks import assert_group
 from pedal.assertions.runtime import *
 from pedal.sandbox.commands import call, start_trace, get_sandbox, evaluate, CommandBlock, run

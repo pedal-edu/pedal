@@ -1,5 +1,8 @@
 from textwrap import dedent
 
+import os
+import sys
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from pedal.assertions.feedbacks import assert_group
 from pedal.assertions.runtime import *
 from pedal.core.commands import suppress

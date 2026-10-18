@@ -45,7 +45,7 @@ class TestNBGrader(ExecutionTestCase):
         with io.StringIO() as f, redirect_stdout(f):
             nbgrader = setup_environment("**", main_file=here + 'datafiles/jupyter_notebook_example.ipynb')
             print(nbgrader.report.submission.main_code)
-            self.assertEqual('''"""For this problem set, we'll be using the Jupyter notebook:
+            self.assertEqual(r'''"""For this problem set, we'll be using the Jupyter notebook:
 
 ![](jupyter.png)"""
 """---

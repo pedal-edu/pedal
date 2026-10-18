@@ -1,5 +1,8 @@
 from textwrap import dedent
 import unittest
+import os
+import sys
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from pedal.assertions.static import *
 from pedal.utilities.system import IS_AT_LEAST_PYTHON_39
 from tests.execution_helper import Execution, ExecutionTestCase, SUCCESS_MESSAGE

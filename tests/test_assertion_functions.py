@@ -4,6 +4,9 @@ Tests related to checking function definitions
 
 import unittest
 
+import os
+import sys
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from pedal.utilities.system import IS_AT_LEAST_PYTHON_311
 from pedal import unit_test, block_function, evaluate, CommandBlock, run, call
 from pedal.assertions.static import *

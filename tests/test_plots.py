@@ -4,6 +4,9 @@ Tests for checking that the plotting extension works.
 import unittest
 from textwrap import dedent
 
+import os
+import sys
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from pedal import call
 from tests.execution_helper import Execution, ExecutionTestCase, SUCCESS_MESSAGE
 from pedal.extensions.plotting import *
